@@ -51,8 +51,8 @@ public class LoopDetailsAdapter extends BaseAdapter {
         loader = ImageLoader.getInstance();
         loader.init(ImageLoaderConfiguration.createDefault(context));
 
-        displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_other_user_loop_image)
-                .showImageForEmptyUri(R.drawable.default_other_user_loop_image).showImageOnFail(R.drawable.default_other_user_loop_image)
+        displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_background_image)
+                .showImageForEmptyUri(R.drawable.default_background_image).showImageOnFail(R.drawable.default_background_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 

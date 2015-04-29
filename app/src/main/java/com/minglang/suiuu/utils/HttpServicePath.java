@@ -123,4 +123,13 @@ public class HttpServicePath {
      * 请求参数:需要收藏文章的id:articleId
      */
     public static String CollectionArticlePath = RootPath + "/attention/add-collection-article";
+
+    /**
+     * 首页请求地址
+     * <p/>
+     * 请求方式:POST
+     * <p/>
+     * 请求参数：无
+     */
+    public static String MainDynamicPath = RootPath + "attention/get-index-list";
 }

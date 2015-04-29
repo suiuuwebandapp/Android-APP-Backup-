@@ -18,7 +18,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginBottom="20dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/default_other_user_loop_image"/>
+        android:src="@drawable/default_background_image"/>
 
     <com.minglang.suiuu.customview.CircleImageView
         android:id="@+id/item_loop_details_head_image"

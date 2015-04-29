@@ -119,6 +119,10 @@
 
     <string name="UnknownArea">未知地区</string>
     <string name="title">标题</string>
+    <string name="attentionDynamic">关注动态</string>
+    <string name="more">更多</string>
+    <string name="today_star">今日之星</string>
+    <string name="loopDynamic">圈子动态</string>
 
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>

@@ -80,7 +80,7 @@
                 android:textSize="@dimen/layout_15sp"
                 />
             </RelativeLayout>
-        <com.minglang.suiuu.view.MyGridView
+        <com.minglang.suiuu.customview.MyGridView
             android:padding="@dimen/layout_10dp"
             android:layout_marginLeft="@dimen/layout_16dp"
             android:layout_marginRight="@dimen/layout_16dp"

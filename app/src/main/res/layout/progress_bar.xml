@@ -8,7 +8,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
-    <com.minglang.suiuu.view.progressbar.CircularProgress
+    <com.minglang.suiuu.customview.CircularProgress
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:background="@color/transparent"

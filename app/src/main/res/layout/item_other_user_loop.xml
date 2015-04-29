@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:id="@+id/item_other_user_main_image"
-        android:src="@drawable/default_other_user_loop_image"
+        android:src="@drawable/default_background_image"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
