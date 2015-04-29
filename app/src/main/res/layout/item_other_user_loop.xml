@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:id="@+id/item_other_user_main_image"
+        android:src="@drawable/default_other_user_loop_image"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:id="@+id/item_other_user_head_image"
+        android:background="@drawable/user_head_image_bg"
+        android:layout_alignBottom="@+id/item_other_user_main_image"
+        android:layout_alignLeft="@+id/item_other_user_main_image"
+        android:layout_alignStart="@+id/item_other_user_main_image" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:textColor="@color/tr_black"
+        android:textSize="18sp"
+        android:id="@+id/item_other_user_name"
+        android:layout_below="@+id/item_other_user_main_image"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:text="New Text"
+        android:textColor="@color/tr_black"
+        android:textSize="22sp"
+        android:id="@+id/item_other_user_content"
+        android:layout_below="@+id/item_other_user_name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/TwentyThree"
+        android:id="@+id/item_other_user_reply"
+        android:textColor="@color/tr_black"
+        android:textSize="16sp"
+        android:drawablePadding="5dp"
+        android:drawableLeft="@drawable/icon_reply"
+        android:drawableStart="@drawable/icon_reply"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/TwentyThree"
+        android:id="@+id/item_other_user_praise"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
+        android:textColor="@color/tr_black"
+        android:textSize="16sp"
+        android:drawablePadding="5dp"
+        android:drawableLeft="@drawable/icon_praise"
+        android:drawableStart="@drawable/icon_praise"
+        android:layout_alignBottom="@+id/item_other_user_reply"
+        android:layout_toLeftOf="@+id/item_other_user_reply"
+        android:layout_toStartOf="@+id/item_other_user_reply" />
+</RelativeLayout>

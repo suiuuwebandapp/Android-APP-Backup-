@@ -1,0 +1,147 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.minglang.suiuu.activity.OtherUserActivity">
+
+    <RelativeLayout
+        android:id="@+id/otherUserBackgroundLayout"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/user_background">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/footprint0"
+            android:id="@+id/otherUserFootprint"
+            android:textSize="20sp"
+            android:textColor="@drawable/other_user_click1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title4"
+            android:id="@+id/otherUserConversation"
+            android:textSize="20sp"
+            android:textColor="@drawable/other_user_click1"
+            android:drawableRight="@drawable/other_user_click2"
+            android:drawableEnd="@drawable/other_user_click2"
+            android:drawablePadding="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/attention_other"
+            android:textColor="@drawable/other_user_click1"
+            android:drawableLeft="@drawable/other_user_click3"
+            android:drawableStart="@drawable/other_user_click3"
+            android:drawablePadding="5dp"
+            android:id="@+id/otherUserAttention"
+            android:layout_marginBottom="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/otherUserAttention"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/otherUserHeadImage"
+                android:src="@drawable/default_head_image3"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/otherUserHeadImage">
+
+                <TextView
+                    style="@style/otherUserInfo"
+                    android:textColor="@color/white"
+                    android:text="@string/blankNickName"
+                    android:id="@+id/otherUserName" />
+
+                <TextView
+                    style="@style/otherUserInfo"
+                    android:textColor="@color/white"
+                    android:text="@string/location"
+                    android:id="@+id/otherUserLocation" />
+
+                <TextView
+                    style="@style/otherUserInfo"
+                    android:textColor="@color/white"
+                    android:text="@string/blankSignature"
+                    android:id="@+id/otherUserSignature" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/transparent"
+        android:layout_alignParentTop="true"
+        android:id="@+id/relativeLayout9">
+
+        <ImageView
+            android:id="@+id/OtherUserBack"
+            style="@style/backKeyStyle"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/TwentyThree"
+            android:drawableLeft="@drawable/icon_praise"
+            android:drawableStart="@drawable/icon_praise"
+            android:drawablePadding="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/otherUserCollection"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/otherUserLoop"
+        android:layout_below="@+id/otherUserBackgroundLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:numColumns="2"
+        android:choiceMode="none" />
+
+
+</RelativeLayout>

@@ -1,0 +1,138 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/personalRootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.minglang.suiuu.activity.PersonalActivity">
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout7"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/tr_black">
+
+        <ImageView
+            android:id="@+id/personalBack"
+            style="@style/backKeyStyle"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/textView26"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/personalInfo"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/personalSave"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/save"
+            android:textColor="@color/remindColor"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/relativeLayout7"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.minglang.suiuu.customview.CircleImageView
+                android:id="@+id/personalHeadImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/default_head_image3" />
+
+            <LinearLayout style="@style/personalItemStyle">
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/gender"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/personalItemStyle">
+
+                <TextView
+                    android:id="@+id/textView9"
+                    style="@style/personalTextStyle"
+                    android:text="昵称    "
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/personalNickName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:hint="@string/nickname_hint" />
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/personalItemStyle">
+
+                <TextView
+                    android:id="@+id/textView11"
+                    style="@style/personalTextStyle"
+                    android:text="@string/location"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/personalLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:hint="@string/Location_hint" />
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/personalItemStyle">
+
+                <TextView
+                    android:id="@+id/textView13"
+                    style="@style/personalTextStyle"
+                    android:text="签名    "
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/personalSignature"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:hint="@string/Signature_hint" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

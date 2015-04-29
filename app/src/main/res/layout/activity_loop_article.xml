@@ -1,0 +1,268 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.minglang.suiuu.activity.LoopArticleActivity">
+
+    <ScrollView
+        android:id="@+id/loop_article_scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/loop_article_bottom_layout"
+        android:layout_centerHorizontal="true"
+        android:background="@color/backgroundColor">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/loop_article_head_image_layout"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+                <ImageView
+                    android:id="@+id/loop_article_cover_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/scroll2"/>
+
+                <TextView
+                    android:id="@+id/loop_article_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
+                    android:text="@string/Jeju_Island"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="2.5dp"
+                android:layout_marginTop="2.5dp"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.minglang.suiuu.customview.CircleImageView
+                        android:id="@+id/loop_article_user_head_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/user_head_image_bg"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/loop_article_user_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.5"
+                            android:gravity="center_vertical"
+                            android:text="@string/user_name"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"/>
+
+                        <TextView
+                            android:id="@+id/loop_article_user_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.5"
+                            android:gravity="center_vertical"
+                            android:text="@string/location"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/loop_article_editor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:drawableLeft="@drawable/icon_edit_selector"
+                        android:drawableStart="@drawable/icon_edit_selector"
+                        android:gravity="center"
+                        android:text="@string/editor"
+                        android:textColor="@drawable/text_color_selector"
+                        android:textSize="18sp"/>
+
+                    <TextView
+                        android:id="@+id/loop_article_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_toEndOf="@+id/loop_article_editor"
+                        android:layout_toRightOf="@+id/loop_article_editor"
+                        android:drawableLeft="@drawable/icon_delete_selector"
+                        android:drawableStart="@drawable/icon_delete_selector"
+                        android:text="@string/delete"
+                        android:textColor="@drawable/text_color_selector"
+                        android:textSize="18sp"/>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/white">
+
+                <TextView
+                    android:id="@+id/loop_article_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/article_temp"
+                    android:textSize="18sp"/>
+
+                <com.minglang.suiuu.customview.NoScrollBarGridView
+                    android:id="@+id/loop_article_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/loop_article_content"
+                    android:fillViewport="false"
+                    android:numColumns="3"/>
+
+                <TextView
+                    android:id="@+id/loop_article_show_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/loop_article_grid"
+                    android:layout_marginBottom="2.5dp"
+                    android:layout_marginTop="2.5dp"
+                    android:gravity="center"
+                    android:text="@string/show_comments"
+                    android:textColor="@drawable/text_select_color"
+                    android:textSize="18sp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/loop_article_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/tr_black">
+
+        <ImageView
+            android:id="@+id/loop_article_back"
+            style="@style/backKeyStyle"
+            android:contentDescription="@string/back"
+            android:src="@drawable/back"/>
+
+        <TextView
+            android:id="@+id/loop_article_collection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:drawableLeft="@drawable/icon_collection_white"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/icon_collection_white"
+            android:text="@string/collection"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/loop_article_praise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/loop_article_collection"
+            android:layout_toStartOf="@+id/loop_article_collection"
+            android:drawableLeft="@drawable/icon_praise_white"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/icon_praise_white"
+            android:text="@string/clickPraise"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/loop_article_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/loop_article_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:drawableLeft="@drawable/comments_select"
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/comments_select"
+            android:gravity="center_vertical"
+            android:text="@string/comment"
+            android:textColor="@drawable/text_select_color"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/loop_article_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/loop_article_comments"
+            android:layout_toStartOf="@+id/loop_article_comments"
+            android:drawableLeft="@drawable/share_select"
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/share_select"
+            android:gravity="center_vertical"
+            android:text="@string/share"
+            android:textColor="@drawable/text_select_color"
+            android:textSize="20sp"/>
+    </RelativeLayout>
+
+</RelativeLayout>

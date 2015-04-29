@@ -1,0 +1,56 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/feedbackRootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    tools:context="com.minglang.suiuu.activity.FeedbackActivity">
+    <include
+        android:id="@+id/top"
+        layout="@layout/common_top2_layout"/>
+    <LinearLayout
+        android:layout_below="@+id/top"
+        android:background="@color/backgroundColor"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+
+        >
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/layout_10dp"
+        android:layout_marginLeft="@dimen/layout_16dp"
+        android:layout_marginRight="@dimen/layout_16dp"
+        >
+        <EditText
+            android:id="@+id/et_question_description"
+            android:padding="@dimen/layout_8dp"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/layout_150dp"
+            android:background="@color/white"
+            android:gravity="left"
+            android:textColor="@color/textColor"
+            android:hint="@string/question_description"
+            android:textSize="@dimen/layout_15sp"
+            />
+
+    </RelativeLayout>
+    <GridView
+        android:padding="@dimen/layout_10dp"
+        android:layout_marginLeft="@dimen/layout_16dp"
+        android:layout_marginRight="@dimen/layout_16dp"
+        android:gravity="center"
+        android:verticalSpacing="@dimen/layout_10dp"
+        android:horizontalSpacing="@dimen/layout_10dp"
+        android:id="@+id/gv_show_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:scrollbars="none"
+        android:background="@color/white"
+        android:layout_alignBottom="@id/et_question_description"></GridView>
+    </LinearLayout>
+</RelativeLayout>
