@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="com.minglang.suiuu"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="1"
-    android:versionName="1.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.minglang.suiuu"
+          android:versionCode="1"
+          android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -158,24 +157,21 @@
             android:name=".activity.SelectPictureActivity"
             android:label="@string/title_activity_select_picture"
             android:theme="@style/FullBleedTheme"/>
-        <!--随问的页面-->
+        <!-- 随问的页面 -->
         <activity
             android:name=".activity.AskQuestionActivity"
             android:label="AskQuestionActivity"
-            android:theme="@style/FullBleedTheme"
-            />
-        <!--通用设置的页面-->
+            android:theme="@style/FullBleedTheme"/>
+        <!-- 通用设置的页面 -->
         <activity
             android:name=".activity.NormalSettingActivity"
             android:label="NormalSettingActivity"
-            android:theme="@style/FullBleedTheme"
-            />
-        <!--随拍的展示页面-->
+            android:theme="@style/FullBleedTheme"/>
+        <!-- 随拍的展示页面 -->
         <activity
             android:name=".activity.EasyTackPhotoActivity"
             android:label="EasyTackPhotoActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"/>
-
 
         <!-- 聊天页面 -->
         <activity
@@ -281,6 +277,11 @@
         <activity
             android:name=".activity.LoopArticleActivity"
             android:label="@string/title_activity_loop_article"
+            android:theme="@style/FullBleedTheme">
+        </activity>
+        <activity
+            android:name=".activity.AllAttentionDynamicActivity"
+            android:label="@string/title_activity_all_attention_dynamic"
             android:theme="@style/FullBleedTheme">
         </activity>
     </application>

@@ -123,6 +123,8 @@
     <string name="more">更多</string>
     <string name="today_star">今日之星</string>
     <string name="loopDynamic">圈子动态</string>
+    <string name="UnknownName">未知</string>
+    <string name="noInformation">暂无信息</string>
 
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
@@ -402,5 +404,6 @@
     <string name="title_activity_select_picture">SelectPictureActivity</string>
     <string name="title_activity_loop_details">LoopDetailsActivity</string>
     <string name="title_activity_loop_article">LoopArticleActivity</string>
+    <string name="title_activity_all_attention_dynamic">AllAttentionDynamicActivity</string>
 
 </resources>

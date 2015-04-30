@@ -52,21 +52,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 随拍图片选择完成
+ * <p/>
  * Created by Administrator on 2015/4/24.
  */
 public class EasyTackPhotoActivity extends Activity implements View.OnClickListener {
+
+    private static final String TAG = EasyTackPhotoActivity.class.getSimpleName();
+
     private static OSSService ossService = OSSServiceProvider.getService();
     private static OSSBucket bucket = ossService.getOssBucket("suiuu");
-    private ImageView iv_cancel;
+    //    private ImageView iv_cancel;
+    /**
+     * 取消按钮
+     */
     private TextView tv_cancel;
     private ArrayList<String> picList = new ArrayList<>();
+    /**
+     * 显示选择的照片
+     */
     private ListView lv_picture_description;
+    /**
+     * 完成按钮
+     */
     private TextView tv_top_right;
+    /**
+     * 保存照片描述的List集合
+     */
     private List<String> picDescriptionList;
-    private PopupWindow popwindow;
+    private PopupWindow popupWindow;
+    /**
+     * PopupWindow中的ListView
+     */
     private ListView listView;
+    /**
+     * 选择主题
+     */
     private TextView tv_theme_choice;
+    /**
+     * 选择地区
+     */
     private TextView tv_area_choice;
+    /**
+     * 标题描写
+     */
     private EditText search_question;
     private static final int REQUEST_CODE_MAP = 8;
     /**
@@ -77,6 +106,9 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     private int themeOrArea = 1;
     private String themeCid;
     private String areaCid;
+    /**
+     * 选择位置
+     */
     private TextView tv_show_your_location;
     private int picSuccessCount = 0;
     protected static final int getData_Success = 0;
@@ -85,16 +117,17 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     private Dialog dialog;
     private ImageView iv_top_back;
     private ScrollView sll;
-    private Handler handler = new Handler() {
+
+    private Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
+        public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case getData_Success:
-                    if(1 == status && picSuccessCount == picList.size()) {
+                    if (1 == status && picSuccessCount == picList.size()) {
                         dialog.dismiss();
                         Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
                         finish();
-                    }else {
+                    } else {
                         dialog.dismiss();
                         Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
                     }
@@ -106,26 +139,36 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
                 default:
                     break;
             }
+            return false;
         }
-
-    };
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_easy_tackphoto);
+
         picList = this.getIntent().getStringArrayListExtra("pictureMessage");
+
         initView();
         lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, picList));
-        iv_cancel.setVisibility(View.GONE);
+
+//        iv_cancel.setVisibility(View.GONE);
         tv_cancel.setVisibility(View.VISIBLE);
+
+        initPopupWindow();
+
+        ViewAction();
+    }
+
+    private void ViewAction() {
         tv_cancel.setOnClickListener(this);
-        initPopuWindow();
         tv_top_right.setOnClickListener(this);
         iv_top_back.setOnClickListener(this);
         tv_show_your_location.setOnClickListener(this);
         tv_theme_choice.setOnClickListener(this);
         tv_area_choice.setOnClickListener(this);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -137,16 +180,14 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
                     areaCid = list.get(position).getcId();
 
                 }
-                popwindow.dismiss();
+                popupWindow.dismiss();
             }
         });
-
-
     }
 
     private void initView() {
         iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
-        iv_cancel = (ImageView) findViewById(R.id.iv_top_back);
+//        iv_cancel = (ImageView) findViewById(R.id.iv_top_back);
         tv_cancel = (TextView) findViewById(R.id.tv_top_cancel);
         lv_picture_description = (ListView) findViewById(R.id.lv_picture_description);
         tv_top_right = (TextView) findViewById(R.id.tv_top_right);
@@ -163,11 +204,11 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == 9) {
             picList = data.getStringArrayListExtra("pictureMessage");
-        }else if (data != null && requestCode == REQUEST_CODE_MAP) {
+        } else if (data != null && requestCode == REQUEST_CODE_MAP) {
             double latitude = data.getDoubleExtra("latitude", 0);
             double longitude = data.getDoubleExtra("longitude", 0);
             String locationAddress = data.getStringExtra("address");
-            Log.i("suiuu", locationAddress + "logcation");
+            Log.i(TAG, locationAddress + "logcation");
             if (locationAddress != null && !locationAddress.equals("")) {
                 tv_show_your_location.setText(locationAddress);
             } else {
@@ -190,10 +231,11 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
             loadAreaDate();
         } else if (mId == R.id.tv_show_your_location) {
             startActivityForResult(new Intent(EasyTackPhotoActivity.this, BaiduMapActivity.class), REQUEST_CODE_MAP);
-        }else if (mId == R.id.iv_top_back) {
+        } else if (mId == R.id.iv_top_back) {
             finish();
         }
     }
+
     //访问主题的数据
     public void loadThemeDate() {
         String str = SuiuuInformation.ReadVerification(this);
@@ -205,6 +247,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         suHttpRequest.setParams(params);
         suHttpRequest.requestNetworkData();
     }
+
     /**
      * 主题请求回调接口
      */
@@ -218,21 +261,23 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
                 if (Integer.parseInt(loop.getStatus()) == 1) {
                     list = loop.getData();
                     for (LoopData date : list) {
-                        Log.i("suiuu", date.toString());
+                        Log.i(TAG, date.toString());
                     }
                     listView.setAdapter(new MyListAdapter(EasyTackPhotoActivity.this, list));
                     themeOrArea = 1;
-                    popwindow.showAsDropDown(tv_theme_choice, 0, 10);
+                    popupWindow.showAsDropDown(tv_theme_choice, 0, 10);
                 } else {
                     Toast.makeText(EasyTackPhotoActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
                 }
             }
         }
+
         @Override
         public void onFailure(HttpException error, String msg) {
             Toast.makeText(EasyTackPhotoActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void loadAreaDate() {
         String str = SuiuuInformation.ReadVerification(this);
 
@@ -260,12 +305,13 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
                     list = loop.getData();
                     listView.setAdapter(new MyListAdapter(EasyTackPhotoActivity.this, list));
                     themeOrArea = 2;
-                    popwindow.showAsDropDown(tv_area_choice, 0, 10);
+                    popupWindow.showAsDropDown(tv_area_choice, 0, 10);
                 } else {
                     Toast.makeText(EasyTackPhotoActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
                 }
             }
         }
+
         @Override
         public void onFailure(HttpException error, String msg) {
             Toast.makeText(EasyTackPhotoActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
@@ -280,17 +326,17 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
             EditText et = (EditText) layout.findViewById(R.id.et_item_description);// 从layout中获得控件,根据其id
             // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
             picDescriptionList.add(et.getText().toString());
-            Log.i("suiuu", "the text of " + i + "'s EditText：----------->" + et.getText());
+            Log.i(TAG, "the text of " + i + "'s EditText：----------->" + et.getText());
         }
-        if(TextUtils.isEmpty(search_question.getText().toString().trim())) {
+        if (TextUtils.isEmpty(search_question.getText().toString().trim())) {
             Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
             return;
         }
-        if("".equals(tv_theme_choice.getText().toString().trim())) {
+        if ("".equals(tv_theme_choice.getText().toString().trim())) {
             Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
             return;
         }
-        if("".equals(tv_area_choice.getText().toString().trim())) {
+        if ("".equals(tv_area_choice.getText().toString().trim())) {
             Toast.makeText(this, R.string.area_is_empty, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -317,8 +363,9 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         suHttpRequest.setParams(params);
         suHttpRequest.requestNetworkData();
     }
-    //初始化popuwindow
-    public void initPopuWindow() {
+
+    //初始化popupWindow
+    public void initPopupWindow() {
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progress_bar);
@@ -328,28 +375,29 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         listView = (ListView) view.findViewById(R.id.pictureSelectList);
 //        listView.setBackgroundResource(R.drawable.listview_background);
         //自适配长、框设置
-        popwindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT,
+        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        popwindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.listview_background));
-        popwindow.setOutsideTouchable(true);
-        popwindow.setAnimationStyle(android.R.style.Animation_Dialog);
-        popwindow.update();
-        popwindow.setTouchable(true);
-        popwindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.listview_background));
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setAnimationStyle(android.R.style.Animation_Dialog);
+        popupWindow.update();
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(true);
     }
+
     private void updateDate(String path) {
         String type = path.substring(path.lastIndexOf("/"));
         String name = type.substring(type.lastIndexOf(".") + 1);
-        OSSFile bigfFile = ossService.getOssFile(bucket, "suiuu_content" + type);
+        OSSFile bigFile = ossService.getOssFile(bucket, "suiuu_content" + type);
         try {
-            bigfFile.setUploadFilePath(path, name);
-            bigfFile.ResumableUploadInBackground(new SaveCallback() {
+            bigFile.setUploadFilePath(path, name);
+            bigFile.ResumableUploadInBackground(new SaveCallback() {
 
                 @Override
                 public void onSuccess(String objectKey) {
-                    Log.i("suiuu","success upload");
+                    Log.i(TAG, "success upload");
                     picSuccessCount += 1;
-                    if(picSuccessCount == picList.size()) {
+                    if (picSuccessCount == picList.size()) {
                         handler.sendEmptyMessage(getData_Success);
                     }
 
@@ -357,13 +405,13 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
 
                 @Override
                 public void onProgress(String objectKey, int byteCount, int totalSize) {
-                    Log.i("suiuu", "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
+                    Log.i(TAG, "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
                 }
 
                 @Override
                 public void onFailure(String objectKey, OSSException ossException) {
                     handler.sendEmptyMessage(getData_FAILURE);
-                    Log.i("suiuu", "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
+                    Log.i(TAG, "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
                     ossException.printStackTrace();
 //                    ossException.getException().printStackTrace();
                 }
@@ -372,6 +420,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
             e.printStackTrace();
         }
     }
+
     /**
      * 发布圈子文章回调接口
      */
@@ -387,10 +436,11 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
                 e.printStackTrace();
             }
         }
+
         @Override
         public void onFailure(HttpException e, String s) {
             handler.sendEmptyMessage(getData_FAILURE);
-            Log.i("suiuu","请求失败------------------------------------"+s);
+            Log.i(TAG, "请求失败------------------------------------" + s);
         }
     }
 }

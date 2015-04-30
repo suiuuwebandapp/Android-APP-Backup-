@@ -1,5 +1,6 @@
 package com.minglang.suiuu.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -74,7 +75,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
     private static OSSService ossService = OSSServiceProvider.getService();
     private static OSSBucket bucket = ossService.getOssBucket("suiuu");
     private Dialog dialog;
-    private PopupWindow popwindow;
+    private PopupWindow popupWindow;
     private ListView listView;
     private int record = 0;
     private int picSuccessCount = 0;
@@ -90,30 +91,30 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
     private String areaCid;
     int status = 0;
 
-    private Handler handler = new Handler() {
+    private Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
+        public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case getData_Success:
-                    if(1 == status && picSuccessCount == listPicture.size()) {
+                    if (1 == status && picSuccessCount == listPicture.size()) {
                         dialog.dismiss();
                         Toast.makeText(AskQuestionActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
                         finish();
-                    }else {
+                    } else {
                         dialog.dismiss();
                         Toast.makeText(AskQuestionActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case getData_FAILURE:
-                        dialog.dismiss();
-                        Toast.makeText(AskQuestionActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    Toast.makeText(AskQuestionActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
             }
+            return false;
         }
-
-    };
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +157,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                     areaCid = list.get(position).getcId();
 
                 }
-                popwindow.dismiss();
+                popupWindow.dismiss();
             }
         });
     }
@@ -172,7 +173,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                 @Override
                 public void onSuccess(String objectKey) {
                     picSuccessCount += 1;
-                    if(picSuccessCount == listPicture.size()) {
+                    if (picSuccessCount == listPicture.size()) {
                         handler.sendEmptyMessage(getData_Success);
                     }
 
@@ -210,7 +211,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         tv_show_your_location = (TextView) findViewById(R.id.tv_show_your_location);
         tv_theme_choice = (TextView) findViewById(R.id.tv_theme_choice);
         tv_area_choice = (TextView) findViewById(R.id.tv_area_choice);
-        initPopuWindow();
+        initPopupWindow();
 
     }
 
@@ -266,11 +267,11 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                 return;
             }
         }
-        if("".equals(tv_theme_choice.getText().toString().trim())) {
+        if ("".equals(tv_theme_choice.getText().toString().trim())) {
             Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
             return;
         }
-        if("".equals(tv_area_choice.getText().toString().trim())) {
+        if ("".equals(tv_area_choice.getText().toString().trim())) {
             Toast.makeText(this, R.string.area_is_empty, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -284,25 +285,25 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
             }
         }
         dialog.show();
-        if(record == 1) {
+        if (record == 1) {
             params.addBodyParameter("type", 3 + "");
         } else {
             params.addBodyParameter("type", 2 + "");
         }
         params.addBodyParameter(HttpServicePath.key, str);
         params.addBodyParameter("title", et_search_question.getText().toString().trim());
-        params.addBodyParameter("addrId",areaCid);
-        params.addBodyParameter("circleId",themeCid);
-        params.addBodyParameter("content",et_question_description.getText().toString().trim());
-        params.addBodyParameter("addr",tv_show_your_location.getText().toString().trim());
+        params.addBodyParameter("addrId", areaCid);
+        params.addBodyParameter("circleId", themeCid);
+        params.addBodyParameter("content", et_question_description.getText().toString().trim());
+        params.addBodyParameter("addr", tv_show_your_location.getText().toString().trim());
         List<String> picNameList = new ArrayList<>();
-        for(String string:listPicture) {
+        for (String string : listPicture) {
             updateDate(string);
             String substring = string.substring(string.lastIndexOf("/"));
             picNameList.add(substring);
         }
-        params.addBodyParameter("imgList",JsonUtil.getInstance().toJSON(picNameList));
-        Log.i("suiuu",JsonUtil.getInstance().toJSON(picNameList)+"YYYYYYYY");
+        params.addBodyParameter("imgList", JsonUtil.getInstance().toJSON(picNameList));
+        Log.i("suiuu", JsonUtil.getInstance().toJSON(picNameList) + "YYYYYYYY");
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.createLoop, new CreateLoopCallBack());
         suHttpRequest.setParams(params);
@@ -323,21 +324,21 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         suHttpRequest.requestNetworkData();
     }
 
-    //初始化popuwindow
-    public void initPopuWindow() {
+    //初始化popupWindow
+    public void initPopupWindow() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.pop_select_list, null);
         listView = (ListView) view.findViewById(R.id.pictureSelectList);
 //        listView.setBackgroundResource(R.drawable.listview_background);
         //自适配长、框设置
-        popwindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT,
+        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        popwindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.listview_background));
-        popwindow.setOutsideTouchable(true);
-        popwindow.setAnimationStyle(android.R.style.Animation_Dialog);
-        popwindow.update();
-        popwindow.setTouchable(true);
-        popwindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.listview_background));
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setAnimationStyle(android.R.style.Animation_Dialog);
+        popupWindow.update();
+        popupWindow.setTouchable(true);
+        popupWindow.setFocusable(true);
     }
 
     //访问主题的数据
@@ -369,12 +370,13 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                     }
                     listView.setAdapter(new MyListAdapter(AskQuestionActivity.this, list));
                     themeOrArea = 1;
-                    popwindow.showAsDropDown(tv_theme_choice, 0, 10);
+                    popupWindow.showAsDropDown(tv_theme_choice, 0, 10);
                 } else {
                     Toast.makeText(AskQuestionActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
                 }
             }
         }
+
         @Override
         public void onFailure(HttpException error, String msg) {
             Toast.makeText(AskQuestionActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
@@ -395,12 +397,13 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                     list = loop.getData();
                     listView.setAdapter(new MyListAdapter(AskQuestionActivity.this, list));
                     themeOrArea = 2;
-                    popwindow.showAsDropDown(tv_area_choice, 0, 10);
+                    popupWindow.showAsDropDown(tv_area_choice, 0, 10);
                 } else {
                     Toast.makeText(AskQuestionActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
                 }
             }
         }
+
         @Override
         public void onFailure(HttpException error, String msg) {
             Toast.makeText(AskQuestionActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
@@ -423,10 +426,11 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                 e.printStackTrace();
             }
         }
+
         @Override
         public void onFailure(HttpException e, String s) {
             handler.sendEmptyMessage(getData_FAILURE);
-            Log.i("suiuu","请求失败------------------------------------"+s);
+            Log.i("suiuu", "请求失败------------------------------------" + s);
         }
     }
 }
@@ -457,6 +461,7 @@ class MyListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        @SuppressLint("ViewHolder")
         View view = View.inflate(context, R.layout.adapter_simple_string, null);
         TextView tv_theme = (TextView) view.findViewById(R.id.tv_theme);
         tv_theme.setText(list.get(position).getcName());

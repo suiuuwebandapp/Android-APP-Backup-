@@ -125,11 +125,20 @@ public class HttpServicePath {
     public static String CollectionArticlePath = RootPath + "/attention/add-collection-article";
 
     /**
-     * 首页请求地址
+     * 首页动态请求地址
      * <p/>
      * 请求方式:POST
      * <p/>
      * 请求参数：无
      */
-    public static String MainDynamicPath = RootPath + "attention/get-index-list";
+    public static String MainDynamicPath = RootPath + "/attention/get-index-list";
+
+    /**
+     * 得到详细关注动态数据
+     *
+     * 请求方式:POST
+     *
+     * 请求参数:页码 page(0 得到全部、1—— +∞ 对应页码数)
+     */
+    public static String AllAttentionDynamicPath = RootPath + "/attention/get-user-dynamic";
 }

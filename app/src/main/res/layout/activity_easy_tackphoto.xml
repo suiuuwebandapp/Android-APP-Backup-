@@ -1,93 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/root">
+
     <include
         layout="@layout/common_top2_layout"/>
+
     <ScrollView
         android:id="@+id/sll"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:fillViewport="true">
-    <LinearLayout
-        android:background="@color/backgroundColor"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
 
-        >
-        <EditText
-            android:id="@+id/search_question"
-            android:layout_marginTop="@dimen/layout_12dp"
-            android:background="@color/white"
-            android:hint="@string/image_theme"
+        <LinearLayout
+            android:background="@color/backgroundColor"
             android:layout_width="fill_parent"
-            android:padding="@dimen/layout_8dp"
-            android:textColorHighlight="@color/textColor"
-            android:gravity="left"
-            android:textSize="@dimen/layout_15sp"
-            android:textColor="@color/black"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/layout_20dp"
-            android:layout_marginRight="@dimen/layout_16dp"/>
-        <TextView
-            android:id="@+id/tv_theme_choice"
-            android:layout_marginTop="@dimen/layout_10dp"
-            android:background="@color/white"
-            android:hint="@string/choice_theme"
-            android:layout_width="fill_parent"
-            android:padding="@dimen/layout_8dp"
-            android:textColorHighlight="@color/textColor"
-            android:gravity="left"
-            android:textSize="@dimen/layout_15sp"
-            android:textColor="@color/black"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/layout_16dp"
-            android:layout_marginRight="@dimen/layout_16dp"/>
-        <TextView
-            android:id="@+id/tv_area_choice"
-            android:layout_marginTop="@dimen/layout_10dp"
-            android:background="@color/white"
-            android:hint="@string/choice_area"
-            android:layout_width="fill_parent"
-            android:padding="@dimen/layout_8dp"
-            android:textColorHighlight="@color/textColor"
-            android:gravity="left"
-            android:textSize="@dimen/layout_15sp"
-            android:textColor="@color/black"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/layout_16dp"
-            android:layout_marginRight="@dimen/layout_16dp"/>
+            android:orientation="vertical">
 
-        <com.minglang.suiuu.customview.ListViewForScrollView
-            android:id="@+id/lv_picture_description"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/layout_10dp"
-            android:layout_marginLeft="@dimen/layout_20dp"
-            android:layout_marginRight="@dimen/layout_16dp"
-            android:scrollbars="none"
-            android:divider="@null"
-            android:dividerHeight="@dimen/layout_10dp"
+            <EditText
+                android:id="@+id/search_question"
+                android:layout_marginTop="@dimen/layout_12dp"
+                android:background="@color/white"
+                android:hint="@string/image_theme"
+                android:layout_width="fill_parent"
+                android:padding="@dimen/layout_8dp"
+                android:textColorHighlight="@color/textColor"
+                android:gravity="start"
+                android:textSize="@dimen/layout_15sp"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/layout_20dp"
+                android:layout_marginStart="@dimen/layout_20dp"
+                android:layout_marginRight="@dimen/layout_16dp"
+                android:layout_marginEnd="@dimen/layout_16dp"/>
 
-            />
-        <TextView
-            android:drawableLeft="@drawable/show_your_location"
-            android:id="@+id/tv_show_your_location"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/layout_5dp"
-            android:layout_marginLeft="@dimen/layout_16dp"
-            android:layout_marginRight="@dimen/layout_16dp"
-            android:textColor="@color/textColor"
-            android:text="@string/show_location"
-            android:padding="@dimen/layout_8dp"
-            android:background="@color/white"
-            android:textSize="@dimen/layout_15sp"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="@dimen/layout_30dp"/>
+            <TextView
+                android:id="@+id/tv_theme_choice"
+                android:layout_marginTop="@dimen/layout_10dp"
+                android:background="@color/white"
+                android:hint="@string/choice_theme"
+                android:layout_width="fill_parent"
+                android:padding="@dimen/layout_8dp"
+                android:textColorHighlight="@color/textColor"
+                android:gravity="start"
+                android:textSize="@dimen/layout_15sp"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/layout_16dp"
+                android:layout_marginRight="@dimen/layout_16dp"/>
+
+            <TextView
+                android:id="@+id/tv_area_choice"
+                android:layout_marginTop="@dimen/layout_10dp"
+                android:background="@color/white"
+                android:hint="@string/choice_area"
+                android:layout_width="fill_parent"
+                android:padding="@dimen/layout_8dp"
+                android:textColorHighlight="@color/textColor"
+                android:gravity="start"
+                android:textSize="@dimen/layout_15sp"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/layout_16dp"
+                android:layout_marginRight="@dimen/layout_16dp"/>
+
+            <com.minglang.suiuu.customview.ListViewForScrollView
+                android:id="@+id/lv_picture_description"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_10dp"
+                android:layout_marginLeft="@dimen/layout_20dp"
+                android:layout_marginStart="@dimen/layout_20dp"
+                android:layout_marginRight="@dimen/layout_16dp"
+                android:layout_marginEnd="@dimen/layout_16dp"
+                android:scrollbars="none"
+                android:divider="@null"
+                android:dividerHeight="@dimen/layout_10dp"/>
+
+            <TextView
+                android:drawableLeft="@drawable/show_your_location"
+                android:drawableStart="@drawable/show_your_location"
+                android:id="@+id/tv_show_your_location"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_5dp"
+                android:layout_marginLeft="@dimen/layout_16dp"
+                android:layout_marginRight="@dimen/layout_16dp"
+                android:textColor="@color/textColor"
+                android:text="@string/show_location"
+                android:padding="@dimen/layout_8dp"
+                android:background="@color/white"
+                android:textSize="@dimen/layout_15sp"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="@dimen/layout_30dp"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -32,14 +32,26 @@
                 android:padding="5dp">
 
                 <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/backgroundColor"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="3dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/attentionDynamic"
                         android:id="@+id/textView2"
+                        android:textColor="@color/slider_line_color"
+                        android:textSize="18sp"
+                        android:drawableLeft="@drawable/icon_line"
+                        android:drawableStart="@drawable/icon_line"
+                        android:drawablePadding="3dp"
+                        android:layout_centerVertical="true"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"/>
 
@@ -48,26 +60,38 @@
                         android:layout_height="wrap_content"
                         android:text="@string/more"
                         android:id="@+id/textView3"
+                        android:textColor="@color/slider_line_color"
+                        android:textSize="18sp"
+                        android:drawableLeft="@drawable/icon_more"
+                        android:drawableStart="@drawable/icon_more"
+                        android:drawablePadding="3dp"
+                        android:gravity="center_vertical"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"/>
                 </RelativeLayout>
 
-                <LinearLayout
+                <com.minglang.suiuu.customview.LinearLayoutForListView
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/mainAttentionLayout">
-                </LinearLayout>
+                    android:id="@+id/mainAttentionLayout"/>
 
                 <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/today_star"
+                        android:textColor="@color/slider_line_color"
+                        android:drawableLeft="@drawable/icon_line"
+                        android:drawableStart="@drawable/icon_line"
+                        android:drawablePadding="3dp"
+                        android:textSize="18sp"
                         android:id="@+id/textView4"/>
                 </RelativeLayout>
 
@@ -75,19 +99,27 @@
                     android:id="@+id/mainTodayStarGridView"
                     android:horizontalSpacing="10dp"
                     android:verticalSpacing="10dp"
+                    android:numColumns="2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                 </com.minglang.suiuu.customview.NoScrollBarGridView>
 
                 <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/loopDynamic"
+                        android:textColor="@color/slider_line_color"
+                        android:drawableLeft="@drawable/icon_line"
+                        android:drawableStart="@drawable/icon_line"
+                        android:drawablePadding="3dp"
+                        android:textSize="18sp"
                         android:id="@+id/textView6"/>
                 </RelativeLayout>
 
@@ -95,6 +127,7 @@
                     android:id="@+id/mainLoopDynamicGridView"
                     android:horizontalSpacing="10dp"
                     android:verticalSpacing="10dp"
+                    android:numColumns="2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 

@@ -153,7 +153,6 @@ public class SelectPictureActivity extends Activity {
                         finish();
                     }
                 }else {
-                Log.i("suiuu","有数据了吧dfkdjjjjjjjjjj");
                 Intent intent = new Intent();
                 intent.putStringArrayListExtra("pictureMessage",selectedPicture);
                 setResult(result,intent);

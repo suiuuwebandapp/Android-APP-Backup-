@@ -30,7 +30,7 @@ public class SelectPictureAdapter extends BaseAdapter {
 
     private static final String TAG = SelectPictureAdapter.class.getSimpleName();
 
-    private static int MAX_NUM = 6;
+    private static int MAX_NUM = 9;
 
     private Context context;
 

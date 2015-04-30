@@ -1,9 +1,11 @@
 package com.minglang.suiuu.entity;
 
 /**
+ * 关注动态数据实体类
+ * <p/>
  * Created by Administrator on 2015/4/29.
  */
-public class MainDynamicDataUserDynamic {
+public class MainDynamicDataUser {
 
     public String aImg;
 

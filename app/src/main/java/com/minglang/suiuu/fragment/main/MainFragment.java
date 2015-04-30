@@ -1,32 +1,32 @@
 package com.minglang.suiuu.fragment.main;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.AttentionDynamicAdapter;
+import com.minglang.suiuu.adapter.LoopDynamicAdapter;
 import com.minglang.suiuu.adapter.TodayStarAdapter;
-import com.minglang.suiuu.customview.CircleImageView;
+import com.minglang.suiuu.customview.LinearLayoutForListView;
 import com.minglang.suiuu.customview.NoScrollBarGridView;
 import com.minglang.suiuu.entity.MainDynamic;
 import com.minglang.suiuu.entity.MainDynamicData;
-import com.minglang.suiuu.entity.MainDynamicDataCircleDynamic;
+import com.minglang.suiuu.entity.MainDynamicDataLoop;
 import com.minglang.suiuu.entity.MainDynamicDataRecommendUser;
-import com.minglang.suiuu.entity.MainDynamicDataUserDynamic;
+import com.minglang.suiuu.entity.MainDynamicDataUser;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.ScreenUtils;
@@ -34,6 +34,7 @@ import com.minglang.suiuu.utils.SuHttpRequest;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.srain.cube.util.LocalDisplay;
@@ -78,12 +79,18 @@ public class MainFragment extends Fragment {
     /**
      * 关注动态Layout
      */
-    private LinearLayout attentionDynamicLayout;
+    private LinearLayoutForListView attentionDynamicLayout;
 
     /**
-     * GridView
+     * 圈子动态GridView
      */
     private NoScrollBarGridView loopDynamicGridView;
+    /**
+     * 圈子动态统一数据集合
+     */
+    private List<MainDynamicDataLoop> listLoopDynamic = new ArrayList<>();
+
+    private ProgressDialog progressDialog;
 
     @SuppressLint("InflateParams")
     @Override
@@ -104,79 +111,36 @@ public class MainFragment extends Fragment {
     }
 
     /**
-     * 添加关注动态条目
+     * 数据绑定到View
      *
-     * @param list 关注动态数据
+     * @param str Json字符串
      */
-    private void addAttentionDynamicView(List<MainDynamicDataUserDynamic> list) {
-        if (list == null) {
-            return;
+    private void bindData2View(String str) {
+        try {
+            mainDynamic = JsonUtil.getInstance().fromJSON(MainDynamic.class, str);
+            MainDynamicData data = mainDynamic.getData();
+
+            listLoopDynamic = data.getCircleDynamic();
+            LoopDynamicAdapter loopDynamicAdapter = new LoopDynamicAdapter(getActivity(), listLoopDynamic);
+            loopDynamicAdapter.setScrrenParams(screenWidth, screenHeight);
+            loopDynamicGridView.setAdapter(loopDynamicAdapter);
+
+            //关注动态
+            List<MainDynamicDataUser> mainDynamicDataUserDynamic = data.getUserDynamic();
+            AttentionDynamicAdapter attentionDynamicAdapter = new AttentionDynamicAdapter(getActivity(),
+                    mainDynamicDataUserDynamic);
+            attentionDynamicLayout.setAdapter(attentionDynamicAdapter);
+
+            //今日之星
+            mainDynamicDataRecommendUserList = data.getRecommendUser();
+            TodayStarAdapter todayStarAdapter = new TodayStarAdapter(getActivity(), mainDynamicDataRecommendUserList);
+            todayStarAdapter.setScreenParams(screenWidth, screenHeight);
+            todayStarGridView.setAdapter(todayStarAdapter);
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            Toast.makeText(getActivity(), "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
-
-        for (int i = 0; i < list.size(); i++) {
-            View view = AttentionDynamicData2View(list.get(i));
-            view.setId(10 + i);
-            attentionDynamicLayout.addView(view);
-        }
-
-    }
-
-    /**
-     * 加载关注数据到View
-     *
-     * @param mainDynamicDataUserDynamic 单条关注数据
-     * @return 加载完数据后的View
-     */
-    private View AttentionDynamicData2View(MainDynamicDataUserDynamic mainDynamicDataUserDynamic) {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.item_attention_dynamic, null);
-
-        ImageView mainView = (ImageView) view.findViewById(R.id.item_attention_dynamic_image);
-        String imagePath = mainDynamicDataUserDynamic.getaImg();
-        if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, mainView);
-        }
-
-        CircleImageView headImage = (CircleImageView) view.findViewById(R.id.item_attention_dynamic_head);
-        String headImagePath = mainDynamicDataUserDynamic.getHeadImg();
-        if (!TextUtils.isEmpty(headImagePath)) {
-            imageLoader.displayImage(headImagePath, headImage);
-        }
-
-        TextView title = (TextView) view.findViewById(R.id.item_attention_dynamic_title);
-        String strTitle = mainDynamicDataUserDynamic.getaTitle();
-        if (!TextUtils.isEmpty(strTitle)) {
-            title.setText(strTitle);
-        } else {
-            title.setText("");
-        }
-
-        TextView content = (TextView) view.findViewById(R.id.item_attention_dynamic_content);
-        String strContent = mainDynamicDataUserDynamic.getArticleId();
-        if (!TextUtils.isEmpty(strContent)) {
-            content.setText(strContent);
-        } else {
-            content.setText("");
-        }
-
-        return view;
-    }
-
-    /**
-     * 添加今日之星条目
-     *
-     * @param list 今日之星数据
-     */
-    private void addTodayStarView(List<MainDynamicDataRecommendUser> list) {
-
-    }
-
-    /**
-     * 添加圈子动态条目
-     *
-     * @param dynamic 圈子动态数据
-     */
-    private void addLoopDynamaicView(MainDynamicDataCircleDynamic dynamic) {
-
     }
 
     /**
@@ -186,6 +150,10 @@ public class MainFragment extends Fragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.MainDynamicPath, new MainDynamicRequestCallBack());
         httpRequest.requestNetworkData();
+
+        if (progressDialog != null) {
+            progressDialog.show();
+        }
     }
 
     /**
@@ -201,11 +169,29 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                getMainDynamic4Service();
+
+                SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                        HttpServicePath.MainDynamicPath, new MainDynamic2RequestCallBack());
+                httpRequest.requestNetworkData();
+            }
+        });
+
+        attentionDynamicLayout.setOnItemClickListener(new LinearLayoutForListView.OnItemClickListener() {
+            @Override
+            public void onItemClicked(View v, Object obj, int position) {
+
             }
         });
 
         todayStarGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MainDynamicDataRecommendUser user = mainDynamicDataRecommendUserList.get(position);
+                Log.i(TAG, user.getNumb());
+            }
+        });
+
+        loopDynamicGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -222,6 +208,12 @@ public class MainFragment extends Fragment {
         screenWidth = screenUtils.getScreenWidth();
         screenHeight = screenUtils.getScreenHeight();
 
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.main_fragment_head_frame);
+
         header = new MaterialHeader(getActivity());
         int[] colors = getResources().getIntArray(R.array.google_colors);
         header.setColorSchemeColors(colors);
@@ -229,7 +221,6 @@ public class MainFragment extends Fragment {
         header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
         header.setPtrFrameLayout(mPtrFrame);
 
-        mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.main_fragment_head_frame);
         scrollView = (ScrollView) rootView.findViewById(R.id.main_fragment_scrollView);
 
         mPtrFrame.setHeaderView(header);
@@ -246,7 +237,7 @@ public class MainFragment extends Fragment {
         // default is true
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
-        attentionDynamicLayout = (LinearLayout) rootView.findViewById(R.id.mainAttentionLayout);
+        attentionDynamicLayout = (LinearLayoutForListView) rootView.findViewById(R.id.mainAttentionLayout);
 
         todayStarGridView = (NoScrollBarGridView) rootView.findViewById(R.id.mainTodayStarGridView);
 
@@ -260,31 +251,43 @@ public class MainFragment extends Fragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            String str = stringResponseInfo.result;
-            try {
-                mainDynamic = JsonUtil.getInstance().fromJSON(MainDynamic.class, str);
-                MainDynamicData data = mainDynamic.getData();
 
-                //圈子动态
-                MainDynamicDataCircleDynamic mainDynamicDataCircleDynamic = data.getCircleDynamic();
-                //关注动态
-                List<MainDynamicDataUserDynamic> mainDynamicDataUserDynamicList = data.getUserDynamic();
-                addAttentionDynamicView(mainDynamicDataUserDynamicList);
-                //今日之星
-                mainDynamicDataRecommendUserList = data.getRecommendUser();
-
-                TodayStarAdapter todayStarAdapter = new TodayStarAdapter(getActivity(), mainDynamicDataRecommendUserList);
-                todayStarAdapter.setScreenParams(screenWidth, screenHeight);
-                todayStarGridView.setAdapter(todayStarAdapter);
-
-            } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
             }
+
+            String str = stringResponseInfo.result;
+            bindData2View(str);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
+
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+
             Log.e(TAG, s);
+            Toast.makeText(getActivity(), "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class MainDynamic2RequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            String str = stringResponseInfo.result;
+            attentionDynamicLayout.removeAllViews();
+            bindData2View(str);
+            mPtrFrame.refreshComplete();
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            mPtrFrame.refreshComplete();
+
+            Log.e(TAG, s);
+            Toast.makeText(getActivity(), "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
 
