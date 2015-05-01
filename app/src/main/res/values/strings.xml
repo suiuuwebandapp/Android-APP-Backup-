@@ -106,6 +106,7 @@
 
     <string name="load_wait">正在加载，请稍候&#8230;</string>
     <string name="login_wait">正在登陆，请稍候&#8230;</string>
+    <string name="register_wait">正在注册，请稍候&#8230;</string>
     <string name="choice_area">请选择地区</string>
     <string name="choice_theme">请选择主题</string>
     <string name="theme_is_empty">主题不能为空</string>
@@ -126,6 +127,12 @@
     <string name="UnknownName">未知</string>
     <string name="noInformation">暂无信息</string>
 
+    <string name="please_input_email_or_phone_number">请输入邮箱或手机号</string>
+    <string name="please_input_password">请输入密码</string>
+    <string name="obtain_captcha">获取验证码</string>
+    <string name="please_input_number">请输入手机号</string>
+    <string name="please_input_confirm_password">请输入确认密码</string>
+    <string name="please_input_obtain_captcha">请输入验证码</string>
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>

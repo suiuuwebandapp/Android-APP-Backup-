@@ -20,6 +20,9 @@ android {
     packagingOptions {
         exclude 'AndroidManifest.xml'
     }
+    sourceSets {
+        main { jniLibs.srcDirs = ['libs'] }
+    }
 }
 
 dependencies {

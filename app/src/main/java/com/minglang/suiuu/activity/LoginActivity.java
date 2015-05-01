@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -18,10 +17,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.easemob.EMCallBack;
@@ -42,6 +43,8 @@ import com.minglang.suiuu.chat.chat.Constant;
 import com.minglang.suiuu.chat.chat.DemoApplication;
 import com.minglang.suiuu.chat.dao.UserDao;
 import com.minglang.suiuu.chat.utils.CommonUtils;
+import com.minglang.suiuu.entity.AreaCode;
+import com.minglang.suiuu.entity.AreaCodeData;
 import com.minglang.suiuu.entity.QQInfo;
 import com.minglang.suiuu.entity.RequestData;
 import com.minglang.suiuu.entity.UserBack;
@@ -67,6 +70,7 @@ import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 import com.umeng.analytics.MobclickAgent;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.NoSuchAlgorithmException;
@@ -108,17 +112,59 @@ public class LoginActivity extends Activity {
      * ***************************分割线***************************
      */
 
-    //注册PopupWindow
+    //注册PopupWindow1
 
-    private View popupRegisterView;
+    private View popupRegisterView1;
 
-    private PopupWindow popupWindowRegister;
+    private PopupWindow popupWindowRegister1;
 
-    private EditText popupRegisterUserName;
+    private Spinner popupRegister1Spinner;
 
-    private EditText popupRegisterPassword1;
+    private EditText popupRegister1PhoneNumber;
 
-    private Button popupRegisterBtn;
+    private Button popupRegister1ObtainCaptcha;
+
+    /**
+     * **************************分割线***************************
+     */
+
+    //注册PopupWindow2
+
+    private View popupRegisterView2;
+
+    private PopupWindow popupWindowRegister2;
+
+    private EditText editCaptcha;
+
+    private EditText editPassWord;
+
+    private EditText editConfirmPassWord;
+
+    private Button registerButton;
+
+    /**
+     * **************************分割线***************************
+     */
+
+    /**
+     * 国际电话区号数据集合
+     */
+    private List<AreaCodeData> areaCodeDataList;
+
+    /**
+     * 国家名称
+     */
+    private String areaName;
+
+    /**
+     * 国际电话区号
+     */
+    private String internationalAreaCode;
+
+    /**
+     * 手机号
+     */
+    private String phoneNumber;
 
     /**
      * ***************************分割线***************************
@@ -135,14 +181,23 @@ public class LoginActivity extends Activity {
     private String suiuuLoginPassword;
 
     /**
-     * 注册用户名
+     * 验证码
      */
-    private String suiuuRegisterUserName;
+    private String VerificationCode;
 
     /**
      * 注册密码
      */
-    private String suiuuRegisterPassword;
+    private String registerPassword1;
+
+    /**
+     * 确认密码
+     */
+    private String registerPassword2;
+
+    /**
+     * ***************************分割线***************************
+     */
 
     //判断是否登录
     private boolean autoLogin = false;
@@ -192,11 +247,6 @@ public class LoginActivity extends Activity {
     private static Tencent tencent;
 
     /**
-     * QQ 用户信息类
-     */
-    private com.tencent.connect.UserInfo qqUserInfo;
-
-    /**
      * 自定义QQ用户信息类
      */
     private QQInfo qqInfo;
@@ -206,7 +256,12 @@ public class LoginActivity extends Activity {
      */
     private String type;
 
+    /**
+     * 登陆进度框
+     */
     private ProgressDialog loginDialog;
+
+    private ProgressDialog registerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,7 +279,37 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         initView();
         initThirdParty();
+        getInternationalAreaCode();
         ViewAction();
+    }
+
+    /**
+     * 获取国际电话区号
+     */
+    private void getInternationalAreaCode() {
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.GetInternationalAreaCode, new AreaCodeRequestCallBack());
+        httpRequest.requestNetworkData();
+    }
+
+    private class AreaCodeRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            String str = stringResponseInfo.result;
+            try {
+                AreaCode areaCode = JsonUtil.getInstance().fromJSON(AreaCode.class, str);
+                areaCodeDataList = areaCode.getData();
+
+            } catch (Exception e) {
+                Log.e(TAG, "国际电话区号数据解析异常:" + e.getMessage());
+            }
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            Log.e(TAG, s);
+        }
     }
 
     /**
@@ -243,8 +328,7 @@ public class LoginActivity extends Activity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popupWindowRegister.showAtLocation(popupRegisterView,
-                        Gravity.CENTER_HORIZONTAL, 0, 0);
+                popupWindowRegister1.showAtLocation(popupRegisterView1, Gravity.CENTER_HORIZONTAL, 0, 0);
             }
         });
 
@@ -273,31 +357,48 @@ public class LoginActivity extends Activity {
             }
         });
 
-        popupRegisterBtn.setOnClickListener(new OnClickListener() {
+        popupRegister1Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                AreaCodeData data = areaCodeDataList.get(position);
+                areaName = data.getCname();
+                internationalAreaCode = data.getAreaCode();
+                Toast.makeText(LoginActivity.this, "您已选择" + areaName + ":" + internationalAreaCode, Toast.LENGTH_LONG).show();
+            }
 
             @Override
-            public void onClick(View v) {
-                if (!CommonUtils.isNetWorkConnected(LoginActivity.this)) {
-                    Toast.makeText(LoginActivity.this, R.string.network_isnot_available, Toast.LENGTH_SHORT).show();
-                    return;
-                }
+            public void onNothingSelected(AdapterView<?> parent) {
 
-                suiuuRegisterUserName = popupRegisterUserName.getText().toString().trim();
-                suiuuRegisterPassword = popupRegisterPassword1.getText().toString().trim();
-
-                if (TextUtils.isEmpty(suiuuRegisterUserName)) {
-                    Toast.makeText(LoginActivity.this,
-                            getResources().getString(R.string.User_name_cannot_be_empty), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (TextUtils.isEmpty(suiuuRegisterPassword)) {
-                    Toast.makeText(LoginActivity.this,
-                            getResources().getString(R.string.Password_cannot_be_empty), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                register4Suiuu();
             }
         });
+
+        popupRegister1ObtainCaptcha.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                phoneNumber = popupRegister1PhoneNumber.getText().toString().trim();
+                setPhoneNumber4Service();
+            }
+        });
+
+        registerButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                VerificationCode = editCaptcha.getText().toString().trim();
+                registerPassword1 = editPassWord.getText().toString().trim();
+                registerPassword2 = editConfirmPassWord.getText().toString().trim();
+                if (TextUtils.isEmpty(VerificationCode)) {
+                    Toast.makeText(LoginActivity.this, "验证码不能为空！", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(registerPassword1)) {
+                    Toast.makeText(LoginActivity.this, "密码不能为空！", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(registerPassword2)) {
+                    Toast.makeText(LoginActivity.this, "确认密码密码不能为空！", Toast.LENGTH_SHORT).show();
+                } else {
+                    register4Suiuu();
+                }
+            }
+        });
+
 
         microBlog_login.setOnClickListener(new OnClickListener() {
             @Override
@@ -326,17 +427,72 @@ public class LoginActivity extends Activity {
 
     }
 
-    //TODO 注册还未完成
+    /**
+     * 把国际电话区号和手机号发送到服务器
+     */
+    private void setPhoneNumber4Service() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("areaCode", internationalAreaCode);
+        params.addBodyParameter("phone", phoneNumber);
+
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.SendInternationalAreaCodeAndPhoneNumber, new PhoneNumberRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
+    }
+
+    /**
+     * 发送手机号的网络请求回调接口
+     */
+    private class PhoneNumberRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            String str = stringResponseInfo.result;
+            try {
+                JSONObject object = new JSONObject(str);
+                String status = object.getString("status");
+                JSONObject data = object.getJSONObject("data");
+                String dataInfo = data.getString("0");
+                if (status.equals("1")) {
+                    popupWindowRegister1.dismiss();
+                    popupWindowRegister2.showAtLocation(popupRegisterView1, Gravity.CENTER_HORIZONTAL, 0, 0);
+                    Toast.makeText(LoginActivity.this, "发送成功！", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.e(TAG, dataInfo);
+                    Toast.makeText(LoginActivity.this, "发送失败，请检查手机号码是否填写正确！", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(LoginActivity.this, "发送失败，请重试！", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            Log.e(TAG, s);
+            Toast.makeText(LoginActivity.this, "发送失败，请重试！", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     /**
      * 注册方法
      */
     private void register4Suiuu() {
 
+        if (registerDialog != null) {
+            registerDialog.show();
+        }
+
         RequestParams params = new RequestParams();
+        params.addBodyParameter("phone", phoneNumber);
+        params.addBodyParameter("password", registerPassword1);
+        params.addBodyParameter("cPassword", registerPassword2);
+        params.addBodyParameter("nick", phoneNumber);
+        params.addBodyParameter("validateCode", VerificationCode);
 
-
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST, "", new RegisterRequestCallback());
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.Register4SuiuuPath, new RegisterRequestCallback());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
@@ -349,11 +505,34 @@ public class LoginActivity extends Activity {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
 
+            if (registerDialog.isShowing()) {
+                registerDialog.dismiss();
+            }
+
+            String str = stringResponseInfo.result;
+            try {
+                UserBack user = JsonUtil.getInstance().fromJSON(UserBack.class, str);
+                if (user.getStatus().equals("1")) {
+                    popupWindowRegister2.dismiss();
+                    SuiuuInformation.WriteVerification(LoginActivity.this, user.getMessage());
+                    SuiuuInformation.WriteUserSign(LoginActivity.this, user.getData().getUserSign());
+                    huanXinUsername = user.getData().getUserSign();
+                    huanXinLogin();
+                } else {
+                    Toast.makeText(LoginActivity.this, "注册失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "注册返回的数据解析异常信息:" + e.getMessage());
+            }
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-
+            if (registerDialog.isShowing()) {
+                registerDialog.dismiss();
+            }
+            Log.e(TAG, "注册网络请求失败的异常信息:" + s);
+            Toast.makeText(LoginActivity.this, "注册失败，请检查网络后再试！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -392,28 +571,25 @@ public class LoginActivity extends Activity {
             }
 
             String str = responseInfo.result;
-            Log.i(TAG, str);
             try {
-                UserBack userBack = JsonUtil.getInstance().fromJSON(UserBack.class, str);
-                Log.i(TAG, userBack.toString());
-                if (userBack != null) {
-                    if (userBack.getStatus().equals("1")) {
-                        SuiuuInformation.WriteVerification(LoginActivity.this, userBack.getMessage());
-                        huanXinUsername = userBack.getData().getUserSign();
-                        huanXinLogin();
-                    } else {
-                        Toast.makeText(LoginActivity.this, "获取数据失败，请稍候再试！", Toast.LENGTH_SHORT).show();
-                    }
+                UserBack user = JsonUtil.getInstance().fromJSON(UserBack.class, str);
+                if (user.getStatus().equals("1")) {
+                    SuiuuInformation.WriteVerification(LoginActivity.this, user.getMessage());
+                    SuiuuInformation.WriteUserSign(LoginActivity.this, user.getData().getUserSign());
+                    huanXinUsername = user.getData().getUserSign();
+                    huanXinLogin();
+                } else {
+                    Toast.makeText(LoginActivity.this, "登录失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG, "登陆返回的数据解析异常信息:" + e.getMessage());
                 Toast.makeText(LoginActivity.this, "获取数据失败，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onFailure(HttpException error, String msg) {
-            Log.e(TAG, msg);
+            Log.e(TAG, "登录网络请求失败返回的异常信息:" + msg);
 
             if (loginDialog.isShowing()) {
                 loginDialog.dismiss();
@@ -630,10 +806,38 @@ public class LoginActivity extends Activity {
         }
     }
 
-    @SuppressWarnings("deprecation")
-    @SuppressLint("InflateParams")
     private void initView() {
 
+        loginDialog = new ProgressDialog(this);
+        loginDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        loginDialog.setCanceledOnTouchOutside(false);
+        loginDialog.setCancelable(true);
+        loginDialog.setMessage(getResources().getString(R.string.login_wait));
+
+        registerDialog = new ProgressDialog(this);
+        registerDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        registerDialog.setCanceledOnTouchOutside(false);
+        registerDialog.setCancelable(true);
+        registerDialog.setMessage(getResources().getString(R.string.register_wait));
+
+        loginBtn = (Button) findViewById(R.id.loginBtn);
+        registerBtn = (Button) findViewById(R.id.registerBtn);
+
+        initPopupWindow();
+
+        microBlog_login = (ImageView) findViewById(R.id.microBlog_login);
+        qq_login = (ImageView) findViewById(R.id.qq_login);
+        weChat_login = (ImageView) findViewById(R.id.weChat_login);
+
+        microBlog_login.setEnabled(false);
+        qq_login.setEnabled(false);
+        weChat_login.setEnabled(false);
+    }
+
+    /**
+     * 初始化PopupWindow
+     */
+    private void initPopupWindow() {
         DisplayMetrics dm = getResources().getDisplayMetrics();
 
         float density = dm.density;//屏幕密度（像素比例：0.75, 1.0, 1.5, 2.0）
@@ -643,19 +847,6 @@ public class LoginActivity extends Activity {
 
         Log.i(TAG, "像素比例:" + String.valueOf(density));
         Log.i(TAG, "每寸像素:" + String.valueOf(densityDPI));
-
-        loginDialog = new ProgressDialog(this);
-        loginDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        loginDialog.setCanceledOnTouchOutside(false);
-        loginDialog.setCancelable(true);
-        loginDialog.setMessage(getResources().getString(R.string.login_wait));
-
-        loginBtn = (Button) findViewById(R.id.loginBtn);
-        registerBtn = (Button) findViewById(R.id.registerBtn);
-
-        /**
-         * ***************************分割线***************************
-         */
 
         popupLoginRootView = LayoutInflater.from(this).inflate(R.layout.popup_login, null);
 
@@ -675,24 +866,38 @@ public class LoginActivity extends Activity {
          * ***************************分割线***************************
          */
 
-        popupRegisterView = LayoutInflater.from(this).inflate(R.layout.popup_register, null);
+        popupRegisterView1 = LayoutInflater.from(this).inflate(R.layout.popup_register1, null);
 
-        popupRegisterUserName = (EditText) popupRegisterView.findViewById(R.id.registerUserInfo);
-        popupRegisterPassword1 = (EditText) popupRegisterView.findViewById(R.id.registerPassword1);
+        popupRegister1Spinner = (Spinner) popupRegisterView1.findViewById(R.id.popup_register1_international_area_code);
+        popupRegister1PhoneNumber = (EditText) popupRegisterView1.findViewById(R.id.popup_register1_phone_number);
+        popupRegister1ObtainCaptcha = (Button) popupRegisterView1.findViewById(R.id.popup_register1_button);
 
-        popupRegisterBtn = (Button) popupRegisterView.findViewById(R.id.registerBtn);
+        ViewGroup.LayoutParams ObtainCaptchaParams = popupRegister1ObtainCaptcha.getLayoutParams();
+        ObtainCaptchaParams.width = screenWidth / 3;
+        popupRegister1ObtainCaptcha.setLayoutParams(ObtainCaptchaParams);
 
-        ViewGroup.LayoutParams registerParams = popupRegisterBtn.getLayoutParams();
-        registerParams.width = screenWidth / 3;
-        popupRegisterBtn.setLayoutParams(registerParams);
-
-        popupWindowRegister = new PopupWindow(popupRegisterView, ViewGroup.LayoutParams.MATCH_PARENT,
+        popupWindowRegister1 = new PopupWindow(popupRegisterView1, ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT, true);
-        popupWindowRegister.setBackgroundDrawable(new BitmapDrawable());
+        popupWindowRegister1.setBackgroundDrawable(new BitmapDrawable());
 
-        microBlog_login = (ImageView) findViewById(R.id.microBlog_login);
-        qq_login = (ImageView) findViewById(R.id.qq_login);
-        weChat_login = (ImageView) findViewById(R.id.weChat_login);
+        /**
+         * ***************************分割线***************************
+         */
+
+        popupRegisterView2 = LayoutInflater.from(this).inflate(R.layout.popup_register2, null);
+
+        editCaptcha = (EditText) popupRegisterView2.findViewById(R.id.popup_register2_captcha);
+        editPassWord = (EditText) popupRegisterView2.findViewById(R.id.popup_register_password);
+        editConfirmPassWord = (EditText) popupRegisterView2.findViewById(R.id.popup_register_confirm_password);
+        registerButton = (Button) popupRegisterView2.findViewById(R.id.popup_register_button);
+
+        ViewGroup.LayoutParams registerParams = registerButton.getLayoutParams();
+        registerParams.width = screenWidth / 3;
+        registerButton.setLayoutParams(registerParams);
+
+        popupWindowRegister2 = new PopupWindow(popupRegisterView2, ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT, true);
+        popupWindowRegister2.setBackgroundDrawable(new BitmapDrawable());
     }
 
     @Override
@@ -706,8 +911,10 @@ public class LoginActivity extends Activity {
 
         if (popupWindowLogin.isShowing()) {
             popupWindowLogin.dismiss();
-        } else if (popupWindowRegister.isShowing()) {
-            popupWindowRegister.dismiss();
+        } else if (popupWindowRegister1.isShowing()) {
+            popupWindowRegister1.dismiss();
+        } else if (popupWindowRegister2.isShowing()) {
+            popupWindowRegister2.dismiss();
         } else {
             super.onBackPressed();
         }
@@ -742,11 +949,6 @@ public class LoginActivity extends Activity {
      * 微博用户名
      */
     private String WeiBoUserName;
-
-    /**
-     * 微博头像地址
-     */
-    private String WeiBoImagePath;
 
     /**
      * 性别
@@ -815,7 +1017,10 @@ public class LoginActivity extends Activity {
 
             WeiBoUserID = user.id;
             WeiBoUserName = user.screen_name;
-            WeiBoImagePath = user.avatar_large;
+            /**
+             微博头像地址
+             */
+            String weiBoImagePath = user.avatar_large;
             WeiBoGender = user.gender;
 
             SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
@@ -839,7 +1044,7 @@ public class LoginActivity extends Activity {
             params.addBodyParameter("openId", WeiBoUserID);
             params.addBodyParameter("nickname", WeiBoUserName);
             params.addBodyParameter("sex", code);
-            params.addBodyParameter("headImg", WeiBoImagePath);
+            params.addBodyParameter("headImg", weiBoImagePath);
             params.addBodyParameter("type", type);
 
             String sign = null;
@@ -852,10 +1057,10 @@ public class LoginActivity extends Activity {
 
 
             Log.i(TAG, "openID:" + WeiBoUserID + ",nickName:" + WeiBoUserName + ",sex:" + code +
-                    ",headImage:" + WeiBoImagePath + ",type:" + type + ",sign:" + sign);
+                    ",headImage:" + weiBoImagePath + ",type:" + type + ",sign:" + sign);
 
             SuiuuInformation.WriteInformation(LoginActivity.this, new RequestData(WeiBoUserID, WeiBoUserName,
-                    code, WeiBoImagePath, type));
+                    code, weiBoImagePath, type));
 
             httpRequest.setParams(params);
             httpRequest.requestNetworkData();
@@ -984,7 +1189,10 @@ public class LoginActivity extends Activity {
 
                 }
             };
-            qqUserInfo = new com.tencent.connect.UserInfo(LoginActivity.this, tencent.getQQToken());
+            /**
+             QQ 用户信息类
+             */
+            com.tencent.connect.UserInfo qqUserInfo = new com.tencent.connect.UserInfo(LoginActivity.this, tencent.getQQToken());
             qqUserInfo.getUserInfo(iUiListener);
         }
     }
@@ -1075,13 +1283,12 @@ public class LoginActivity extends Activity {
             }
 
             String str = responseInfo.result;
-            Log.i(TAG, str);
             UserBack userBack = JsonUtil.getInstance().fromJSON(UserBack.class, str);
 
             if (userBack != null) {
                 if (userBack.status.equals("1")) {
                     SuiuuInformation.WriteVerification(LoginActivity.this, userBack.getMessage());
-
+                    SuiuuInformation.WriteUserSign(LoginActivity.this, userBack.getData().getUserSign());
                     huanXinUsername = userBack.getData().getUserSign();
                     huanXinLogin();
                 } else {
@@ -1123,7 +1330,7 @@ public class LoginActivity extends Activity {
             if (userBack != null) {
                 if (userBack.status.equals("1")) {
                     SuiuuInformation.WriteVerification(LoginActivity.this, userBack.getMessage());
-
+                    SuiuuInformation.WriteUserSign(LoginActivity.this, userBack.getData().getUserSign());
                     huanXinUsername = userBack.getData().getUserSign();
                     huanXinLogin();
                 } else {

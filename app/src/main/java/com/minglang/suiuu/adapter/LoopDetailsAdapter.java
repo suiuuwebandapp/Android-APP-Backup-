@@ -60,6 +60,8 @@ public class LoopDetailsAdapter extends BaseAdapter {
                 .showImageForEmptyUri(R.drawable.default_head_image2).showImageOnFail(R.drawable.default_head_image2)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        Log.i(TAG, String.valueOf(list.size()));
     }
 
     public void setScreenParams(int screenWidth, int screenHeight) {
@@ -110,7 +112,6 @@ public class LoopDetailsAdapter extends BaseAdapter {
 //        mainImageView.setBackgroundDrawable(new BitmapDrawable(bitmap));
         //加载主图片
         String imagePath = loopDetailsDataList.getaImg();
-        Log.i(TAG, "imagePath:" + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
             loader.displayImage(url.trim(), mainImageView, displayImageOptions1);
         } else {
@@ -150,8 +151,6 @@ public class LoopDetailsAdapter extends BaseAdapter {
 
         int itemParams = screenWidth / 2 - Utils.newInstance(context).dip2px(10);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemParams, itemParams);
-
-        Log.i(TAG, "*********************" + itemParams);
 
         convertView = holder.getConvertView();
         convertView.setLayoutParams(params);

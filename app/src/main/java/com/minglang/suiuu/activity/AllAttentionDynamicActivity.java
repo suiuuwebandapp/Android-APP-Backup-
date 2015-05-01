@@ -1,9 +1,9 @@
 package com.minglang.suiuu.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -39,7 +39,7 @@ import in.srain.cube.views.ptr.header.MaterialHeader;
 /**
  * 查看更多关注页面
  */
-public class AllAttentionDynamicActivity extends ActionBarActivity {
+public class AllAttentionDynamicActivity extends Activity {
 
     private static final String TAG = AllAttentionDynamicActivity.class.getSimpleName();
 
@@ -104,7 +104,7 @@ public class AllAttentionDynamicActivity extends ActionBarActivity {
                 params.addBodyParameter("page", String.valueOf(page));
 
                 SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                        HttpServicePath.AllAttentionDynamicPath, new AllAttentionDynamic3RequestCallBack());
+                        HttpServicePath.AllAttentionDynamicPath, new AllAttentionDynamic2RequestCallBack());
                 httpRequest.setParams(params);
                 httpRequest.requestNetworkData();
             }
@@ -154,7 +154,7 @@ public class AllAttentionDynamicActivity extends ActionBarActivity {
         params.addBodyParameter("page", String.valueOf(page));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.AllAttentionDynamicPath, new AllAttentionDynamic2RequestCallBack());
+                HttpServicePath.AllAttentionDynamicPath, new AllAttentionDynamicRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
@@ -208,6 +208,8 @@ public class AllAttentionDynamicActivity extends ActionBarActivity {
                 dialog.dismiss();
             }
 
+            mPtrFrame.refreshComplete();
+
             String str = stringResponseInfo.result;
             setData2View(str);
         }
@@ -219,33 +221,14 @@ public class AllAttentionDynamicActivity extends ActionBarActivity {
                 dialog.dismiss();
             }
 
+            mPtrFrame.refreshComplete();
+
             Log.e(TAG, s);
             Toast.makeText(AllAttentionDynamicActivity.this, "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
 
     private class AllAttentionDynamic2RequestCallBack extends RequestCallBack<String> {
-
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-
-            mPtrFrame.refreshComplete();
-
-            String str = stringResponseInfo.result;
-            setData2View(str);
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-
-            mPtrFrame.refreshComplete();
-
-            Log.e(TAG, s);
-            Toast.makeText(AllAttentionDynamicActivity.this, "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private class AllAttentionDynamic3RequestCallBack extends RequestCallBack<String> {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {

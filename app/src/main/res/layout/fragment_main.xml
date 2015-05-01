@@ -59,7 +59,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/more"
-                        android:id="@+id/textView3"
+                        android:id="@+id/main_fragment_more"
                         android:textColor="@color/slider_line_color"
                         android:textSize="18sp"
                         android:drawableLeft="@drawable/icon_more"

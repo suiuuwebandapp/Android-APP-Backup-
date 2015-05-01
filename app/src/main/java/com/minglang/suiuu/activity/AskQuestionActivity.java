@@ -61,6 +61,9 @@ import java.util.List;
  */
 
 public class AskQuestionActivity extends Activity implements View.OnClickListener {
+
+    private static final String TAG = AskQuestionActivity.class.getSimpleName();
+
     private GridView gv_show_picture;
     private ArrayList<String> listPicture;
     //返回按钮
@@ -122,10 +125,11 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         setContentView(R.layout.activity_ask_question);
         record = getIntent().getIntExtra("record", 0);
         initView();
-        if (record == 1) {
-            et_search_question.setHint(R.string.image_theme);
-            et_question_description.setHint(R.string.activity_description);
-        }
+
+        ViewAction();
+    }
+
+    private void ViewAction() {
         gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture));
         tv_top_right.setOnClickListener(this);
         iv_top_back.setOnClickListener(this);
@@ -181,13 +185,13 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
 
                 @Override
                 public void onProgress(String objectKey, int byteCount, int totalSize) {
-                    Log.i("suiuu", "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
+                    Log.i(TAG, "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
                 }
 
                 @Override
                 public void onFailure(String objectKey, OSSException ossException) {
                     handler.sendEmptyMessage(getData_FAILURE);
-                    Log.i("suiuu", "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
+                    Log.i(TAG, "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
                     ossException.printStackTrace();
                     ossException.getException().printStackTrace();
                 }
@@ -197,12 +201,18 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         }
     }
 
+    /**
+     * 初始化方法
+     */
     public void initView() {
+
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progress_bar);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+
         listPicture = new ArrayList<>();
+
         tv_top_right = (TextView) findViewById(R.id.tv_top_right);
         gv_show_picture = (GridView) findViewById(R.id.gv_show_picture);
         iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
@@ -211,7 +221,13 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         tv_show_your_location = (TextView) findViewById(R.id.tv_show_your_location);
         tv_theme_choice = (TextView) findViewById(R.id.tv_theme_choice);
         tv_area_choice = (TextView) findViewById(R.id.tv_area_choice);
+
         initPopupWindow();
+
+        if (record == 1) {
+            et_search_question.setHint(R.string.image_theme);
+            et_question_description.setHint(R.string.activity_description);
+        }
 
     }
 
@@ -286,9 +302,9 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         }
         dialog.show();
         if (record == 1) {
-            params.addBodyParameter("type", 3 + "");
+            params.addBodyParameter("type", String.valueOf(3));
         } else {
-            params.addBodyParameter("type", 2 + "");
+            params.addBodyParameter("type", String.valueOf(2));
         }
         params.addBodyParameter(HttpServicePath.key, str);
         params.addBodyParameter("title", et_search_question.getText().toString().trim());
@@ -303,7 +319,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
             picNameList.add(substring);
         }
         params.addBodyParameter("imgList", JsonUtil.getInstance().toJSON(picNameList));
-        Log.i("suiuu", JsonUtil.getInstance().toJSON(picNameList) + "YYYYYYYY");
+        Log.i(TAG, JsonUtil.getInstance().toJSON(picNameList) + "YYYYYYYY");
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.createLoop, new CreateLoopCallBack());
         suHttpRequest.setParams(params);
@@ -324,7 +340,9 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         suHttpRequest.requestNetworkData();
     }
 
-    //初始化popupWindow
+    /**
+     * 初始化popupWindow
+     */
     public void initPopupWindow() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.pop_select_list, null);
@@ -366,7 +384,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                 if (Integer.parseInt(loop.getStatus()) == 1) {
                     list = loop.getData();
                     for (LoopData date : list) {
-                        Log.i("suiuu", date.toString());
+                        Log.i(TAG, date.toString());
                     }
                     listView.setAdapter(new MyListAdapter(AskQuestionActivity.this, list));
                     themeOrArea = 1;
@@ -379,6 +397,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
 
         @Override
         public void onFailure(HttpException error, String msg) {
+            Log.e(TAG, "主题数据请求失败:" + msg);
             Toast.makeText(AskQuestionActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -406,6 +425,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
 
         @Override
         public void onFailure(HttpException error, String msg) {
+            Log.e(TAG, "地区数据请求失败:" + msg);
             Toast.makeText(AskQuestionActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -430,12 +450,15 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         @Override
         public void onFailure(HttpException e, String s) {
             handler.sendEmptyMessage(getData_FAILURE);
-            Log.i("suiuu", "请求失败------------------------------------" + s);
+            Log.e(TAG, "发布文章失败:" + s);
         }
     }
 }
 
 class MyListAdapter extends BaseAdapter {
+
+    private static final String TAG = MyListAdapter.class.getSimpleName();
+
     private List<LoopData> list;
     private Context context;
 
@@ -465,7 +488,7 @@ class MyListAdapter extends BaseAdapter {
         View view = View.inflate(context, R.layout.adapter_simple_string, null);
         TextView tv_theme = (TextView) view.findViewById(R.id.tv_theme);
         tv_theme.setText(list.get(position).getcName());
-        Log.i("suiuu", list.get(position).getcName() + "----------");
+        Log.i(TAG, list.get(position).getcName() + "----------");
         return view;
     }
 

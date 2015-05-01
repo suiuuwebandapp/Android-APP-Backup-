@@ -8,8 +8,7 @@
         android:id="@+id/mainShowLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:background="@color/remindColor">
+        android:layout_alignParentBottom="true">
 
 
         <FrameLayout
@@ -42,6 +41,7 @@
             android:layout_above="@+id/tabSelect"
             android:layout_marginBottom="-20dp"
             android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
             android:layout_toLeftOf="@+id/main_record"
             android:layout_toStartOf="@+id/main_record"
             android:src="@drawable/icon_main_pic"
@@ -64,6 +64,7 @@
             android:layout_above="@+id/tabSelect"
             android:layout_marginBottom="-20dp"
             android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
             android:layout_toEndOf="@+id/main_record"
             android:layout_toRightOf="@+id/main_record"
             android:src="@drawable/icon_main_ask"
@@ -85,7 +86,7 @@
                 <ImageView
                     android:id="@+id/img1"
                     style="@style/titleImage"
-                    android:src="@drawable/icon_main2"></ImageView>
+                    android:src="@drawable/icon_main2"/>
 
                 <TextView
                     android:id="@+id/title1"
@@ -96,12 +97,13 @@
             <LinearLayout
                 android:id="@+id/tab2"
                 style="@style/tabLayout"
-                android:paddingLeft="20dp">
+                android:paddingLeft="20dp"
+                android:paddingStart="20dp">
 
                 <ImageView
                     android:id="@+id/img2"
                     style="@style/titleImage"
-                    android:src="@drawable/icon_loop2"></ImageView>
+                    android:src="@drawable/icon_loop2"/>
 
                 <TextView
                     android:id="@+id/title2"
@@ -126,7 +128,7 @@
                 <ImageView
                     android:id="@+id/img3"
                     style="@style/titleImage"
-                    android:src="@drawable/icon_suiuu2"></ImageView>
+                    android:src="@drawable/icon_suiuu2"/>
 
                 <TextView
                     android:id="@+id/title3"
@@ -148,7 +150,7 @@
                         style="@style/titleImage"
                         android:layout_gravity="center"
                         android:paddingLeft="@dimen/size22"
-                        android:src="@drawable/icon_conversation2"></ImageView>
+                        android:src="@drawable/icon_conversation2"/>
 
                     <TextView
                         android:id="@+id/unread_msg_number"

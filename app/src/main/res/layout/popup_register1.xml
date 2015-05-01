@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#b0000000">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/register_button_style"
+        android:text="@string/obtain_captcha"
+        android:id="@+id/popup_register1_button"
+        android:textSize="16sp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:layout_margin="10dp"
+        android:ems="10"
+        android:hint="@string/please_input_number"
+        android:id="@+id/popup_register1_phone_number"
+        android:layout_above="@+id/popup_register1_button"
+        android:layout_centerHorizontal="true"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/popup_register1_international_area_code"
+        android:layout_above="@+id/popup_register1_phone_number"
+        android:layout_alignLeft="@+id/popup_register1_phone_number"
+        android:layout_alignStart="@+id/popup_register1_phone_number"
+        android:layout_alignRight="@+id/popup_register1_phone_number"
+        android:layout_alignEnd="@+id/popup_register1_phone_number"/>
+</RelativeLayout>

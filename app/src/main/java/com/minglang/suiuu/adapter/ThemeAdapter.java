@@ -56,6 +56,8 @@ public class ThemeAdapter extends BaseAdapter {
                 .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        Log.i(TAG, String.valueOf(list.size()));
     }
 
     public void setScreenParams(int screenWidth, int screenHeight) {
@@ -88,7 +90,9 @@ public class ThemeAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_theme_grid, position);
+
         ImageView imageView = holder.getView(R.id.item_theme_image);
         TextView title = holder.getView(R.id.item_theme_title);
 
@@ -102,8 +106,6 @@ public class ThemeAdapter extends BaseAdapter {
 
         convertView = holder.getConvertView();
         convertView.setLayoutParams(params);
-
-        Log.i(TAG, "itemParams:" + itemParams);
 
         return convertView;
     }

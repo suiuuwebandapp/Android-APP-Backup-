@@ -185,7 +185,12 @@ public class MainActivity extends FragmentActivity {
     private TextView msgCount;
     private RelativeLayout errorItem;
     private TextView errorText;
+
+    /**
+     * 搜索
+     */
     private ImageView im_search;
+
     private ImageView iv_theme;
     private TextView tv_theme_text;
     private ImageView iv_loop;
@@ -636,7 +641,10 @@ public class MainActivity extends FragmentActivity {
     private void initView() {
         initNumber();
         conversationFragment = new ChatAllHistoryFragment();
+
         im_search = (ImageView) findViewById(R.id.mainPagerSearch);
+        im_search.setEnabled(false);
+
         errorItem = (RelativeLayout) findViewById(R.id.rl_error_item);
         errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
         msgCount = (TextView) findViewById(R.id.unread_msg_number);

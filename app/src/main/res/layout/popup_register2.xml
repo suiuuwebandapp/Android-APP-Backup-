@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#b0000000">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register"
+        android:id="@+id/popup_register_button"
+        android:textSize="16sp"
+        style="@style/register_button_style"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:hint="@string/please_input_confirm_password"
+        android:id="@+id/popup_register_confirm_password"
+        android:layout_margin="10dp"
+        android:layout_above="@+id/popup_register_button"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:hint="@string/please_input_password"
+        android:id="@+id/popup_register_password"
+        android:layout_above="@+id/popup_register_confirm_password"
+        android:layout_alignLeft="@+id/popup_register_confirm_password"
+        android:layout_alignStart="@+id/popup_register_confirm_password"
+        android:layout_alignRight="@+id/popup_register_confirm_password"
+        android:layout_alignEnd="@+id/popup_register_confirm_password"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/popup_register2_captcha"
+        android:layout_marginBottom="10dp"
+        android:hint="@string/please_input_obtain_captcha"
+        android:layout_above="@+id/popup_register_password"
+        android:layout_alignLeft="@+id/popup_register_password"
+        android:layout_alignStart="@+id/popup_register_password"
+        android:layout_alignRight="@+id/popup_register_password"
+        android:layout_alignEnd="@+id/popup_register_password"/>
+</RelativeLayout>

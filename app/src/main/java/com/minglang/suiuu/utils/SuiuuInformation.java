@@ -2,6 +2,7 @@ package com.minglang.suiuu.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.minglang.suiuu.entity.RequestData;
 
@@ -45,6 +46,27 @@ public class SuiuuInformation implements Serializable {
     private static final String PREFERENCE_NAME2 = "Suiuu_Back";
 
     private static final String MESSAGE = "message";
+
+    public static String ReadUserSign(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND);
+        String str = sp.getString("userSign", "");
+        return str;
+    }
+
+    public static void WriteUserSign(Context context, String usersign) {
+        if (context == null) {
+            return;
+        }
+
+        if (TextUtils.isEmpty(usersign)) {
+            return;
+        }
+
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("userSign", usersign);
+        editor.commit();
+    }
 
     /**
      * 第三方相关信息保存到本地

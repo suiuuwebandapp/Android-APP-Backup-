@@ -122,9 +122,10 @@ public class AreaFragment extends Fragment {
         areaGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String loopID = list.get(position).getcId();
+                String circleId = list.get(position).getcId();
                 Intent intent = new Intent(getActivity(), LoopDetailsActivity.class);
-                intent.putExtra("loopID", loopID);
+                intent.putExtra("circleId", circleId);
+                intent.putExtra("type","2");
                 startActivity(intent);
             }
         });

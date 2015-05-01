@@ -122,9 +122,10 @@ public class ThemeFragment extends Fragment {
         themeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String loopID = list.get(position).getcId();
+                String circleId = list.get(position).getcId();
                 Intent intent = new Intent(getActivity(), LoopDetailsActivity.class);
-                intent.putExtra("loopID", loopID);
+                intent.putExtra("circleId", circleId);
+                intent.putExtra("type","1");
                 startActivity(intent);
             }
         });
@@ -141,8 +142,7 @@ public class ThemeFragment extends Fragment {
         String str = SuiuuInformation.ReadVerification(getActivity());
 
         RequestParams params = new RequestParams();
-        //TODO 忽略身份验证KEY
-//        params.addBodyParameter(HttpServicePath.key, str);
+        params.addBodyParameter(HttpServicePath.key, str);
         params.addBodyParameter("type", "1");
 
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
@@ -180,6 +180,9 @@ public class ThemeFragment extends Fragment {
             }
 
             String str = responseInfo.result;
+
+            Log.i(TAG, str);
+
             Loop loop;
             loop = JsonUtil.getInstance().fromJSON(Loop.class, str);
             Log.i(TAG, loop.toString());
@@ -198,14 +201,13 @@ public class ThemeFragment extends Fragment {
         @Override
         public void onFailure(HttpException error, String msg) {
 
-            Log.i(TAG, msg);
+            Log.e(TAG, msg);
 
-//            if (progressDialog.isShowing()) {
-            progressDialog.cancel();
-            Log.i(TAG, "progressDialog dismiss");
-//            }
+            if (progressDialog.isShowing()) {
+                progressDialog.cancel();
+            }
 
-            Toast.makeText(getActivity(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "网络异常，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
 

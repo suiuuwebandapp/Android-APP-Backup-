@@ -1,8 +1,13 @@
 <component name="ProjectDictionaryState">
   <dictionary name="Administrator">
     <words>
+      <w>articleid</w>
+      <w>circleid</w>
+      <w>huanxinpassword</w>
       <w>sina</w>
       <w>tencent</w>
+      <w>usersign</w>
+      <w>usersignkey</w>
       <w>weibo</w>
     </words>
   </dictionary>

@@ -48,6 +48,8 @@ public class LoopArticleActivity extends Activity {
 
     private static final String TAG = LoopArticleActivity.class.getSimpleName();
 
+    private static final String ARTICLEID = "articleId";
+
     /**
      * 封面图片
      */
@@ -159,12 +161,14 @@ public class LoopArticleActivity extends Activity {
 
     private ProgressDialog progressDialog;
 
+    private String myUserSign;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loop_article);
 
-        articleId = getIntent().getStringExtra("articleId");
+        articleId = getIntent().getStringExtra(ARTICLEID);
         Verification = SuiuuInformation.ReadVerification(this);
 
         imageLoader = ImageLoader.getInstance();
@@ -174,6 +178,8 @@ public class LoopArticleActivity extends Activity {
                 .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        myUserSign = SuiuuInformation.ReadUserSign(this);
 
         initView();
         ViewAction();
@@ -300,6 +306,8 @@ public class LoopArticleActivity extends Activity {
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter(HttpServicePath.key, Verification);
 
+        Log.i(TAG, "要请求的文章的ID:" + articleId);
+
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.LoopArticlePath, new LoopArticleRequestCallBack());
         httpRequest.setParams(params);
@@ -371,8 +379,8 @@ public class LoopArticleActivity extends Activity {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            loopArticle = JsonUtil.getInstance().fromJSON(LoopArticle.class, responseInfo.result);
-            if (loopArticle != null) {
+            try {
+                loopArticle = JsonUtil.getInstance().fromJSON(LoopArticle.class, responseInfo.result);
                 if (!loopArticle.getStatus().equals("1")) {
                     Toast.makeText(LoopArticleActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 } else {
@@ -380,9 +388,15 @@ public class LoopArticleActivity extends Activity {
                     if (loopArticleData != null) {
                         setForArticleContent();
                         list = loopArticleData.getCommentList();
+                        String userSign = loopArticleData.getaCreateUserSign();
+                        if (!myUserSign.equals(userSign)) {
+                            editor.setVisibility(View.GONE);
+                            delete.setVisibility(View.GONE);
+                        }
                     }
                 }
-            } else {
+            } catch (Exception e) {
+                Log.e(TAG, "数据解析失败:" + e.getMessage());
                 Toast.makeText(LoopArticleActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
 
@@ -395,13 +409,13 @@ public class LoopArticleActivity extends Activity {
         @Override
         public void onFailure(HttpException error, String msg) {
 
-            Log.i(TAG, msg);
+            Log.e(TAG, "网络请求失败:" + msg);
 
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
 
-            Toast.makeText(LoopArticleActivity.this, "获取数据失败！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoopArticleActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
 

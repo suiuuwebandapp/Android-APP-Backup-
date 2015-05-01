@@ -2,6 +2,7 @@ package com.minglang.suiuu.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +38,11 @@ public class LoopDetailsActivity extends Activity {
 
     private static final String TAG = LoopDetailsActivity.class.getSimpleName();
 
+    private static final String TYPE = "type";
+    private static final String CIRCLEID = "circleId";
+
+    private static final String ARTICLEID = "articleId";
+
     private SystemBarTintManager systemBarTintManager;
 
     /**
@@ -49,10 +55,12 @@ public class LoopDetailsActivity extends Activity {
      */
     private int navigationBarHeight;
 
+    private String type;
+
     /**
      * 圈子ID
      */
-    private String loopID;
+    private String circleId;
 
     /**
      * 验证信息
@@ -105,7 +113,8 @@ public class LoopDetailsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loop_details);
 
-        loopID = getIntent().getStringExtra("loopID");
+        type = getIntent().getStringExtra(TYPE);
+        circleId = getIntent().getStringExtra(CIRCLEID);
         Verification = SuiuuInformation.ReadVerification(this);
 
         initView();
@@ -122,9 +131,9 @@ public class LoopDetailsActivity extends Activity {
         }
 
         RequestParams params = new RequestParams();
-        //TODO 忽略身份验证KEY
         params.addBodyParameter(HttpServicePath.key, Verification);
-        params.addBodyParameter("circleId", loopID);
+        params.addBodyParameter(CIRCLEID, circleId);
+        params.addBodyParameter(TYPE, type);
 
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.LoopDetailsPath, loopDetailsRequestCallBack);
@@ -155,7 +164,10 @@ public class LoopDetailsActivity extends Activity {
         loopDetailsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                String articleId = list.get(position).getArticleId();
+                Intent intent = new Intent(LoopDetailsActivity.this, LoopArticleActivity.class);
+                intent.putExtra(ARTICLEID, articleId);
+                startActivity(intent);
             }
         });
 

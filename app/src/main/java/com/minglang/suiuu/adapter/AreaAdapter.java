@@ -56,6 +56,8 @@ public class AreaAdapter extends BaseAdapter {
                 .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        Log.i(TAG, String.valueOf(list.size()));
     }
 
     public void setScreenParams(int screenWidth, int screenHeight) {
@@ -102,8 +104,6 @@ public class AreaAdapter extends BaseAdapter {
 
         convertView = holder.getConvertView();
         convertView.setLayoutParams(params);
-
-        Log.i(TAG, "itemParams:" + itemParams);
 
         return convertView;
     }

@@ -2,6 +2,7 @@ package com.minglang.suiuu.fragment.main;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
@@ -17,6 +19,9 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.AllAttentionDynamicActivity;
+import com.minglang.suiuu.activity.LoopArticleActivity;
+import com.minglang.suiuu.activity.OtherUserActivity;
 import com.minglang.suiuu.adapter.AttentionDynamicAdapter;
 import com.minglang.suiuu.adapter.LoopDynamicAdapter;
 import com.minglang.suiuu.adapter.TodayStarAdapter;
@@ -52,6 +57,9 @@ public class MainFragment extends Fragment {
 
     private static final String TAG = MainFragment.class.getSimpleName();
 
+    private static final String USERSIGNKEY = "usersign";
+    private static final String ARTICLEID = "articleId";
+
     private int screenWidth, screenHeight;
 
     private PtrClassicFrameLayout mPtrFrame;
@@ -76,6 +84,8 @@ public class MainFragment extends Fragment {
      */
     private NoScrollBarGridView todayStarGridView;
 
+    private List<MainDynamicDataUser> mainDynamicDataUserList;
+
     /**
      * 关注动态Layout
      */
@@ -85,6 +95,9 @@ public class MainFragment extends Fragment {
      * 圈子动态GridView
      */
     private NoScrollBarGridView loopDynamicGridView;
+
+    private TextView moreButton;
+
     /**
      * 圈子动态统一数据集合
      */
@@ -126,9 +139,9 @@ public class MainFragment extends Fragment {
             loopDynamicGridView.setAdapter(loopDynamicAdapter);
 
             //关注动态
-            List<MainDynamicDataUser> mainDynamicDataUserDynamic = data.getUserDynamic();
+            mainDynamicDataUserList = data.getUserDynamic();
             AttentionDynamicAdapter attentionDynamicAdapter = new AttentionDynamicAdapter(getActivity(),
-                    mainDynamicDataUserDynamic);
+                    mainDynamicDataUserList);
             attentionDynamicLayout.setAdapter(attentionDynamicAdapter);
 
             //今日之星
@@ -179,7 +192,11 @@ public class MainFragment extends Fragment {
         attentionDynamicLayout.setOnItemClickListener(new LinearLayoutForListView.OnItemClickListener() {
             @Override
             public void onItemClicked(View v, Object obj, int position) {
-
+                MainDynamicDataUser user = mainDynamicDataUserList.get(position);
+                String articleId = user.getArticleId();
+                Intent intent = new Intent(getActivity(), LoopArticleActivity.class);
+                intent.putExtra(ARTICLEID, articleId);
+                startActivity(intent);
             }
         });
 
@@ -187,14 +204,29 @@ public class MainFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MainDynamicDataRecommendUser user = mainDynamicDataRecommendUserList.get(position);
-                Log.i(TAG, user.getNumb());
+                String userSign = user.getUserSign();
+                Intent intent = new Intent(getActivity(), OtherUserActivity.class);
+                intent.putExtra(USERSIGNKEY, userSign);
+                startActivity(intent);
             }
         });
 
         loopDynamicGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MainDynamicDataLoop loop = listLoopDynamic.get(position);
+                String articleId = loop.getArticleId();
+                Intent intent = new Intent(getActivity(), LoopArticleActivity.class);
+                intent.putExtra(ARTICLEID, articleId);
+                startActivity(intent);
+            }
+        });
 
+        moreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AllAttentionDynamicActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -242,6 +274,8 @@ public class MainFragment extends Fragment {
         todayStarGridView = (NoScrollBarGridView) rootView.findViewById(R.id.mainTodayStarGridView);
 
         loopDynamicGridView = (NoScrollBarGridView) rootView.findViewById(R.id.mainLoopDynamicGridView);
+
+        moreButton = (TextView) rootView.findViewById(R.id.main_fragment_more);
     }
 
     /**
