@@ -92,7 +92,8 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
     private int themeOrArea = 1;
     private String themeCid;
     private String areaCid;
-    int status = 0;
+    private int status = 0;
+    private String dataNum;
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -102,8 +103,9 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                     if (1 == status && picSuccessCount == listPicture.size()) {
                         dialog.dismiss();
                         Toast.makeText(AskQuestionActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
-                        //TODO 发布完成后在此跳转
-                        finish();
+                        Intent intent = new Intent(AskQuestionActivity.this,LoopArticleActivity.class);
+                        intent.putExtra("articleId",dataNum);
+                        startActivity(intent);
                     } else {
                         dialog.dismiss();
                         Toast.makeText(AskQuestionActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
@@ -442,6 +444,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
+                dataNum = (String)json.get("data");
             } catch (JSONException e) {
                 e.printStackTrace();
             }

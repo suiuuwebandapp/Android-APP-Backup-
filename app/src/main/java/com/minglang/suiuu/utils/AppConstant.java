@@ -14,4 +14,9 @@ public class AppConstant {
 	 * 裁剪图片成功后返回
 	 */
 	public static final int INTENT_CROP = 2;
+
+    /**
+     * 保存在suiuu_content对象中的图片
+     */
+    public static final String img_from_suiuu_content = "http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content";
 }

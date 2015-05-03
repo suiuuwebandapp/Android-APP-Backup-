@@ -12,11 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
@@ -117,6 +117,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     private Dialog dialog;
     private ImageView iv_top_back;
     private ScrollView sll;
+    private String dataNum;
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -127,7 +128,9 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
                         dialog.dismiss();
                         Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
                         //TODO 发布完成后在此跳转
-                        finish();
+                        Intent intent = new Intent(EasyTackPhotoActivity.this,LoopArticleActivity.class);
+                        intent.putExtra("articleId",dataNum);
+                        startActivity(intent);
                     } else {
                         dialog.dismiss();
                         Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
@@ -153,7 +156,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
 
         initView();
         lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, picList));
-
+        setListViewHeightBasedOnChildren(lv_picture_description);
 //        iv_cancel.setVisibility(View.GONE);
         tv_cancel.setVisibility(View.VISIBLE);
 
@@ -188,7 +191,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
 
     private void initView() {
         iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
-//        iv_cancel = (ImageView) findViewById(R.id.iv_top_back);
+        iv_top_back.setVisibility(View.GONE);
         tv_cancel = (TextView) findViewById(R.id.tv_top_cancel);
         lv_picture_description = (ListView) findViewById(R.id.lv_picture_description);
         tv_top_right = (TextView) findViewById(R.id.tv_top_right);
@@ -266,7 +269,8 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
                     }
                     listView.setAdapter(new MyListAdapter(EasyTackPhotoActivity.this, list));
                     themeOrArea = 1;
-                    popupWindow.showAsDropDown(tv_theme_choice, 0, 10);
+
+                    popupWindow.showAsDropDown(tv_theme_choice,10,10);
                 } else {
                     Toast.makeText(EasyTackPhotoActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
                 }
@@ -275,6 +279,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
 
         @Override
         public void onFailure(HttpException error, String msg) {
+            Log.i("suiuu",msg);
             Toast.makeText(EasyTackPhotoActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -368,7 +373,6 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     //初始化popupWindow
     public void initPopupWindow() {
         dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progress_bar);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -378,6 +382,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         //自适配长、框设置
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
+
         popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.listview_background));
         popupWindow.setOutsideTouchable(true);
         popupWindow.setAnimationStyle(android.R.style.Animation_Dialog);
@@ -430,9 +435,11 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String result = stringResponseInfo.result;
+            Log.i("suiuu",result+"--------------");
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
+                dataNum = (String)json.get("data");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -443,5 +450,23 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
             handler.sendEmptyMessage(getData_FAILURE);
             Log.i(TAG, "请求失败------------------------------------" + s);
         }
+    }
+    public void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        params.height += 5;//if without this statement,the listview will be a little short
+        listView.setLayoutParams(params);
     }
 }

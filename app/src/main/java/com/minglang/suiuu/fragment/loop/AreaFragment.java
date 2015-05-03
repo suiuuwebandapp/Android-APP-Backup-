@@ -22,9 +22,9 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.LoopDetailsActivity;
 import com.minglang.suiuu.adapter.AreaAdapter;
 import com.minglang.suiuu.entity.Loop;
+import com.minglang.suiuu.entity.LoopData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
-import com.minglang.suiuu.entity.LoopData;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInformation;
@@ -181,9 +181,9 @@ public class AreaFragment extends Fragment {
             }
 
             String str = responseInfo.result;
-            Loop loop = JsonUtil.getInstance().fromJSON(Loop.class, str);
-            Log.i(TAG, loop.toString());
-            if (loop != null) {
+            try{
+                Loop loop = JsonUtil.getInstance().fromJSON(Loop.class, str);
+                Log.i(TAG, loop.toString());
                 if (Integer.parseInt(loop.getStatus()) == 1) {
                     list = loop.getData();
                     AreaAdapter areaAdapter = new AreaAdapter(getActivity(), loop, list);
@@ -192,6 +192,8 @@ public class AreaFragment extends Fragment {
                 } else {
                     Toast.makeText(getActivity(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
                 }
+            }catch (Exception e){
+                Log.e(TAG,e.getMessage());
             }
         }
 

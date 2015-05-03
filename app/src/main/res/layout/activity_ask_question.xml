@@ -12,7 +12,9 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:scrollbars="none"
+        android:layout_marginBottom="@dimen/layout_25dp">
 
         <LinearLayout
             android:background="@color/backgroundColor"

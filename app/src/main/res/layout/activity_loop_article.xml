@@ -27,6 +27,7 @@
                     android:id="@+id/loop_article_cover_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
                     android:background="@drawable/scroll2"/>
 
                 <TextView
@@ -86,7 +87,7 @@
                                 android:layout_weight="0.5"
                                 android:gravity="center_vertical"
                                 android:text="@string/user_name"
-                                android:textColor="@color/black"
+                                android:textColor="@color/tr_black"
                                 android:textSize="18sp"/>
 
                             <TextView
@@ -96,7 +97,7 @@
                                 android:layout_weight="0.5"
                                 android:gravity="center_vertical"
                                 android:text="@string/location"
-                                android:textColor="@color/black"
+                                android:textColor="@color/tr_black"
                                 android:textSize="18sp"/>
 
                         </LinearLayout>
@@ -143,6 +144,7 @@
             </HorizontalScrollView>
 
             <RelativeLayout
+                android:id="@+id/rl_showForAsk"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
@@ -155,12 +157,17 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="@string/article_temp"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp"
+                    android:textColor="@color/tr_black"/>
 
                 <com.minglang.suiuu.customview.NoScrollBarGridView
                     android:id="@+id/loop_article_grid"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:scrollbars="none"
+                    android:verticalSpacing="@dimen/layout_10dp"
+                    android:horizontalSpacing="@dimen/layout_10dp"
                     android:layout_below="@+id/loop_article_content"
                     android:fillViewport="false"
                     android:numColumns="3"/>
@@ -178,7 +185,23 @@
                     android:textSize="18sp"/>
 
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_showForTakePhoto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/white"
+                android:visibility="gone">
+                <ListView
+                    android:id="@+id/loop_article_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:scrollbars="none"
+                   />
 
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 

@@ -68,7 +68,8 @@
                 android:layout_marginLeft="@dimen/layout_16dp"
                 android:layout_marginRight="@dimen/layout_16dp"/>
 
-            <com.minglang.suiuu.customview.ListViewForScrollView
+          <!--  <com.minglang.suiuu.customview.ListViewForScrollView-->
+            <ListView
                 android:id="@+id/lv_picture_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

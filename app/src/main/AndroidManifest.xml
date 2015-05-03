@@ -156,7 +156,8 @@
         <activity
             android:name=".activity.SelectPictureActivity"
             android:label="@string/title_activity_select_picture"
-            android:theme="@style/FullBleedTheme"/>
+            android:theme="@style/FullBleedTheme"
+            android:windowSoftInputMode="stateHidden"/>
         <!-- 随问的页面 -->
         <activity
             android:name=".activity.AskQuestionActivity"
@@ -171,7 +172,8 @@
         <activity
             android:name=".activity.EasyTackPhotoActivity"
             android:label="EasyTackPhotoActivity"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"/>
+            android:theme="@style/FullBleedTheme"
+            android:windowSoftInputMode="stateHidden"/>
 
         <!-- 聊天页面 -->
         <activity

@@ -13,6 +13,8 @@ public class LoopArticleData {
 
     public String cId;
 
+    public String aType;
+
     public String aTitle;
 
     public String aContent;
@@ -167,6 +169,14 @@ public class LoopArticleData {
 
     public void setCommentList(List<LoopArticleCommentList> commentList) {
         this.commentList = commentList;
+    }
+
+    public String getaType() {
+        return aType;
+    }
+
+    public void setaType(String aType) {
+        this.aType = aType;
     }
 
     @Override

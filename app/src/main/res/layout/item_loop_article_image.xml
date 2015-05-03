@@ -6,10 +6,10 @@
 
 
     <ImageView
-        android:id="@+id/item_loop_article_imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:scaleType="centerCrop"/>
+        android:layout_width="@dimen/layout_100dp"
+        android:layout_height="@dimen/layout_100dp"
+        android:id="@+id/iv_picture"
+        android:src="@drawable/ic_launcher"
+        android:scaleType="centerCrop"
+        />
 </RelativeLayout>

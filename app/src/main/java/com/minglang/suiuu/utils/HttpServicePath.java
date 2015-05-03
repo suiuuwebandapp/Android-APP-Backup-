@@ -20,7 +20,7 @@ public class HttpServicePath {
      * http://test.suiuu.com
      * http://192.168.11.220
      */
-    private static String RootPath = "http://test.suiuu.com";
+    private static String RootPath = "http://192.168.11.220";
 
     /**
      * 应用自带登陆URL

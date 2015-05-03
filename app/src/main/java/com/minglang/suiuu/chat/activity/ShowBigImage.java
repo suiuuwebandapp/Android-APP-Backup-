@@ -35,6 +35,10 @@ import com.minglang.suiuu.chat.photoview.PhotoView;
 import com.minglang.suiuu.chat.photoview.PhotoViewAttacher;
 import com.minglang.suiuu.chat.task.LoadLocalBigImgTask;
 import com.minglang.suiuu.chat.utils.ImageCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.io.File;
 import java.util.HashMap;
@@ -52,6 +56,8 @@ public class ShowBigImage extends BaseActivity {
 	private Bitmap bitmap;
 	private boolean isDownloaded;
 	private ProgressBar loadLocalPb;
+    private ImageLoader imageLoader;
+    private DisplayImageOptions options;
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +69,30 @@ public class ShowBigImage extends BaseActivity {
         default_res = getIntent().getIntExtra("default_image", R.drawable.default_avatar);
         Uri uri = getIntent().getParcelableExtra("uri");
         String remotepath = getIntent().getExtras().getString("remotepath");
+        boolean isHuanXin = getIntent().getExtras().getBoolean("isHuanXin");
         String secret = getIntent().getExtras().getString("secret");
+
         String path = getIntent().getExtras().getString("path");
         Log.i("suiuu", "show big image uri:" + uri + " remotepath:" + remotepath);
-
+        //不是环信的 ,访问网络图片
+        image.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(View view, float x, float y) {
+                finish();
+            }
+        });
+        if(!isHuanXin && !"".equals(remotepath)) {
+            Log.i("suiuu","来到这儿了吗");
+            imageLoader = ImageLoader.getInstance();
+            imageLoader.init(ImageLoaderConfiguration.createDefault(ShowBigImage.this));
+            options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
+                    .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
+                    .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                    .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
+            Log.i("suiuu",remotepath);
+            imageLoader.displayImage(remotepath, image, options);
+            return;
+        }
         //传过路径显示图片
         if (path != null) {
             Log.i("suiuu", path);
@@ -114,12 +140,7 @@ public class ShowBigImage extends BaseActivity {
                 image.setImageResource(default_res);
             }
 
-            image.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-                @Override
-                public void onPhotoTap(View view, float x, float y) {
-                    finish();
-                }
-            });
+
         }
 
 	
