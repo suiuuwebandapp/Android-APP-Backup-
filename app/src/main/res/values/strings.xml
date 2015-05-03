@@ -126,6 +126,7 @@
     <string name="loopDynamic">圈子动态</string>
     <string name="UnknownName">未知</string>
     <string name="noInformation">暂无信息</string>
+    <string name="popularRecommendation">热门推荐</string>
 
     <string name="please_input_email_or_phone_number">请输入邮箱或手机号</string>
     <string name="please_input_password">请输入密码</string>

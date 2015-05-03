@@ -16,7 +16,7 @@ public class HttpServicePath {
 
     /**
      * 服务器地址
-     *
+     * <p/>
      * http://test.suiuu.com
      * http://192.168.11.220
      */
@@ -179,10 +179,27 @@ public class HttpServicePath {
 
     /**
      * 得到其他用户个人主页数据
-     *
+     * <p/>
      * 请求方式:POST
-     *
+     * <p/>
      * 请求参数:用户标识 userSign、统一参数key{@link #key}
      */
     public static String OtherUserInformationPath = RootPath + "/circle/get-homepage-info";
+
+    /**
+     * 获取消息列表
+     * <p/>
+     * 请求方式:POST
+     * <p/>
+     * 请求参数:请求的消息类型 type、统一参数key{@link #key}
+     * <p/>
+     * const TYPE_AT = 1;//类型为@我的
+     * <p/>
+     * const TYPE_COMMENT=2;//类型为评论的
+     * <p/>
+     * const  TYPE_REPLY=3;//类型为回复
+     * <p/>
+     * const  TYPE_ATTENTION=4;//类型为关注
+     */
+    public static String GetMessageListPath = RootPath + "/attention/get-messages-remind";
 }

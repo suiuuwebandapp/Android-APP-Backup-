@@ -3,7 +3,10 @@ package com.minglang.suiuu.customview;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.minglang.suiuu.R;
 
 /**
  * 用LinearLayout实现ListView
@@ -15,13 +18,21 @@ public class LinearLayoutForListView extends LinearLayout {
     private LinearLayoutBaseAdapter adapter;
     private OnItemClickListener onItemClickListener;
 
+    private Context context;
+
+    private int lineViewHeight;
+
+    private int lineViewColor = R.color.transparent;
+
     public LinearLayoutForListView(Context context) {
         super(context);
+        this.context = context;
         //LinearLayoutForListView.this.setOrientation(LinearLayout.VERTICAL);
     }
 
     public LinearLayoutForListView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
         //LinearLayoutForListView.this.setOrientation(LinearLayout.VERTICAL);
     }
 
@@ -29,6 +40,14 @@ public class LinearLayoutForListView extends LinearLayout {
         this.adapter = adapter;
         // setAdapter 时添加 view
         bindView();
+    }
+
+    public void setLineViewHeight(int lineViewHeight) {
+        this.lineViewHeight = lineViewHeight;
+    }
+
+    public void setLineViewColor(int lineViewColor) {
+        this.lineViewColor = lineViewColor;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -61,6 +80,15 @@ public class LinearLayoutForListView extends LinearLayout {
             });
 
             addView(v);
+
+            if (lineViewHeight == 0) {
+                lineViewHeight = 10;
+            }
+
+            View lineView = new View(context);
+            lineView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, lineViewHeight));
+            lineView.setBackgroundColor(getResources().getColor(lineViewColor));
+            addView(lineView);
         }
     }
 

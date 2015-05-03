@@ -6,11 +6,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import com.minglang.suiuu.R;
 
 /**
- *
  * 收藏的路线
  * <p/>
  * A simple {@link Fragment} subclass.
@@ -28,6 +28,9 @@ public class CollectionSuiuuFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private GridView gridView;
+
+    private int page = 1;
 
     /**
      * Use this factory method to create a new instance of
@@ -60,11 +63,17 @@ public class CollectionSuiuuFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_collection_route, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_collection_suiuu, container, false);
+
+        initView(rootView);
+
+        return rootView;
     }
 
+
+    private void initView(View rootView) {
+
+    }
 
 }

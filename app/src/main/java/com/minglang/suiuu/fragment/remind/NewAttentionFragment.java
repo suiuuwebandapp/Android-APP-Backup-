@@ -8,24 +8,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.minglang.suiuu.R;
 
 /**
- *
  * 新关注页面
- *
+ * <p/>
  * A simple {@link Fragment} subclass.
  * Use the {@link NewAttentionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class NewAttentionFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -39,7 +39,6 @@ public class NewAttentionFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment NewAttentionFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static NewAttentionFragment newInstance(String param1, String param2) {
         NewAttentionFragment fragment = new NewAttentionFragment();
         Bundle args = new Bundle();
@@ -72,8 +71,21 @@ public class NewAttentionFragment extends Fragment {
         return rootView;
     }
 
-    private void initView(View rootView){
+    private void initView(View rootView) {
         newAttentionList = (ListView) rootView.findViewById(R.id.newAttentionList);
     }
 
+
+    private class NewAttentionRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+
+        }
+    }
 }

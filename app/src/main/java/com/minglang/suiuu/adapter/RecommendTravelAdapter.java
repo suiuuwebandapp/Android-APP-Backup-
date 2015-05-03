@@ -9,24 +9,24 @@ import android.widget.TextView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.LinearLayoutBaseAdapter;
-import com.minglang.suiuu.entity.MainDynamicDataUser;
+import com.minglang.suiuu.entity.MainDynamicDataRecommendTravel;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.List;
 
 /**
- * 首页关注动态数据适配器
+ * 热门动态数据适配器
  * <p/>
- * Created by Administrator on 2015/4/30.
+ * Created by Administrator on 2015/5/3.
  */
-public class AttentionDynamicAdapter extends LinearLayoutBaseAdapter {
+public class RecommendTravelAdapter extends LinearLayoutBaseAdapter {
 
-    private List<MainDynamicDataUser> list;
+    private List<MainDynamicDataRecommendTravel> list;
 
     private ImageLoader imageLoader;
 
-    public AttentionDynamicAdapter(Context context, List<MainDynamicDataUser> list) {
+    public RecommendTravelAdapter(Context context, List<MainDynamicDataRecommendTravel> list) {
         super(context, list);
         this.list = list;
 
@@ -37,35 +37,35 @@ public class AttentionDynamicAdapter extends LinearLayoutBaseAdapter {
     @Override
     public View getView(int position) {
 
-        MainDynamicDataUser user = list.get(position);
+        MainDynamicDataRecommendTravel recommendTravel = list.get(position);
 
-        View view = getLayoutInflater().inflate(R.layout.item_attention_dynamic, null);
+        View view = getLayoutInflater().inflate(R.layout.item_recommend_reavel, null);
 
-        ImageView imageView = (ImageView) view.findViewById(R.id.item_attention_dynamic_image);
-        CircleImageView circleImageView = (CircleImageView) view.findViewById(R.id.item_attention_dynamic_head);
-        TextView title = (TextView) view.findViewById(R.id.item_attention_dynamic_title);
-        TextView content = (TextView) view.findViewById(R.id.item_attention_dynamic_content);
+        ImageView imageView = (ImageView) view.findViewById(R.id.item_recommend_travel_image);
+        CircleImageView circleImageView = (CircleImageView) view.findViewById(R.id.item_recommend_travel_head);
+        TextView title = (TextView) view.findViewById(R.id.item_recommend_travel_title);
+        TextView content = (TextView) view.findViewById(R.id.item_recommend_travel_content);
 
-        String imagePath = user.getaImg();
+        String imagePath = recommendTravel.getTitleImg();
         if (!TextUtils.isEmpty(imagePath)) {
             imageLoader.displayImage(imagePath, imageView);
         }
 
-        String headPath = user.getHeadImg();
+        String headPath = recommendTravel.getHeadImg();
         if (!TextUtils.isEmpty(headPath)) {
             imageLoader.displayImage(headPath, circleImageView);
         }
 
-        String strTitle = user.getaTitle();
+        String strTitle = recommendTravel.getTitle();
         if (!TextUtils.isEmpty(strTitle)) {
             title.setText(strTitle);
         } else {
             title.setText("");
         }
 
-        String strContent = user.getaContent();
-        if (!TextUtils.isEmpty(strContent)) {
-            content.setText(strContent);
+        String strIntro = recommendTravel.getIntro();
+        if (!TextUtils.isEmpty(strIntro)) {
+            content.setText(strIntro);
         } else {
             content.setText("");
         }

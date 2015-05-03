@@ -86,6 +86,7 @@ public class LoginActivity extends Activity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
+    //suIuu9Q5E2T7
     private static final String HUANXINPASSWORD = "suIuu9Q5E2T7";
 
     private Button loginBtn;
@@ -300,7 +301,6 @@ public class LoginActivity extends Activity {
             try {
                 AreaCode areaCode = JsonUtil.getInstance().fromJSON(AreaCode.class, str);
                 areaCodeDataList = areaCode.getData();
-
             } catch (Exception e) {
                 Log.e(TAG, "国际电话区号数据解析异常:" + e.getMessage());
             }
@@ -308,7 +308,7 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, s);
+            Log.e(TAG, "国际电话区号数据请求失败:" + s);
         }
     }
 
@@ -459,7 +459,7 @@ public class LoginActivity extends Activity {
                     popupWindowRegister2.showAtLocation(popupRegisterView1, Gravity.CENTER_HORIZONTAL, 0, 0);
                     Toast.makeText(LoginActivity.this, "发送成功！", Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.e(TAG, dataInfo);
+                    Log.e(TAG, "发送失败:" + dataInfo);
                     Toast.makeText(LoginActivity.this, "发送失败，请检查手机号码是否填写正确！", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
@@ -470,7 +470,7 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, s);
+            Log.e(TAG, "发送区号手机号到服务器的请求失败:" + s);
             Toast.makeText(LoginActivity.this, "发送失败，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -582,7 +582,8 @@ public class LoginActivity extends Activity {
                     Toast.makeText(LoginActivity.this, "登录失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "登陆返回的数据解析异常信息:" + e.getMessage());
+                Log.e(TAG, "登陆返回的数据:" + str);
+                Log.e(TAG, "登陆返回的数据解析异常:" + e.getMessage());
                 Toast.makeText(LoginActivity.this, "获取数据失败，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
         }
@@ -614,6 +615,8 @@ public class LoginActivity extends Activity {
         });
         pd.setMessage(getResources().getString(R.string.Is_landing));
         pd.show();
+
+        Log.i(TAG, "环信用户名:" + huanXinUsername);
 
         final long start = System.currentTimeMillis();
         // 调用sdk登陆方法登陆聊天服务器
@@ -671,8 +674,8 @@ public class LoginActivity extends Activity {
                 return;
             }
             //更新当前用户的nickname 此方法的作用是在ios离线推送时能够显示用户nick
-            boolean updatenick = EMChatManager.getInstance().updateCurrentUserNick(DemoApplication.currentUserNick.trim());
-            if (!updatenick) {
+            boolean upDateNick = EMChatManager.getInstance().updateCurrentUserNick(DemoApplication.currentUserNick.trim());
+            if (!upDateNick) {
             }
             if (!LoginActivity.this.isFinishing()) {
                 pd.dismiss();
@@ -1224,7 +1227,7 @@ public class LoginActivity extends Activity {
                 tencent.setOpenId(qqOpenId);
             }
         } catch (Exception ignored) {
-            Log.e(TAG, ignored.getMessage());
+            Log.e(TAG, "QQ返回的数据解析失败:" + ignored.getMessage());
         }
     }
 

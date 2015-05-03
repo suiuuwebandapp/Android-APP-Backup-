@@ -15,29 +15,23 @@ public class MainDynamicData {
     public List<MainDynamicDataUser> userDynamic;
     //今日之星数据
     public List<MainDynamicDataRecommendUser> recommendUser;
+    //热门推荐数据
+    public List<MainDynamicDataRecommendTravel> recommendTravel;
 
     public List<MainDynamicDataLoop> getCircleDynamic() {
         return circleDynamic;
-    }
-
-    public void setCircleDynamic(List<MainDynamicDataLoop> circleDynamic) {
-        this.circleDynamic = circleDynamic;
     }
 
     public List<MainDynamicDataUser> getUserDynamic() {
         return userDynamic;
     }
 
-    public void setUserDynamic(List<MainDynamicDataUser> userDynamic) {
-        this.userDynamic = userDynamic;
-    }
-
     public List<MainDynamicDataRecommendUser> getRecommendUser() {
         return recommendUser;
     }
 
-    public void setRecommendUser(List<MainDynamicDataRecommendUser> recommendUser) {
-        this.recommendUser = recommendUser;
+    public List<MainDynamicDataRecommendTravel> getRecommendTravel() {
+        return recommendTravel;
     }
 
     @Override

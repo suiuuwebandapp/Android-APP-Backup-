@@ -11,5 +11,7 @@
         android:layout_height="match_parent"
         android:id="@+id/collection_loop_grid_view"
         android:numColumns="2"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
         android:choiceMode="none"/>
 </FrameLayout>

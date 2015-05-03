@@ -2,18 +2,19 @@ package com.minglang.suiuu.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.CollectionLoop;
 import com.minglang.suiuu.entity.CollectionLoopData;
+import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -37,7 +38,9 @@ public class CollectionLoopAdapter extends BaseAdapter {
 
     private ImageLoader loader;
 
-    private DisplayImageOptions displayImageOptions1, displayImageOptions2;
+    private DisplayImageOptions displayImageOptions1;
+
+    private int screenWidth, screenHeight;
 
     public CollectionLoopAdapter(Context context, CollectionLoop collectionLoop, List<CollectionLoopData> list) {
         this.context = context;
@@ -52,10 +55,11 @@ public class CollectionLoopAdapter extends BaseAdapter {
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
 
-        displayImageOptions2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image2)
-                .showImageForEmptyUri(R.drawable.default_head_image2).showImageOnFail(R.drawable.default_head_image2)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
+    }
+
+    public void setScreenParams(int screenWidth, int screenHeight) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
     }
 
     @Override
@@ -89,7 +93,7 @@ public class CollectionLoopAdapter extends BaseAdapter {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_collection_loop, position);
 
         //主要图片
-        ImageView imageView = holder.getView(R.id.item_collection_loop_details_image);
+        ImageView imageView = holder.getView(R.id.item_collection_loop_image);
         //头像
         CircleImageView headImage = holder.getView(R.id.item_collection_loop_head_image);
         //用户名
@@ -101,20 +105,49 @@ public class CollectionLoopAdapter extends BaseAdapter {
         //评论
         TextView comment = holder.getView(R.id.item_collection_loop_comments);
 
-        int height = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_head_image2).getHeight();
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(headImage.getLayoutParams());
-        params.setMargins(0, 0, 0, height / 2);
-        imageView.setLayoutParams(params);
+        String mainImagePath = collectionLoopData.getaImg();
+        if (!TextUtils.isEmpty(mainImagePath)) {
+            loader.displayImage(collectionLoopData.getaImg(), imageView, displayImageOptions1);
+        }
 
-        loader.displayImage(collectionLoopData.getaImg(), imageView, displayImageOptions1);
-        loader.displayImage(collectionLoopData.getHeadImg(), headImage, displayImageOptions2);
+        String headImagePath = collectionLoopData.getHeadImg();
+        if (!TextUtils.isEmpty(headImagePath)) {
+            loader.displayImage(headImagePath, headImage);
+        }
 
-        userName.setText(collectionLoopData.getNickname());
-        title.setText(collectionLoopData.getaTitle());
+        String strNickName = collectionLoopData.getNickname();
+        if (!TextUtils.isEmpty(strNickName)) {
+            userName.setText(strNickName);
+        } else {
+            userName.setText("");
+        }
 
-        praise.setText(collectionLoopData.getaSupportCount());
-        comment.setText(collectionLoopData.aCmtCount);
+        String strTitle = collectionLoopData.getaTitle();
+        if (!TextUtils.isEmpty(strTitle)) {
+            title.setText(strTitle);
+        } else {
+            title.setText("");
+        }
 
-        return holder.getConvertView();
+        String praiseCount = collectionLoopData.getaSupportCount();
+        if (!TextUtils.isEmpty(praiseCount)) {
+            praise.setText(praiseCount);
+        } else {
+            praise.setText("0");
+        }
+
+        String commentCount = collectionLoopData.getaCmtCount();
+        if (!TextUtils.isEmpty(commentCount)) {
+            comment.setText(commentCount);
+        } else {
+            comment.setText("0");
+        }
+
+        convertView = holder.getConvertView();
+        int itemParams = screenWidth / 2 - Utils.newInstance(context).dip2px(10);
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemParams, itemParams);
+        convertView.setLayoutParams(params);
+
+        return convertView;
     }
 }

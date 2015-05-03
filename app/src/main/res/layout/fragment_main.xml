@@ -86,6 +86,30 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/popularRecommendation"
+                        android:textColor="@color/slider_line_color"
+                        android:drawableLeft="@drawable/icon_line"
+                        android:drawableStart="@drawable/icon_line"
+                        android:drawablePadding="3dp"
+                        android:textSize="18sp"
+                        android:id="@+id/textView5"/>
+                </RelativeLayout>
+
+                <com.minglang.suiuu.customview.LinearLayoutForListView
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/mainRecommendationLayout"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="@string/today_star"
                         android:textColor="@color/slider_line_color"
                         android:drawableLeft="@drawable/icon_line"
@@ -100,6 +124,7 @@
                     android:horizontalSpacing="10dp"
                     android:verticalSpacing="10dp"
                     android:numColumns="2"
+                    android:focusable="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -128,6 +153,7 @@
                     android:horizontalSpacing="10dp"
                     android:verticalSpacing="10dp"
                     android:numColumns="2"
+                    android:focusable="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 

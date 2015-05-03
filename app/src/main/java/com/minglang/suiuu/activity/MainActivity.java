@@ -451,7 +451,14 @@ public class MainActivity extends FragmentActivity {
                 startActivity(intent);
             }
         });
-
+        im_search.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                intent.putExtra("userId", "third");
+                startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -691,13 +698,10 @@ public class MainActivity extends FragmentActivity {
 
         if (isKITKAT) {
             /**************HeadLayout设置Margins*****************/
-            Log.i(TAG, "版本测试3333");
             RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
             LinearLayout.LayoutParams titleLayoutParams = new LinearLayout.LayoutParams(titleLayout.getLayoutParams());
             titleLayoutParams.setMargins(0, statusBarHeight, 0, 0);
             titleLayout.setLayoutParams(titleLayoutParams);
-        } else {
-            Log.i(TAG, "版本测试2233");
         }
 
         /*************设置侧滑菜单Params**********************/
@@ -724,6 +728,7 @@ public class MainActivity extends FragmentActivity {
         tab2 = (LinearLayout) findViewById(R.id.tab2);
         tab3 = (LinearLayout) findViewById(R.id.tab3);
         tab4 = (LinearLayout) findViewById(R.id.tab4);
+
         //初始化底部控件
         iv_theme = (ImageView) findViewById(R.id.img1);
         tv_theme_text = (TextView) findViewById(R.id.title1);
@@ -733,6 +738,7 @@ public class MainActivity extends FragmentActivity {
         tv_suiuu_text = (TextView) findViewById(R.id.title3);
         iv_conversation = (ImageView) findViewById(R.id.img4);
         tv_conversation_text = (TextView) findViewById(R.id.title4);
+
         changeTheme(true);
 
         sendMsg = (ImageView) findViewById(R.id.sendNewMessage);
@@ -758,14 +764,7 @@ public class MainActivity extends FragmentActivity {
         LoadDefaultFragment();
 
         initAnimation();
-        im_search.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-                intent.putExtra("userId", "third");
-                startActivity(intent);
-            }
-        });
+
     }
 
     //判断主题
@@ -1028,13 +1027,13 @@ public class MainActivity extends FragmentActivity {
         public void onReceive(Context context, Intent intent) {
             abortBroadcast();
 
-            String msgid = intent.getStringExtra("msgid");
+            String msgId = intent.getStringExtra("msgid");
             String from = intent.getStringExtra("from");
 
             EMConversation conversation = EMChatManager.getInstance().getConversation(from);
             if (conversation != null) {
                 // 把message设为已读
-                EMMessage msg = conversation.getMessage(msgid);
+                EMMessage msg = conversation.getMessage(msgId);
 
                 if (msg != null) {
 
@@ -1063,6 +1062,7 @@ public class MainActivity extends FragmentActivity {
             EMLog.d(TAG, "收到透传消息");
             //获取cmd message对象
             String msgId = intent.getStringExtra("msgid");
+            Log.i(TAG, "msgId:" + msgId);
             EMMessage message = intent.getParcelableExtra("message");
             //获取消息body
             CmdMessageBody cmdMsgBody = (CmdMessageBody) message.getBody();
@@ -1172,10 +1172,10 @@ public class MainActivity extends FragmentActivity {
     /**
      * 获取未读消息数
      *
-     * @return
+     * @return 未读消息数量
      */
     public int getUnreadMsgCountTotal() {
-        int unreadMsgCountTotal = 0;
+        int unreadMsgCountTotal;
         unreadMsgCountTotal = EMChatManager.getInstance().getUnreadMsgsCount();
         return unreadMsgCountTotal;
     }

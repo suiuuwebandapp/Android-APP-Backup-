@@ -24,12 +24,14 @@ import com.minglang.suiuu.activity.LoopArticleActivity;
 import com.minglang.suiuu.activity.OtherUserActivity;
 import com.minglang.suiuu.adapter.AttentionDynamicAdapter;
 import com.minglang.suiuu.adapter.LoopDynamicAdapter;
+import com.minglang.suiuu.adapter.RecommendTravelAdapter;
 import com.minglang.suiuu.adapter.TodayStarAdapter;
 import com.minglang.suiuu.customview.LinearLayoutForListView;
 import com.minglang.suiuu.customview.NoScrollBarGridView;
 import com.minglang.suiuu.entity.MainDynamic;
 import com.minglang.suiuu.entity.MainDynamicData;
 import com.minglang.suiuu.entity.MainDynamicDataLoop;
+import com.minglang.suiuu.entity.MainDynamicDataRecommendTravel;
 import com.minglang.suiuu.entity.MainDynamicDataRecommendUser;
 import com.minglang.suiuu.entity.MainDynamicDataUser;
 import com.minglang.suiuu.utils.HttpServicePath;
@@ -76,14 +78,8 @@ public class MainFragment extends Fragment {
     private ImageLoader imageLoader;
 
     /**
-     * 今日之星数据
+     * 关注动态数据集合
      */
-    private List<MainDynamicDataRecommendUser> mainDynamicDataRecommendUserList;
-    /**
-     * 今日之星数据加载View
-     */
-    private NoScrollBarGridView todayStarGridView;
-
     private List<MainDynamicDataUser> mainDynamicDataUserList;
 
     /**
@@ -92,16 +88,35 @@ public class MainFragment extends Fragment {
     private LinearLayoutForListView attentionDynamicLayout;
 
     /**
+     * 热门推荐数据集合
+     */
+    private List<MainDynamicDataRecommendTravel> mainDynamicDataRecommendTravelList;
+
+    /**
+     * 热门推荐Layout
+     */
+    private LinearLayoutForListView recommendDynamicLayout;
+
+    /**
+     * 今日之星数据
+     */
+    private List<MainDynamicDataRecommendUser> mainDynamicDataRecommendUserList;
+    /**
+     * 今日之星数据加载View
+     */
+    private NoScrollBarGridView todayStarGridView;
+
+    /**
+     * 圈子动态数据集合
+     */
+    private List<MainDynamicDataLoop> listLoopDynamic = new ArrayList<>();
+
+    /**
      * 圈子动态GridView
      */
     private NoScrollBarGridView loopDynamicGridView;
 
     private TextView moreButton;
-
-    /**
-     * 圈子动态统一数据集合
-     */
-    private List<MainDynamicDataLoop> listLoopDynamic = new ArrayList<>();
 
     private ProgressDialog progressDialog;
 
@@ -133,22 +148,29 @@ public class MainFragment extends Fragment {
             mainDynamic = JsonUtil.getInstance().fromJSON(MainDynamic.class, str);
             MainDynamicData data = mainDynamic.getData();
 
-            listLoopDynamic = data.getCircleDynamic();
-            LoopDynamicAdapter loopDynamicAdapter = new LoopDynamicAdapter(getActivity(), listLoopDynamic);
-            loopDynamicAdapter.setScrrenParams(screenWidth, screenHeight);
-            loopDynamicGridView.setAdapter(loopDynamicAdapter);
-
             //关注动态
             mainDynamicDataUserList = data.getUserDynamic();
             AttentionDynamicAdapter attentionDynamicAdapter = new AttentionDynamicAdapter(getActivity(),
                     mainDynamicDataUserList);
             attentionDynamicLayout.setAdapter(attentionDynamicAdapter);
 
+            //热门推荐
+            mainDynamicDataRecommendTravelList = data.getRecommendTravel();
+            RecommendTravelAdapter recommendTravelAdapter = new RecommendTravelAdapter(getActivity(),
+                    mainDynamicDataRecommendTravelList);
+            recommendDynamicLayout.setAdapter(recommendTravelAdapter);
+
             //今日之星
             mainDynamicDataRecommendUserList = data.getRecommendUser();
             TodayStarAdapter todayStarAdapter = new TodayStarAdapter(getActivity(), mainDynamicDataRecommendUserList);
             todayStarAdapter.setScreenParams(screenWidth, screenHeight);
             todayStarGridView.setAdapter(todayStarAdapter);
+
+            //圈子动态
+            listLoopDynamic = data.getCircleDynamic();
+            LoopDynamicAdapter loopDynamicAdapter = new LoopDynamicAdapter(getActivity(), listLoopDynamic);
+            loopDynamicAdapter.setScrrenParams(screenWidth, screenHeight);
+            loopDynamicGridView.setAdapter(loopDynamicAdapter);
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
@@ -197,6 +219,13 @@ public class MainFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), LoopArticleActivity.class);
                 intent.putExtra(ARTICLEID, articleId);
                 startActivity(intent);
+            }
+        });
+
+        recommendDynamicLayout.setOnItemClickListener(new LinearLayoutForListView.OnItemClickListener() {
+            @Override
+            public void onItemClicked(View v, Object obj, int position) {
+
             }
         });
 
@@ -271,6 +300,8 @@ public class MainFragment extends Fragment {
 
         attentionDynamicLayout = (LinearLayoutForListView) rootView.findViewById(R.id.mainAttentionLayout);
 
+        recommendDynamicLayout = (LinearLayoutForListView) rootView.findViewById(R.id.mainRecommendationLayout);
+
         todayStarGridView = (NoScrollBarGridView) rootView.findViewById(R.id.mainTodayStarGridView);
 
         loopDynamicGridView = (NoScrollBarGridView) rootView.findViewById(R.id.mainLoopDynamicGridView);
@@ -294,7 +325,9 @@ public class MainFragment extends Fragment {
             Log.i(TAG, "请求返回的数据:" + str);
 
             attentionDynamicLayout.removeAllViews();
+            recommendDynamicLayout.removeAllViews();
             bindData2View(str);
+            scrollView.smoothScrollTo(0, 0);
             mPtrFrame.refreshComplete();
         }
 

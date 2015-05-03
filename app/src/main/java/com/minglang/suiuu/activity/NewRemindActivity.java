@@ -20,6 +20,7 @@ import com.minglang.suiuu.fragment.remind.NewAtFragment;
 import com.minglang.suiuu.fragment.remind.NewAttentionFragment;
 import com.minglang.suiuu.fragment.remind.NewCommentFragment;
 import com.minglang.suiuu.fragment.remind.NewReplyFragment;
+import com.minglang.suiuu.utils.SuiuuInformation;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.ArrayList;
@@ -44,17 +45,9 @@ public class NewRemindActivity extends FragmentActivity {
 
     private int currIndex = 1;// 当前页卡编号
 
-    private int sliderViewWidth;//图片宽度
-
     private int tabWidth;// 每个tab头的宽度
 
     private int offsetX;//偏移量
-
-    private List<Fragment> fragmentList;
-
-    private FragmentManager fm;
-
-    private NewRemindAdapter newRemindAdapter;
 
     /**
      * 新@页面
@@ -76,10 +69,17 @@ public class NewRemindActivity extends FragmentActivity {
      */
     private NewAttentionFragment newAttentionFragment;
 
+    private String userSign;
+
+    private String verification;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_remind);
+
+        userSign = SuiuuInformation.ReadUserSign(this);
+        verification = SuiuuInformation.ReadVerification(this);
 
         initView();
 
@@ -107,7 +107,7 @@ public class NewRemindActivity extends FragmentActivity {
             @Override
             public void onPageSelected(int i) {
 
-                switch (i){
+                switch (i) {
                     case 0:
                         newAt.setTextColor(getResources().getColor(R.color.slider_line_color));
                         newComment.setTextColor(getResources().getColor(R.color.textColor));
@@ -165,7 +165,7 @@ public class NewRemindActivity extends FragmentActivity {
         int statusHeight = mTintManager.getConfig().getStatusBarHeight();
 
         RelativeLayout newRemindRootLayout = (RelativeLayout) findViewById(R.id.newRemindRootLayout);
-        newRemindRootLayout.setPadding(0,statusHeight,0,0);
+        newRemindRootLayout.setPadding(0, statusHeight, 0, 0);
 
         newRemindBack = (ImageView) findViewById(R.id.newRemindBack);
 
@@ -178,9 +178,9 @@ public class NewRemindActivity extends FragmentActivity {
 
         newRemindPager = (ViewPager) findViewById(R.id.newRemindPager);
 
-        fragmentList = new ArrayList<>();
+        List<Fragment> fragmentList = new ArrayList<>();
 
-        fm = getSupportFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
 
         initImageView();
 
@@ -191,13 +191,13 @@ public class NewRemindActivity extends FragmentActivity {
         fragmentList.add(newReplyFragment);
         fragmentList.add(newAttentionFragment);
 
-        newRemindAdapter = new NewRemindAdapter(fm, fragmentList);
+        NewRemindAdapter newRemindAdapter = new NewRemindAdapter(fm, fragmentList);
 
         newRemindPager.setAdapter(newRemindAdapter);
     }
 
     private void initImageView() {
-        sliderViewWidth = BitmapFactory.decodeResource(getResources(), R.drawable.slider).getWidth();
+        int sliderViewWidth = BitmapFactory.decodeResource(getResources(), R.drawable.slider).getWidth();
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenW = dm.widthPixels;// 获取分辨率宽度
@@ -211,10 +211,10 @@ public class NewRemindActivity extends FragmentActivity {
     }
 
     private void CreateFragment() {
-        newAtFragment = NewAtFragment.newInstance("a", "b");
-        newCommentFragment = NewCommentFragment.newInstance("c", "d");
-        newReplyFragment = NewReplyFragment.newInstance("e", "f");
-        newAttentionFragment = NewAttentionFragment.newInstance("g", "h");
+        newAtFragment = NewAtFragment.newInstance(userSign, verification);
+        newCommentFragment = NewCommentFragment.newInstance(userSign, verification);
+        newReplyFragment = NewReplyFragment.newInstance(userSign, verification);
+        newAttentionFragment = NewAttentionFragment.newInstance(userSign, verification);
     }
 
     class NewRemindClick implements View.OnClickListener {

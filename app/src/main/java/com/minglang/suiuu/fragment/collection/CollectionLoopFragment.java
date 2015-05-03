@@ -26,13 +26,13 @@ import com.minglang.suiuu.entity.CollectionLoop;
 import com.minglang.suiuu.entity.CollectionLoopData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInformation;
 
 import java.util.List;
 
 /**
- *
  * 收藏的圈子
  * <p/>
  * A simple {@link Fragment} subclass.
@@ -59,6 +59,8 @@ public class CollectionLoopFragment extends Fragment {
     private List<CollectionLoopData> list;
 
     private Dialog dialog;
+
+    private int screenWidth, screenHeight;
 
     /**
      * Use this factory method to create a new instance of
@@ -93,6 +95,10 @@ public class CollectionLoopFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_collection_loop, container, false);
+
+        ScreenUtils utils = new ScreenUtils(getActivity());
+        screenWidth = utils.getScreenWidth();
+        screenHeight = utils.getScreenHeight();
 
         initView(rootView);
 
@@ -166,6 +172,7 @@ public class CollectionLoopFragment extends Fragment {
                 collectionLoop = JsonUtil.getInstance().fromJSON(CollectionLoop.class, str);
                 list = collectionLoop.getData();
                 CollectionLoopAdapter collectionLoopAdapter = new CollectionLoopAdapter(getActivity(), collectionLoop, list);
+                collectionLoopAdapter.setScreenParams(screenWidth, screenHeight);
                 gridView.setAdapter(collectionLoopAdapter);
             } catch (Exception e) {
                 Log.e(TAG, "收藏的圈子的数据解析异常:" + e.getMessage());
