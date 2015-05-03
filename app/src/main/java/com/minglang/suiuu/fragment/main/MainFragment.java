@@ -184,7 +184,7 @@ public class MainFragment extends Fragment {
             public void onRefreshBegin(PtrFrameLayout frame) {
 
                 SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                        HttpServicePath.MainDynamicPath, new MainDynamic2RequestCallBack());
+                        HttpServicePath.MainDynamicPath, new MainDynamicRequestCallBack());
                 httpRequest.requestNetworkData();
             }
         });
@@ -291,7 +291,11 @@ public class MainFragment extends Fragment {
             }
 
             String str = stringResponseInfo.result;
+            Log.i(TAG, "请求返回的数据:" + str);
+
+            attentionDynamicLayout.removeAllViews();
             bindData2View(str);
+            mPtrFrame.refreshComplete();
         }
 
         @Override
@@ -301,28 +305,10 @@ public class MainFragment extends Fragment {
                 progressDialog.dismiss();
             }
 
-            Log.e(TAG, s);
+            mPtrFrame.refreshComplete();
+
+            Log.e(TAG, "数据请求失败:" + s);
             Toast.makeText(getActivity(), "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
-
-    private class MainDynamic2RequestCallBack extends RequestCallBack<String> {
-
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            String str = stringResponseInfo.result;
-            attentionDynamicLayout.removeAllViews();
-            bindData2View(str);
-            mPtrFrame.refreshComplete();
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            mPtrFrame.refreshComplete();
-
-            Log.e(TAG, s);
-            Toast.makeText(getActivity(), "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 }

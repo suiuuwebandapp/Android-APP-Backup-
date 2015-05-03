@@ -125,7 +125,7 @@ public class ThemeFragment extends Fragment {
                 String circleId = list.get(position).getcId();
                 Intent intent = new Intent(getActivity(), LoopDetailsActivity.class);
                 intent.putExtra("circleId", circleId);
-                intent.putExtra("type","1");
+                intent.putExtra("type", "1");
                 startActivity(intent);
             }
         });
@@ -185,7 +185,6 @@ public class ThemeFragment extends Fragment {
 
             Loop loop;
             loop = JsonUtil.getInstance().fromJSON(Loop.class, str);
-            Log.i(TAG, loop.toString());
             if (loop != null) {
                 if (Integer.parseInt(loop.getStatus()) == 1) {
                     list = loop.getData();
@@ -201,7 +200,7 @@ public class ThemeFragment extends Fragment {
         @Override
         public void onFailure(HttpException error, String msg) {
 
-            Log.e(TAG, msg);
+            Log.e(TAG, "主题数据请求失败:" + msg);
 
             if (progressDialog.isShowing()) {
                 progressDialog.cancel();

@@ -1,13 +1,16 @@
 package com.minglang.suiuu.fragment.collection;
 
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
@@ -24,10 +27,12 @@ import com.minglang.suiuu.entity.CollectionLoopData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuInformation;
 
 import java.util.List;
 
 /**
+ *
  * 收藏的圈子
  * <p/>
  * A simple {@link Fragment} subclass.
@@ -52,6 +57,8 @@ public class CollectionLoopFragment extends Fragment {
     private CollectionLoop collectionLoop;
 
     private List<CollectionLoopData> list;
+
+    private Dialog dialog;
 
     /**
      * Use this factory method to create a new instance of
@@ -115,10 +122,14 @@ public class CollectionLoopFragment extends Fragment {
      * 从网络获取收藏的圈子数据
      */
     private void getCollectionLoop4Service() {
+
+        if (dialog != null) {
+            dialog.show();
+        }
+
         RequestParams params = new RequestParams();
         params.addBodyParameter("page", String.valueOf(page));
-//        TODO 忽略身份验证KEY
-//        params.addBodyParameter(HttpServicePath.key, SuiuuInformation.ReadVerification(getActivity()));
+        params.addBodyParameter(HttpServicePath.key, SuiuuInformation.ReadVerification(getActivity()));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionLoopPath, new CollectionLoopRequestCallBack());
@@ -132,6 +143,12 @@ public class CollectionLoopFragment extends Fragment {
      * @param rootView Fragment的根View
      */
     private void initView(View rootView) {
+
+        dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progress_bar);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+
         gridView = (GridView) rootView.findViewById(R.id.collection_loop_grid_view);
     }
 
@@ -139,6 +156,11 @@ public class CollectionLoopFragment extends Fragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
             String str = stringResponseInfo.result;
             try {
                 collectionLoop = JsonUtil.getInstance().fromJSON(CollectionLoop.class, str);
@@ -146,13 +168,18 @@ public class CollectionLoopFragment extends Fragment {
                 CollectionLoopAdapter collectionLoopAdapter = new CollectionLoopAdapter(getActivity(), collectionLoop, list);
                 gridView.setAdapter(collectionLoopAdapter);
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG, "收藏的圈子的数据解析异常:" + e.getMessage());
             }
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, s);
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
+            Log.e(TAG, "收藏的圈子数据请求失败:" + s);
         }
     }
 

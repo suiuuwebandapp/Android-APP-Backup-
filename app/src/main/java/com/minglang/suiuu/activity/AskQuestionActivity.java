@@ -102,6 +102,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                     if (1 == status && picSuccessCount == listPicture.size()) {
                         dialog.dismiss();
                         Toast.makeText(AskQuestionActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
+                        //TODO 发布完成后在此跳转
                         finish();
                     } else {
                         dialog.dismiss();
@@ -169,10 +170,10 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
     private void updateDate(String path) {
         String type = path.substring(path.lastIndexOf("/"));
         String name = type.substring(type.lastIndexOf(".") + 1);
-        OSSFile bigfFile = ossService.getOssFile(bucket, "suiuu_content" + type);
+        OSSFile bigFile = ossService.getOssFile(bucket, "suiuu_content" + type);
         try {
-            bigfFile.setUploadFilePath(path, name);
-            bigfFile.ResumableUploadInBackground(new SaveCallback() {
+            bigFile.setUploadFilePath(path, name);
+            bigFile.ResumableUploadInBackground(new SaveCallback() {
 
                 @Override
                 public void onSuccess(String objectKey) {
@@ -191,7 +192,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                 @Override
                 public void onFailure(String objectKey, OSSException ossException) {
                     handler.sendEmptyMessage(getData_FAILURE);
-                    Log.i(TAG, "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
+                    Log.e(TAG, "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
                     ossException.printStackTrace();
                     ossException.getException().printStackTrace();
                 }
@@ -319,7 +320,6 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
             picNameList.add(substring);
         }
         params.addBodyParameter("imgList", JsonUtil.getInstance().toJSON(picNameList));
-        Log.i(TAG, JsonUtil.getInstance().toJSON(picNameList) + "YYYYYYYY");
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.createLoop, new CreateLoopCallBack());
         suHttpRequest.setParams(params);

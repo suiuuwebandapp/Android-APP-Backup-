@@ -126,6 +126,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
                     if (1 == status && picSuccessCount == picList.size()) {
                         dialog.dismiss();
                         Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
+                        //TODO 发布完成后在此跳转
                         finish();
                     } else {
                         dialog.dismiss();

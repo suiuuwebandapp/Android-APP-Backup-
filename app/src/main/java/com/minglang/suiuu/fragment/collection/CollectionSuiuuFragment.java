@@ -12,12 +12,15 @@ import com.minglang.suiuu.R;
 /**
  *
  * 收藏的路线
- *
+ * <p/>
  * A simple {@link Fragment} subclass.
  * Use the {@link CollectionSuiuuFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class CollectionSuiuuFragment extends Fragment {
+
+    private static final String TAG = CollectionSuiuuFragment.class.getSimpleName();
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";

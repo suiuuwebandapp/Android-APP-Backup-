@@ -209,7 +209,6 @@ public class LoopDetailsActivity extends Activity {
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
             String str = responseInfo.result;
-            Log.i(TAG, str);
             try {
                 LoopDetails loopDetails = JsonUtil.getInstance().fromJSON(LoopDetails.class, str);
                 loopDetailsData = loopDetails.getData();
@@ -237,7 +236,7 @@ public class LoopDetailsActivity extends Activity {
         @Override
         public void onFailure(HttpException error, String msg) {
 
-            Log.i(TAG, msg);
+            Log.e(TAG, "圈子详细列表请求失败:" + msg);
 
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();

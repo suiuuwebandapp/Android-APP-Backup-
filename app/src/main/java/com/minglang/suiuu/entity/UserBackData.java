@@ -47,6 +47,8 @@ public class UserBackData {
 
     public String status;
 
+    public String isPublisher;
+
     public String getUserId() {
         return userId;
     }
@@ -207,6 +209,14 @@ public class UserBackData {
         this.status = status;
     }
 
+    public String getIsPublisher() {
+        return isPublisher;
+    }
+
+    public void setIsPublisher(String isPublisher) {
+        this.isPublisher = isPublisher;
+    }
+
     @Override
     public String toString() {
         return "UserBackData{" +
@@ -230,6 +240,7 @@ public class UserBackData {
                 ", lastLoginTime='" + lastLoginTime + '\'' +
                 ", userSign='" + userSign + '\'' +
                 ", status='" + status + '\'' +
+                ", isPublisher='" + isPublisher + '\'' +
                 '}';
     }
 }
