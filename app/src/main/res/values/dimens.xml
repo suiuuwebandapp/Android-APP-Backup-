@@ -28,6 +28,7 @@
     <dimen name="layout_100dp">100dp</dimen>
     <dimen name="layout_150dp">150dp</dimen>
     <dimen name="layout_120dp">120dp</dimen>
+    <dimen name="layout_170dp">170dp</dimen>
 
 
 

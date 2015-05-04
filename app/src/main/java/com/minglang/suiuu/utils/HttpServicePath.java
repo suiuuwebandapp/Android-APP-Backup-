@@ -202,4 +202,8 @@ public class HttpServicePath {
      * const  TYPE_ATTENTION=4;//类型为关注
      */
     public static String GetMessageListPath = RootPath + "/attention/get-messages-remind";
+    /**
+     * 得到随游列表
+     */
+    public static String getSuiuuList = RootPath+ "/app-travel/get-travel-list";
 }

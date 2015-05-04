@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
@@ -43,6 +42,7 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -156,7 +156,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
 
         initView();
         lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, picList));
-        setListViewHeightBasedOnChildren(lv_picture_description);
+        Utils.setListViewHeightBasedOnChildren(lv_picture_description);
 //        iv_cancel.setVisibility(View.GONE);
         tv_cancel.setVisibility(View.VISIBLE);
 
@@ -451,22 +451,5 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
             Log.i(TAG, "请求失败------------------------------------" + s);
         }
     }
-    public void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
 
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        params.height += 5;//if without this statement,the listview will be a little short
-        listView.setLayoutParams(params);
-    }
 }

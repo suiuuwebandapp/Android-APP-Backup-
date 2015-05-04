@@ -60,11 +60,6 @@ public class OtherUserActivity extends Activity {
     private ImageView headImage;
 
     /**
-     * 足迹
-     */
-    private TextView footprint;
-
-    /**
      * 关注
      */
     private TextView attention;
@@ -142,7 +137,6 @@ public class OtherUserActivity extends Activity {
         otherUserBack.setOnClickListener(otherUserClick);
         collection.setOnClickListener(otherUserClick);
         headImage.setOnClickListener(otherUserClick);
-        footprint.setOnClickListener(otherUserClick);
         attention.setOnClickListener(otherUserClick);
         conversation.setOnClickListener(otherUserClick);
 
@@ -174,7 +168,6 @@ public class OtherUserActivity extends Activity {
         otherUserBack = (ImageView) findViewById(R.id.OtherUserBack);
         collection = (TextView) findViewById(R.id.otherUserCollection);
         headImage = (ImageView) findViewById(R.id.otherUserHeadImage);
-        footprint = (TextView) findViewById(R.id.otherUserFootprint);
         attention = (TextView) findViewById(R.id.otherUserAttention);
         conversation = (TextView) findViewById(R.id.otherUserConversation);
         otherUserLoop = (GridView) findViewById(R.id.otherUserLoop);
@@ -198,10 +191,6 @@ public class OtherUserActivity extends Activity {
 
                 case R.id.otherUserHeadImage:
                     break;
-
-                case R.id.otherUserFootprint:
-                    break;
-
                 case R.id.otherUserAttention:
                     AddAttentionRequest4Service();
                     break;
