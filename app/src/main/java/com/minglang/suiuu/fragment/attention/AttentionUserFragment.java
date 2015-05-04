@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -36,8 +37,8 @@ public class AttentionUserFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
+    private String userSign;
+    private String verification;
 
     private ListView listView;
 
@@ -70,8 +71,8 @@ public class AttentionUserFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            userSign = getArguments().getString(ARG_PARAM1);
+            verification = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -103,8 +104,7 @@ public class AttentionUserFragment extends Fragment {
     private void getAttentionData4Service() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("page", String.valueOf(page));
-//        TODO 忽略身份验证KEY
-//        params.addBodyParameter(HttpServicePath.key, SuiuuInformation.ReadVerification(getActivity()));
+        params.addBodyParameter(HttpServicePath.key, verification);
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.AttentionUserPath, new AttentionUserRequestCallback());
@@ -140,23 +140,26 @@ public class AttentionUserFragment extends Fragment {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
+            Log.i(TAG, "关注的用户数据:" + str);
             try {
                 AttentionUser attentionUser = JsonUtil.getInstance().fromJSON(AttentionUser.class, str);
                 if (attentionUser.getStatus().equals("1")) {
                     list = attentionUser.getData();
-
-                    AttentionUserAdapter attentionUserAdapter = new AttentionUserAdapter(getActivity(), attentionUser, list);
+                    AttentionUserAdapter attentionUserAdapter = new AttentionUserAdapter(getActivity(), list);
                     listView.setAdapter(attentionUserAdapter);
-
+                } else {
+                    Toast.makeText(getActivity(), "数据获取异常，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG, "关注的用户的数据解析失败:" + e.getMessage());
+                Toast.makeText(getActivity(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, s);
+            Log.e(TAG, "关注的用户数据请求失败:" + s);
+            Toast.makeText(getActivity(), "网络异常，请检查后重试！", Toast.LENGTH_SHORT).show();
         }
     }
 

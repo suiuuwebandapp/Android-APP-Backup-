@@ -2,6 +2,7 @@ package com.minglang.suiuu.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.Loop;
 import com.minglang.suiuu.entity.LoopData;
+import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -96,9 +98,18 @@ public class AreaAdapter extends BaseAdapter {
 
         LoopData loopData = list.get(position);
 
-        imageLoader.displayImage(url, imageView, displayImageOptions);
-        title.setText(loopData.getcName());
+        String imagePath = loopData.getCpic();
+        Log.i(TAG, "imagePath:" + imagePath);
+        if (!TextUtils.isEmpty(imagePath)) {
+            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imagePath, imageView, displayImageOptions);
+        }
 
+        String name = loopData.getcName();
+        if (!TextUtils.isEmpty(name)) {
+            title.setText(name);
+        } else {
+            title.setText("");
+        }
         int itemParams = screenWidth / 2 - Utils.newInstance(context).dip2px(10);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemParams, itemParams);
 

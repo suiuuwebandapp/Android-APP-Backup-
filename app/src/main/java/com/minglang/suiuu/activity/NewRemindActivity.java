@@ -1,6 +1,7 @@
 package com.minglang.suiuu.activity;
 
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -164,8 +165,11 @@ public class NewRemindActivity extends FragmentActivity {
 
         int statusHeight = mTintManager.getConfig().getStatusBarHeight();
 
-        RelativeLayout newRemindRootLayout = (RelativeLayout) findViewById(R.id.newRemindRootLayout);
-        newRemindRootLayout.setPadding(0, statusHeight, 0, 0);
+        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        if (isKITKAT) {
+            RelativeLayout newRemindRootLayout = (RelativeLayout) findViewById(R.id.newRemindRootLayout);
+            newRemindRootLayout.setPadding(0, statusHeight, 0, 0);
+        }
 
         newRemindBack = (ImageView) findViewById(R.id.newRemindBack);
 
@@ -177,6 +181,7 @@ public class NewRemindActivity extends FragmentActivity {
         newRemindSlider = (ImageView) findViewById(R.id.newRemindSlider);
 
         newRemindPager = (ViewPager) findViewById(R.id.newRemindPager);
+        newRemindPager.setOffscreenPageLimit(4);
 
         List<Fragment> fragmentList = new ArrayList<>();
 

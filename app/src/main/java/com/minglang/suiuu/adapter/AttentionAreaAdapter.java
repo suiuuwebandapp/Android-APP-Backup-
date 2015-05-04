@@ -5,13 +5,14 @@ import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.AttentionLoop;
 import com.minglang.suiuu.entity.AttentionLoopData;
+import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -25,11 +26,10 @@ import java.util.List;
  * <p/>
  * Created by Administrator on 2015/4/27.
  */
-public class AttentionLoopAdapter extends BaseAdapter {
+public class AttentionAreaAdapter extends BaseAdapter {
 
     private Context context;
 
-    private AttentionLoop attentionLoop;
 
     private List<AttentionLoopData> list;
 
@@ -37,18 +37,26 @@ public class AttentionLoopAdapter extends BaseAdapter {
 
     private DisplayImageOptions displayImageOptions;
 
-    public AttentionLoopAdapter(Context context, AttentionLoop attentionLoop, List<AttentionLoopData> list) {
+    private int screenWidth, screenHeight;
+
+    public AttentionAreaAdapter(Context context, List<AttentionLoopData> list) {
         this.context = context;
-        this.attentionLoop = attentionLoop;
         this.list = list;
 
         imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        if(!imageLoader.isInited()){
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
 
         displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
                 .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
+    }
+
+    public void setScreenParams(int screenWidth, int screenHeight) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
     }
 
     @Override
@@ -90,6 +98,12 @@ public class AttentionLoopAdapter extends BaseAdapter {
         String str_title = list.get(position).getcName();
         title.setText(str_title);
 
-        return holder.getConvertView();
+        convertView = holder.getConvertView();
+
+        int itemParams = screenWidth / 3 - Utils.newInstance(context).dip2px(10);
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemParams, itemParams);
+        convertView.setLayoutParams(params);
+
+        return convertView;
     }
 }

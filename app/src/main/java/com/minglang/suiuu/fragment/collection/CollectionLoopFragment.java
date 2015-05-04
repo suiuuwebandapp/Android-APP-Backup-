@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -35,7 +36,6 @@ import java.util.List;
 /**
  * 收藏的圈子
  * <p/>
- * A simple {@link Fragment} subclass.
  * Use the {@link CollectionLoopFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
@@ -47,14 +47,12 @@ public class CollectionLoopFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
+    private String userSign;
+    private String verification;
 
     private GridView gridView;
 
     private int page = 1;
-
-    private CollectionLoop collectionLoop;
 
     private List<CollectionLoopData> list;
 
@@ -87,8 +85,8 @@ public class CollectionLoopFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            userSign = getArguments().getString(ARG_PARAM1);
+            verification = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -169,13 +167,14 @@ public class CollectionLoopFragment extends Fragment {
 
             String str = stringResponseInfo.result;
             try {
-                collectionLoop = JsonUtil.getInstance().fromJSON(CollectionLoop.class, str);
+                CollectionLoop collectionLoop = JsonUtil.getInstance().fromJSON(CollectionLoop.class, str);
                 list = collectionLoop.getData();
-                CollectionLoopAdapter collectionLoopAdapter = new CollectionLoopAdapter(getActivity(), collectionLoop, list);
+                CollectionLoopAdapter collectionLoopAdapter = new CollectionLoopAdapter(getActivity(), list);
                 collectionLoopAdapter.setScreenParams(screenWidth, screenHeight);
                 gridView.setAdapter(collectionLoopAdapter);
             } catch (Exception e) {
                 Log.e(TAG, "收藏的圈子的数据解析异常:" + e.getMessage());
+                Toast.makeText(getActivity(), "数据异常，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -187,6 +186,7 @@ public class CollectionLoopFragment extends Fragment {
             }
 
             Log.e(TAG, "收藏的圈子数据请求失败:" + s);
+            Toast.makeText(getActivity(), "网络异常，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
 

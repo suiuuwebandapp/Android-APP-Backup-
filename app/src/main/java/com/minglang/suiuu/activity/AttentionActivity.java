@@ -18,8 +18,9 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.AttentionPagerAdapter;
-import com.minglang.suiuu.fragment.attention.AttentionLoopFragment;
+import com.minglang.suiuu.fragment.attention.AttentionAreaFragment;
 import com.minglang.suiuu.fragment.attention.AttentionUserFragment;
+import com.minglang.suiuu.utils.SuiuuInformation;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 import com.minglang.suiuu.utils.Utils;
 
@@ -76,13 +77,14 @@ public class AttentionActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
             }
         });
 
         attentionPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i2) {
-                Log.i(TAG, "偏移量:" + String.valueOf(v));
+//                Log.i(TAG, "偏移量:" + String.valueOf(v));
             }
 
             @Override
@@ -106,7 +108,7 @@ public class AttentionActivity extends FragmentActivity {
                 anim.setDuration(200);
                 attentionSliderView.startAnimation(anim);
 
-                Log.i(TAG, "offsetX:" + String.valueOf(offsetX));
+//                Log.i(TAG, "offsetX:" + String.valueOf(offsetX));
             }
 
             @Override
@@ -140,6 +142,7 @@ public class AttentionActivity extends FragmentActivity {
         if (isKITKAT) {
             LinearLayout rootLayout = (LinearLayout) findViewById(R.id.attentionRootLayout);
             rootLayout.setPadding(0, statusHeight, 0, 0);
+            Log.i(TAG, "状态栏高度:" + statusHeight);
         }
 
         AttentionBack = (ImageView) findViewById(R.id.AttentionBack);
@@ -151,6 +154,9 @@ public class AttentionActivity extends FragmentActivity {
         attentionThemeTitle = (TextView) findViewById(R.id.attention_theme_title);
         attentionUserTitle = (TextView) findViewById(R.id.attention_user_title);
 
+        String userSign = SuiuuInformation.ReadUserSign(this);
+        String verification = SuiuuInformation.ReadVerification(this);
+
         List<Fragment> fragmentList = new ArrayList<>();
 
         FragmentManager fm = getSupportFragmentManager();
@@ -158,12 +164,12 @@ public class AttentionActivity extends FragmentActivity {
         /**
          关注圈子页面
          */
-        AttentionLoopFragment attentionThemeFragment = AttentionLoopFragment.newInstance("a", "b");
+        AttentionAreaFragment attentionThemeFragment = AttentionAreaFragment.newInstance(userSign, verification);
 
         /**
          关注用户页面
          */
-        AttentionUserFragment attentionUserFragment = AttentionUserFragment.newInstance("c", "d");
+        AttentionUserFragment attentionUserFragment = AttentionUserFragment.newInstance(userSign, verification);
 
         fragmentList.add(attentionThemeFragment);
         fragmentList.add(attentionUserFragment);
@@ -193,6 +199,12 @@ public class AttentionActivity extends FragmentActivity {
         offsetX = (tabWidth - sliderViewWidth) / 2;
         attentionSliderView.setPadding(offsetX, 0, 0, 0);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
     }
 
     class AttentionClick implements View.OnClickListener {

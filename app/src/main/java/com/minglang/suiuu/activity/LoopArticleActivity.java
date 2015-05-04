@@ -248,7 +248,7 @@ public class LoopArticleActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent showPic = new Intent(LoopArticleActivity.this, ShowBigImage.class);
-                showPic.putExtra("remotepath", AppConstant.img_from_suiuu_content+imageList.get(position));
+                showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT +imageList.get(position));
                 showPic.putExtra("isHuanXin",false);
                 startActivity(showPic);
             }

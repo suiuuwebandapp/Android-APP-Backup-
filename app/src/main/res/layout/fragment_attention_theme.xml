@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.minglang.suiuu.fragment.attention.AttentionLoopFragment">
+    android:padding="5dp"
+    tools:context="com.minglang.suiuu.fragment.attention.AttentionAreaFragment">
 
 
     <GridView
@@ -11,6 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="3"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>

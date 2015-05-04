@@ -19,6 +19,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.CollectionAdapter;
 import com.minglang.suiuu.fragment.collection.CollectionLoopFragment;
 import com.minglang.suiuu.fragment.collection.CollectionSuiuuFragment;
+import com.minglang.suiuu.utils.SuiuuInformation;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import java.util.List;
  * 收藏页面
  */
 public class CollectionActivity extends FragmentActivity {
+
 
     /**
      * 返回
@@ -47,7 +49,7 @@ public class CollectionActivity extends FragmentActivity {
     /**
      * 路线Tab头
      */
-    private TextView collectionRoute;
+    private TextView collectionSuiuu;
 
     /**
      * 滑块
@@ -94,7 +96,7 @@ public class CollectionActivity extends FragmentActivity {
         });
 
         collectionLoop.setOnClickListener(new CollectionClick(0));
-        collectionRoute.setOnClickListener(new CollectionClick(1));
+        collectionSuiuu.setOnClickListener(new CollectionClick(1));
 
         collectionPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -109,11 +111,11 @@ public class CollectionActivity extends FragmentActivity {
                 switch (i) {
                     case 0:
                         collectionLoop.setTextColor(getResources().getColor(R.color.slider_line_color));
-                        collectionRoute.setTextColor(getResources().getColor(R.color.textColor));
+                        collectionSuiuu.setTextColor(getResources().getColor(R.color.textColor));
                         break;
                     case 1:
                         collectionLoop.setTextColor(getResources().getColor(R.color.textColor));
-                        collectionRoute.setTextColor(getResources().getColor(R.color.slider_line_color));
+                        collectionSuiuu.setTextColor(getResources().getColor(R.color.slider_line_color));
                         break;
 
                 }
@@ -155,7 +157,7 @@ public class CollectionActivity extends FragmentActivity {
         collectionSearch = (ImageView) findViewById(R.id.collectionSearch);
 
         collectionLoop = (TextView) findViewById(R.id.collectionLoop);
-        collectionRoute = (TextView) findViewById(R.id.collectionRoute);
+        collectionSuiuu = (TextView) findViewById(R.id.collectionSuiuu);
 
         collectionSlider = (ImageView) findViewById(R.id.collectionSlider);
 
@@ -163,8 +165,11 @@ public class CollectionActivity extends FragmentActivity {
 
         List<Fragment> collectionList = new ArrayList<>();
 
-        CollectionLoopFragment collectionLoopFragment = CollectionLoopFragment.newInstance("a", "b");
-        CollectionSuiuuFragment collectionSuiuuFragment = CollectionSuiuuFragment.newInstance("c", "d");
+        String userSign = SuiuuInformation.ReadUserSign(this);
+        String verification = SuiuuInformation.ReadVerification(this);
+
+        CollectionLoopFragment collectionLoopFragment = CollectionLoopFragment.newInstance(userSign, verification);
+        CollectionSuiuuFragment collectionSuiuuFragment = CollectionSuiuuFragment.newInstance(userSign, verification);
 
         collectionList.add(collectionLoopFragment);
         collectionList.add(collectionSuiuuFragment);

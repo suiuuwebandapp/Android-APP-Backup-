@@ -17,11 +17,12 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.AttentionLoopAdapter;
+import com.minglang.suiuu.adapter.AttentionAreaAdapter;
 import com.minglang.suiuu.entity.AttentionLoop;
 import com.minglang.suiuu.entity.AttentionLoopData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
 import java.util.List;
@@ -29,22 +30,24 @@ import java.util.List;
 /**
  * 关注主题
  */
-public class AttentionLoopFragment extends Fragment {
+public class AttentionAreaFragment extends Fragment {
 
-    private static final String TAG = AttentionLoopFragment.class.getSimpleName();
+    private static final String TAG = AttentionAreaFragment.class.getSimpleName();
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
+    private String userSign;
+    private String verification;
 
     private GridView attentionThemeGridView;
 
     private int page = 1;
 
     private List<AttentionLoopData> list;
+
+    private int screenWidth, screenHeight;
 
     /**
      * Use this factory method to create a new instance of
@@ -54,8 +57,8 @@ public class AttentionLoopFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment AttentionThemeFragment.
      */
-    public static AttentionLoopFragment newInstance(String param1, String param2) {
-        AttentionLoopFragment fragment = new AttentionLoopFragment();
+    public static AttentionAreaFragment newInstance(String param1, String param2) {
+        AttentionAreaFragment fragment = new AttentionAreaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -63,7 +66,7 @@ public class AttentionLoopFragment extends Fragment {
         return fragment;
     }
 
-    public AttentionLoopFragment() {
+    public AttentionAreaFragment() {
         // Required empty public constructor
     }
 
@@ -71,8 +74,8 @@ public class AttentionLoopFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            userSign = getArguments().getString(ARG_PARAM1);
+            verification = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -104,8 +107,7 @@ public class AttentionLoopFragment extends Fragment {
     private void getAttentionData4Service() {
 
         RequestParams params = new RequestParams();
-//        TODO 忽略身份验证KEY
-//        params.addBodyParameter(HttpServicePath.key, SuiuuInformation.ReadVerification(getActivity()));
+        params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter("page", String.valueOf(page));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
@@ -121,6 +123,10 @@ public class AttentionLoopFragment extends Fragment {
      * @param rootView Fragment根View
      */
     private void initView(View rootView) {
+        ScreenUtils utils = new ScreenUtils(getActivity());
+        screenWidth = utils.getScreenWidth();
+        screenHeight = utils.getScreenHeight();
+
         attentionThemeGridView = (GridView) rootView.findViewById(R.id.attentionThemeGridView);
     }
 
@@ -150,22 +156,22 @@ public class AttentionLoopFragment extends Fragment {
 
                     list = attentionLoop.getData();
 
-                    AttentionLoopAdapter attentionLoopAdapter = new AttentionLoopAdapter(getActivity(),
-                            attentionLoop, list);
-                    attentionThemeGridView.setAdapter(attentionLoopAdapter);
+                    AttentionAreaAdapter attentionAreaAdapter = new AttentionAreaAdapter(getActivity(), list);
+                    attentionAreaAdapter.setScreenParams(screenWidth, screenHeight);
+                    attentionThemeGridView.setAdapter(attentionAreaAdapter);
 
                 } else {
-                    Toast.makeText(getActivity(), "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "数据获取异常，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
-                Toast.makeText(getActivity(), "数据获取异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "关注的圈子数据解析异常:" + e.getMessage());
+                Toast.makeText(getActivity(), "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, s);
+            Log.e(TAG, "关注的圈子数据请求失败:" + s);
             Toast.makeText(getActivity(), "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
