@@ -53,10 +53,10 @@
             android:text="@string/title2" />
 
         <TextView
-            android:id="@+id/collectionRoute"
+            android:id="@+id/collectionSuiuu"
             style="@style/collectionInfoStyle"
             android:textColor="@color/textColor"
-            android:text="@string/route" />
+            android:text="@string/title3" />
     </LinearLayout>
 
     <ImageView
@@ -68,7 +68,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="5px"
+        android:layout_height="2dp"
         android:background="@color/slider_line_color"/>
 
     <android.support.v4.view.ViewPager

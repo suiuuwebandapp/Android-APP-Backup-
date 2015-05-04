@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
-import com.minglang.suiuu.entity.CollectionLoop;
 import com.minglang.suiuu.entity.CollectionLoopData;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
@@ -32,8 +31,6 @@ public class CollectionLoopAdapter extends BaseAdapter {
 
     private Context context;
 
-    private CollectionLoop collectionLoop;
-
     private List<CollectionLoopData> list;
 
     private ImageLoader loader;
@@ -42,9 +39,8 @@ public class CollectionLoopAdapter extends BaseAdapter {
 
     private int screenWidth, screenHeight;
 
-    public CollectionLoopAdapter(Context context, CollectionLoop collectionLoop, List<CollectionLoopData> list) {
+    public CollectionLoopAdapter(Context context, List<CollectionLoopData> list) {
         this.context = context;
-        this.collectionLoop = collectionLoop;
         this.list = list;
 
         loader = ImageLoader.getInstance();

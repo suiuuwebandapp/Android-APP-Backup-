@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.AttentionUser;
 import com.minglang.suiuu.entity.AttentionUserData;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -29,21 +28,20 @@ public class AttentionUserAdapter extends BaseAdapter {
 
     private Context context;
 
-    private AttentionUser attentionUser;
-
     private List<AttentionUserData> list;
 
     private ImageLoader imageLoader;
 
     private DisplayImageOptions displayImageOptions;
 
-    public AttentionUserAdapter(Context context, AttentionUser attentionUser, List<AttentionUserData> list) {
+    public AttentionUserAdapter(Context context, List<AttentionUserData> list) {
         this.context = context;
-        this.attentionUser = attentionUser;
         this.list = list;
 
         imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        if (!imageLoader.isInited()) {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
 
         displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image2)
                 .showImageForEmptyUri(R.drawable.default_head_image2).showImageOnFail(R.drawable.default_head_image2)
@@ -82,21 +80,28 @@ public class AttentionUserAdapter extends BaseAdapter {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_attention_user, position);
 
         ImageView headImage = holder.getView(R.id.item_attention_user_head_image);
+        TextView title = holder.getView(R.id.item_attention_user_title);
+        TextView content = holder.getView(R.id.item_attention_user_content);
+
         String headImagePath = attentionUserData.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
             imageLoader.displayImage(headImagePath, headImage, displayImageOptions);
-        } else {
-
         }
 
-        TextView title = holder.getView(R.id.item_attention_user_title);
         String str_title = attentionUserData.getNickname();
-        title.setText(str_title);
+        if (!TextUtils.isEmpty(str_title)) {
+            title.setText(str_title);
+        } else {
+            title.setText("");
+        }
 
-        TextView content = holder.getView(R.id.item_attention_user_content);
+
         String str_content = attentionUserData.getIntro();
-        content.setText(str_content);
-
+        if (!TextUtils.isEmpty(str_content)) {
+            content.setText(str_content);
+        } else {
+            content.setText("");
+        }
         return holder.getConvertView();
     }
 }

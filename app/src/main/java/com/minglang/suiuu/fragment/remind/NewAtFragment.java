@@ -1,14 +1,17 @@
 package com.minglang.suiuu.fragment.remind;
 
-
+import android.app.Dialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -35,7 +38,6 @@ import in.srain.cube.views.ptr.header.MaterialHeader;
 /**
  * 新@页面
  * <p/>
- * A simple {@link Fragment} subclass.
  * Use the {@link NewAtFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
@@ -57,6 +59,8 @@ public class NewAtFragment extends Fragment {
     private ListView newAtList;
 
     private List<SuiuuMessageData> list;
+
+    private Dialog dialog;
 
     /**
      * Use this factory method to create a new instance of
@@ -96,19 +100,16 @@ public class NewAtFragment extends Fragment {
 
         ViewAction();
 
+
+        if (dialog != null) {
+            dialog.show();
+        }
         getNewAt4Service();
 
         return rootView;
     }
 
     private void ViewAction() {
-
-        newAtList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-        });
 
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
@@ -119,6 +120,15 @@ public class NewAtFragment extends Fragment {
             @Override
             public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
                 getNewAt4Service();
+            }
+        });
+
+        newAtList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SuiuuMessageData data = list.get(position);
+                String relativeId = data.getRelativeId();
+                Log.i(TAG, "relativeId:" + relativeId);
             }
         });
     }
@@ -143,6 +153,11 @@ public class NewAtFragment extends Fragment {
      * @param rootView Fragment的根View
      */
     private void initView(View rootView) {
+
+        dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progress_bar);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
         mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.new_at_fragment_head_frame);
 
@@ -174,20 +189,35 @@ public class NewAtFragment extends Fragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
+            mPtrFrame.refreshComplete();
             String str = stringResponseInfo.result;
+            Log.i(TAG, "新@数据:" + str);
             try {
                 SuiuuMessage message = JsonUtil.getInstance().fromJSON(SuiuuMessage.class, str);
                 list = message.getData();
                 MessageAdapter adapter = new MessageAdapter(getActivity(), list, "1");
                 newAtList.setAdapter(adapter);
             } catch (Exception e) {
+                Toast.makeText(getActivity(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "新@数据解析异常:" + e.getMessage());
             }
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
+            mPtrFrame.refreshComplete();
             Log.e(TAG, "获取新@数据失败:" + s);
+            Toast.makeText(getActivity(), "网络异常,请重试！", Toast.LENGTH_SHORT).show();
         }
     }
 

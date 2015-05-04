@@ -83,19 +83,34 @@ public class MessageAdapter extends BaseAdapter {
 
             case "1":
                 if (!TextUtils.isEmpty(strInfo)) {
+                    info.setText(strInfo + " @了你，快去看吧。");
+                } else {
+                    info.setText("匿名用户 @了你，快去看吧。");
+                }
+                break;
+
+            case "2":
+                if (!TextUtils.isEmpty(strInfo)) {
                     info.setText(strInfo + " 评论了你，快去看吧。");
                 } else {
                     info.setText("匿名用户 评论了你，快去看吧。");
                 }
                 break;
 
-            case "2":
-                break;
-
             case "3":
+                if (!TextUtils.isEmpty(strInfo)) {
+                    info.setText(strInfo + " 回复了你，快去看吧。");
+                } else {
+                    info.setText("匿名用户 回复了你，快去看吧。");
+                }
                 break;
 
             case "4":
+                if (!TextUtils.isEmpty(strInfo)) {
+                    info.setText(strInfo + " 关注了你，快去看吧。");
+                } else {
+                    info.setText("匿名用户 关注了你，快去看吧。");
+                }
                 break;
         }
 

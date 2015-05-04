@@ -73,7 +73,7 @@ public class LoopArticleImageAdapter extends BaseAdapter {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_loop_article_image, position);
         String str = list.get(position);
         ImageView imageView = holder.getView(R.id.iv_picture);
-        imageLoader.displayImage(AppConstant.img_from_suiuu_content + str, imageView, options);
+        imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + str, imageView, options);
         return holder.getConvertView();
     }
 }

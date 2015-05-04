@@ -911,7 +911,6 @@ public class LoginActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-
         if (popupWindowLogin.isShowing()) {
             popupWindowLogin.dismiss();
         } else if (popupWindowRegister1.isShowing()) {

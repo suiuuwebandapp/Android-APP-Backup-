@@ -51,7 +51,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.5"
             android:gravity="center"
-            android:text="@string/areas"
+            android:text="@string/user"
             android:textColor="@color/textColor"
             android:textSize="18sp" />
     </LinearLayout>
@@ -65,7 +65,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="5px"
+        android:layout_height="2dp"
         android:background="@color/slider_line_color" />
 
     <android.support.v4.view.ViewPager
