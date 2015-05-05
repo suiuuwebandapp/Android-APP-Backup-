@@ -128,6 +128,7 @@ public class ThemeFragment extends Fragment {
                 intent.putExtra("circleId", circleId);
                 intent.putExtra(TYPE, "1");
                 startActivity(intent);
+                getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
     }
