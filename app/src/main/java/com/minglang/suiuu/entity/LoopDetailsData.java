@@ -11,20 +11,18 @@ public class LoopDetailsData {
 
     public String attentionId;
 
+    public LoopDetailsDataMsg msg;
+
     public List<LoopDetailsDataList> getData() {
         return data;
-    }
-
-    public void setData(List<LoopDetailsDataList> data) {
-        this.data = data;
     }
 
     public String getAttentionId() {
         return attentionId;
     }
 
-    public void setAttentionId(String attentionId) {
-        this.attentionId = attentionId;
+    public LoopDetailsDataMsg getMsg() {
+        return msg;
     }
 
     @Override
@@ -32,6 +30,7 @@ public class LoopDetailsData {
         return "LoopDetailsData{" +
                 "data=" + data +
                 ", attentionId='" + attentionId + '\'' +
+                ", msg=" + msg +
                 '}';
     }
 }

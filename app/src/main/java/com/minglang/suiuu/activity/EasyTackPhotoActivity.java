@@ -37,8 +37,8 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.EasyTackPhotoAdapter;
 import com.minglang.suiuu.chat.activity.BaiduMapActivity;
-import com.minglang.suiuu.entity.Loop;
-import com.minglang.suiuu.entity.LoopData;
+import com.minglang.suiuu.entity.LoopBase;
+import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -101,7 +101,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     /**
      * 主题数据集合
      */
-    private List<LoopData> list;
+    private List<LoopBaseData> list;
     //判断是主题下拉框还是地区下拉框
     private int themeOrArea = 1;
     private String themeCid;
@@ -259,12 +259,12 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
             String str = responseInfo.result;
-            Loop loop;
-            loop = JsonUtil.getInstance().fromJSON(Loop.class, str);
-            if (loop != null) {
-                if (Integer.parseInt(loop.getStatus()) == 1) {
-                    list = loop.getData();
-                    for (LoopData date : list) {
+            LoopBase loopBase;
+            loopBase = JsonUtil.getInstance().fromJSON(LoopBase.class, str);
+            if (loopBase != null) {
+                if (Integer.parseInt(loopBase.getStatus()) == 1) {
+                    list = loopBase.getData().getData();
+                    for (LoopBaseData date : list) {
                         Log.i(TAG, date.toString());
                     }
                     listView.setAdapter(new MyListAdapter(EasyTackPhotoActivity.this, list));
@@ -305,10 +305,10 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
             String str = responseInfo.result;
-            Loop loop = JsonUtil.getInstance().fromJSON(Loop.class, str);
-            if (loop != null) {
-                if (Integer.parseInt(loop.getStatus()) == 1) {
-                    list = loop.getData();
+            LoopBase loopBase = JsonUtil.getInstance().fromJSON(LoopBase.class, str);
+            if (loopBase != null) {
+                if (Integer.parseInt(loopBase.getStatus()) == 1) {
+                    list = loopBase.getData().getData();
                     listView.setAdapter(new MyListAdapter(EasyTackPhotoActivity.this, list));
                     themeOrArea = 2;
                     popupWindow.showAsDropDown(tv_area_choice, 0, 10);

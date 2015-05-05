@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.Loop;
-import com.minglang.suiuu.entity.LoopData;
+import com.minglang.suiuu.entity.LoopBase;
+import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
@@ -35,9 +35,9 @@ public class AreaAdapter extends BaseAdapter {
 
     private Context context;
 
-    private Loop loopInfo;
+    private LoopBase loopBaseInfo;
 
-    private List<LoopData> list;
+    private List<LoopBaseData> list;
 
     private ImageLoader imageLoader;
 
@@ -47,9 +47,9 @@ public class AreaAdapter extends BaseAdapter {
 
     private int screenWidth, screenHeight;
 
-    public AreaAdapter(Context context, Loop loopInfo, List<LoopData> list) {
+    public AreaAdapter(Context context, LoopBase loopBaseInfo, List<LoopBaseData> list) {
         this.context = context;
-        this.loopInfo = loopInfo;
+        this.loopBaseInfo = loopBaseInfo;
         this.list = list;
 
         imageLoader = ImageLoader.getInstance();
@@ -96,15 +96,15 @@ public class AreaAdapter extends BaseAdapter {
         ImageView imageView = holder.getView(R.id.item_area_image);
         TextView title = holder.getView(R.id.item_area_title);
 
-        LoopData loopData = list.get(position);
+        LoopBaseData loopBaseData = list.get(position);
 
-        String imagePath = loopData.getCpic();
+        String imagePath = loopBaseData.getCpic();
         Log.i(TAG, "imagePath:" + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
             imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imagePath, imageView, displayImageOptions);
         }
 
-        String name = loopData.getcName();
+        String name = loopBaseData.getcName();
         if (!TextUtils.isEmpty(name)) {
             title.setText(name);
         } else {

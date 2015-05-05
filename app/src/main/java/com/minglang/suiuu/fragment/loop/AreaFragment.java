@@ -21,13 +21,12 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.LoopDetailsActivity;
 import com.minglang.suiuu.adapter.AreaAdapter;
-import com.minglang.suiuu.entity.Loop;
-import com.minglang.suiuu.entity.LoopData;
+import com.minglang.suiuu.entity.LoopBase;
+import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInformation;
 
 import java.util.List;
 
@@ -42,12 +41,14 @@ public class AreaFragment extends Fragment {
 
     private static final String TAG = AreaFragment.class.getSimpleName();
 
+    private static final String TYPE = "type";
+
     private GridView areaGridView;
 
     /**
      * 数据集合
      */
-    private List<LoopData> list;
+    private List<LoopBaseData> list;
 
     private ProgressDialog progressDialog;
 
@@ -55,8 +56,8 @@ public class AreaFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
+    private String userSign;
+    private String verification;
 
     /**
      * 屏幕宽度
@@ -93,8 +94,8 @@ public class AreaFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            userSign = getArguments().getString(ARG_PARAM1);
+            verification = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -125,7 +126,7 @@ public class AreaFragment extends Fragment {
                 String circleId = list.get(position).getcId();
                 Intent intent = new Intent(getActivity(), LoopDetailsActivity.class);
                 intent.putExtra("circleId", circleId);
-                intent.putExtra("type","2");
+                intent.putExtra(TYPE, "2");
                 startActivity(intent);
             }
         });
@@ -139,12 +140,9 @@ public class AreaFragment extends Fragment {
             progressDialog.show();
         }
 
-        String str = SuiuuInformation.ReadVerification(getActivity());
-
         RequestParams params = new RequestParams();
-        //TODO 忽略身份验证KEY
-//        params.addBodyParameter(HttpServicePath.key, str);
-        params.addBodyParameter("type", "2");
+        params.addBodyParameter(HttpServicePath.key, verification);
+        params.addBodyParameter(TYPE, "2");
 
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.LoopDataPath, new AreaRequestCallback());
@@ -181,33 +179,32 @@ public class AreaFragment extends Fragment {
             }
 
             String str = responseInfo.result;
-            try{
-                Loop loop = JsonUtil.getInstance().fromJSON(Loop.class, str);
-                Log.i(TAG, loop.toString());
-                if (Integer.parseInt(loop.getStatus()) == 1) {
-                    list = loop.getData();
-                    AreaAdapter areaAdapter = new AreaAdapter(getActivity(), loop, list);
+            try {
+                LoopBase loopBase = JsonUtil.getInstance().fromJSON(LoopBase.class, str);
+                if (Integer.parseInt(loopBase.getStatus()) == 1) {
+                    list = loopBase.getData().getData();
+                    AreaAdapter areaAdapter = new AreaAdapter(getActivity(), loopBase, list);
                     areaAdapter.setScreenParams(screenWidth, screenHeight);
                     areaGridView.setAdapter(areaAdapter);
                 } else {
-                    Toast.makeText(getActivity(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
-            }catch (Exception e){
-                Log.e(TAG,e.getMessage());
+            } catch (Exception e) {
+                Log.e(TAG, "地区数据解析错误:" + e.getMessage());
+                Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onFailure(HttpException error, String msg) {
 
-            Log.i(TAG, msg);
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
 
-//            if (progressDialog.isShowing()) {
-            progressDialog.dismiss();
-            Log.i(TAG, "progressDialog dismiss");
-//            }
+            Log.e(TAG, "地区数据请求失败:" + msg);
 
-            Toast.makeText(getActivity(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
 

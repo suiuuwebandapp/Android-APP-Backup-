@@ -5,13 +5,18 @@
     android:layout_height="match_parent"
     tools:context="com.minglang.suiuu.fragment.collection.CollectionLoopFragment">
 
-
-    <GridView
+    <in.srain.cube.views.ptr.PtrClassicFrameLayout
+        android:id="@+id/collection_loop_grid_view_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/collection_loop_grid_view"
-        android:numColumns="2"
-        android:horizontalSpacing="10dp"
-        android:verticalSpacing="10dp"
-        android:choiceMode="none"/>
+        android:layout_height="match_parent">
+
+        <in.srain.cube.views.GridViewWithHeaderAndFooter
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/collection_loop_grid_view"
+            android:numColumns="2"
+            android:horizontalSpacing="@dimen/layout_10dp"
+            android:verticalSpacing="@dimen/layout_10dp"
+            android:choiceMode="none"/>
+    </in.srain.cube.views.ptr.PtrClassicFrameLayout>
 </FrameLayout>
