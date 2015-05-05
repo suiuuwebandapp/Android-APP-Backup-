@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,10 +24,11 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.LoopArticleImageAdapter;
+import com.minglang.suiuu.adapter.showPicDescriptionAdapter;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.NoScrollBarGridView;
-import com.minglang.suiuu.entity.BaseCollection;
+import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.entity.DeleteArticle;
 import com.minglang.suiuu.entity.LoopArticle;
 import com.minglang.suiuu.entity.LoopArticleCommentList;
@@ -36,6 +38,7 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -170,6 +173,7 @@ public class LoopArticleActivity extends Activity {
     private List<String> imageList;
     private RelativeLayout rl_showForAsk;
     private RelativeLayout rl_showForTakePhoto;
+    private ListView loop_article_listview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -327,21 +331,24 @@ public class LoopArticleActivity extends Activity {
      * 将显示文章内容
      */
     private void setForArticleContent() {
+        rl_showForTakePhoto.setVisibility(View.GONE);
+        rl_showForAsk.setVisibility(View.VISIBLE);
+        locationName.setText(loopArticleData.getaTitle());
+        imageLoader.displayImage(loopArticleData.getaImg(), coverImage, options);
+        imageLoader.displayImage(loopArticleData.getHeadImg(), headImage);
+        userName.setText(loopArticleData.getNickname());
+        userLocation.setText(loopArticleData.getaAddr());
+        imageList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
+        }.getType(), loopArticleData.getaImgList());
         if("1".equals(loopArticleData.getaType())) {
             rl_showForTakePhoto.setVisibility(View.VISIBLE);
             rl_showForAsk.setVisibility(View.GONE);
-
+            List<String> conentList =  JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
+            }.getType(), loopArticleData.getaContent());
+            loop_article_listview.setAdapter(new showPicDescriptionAdapter(this,imageList,conentList));
+            Utils.setListViewHeightBasedOnChildren(loop_article_listview);
         }else {
-            rl_showForTakePhoto.setVisibility(View.GONE);
-            rl_showForAsk.setVisibility(View.VISIBLE);
-            locationName.setText(loopArticleData.getaTitle());
-            imageLoader.displayImage(loopArticleData.getaImg(), coverImage, options);
-            imageLoader.displayImage(loopArticleData.getHeadImg(), headImage);
-            userName.setText(loopArticleData.getNickname());
-            userLocation.setText(loopArticleData.getaAddr());
             articleContent.setText(loopArticleData.getaContent());
-            imageList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
-            }.getType(), loopArticleData.getaImgList());
             imageAdapter = new LoopArticleImageAdapter(this, imageList);
             noScrollBarGridView.setAdapter(imageAdapter);
         }
@@ -381,6 +388,7 @@ public class LoopArticleActivity extends Activity {
         comments = (TextView) findViewById(R.id.loop_article_comments);
         rl_showForTakePhoto = (RelativeLayout) findViewById(R.id.rl_showForTakePhoto);
         rl_showForAsk = (RelativeLayout) findViewById(R.id.rl_showForAsk);
+        loop_article_listview = (ListView) findViewById(R.id.loop_article_listview);
     }
 
     /**
@@ -467,7 +475,7 @@ public class LoopArticleActivity extends Activity {
             String str = stringResponseInfo.result;
             Log.i("suiuu",str+"返回结果");
             try {
-                BaseCollection baseCollection = JsonUtil.getInstance().fromJSON(BaseCollection.class, str);
+                SuiuuReturnDate baseCollection = JsonUtil.getInstance().fromJSON(SuiuuReturnDate.class, str);
                 if (baseCollection.getStatus().equals("1")) {
                     Toast.makeText(LoopArticleActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
                 }

@@ -211,4 +211,9 @@ public class HttpServicePath {
      * 请求参数:
      */
     public static String GetCollectionSuiuuPath = RootPath + "/attention/get-collection-travel";
+    
+    /**
+     * 得到随游列表
+     */
+    public static String getSuiuuList = RootPath+ "/app-travel/get-travel-list";
 }

@@ -17,16 +17,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/footprint0"
-            android:id="@+id/otherUserFootprint"
+            android:text="@string/TwentyThree"
+            android:drawableLeft="@drawable/icon_praise"
+            android:drawableStart="@drawable/icon_praise"
+            android:drawablePadding="5dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/otherUserCollection"
+            android:textColor="@color/white"
             android:textSize="20sp"
-            android:textColor="@drawable/other_user_click1"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="@dimen/layout_10dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -116,21 +120,7 @@
             style="@style/backKeyStyle"
             android:src="@drawable/back"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/TwentyThree"
-            android:drawableLeft="@drawable/icon_praise"
-            android:drawableStart="@drawable/icon_praise"
-            android:drawablePadding="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:id="@+id/otherUserCollection"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+
     </RelativeLayout>
 
     <GridView

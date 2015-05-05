@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.Pair;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -65,15 +64,9 @@ public class ChatAllHistoryFragment extends Fragment {
 
         conversationList.addAll(loadConversationsWithRecentChat());
         listView = (ListView) getView().findViewById(R.id.list);
-//        ViewGroup.MarginLayoutParams paramTest2 = (ViewGroup.MarginLayoutParams) listView.getLayoutParams();
-//        paramTest2.setMargins(0, 0,new Utils(getActivity().getApplicationContext()).dip2px(50) , 0);
-//        Log.i("suiuu","ttttttttttttt"+new Utils(getActivity().getApplicationContext()).dip2px(50));
-//        listView.requestLayout();
-
         LinearLayout.LayoutParams paramTest = (LinearLayout.LayoutParams) listView.getLayoutParams();
         //paramTest.topMargin = ConstantUtil.topHeight;
         paramTest.setMargins(0,ConstantUtil.topHeight,0,0);
-        Log.i("suiuu",ConstantUtil.topHeight+"7yyyyy");
         listView.setLayoutParams(paramTest);
         adapter = new ChatAllHistoryAdapter(getActivity(), 1, conversationList);
         // 设置adapter
