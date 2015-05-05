@@ -76,8 +76,8 @@
 
             <com.minglang.suiuu.customview.CircleImageView
                 android:id="@+id/loop_article_user_head_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/layout_60dp"
+                android:layout_height="@dimen/layout_60dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="5dp"
                 android:background="@drawable/user_head_image_bg" />

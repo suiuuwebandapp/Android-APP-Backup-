@@ -166,6 +166,7 @@ public class LoopArticleActivity extends Activity {
     private ImageLoader imageLoader;
 
     private DisplayImageOptions options;
+    private DisplayImageOptions options1 ;
 
     private ProgressDialog progressDialog;
 
@@ -188,6 +189,10 @@ public class LoopArticleActivity extends Activity {
 
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
                 .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
+        options1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
+                .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
         myUserSign = SuiuuInformation.ReadUserSign(this);
@@ -326,9 +331,6 @@ public class LoopArticleActivity extends Activity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter(HttpServicePath.key, Verification);
-
-        Log.i(TAG, "要请求的文章的ID:" + articleId);
-
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.LoopArticlePath, new LoopArticleRequestCallBack());
         httpRequest.setParams(params);
@@ -342,12 +344,14 @@ public class LoopArticleActivity extends Activity {
         rl_showForTakePhoto.setVisibility(View.GONE);
         rl_showForAsk.setVisibility(View.VISIBLE);
         locationName.setText(loopArticleData.getaTitle());
-        imageLoader.displayImage(loopArticleData.getaImg(), coverImage, options);
-        imageLoader.displayImage(loopArticleData.getHeadImg(), headImage);
+        imageLoader.displayImage(loopArticleData.getHeadImg(), headImage,options1);
         userName.setText(loopArticleData.getNickname());
         userLocation.setText(loopArticleData.getaAddr());
         imageList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
         }.getType(), loopArticleData.getaImgList());
+        if(imageList.size() >= 1) {
+            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT+imageList.get(0), coverImage, options);
+        }
         if("1".equals(loopArticleData.getaType())) {
             rl_showForTakePhoto.setVisibility(View.VISIBLE);
             rl_showForAsk.setVisibility(View.GONE);
