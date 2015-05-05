@@ -3,17 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/layout_5dp"
+    android:background="@color/white"
     tools:context="com.minglang.suiuu.fragment.collection.CollectionSuiuuFragment">
 
+    <in.srain.cube.views.ptr.PtrClassicFrameLayout
+        android:id="@+id/collection_suiuu_grid_view_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <GridView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/collection_suiuu_gridView"
-        android:horizontalSpacing="10dp"
-        android:verticalSpacing="10dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:numColumns="2"
-        android:choiceMode="none"/>
+        <in.srain.cube.views.loadmore.LoadMoreGridViewContainer
+            android:id="@+id/collection_suiuu_load_more_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/cube_mints_white">
+
+            <in.srain.cube.views.GridViewWithHeaderAndFooter
+                android:id="@+id/collection_suiuu_grid_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fadingEdge="none"
+                android:focusable="false"
+                android:horizontalSpacing="@dimen/layout_10dp"
+                android:verticalSpacing="@dimen/layout_10dp"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="2"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:scrollbarStyle="outsideOverlay"
+                android:stretchMode="columnWidth"/>
+
+        </in.srain.cube.views.loadmore.LoadMoreGridViewContainer>
+    </in.srain.cube.views.ptr.PtrClassicFrameLayout>
+
+
 </RelativeLayout>

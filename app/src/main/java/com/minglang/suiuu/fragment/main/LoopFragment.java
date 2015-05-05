@@ -23,6 +23,7 @@ import com.minglang.suiuu.adapter.LoopScrollPagerAdapter;
 import com.minglang.suiuu.customview.AutoScrollViewPager;
 import com.minglang.suiuu.fragment.loop.AreaFragment;
 import com.minglang.suiuu.fragment.loop.ThemeFragment;
+import com.minglang.suiuu.utils.SuiuuInformation;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -37,8 +38,6 @@ import java.util.List;
 public class LoopFragment extends Fragment {
 
     private static final String TAG = LoopFragment.class.getSimpleName();
-
-    private RelativeLayout loopScrollLayout;
 
     /**
      * 轮播ViewPager
@@ -69,24 +68,6 @@ public class LoopFragment extends Fragment {
 
     private ViewPager loopViewPager;
 
-    private FragmentManager fm;
-
-    /**
-     * 主题页面
-     */
-    private ThemeFragment themeFragment;
-
-    /**
-     * 地区页面
-     */
-    private AreaFragment areaFragment;
-
-    private List<Fragment> fragments;
-
-    private LoopFragmentPagerAdapter lfpAdapter;
-
-    private DisplayMetrics dm;
-
     /**
      * 设备宽度
      */
@@ -98,8 +79,6 @@ public class LoopFragment extends Fragment {
     private int screenHeight;
 
     private int currIndex = 1;// 当前页卡编号
-
-    private int sliderViewWidth;//图片宽度
 
     private int tabWidth;// 每个tab头的宽度
 
@@ -159,7 +138,7 @@ public class LoopFragment extends Fragment {
     }
 
     private void initScreenOrImageLoad() {
-        dm = new DisplayMetrics();
+        DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 
         screenWidth = dm.widthPixels;// 获取设备宽度
@@ -168,7 +147,9 @@ public class LoopFragment extends Fragment {
         screenHeight = dm.heightPixels;
 
         imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
+        if (!imageLoader.isInited()) {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
+        }
         displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
                 .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
@@ -183,7 +164,7 @@ public class LoopFragment extends Fragment {
     @SuppressLint("InflateParams")
     private void initView(View rootView) {
 
-        loopScrollLayout = (RelativeLayout) rootView.findViewById(R.id.LoopScrollLayout);
+        RelativeLayout loopScrollLayout = (RelativeLayout) rootView.findViewById(R.id.LoopScrollLayout);
         ViewGroup.LayoutParams loopLayoutParams = loopScrollLayout.getLayoutParams();
         loopLayoutParams.height = screenHeight / 3;
         loopLayoutParams.width = screenWidth;
@@ -239,16 +220,21 @@ public class LoopFragment extends Fragment {
         loopViewPager = (ViewPager) rootView.findViewById(R.id.loopViewPager);
         loopViewPager.setOffscreenPageLimit(2);
 
-        themeFragment = new ThemeFragment();
-        areaFragment = new AreaFragment();
+        String userSign = SuiuuInformation.ReadUserSign(getActivity());
+        String verification = SuiuuInformation.ReadVerification(getActivity());
 
-        fm = getFragmentManager();
+        //主题页面
+        ThemeFragment themeFragment = ThemeFragment.newInstance(userSign, verification);
+        //地区页面
+        AreaFragment areaFragment = AreaFragment.newInstance(userSign, verification);
 
-        fragments = new ArrayList<>();
+        FragmentManager fm = getFragmentManager();
+
+        List<Fragment> fragments = new ArrayList<>();
         fragments.add(themeFragment);
         fragments.add(areaFragment);
 
-        lfpAdapter = new LoopFragmentPagerAdapter(fm, fragments);
+        LoopFragmentPagerAdapter lfpAdapter = new LoopFragmentPagerAdapter(fm, fragments);
 
         loopViewPager.setAdapter(lfpAdapter);
 
@@ -258,14 +244,11 @@ public class LoopFragment extends Fragment {
     private void loadImage(ImageView imageView, int imageId) {
         String uri = "drawable://" + imageId;
         imageLoader.displayImage(uri, imageView, displayImageOptions);
-//        Bitmap bitmap = imageLoader.loadImageSync(uri, displayImageOptions);
-//        Drawable drawable = new BitmapDrawable(bitmap);
-//        imageView.setBackgroundDrawable(drawable);
     }
 
     private void initImageView() {
 
-        sliderViewWidth = BitmapFactory.decodeResource(getResources(), R.drawable.slider).getWidth();//获取图片宽度
+        int sliderViewWidth = BitmapFactory.decodeResource(getResources(), R.drawable.slider).getWidth();
 
         if (sliderViewWidth > tabWidth) {
             sliderView.getLayoutParams().width = tabWidth;

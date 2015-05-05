@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.srain.cube.util.LocalDisplay;
@@ -43,19 +45,29 @@ public class AllAttentionDynamicActivity extends Activity {
 
     private static final String TAG = AllAttentionDynamicActivity.class.getSimpleName();
 
+    private static final String PAGE = "page";
+
+    /**
+     * 下拉刷新组件
+     */
     private PtrClassicFrameLayout mPtrFrame;
 
+    /**
+     * 上拉加载组件
+     */
     private LoadMoreListViewContainer loadMoreContainer;
 
     private ListView listView;
 
     private int page = 1;
 
-    private List<AllAttentionDynamicData> list;
+    private List<AllAttentionDynamicData> listAll = new ArrayList<>();
 
     private AllAttentionDynamicAdapter adapter;
 
     private ProgressDialog dialog;
+
+    private ImageView back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +86,13 @@ public class AllAttentionDynamicActivity extends Activity {
      */
     private void ViewAction() {
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         mPtrFrame.setLastUpdateTimeRelateObject(this);
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
@@ -85,7 +104,7 @@ public class AllAttentionDynamicActivity extends Activity {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
                 RequestParams params = new RequestParams();
-                params.addBodyParameter("page", "1");
+                params.addBodyParameter(PAGE, "1");
 
                 SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                         HttpServicePath.AllAttentionDynamicPath, new AllAttentionDynamicRequestCallBack());
@@ -101,10 +120,10 @@ public class AllAttentionDynamicActivity extends Activity {
                 page = page + 1;
 
                 RequestParams params = new RequestParams();
-                params.addBodyParameter("page", String.valueOf(page));
+                params.addBodyParameter(PAGE, String.valueOf(page));
 
                 SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                        HttpServicePath.AllAttentionDynamicPath, new AllAttentionDynamic2RequestCallBack());
+                        HttpServicePath.AllAttentionDynamicPath, new AllAttentionDynamicRequestCallBack());
                 httpRequest.setParams(params);
                 httpRequest.requestNetworkData();
             }
@@ -113,7 +132,7 @@ public class AllAttentionDynamicActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String articleId = list.get(position).getArticleId();
+                String articleId = listAll.get(position).getArticleId();
                 Intent intent = new Intent(AllAttentionDynamicActivity.this, LoopArticleActivity.class);
                 intent.putExtra("articleId", articleId);
                 startActivity(intent);
@@ -128,15 +147,21 @@ public class AllAttentionDynamicActivity extends Activity {
      */
     private void setData2View(String str) {
         if (TextUtils.isEmpty(str)) {
-            return;
+            Toast.makeText(this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
         } else {
             try {
                 AllAttentionDynamic dynamic = JsonUtil.getInstance().fromJSON(AllAttentionDynamic.class, str);
-                list = dynamic.getData();
-                adapter.setList(list);
-                adapter.notifyDataSetChanged();
+                List<AllAttentionDynamicData> list = dynamic.getData();
+                if (list != null && list.size() > 0) {
+                    listAll.addAll(list);
+                    adapter.setList(listAll);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                }
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG, "关注详细信息解析错误:" + e.getMessage());
+                Toast.makeText(this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -151,7 +176,7 @@ public class AllAttentionDynamicActivity extends Activity {
         }
 
         RequestParams params = new RequestParams();
-        params.addBodyParameter("page", String.valueOf(page));
+        params.addBodyParameter(PAGE, String.valueOf(page));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.AllAttentionDynamicPath, new AllAttentionDynamicRequestCallBack());
@@ -168,6 +193,7 @@ public class AllAttentionDynamicActivity extends Activity {
         dialog.setMessage(getResources().getString(R.string.load_wait));
         dialog.setCanceledOnTouchOutside(false);
 
+        back = (ImageView) findViewById(R.id.AllAttentionBack);
         mPtrFrame = (PtrClassicFrameLayout) findViewById(R.id.all_attention_dynamic_frame);
         listView = (ListView) findViewById(R.id.all_attention_dynamic_list_view);
         loadMoreContainer = (LoadMoreListViewContainer) findViewById(R.id.all_attention_dynamic_load_more_container);
@@ -196,6 +222,17 @@ public class AllAttentionDynamicActivity extends Activity {
         adapter = new AllAttentionDynamicAdapter(this);
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
     /**
      * 网络请求回调接口
      */
@@ -209,6 +246,7 @@ public class AllAttentionDynamicActivity extends Activity {
             }
 
             mPtrFrame.refreshComplete();
+            loadMoreContainer.loadMoreFinish(true, true);
 
             String str = stringResponseInfo.result;
             setData2View(str);
@@ -223,55 +261,17 @@ public class AllAttentionDynamicActivity extends Activity {
 
             mPtrFrame.refreshComplete();
 
-            Log.e(TAG, s);
-            Toast.makeText(AllAttentionDynamicActivity.this, "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private class AllAttentionDynamic2RequestCallBack extends RequestCallBack<String> {
-
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            //TODO 上拉加载更多未完成
-            String str = stringResponseInfo.result;
-            AllAttentionDynamic dynamic;
-            boolean b1;
-            try {
-                dynamic = JsonUtil.getInstance().fromJSON(AllAttentionDynamic.class, str);
-                List<AllAttentionDynamicData> data = dynamic.getData();
-                b1 = (data == null || data.size() == 0);
-
-                loadMoreContainer.loadMoreFinish(b1, b1);
-            } catch (Exception e) {
-
+            if (page > 1) {
                 page = page - 1;
-                if (page < 1) {
-                    page = 1;
-                }
-
-                Log.e(TAG, e.getMessage());
-                //loadMoreContainer.loadMoreFinish(true, true);
-                int error = 0;
-                String errorMessage = "加载失败，点击加载更多";
-                loadMoreContainer.loadMoreError(error, errorMessage);
-            }
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-
-            Log.e(TAG, s);
-
-            page = page - 1;
-            if (page < 1) {
-                page = 1;
             }
 
             int error = 0;
             String errorMessage = "加载失败，点击加载更多";
             loadMoreContainer.loadMoreError(error, errorMessage);
 
+            Log.e(TAG, "关注动态数据加载失败:" + s);
+            Toast.makeText(AllAttentionDynamicActivity.this,
+                    getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
         }
     }
-
 }

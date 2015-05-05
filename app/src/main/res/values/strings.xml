@@ -113,6 +113,12 @@
     <string name="please_input_number">请输入手机号</string>
     <string name="please_input_confirm_password">请输入确认密码</string>
     <string name="please_input_obtain_captcha">请输入验证码</string>
+
+    <string name="DataError">数据获取错误，请稍候重试！</string>
+    <string name="NetworkAnomaly">网络异常，请检查后再试！</string>
+    <string name="NoData">暂无数据！</string>
+
+    <string name="all_attention">关注动态</string>
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>

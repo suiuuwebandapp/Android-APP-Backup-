@@ -29,6 +29,7 @@ import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInformation;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,11 +45,6 @@ public class LoopDetailsActivity extends Activity {
     private static final String ARTICLEID = "articleId";
 
     private SystemBarTintManager systemBarTintManager;
-
-    /**
-     * 状态栏高度
-     */
-    private int statusBarHeight;
 
     /**
      * 虚拟按键高度
@@ -87,16 +83,11 @@ public class LoopDetailsActivity extends Activity {
      */
     private GridView loopDetailsGridView;
 
-    private LoopDetailsData loopDetailsData;
-
-    private List<LoopDetailsDataList> list;
-
-    /**
-     * 网络请求回调接口
-     */
-    private LoopDetailsRequestCallBack loopDetailsRequestCallBack = new LoopDetailsRequestCallBack();
+    private List<LoopDetailsDataList> listAll = new ArrayList<>();
 
     private ProgressDialog progressDialog;
+
+    private LoopDetailsAdapter loopDetailsAdapter;
 
     /**
      * 屏幕宽度
@@ -136,7 +127,7 @@ public class LoopDetailsActivity extends Activity {
         params.addBodyParameter(TYPE, type);
 
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.LoopDetailsPath, loopDetailsRequestCallBack);
+                HttpServicePath.LoopDetailsPath, new LoopDetailsRequestCallBack());
         suHttpRequest.setParams(params);
         suHttpRequest.requestNetworkData();
 
@@ -164,7 +155,7 @@ public class LoopDetailsActivity extends Activity {
         loopDetailsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String articleId = list.get(position).getArticleId();
+                String articleId = listAll.get(position).getArticleId();
                 Intent intent = new Intent(LoopDetailsActivity.this, LoopArticleActivity.class);
                 intent.putExtra(ARTICLEID, articleId);
                 startActivity(intent);
@@ -179,7 +170,10 @@ public class LoopDetailsActivity extends Activity {
     private void initView() {
         systemBarTintManager = new SystemBarTintManager(this);
         SystemBarTintManager.SystemBarConfig systemBarConfig = systemBarTintManager.getConfig();
-        statusBarHeight = systemBarConfig.getStatusBarHeight();
+        /**
+         状态栏高度
+         */
+        int statusBarHeight = systemBarConfig.getStatusBarHeight();
         navigationBarHeight = systemBarConfig.getNavigationBarHeight();
 
         /****************设置状态栏颜色*************/
@@ -202,12 +196,21 @@ public class LoopDetailsActivity extends Activity {
         ScreenUtils screenUtils = new ScreenUtils(this);
         screenWidth = screenUtils.getScreenWidth();
         screenHeight = screenUtils.getScreenHeight();
+
+        loopDetailsAdapter = new LoopDetailsAdapter(this);
+        loopDetailsAdapter.setScreenParams(screenWidth, screenHeight);
+        loopDetailsGridView.setAdapter(loopDetailsAdapter);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        finish();
     }
 
     class LoopDetailsRequestCallBack extends RequestCallBack<String> {
@@ -217,20 +220,22 @@ public class LoopDetailsActivity extends Activity {
             String str = responseInfo.result;
             try {
                 LoopDetails loopDetails = JsonUtil.getInstance().fromJSON(LoopDetails.class, str);
-                loopDetailsData = loopDetails.getData();
+                LoopDetailsData loopDetailsData = loopDetails.getData();
                 if (loopDetailsData != null) {
-                    list = loopDetailsData.getData();
+                    List<LoopDetailsDataList> list = loopDetailsData.getData();
                     if (list != null) {
-                        LoopDetailsAdapter loopDetailsAdapter = new LoopDetailsAdapter(LoopDetailsActivity.this, list);
-                        loopDetailsAdapter.setScreenParams(screenWidth, screenHeight);
-                        loopDetailsGridView.setAdapter(loopDetailsAdapter);
+                        listAll.addAll(list);
+                        loopDetailsAdapter.setDataList(listAll);
                     } else {
-                        Toast.makeText(LoopDetailsActivity.this, "暂无数据！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoopDetailsActivity.this,
+                                getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                     }
+                    Log.i(TAG, "相关数据:" + loopDetailsData.getMsg().toString());
                 }
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
-                Toast.makeText(LoopDetailsActivity.this, "获取数据失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoopDetailsActivity.this,
+                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
 
             if (progressDialog != null && progressDialog.isShowing()) {
@@ -248,7 +253,8 @@ public class LoopDetailsActivity extends Activity {
                 progressDialog.dismiss();
             }
 
-            Toast.makeText(LoopDetailsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoopDetailsActivity.this,
+                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
 

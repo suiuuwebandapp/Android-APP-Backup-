@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
-import com.minglang.suiuu.entity.CollectionLoopData;
+import com.minglang.suiuu.entity.CollectionSuiuuData;
+import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -24,44 +26,51 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import java.util.List;
 
 /**
- * 收藏的圈子数据适配器
+ * 收藏的随游数据适配器
  * <p/>
- * Created by Administrator on 2015/4/28.
+ * Created by Administrator on 2015/5/5.
  */
-public class CollectionLoopAdapter extends BaseAdapter {
+public class CollectionSuiuuAdapter extends BaseAdapter {
 
-    private static final String TAG = CollectionLoopAdapter.class.getSimpleName();
+    private static final String TAG = CollectionSuiuuAdapter.class.getSimpleName();
 
     private Context context;
 
-    private List<CollectionLoopData> list;
+    private List<CollectionSuiuuData> list;
 
-    private ImageLoader loader;
+    private int screenWidth;
+    private int screenHeight;
 
-    private DisplayImageOptions displayImageOptions1;
+    private ImageLoader imageLoader;
 
-    private int screenWidth, screenHeight;
+    private DisplayImageOptions options;
 
-    public CollectionLoopAdapter(Context context) {
+    public CollectionSuiuuAdapter(Context context) {
         this.context = context;
 
-        loader = ImageLoader.getInstance();
-        loader.init(ImageLoaderConfiguration.createDefault(context));
+        imageLoader = ImageLoader.getInstance();
 
-        displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
+        if (!imageLoader.isInited()) {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
+
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
                 .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
-    public CollectionLoopAdapter(Context context, List<CollectionLoopData> list) {
+    public CollectionSuiuuAdapter(Context context, List<CollectionSuiuuData> list) {
         this.context = context;
         this.list = list;
 
-        loader = ImageLoader.getInstance();
-        loader.init(ImageLoaderConfiguration.createDefault(context));
+        imageLoader = ImageLoader.getInstance();
 
-        displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
+        if (!imageLoader.isInited()) {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
+
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
                 .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
@@ -74,7 +83,7 @@ public class CollectionLoopAdapter extends BaseAdapter {
         Log.i(TAG, "屏幕显示区域高度为:" + String.valueOf(this.screenHeight));
     }
 
-    public void setListData(List<CollectionLoopData> list){
+    public void setListData(List<CollectionSuiuuData> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -105,62 +114,49 @@ public class CollectionLoopAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        CollectionLoopData collectionLoopData = list.get(position);
+        CollectionSuiuuData data = list.get(position);
 
-        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_collection_loop, position);
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_collection_suiuu, position);
+        ImageView mainImage = holder.getView(R.id.item_collection_suiuu_image);
+        CircleImageView headImage = holder.getView(R.id.item_collection_suiuu_head_image);
+        TextView userName = holder.getView(R.id.item_collection_suiuu_name);
+        TextView title = holder.getView(R.id.item_collection_suiuu_title);
+        RatingBar ratingBar = holder.getView(R.id.item_collection_loop_indicator);
 
-        //主要图片
-        ImageView imageView = holder.getView(R.id.item_collection_loop_image);
-        //头像
-        CircleImageView headImage = holder.getView(R.id.item_collection_loop_head_image);
-        //用户名
-        TextView userName = holder.getView(R.id.item_collection_loop_user_name);
-        //标题
-        TextView title = holder.getView(R.id.item_collection_loop_title);
-        //赞
-        TextView praise = holder.getView(R.id.item_collection_loop_praise);
-        //评论
-        TextView comment = holder.getView(R.id.item_collection_loop_comments);
-
-        String mainImagePath = collectionLoopData.getaImg();
-        if (!TextUtils.isEmpty(mainImagePath)) {
-            loader.displayImage(collectionLoopData.getaImg(), imageView, displayImageOptions1);
+        String imagePath = data.getTitleImg();
+        if (!TextUtils.isEmpty(imagePath)) {
+            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imagePath, mainImage, options);
         }
 
-        String headImagePath = collectionLoopData.getHeadImg();
+        String headImagePath = data.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            loader.displayImage(headImagePath, headImage);
+            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + headImagePath, headImage);
         }
 
-        String strNickName = collectionLoopData.getNickname();
-        if (!TextUtils.isEmpty(strNickName)) {
-            userName.setText(strNickName);
+        String strUserName = data.getNickname();
+        if (!TextUtils.isEmpty(strUserName)) {
+            userName.setText(strUserName);
         } else {
             userName.setText("");
         }
 
-        String strTitle = collectionLoopData.getaTitle();
+        String strTitle = data.getTitle();
         if (!TextUtils.isEmpty(strTitle)) {
             title.setText(strTitle);
         } else {
             title.setText("");
         }
 
-        String praiseCount = collectionLoopData.getaSupportCount();
-        if (!TextUtils.isEmpty(praiseCount)) {
-            praise.setText(praiseCount);
+        String strScore = data.getScore();
+        if (!TextUtils.isEmpty(strScore)) {
+            float score = Float.valueOf(strScore);
+            ratingBar.setRating(score);
         } else {
-            praise.setText("0");
-        }
-
-        String commentCount = collectionLoopData.getaCmtCount();
-        if (!TextUtils.isEmpty(commentCount)) {
-            comment.setText(commentCount);
-        } else {
-            comment.setText("0");
+            ratingBar.setRating(0f);
         }
 
         convertView = holder.getConvertView();
+
         int itemParams = screenWidth / 2 - Utils.newInstance(context).dip2px(10);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemParams, itemParams);
         convertView.setLayoutParams(params);

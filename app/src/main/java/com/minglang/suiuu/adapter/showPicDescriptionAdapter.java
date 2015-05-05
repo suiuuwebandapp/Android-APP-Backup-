@@ -82,25 +82,35 @@ public class showPicDescriptionAdapter extends BaseAdapter {
         }
         imageLoader.getInstance().displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
         if (TextUtils.isEmpty(contentList.get(position))) {
-            holder.textContent.setVisibility(View.GONE);
-        } else {
-            holder.picContent.setVisibility(View.VISIBLE);
-            holder.textContent.setText(contentList.get(position));
-        }
-        holder.picContent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent showPic = new Intent(context, ShowBigImage.class);
-                showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position));
-                showPic.putExtra("isHuanXin", false);
-                context.startActivity(showPic);
+
+            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
+            if (TextUtils.isEmpty(contentList.get(position))) {
+
+                holder.textContent.setVisibility(View.GONE);
+            } else {
+                holder.picContent.setVisibility(View.VISIBLE);
+                holder.textContent.setText(contentList.get(position));
             }
-        });
-        return view;
-    }
+        }
+            holder.picContent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent showPic = new Intent(context, ShowBigImage.class);
+
+                    showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position));
+                    showPic.putExtra("isHuanXin", false);
+
+
+                    context.startActivity(showPic);
+                }
+            });
+            return view;
+        }
+
 
     static class ViewHolder {
         ImageView picContent;
         TextView textContent;
     }
+
 }

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.LoopDetailsDataList;
+import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -40,16 +41,15 @@ public class LoopDetailsAdapter extends BaseAdapter {
 
     private DisplayImageOptions displayImageOptions1, displayImageOptions2;
 
-    private String url = "http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150414141605_50758.png";
-
     private int screenWidth, screenHeight;
 
-    public LoopDetailsAdapter(Context context, List<LoopDetailsDataList> loopDetailsDataList) {
+    public LoopDetailsAdapter(Context context) {
         this.context = context;
-        this.list = loopDetailsDataList;
 
         loader = ImageLoader.getInstance();
-        loader.init(ImageLoaderConfiguration.createDefault(context));
+        if (loader.isInited()) {
+            loader.init(ImageLoaderConfiguration.createDefault(context));
+        }
 
         displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_background_image)
                 .showImageForEmptyUri(R.drawable.default_background_image).showImageOnFail(R.drawable.default_background_image)
@@ -64,10 +64,38 @@ public class LoopDetailsAdapter extends BaseAdapter {
         Log.i(TAG, String.valueOf(list.size()));
     }
 
+    public LoopDetailsAdapter(Context context, List<LoopDetailsDataList> list) {
+        this.context = context;
+        this.list = list;
+
+        loader = ImageLoader.getInstance();
+        if (loader.isInited()) {
+            loader.init(ImageLoaderConfiguration.createDefault(context));
+        }
+
+        displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_background_image)
+                .showImageForEmptyUri(R.drawable.default_background_image).showImageOnFail(R.drawable.default_background_image)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        displayImageOptions2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image2)
+                .showImageForEmptyUri(R.drawable.default_head_image2).showImageOnFail(R.drawable.default_head_image2)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        Log.i(TAG, String.valueOf(this.list.size()));
+    }
+
     public void setScreenParams(int screenWidth, int screenHeight) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
     }
+
+    public void setDataList(List<LoopDetailsDataList> list) {
+        this.list = list;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getCount() {
@@ -108,18 +136,17 @@ public class LoopDetailsAdapter extends BaseAdapter {
         TextView praise = holder.getView(R.id.item_loop_details_praise);
         TextView comments = holder.getView(R.id.item_loop_details_comments);
 
-//        Bitmap bitmap = loader.loadImageSync(loopDetailsData.getaImg(), displayImageOptions1);
-//        mainImageView.setBackgroundDrawable(new BitmapDrawable(bitmap));
         //加载主图片
         String imagePath = loopDetailsDataList.getaImg();
         if (!TextUtils.isEmpty(imagePath)) {
-            loader.displayImage(url.trim(), mainImageView, displayImageOptions1);
-        } else {
-            loader.displayImage(url.trim(), mainImageView, displayImageOptions1);
+            loader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imagePath, mainImageView, displayImageOptions1);
         }
 
+        String headImagePath = loopDetailsDataList.getHeadImg();
         //加载头像
-//        loader.displayImage(url.trim(), headImage, displayImageOptions2);
+        if (!TextUtils.isEmpty(headImagePath)) {
+            loader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + headImagePath, headImage, displayImageOptions2);
+        }
 
         //加载用户名
         String str_userName = loopDetailsDataList.getNickname();

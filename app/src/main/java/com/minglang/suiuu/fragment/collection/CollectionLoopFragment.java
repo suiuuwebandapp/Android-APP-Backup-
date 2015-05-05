@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
@@ -29,9 +28,17 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInformation;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import in.srain.cube.util.LocalDisplay;
+import in.srain.cube.views.GridViewWithHeaderAndFooter;
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
+import in.srain.cube.views.ptr.header.MaterialHeader;
 
 /**
  * 收藏的圈子
@@ -50,15 +57,21 @@ public class CollectionLoopFragment extends Fragment {
     private String userSign;
     private String verification;
 
-    private GridView gridView;
+    private PtrClassicFrameLayout mPtrFrame;
+
+    private GridViewWithHeaderAndFooter gridView;
 
     private int page = 1;
 
-    private List<CollectionLoopData> list;
+    private List<CollectionLoopData> listAll = new ArrayList<>();
 
     private Dialog dialog;
 
+    private CollectionLoopAdapter collectionLoopAdapter;
+
     private int screenWidth, screenHeight;
+
+    private boolean clearFlag;
 
     /**
      * Use this factory method to create a new instance of
@@ -102,7 +115,7 @@ public class CollectionLoopFragment extends Fragment {
 
         ViewAction();
 
-        getCollectionLoop4Service();
+        getData();
 
         return rootView;
     }
@@ -111,10 +124,24 @@ public class CollectionLoopFragment extends Fragment {
      * 控件动作
      */
     private void ViewAction() {
+
+        mPtrFrame.setPtrHandler(new PtrHandler() {
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, gridView, header);
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                clearFlag = true;
+                getCollectionLoop4Service(1);
+            }
+        });
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String articleId = list.get(position).getArticleId();
+                String articleId = listAll.get(position).getArticleId();
                 Intent intent = new Intent(getActivity(), LoopArticleActivity.class);
                 intent.putExtra("articleId", articleId);
                 startActivity(intent);
@@ -122,18 +149,24 @@ public class CollectionLoopFragment extends Fragment {
         });
     }
 
-    /**
-     * 从网络获取收藏的圈子数据
-     */
-    private void getCollectionLoop4Service() {
+    private void getData() {
 
         if (dialog != null) {
             dialog.show();
         }
 
+        getCollectionLoop4Service(1);
+    }
+
+    /**
+     * 从网络获取收藏的圈子数据
+     */
+    private void getCollectionLoop4Service(int page) {
+
+
         RequestParams params = new RequestParams();
         params.addBodyParameter("page", String.valueOf(page));
-        params.addBodyParameter(HttpServicePath.key, SuiuuInformation.ReadVerification(getActivity()));
+        params.addBodyParameter(HttpServicePath.key, verification);
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionLoopPath, new CollectionLoopRequestCallBack());
@@ -153,7 +186,34 @@ public class CollectionLoopFragment extends Fragment {
         dialog.setContentView(R.layout.progress_bar);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
-        gridView = (GridView) rootView.findViewById(R.id.collection_loop_grid_view);
+        mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.collection_loop_grid_view_frame);
+
+        MaterialHeader header = new MaterialHeader(getActivity());
+        int[] colors = getResources().getIntArray(R.array.google_colors);
+        header.setColorSchemeColors(colors);
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
+        header.setPtrFrameLayout(mPtrFrame);
+
+        mPtrFrame.setHeaderView(header);
+        mPtrFrame.addPtrUIHandler(header);
+        mPtrFrame.setPinContent(true);
+
+        // the following are default settings
+        mPtrFrame.setResistance(1.7f);
+        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
+        mPtrFrame.setDurationToClose(200);
+        mPtrFrame.setDurationToCloseHeader(1000);
+        // default is false
+        mPtrFrame.setPullToRefresh(false);
+        // default is true
+        mPtrFrame.setKeepHeaderWhenRefresh(true);
+
+        gridView = (GridViewWithHeaderAndFooter) rootView.findViewById(R.id.collection_loop_grid_view);
+
+        collectionLoopAdapter = new CollectionLoopAdapter(getActivity());
+        collectionLoopAdapter.setScreenParams(screenWidth, screenHeight);
+        gridView.setAdapter(collectionLoopAdapter);
     }
 
     class CollectionLoopRequestCallBack extends RequestCallBack<String> {
@@ -165,13 +225,18 @@ public class CollectionLoopFragment extends Fragment {
                 dialog.dismiss();
             }
 
+            mPtrFrame.refreshComplete();
+
+            if (clearFlag) {
+                listAll.clear();
+            }
+
             String str = stringResponseInfo.result;
             try {
                 CollectionLoop collectionLoop = JsonUtil.getInstance().fromJSON(CollectionLoop.class, str);
-                list = collectionLoop.getData();
-                CollectionLoopAdapter collectionLoopAdapter = new CollectionLoopAdapter(getActivity(), list);
-                collectionLoopAdapter.setScreenParams(screenWidth, screenHeight);
-                gridView.setAdapter(collectionLoopAdapter);
+                List<CollectionLoopData> list = collectionLoop.getData();
+                listAll.addAll(list);
+                collectionLoopAdapter.setListData(listAll);
             } catch (Exception e) {
                 Log.e(TAG, "收藏的圈子的数据解析异常:" + e.getMessage());
                 Toast.makeText(getActivity(), "数据异常，请稍候再试！", Toast.LENGTH_SHORT).show();
@@ -181,9 +246,15 @@ public class CollectionLoopFragment extends Fragment {
         @Override
         public void onFailure(HttpException e, String s) {
 
+            if (page > 1) {
+                page = page - 1;
+            }
+
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
+
+            mPtrFrame.refreshComplete();
 
             Log.e(TAG, "收藏的圈子数据请求失败:" + s);
             Toast.makeText(getActivity(), "网络异常，请重试！", Toast.LENGTH_SHORT).show();

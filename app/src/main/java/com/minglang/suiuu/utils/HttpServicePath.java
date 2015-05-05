@@ -202,6 +202,16 @@ public class HttpServicePath {
      * const  TYPE_ATTENTION=4;//类型为关注
      */
     public static String GetMessageListPath = RootPath + "/attention/get-messages-remind";
+
+    /**
+     * 获取收藏的随游
+     * <p/>
+     * 请求方式:Post
+     *
+     * 请求参数:
+     */
+    public static String GetCollectionSuiuuPath = RootPath + "/attention/get-collection-travel";
+
     /**
      * 得到随游列表
      */

@@ -876,6 +876,12 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
     //账号被移除
     private boolean isCurrentAccountRemoved = false;
     private boolean isAccountRemovedDialogShow;
