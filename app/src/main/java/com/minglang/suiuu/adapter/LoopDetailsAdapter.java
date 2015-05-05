@@ -60,8 +60,6 @@ public class LoopDetailsAdapter extends BaseAdapter {
                 .showImageForEmptyUri(R.drawable.default_head_image2).showImageOnFail(R.drawable.default_head_image2)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
-
-        Log.i(TAG, String.valueOf(list.size()));
     }
 
     public LoopDetailsAdapter(Context context, List<LoopDetailsDataList> list) {

@@ -159,6 +159,7 @@ public class LoopDetailsActivity extends Activity {
                 Intent intent = new Intent(LoopDetailsActivity.this, LoopArticleActivity.class);
                 intent.putExtra(ARTICLEID, articleId);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 

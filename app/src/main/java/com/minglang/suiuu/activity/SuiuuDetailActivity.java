@@ -46,7 +46,7 @@ public class SuiuuDetailActivity extends Activity {
     private JsonUtil jsonUtil = JsonUtil.getInstance();
     private SuiuuDetailForInfo detailInfo;
     private List<SuiuuDetailForPublisherList> publisherList;
-    private CircleImageView loop_article_user_head_image;
+    private CircleImageView suiuu_details_user_head_image;
     private DisplayImageOptions options;
     /**
      * 验证信息
@@ -72,7 +72,7 @@ public class SuiuuDetailActivity extends Activity {
         dialog = new Dialog(this);
         dialog.setContentView(R.layout.progress_bar);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-        loop_article_user_head_image = (CircleImageView) findViewById(R.id.loop_article_user_head_image);
+        suiuu_details_user_head_image = (CircleImageView) findViewById(R.id.suiuu_details_user_head_image);
 
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
                 .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
@@ -85,7 +85,7 @@ public class SuiuuDetailActivity extends Activity {
         tv_content.setText(detailInfo.getIntro());
         tv_nikename.setText(publisherList.get(0).getNickname());
         tv_selfsign.setText(publisherList.get(0).getIntro());
-        ImageLoader.getInstance().displayImage(publisherList.get(0).getHeadImg(),loop_article_user_head_image,options);
+        ImageLoader.getInstance().displayImage(publisherList.get(0).getHeadImg(),suiuu_details_user_head_image,options);
         dialog.dismiss();
     }
     //访问网络
