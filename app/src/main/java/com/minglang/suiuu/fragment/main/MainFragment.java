@@ -22,6 +22,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.AllAttentionDynamicActivity;
 import com.minglang.suiuu.activity.LoopArticleActivity;
 import com.minglang.suiuu.activity.OtherUserActivity;
+import com.minglang.suiuu.activity.SuiuuDetailActivity;
 import com.minglang.suiuu.adapter.AttentionDynamicAdapter;
 import com.minglang.suiuu.adapter.LoopDynamicAdapter;
 import com.minglang.suiuu.adapter.RecommendTravelAdapter;
@@ -225,7 +226,9 @@ public class MainFragment extends Fragment {
         recommendDynamicLayout.setOnItemClickListener(new LinearLayoutForListView.OnItemClickListener() {
             @Override
             public void onItemClicked(View v, Object obj, int position) {
-
+                Intent intent = new Intent(getActivity(), SuiuuDetailActivity.class);
+                intent.putExtra("tripId",mainDynamicDataRecommendTravelList.get(position).getTripId() );
+                startActivity(intent);
             }
         });
 

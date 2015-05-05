@@ -174,6 +174,7 @@ public class LoopArticleActivity extends Activity {
     private RelativeLayout rl_showForAsk;
     private RelativeLayout rl_showForTakePhoto;
     private ListView loop_article_listview;
+    private ImageView loop_article_back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -275,6 +276,13 @@ public class LoopArticleActivity extends Activity {
         comments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            }
+        });
+        loop_article_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoopArticleActivity.this,MainActivity.class));
+                finish();
             }
         });
     }
@@ -389,6 +397,7 @@ public class LoopArticleActivity extends Activity {
         rl_showForTakePhoto = (RelativeLayout) findViewById(R.id.rl_showForTakePhoto);
         rl_showForAsk = (RelativeLayout) findViewById(R.id.rl_showForAsk);
         loop_article_listview = (ListView) findViewById(R.id.loop_article_listview);
+        loop_article_back = (ImageView) findViewById(R.id.loop_article_back);
     }
 
     /**

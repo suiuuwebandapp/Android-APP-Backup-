@@ -17,4 +17,17 @@
         android:background="@color/white"
         android:scrollbars="none"
         android:layout_marginRight="@dimen/layout_12dp"></ListView>
+  <!--  <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/layout_18dp"
+        android:layout_marginTop="@dimen/layout_35dp"
+        >
+        <ImageView
+            android:id="@+id/iv_choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_suiuu_search"/>
+        </FrameLayout>-->
 </RelativeLayout>
