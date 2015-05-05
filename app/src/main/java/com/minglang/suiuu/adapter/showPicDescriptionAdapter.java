@@ -67,9 +67,10 @@ public class showPicDescriptionAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         View view;
+
         if (convertView != null && convertView instanceof LinearLayout) {
             view = convertView;
             holder = (ViewHolder) view.getTag();
@@ -80,7 +81,9 @@ public class showPicDescriptionAdapter extends BaseAdapter {
             holder.textContent = (TextView) view.findViewById(R.id.tv_show_text_description);
             view.setTag(holder);
         }
-        imageLoader.getInstance().displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
+
+        imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
+
         if (TextUtils.isEmpty(contentList.get(position))) {
 
             imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
@@ -92,25 +95,32 @@ public class showPicDescriptionAdapter extends BaseAdapter {
                 holder.textContent.setText(contentList.get(position));
             }
         }
-            holder.picContent.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent showPic = new Intent(context, ShowBigImage.class);
 
-                    showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position));
-                    showPic.putExtra("isHuanXin", false);
+        holder.picContent.setOnClickListener(new PicContent(position));
 
-
-                    context.startActivity(showPic);
-                }
-            });
-            return view;
-        }
-
+        return view;
+    }
 
     static class ViewHolder {
         ImageView picContent;
         TextView textContent;
+    }
+
+    class PicContent implements View.OnClickListener {
+
+        private int position;
+
+        PicContent(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent showPic = new Intent(context, ShowBigImage.class);
+            showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position));
+            showPic.putExtra("isHuanXin", false);
+            context.startActivity(showPic);
+        }
     }
 
 }

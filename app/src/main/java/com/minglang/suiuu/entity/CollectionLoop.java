@@ -1,7 +1,5 @@
 package com.minglang.suiuu.entity;
 
-import java.util.List;
-
 /**
  * 收藏的圈子数据实体类
  * <p/>
@@ -11,7 +9,7 @@ public class CollectionLoop {
 
     public String status;
 
-    public List<CollectionLoopData> data;
+    public CollectionLoopBase data;
 
     public String message;
 
@@ -21,32 +19,16 @@ public class CollectionLoop {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public List<CollectionLoopData> getData() {
+    public CollectionLoopBase getData() {
         return data;
-    }
-
-    public void setData(List<CollectionLoopData> data) {
-        this.data = data;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public String getToken() {
         return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     @Override

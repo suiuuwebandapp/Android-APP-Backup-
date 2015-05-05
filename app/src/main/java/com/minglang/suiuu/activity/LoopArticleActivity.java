@@ -28,11 +28,11 @@ import com.minglang.suiuu.adapter.showPicDescriptionAdapter;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.NoScrollBarGridView;
-import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.entity.DeleteArticle;
 import com.minglang.suiuu.entity.LoopArticle;
 import com.minglang.suiuu.entity.LoopArticleCommentList;
 import com.minglang.suiuu.entity.LoopArticleData;
+import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
@@ -62,11 +62,6 @@ public class LoopArticleActivity extends Activity {
      * 封面图片
      */
     private ImageView coverImage;
-
-    /**
-     * 返回键
-     */
-    private ImageView back;
 
     /**
      * 点赞
@@ -166,7 +161,7 @@ public class LoopArticleActivity extends Activity {
     private ImageLoader imageLoader;
 
     private DisplayImageOptions options;
-    private DisplayImageOptions options1 ;
+    private DisplayImageOptions options1;
 
     private ProgressDialog progressDialog;
 
@@ -174,14 +169,18 @@ public class LoopArticleActivity extends Activity {
     private List<String> imageList;
     private RelativeLayout rl_showForAsk;
     private RelativeLayout rl_showForTakePhoto;
-    private ListView loop_article_listview;
+    private ListView loop_article_listView;
     private ImageView loop_article_back;
+
+    private String otherActivityTAG;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loop_article);
 
         articleId = getIntent().getStringExtra(ARTICLEID);
+        otherActivityTAG = getIntent().getStringExtra("TAG");
         Verification = SuiuuInformation.ReadVerification(this);
 
         imageLoader = ImageLoader.getInstance();
@@ -206,12 +205,6 @@ public class LoopArticleActivity extends Activity {
      * 控件动作
      */
     private void ViewAction() {
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
         praise.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,8 +251,8 @@ public class LoopArticleActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent showPic = new Intent(LoopArticleActivity.this, ShowBigImage.class);
-                showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT +imageList.get(position));
-                showPic.putExtra("isHuanXin",false);
+                showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position));
+                showPic.putExtra("isHuanXin", false);
                 startActivity(showPic);
             }
         });
@@ -286,7 +279,7 @@ public class LoopArticleActivity extends Activity {
         loop_article_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoopArticleActivity.this,MainActivity.class));
+                startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
                 finish();
             }
         });
@@ -344,22 +337,22 @@ public class LoopArticleActivity extends Activity {
         rl_showForTakePhoto.setVisibility(View.GONE);
         rl_showForAsk.setVisibility(View.VISIBLE);
         locationName.setText(loopArticleData.getaTitle());
-        imageLoader.displayImage(loopArticleData.getHeadImg(), headImage,options1);
+        imageLoader.displayImage(loopArticleData.getHeadImg(), headImage, options1);
         userName.setText(loopArticleData.getNickname());
         userLocation.setText(loopArticleData.getaAddr());
         imageList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
         }.getType(), loopArticleData.getaImgList());
-        if(imageList.size() >= 1) {
-            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT+imageList.get(0), coverImage, options);
+        if (imageList.size() >= 1) {
+            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(0), coverImage, options);
         }
-        if("1".equals(loopArticleData.getaType())) {
+        if ("1".equals(loopArticleData.getaType())) {
             rl_showForTakePhoto.setVisibility(View.VISIBLE);
             rl_showForAsk.setVisibility(View.GONE);
-            List<String> conentList =  JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
+            List<String> contentList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
             }.getType(), loopArticleData.getaContent());
-            loop_article_listview.setAdapter(new showPicDescriptionAdapter(this,imageList,conentList));
-            Utils.setListViewHeightBasedOnChildren(loop_article_listview);
-        }else {
+            loop_article_listView.setAdapter(new showPicDescriptionAdapter(this, imageList, contentList));
+            Utils.setListViewHeightBasedOnChildren(loop_article_listView);
+        } else {
             articleContent.setText(loopArticleData.getaContent());
             imageAdapter = new LoopArticleImageAdapter(this, imageList);
             noScrollBarGridView.setAdapter(imageAdapter);
@@ -379,7 +372,6 @@ public class LoopArticleActivity extends Activity {
 
         coverImage = (ImageView) findViewById(R.id.loop_article_cover_image);
 
-        back = (ImageView) findViewById(R.id.loop_article_back);
         praise = (TextView) findViewById(R.id.loop_article_praise);
         collection = (TextView) findViewById(R.id.loop_article_collection);
 
@@ -400,7 +392,7 @@ public class LoopArticleActivity extends Activity {
         comments = (TextView) findViewById(R.id.loop_article_comments);
         rl_showForTakePhoto = (RelativeLayout) findViewById(R.id.rl_showForTakePhoto);
         rl_showForAsk = (RelativeLayout) findViewById(R.id.rl_showForAsk);
-        loop_article_listview = (ListView) findViewById(R.id.loop_article_listview);
+        loop_article_listView = (ListView) findViewById(R.id.loop_article_listview);
         loop_article_back = (ImageView) findViewById(R.id.loop_article_back);
     }
 
@@ -411,12 +403,11 @@ public class LoopArticleActivity extends Activity {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            Log.i("suiuu",responseInfo.result);
             try {
                 loopArticle = JsonUtil.getInstance().fromJSON(LoopArticle.class, responseInfo.result);
-                Log.i("suiuu",responseInfo.result);
                 if (!loopArticle.getStatus().equals("1")) {
-                    Toast.makeText(LoopArticleActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoopArticleActivity.this,
+                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 } else {
                     loopArticleData = loopArticle.getData();
                     if (loopArticleData != null) {
@@ -431,7 +422,8 @@ public class LoopArticleActivity extends Activity {
                 }
             } catch (Exception e) {
                 Log.e(TAG, "数据解析失败:" + e.getMessage());
-                Toast.makeText(LoopArticleActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoopArticleActivity.this,
+                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
 
             if (progressDialog != null && progressDialog.isShowing()) {
@@ -449,7 +441,8 @@ public class LoopArticleActivity extends Activity {
                 progressDialog.dismiss();
             }
 
-            Toast.makeText(LoopArticleActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoopArticleActivity.this,
+                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -464,9 +457,11 @@ public class LoopArticleActivity extends Activity {
             DeleteArticle deleteArticle = JsonUtil.getInstance().fromJSON(DeleteArticle.class, str);
             if (deleteArticle != null) {
                 if (deleteArticle.getStatus().equals("1")) {
-                    Toast.makeText(LoopArticleActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoopArticleActivity.this,
+                            getResources().getString(R.string.deleteSuccess), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(LoopArticleActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoopArticleActivity.this,
+                            getResources().getString(R.string.deleteError), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -474,7 +469,8 @@ public class LoopArticleActivity extends Activity {
         @Override
         public void onFailure(HttpException error, String msg) {
             Log.i(TAG, msg);
-            Toast.makeText(LoopArticleActivity.this, "删除失败，请稍候再试", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoopArticleActivity.this,
+                    getResources().getString(R.string.deleteError), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -486,36 +482,41 @@ public class LoopArticleActivity extends Activity {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
-            Log.i("suiuu",str+"返回结果");
             try {
                 SuiuuReturnDate baseCollection = JsonUtil.getInstance().fromJSON(SuiuuReturnDate.class, str);
                 if (baseCollection.getStatus().equals("1")) {
-                    Toast.makeText(LoopArticleActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoopArticleActivity.this,
+                            getResources().getString(R.string.collectionSuccess), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Toast.makeText(LoopArticleActivity.this, "收藏失败，请稍候再试！", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG, "收藏数据解析失败" + e.getMessage());
+                Toast.makeText(LoopArticleActivity.this,
+                        getResources().getString(R.string.collectionError), Toast.LENGTH_SHORT).show();
             }
 
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, s);
-            Toast.makeText(LoopArticleActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "收藏失败:" + s);
+            Toast.makeText(LoopArticleActivity.this,
+                    getResources().getString(R.string.collectionError), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void finish() {
-        super.finish();
+        if (otherActivityTAG.equals(AskQuestionActivity.class.getSimpleName())) {
+            startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
+            super.finish();
+        }else{
+            super.finish();
+        }
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(LoopArticleActivity.this,MainActivity.class));
         finish();
     }
 }

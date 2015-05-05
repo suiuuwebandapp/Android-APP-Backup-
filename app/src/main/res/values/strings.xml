@@ -119,6 +119,14 @@
     <string name="NoData">暂无数据！</string>
 
     <string name="all_attention">关注动态</string>
+
+    <string name="deleteSuccess">删除成功!</string>
+    <string name="deleteError">删除失败，请稍候再试！</string>
+    <string name="collectionSuccess">收藏成功！</string>
+    <string name="collectionError">收藏失败，请稍候再试！</string>
+
+    <string name="addAttentionSuccess">添加关注成功!</string>
+    <string name="addAttentionFail">添加关注失败！</string>
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>

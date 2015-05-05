@@ -66,7 +66,7 @@ public class SuiuuDetailActivity extends Activity {
 
     private void initView() {
         tv_nikename = (TextView) findViewById(R.id.tv_nickname);
-        tv_selfsign = (TextView) findViewById(R.id.tv_selfsign);
+        tv_selfsign = (TextView) findViewById(R.id.tv_self_sign);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_content = (TextView) findViewById(R.id.tv_content);
         dialog = new Dialog(this);

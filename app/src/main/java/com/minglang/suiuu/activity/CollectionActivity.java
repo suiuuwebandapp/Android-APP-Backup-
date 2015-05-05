@@ -30,7 +30,6 @@ import java.util.List;
  */
 public class CollectionActivity extends FragmentActivity {
 
-
     /**
      * 返回
      */

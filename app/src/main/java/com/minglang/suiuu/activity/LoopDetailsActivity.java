@@ -3,12 +3,15 @@ package com.minglang.suiuu.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +31,9 @@ import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInformation;
 import com.minglang.suiuu.utils.SystemBarTintManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,7 +154,7 @@ public class LoopDetailsActivity extends Activity {
         addAttention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                setAddAttention2Service();
             }
         });
 
@@ -158,6 +164,7 @@ public class LoopDetailsActivity extends Activity {
                 String articleId = listAll.get(position).getArticleId();
                 Intent intent = new Intent(LoopDetailsActivity.this, LoopArticleActivity.class);
                 intent.putExtra(ARTICLEID, articleId);
+                intent.putExtra("TAG", TAG);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
@@ -166,14 +173,24 @@ public class LoopDetailsActivity extends Activity {
     }
 
     /**
+     * 添加圈子关注网络请求
+     */
+    private void setAddAttention2Service() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter(CIRCLEID, circleId);
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.setAddAttentionPath, new AddAttentionRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
+    }
+
+    /**
      * 初始化方法
      */
     private void initView() {
         systemBarTintManager = new SystemBarTintManager(this);
         SystemBarTintManager.SystemBarConfig systemBarConfig = systemBarTintManager.getConfig();
-        /**
-         状态栏高度
-         */
+        //状态栏高度
         int statusBarHeight = systemBarConfig.getStatusBarHeight();
         navigationBarHeight = systemBarConfig.getNavigationBarHeight();
 
@@ -181,6 +198,13 @@ public class LoopDetailsActivity extends Activity {
         systemBarTintManager.setStatusBarTintEnabled(true);
         systemBarTintManager.setNavigationBarTintEnabled(false);
         systemBarTintManager.setTintColor(getResources().getColor(R.color.tr_black));
+
+        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+
+        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.loop_details_root_layout);
+        if (isKITKAT) {
+            rootLayout.setPadding(0, statusBarHeight, 0, 0);
+        }
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -214,6 +238,9 @@ public class LoopDetailsActivity extends Activity {
         finish();
     }
 
+    /**
+     * 得到圈子文章列表的网络请求回调接口
+     */
     class LoopDetailsRequestCallBack extends RequestCallBack<String> {
 
         @Override
@@ -256,6 +283,45 @@ public class LoopDetailsActivity extends Activity {
 
             Toast.makeText(LoopDetailsActivity.this,
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 添加圈子关注网络请求
+     */
+    class AddAttentionRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            String str = stringResponseInfo.result;
+            try {
+                JSONObject object = new JSONObject(str);
+                String status = object.getString("status");
+                if (!TextUtils.isEmpty(status)) {
+                    if (status.equals("1")) {
+                        Toast.makeText(LoopDetailsActivity.this,
+                                getResources().getString(R.string.addAttentionSuccess), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(LoopDetailsActivity.this,
+                                getResources().getString(R.string.addAttentionFail), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(LoopDetailsActivity.this,
+                            getResources().getString(R.string.addAttentionFail), Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.e(TAG, "添加关注数据解析异常:" + e.getMessage());
+                Toast.makeText(LoopDetailsActivity.this,
+                        getResources().getString(R.string.addAttentionFail), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            Log.e(TAG, "添加关注失败:" + s);
+            Toast.makeText(LoopDetailsActivity.this,
+                    getResources().getString(R.string.addAttentionFail), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -219,6 +219,7 @@ public class MainFragment extends Fragment {
                 String articleId = user.getArticleId();
                 Intent intent = new Intent(getActivity(), LoopArticleActivity.class);
                 intent.putExtra(ARTICLEID, articleId);
+                intent.putExtra("TAG",TAG);
                 startActivity(intent);
             }
         });
@@ -250,6 +251,7 @@ public class MainFragment extends Fragment {
                 String articleId = loop.getArticleId();
                 Intent intent = new Intent(getActivity(), LoopArticleActivity.class);
                 intent.putExtra(ARTICLEID, articleId);
+                intent.putExtra("TAG",TAG);
                 startActivity(intent);
             }
         });

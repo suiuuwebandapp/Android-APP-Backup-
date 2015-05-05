@@ -1,7 +1,5 @@
 package com.minglang.suiuu.entity;
 
-import java.util.List;
-
 /**
  * Created by Administrator on 2015/5/4.
  */
@@ -9,7 +7,7 @@ public class CollectionSuiuu {
 
     public String status;
 
-    public List<CollectionSuiuuData> data;
+    public CollectionSuiuuBase data;
 
     public String message;
 
@@ -19,7 +17,7 @@ public class CollectionSuiuu {
         return status;
     }
 
-    public List<CollectionSuiuuData> getData() {
+    public CollectionSuiuuBase getData() {
         return data;
     }
 

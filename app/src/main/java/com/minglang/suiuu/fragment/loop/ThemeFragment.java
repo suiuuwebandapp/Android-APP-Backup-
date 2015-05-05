@@ -184,7 +184,7 @@ public class ThemeFragment extends Fragment {
                 LoopBase loopBase = JsonUtil.getInstance().fromJSON(LoopBase.class, str);
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
                     list = loopBase.getData().getData();
-                    ThemeAdapter themeAdapter = new ThemeAdapter(getActivity(), loopBase, list);
+                    ThemeAdapter themeAdapter = new ThemeAdapter(getActivity(), list);
                     themeAdapter.setScreenParams(screenWidth, screenHeight);
                     themeGridView.setAdapter(themeAdapter);
                 } else {

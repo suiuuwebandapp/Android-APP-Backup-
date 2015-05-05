@@ -234,7 +234,7 @@ public class CollectionLoopFragment extends Fragment {
             String str = stringResponseInfo.result;
             try {
                 CollectionLoop collectionLoop = JsonUtil.getInstance().fromJSON(CollectionLoop.class, str);
-                List<CollectionLoopData> list = collectionLoop.getData();
+                List<CollectionLoopData> list = collectionLoop.getData().getData();
                 listAll.addAll(list);
                 collectionLoopAdapter.setListData(listAll);
             } catch (Exception e) {

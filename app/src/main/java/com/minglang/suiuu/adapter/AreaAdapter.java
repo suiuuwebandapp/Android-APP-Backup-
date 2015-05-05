@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
-import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -43,8 +42,6 @@ public class AreaAdapter extends BaseAdapter {
 
     private DisplayImageOptions displayImageOptions;
 
-    private String url = "http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150414141605_50758.png";
-
     private int screenWidth, screenHeight;
 
     public AreaAdapter(Context context, LoopBase loopBaseInfo, List<LoopBaseData> list) {
@@ -54,8 +51,8 @@ public class AreaAdapter extends BaseAdapter {
 
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
-                .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
+        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll5)
+                .showImageForEmptyUri(R.drawable.scroll5).showImageOnFail(R.drawable.scroll5)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
 
@@ -101,7 +98,7 @@ public class AreaAdapter extends BaseAdapter {
         String imagePath = loopBaseData.getCpic();
         Log.i(TAG, "imagePath:" + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imagePath, imageView, displayImageOptions);
+            imageLoader.displayImage(imagePath, imageView, displayImageOptions);
         }
 
         String name = loopBaseData.getcName();
