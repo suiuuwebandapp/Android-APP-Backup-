@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/loop_article_head_image_layout"
+        android:id="@+id/suiuu_details_head_image_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -16,26 +16,26 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/loop_article_cover_image"
+                android:id="@+id/suiuu_details_cover_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/layout_200dp"
                 android:scaleType="centerCrop"
-                android:background="@drawable/scroll2" />
+                android:background="@drawable/scroll2"/>
 
             <RelativeLayout
-                android:id="@+id/loop_article_title_layout"
+                android:id="@+id/suiuu_details_title_layout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/tr_black">
 
                 <ImageView
-                    android:id="@+id/loop_article_back"
+                    android:id="@+id/suiuu_details_back"
                     style="@style/backKeyStyle"
                     android:contentDescription="@string/back"
-                    android:src="@drawable/back" />
+                    android:src="@drawable/back"/>
 
                 <TextView
-                    android:id="@+id/loop_article_collection"
+                    android:id="@+id/suiuu_details_collection"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -48,59 +48,65 @@
                     android:drawableStart="@drawable/icon_collection_white"
                     android:text="@string/collection"
                     android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"/>
 
                 <TextView
-                    android:id="@+id/loop_article_praise"
+                    android:id="@+id/suiuu_details_praise"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/loop_article_collection"
-                    android:layout_toStartOf="@+id/loop_article_collection"
+                    android:layout_toLeftOf="@+id/suiuu_details_collection"
+                    android:layout_toStartOf="@+id/suiuu_details_collection"
                     android:drawableLeft="@drawable/icon_praise_white"
                     android:drawablePadding="10dp"
                     android:drawableStart="@drawable/icon_praise_white"
                     android:text="@string/clickPraise"
                     android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"/>
             </RelativeLayout>
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/layout_5dp"
-            >
+            android:layout_marginTop="@dimen/layout_5dp">
 
             <com.minglang.suiuu.customview.CircleImageView
-                android:id="@+id/loop_article_user_head_image"
+                android:id="@+id/suiuu_details_user_head_image"
                 android:layout_width="@dimen/layout_60dp"
                 android:layout_height="@dimen/layout_60dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="5dp"
-                android:background="@drawable/user_head_image_bg" />
+                android:background="@drawable/user_head_image_bg"/>
+
             <TextView
-                android:layout_toRightOf="@+id/loop_article_user_head_image"
+                android:layout_toRightOf="@+id/suiuu_details_user_head_image"
+                android:layout_toEndOf="@+id/suiuu_details_user_head_image"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" 
+                android:layout_height="wrap_content"
                 android:textColor="@color/gray"
                 android:text="nikeName"
-                android:layout_marginLeft="@dimen/layout_5dp" 
+                android:layout_marginLeft="@dimen/layout_5dp"
+                android:layout_marginStart="@dimen/layout_5dp"
                 android:textSize="@dimen/layout_15sp"
-                android:id="@+id/tv_nikename"
+                android:id="@+id/tv_nickname"
                 />
+
             <TextView
-                android:layout_toRightOf="@+id/loop_article_user_head_image"
+                android:layout_toRightOf="@+id/suiuu_details_user_head_image"
+                android:layout_toEndOf="@+id/suiuu_details_user_head_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="selfSign"
-                android:layout_below="@+id/tv_nikename"
-                android:id="@+id/tv_selfsign"
-                android:layout_marginLeft="@dimen/layout_5dp" />
+                android:layout_below="@+id/tv_nickname"
+                android:id="@+id/tv_self_sign"
+                android:layout_marginLeft="@dimen/layout_5dp"
+                android:layout_marginStart="@dimen/layout_5dp"/>
 
         </RelativeLayout>
+
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="fill_parent"
@@ -109,6 +115,7 @@
             android:text="标题"
             android:textSize="@dimen/layout_25sp"
             android:gravity="center"/>
+
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -118,7 +125,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/loop_article_bottom_layout"
+        android:id="@+id/suiuu_details_bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
@@ -126,7 +133,7 @@
         android:background="@color/white">
 
         <TextView
-            android:id="@+id/loop_article_comments"
+            android:id="@+id/suiuu_details_comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -143,14 +150,14 @@
             android:textSize="20sp"/>
 
         <TextView
-            android:id="@+id/loop_article_share"
+            android:id="@+id/suiuu_details_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/loop_article_comments"
-            android:layout_toStartOf="@+id/loop_article_comments"
+            android:layout_toLeftOf="@+id/suiuu_details_comments"
+            android:layout_toStartOf="@+id/suiuu_details_comments"
             android:drawableLeft="@drawable/share_select"
             android:drawablePadding="5dp"
             android:drawableStart="@drawable/share_select"
