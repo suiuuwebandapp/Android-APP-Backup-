@@ -35,14 +35,16 @@ public class showPicDescriptionAdapter extends BaseAdapter {
     private List<String> imageList;
     private List<String> contentList;
     private ImageLoader imageLoader;
-
     private DisplayImageOptions options;
+
     public showPicDescriptionAdapter(Context context, List<String> imageList, List<String> conentList) {
         this.context = context;
         this.imageList = imageList;
         this.contentList = conentList;
         imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        if (!imageLoader.isInited()) {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
                 .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
@@ -78,26 +80,37 @@ public class showPicDescriptionAdapter extends BaseAdapter {
             holder.textContent = (TextView) view.findViewById(R.id.tv_show_text_description);
             view.setTag(holder);
         }
-        imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
-        if(TextUtils.isEmpty(contentList.get(position))) {
-            holder.textContent.setVisibility(View.GONE);
-        }else {
-            holder.picContent.setVisibility(View.VISIBLE);
-            holder.textContent.setText(contentList.get(position));
-        }
-        holder.picContent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent showPic = new Intent(context, ShowBigImage.class);
-                showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT+imageList.get(position));
-                showPic.putExtra("isHuanXin",false);
-                context.startActivity(showPic);
+        imageLoader.getInstance().displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
+        if (TextUtils.isEmpty(contentList.get(position))) {
+
+            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
+            if (TextUtils.isEmpty(contentList.get(position))) {
+
+                holder.textContent.setVisibility(View.GONE);
+            } else {
+                holder.picContent.setVisibility(View.VISIBLE);
+                holder.textContent.setText(contentList.get(position));
             }
-        });
-        return view;
-    }
+        }
+            holder.picContent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent showPic = new Intent(context, ShowBigImage.class);
+
+                    showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position));
+                    showPic.putExtra("isHuanXin", false);
+
+
+                    context.startActivity(showPic);
+                }
+            });
+            return view;
+        }
+
+
     static class ViewHolder {
         ImageView picContent;
         TextView textContent;
     }
+
 }

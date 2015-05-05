@@ -1,5 +1,7 @@
 package com.minglang.suiuu.entity;
 
+import java.util.List;
+
 /**
  * 部分接口统一数据实体类
  * <p/>
@@ -9,9 +11,9 @@ public class SuiuuReturnDate {
 
     public String status;
 
-    public SuiuuData data;
+    public List<SuiuuDataList> data;
 
-    public String message;
+    public SuiuuDataForMessage message;
 
     public String token;
 
@@ -19,24 +21,40 @@ public class SuiuuReturnDate {
         return status;
     }
 
-    public SuiuuData getData() {
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<SuiuuDataList> getData() {
         return data;
     }
 
-    public String getMessage() {
+    public void setData(List<SuiuuDataList> data) {
+        this.data = data;
+    }
+
+    public SuiuuDataForMessage getMessage() {
         return message;
+    }
+
+    public void setMessage(SuiuuDataForMessage message) {
+        this.message = message;
     }
 
     public String getToken() {
         return token;
     }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public String toString() {
-        return "BaseCollection{" +
+        return "SuiuuReturnDate{" +
                 "status='" + status + '\'' +
-                ", data='" + data + '\'' +
-                ", message='" + message + '\'' +
+                ", data=" + data +
+                ", message=" + message +
                 ", token='" + token + '\'' +
                 '}';
     }

@@ -1,17 +1,14 @@
 package com.minglang.suiuu.fragment.main;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -25,6 +22,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.AllAttentionDynamicActivity;
 import com.minglang.suiuu.activity.LoopArticleActivity;
 import com.minglang.suiuu.activity.OtherUserActivity;
+import com.minglang.suiuu.activity.SuiuuDetailActivity;
 import com.minglang.suiuu.adapter.AttentionDynamicAdapter;
 import com.minglang.suiuu.adapter.LoopDynamicAdapter;
 import com.minglang.suiuu.adapter.RecommendTravelAdapter;
@@ -41,6 +39,8 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,12 +65,18 @@ public class MainFragment extends Fragment {
 
     private int screenWidth, screenHeight;
 
-    /**
-     * 下拉刷新组件
-     */
     private PtrClassicFrameLayout mPtrFrame;
 
     private ScrollView scrollView;
+
+    private MaterialHeader header;
+
+    /**
+     * 数据总集
+     */
+    private MainDynamic mainDynamic;
+
+    private ImageLoader imageLoader;
 
     /**
      * 关注动态数据集合
@@ -111,12 +117,9 @@ public class MainFragment extends Fragment {
      */
     private NoScrollBarGridView loopDynamicGridView;
 
-    /**
-     * 点击查看更多动态
-     */
     private TextView moreButton;
 
-    private Dialog dialog;
+    private ProgressDialog progressDialog;
 
     @SuppressLint("InflateParams")
     @Override
@@ -124,11 +127,14 @@ public class MainFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, null);
 
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
+
         initView(rootView);
 
         ViewAction();
 
-        getData();
+        getMainDynamic4Service();
 
         return rootView;
     }
@@ -139,51 +145,38 @@ public class MainFragment extends Fragment {
      * @param str Json字符串
      */
     private void bindData2View(String str) {
-        if (TextUtils.isEmpty(str)) {
-            Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                //数据总集
-                MainDynamic mainDynamic = JsonUtil.getInstance().fromJSON(MainDynamic.class, str);
-                MainDynamicData data = mainDynamic.getData();
+        try {
+            mainDynamic = JsonUtil.getInstance().fromJSON(MainDynamic.class, str);
+            MainDynamicData data = mainDynamic.getData();
 
-                //关注动态
-                mainDynamicDataUserList = data.getUserDynamic();
-                AttentionDynamicAdapter attentionDynamicAdapter = new AttentionDynamicAdapter(getActivity(),
-                        mainDynamicDataUserList);
-                attentionDynamicLayout.setAdapter(attentionDynamicAdapter);
+            //关注动态
+            mainDynamicDataUserList = data.getUserDynamic();
+            AttentionDynamicAdapter attentionDynamicAdapter = new AttentionDynamicAdapter(getActivity(),
+                    mainDynamicDataUserList);
+            attentionDynamicLayout.setAdapter(attentionDynamicAdapter);
 
-                //热门推荐
-                mainDynamicDataRecommendTravelList = data.getRecommendTravel();
-                RecommendTravelAdapter recommendTravelAdapter = new RecommendTravelAdapter(getActivity(),
-                        mainDynamicDataRecommendTravelList);
-                recommendDynamicLayout.setAdapter(recommendTravelAdapter);
+            //热门推荐
+            mainDynamicDataRecommendTravelList = data.getRecommendTravel();
+            RecommendTravelAdapter recommendTravelAdapter = new RecommendTravelAdapter(getActivity(),
+                    mainDynamicDataRecommendTravelList);
+            recommendDynamicLayout.setAdapter(recommendTravelAdapter);
 
-                //今日之星
-                mainDynamicDataRecommendUserList = data.getRecommendUser();
-                TodayStarAdapter todayStarAdapter = new TodayStarAdapter(getActivity(), mainDynamicDataRecommendUserList);
-                todayStarAdapter.setScreenParams(screenWidth, screenHeight);
-                todayStarGridView.setAdapter(todayStarAdapter);
+            //今日之星
+            mainDynamicDataRecommendUserList = data.getRecommendUser();
+            TodayStarAdapter todayStarAdapter = new TodayStarAdapter(getActivity(), mainDynamicDataRecommendUserList);
+            todayStarAdapter.setScreenParams(screenWidth, screenHeight);
+            todayStarGridView.setAdapter(todayStarAdapter);
 
-                //圈子动态
-                listLoopDynamic = data.getCircleDynamic();
-                LoopDynamicAdapter loopDynamicAdapter = new LoopDynamicAdapter(getActivity(), listLoopDynamic);
-                loopDynamicAdapter.setScrrenParams(screenWidth, screenHeight);
-                loopDynamicGridView.setAdapter(loopDynamicAdapter);
+            //圈子动态
+            listLoopDynamic = data.getCircleDynamic();
+            LoopDynamicAdapter loopDynamicAdapter = new LoopDynamicAdapter(getActivity(), listLoopDynamic);
+            loopDynamicAdapter.setScrrenParams(screenWidth, screenHeight);
+            loopDynamicGridView.setAdapter(loopDynamicAdapter);
 
-            } catch (Exception e) {
-                Log.e(TAG, "首页动态数据解析错误:" + e.getMessage());
-                Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            Toast.makeText(getActivity(), "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void getData() {
-
-        if (dialog != null) {
-            dialog.show();
-        }
-        getMainDynamic4Service();
     }
 
     /**
@@ -193,6 +186,10 @@ public class MainFragment extends Fragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.MainDynamicPath, new MainDynamicRequestCallBack());
         httpRequest.requestNetworkData();
+
+        if (progressDialog != null) {
+            progressDialog.show();
+        }
     }
 
     /**
@@ -208,7 +205,10 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                getMainDynamic4Service();
+
+                SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                        HttpServicePath.MainDynamicPath, new MainDynamicRequestCallBack());
+                httpRequest.requestNetworkData();
             }
         });
 
@@ -226,9 +226,9 @@ public class MainFragment extends Fragment {
         recommendDynamicLayout.setOnItemClickListener(new LinearLayoutForListView.OnItemClickListener() {
             @Override
             public void onItemClicked(View v, Object obj, int position) {
-                MainDynamicDataRecommendTravel travel = mainDynamicDataRecommendTravelList.get(position);
-                Log.i(TAG, "热门推荐Item数据:" + travel.toString());
-                Toast.makeText(getActivity(), "随游还未到来...请耐心等待", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), SuiuuDetailActivity.class);
+                intent.putExtra("tripId",mainDynamicDataRecommendTravelList.get(position).getTripId() );
+                startActivity(intent);
             }
         });
 
@@ -243,7 +243,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-        //圈子动态详情跳转
         loopDynamicGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -264,12 +263,6 @@ public class MainFragment extends Fragment {
         });
     }
 
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
     /**
      * 初始化方法
      */
@@ -279,15 +272,13 @@ public class MainFragment extends Fragment {
         screenWidth = screenUtils.getScreenWidth();
         screenHeight = screenUtils.getScreenHeight();
 
-        dialog = new Dialog(getActivity());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progress_bar);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-        dialog.setCanceledOnTouchOutside(false);
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
 
         mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.main_fragment_head_frame);
 
-        MaterialHeader header = new MaterialHeader(getActivity());
+        header = new MaterialHeader(getActivity());
         int[] colors = getResources().getIntArray(R.array.google_colors);
         header.setColorSchemeColors(colors);
         header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
@@ -329,8 +320,8 @@ public class MainFragment extends Fragment {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
 
-            if (dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
             }
 
             String str = stringResponseInfo.result;
@@ -346,14 +337,14 @@ public class MainFragment extends Fragment {
         @Override
         public void onFailure(HttpException e, String s) {
 
-            if (dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
             }
 
             mPtrFrame.refreshComplete();
 
             Log.e(TAG, "数据请求失败:" + s);
-            Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
 }

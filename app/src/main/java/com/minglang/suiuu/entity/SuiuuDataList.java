@@ -2,7 +2,7 @@ package com.minglang.suiuu.entity;
 
 /**
  * 项目名称：Suiuu
- * 类描述：
+ * 类描述：随游列表中每个Item的实体
  * 创建人：Administrator
  * 创建时间：2015/5/4 12:35
  * 修改人：Administrator
