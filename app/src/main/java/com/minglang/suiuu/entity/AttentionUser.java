@@ -1,7 +1,5 @@
 package com.minglang.suiuu.entity;
 
-import java.util.List;
-
 /**
  * 关注的用户的数据实体类
  * <p/>
@@ -11,7 +9,7 @@ public class AttentionUser {
 
     public String status;
 
-    public List<AttentionUserData> data;
+    public AttentionUserBase data;
 
     public String message;
 
@@ -21,32 +19,16 @@ public class AttentionUser {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public List<AttentionUserData> getData() {
+    public AttentionUserBase getData() {
         return data;
-    }
-
-    public void setData(List<AttentionUserData> data) {
-        this.data = data;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public String getToken() {
         return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     @Override

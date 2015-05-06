@@ -26,7 +26,7 @@ import java.util.List;
  * <p/>
  * Created by Administrator on 2015/4/27.
  */
-public class AttentionAreaAdapter extends BaseAdapter {
+public class AttentionLoopAdapter extends BaseAdapter {
 
     private Context context;
 
@@ -39,7 +39,7 @@ public class AttentionAreaAdapter extends BaseAdapter {
 
     private int screenWidth, screenHeight;
 
-    public AttentionAreaAdapter(Context context, List<AttentionLoopData> list) {
+    public AttentionLoopAdapter(Context context, List<AttentionLoopData> list) {
         this.context = context;
         this.list = list;
 
@@ -90,8 +90,6 @@ public class AttentionAreaAdapter extends BaseAdapter {
         String imageURL = list.get(position).getCpic();
         if (!TextUtils.isEmpty(imageURL)) {
             imageLoader.displayImage(imageURL, imageView, displayImageOptions);
-        } else {
-
         }
 
         TextView title = holder.getView(R.id.item_attention_loop_title);

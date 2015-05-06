@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.attention;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.OtherUserActivity;
 import com.minglang.suiuu.adapter.AttentionUserAdapter;
 import com.minglang.suiuu.entity.AttentionUser;
 import com.minglang.suiuu.entity.AttentionUserData;
@@ -90,12 +92,18 @@ public class AttentionUserFragment extends Fragment {
     }
 
     private void ViewAction() {
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                AttentionUserData data = list.get(position);
+                String otherUserSign = data.getUserSign();
+                Intent intent = new Intent(getActivity(), OtherUserActivity.class);
+                intent.putExtra("usersign", otherUserSign);
+                startActivity(intent);
             }
         });
+
     }
 
     /**
@@ -132,6 +140,12 @@ public class AttentionUserFragment extends Fragment {
         super.onDetach();
     }
 
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
     /**
      * 网络请求回调接口
      */
@@ -140,11 +154,10 @@ public class AttentionUserFragment extends Fragment {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
-            Log.i(TAG, "关注的用户数据:" + str);
             try {
                 AttentionUser attentionUser = JsonUtil.getInstance().fromJSON(AttentionUser.class, str);
                 if (attentionUser.getStatus().equals("1")) {
-                    list = attentionUser.getData();
+                    list = attentionUser.getData().getData();
                     AttentionUserAdapter attentionUserAdapter = new AttentionUserAdapter(getActivity(), list);
                     listView.setAdapter(attentionUserAdapter);
                 } else {

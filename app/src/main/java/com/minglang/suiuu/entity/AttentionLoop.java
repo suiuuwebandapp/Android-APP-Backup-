@@ -1,7 +1,5 @@
 package com.minglang.suiuu.entity;
 
-import java.util.List;
-
 /**
  * 关注的圈子的数据实体类
  * <p/>
@@ -11,7 +9,7 @@ public class AttentionLoop {
 
     public String status;
 
-    public List<AttentionLoopData> data;
+    public AttentionLoopBase data;
 
     public String message;
 
@@ -21,32 +19,16 @@ public class AttentionLoop {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public List<AttentionLoopData> getData() {
+    public AttentionLoopBase getData() {
         return data;
-    }
-
-    public void setData(List<AttentionLoopData> data) {
-        this.data = data;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public String getToken() {
         return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     @Override

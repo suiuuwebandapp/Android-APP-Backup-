@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <ImageView
+    <com.minglang.suiuu.customview.CircleImageView
         android:id="@+id/item_attention_user_head_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/layout_60dp"
+        android:layout_height="@dimen/layout_60dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="15dp"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/default_head_image2"/>
+        android:layout_marginTop="15dp"
+        android:background="@drawable/default_head_image"/>
 
     <TextView
         android:id="@+id/item_attention_user_content"
@@ -22,23 +23,26 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:layout_marginEnd="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:singleLine="true"
         android:layout_toEndOf="@+id/item_attention_user_head_image"
         android:layout_toRightOf="@+id/item_attention_user_head_image"
-        android:text="New Text"/>
+        android:text="New Text"
+        android:layout_alignBottom="@+id/item_attention_user_head_image"/>
 
     <TextView
         android:id="@+id/item_attention_user_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/item_attention_user_content"
         android:layout_alignLeft="@+id/item_attention_user_content"
         android:layout_alignStart="@+id/item_attention_user_content"
-        android:layout_marginBottom="5dp"
         android:singleLine="true"
-        android:text="New Text"/>
+        android:text="New Text"
+        android:layout_alignTop="@+id/item_attention_user_head_image"
+        android:layout_alignRight="@+id/item_attention_user_content"
+        android:layout_alignEnd="@+id/item_attention_user_content"/>
 </RelativeLayout>

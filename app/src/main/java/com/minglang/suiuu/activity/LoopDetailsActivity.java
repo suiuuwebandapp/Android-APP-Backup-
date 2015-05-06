@@ -50,11 +50,6 @@ public class LoopDetailsActivity extends Activity {
     private static final String CID = "cId";
     private static final String ARTICLEID = "articleId";
 
-    /**
-     * 虚拟按键高度
-     */
-    private int navigationBarHeight;
-
     private String type;
 
     /**
@@ -185,7 +180,8 @@ public class LoopDetailsActivity extends Activity {
         SystemBarTintManager.SystemBarConfig systemBarConfig = systemBarTintManager.getConfig();
         //状态栏高度
         int statusBarHeight = systemBarConfig.getStatusBarHeight();
-        navigationBarHeight = systemBarConfig.getNavigationBarHeight();
+        //虚拟按键高度
+        int navigationBarHeight = systemBarConfig.getNavigationBarHeight();
 
         /****************设置状态栏颜色*************/
         systemBarTintManager.setStatusBarTintEnabled(true);

@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.attention;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -17,7 +18,8 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.AttentionAreaAdapter;
+import com.minglang.suiuu.activity.LoopDetailsActivity;
+import com.minglang.suiuu.adapter.AttentionLoopAdapter;
 import com.minglang.suiuu.entity.AttentionLoop;
 import com.minglang.suiuu.entity.AttentionLoopData;
 import com.minglang.suiuu.utils.HttpServicePath;
@@ -30,9 +32,9 @@ import java.util.List;
 /**
  * 关注主题
  */
-public class AttentionThemeFragment extends Fragment {
+public class AttentionLoopFragment extends Fragment {
 
-    private static final String TAG = AttentionThemeFragment.class.getSimpleName();
+    private static final String TAG = AttentionLoopFragment.class.getSimpleName();
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -57,8 +59,8 @@ public class AttentionThemeFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment AttentionThemeFragment.
      */
-    public static AttentionThemeFragment newInstance(String param1, String param2) {
-        AttentionThemeFragment fragment = new AttentionThemeFragment();
+    public static AttentionLoopFragment newInstance(String param1, String param2) {
+        AttentionLoopFragment fragment = new AttentionLoopFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -66,7 +68,7 @@ public class AttentionThemeFragment extends Fragment {
         return fragment;
     }
 
-    public AttentionThemeFragment() {
+    public AttentionLoopFragment() {
         // Required empty public constructor
     }
 
@@ -96,7 +98,16 @@ public class AttentionThemeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 AttentionLoopData attentionLoopData = list.get(position);
+                
                 String cID = attentionLoopData.getcId();
+                String type = attentionLoopData.getcType();
+                String loopName = attentionLoopData.getcName();
+
+                Intent intent = new Intent(getActivity(), LoopDetailsActivity.class);
+                intent.putExtra("type", type);
+                intent.putExtra("circleId", cID);
+                intent.putExtra("name", loopName);
+                startActivity(intent);
             }
         });
     }
@@ -111,7 +122,7 @@ public class AttentionThemeFragment extends Fragment {
 //        params.addBodyParameter("page", String.valueOf(page));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.AttentionThemePath, new AttentionThemeRequestCallback());
+                HttpServicePath.AttentionLoopPath, new AttentionLoopRequestCallback());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
 
@@ -141,10 +152,16 @@ public class AttentionThemeFragment extends Fragment {
         super.onDetach();
     }
 
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
     /**
      * 关注的圈子网络请求回调接口
      */
-    private class AttentionThemeRequestCallback extends RequestCallBack<String> {
+    private class AttentionLoopRequestCallback extends RequestCallBack<String> {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
@@ -154,11 +171,11 @@ public class AttentionThemeFragment extends Fragment {
                 AttentionLoop attentionLoop = JsonUtil.getInstance().fromJSON(AttentionLoop.class, str);
                 if (attentionLoop.getStatus().equals("1")) {
 
-                    list = attentionLoop.getData();
+                    list = attentionLoop.getData().getData();
 
-                    AttentionAreaAdapter attentionAreaAdapter = new AttentionAreaAdapter(getActivity(), list);
-                    attentionAreaAdapter.setScreenParams(screenWidth, screenHeight);
-                    attentionThemeGridView.setAdapter(attentionAreaAdapter);
+                    AttentionLoopAdapter attentionLoopAdapter = new AttentionLoopAdapter(getActivity(), list);
+                    attentionLoopAdapter.setScreenParams(screenWidth, screenHeight);
+                    attentionThemeGridView.setAdapter(attentionLoopAdapter);
 
                 } else {
                     Toast.makeText(getActivity(), "数据获取异常，请稍候再试！", Toast.LENGTH_SHORT).show();

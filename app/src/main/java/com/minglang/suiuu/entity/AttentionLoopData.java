@@ -11,36 +11,31 @@ public class AttentionLoopData {
 
     public String cpic;
 
+    public String cType;
+
     public String getcName() {
         return cName;
-    }
-
-    public void setcName(String cName) {
-        this.cName = cName;
     }
 
     public String getcId() {
         return cId;
     }
 
-    public void setcId(String cId) {
-        this.cId = cId;
-    }
-
     public String getCpic() {
         return cpic;
     }
 
-    public void setCpic(String cpic) {
-        this.cpic = cpic;
+    public String getcType() {
+        return cType;
     }
 
     @Override
     public String toString() {
-        return "AttentionThemeData{" +
+        return "AttentionLoopData{" +
                 "cName='" + cName + '\'' +
                 ", cId='" + cId + '\'' +
                 ", cpic='" + cpic + '\'' +
+                ", cType='" + cType + '\'' +
                 '}';
     }
 }

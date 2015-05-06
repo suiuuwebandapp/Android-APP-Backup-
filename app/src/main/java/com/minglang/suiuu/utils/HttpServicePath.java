@@ -83,7 +83,7 @@ public class HttpServicePath {
      * <p/>
      * 请求参数:页码 page(0 得到全部、1—— +∞ 对应页码数)
      */
-    public static String AttentionThemePath = RootPath + "/attention/get-attention-circle";
+    public static String AttentionLoopPath = RootPath + "/attention/get-attention-circle";
 
     /**
      * 获取关注的用户

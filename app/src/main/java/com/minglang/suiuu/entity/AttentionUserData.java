@@ -13,36 +13,26 @@ public class AttentionUserData {
 
     public String hobby;
 
+    public  String userSign;
+
     public String getNickname() {
         return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     public String getHeadImg() {
         return headImg;
     }
 
-    public void setHeadImg(String headImg) {
-        this.headImg = headImg;
-    }
-
     public String getIntro() {
         return intro;
-    }
-
-    public void setIntro(String intro) {
-        this.intro = intro;
     }
 
     public String getHobby() {
         return hobby;
     }
 
-    public void setHobby(String hobby) {
-        this.hobby = hobby;
+    public String getUserSign() {
+        return userSign;
     }
 
     @Override
@@ -52,6 +42,7 @@ public class AttentionUserData {
                 ", headImg='" + headImg + '\'' +
                 ", intro='" + intro + '\'' +
                 ", hobby='" + hobby + '\'' +
+                ", userSign='" + userSign + '\'' +
                 '}';
     }
 }

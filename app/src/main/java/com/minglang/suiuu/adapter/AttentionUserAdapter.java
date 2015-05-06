@@ -92,7 +92,7 @@ public class AttentionUserAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(str_title)) {
             title.setText(str_title);
         } else {
-            title.setText("");
+            title.setText("匿名用户");
         }
 
 
@@ -100,7 +100,7 @@ public class AttentionUserAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(str_content)) {
             content.setText(str_content);
         } else {
-            content.setText("");
+            content.setText("暂无内容");
         }
         return holder.getConvertView();
     }
