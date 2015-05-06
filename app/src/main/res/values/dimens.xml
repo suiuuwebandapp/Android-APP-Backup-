@@ -35,6 +35,7 @@
     <dimen name="layout_70dp">70dp</dimen>
     <dimen name="layout_80dp">80dp</dimen>
     <dimen name="layout_60dp">60dp</dimen>
+    <dimen name="layout_2dp">2dp</dimen>
 
 
 

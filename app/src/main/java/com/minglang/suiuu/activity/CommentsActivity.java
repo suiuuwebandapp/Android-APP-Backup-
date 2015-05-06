@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
@@ -20,9 +21,14 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.CommentAdapter;
+import com.minglang.suiuu.entity.CommentList;
+import com.minglang.suiuu.entity.LoopArticleCommentList;
 import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SystemBarTintManager;
+
+import java.util.List;
 
 /**
  * 评论列表
@@ -43,6 +49,9 @@ public class CommentsActivity extends Activity {
     private EditText et_input_comment;
     private Button bt_send_comment;
     private String articleId;
+    private JsonUtil jsonUtil = JsonUtil.getInstance();
+    private List<LoopArticleCommentList> commentLists;
+    private TextView tv_top_right,tv_top_center;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +63,16 @@ public class CommentsActivity extends Activity {
 
         ViewAction();
 
-        mListView.setAdapter(adapter);
+        origainData();
+    }
 
+    private void origainData() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("articleId", articleId);
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.getCommentListByArticleId, new getCommentListCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
     }
 
     private void ViewAction() {
@@ -73,17 +90,17 @@ public class CommentsActivity extends Activity {
                 if(TextUtils.isEmpty(commentContent)) {
                     Toast.makeText(CommentsActivity.this, "请输入评论内容", Toast.LENGTH_SHORT).show();
                 }else {
-                    requestCommentSend(commentContent);
+                    requestCommentSend(commentContent,"0");
                 }
             }
         });
     }
 
-    private void requestCommentSend(String commentContent) {
+    private void requestCommentSend(String commentContent,String rId) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter("content", commentContent);
-        params.addBodyParameter("rId", "0");
+        params.addBodyParameter("rId", rId);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.createComment, new requestComentSendCallBack());
         httpRequest.setParams(params);
@@ -94,6 +111,28 @@ public class CommentsActivity extends Activity {
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
             Log.i("suiuu","success="+responseInfo.result);
+
+        }
+
+        @Override
+        public void onFailure(HttpException error, String msg) {
+            Log.e("suiuu", "网络请求失败:" + msg);
+            Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+        }
+    }
+    class getCommentListCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+            Log.i("suiuu","getList+" +responseInfo.result);
+            CommentList list = jsonUtil.fromJSON(CommentList.class,responseInfo.result);
+            if("1".equals(list.getStatus())) {
+                commentLists = list.getData().getData();
+                mListView.setAdapter(new CommentAdapter(CommentsActivity.this, commentLists));
+            }else {
+                Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+
+            }
         }
 
         @Override
@@ -123,13 +162,17 @@ public class CommentsActivity extends Activity {
             RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.CommentRootLayout);
             rootLayout.setPadding(0, statusHeight, 0, 0);
         }
-
         back = (ImageView) findViewById(R.id.iv_top_back);
         mListView = (ListView) findViewById(R.id.lv_activity_commentlist);
         et_input_comment = (EditText) findViewById(R.id.et_input_comment);
         bt_send_comment = (Button) findViewById(R.id.bt_send_comment);
         adapter = new CommentAdapter(this);
+        tv_top_center = (TextView) findViewById(R.id.tv_top_center);
+        tv_top_center.setText("评论");
+        tv_top_right = (TextView) findViewById(R.id.tv_top_right);
+        tv_top_right.setVisibility(View.GONE);
 
     }
+
 
 }

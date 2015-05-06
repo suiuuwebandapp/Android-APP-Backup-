@@ -269,6 +269,7 @@ public class LoopArticleActivity extends Activity {
                     if (commentList.size() > 0) {
                         lv_comment_list.setVisibility(View.VISIBLE);
                         lv_comment_list.setAdapter(new CommentAdapter(LoopArticleActivity.this, commentList));
+
                     } else {
                         Toast.makeText(LoopArticleActivity.this, R.string.thisArticNoComment, Toast.LENGTH_SHORT).show();
                     }
@@ -344,7 +345,6 @@ public class LoopArticleActivity extends Activity {
         if (progressDialog != null) {
             progressDialog.show();
         }
-
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter(HttpServicePath.key, Verification);
@@ -453,6 +453,7 @@ public class LoopArticleActivity extends Activity {
         loop_article_listview = (ListView) findViewById(R.id.loop_article_listview);
         loop_article_back = (ImageView) findViewById(R.id.loop_article_back);
         lv_comment_list = (ListView) findViewById(R.id.lv_comment_list);
+
     }
 
     /**
@@ -597,3 +598,4 @@ public class LoopArticleActivity extends Activity {
         finish();
     }
 }
+

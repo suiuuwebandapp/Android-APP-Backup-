@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_pressed">
+    >
 
     <!--评论Item-->
 
     <com.minglang.suiuu.customview.CircleImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/layout_60dp"
+        android:layout_height="@dimen/layout_60dp"
         android:id="@+id/item_comment_head_image"
         android:src="@drawable/default_head_image2"
         android:layout_marginLeft="10dp"
@@ -24,7 +24,7 @@
         android:id="@+id/item_comment_title"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        android:textSize="18sp"
+        android:textSize="@dimen/layout_20sp"
         android:singleLine="true"
         android:textColor="@color/comment_title_color2"
         android:layout_alignTop="@+id/item_comment_head_image"
@@ -36,8 +36,8 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/item_comment_content"
-        android:layout_marginTop="10dp"
-        android:textSize="20sp"
+        android:layout_marginTop="@dimen/layout_8dp"
+        android:textSize="@dimen/layout_15sp"
         android:textColor="@color/tr_black"
         android:maxLines="2"
         android:layout_below="@+id/item_comment_title"

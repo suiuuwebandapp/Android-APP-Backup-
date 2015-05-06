@@ -1,15 +1,16 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.LoopArticleCommentList;
 
 import java.util.List;
@@ -65,28 +66,25 @@ public class CommentAdapter extends BaseAdapter {
         ViewHolder holder = null;
 
         if (convertView == null) {
-
             holder = new ViewHolder();
-
             convertView = LayoutInflater.from(context).inflate(R.layout.item_comment, null);
-
-            holder.headImage = (ImageView) convertView.findViewById(R.id.item_comment_head_image);
+            holder.headImage = (CircleImageView) convertView.findViewById(R.id.item_comment_head_image);
             holder.title = (TextView) convertView.findViewById(R.id.item_comment_title);
             holder.content = (TextView) convertView.findViewById(R.id.item_comment_content);
-
             convertView.setTag(holder);
-
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        bitMap.display(holder.headImage,list.get(position).getHeadImg());
+        if(!TextUtils.isEmpty(list.get(position).getHeadImg())) {
+            bitMap.display(holder.headImage, list.get(position).getHeadImg());
+        }
         holder.title.setText(list.get(position).getNickname());
         holder.content.setText(list.get(position).getContent());
         return convertView;
     }
 
     class ViewHolder {
-        ImageView headImage;
+        CircleImageView headImage;
         TextView title;
         TextView content;
     }

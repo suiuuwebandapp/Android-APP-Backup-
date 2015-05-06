@@ -242,4 +242,8 @@ public class HttpServicePath {
      * 创建一条评论
      */
     public static String createComment = RootPath+ "/circle/create-comment";
+    /**
+     * 根据文章ID获得评论列表
+     */
+    public static String getCommentListByArticleId = RootPath+ "/circle/get-comment-by-article-id";
 }
