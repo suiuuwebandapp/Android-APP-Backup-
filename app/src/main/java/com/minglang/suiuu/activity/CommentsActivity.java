@@ -112,7 +112,6 @@ public class CommentsActivity extends Activity {
         mTintManager.setStatusBarTintEnabled(true);
         mTintManager.setNavigationBarTintEnabled(false);
         mTintManager.setTintColor(getResources().getColor(R.color.tr_black));
-
         int statusHeight = mTintManager.getConfig().getStatusBarHeight();
 
         /**
