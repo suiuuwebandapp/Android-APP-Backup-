@@ -289,7 +289,7 @@ public class LoopArticleActivity extends Activity {
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            
+
             }
         });
 
