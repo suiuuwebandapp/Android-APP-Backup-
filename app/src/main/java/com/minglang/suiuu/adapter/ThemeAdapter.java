@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.Utils;
@@ -35,21 +34,16 @@ public class ThemeAdapter extends BaseAdapter {
 
     private Context context;
 
-    private LoopBase loopBaseInfo;
-
     private List<LoopBaseData> list;
 
     private ImageLoader imageLoader;
 
     private DisplayImageOptions displayImageOptions;
 
-    private String url = "http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150414141605_50758.png";
-
     private int screenWidth, screenHeight;
 
-    public ThemeAdapter(Context context, LoopBase loopBaseInfo, List<LoopBaseData> list) {
+    public ThemeAdapter(Context context, List<LoopBaseData> list) {
         this.context = context;
-        this.loopBaseInfo = loopBaseInfo;
         this.list = list;
 
         imageLoader = ImageLoader.getInstance();
@@ -65,6 +59,7 @@ public class ThemeAdapter extends BaseAdapter {
     public void setScreenParams(int screenWidth, int screenHeight) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        Log.i(TAG, "屏幕高度:" + this.screenHeight);
     }
 
     @Override
@@ -101,9 +96,8 @@ public class ThemeAdapter extends BaseAdapter {
         LoopBaseData loopBaseData = list.get(position);
 
         String imagePath = loopBaseData.getCpic();
-        Log.i(TAG, "imagePath:" + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT +imagePath, imageView, displayImageOptions);
+            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imagePath, imageView, displayImageOptions);
         }
 
         String name = loopBaseData.getcName();

@@ -74,8 +74,6 @@ public class CollectionSuiuuFragment extends Fragment {
 
     private Dialog dialog;
 
-    private int screenWidth, screenHeight;
-
     private boolean clearFlag;
 
     /**
@@ -184,6 +182,7 @@ public class CollectionSuiuuFragment extends Fragment {
      *
      * @param rootView Fragment根View
      */
+    @SuppressWarnings("deprecation")
     private void initView(View rootView) {
 
         dialog = new Dialog(getActivity());
@@ -219,8 +218,8 @@ public class CollectionSuiuuFragment extends Fragment {
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
         ScreenUtils utils = new ScreenUtils(getActivity());
-        screenWidth = utils.getScreenWidth();
-        screenHeight = utils.getScreenHeight();
+        int screenWidth = utils.getScreenWidth();
+        int screenHeight = utils.getScreenHeight();
 
         adapter = new CollectionSuiuuAdapter(getActivity());
         adapter.setScreenParams(screenWidth, screenHeight);
@@ -249,12 +248,12 @@ public class CollectionSuiuuFragment extends Fragment {
             String str = stringResponseInfo.result;
             try {
                 CollectionSuiuu suiuu = JsonUtil.getInstance().fromJSON(CollectionSuiuu.class, str);
-                List<CollectionSuiuuData> list = suiuu.getData();
+                List<CollectionSuiuuData> list = suiuu.getData().getData();
                 listAll.addAll(list);
                 adapter.setListData(listAll);
 
             } catch (Exception e) {
-                Log.e(TAG, "收藏的随游数据解析失败");
+                Log.e(TAG, "收藏的随游数据解析失败" + e.getMessage());
                 Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
 

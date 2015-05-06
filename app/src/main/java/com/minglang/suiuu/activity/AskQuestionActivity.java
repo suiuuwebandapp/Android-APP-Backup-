@@ -105,6 +105,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                         Toast.makeText(AskQuestionActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(AskQuestionActivity.this,LoopArticleActivity.class);
                         intent.putExtra("articleId",dataNum);
+                        intent.putExtra("TAG",TAG);
                         startActivity(intent);
                     } else {
                         dialog.dismiss();
