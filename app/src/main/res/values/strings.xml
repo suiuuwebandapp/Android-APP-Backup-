@@ -121,7 +121,8 @@
     <string name="all_attention">关注动态</string>
     <string name="thisArticNoComment">该文章暂时没有评论</string>
 
-
+    <string name="addAttentionSuccess">添加关注成功!</string>
+    <string name="addAttentionFail">添加关注失败！</string>
 
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
