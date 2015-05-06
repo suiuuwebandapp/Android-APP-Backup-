@@ -144,6 +144,7 @@ public class CollectionLoopFragment extends Fragment {
                 String articleId = listAll.get(position).getArticleId();
                 Intent intent = new Intent(getActivity(), LoopArticleActivity.class);
                 intent.putExtra("articleId", articleId);
+                intent.putExtra("TAG", TAG);
                 startActivity(intent);
             }
         });

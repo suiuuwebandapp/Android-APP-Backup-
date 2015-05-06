@@ -41,9 +41,9 @@ public class LoopArticleData {
 
     public String headImg;
 
-    public String attentionId;
-
     public String articleId;
+
+    public String attentionId;
 
     public List<LoopArticleCommentList> commentList;
 

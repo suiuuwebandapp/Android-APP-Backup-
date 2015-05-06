@@ -99,7 +99,7 @@ public class AttentionUserFragment extends Fragment {
                 AttentionUserData data = list.get(position);
                 String otherUserSign = data.getUserSign();
                 Intent intent = new Intent(getActivity(), OtherUserActivity.class);
-                intent.putExtra("usersign", otherUserSign);
+                intent.putExtra("userSign", otherUserSign);
                 startActivity(intent);
             }
         });

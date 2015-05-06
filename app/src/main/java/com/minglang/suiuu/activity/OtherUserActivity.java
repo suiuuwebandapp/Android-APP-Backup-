@@ -84,7 +84,7 @@ public class OtherUserActivity extends Activity {
 
     private int screenWidth, screenHeight;
 
-    private TextView otherUserName,otherUserLocation,otherUserSignature;
+    private TextView otherUserName, otherUserLocation, otherUserSignature;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +92,7 @@ public class OtherUserActivity extends Activity {
         setContentView(R.layout.activity_other_user);
 
         userSign = getIntent().getStringExtra(USERSIGNKEY);
-        Log.i("suiuu",userSign);
+        Log.i(TAG, "其他页面传递的userSign:" + userSign);
 
         initView();
 
@@ -191,6 +191,7 @@ public class OtherUserActivity extends Activity {
         otherUserSignature.setText(user.getIntro());
 
     }
+
     /**
      * 控件点击事件
      */
@@ -218,7 +219,7 @@ public class OtherUserActivity extends Activity {
                     String userId = otherUser.getData().getUser().getUserId();
                     Intent intent = new Intent(OtherUserActivity.this, ChatActivity.class);
                     intent.putExtra("userId", userId);
-                    intent.putExtra("nikeName",otherUser.getData().getUser().getNickname());
+                    intent.putExtra("nikeName", otherUser.getData().getUser().getNickname());
                     startActivity(intent);
                     break;
 
@@ -238,7 +239,7 @@ public class OtherUserActivity extends Activity {
             }
 
             String str = stringResponseInfo.result;
-            Log.i("suiuu",str);
+            Log.i("suiuu", str);
             try {
                 otherUser = JsonUtil.getInstance().fromJSON(OtherUser.class, str);
                 articleList = otherUser.getData().getArticleList();
@@ -251,6 +252,7 @@ public class OtherUserActivity extends Activity {
                 e.printStackTrace();
             }
         }
+
         @Override
         public void onFailure(HttpException e, String s) {
             if (dialog.isShowing()) {
