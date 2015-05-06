@@ -22,6 +22,7 @@ import com.minglang.suiuu.adapter.OtherUserArticleAdapter;
 import com.minglang.suiuu.chat.activity.ChatActivity;
 import com.minglang.suiuu.entity.OtherUser;
 import com.minglang.suiuu.entity.OtherUserDataArticle;
+import com.minglang.suiuu.entity.OtherUserDataInfo;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.ScreenUtils;
@@ -42,7 +43,7 @@ public class OtherUserActivity extends Activity {
 
     private static final String TAG = OtherUserActivity.class.getSimpleName();
 
-    private static final String USERSIGNKEY = "usersign";
+    private static final String USERSIGNKEY = "userSign";
 
     /**
      * 返回键
@@ -83,12 +84,15 @@ public class OtherUserActivity extends Activity {
 
     private int screenWidth, screenHeight;
 
+    private TextView otherUserName,otherUserLocation,otherUserSignature;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_user);
 
         userSign = getIntent().getStringExtra(USERSIGNKEY);
+        Log.i("suiuu",userSign);
 
         initView();
 
@@ -171,8 +175,20 @@ public class OtherUserActivity extends Activity {
         attention = (TextView) findViewById(R.id.otherUserAttention);
         conversation = (TextView) findViewById(R.id.otherUserConversation);
         otherUserLoop = (GridView) findViewById(R.id.otherUserLoop);
+        otherUserName = (TextView) findViewById(R.id.otherUserName);
+        otherUserLocation = (TextView) findViewById(R.id.otherUserLocation);
+        otherUserSignature = (TextView) findViewById(R.id.otherUserSignature);
     }
 
+    /**
+     * 用户信息回调接口
+     */
+    private void fullData() {
+        OtherUserDataInfo user = otherUser.getData().getUser();
+        otherUserName.setText(user.getNickname());
+        otherUserSignature.setText(user.getIntro());
+
+    }
     /**
      * 控件点击事件
      */
@@ -198,20 +214,18 @@ public class OtherUserActivity extends Activity {
                 case R.id.otherUserConversation:
 
                     String userId = otherUser.getData().getUser().getUserId();
-
                     Intent intent = new Intent(OtherUserActivity.this, ChatActivity.class);
                     intent.putExtra("userId", userId);
+                    intent.putExtra("nikeName",otherUser.getData().getUser().getNickname());
                     startActivity(intent);
                     break;
 
             }
 
         }
+
     }
 
-    /**
-     * 用户信息回调接口
-     */
     private class GetOtherUserInformationRequestCallBack extends RequestCallBack<String> {
 
         @Override
@@ -222,17 +236,19 @@ public class OtherUserActivity extends Activity {
             }
 
             String str = stringResponseInfo.result;
+            Log.i("suiuu",str);
             try {
                 otherUser = JsonUtil.getInstance().fromJSON(OtherUser.class, str);
                 articleList = otherUser.getData().getArticleList();
+                fullData();
                 OtherUserArticleAdapter adapter = new OtherUserArticleAdapter(OtherUserActivity.this, articleList, screenWidth, screenHeight);
                 otherUserLoop.setAdapter(adapter);
             } catch (Exception e) {
                 Log.e(TAG, "用户数据解析失败异常信息:" + e.getMessage());
                 Toast.makeText(OtherUserActivity.this, "网络异常，请稍候再试!", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
         }
-
         @Override
         public void onFailure(HttpException e, String s) {
             if (dialog.isShowing()) {
@@ -243,6 +259,7 @@ public class OtherUserActivity extends Activity {
 
             Toast.makeText(OtherUserActivity.this, "网络异常，请稍候再试!", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     /**

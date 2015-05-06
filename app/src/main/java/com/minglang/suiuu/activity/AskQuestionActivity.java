@@ -322,6 +322,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
             picNameList.add(substring);
         }
         params.addBodyParameter("imgList", JsonUtil.getInstance().toJSON(picNameList));
+        params.addBodyParameter("img", picNameList.get(0));
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.createLoop, new CreateLoopCallBack());
         suHttpRequest.setParams(params);

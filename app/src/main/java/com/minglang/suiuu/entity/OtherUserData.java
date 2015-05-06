@@ -17,6 +17,16 @@ public class OtherUserData {
 
     public List<OtherUserDataArticle> articleList;
 
+    private SuiuuDataForMessage msg;
+
+    public SuiuuDataForMessage getMsg() {
+        return msg;
+    }
+
+    public void setMsg(SuiuuDataForMessage msg) {
+        this.msg = msg;
+    }
+
     public OtherUserDataInfo getUser() {
         return user;
     }

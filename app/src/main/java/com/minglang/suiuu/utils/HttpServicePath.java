@@ -220,8 +220,15 @@ public class HttpServicePath {
     /**
      * 得到随游的详细信息
      */
-    public static String getSuiuuItemInfo = RootPath+ "/app-travel/get-travel-info";  /**
+    public static String getSuiuuItemInfo = RootPath+ "/app-travel/get-travel-info";
+    /**
      * 得到选择国家的数据
      */
     public static String getCountryData = RootPath+ "/app-travel/get-country";
+    /**
+     * 创建一条评论
+     */
+    public static String createComment = RootPath+ "/circle/create-comment";
+
+
 }

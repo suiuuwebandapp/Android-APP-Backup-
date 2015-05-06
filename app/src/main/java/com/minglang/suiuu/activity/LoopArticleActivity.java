@@ -23,6 +23,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.CommentAdapter;
 import com.minglang.suiuu.adapter.LoopArticleImageAdapter;
 import com.minglang.suiuu.adapter.showPicDescriptionAdapter;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
@@ -166,7 +167,7 @@ public class LoopArticleActivity extends Activity {
     private ImageLoader imageLoader;
 
     private DisplayImageOptions options;
-    private DisplayImageOptions options1 ;
+    private DisplayImageOptions options1;
 
     private ProgressDialog progressDialog;
 
@@ -174,8 +175,10 @@ public class LoopArticleActivity extends Activity {
     private List<String> imageList;
     private RelativeLayout rl_showForAsk;
     private RelativeLayout rl_showForTakePhoto;
-    private ListView loop_article_listview;
+    private ListView loop_article_listview,lv_comment_list;
     private ImageView loop_article_back;
+    private boolean isClickComment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -258,16 +261,28 @@ public class LoopArticleActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent showPic = new Intent(LoopArticleActivity.this, ShowBigImage.class);
-                showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT +imageList.get(position));
-                showPic.putExtra("isHuanXin",false);
+                showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position));
+                showPic.putExtra("isHuanXin", false);
                 startActivity(showPic);
             }
         });
-
+        //显示评论列表
         showComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (isClickComment) {
+                    lv_comment_list.setVisibility(View.GONE);
+                    isClickComment = false;
+                } else {
+                    List<LoopArticleCommentList> commentList = loopArticleData.getCommentList();
+                    if (commentList.size() > 0) {
+                        lv_comment_list.setVisibility(View.VISIBLE);
+                        lv_comment_list.setAdapter(new CommentAdapter(LoopArticleActivity.this, commentList));
+                    } else {
+                        Toast.makeText(LoopArticleActivity.this, R.string.thisArticNoComment, Toast.LENGTH_SHORT).show();
+                    }
+                    isClickComment = true;
+                }
             }
         });
 
@@ -281,13 +296,24 @@ public class LoopArticleActivity extends Activity {
         comments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(LoopArticleActivity.this,CommentsActivity.class);
+                intent.putExtra("articleId",loopArticleData.getArticleId());
+                startActivity(intent);
             }
         });
         loop_article_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoopArticleActivity.this,MainActivity.class));
+                startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
                 finish();
+            }
+        });
+        headImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoopArticleActivity.this, OtherUserActivity.class);
+                intent.putExtra("userSign", loopArticleData.getaCreateUserSign());
+                startActivity(intent);
             }
         });
     }
@@ -344,22 +370,22 @@ public class LoopArticleActivity extends Activity {
         rl_showForTakePhoto.setVisibility(View.GONE);
         rl_showForAsk.setVisibility(View.VISIBLE);
         locationName.setText(loopArticleData.getaTitle());
-        imageLoader.displayImage(loopArticleData.getHeadImg(), headImage,options1);
+        imageLoader.displayImage(loopArticleData.getHeadImg(), headImage, options1);
         userName.setText(loopArticleData.getNickname());
         userLocation.setText(loopArticleData.getaAddr());
         imageList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
         }.getType(), loopArticleData.getaImgList());
-        if(imageList.size() >= 1) {
-            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT+imageList.get(0), coverImage, options);
+        if (imageList.size() >= 1) {
+            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(0), coverImage, options);
         }
-        if("1".equals(loopArticleData.getaType())) {
+        if ("1".equals(loopArticleData.getaType())) {
             rl_showForTakePhoto.setVisibility(View.VISIBLE);
             rl_showForAsk.setVisibility(View.GONE);
-            List<String> conentList =  JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
+            List<String> conentList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
             }.getType(), loopArticleData.getaContent());
-            loop_article_listview.setAdapter(new showPicDescriptionAdapter(this,imageList,conentList));
+            loop_article_listview.setAdapter(new showPicDescriptionAdapter(this, imageList, conentList));
             Utils.setListViewHeightBasedOnChildren(loop_article_listview);
-        }else {
+        } else {
             articleContent.setText(loopArticleData.getaContent());
             imageAdapter = new LoopArticleImageAdapter(this, imageList);
             noScrollBarGridView.setAdapter(imageAdapter);
@@ -402,6 +428,7 @@ public class LoopArticleActivity extends Activity {
         rl_showForAsk = (RelativeLayout) findViewById(R.id.rl_showForAsk);
         loop_article_listview = (ListView) findViewById(R.id.loop_article_listview);
         loop_article_back = (ImageView) findViewById(R.id.loop_article_back);
+        lv_comment_list = (ListView) findViewById(R.id.lv_comment_list);
     }
 
     /**
@@ -411,10 +438,10 @@ public class LoopArticleActivity extends Activity {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            Log.i("suiuu",responseInfo.result);
+            Log.i("suiuu", responseInfo.result);
             try {
                 loopArticle = JsonUtil.getInstance().fromJSON(LoopArticle.class, responseInfo.result);
-                Log.i("suiuu",responseInfo.result);
+                Log.i("suiuu", responseInfo.result);
                 if (!loopArticle.getStatus().equals("1")) {
                     Toast.makeText(LoopArticleActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 } else {
@@ -486,7 +513,7 @@ public class LoopArticleActivity extends Activity {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
-            Log.i("suiuu",str+"返回结果");
+            Log.i("suiuu", str + "返回结果");
             try {
                 SuiuuReturnDate baseCollection = JsonUtil.getInstance().fromJSON(SuiuuReturnDate.class, str);
                 if (baseCollection.getStatus().equals("1")) {
@@ -515,7 +542,7 @@ public class LoopArticleActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(LoopArticleActivity.this,MainActivity.class));
+        startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
         finish();
     }
 }

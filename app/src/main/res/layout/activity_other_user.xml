@@ -124,16 +124,19 @@
     </RelativeLayout>
 
     <GridView
+       android:layout_marginTop="@dimen/layout_10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/otherUserLoop"
         android:layout_below="@+id/otherUserBackgroundLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:horizontalSpacing="10dp"
+        android:horizontalSpacing="@dimen/layout_8dp"
         android:verticalSpacing="10dp"
         android:numColumns="2"
-        android:choiceMode="none"/>
+        android:choiceMode="none"
+        android:layout_marginLeft="@dimen/layout_8dp"
+        android:layout_marginRight="@dimen/layout_8dp"/>
 
 
 </RelativeLayout>

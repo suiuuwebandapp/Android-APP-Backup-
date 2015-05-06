@@ -80,27 +80,23 @@ public class showPicDescriptionAdapter extends BaseAdapter {
             holder.textContent = (TextView) view.findViewById(R.id.tv_show_text_description);
             view.setTag(holder);
         }
-        imageLoader.getInstance().displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
-        if (TextUtils.isEmpty(contentList.get(position))) {
 
-            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
+        imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
+
+
             if (TextUtils.isEmpty(contentList.get(position))) {
-
                 holder.textContent.setVisibility(View.GONE);
             } else {
                 holder.picContent.setVisibility(View.VISIBLE);
                 holder.textContent.setText(contentList.get(position));
             }
-        }
+
             holder.picContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent showPic = new Intent(context, ShowBigImage.class);
-
                     showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position));
                     showPic.putExtra("isHuanXin", false);
-
-
                     context.startActivity(showPic);
                 }
             });

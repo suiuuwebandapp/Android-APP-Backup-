@@ -119,6 +119,10 @@
     <string name="NoData">暂无数据！</string>
 
     <string name="all_attention">关注动态</string>
+    <string name="thisArticNoComment">该文章暂时没有评论</string>
+
+
+
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>

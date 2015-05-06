@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:id="@+id/CommentRootLayout">
+    <include
+        android:id="@+id/comment_activity_top"
+        layout="@layout/common_top2_layout"/>
+    <ListView
+        android:id="@+id/lv_activity_commentlist"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/comment_activity_top"
+        android:layout_marginTop="@dimen/layout_10dp"
+        android:background="@color/white"
+        ></ListView>
+    <LinearLayout
+        android:background="@color/divider_list"
+        android:layout_alignParentBottom="true"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/layout_50dp">
+        <EditText
+            android:id="@+id/et_input_comment"
+            android:layout_margin="@dimen/layout_8dp"
+            android:padding="@dimen/layout_8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:textSize="@dimen/layout_15sp"
+            android:textColor="@color/textColor"
+            android:hint="请输入你的评论"
+            android:layout_weight="12"
+            />
+        <Button
+            android:id="@+id/bt_send_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/et_input_comment"
+            android:layout_alignParentRight="true"
+            android:text="发送"
+            android:padding="@dimen/layout_8dp"
+            android:layout_margin="@dimen/layout_8dp"
+            android:textSize="@dimen/layout_15sp"
+            android:background="@color/btn_coment_send"
+            android:textColor="@color/white"
+            />
+        
+        </LinearLayout>
+
+</RelativeLayout>
