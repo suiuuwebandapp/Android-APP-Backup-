@@ -12,25 +12,25 @@ public class MainDynamicData {
     //圈子动态数据
     public List<MainDynamicDataLoop> circleDynamic;
     //关注动态数据
-    public List<MainDynamicDataUser> userDynamic;
+    public MainDynamicDataUserBase userDynamic;
     //今日之星数据
-    public List<MainDynamicDataRecommendUser> recommendUser;
+    public MainDynamicDataRecommendUserBase recommendUser;
     //热门推荐数据
-    public List<MainDynamicDataRecommendTravel> recommendTravel;
+    public MainDynamicDataRecommendTravelBase recommendTravel;
 
     public List<MainDynamicDataLoop> getCircleDynamic() {
         return circleDynamic;
     }
 
-    public List<MainDynamicDataUser> getUserDynamic() {
+    public MainDynamicDataUserBase getUserDynamic() {
         return userDynamic;
     }
 
-    public List<MainDynamicDataRecommendUser> getRecommendUser() {
+    public MainDynamicDataRecommendUserBase getRecommendUser() {
         return recommendUser;
     }
 
-    public List<MainDynamicDataRecommendTravel> getRecommendTravel() {
+    public MainDynamicDataRecommendTravelBase getRecommendTravel() {
         return recommendTravel;
     }
 

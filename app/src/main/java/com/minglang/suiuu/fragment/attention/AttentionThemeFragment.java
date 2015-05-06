@@ -30,9 +30,9 @@ import java.util.List;
 /**
  * 关注主题
  */
-public class AttentionAreaFragment extends Fragment {
+public class AttentionThemeFragment extends Fragment {
 
-    private static final String TAG = AttentionAreaFragment.class.getSimpleName();
+    private static final String TAG = AttentionThemeFragment.class.getSimpleName();
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -57,8 +57,8 @@ public class AttentionAreaFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment AttentionThemeFragment.
      */
-    public static AttentionAreaFragment newInstance(String param1, String param2) {
-        AttentionAreaFragment fragment = new AttentionAreaFragment();
+    public static AttentionThemeFragment newInstance(String param1, String param2) {
+        AttentionThemeFragment fragment = new AttentionThemeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -66,7 +66,7 @@ public class AttentionAreaFragment extends Fragment {
         return fragment;
     }
 
-    public AttentionAreaFragment() {
+    public AttentionThemeFragment() {
         // Required empty public constructor
     }
 
@@ -108,10 +108,10 @@ public class AttentionAreaFragment extends Fragment {
 
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter("page", String.valueOf(page));
+//        params.addBodyParameter("page", String.valueOf(page));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.AttentionLoopPath, new AttentionThemeRequestCallback());
+                HttpServicePath.AttentionThemePath, new AttentionThemeRequestCallback());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
 

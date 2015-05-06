@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * 其他用户的个人主页
  * <p/>
- * 尚未完成
+ * 数据结构已改变
  */
 public class OtherUserActivity extends Activity {
 
@@ -115,6 +115,8 @@ public class OtherUserActivity extends Activity {
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
 
+        Log.i(TAG, USERSIGNKEY + ":" + userSign);
+        Log.i(TAG, HttpServicePath.key + ":" + msg);
     }
 
     /**

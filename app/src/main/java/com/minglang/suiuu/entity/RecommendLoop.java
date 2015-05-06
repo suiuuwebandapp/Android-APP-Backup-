@@ -1,15 +1,15 @@
 package com.minglang.suiuu.entity;
 
 /**
- * 粉丝数据实体类
+ * 推荐的圈子的数据实体类
  * <p/>
- * Created by Administrator on 2015/5/1.
+ * Created by Administrator on 2015/5/6.
  */
-public class Fans {
+public class RecommendLoop {
 
     public String status;
 
-    public FansBase data;
+    public RecommendLoopBase data;
 
     public String message;
 
@@ -19,7 +19,7 @@ public class Fans {
         return status;
     }
 
-    public FansBase getData() {
+    public RecommendLoopBase getData() {
         return data;
     }
 
@@ -33,7 +33,7 @@ public class Fans {
 
     @Override
     public String toString() {
-        return "Fans{" +
+        return "RecommendLoop{" +
                 "status='" + status + '\'' +
                 ", data=" + data +
                 ", message='" + message + '\'' +

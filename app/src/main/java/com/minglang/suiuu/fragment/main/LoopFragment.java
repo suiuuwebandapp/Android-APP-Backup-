@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.main;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +19,22 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.LoopDetailsActivity;
 import com.minglang.suiuu.adapter.LoopFragmentPagerAdapter;
 import com.minglang.suiuu.adapter.LoopScrollPagerAdapter;
 import com.minglang.suiuu.customview.AutoScrollViewPager;
+import com.minglang.suiuu.entity.RecommendLoop;
+import com.minglang.suiuu.entity.RecommendLoopData;
 import com.minglang.suiuu.fragment.loop.AreaFragment;
 import com.minglang.suiuu.fragment.loop.ThemeFragment;
+import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInformation;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -39,6 +51,16 @@ public class LoopFragment extends Fragment {
 
     private static final String TAG = LoopFragment.class.getSimpleName();
 
+    private static final int IMAGEID1 = 100001;
+    private static final int IMAGEID2 = 100002;
+    private static final int IMAGEID3 = 100003;
+    private static final int IMAGEID4 = 100004;
+    private static final int IMAGEID5 = 100005;
+
+    private static final String TYPE = "type";
+    private static final String CIRCLEID = "circleId";
+
+
     /**
      * 轮播ViewPager
      */
@@ -47,10 +69,6 @@ public class LoopFragment extends Fragment {
      * 轮播图片View列表
      */
     private List<ImageView> imageList = new ArrayList<>();
-    /**
-     * 轮播图片地址列表
-     */
-    private List<String> imageIdList = new ArrayList<>();
 
     private ImageLoader imageLoader;
 
@@ -84,6 +102,15 @@ public class LoopFragment extends Fragment {
 
     private int offsetX;//偏移量
 
+    private ImageView imageView1, imageView2, imageView3, imageView4, imageView5;
+
+    /**
+     * 推荐的圈子的数据
+     */
+    private List<RecommendLoopData> recommendLoopImagePathList;
+
+    private List<String> imagePathList = new ArrayList<>();
+
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,15 +120,29 @@ public class LoopFragment extends Fragment {
 
         initView(rootView);
 
+        getRecommendLoopData4Service();
+
         ViewAction();
 
         return rootView;
     }
 
+    /**
+     * 得到推荐的圈子的图片
+     */
+    private void getRecommendLoopData4Service() {
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.GetRecommendLoopPath, new RecommendLoopRequestCallBack());
+        httpRequest.requestNetworkData();
+    }
 
+    /**
+     * 控件动作
+     */
     private void ViewAction() {
         title0.setOnClickListener(new TitleOnClick(0));
         title1.setOnClickListener(new TitleOnClick(1));
+
         loopViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i2) {
@@ -135,8 +176,28 @@ public class LoopFragment extends Fragment {
 
             }
         });
+
+        imageView1.setOnClickListener(new RecommendClick());
+        imageView2.setOnClickListener(new RecommendClick());
+        imageView3.setOnClickListener(new RecommendClick());
+        imageView4.setOnClickListener(new RecommendClick());
+        imageView5.setOnClickListener(new RecommendClick());
+
     }
 
+    private void LoadRecommendLoopImage() {
+        if (imagePathList != null && imagePathList.size() > 0) {
+            imageLoader.displayImage(imagePathList.get(0), imageView1, displayImageOptions);
+            imageLoader.displayImage(imagePathList.get(1), imageView2, displayImageOptions);
+            imageLoader.displayImage(imagePathList.get(2), imageView3, displayImageOptions);
+            imageLoader.displayImage(imagePathList.get(3), imageView4, displayImageOptions);
+            imageLoader.displayImage(imagePathList.get(4), imageView5, displayImageOptions);
+        }
+    }
+
+    /**
+     * 初始化获得屏幕宽高等
+     */
     private void initScreenOrImageLoad() {
         DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -170,13 +231,21 @@ public class LoopFragment extends Fragment {
         loopLayoutParams.width = screenWidth;
         loopScrollLayout.setLayoutParams(loopLayoutParams);
 
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-
-        ImageView imageView1 = (ImageView) inflater.inflate(R.layout.image_view_match_parent, null);
-        ImageView imageView2 = (ImageView) inflater.inflate(R.layout.image_view_match_parent, null);
-        ImageView imageView3 = (ImageView) inflater.inflate(R.layout.image_view_match_parent, null);
-        ImageView imageView4 = (ImageView) inflater.inflate(R.layout.image_view_match_parent, null);
-        ImageView imageView5 = (ImageView) inflater.inflate(R.layout.image_view_match_parent, null);
+        imageView1 = new ImageView(getActivity());
+        imageView1.setTag(IMAGEID1);
+        imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView2 = new ImageView(getActivity());
+        imageView2.setTag(IMAGEID2);
+        imageView2.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView3 = new ImageView(getActivity());
+        imageView3.setTag(IMAGEID3);
+        imageView3.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView4 = new ImageView(getActivity());
+        imageView4.setTag(IMAGEID4);
+        imageView4.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView5 = new ImageView(getActivity());
+        imageView5.setTag(IMAGEID5);
+        imageView5.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -191,16 +260,6 @@ public class LoopFragment extends Fragment {
         imageList.add(imageView3);
         imageList.add(imageView4);
         imageList.add(imageView5);
-
-        imageIdList.add(String.valueOf(R.drawable.scroll1));
-        imageIdList.add(String.valueOf(R.drawable.scroll2));
-        imageIdList.add(String.valueOf(R.drawable.scroll3));
-        imageIdList.add(String.valueOf(R.drawable.scroll4));
-        imageIdList.add(String.valueOf(R.drawable.scroll5));
-
-        for (int i = 0; i < 5; i++) {
-            loadImage(imageList.get(i), Integer.parseInt(imageIdList.get(i)));
-        }
 
         loopScrollViewPager = (AutoScrollViewPager) rootView.findViewById(R.id.LoopScrollViewPager);
         loopScrollViewPager.setInterval(2000);
@@ -241,11 +300,6 @@ public class LoopFragment extends Fragment {
         initImageView();
     }
 
-    private void loadImage(ImageView imageView, int imageId) {
-        String uri = "drawable://" + imageId;
-        imageLoader.displayImage(uri, imageView, displayImageOptions);
-    }
-
     private void initImageView() {
 
         int sliderViewWidth = BitmapFactory.decodeResource(getResources(), R.drawable.slider).getWidth();
@@ -283,6 +337,112 @@ public class LoopFragment extends Fragment {
         @Override
         public void onClick(View v) {
             loopViewPager.setCurrentItem(index);
+        }
+    }
+
+    class RecommendLoopRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            String str = stringResponseInfo.result;
+            try {
+                RecommendLoop recommendLoop = JsonUtil.getInstance().fromJSON(RecommendLoop.class, str);
+                recommendLoopImagePathList = recommendLoop.getData().getData();
+                if (recommendLoopImagePathList != null && recommendLoopImagePathList.size() > 0) {
+                    //RecommendImageList
+                    for (RecommendLoopData data : recommendLoopImagePathList) {
+                        String imagePath = data.getCpic();
+                        imagePathList.add(imagePath);
+                    }
+                    LoadRecommendLoopImage();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "推荐的圈子解析错误:" + e.getMessage());
+            }
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            Log.e(TAG, "推荐的圈子请求错误:" + e.getMessage());
+        }
+    }
+
+    class RecommendClick implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+
+            boolean flag = recommendLoopImagePathList != null && recommendLoopImagePathList.size() > 0;
+            Intent intent = new Intent(getActivity(), LoopDetailsActivity.class);
+
+            switch ((int) v.getTag()) {
+
+                case IMAGEID1:
+                    if (flag) {
+                        RecommendLoopData data = recommendLoopImagePathList.get(0);
+                        String circleId = data.getcId();
+                        String type = data.getcType();
+                        String loopName = data.getcName();
+                        intent.putExtra(TYPE, type);
+                        intent.putExtra(CIRCLEID, circleId);
+                        intent.putExtra("name",loopName);
+                        startActivity(intent);
+                    }
+                    break;
+
+                case IMAGEID2:
+                    if (flag) {
+                        RecommendLoopData data = recommendLoopImagePathList.get(1);
+                        String circleId = data.getcId();
+                        String type = data.getcType();
+                        String loopName = data.getcName();
+                        intent.putExtra(TYPE, type);
+                        intent.putExtra(CIRCLEID, circleId);
+                        intent.putExtra("name",loopName);
+                        startActivity(intent);
+                    }
+                    break;
+
+                case IMAGEID3:
+                    if (flag) {
+                        RecommendLoopData data = recommendLoopImagePathList.get(2);
+                        String circleId = data.getcId();
+                        String type = data.getcType();
+                        String loopName = data.getcName();
+                        intent.putExtra(TYPE, type);
+                        intent.putExtra(CIRCLEID, circleId);
+                        intent.putExtra("name",loopName);
+                        startActivity(intent);
+                    }
+                    break;
+
+                case IMAGEID4:
+                    if (flag) {
+                        RecommendLoopData data = recommendLoopImagePathList.get(3);
+                        String circleId = data.getcId();
+                        String type = data.getcType();
+                        String loopName = data.getcName();
+                        intent.putExtra(TYPE, type);
+                        intent.putExtra(CIRCLEID, circleId);
+                        intent.putExtra("name",loopName);
+                        startActivity(intent);
+                    }
+                    break;
+
+                case IMAGEID5:
+                    if (flag) {
+                        RecommendLoopData data = recommendLoopImagePathList.get(4);
+                        String circleId = data.getcId();
+                        String type = data.getcType();
+                        String loopName = data.getcName();
+                        intent.putExtra(TYPE, type);
+                        intent.putExtra(CIRCLEID, circleId);
+                        intent.putExtra("name",loopName);
+                        startActivity(intent);
+                    }
+                    break;
+            }
+
         }
     }
 

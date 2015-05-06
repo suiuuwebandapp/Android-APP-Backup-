@@ -48,8 +48,6 @@ public class FansActivity extends Activity {
 
     private PtrClassicFrameLayout mPtrFrame;
 
-    private MaterialHeader header;
-
     private ListView fansList;
 
     private ProgressDialog dialog;
@@ -146,7 +144,7 @@ public class FansActivity extends Activity {
         fansBack = (ImageView) findViewById(R.id.fansBack);
         fansList = (ListView) findViewById(R.id.fansList);
 
-        header = new MaterialHeader(this);
+        MaterialHeader header = new MaterialHeader(this);
         int[] colors = getResources().getIntArray(R.array.google_colors);
         header.setColorSchemeColors(colors);
         header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
@@ -169,9 +167,14 @@ public class FansActivity extends Activity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public void finish() {
+        super.finish();
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     private class FansRequestCallBack extends RequestCallBack<String> {
@@ -188,11 +191,16 @@ public class FansActivity extends Activity {
             String str = stringResponseInfo.result;
             try {
                 Fans fans = JsonUtil.getInstance().fromJSON(Fans.class, str);
-                fansDataList = fans.getData();
-                FansAdapter adapter = new FansAdapter(FansActivity.this, fansDataList);
-                fansList.setAdapter(adapter);
+                fansDataList = fans.getData().getData();
+                if (fansDataList != null && fansDataList.size() > 0) {
+                    FansAdapter adapter = new FansAdapter(FansActivity.this, fansDataList);
+                    fansList.setAdapter(adapter);
+                } else {
+                    Toast.makeText(FansActivity.this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                }
             } catch (Exception e) {
                 Log.e(TAG, "粉丝数据解析错误异常信息:" + e.getMessage());
+                Toast.makeText(FansActivity.this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -206,8 +214,7 @@ public class FansActivity extends Activity {
             mPtrFrame.refreshComplete();
 
             Log.e(TAG, "获取粉丝列表请求失败的异常信息:" + s);
-
-            Toast.makeText(FansActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(FansActivity.this, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
 

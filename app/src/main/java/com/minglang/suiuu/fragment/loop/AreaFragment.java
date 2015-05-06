@@ -42,6 +42,7 @@ public class AreaFragment extends Fragment {
     private static final String TAG = AreaFragment.class.getSimpleName();
 
     private static final String TYPE = "type";
+    private static final String CIRCLEID = "circleId";
 
     private GridView areaGridView;
 
@@ -124,9 +125,11 @@ public class AreaFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String circleId = list.get(position).getcId();
+                String loopName = list.get(position).getcName();
                 Intent intent = new Intent(getActivity(), LoopDetailsActivity.class);
-                intent.putExtra("circleId", circleId);
+                intent.putExtra(CIRCLEID, circleId);
                 intent.putExtra(TYPE, "2");
+                intent.putExtra("name", loopName);
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }

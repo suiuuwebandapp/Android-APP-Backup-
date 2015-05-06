@@ -47,10 +47,8 @@ public class LoopDetailsActivity extends Activity {
 
     private static final String TYPE = "type";
     private static final String CIRCLEID = "circleId";
-
+    private static final String CID = "cId";
     private static final String ARTICLEID = "articleId";
-
-    private SystemBarTintManager systemBarTintManager;
 
     /**
      * 虚拟按键高度
@@ -95,15 +93,7 @@ public class LoopDetailsActivity extends Activity {
 
     private LoopDetailsAdapter loopDetailsAdapter;
 
-    /**
-     * 屏幕宽度
-     */
-    private int screenWidth;
-
-    /**
-     * 屏幕高度
-     */
-    private int screenHeight;
+    private String loopName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +102,8 @@ public class LoopDetailsActivity extends Activity {
 
         type = getIntent().getStringExtra(TYPE);
         circleId = getIntent().getStringExtra(CIRCLEID);
+        loopName = getIntent().getStringExtra("name");
+
         Verification = SuiuuInformation.ReadVerification(this);
 
         initView();
@@ -143,6 +135,7 @@ public class LoopDetailsActivity extends Activity {
      * 控件动作
      */
     private void ViewAction() {
+        title.setText(loopName);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,7 +170,7 @@ public class LoopDetailsActivity extends Activity {
      */
     private void setAddAttention2Service() {
         RequestParams params = new RequestParams();
-        params.addBodyParameter(CIRCLEID, circleId);
+        params.addBodyParameter(CID, circleId);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.setAddAttentionPath, new AddAttentionRequestCallBack());
         httpRequest.setParams(params);
@@ -188,7 +181,7 @@ public class LoopDetailsActivity extends Activity {
      * 初始化方法
      */
     private void initView() {
-        systemBarTintManager = new SystemBarTintManager(this);
+        SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
         SystemBarTintManager.SystemBarConfig systemBarConfig = systemBarTintManager.getConfig();
         //状态栏高度
         int statusBarHeight = systemBarConfig.getStatusBarHeight();
@@ -219,8 +212,8 @@ public class LoopDetailsActivity extends Activity {
         loopDetailsGridView = (GridView) findViewById(R.id.loopDetailsGridView);
 
         ScreenUtils screenUtils = new ScreenUtils(this);
-        screenWidth = screenUtils.getScreenWidth();
-        screenHeight = screenUtils.getScreenHeight();
+        int screenWidth = screenUtils.getScreenWidth();
+        int screenHeight = screenUtils.getScreenHeight();
 
         loopDetailsAdapter = new LoopDetailsAdapter(this);
         loopDetailsAdapter.setScreenParams(screenWidth, screenHeight);
@@ -245,6 +238,11 @@ public class LoopDetailsActivity extends Activity {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
+
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+
             String str = responseInfo.result;
             try {
                 LoopDetails loopDetails = JsonUtil.getInstance().fromJSON(LoopDetails.class, str);
@@ -265,11 +263,6 @@ public class LoopDetailsActivity extends Activity {
                 Toast.makeText(LoopDetailsActivity.this,
                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
-
-            if (progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
         }
 
         @Override

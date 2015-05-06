@@ -150,19 +150,19 @@ public class MainFragment extends Fragment {
             MainDynamicData data = mainDynamic.getData();
 
             //关注动态
-            mainDynamicDataUserList = data.getUserDynamic();
+            mainDynamicDataUserList = data.getUserDynamic().getData();
             AttentionDynamicAdapter attentionDynamicAdapter = new AttentionDynamicAdapter(getActivity(),
                     mainDynamicDataUserList);
             attentionDynamicLayout.setAdapter(attentionDynamicAdapter);
 
             //热门推荐
-            mainDynamicDataRecommendTravelList = data.getRecommendTravel();
+            mainDynamicDataRecommendTravelList = data.getRecommendTravel().getData();
             RecommendTravelAdapter recommendTravelAdapter = new RecommendTravelAdapter(getActivity(),
                     mainDynamicDataRecommendTravelList);
             recommendDynamicLayout.setAdapter(recommendTravelAdapter);
 
             //今日之星
-            mainDynamicDataRecommendUserList = data.getRecommendUser();
+            mainDynamicDataRecommendUserList = data.getRecommendUser().getData();
             TodayStarAdapter todayStarAdapter = new TodayStarAdapter(getActivity(), mainDynamicDataRecommendUserList);
             todayStarAdapter.setScreenParams(screenWidth, screenHeight);
             todayStarGridView.setAdapter(todayStarAdapter);
@@ -174,8 +174,9 @@ public class MainFragment extends Fragment {
             loopDynamicGridView.setAdapter(loopDynamicAdapter);
 
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-            Toast.makeText(getActivity(), "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "首页数据解析失败:" + e.getMessage());
+            Toast.makeText(getActivity(),
+                    getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -219,7 +220,7 @@ public class MainFragment extends Fragment {
                 String articleId = user.getArticleId();
                 Intent intent = new Intent(getActivity(), LoopArticleActivity.class);
                 intent.putExtra(ARTICLEID, articleId);
-                intent.putExtra("TAG",TAG);
+                intent.putExtra("TAG", TAG);
                 startActivity(intent);
             }
         });
@@ -228,7 +229,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onItemClicked(View v, Object obj, int position) {
                 Intent intent = new Intent(getActivity(), SuiuuDetailActivity.class);
-                intent.putExtra("tripId",mainDynamicDataRecommendTravelList.get(position).getTripId() );
+                intent.putExtra("tripId", mainDynamicDataRecommendTravelList.get(position).getTripId());
                 startActivity(intent);
             }
         });
@@ -251,7 +252,7 @@ public class MainFragment extends Fragment {
                 String articleId = loop.getArticleId();
                 Intent intent = new Intent(getActivity(), LoopArticleActivity.class);
                 intent.putExtra(ARTICLEID, articleId);
-                intent.putExtra("TAG",TAG);
+                intent.putExtra("TAG", TAG);
                 startActivity(intent);
             }
         });
@@ -273,6 +274,7 @@ public class MainFragment extends Fragment {
         ScreenUtils screenUtils = new ScreenUtils(getActivity());
         screenWidth = screenUtils.getScreenWidth();
         screenHeight = screenUtils.getScreenHeight();
+
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
@@ -327,7 +329,6 @@ public class MainFragment extends Fragment {
             }
 
             String str = stringResponseInfo.result;
-            Log.i(TAG, "请求返回的数据:" + str);
 
             attentionDynamicLayout.removeAllViews();
             recommendDynamicLayout.removeAllViews();

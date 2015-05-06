@@ -2,6 +2,7 @@ package com.minglang.suiuu.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -36,7 +37,9 @@ public class FansAdapter extends BaseAdapter {
         this.context = context;
         this.list = list;
         imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        if (!imageLoader.isInited()) {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
     }
 
     @Override
@@ -67,17 +70,17 @@ public class FansAdapter extends BaseAdapter {
 
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_fans, position);
 
-        CircleImageView head = holder.getView(R.id.item_fans_head);
+        CircleImageView headImageView = holder.getView(R.id.item_fans_head);
         TextView name = holder.getView(R.id.item_fans_name);
         TextView intro = holder.getView(R.id.item_fans_intro);
 
         FansData data = list.get(position);
 
-        String headImage = data.getHeadImg();
-        if (!TextUtils.isEmpty(headImage)) {
-            imageLoader.displayImage(headImage, head);
+        String headImagePath = data.getHeadImg();
+        if (!TextUtils.isEmpty(headImagePath)) {
+            imageLoader.displayImage(headImagePath, headImageView);
         }
-
+        Log.i(TAG,"头像图片地址:"+headImagePath);
 
         String strName = data.getNickname();
         if (!TextUtils.isEmpty(strName)) {
@@ -90,7 +93,7 @@ public class FansAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(strIntro)) {
             intro.setText(strIntro);
         } else {
-            intro.setText("");
+            intro.setText("暂无简介");
         }
 
         convertView = holder.getConvertView();

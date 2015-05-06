@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.AttentionPagerAdapter;
-import com.minglang.suiuu.fragment.attention.AttentionAreaFragment;
+import com.minglang.suiuu.fragment.attention.AttentionThemeFragment;
 import com.minglang.suiuu.fragment.attention.AttentionUserFragment;
 import com.minglang.suiuu.utils.SuiuuInformation;
 import com.minglang.suiuu.utils.SystemBarTintManager;
@@ -164,7 +164,7 @@ public class AttentionActivity extends FragmentActivity {
         /**
          关注圈子页面
          */
-        AttentionAreaFragment attentionThemeFragment = AttentionAreaFragment.newInstance(userSign, verification);
+        AttentionThemeFragment attentionThemeFragment = AttentionThemeFragment.newInstance(userSign, verification);
 
         /**
          关注用户页面
