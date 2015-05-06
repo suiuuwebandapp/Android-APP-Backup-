@@ -1295,6 +1295,7 @@ public class MessageAdapter extends BaseAdapter {
                     if (file.exists()) {
                         Uri uri = Uri.fromFile(file);
                         intent.putExtra("uri", uri);
+                        intent.putExtra("isHuanXin",true);
                         System.err.println("here need to check why download everytime");
                     } else {
                         // The local full size pic does not exist yet.

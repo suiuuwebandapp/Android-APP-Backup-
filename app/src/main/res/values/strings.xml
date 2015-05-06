@@ -119,14 +119,10 @@
     <string name="NoData">暂无数据！</string>
 
     <string name="all_attention">关注动态</string>
+    <string name="thisArticNoComment">该文章暂时没有评论</string>
 
-    <string name="deleteSuccess">删除成功!</string>
-    <string name="deleteError">删除失败，请稍候再试！</string>
-    <string name="collectionSuccess">收藏成功！</string>
-    <string name="collectionError">收藏失败，请稍候再试！</string>
 
-    <string name="addAttentionSuccess">添加关注成功!</string>
-    <string name="addAttentionFail">添加关注失败！</string>
+
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>
@@ -225,10 +221,8 @@
     <string name="Group_of_Lord">群主</string>
     <string name="Introduction">简介</string>
     <string name="To_join_the_chat">加入群聊</string>
-
     <string name="user_name">用户名</string>
     <string name="password">密码</string>
-
     <string name="confirmpassword">确认密码</string>
     <string name="downwaiting">正在下载文件请稍后</string>
     <string name="mute">静音</string>
@@ -243,7 +237,6 @@
     <string name="Please_enter_a_username">请输入用户名</string>
     <string name="is_down_please_wait">正在下载视频请稍候</string>
     <string name="Exit_the_group_chat">退出群聊</string>
-
     <string name="not_add_myself">不能添加自己</string>
     <string name="This_user_is_already_your_friend">此用户已是你的好友</string>
     <string name="Add_a_friend">加个好友呗</string>

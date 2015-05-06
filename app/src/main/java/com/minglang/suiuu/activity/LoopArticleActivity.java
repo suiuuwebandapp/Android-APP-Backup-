@@ -23,16 +23,17 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.CommentAdapter;
 import com.minglang.suiuu.adapter.LoopArticleImageAdapter;
 import com.minglang.suiuu.adapter.showPicDescriptionAdapter;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.NoScrollBarGridView;
+import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.entity.DeleteArticle;
 import com.minglang.suiuu.entity.LoopArticle;
 import com.minglang.suiuu.entity.LoopArticleCommentList;
 import com.minglang.suiuu.entity.LoopArticleData;
-import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
@@ -62,6 +63,11 @@ public class LoopArticleActivity extends Activity {
      * 封面图片
      */
     private ImageView coverImage;
+
+    /**
+     * 返回键
+     */
+    private ImageView back;
 
     /**
      * 点赞
@@ -169,10 +175,9 @@ public class LoopArticleActivity extends Activity {
     private List<String> imageList;
     private RelativeLayout rl_showForAsk;
     private RelativeLayout rl_showForTakePhoto;
-    private ListView loop_article_listView;
+    private ListView loop_article_listview,lv_comment_list;
     private ImageView loop_article_back;
-
-    private String otherActivityTAG;
+    private boolean isClickComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +185,6 @@ public class LoopArticleActivity extends Activity {
         setContentView(R.layout.activity_loop_article);
 
         articleId = getIntent().getStringExtra(ARTICLEID);
-        otherActivityTAG = getIntent().getStringExtra("TAG");
         Verification = SuiuuInformation.ReadVerification(this);
 
         imageLoader = ImageLoader.getInstance();
@@ -205,6 +209,12 @@ public class LoopArticleActivity extends Activity {
      * 控件动作
      */
     private void ViewAction() {
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         praise.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,11 +266,23 @@ public class LoopArticleActivity extends Activity {
                 startActivity(showPic);
             }
         });
-
+        //显示评论列表
         showComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (isClickComment) {
+                    lv_comment_list.setVisibility(View.GONE);
+                    isClickComment = false;
+                } else {
+                    List<LoopArticleCommentList> commentList = loopArticleData.getCommentList();
+                    if (commentList.size() > 0) {
+                        lv_comment_list.setVisibility(View.VISIBLE);
+                        lv_comment_list.setAdapter(new CommentAdapter(LoopArticleActivity.this, commentList));
+                    } else {
+                        Toast.makeText(LoopArticleActivity.this, R.string.thisArticNoComment, Toast.LENGTH_SHORT).show();
+                    }
+                    isClickComment = true;
+                }
             }
         });
 
@@ -274,6 +296,9 @@ public class LoopArticleActivity extends Activity {
         comments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(LoopArticleActivity.this,CommentsActivity.class);
+                intent.putExtra("articleId",loopArticleData.getArticleId());
+                startActivity(intent);
             }
         });
         loop_article_back.setOnClickListener(new View.OnClickListener() {
@@ -281,6 +306,14 @@ public class LoopArticleActivity extends Activity {
             public void onClick(View v) {
                 startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
                 finish();
+            }
+        });
+        headImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoopArticleActivity.this, OtherUserActivity.class);
+                intent.putExtra("userSign", loopArticleData.getaCreateUserSign());
+                startActivity(intent);
             }
         });
     }
@@ -348,10 +381,10 @@ public class LoopArticleActivity extends Activity {
         if ("1".equals(loopArticleData.getaType())) {
             rl_showForTakePhoto.setVisibility(View.VISIBLE);
             rl_showForAsk.setVisibility(View.GONE);
-            List<String> contentList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
+            List<String> conentList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
             }.getType(), loopArticleData.getaContent());
-            loop_article_listView.setAdapter(new showPicDescriptionAdapter(this, imageList, contentList));
-            Utils.setListViewHeightBasedOnChildren(loop_article_listView);
+            loop_article_listview.setAdapter(new showPicDescriptionAdapter(this, imageList, conentList));
+            Utils.setListViewHeightBasedOnChildren(loop_article_listview);
         } else {
             articleContent.setText(loopArticleData.getaContent());
             imageAdapter = new LoopArticleImageAdapter(this, imageList);
@@ -372,6 +405,7 @@ public class LoopArticleActivity extends Activity {
 
         coverImage = (ImageView) findViewById(R.id.loop_article_cover_image);
 
+        back = (ImageView) findViewById(R.id.loop_article_back);
         praise = (TextView) findViewById(R.id.loop_article_praise);
         collection = (TextView) findViewById(R.id.loop_article_collection);
 
@@ -392,8 +426,9 @@ public class LoopArticleActivity extends Activity {
         comments = (TextView) findViewById(R.id.loop_article_comments);
         rl_showForTakePhoto = (RelativeLayout) findViewById(R.id.rl_showForTakePhoto);
         rl_showForAsk = (RelativeLayout) findViewById(R.id.rl_showForAsk);
-        loop_article_listView = (ListView) findViewById(R.id.loop_article_listview);
+        loop_article_listview = (ListView) findViewById(R.id.loop_article_listview);
         loop_article_back = (ImageView) findViewById(R.id.loop_article_back);
+        lv_comment_list = (ListView) findViewById(R.id.lv_comment_list);
     }
 
     /**
@@ -403,11 +438,12 @@ public class LoopArticleActivity extends Activity {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
+            Log.i("suiuu", responseInfo.result);
             try {
                 loopArticle = JsonUtil.getInstance().fromJSON(LoopArticle.class, responseInfo.result);
+                Log.i("suiuu", responseInfo.result);
                 if (!loopArticle.getStatus().equals("1")) {
-                    Toast.makeText(LoopArticleActivity.this,
-                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoopArticleActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 } else {
                     loopArticleData = loopArticle.getData();
                     if (loopArticleData != null) {
@@ -422,8 +458,7 @@ public class LoopArticleActivity extends Activity {
                 }
             } catch (Exception e) {
                 Log.e(TAG, "数据解析失败:" + e.getMessage());
-                Toast.makeText(LoopArticleActivity.this,
-                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoopArticleActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
 
             if (progressDialog != null && progressDialog.isShowing()) {
@@ -441,8 +476,7 @@ public class LoopArticleActivity extends Activity {
                 progressDialog.dismiss();
             }
 
-            Toast.makeText(LoopArticleActivity.this,
-                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoopArticleActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -457,11 +491,9 @@ public class LoopArticleActivity extends Activity {
             DeleteArticle deleteArticle = JsonUtil.getInstance().fromJSON(DeleteArticle.class, str);
             if (deleteArticle != null) {
                 if (deleteArticle.getStatus().equals("1")) {
-                    Toast.makeText(LoopArticleActivity.this,
-                            getResources().getString(R.string.deleteSuccess), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoopArticleActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(LoopArticleActivity.this,
-                            getResources().getString(R.string.deleteError), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoopArticleActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -469,8 +501,7 @@ public class LoopArticleActivity extends Activity {
         @Override
         public void onFailure(HttpException error, String msg) {
             Log.i(TAG, msg);
-            Toast.makeText(LoopArticleActivity.this,
-                    getResources().getString(R.string.deleteError), Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoopArticleActivity.this, "删除失败，请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -482,41 +513,36 @@ public class LoopArticleActivity extends Activity {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
+            Log.i("suiuu", str + "返回结果");
             try {
                 SuiuuReturnDate baseCollection = JsonUtil.getInstance().fromJSON(SuiuuReturnDate.class, str);
                 if (baseCollection.getStatus().equals("1")) {
-                    Toast.makeText(LoopArticleActivity.this,
-                            getResources().getString(R.string.collectionSuccess), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoopArticleActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "收藏数据解析失败" + e.getMessage());
-                Toast.makeText(LoopArticleActivity.this,
-                        getResources().getString(R.string.collectionError), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoopArticleActivity.this, "收藏失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, e.getMessage());
             }
 
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, "收藏失败:" + s);
-            Toast.makeText(LoopArticleActivity.this,
-                    getResources().getString(R.string.collectionError), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, s);
+            Toast.makeText(LoopArticleActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void finish() {
-        if (otherActivityTAG.equals(AskQuestionActivity.class.getSimpleName())) {
-            startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
-            super.finish();
-        }else{
-            super.finish();
-        }
+        super.finish();
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
         finish();
     }
 }

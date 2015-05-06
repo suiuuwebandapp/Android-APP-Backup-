@@ -65,6 +65,7 @@
 
     <color name="text_select_true">#ffa538</color>
     <color name="text_select_false">#b8b6c1</color>
+    <color name="btn_coment_send">#97caff</color>
 
     <!--关于chat-->
     <color name="common_top_bar_blue">#4ebcd3</color>

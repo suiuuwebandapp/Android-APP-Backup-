@@ -2,6 +2,7 @@ package com.minglang.suiuu.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -9,12 +10,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.OtherUserDataArticle;
+import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.List;
 
@@ -28,8 +29,7 @@ public class OtherUserArticleAdapter extends BaseAdapter {
     private Context context;
 
     private List<OtherUserDataArticle> list;
-
-    private ImageLoader imageLoader;
+    BitmapUtils bitmapUtils;
 
     private int screenWidth, screenHeight;
 
@@ -38,8 +38,7 @@ public class OtherUserArticleAdapter extends BaseAdapter {
         this.list = list;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        bitmapUtils = new BitmapUtils(context);
     }
 
 
@@ -79,8 +78,9 @@ public class OtherUserArticleAdapter extends BaseAdapter {
         TextView reply = holder.getView(R.id.item_other_user_reply);
 
         String imagePath = article.getaImg();
+        Log.i("suiuu","imagePath" + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, image);
+            bitmapUtils.display(image, AppConstant.IMG_FROM_SUIUU_CONTENT + imagePath);
         }
 
         String strTitle = article.getaTitle();

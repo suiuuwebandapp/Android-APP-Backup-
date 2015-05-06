@@ -314,7 +314,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 
 		if (chatType == CHATTYPE_SINGLE) { // 单聊
 			toChatUsername = getIntent().getStringExtra("userId");
-			((TextView) findViewById(R.id.name)).setText(toChatUsername);
+			String nikeName = getIntent().getStringExtra("nikeName");
+			((TextView) findViewById(R.id.name)).setText(nikeName);
 			// conversation =
 			// EMChatManager.getInstance().getConversation(toChatUsername,false);
 		} else {
@@ -393,7 +394,6 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		// 监听当前会话的群聊解散被T事件
 		groupListener = new GroupListener();
 		EMGroupManager.getInstance().addGroupChangeListener(groupListener);
-
 		// show forward message if the message is not null
 		String forward_msg_id = getIntent().getStringExtra("forward_msg_id");
 		if (forward_msg_id != null) {

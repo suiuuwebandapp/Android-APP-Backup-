@@ -207,7 +207,7 @@ public class HttpServicePath {
      * 获取收藏的随游
      * <p/>
      * 请求方式:Post
-     * <p/>
+     *
      * 请求参数:
      */
     public static String GetCollectionSuiuuPath = RootPath + "/attention/get-collection-travel";
@@ -215,18 +215,16 @@ public class HttpServicePath {
     /**
      * 得到随游列表
      */
-    public static String getSuiuuList = RootPath + "/app-travel/get-travel-list";
+    public static String getSuiuuList = RootPath+ "/app-travel/get-travel-list";
 
     /**
      * 得到随游的详细信息
      */
-    public static String getSuiuuItemInfo = RootPath + "/app-travel/get-travel-info";
-
+    public static String getSuiuuItemInfo = RootPath+ "/app-travel/get-travel-info";
     /**
      * 得到选择国家的数据
      */
-    public static String getCountryData = RootPath + "/app-travel/get-country";
-
+    public static String getCountryData = RootPath+ "/app-travel/get-country";
     /**
      * 添加关注的圈子
      * <p/>
@@ -240,4 +238,8 @@ public class HttpServicePath {
      * 得到推荐的圈子
      */
     public static String GetRecommendLoopPath = RootPath + "/attention/get-recommend-circle";
+    /**
+     * 创建一条评论
+     */
+    public static String createComment = RootPath+ "/circle/create-comment";
 }

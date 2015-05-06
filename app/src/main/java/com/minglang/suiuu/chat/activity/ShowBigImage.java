@@ -89,7 +89,6 @@ public class ShowBigImage extends BaseActivity {
                     .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
                     .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                     .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
-            Log.i("suiuu",remotepath);
             imageLoader.displayImage(remotepath, image, options);
             return;
         }

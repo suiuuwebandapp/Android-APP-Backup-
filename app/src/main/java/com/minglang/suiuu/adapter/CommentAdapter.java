@@ -8,10 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.entity.LoopArticleCommentList;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Administrator on 2015/4/9.
@@ -20,20 +21,20 @@ public class CommentAdapter extends BaseAdapter {
 
     private Context context;
 
-    private List<Objects> list;
+    private List<LoopArticleCommentList> list;
 
+    private BitmapUtils bitMap;
     public CommentAdapter(Context context){
         this.context =context;
     }
 
-    public CommentAdapter(Context context, List<Objects> list) {
+    public CommentAdapter(Context context, List<LoopArticleCommentList> list) {
         this.context = context;
         this.list = list;
+        bitMap = new BitmapUtils(context);
     }
 
-    public void setData(List<Objects> list){
-        this.list = list;
-    }
+
 
     @Override
     public int getCount() {
@@ -78,8 +79,9 @@ public class CommentAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
-
+        bitMap.display(holder.headImage,list.get(position).getHeadImg());
+        holder.title.setText(list.get(position).getNickname());
+        holder.content.setText(list.get(position).getContent());
         return convertView;
     }
 

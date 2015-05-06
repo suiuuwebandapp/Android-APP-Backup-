@@ -67,10 +67,9 @@ public class showPicDescriptionAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         View view;
-
         if (convertView != null && convertView instanceof LinearLayout) {
             view = convertView;
             holder = (ViewHolder) view.getTag();
@@ -84,43 +83,30 @@ public class showPicDescriptionAdapter extends BaseAdapter {
 
         imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
 
-        if (TextUtils.isEmpty(contentList.get(position))) {
 
-            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
             if (TextUtils.isEmpty(contentList.get(position))) {
-
                 holder.textContent.setVisibility(View.GONE);
             } else {
                 holder.picContent.setVisibility(View.VISIBLE);
                 holder.textContent.setText(contentList.get(position));
             }
+
+            holder.picContent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent showPic = new Intent(context, ShowBigImage.class);
+                    showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position));
+                    showPic.putExtra("isHuanXin", false);
+                    context.startActivity(showPic);
+                }
+            });
+            return view;
         }
 
-        holder.picContent.setOnClickListener(new PicContent(position));
-
-        return view;
-    }
 
     static class ViewHolder {
         ImageView picContent;
         TextView textContent;
-    }
-
-    class PicContent implements View.OnClickListener {
-
-        private int position;
-
-        PicContent(int position) {
-            this.position = position;
-        }
-
-        @Override
-        public void onClick(View v) {
-            Intent showPic = new Intent(context, ShowBigImage.class);
-            showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position));
-            showPic.putExtra("isHuanXin", false);
-            context.startActivity(showPic);
-        }
     }
 
 }
