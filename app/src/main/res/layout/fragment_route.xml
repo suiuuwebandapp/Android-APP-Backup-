@@ -7,6 +7,12 @@
 
     <include layout="@layout/common_top_layout"
       />
+    <com.minglang.suiuu.customview.PullToRefreshView
+        android:id="@+id/main_pull_refresh_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical" >
 
     <ListView
         android:id="@+id/lv_suiuu"
@@ -17,17 +23,19 @@
         android:background="@color/white"
         android:scrollbars="none"
         android:layout_marginRight="@dimen/layout_12dp"></ListView>
-  <!--  <FrameLayout
-        android:layout_width="wrap_content"
+
+    </com.minglang.suiuu.customview.PullToRefreshView>
+    <TextView
+        android:id="@+id/tv_nodata_load"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/layout_18dp"
-        android:layout_marginTop="@dimen/layout_35dp"
-        >
-        <ImageView
-            android:id="@+id/iv_choice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_suiuu_search"/>
-        </FrameLayout>-->
+        android:layout_centerVertical="true"
+        android:text="@string/loadDataComplete"
+        android:gravity="center"
+        android:textColor="@color/text_select_true"
+        android:textSize="@dimen/layout_20sp"
+        android:padding="@dimen/layout_5dp"
+        android:visibility="gone"
+       />
+
 </RelativeLayout>

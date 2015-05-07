@@ -11,21 +11,13 @@ public class OtherUserData {
 
     public String fansNumb;
 
-    public OtherUserDataAttentionRest attentionRst;
+    public List<OtherUserDataAttentionRest> attentionRst;
 
     public String AttentionNumb;
 
     public List<OtherUserDataArticle> articleList;
 
-    private SuiuuDataForMessage msg;
-
-    public SuiuuDataForMessage getMsg() {
-        return msg;
-    }
-
-    public void setMsg(SuiuuDataForMessage msg) {
-        this.msg = msg;
-    }
+    private List<TravelList> travelList;
 
     public OtherUserDataInfo getUser() {
         return user;
@@ -43,11 +35,11 @@ public class OtherUserData {
         this.fansNumb = fansNumb;
     }
 
-    public OtherUserDataAttentionRest getAttentionRst() {
+    public List<OtherUserDataAttentionRest> getAttentionRst() {
         return attentionRst;
     }
 
-    public void setAttentionRst(OtherUserDataAttentionRest attentionRst) {
+    public void setAttentionRst(List<OtherUserDataAttentionRest> attentionRst) {
         this.attentionRst = attentionRst;
     }
 
@@ -67,6 +59,14 @@ public class OtherUserData {
         this.articleList = articleList;
     }
 
+    public List<TravelList> getTravelList() {
+        return travelList;
+    }
+
+    public void setTravelList(List<TravelList> travelList) {
+        this.travelList = travelList;
+    }
+
     @Override
     public String toString() {
         return "OtherUserData{" +
@@ -75,6 +75,7 @@ public class OtherUserData {
                 ", attentionRst=" + attentionRst +
                 ", AttentionNumb='" + AttentionNumb + '\'' +
                 ", articleList=" + articleList +
+                ", travelList=" + travelList +
                 '}';
     }
 }

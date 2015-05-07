@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * 项目名称：Suiuu
- * 类描述：
+ * 类描述：suiuu的详细列表
  * 创建人：Administrator
  * 创建时间：2015/5/4 19:13
  * 修改人：Administrator
@@ -48,6 +48,9 @@ public class SuiuuDetailActivity extends Activity {
     private List<SuiuuDetailForPublisherList> publisherList;
     private CircleImageView suiuu_details_user_head_image;
     private DisplayImageOptions options;
+    private TextView tv_service_time;
+    private TextView tv_suiuu_travel_time;
+    private TextView tv_atmost_people;
     /**
      * 验证信息
      */
@@ -78,14 +81,21 @@ public class SuiuuDetailActivity extends Activity {
                 .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
+        tv_service_time = (TextView) findViewById(R.id.tv_service_time);
+        tv_suiuu_travel_time = (TextView) findViewById(R.id.tv_suiuu_travel_time);
+        tv_atmost_people = (TextView) findViewById(R.id.tv_atmost_people);
 
     }
     public void fullOfData() {
         tv_title.setText(detailInfo.getTitle());
-        tv_content.setText(detailInfo.getIntro());
+        tv_content.setText(detailInfo.getInfo());
         tv_nikename.setText(publisherList.get(0).getNickname());
         tv_selfsign.setText(publisherList.get(0).getIntro());
-        ImageLoader.getInstance().displayImage(publisherList.get(0).getHeadImg(),suiuu_details_user_head_image,options);
+        ImageLoader.getInstance().displayImage(publisherList.get(0).getHeadImg(), suiuu_details_user_head_image, options);
+        Log.i("suiuu", "startTime=" + detailInfo.getStartTime() + ",endTime=" + detailInfo.getEndTime());
+        tv_service_time.setText("服务时间:     " + detailInfo.getStartTime() + "-" + detailInfo.getEndTime());
+        tv_suiuu_travel_time.setText("随游时长:     "+detailInfo.getTravelTime()+"个小时");
+        tv_atmost_people.setText("最多人数:     "+detailInfo.getMakeUserCount()+"人");
         dialog.dismiss();
     }
     //访问网络

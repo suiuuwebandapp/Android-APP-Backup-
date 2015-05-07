@@ -75,7 +75,7 @@
     <string name="Jeju_Island">济州岛</string>
     <string name="editor">修改</string>
     <string name="search_question">写下你的问题</string>
-    <string name="question_description">问题的描叙</string>
+    <string name="question_description">问题的描述</string>
     <string name="show_location">显示你的位置</string>
     <string name="image_theme">想个标题吧</string>
     <string name="activity_description">活动描述</string>
@@ -123,6 +123,13 @@
 
     <string name="addAttentionSuccess">添加关注成功!</string>
     <string name="addAttentionFail">添加关注失败！</string>
+    <string name="pull_to_refresh_pull_label">下拉刷新</string>
+    <string name="pull_to_refresh_release_label">松开后刷新</string>
+    <string name="pull_to_refresh_refreshing_label">刷新\u2026</string>
+    <string name="pull_to_refresh_footer_release_label">松开后加载</string>
+    <string name="pull_to_refresh_footer_pull_label">上拉加载更多</string>
+    <string name="pull_to_refresh_footer_refreshing_label">加载中\u2026</string>
+    <string name="loadDataComplete">数据加载完毕,点击刷新</string>
 
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
@@ -196,7 +203,6 @@
     <string name="book_black">通讯录黑名单</string>
     <string name="session">会话</string>
     <string name="address_book">通讯录</string>
-
     <string name="now_refresh_list">正在刷新联系人</string>
     <string name="Application_and_notify">申请与通知</string>
     <string name="group_chat">群聊</string>

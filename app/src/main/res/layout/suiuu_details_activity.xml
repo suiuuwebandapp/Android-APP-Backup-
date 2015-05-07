@@ -1,112 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
 
-    <LinearLayout
-        android:id="@+id/suiuu_details_head_image_layout"
+    <ImageView
+        android:id="@+id/suiuu_details_cover_image"
         android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_200dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/scroll2"/>
+    <RelativeLayout
+        android:id="@+id/suiuu_details_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/tr_black">
+
+        <ImageView
+            android:id="@+id/suiuu_details_back"
+            style="@style/backKeyStyle"
+            android:contentDescription="@string/back"
+            android:src="@drawable/back"/>
+
+        <TextView
+            android:id="@+id/suiuu_details_collection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:drawableLeft="@drawable/icon_collection_white"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/icon_collection_white"
+            android:text="@string/collection"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/suiuu_details_praise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/suiuu_details_collection"
+            android:layout_toStartOf="@+id/suiuu_details_collection"
+            android:drawableLeft="@drawable/icon_praise_white"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/icon_praise_white"
+            android:text="@string/clickPraise"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
+    </RelativeLayout>
+    <ScrollView
+        android:scrollbars="none"
+        android:layout_below="@+id/suiuu_details_cover_image"
+        android:id="@+id/sll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/layout_25dp">
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/backgroundColor">
+        >
+    <RelativeLayout
+        style="@style/comment_suiuu_detail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+        <com.minglang.suiuu.customview.CircleImageView
+            android:id="@+id/suiuu_details_user_head_image"
+            android:layout_width="@dimen/layout_60dp"
+            android:layout_height="@dimen/layout_60dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:background="@drawable/user_head_image_bg"/>
 
-            <ImageView
-                android:id="@+id/suiuu_details_cover_image"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/layout_200dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/scroll2"/>
-
-            <RelativeLayout
-                android:id="@+id/suiuu_details_title_layout"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/tr_black">
-
-                <ImageView
-                    android:id="@+id/suiuu_details_back"
-                    style="@style/backKeyStyle"
-                    android:contentDescription="@string/back"
-                    android:src="@drawable/back"/>
-
-                <TextView
-                    android:id="@+id/suiuu_details_collection"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:drawableLeft="@drawable/icon_collection_white"
-                    android:drawablePadding="10dp"
-                    android:drawableStart="@drawable/icon_collection_white"
-                    android:text="@string/collection"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"/>
-
-                <TextView
-                    android:id="@+id/suiuu_details_praise"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/suiuu_details_collection"
-                    android:layout_toStartOf="@+id/suiuu_details_collection"
-                    android:drawableLeft="@drawable/icon_praise_white"
-                    android:drawablePadding="10dp"
-                    android:drawableStart="@drawable/icon_praise_white"
-                    android:text="@string/clickPraise"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"/>
-            </RelativeLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
+        <TextView
+            android:layout_toRightOf="@+id/suiuu_details_user_head_image"
+            android:layout_toEndOf="@+id/suiuu_details_user_head_image"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/layout_5dp">
+            android:textColor="@color/gray"
+            android:text="nikeName"
+            android:layout_marginLeft="@dimen/layout_5dp"
+           android:layout_marginTop="@dimen/layout_8dp"
+            android:textSize="@dimen/layout_15sp"
+            android:id="@+id/tv_nickname"
+            />
 
-            <com.minglang.suiuu.customview.CircleImageView
-                android:id="@+id/suiuu_details_user_head_image"
-                android:layout_width="@dimen/layout_60dp"
-                android:layout_height="@dimen/layout_60dp"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="5dp"
-                android:background="@drawable/user_head_image_bg"/>
-
-            <TextView
-                android:layout_toRightOf="@+id/suiuu_details_user_head_image"
-                android:layout_toEndOf="@+id/suiuu_details_user_head_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/gray"
-                android:text="nikeName"
-                android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_marginStart="@dimen/layout_5dp"
-                android:textSize="@dimen/layout_15sp"
-                android:id="@+id/tv_nickname"
-                />
-
-            <TextView
-                android:layout_toRightOf="@+id/suiuu_details_user_head_image"
-                android:layout_toEndOf="@+id/suiuu_details_user_head_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="selfSign"
-                android:layout_below="@+id/tv_nickname"
-                android:id="@+id/tv_self_sign"
-                android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_marginStart="@dimen/layout_5dp"/>
-
-        </RelativeLayout>
-
+        <TextView
+            android:layout_toRightOf="@+id/suiuu_details_user_head_image"
+            android:layout_toEndOf="@+id/suiuu_details_user_head_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="selfSign"
+            android:layout_below="@+id/tv_nickname"
+            android:id="@+id/tv_self_sign"
+            android:layout_marginLeft="@dimen/layout_5dp"
+            android:layout_marginStart="@dimen/layout_5dp"/>
+    </RelativeLayout>
+    <LinearLayout
+        style="@style/comment_suiuu_detail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$700"
+            android:padding="@dimen/layout_8dp"
+            android:textSize="@dimen/layout_15sp"
+            android:textColor="@color/text_select_true"/>
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="fill_parent"
@@ -122,8 +132,45 @@
             android:padding="@dimen/layout_10dp"
             android:text="v"
             android:id="@+id/tv_content"/>
-    </LinearLayout>
 
+        </LinearLayout>
+        <LinearLayout
+            style="@style/comment_suiuu_detail"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_service_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="服务时间:&#160;&#160;&#160;&#160;&#160;9:00AM-06PM"
+                android:padding="@dimen/layout_8dp"
+                android:textSize="@dimen/layout_15sp"
+                android:textColor="@color/gray"/>
+            <include
+                layout="@layout/view_line"/>
+            <TextView
+                android:id="@+id/tv_suiuu_travel_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="随游时长:&#160;&#160;&#160;&#160;&#160;2个小时"
+                android:padding="@dimen/layout_8dp"
+                android:textSize="@dimen/layout_15sp"
+                android:textColor="@color/gray"/>
+            <include
+                layout="@layout/view_line"/>
+            <TextView
+                android:id="@+id/tv_atmost_people"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="最多人数:&#160;&#160;&#160;&#160;&#160;20人"
+                android:padding="@dimen/layout_8dp"
+                android:textSize="@dimen/layout_15sp"
+                android:textColor="@color/gray"/>
+
+        </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
     <RelativeLayout
         android:id="@+id/suiuu_details_bottom_layout"
         android:layout_width="match_parent"

@@ -1,6 +1,7 @@
 package com.minglang.suiuu.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -28,6 +29,9 @@ import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 /**
@@ -52,6 +56,7 @@ public class CommentsActivity extends Activity {
     private JsonUtil jsonUtil = JsonUtil.getInstance();
     private List<LoopArticleCommentList> commentLists;
     private TextView tv_top_right,tv_top_center;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,7 @@ public class CommentsActivity extends Activity {
     }
 
     private void origainData() {
+        dialog.show();
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
@@ -90,7 +96,8 @@ public class CommentsActivity extends Activity {
                 if(TextUtils.isEmpty(commentContent)) {
                     Toast.makeText(CommentsActivity.this, "请输入评论内容", Toast.LENGTH_SHORT).show();
                 }else {
-                    requestCommentSend(commentContent,"0");
+                    dialog.show();
+                    requestCommentSend(commentContent, "0");
                 }
             }
         });
@@ -110,6 +117,20 @@ public class CommentsActivity extends Activity {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
+            try {
+                JSONObject json = new JSONObject(responseInfo.result);
+                String status = json.getString("status");
+                String data = json.getString("data");
+                if("1".equals(status) && "success".equals(data)) {
+                    et_input_comment.setText("");
+                    origainData();
+                    Toast.makeText(CommentsActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+            }
             Log.i("suiuu","success="+responseInfo.result);
 
         }
@@ -129,6 +150,7 @@ public class CommentsActivity extends Activity {
             if("1".equals(list.getStatus())) {
                 commentLists = list.getData().getData();
                 mListView.setAdapter(new CommentAdapter(CommentsActivity.this, commentLists));
+                dialog.dismiss();
             }else {
                 Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
 
@@ -171,6 +193,11 @@ public class CommentsActivity extends Activity {
         tv_top_center.setText("评论");
         tv_top_right = (TextView) findViewById(R.id.tv_top_right);
         tv_top_right.setVisibility(View.GONE);
+
+        dialog = new ProgressDialog(this);
+        dialog.setMessage(getResources().getString(R.string.load_wait));
+
+        dialog.setCanceledOnTouchOutside(false);
 
     }
 

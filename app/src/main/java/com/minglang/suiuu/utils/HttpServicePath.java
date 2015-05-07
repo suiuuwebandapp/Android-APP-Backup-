@@ -126,7 +126,14 @@ public class HttpServicePath {
      * 请求参数:需要收藏文章的id:articleId
      */
     public static String CollectionArticlePath = RootPath + "/attention/add-collection-article";
-
+    /**
+     * 取消收藏文章
+     * <p/>
+     * 请求方式:POST
+     * <p/>
+     * 请求参数:需要收藏文章的attentionId
+     */
+    public static String CollectionArticleCancelPath = RootPath + "/attention/delete-attention";
     /**
      * 首页动态请求地址
      * <p/>

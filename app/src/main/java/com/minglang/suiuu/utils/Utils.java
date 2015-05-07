@@ -296,4 +296,5 @@ public class Utils {
         params.height += 5;//if without this statement,the listview will be a little short
         listView.setLayoutParams(params);
     }
+
 }

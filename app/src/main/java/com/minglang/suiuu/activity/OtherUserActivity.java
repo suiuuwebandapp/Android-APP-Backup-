@@ -3,7 +3,9 @@ package com.minglang.suiuu.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -86,6 +88,8 @@ public class OtherUserActivity extends Activity {
 
     private TextView otherUserName, otherUserLocation, otherUserSignature;
 
+    private String attentionId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +139,18 @@ public class OtherUserActivity extends Activity {
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
+    /**
+     * 关注用户取消取消
+     */
+    private void cancelAttentionRequst() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("attentionId", attentionId);
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.CollectionArticleCancelPath, new CollectionArticleCancelRequestCallback());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
+    }
+
 
     /**
      * 控件动作
@@ -189,6 +205,14 @@ public class OtherUserActivity extends Activity {
         OtherUserDataInfo user = otherUser.getData().getUser();
         otherUserName.setText(user.getNickname());
         otherUserSignature.setText(user.getIntro());
+        collection.setText(otherUser.getData().getFansNumb());
+        if(otherUser.getData().getAttentionRst().size()>=1) {
+         attentionId = otherUser.getData().getAttentionRst().get(0).getAttentionId();
+        }
+        if(!TextUtils.isEmpty(attentionId)) {
+            attention.setTextColor(getResources().getColor(R.color.text_select_true));
+            attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_light),null,null,null);
+        }
 
     }
 
@@ -211,7 +235,11 @@ public class OtherUserActivity extends Activity {
                 case R.id.otherUserHeadImage:
                     break;
                 case R.id.otherUserAttention:
-                    AddAttentionRequest4Service();
+                    if(TextUtils.isEmpty(attentionId)) {
+                        AddAttentionRequest4Service();
+                    }else {
+                        cancelAttentionRequst();
+                    }
                     break;
 
                 case R.id.otherUserConversation:
@@ -228,7 +256,7 @@ public class OtherUserActivity extends Activity {
         }
 
     }
-
+    //获取用户信息
     private class GetOtherUserInformationRequestCallBack extends RequestCallBack<String> {
 
         @Override
@@ -274,10 +302,13 @@ public class OtherUserActivity extends Activity {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
+            Log.i("suiuu","关注"+str);
             try {
                 JSONObject object = new JSONObject(str);
                 String status = object.getString("status");
                 if (status.equals("1")) {
+                    attention.setTextColor(getResources().getColor(R.color.text_select_true));
+                    attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_light),null,null,null);
                     Toast.makeText(OtherUserActivity.this, "关注成功！", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(OtherUserActivity.this, "关注失败！", Toast.LENGTH_SHORT).show();
@@ -294,5 +325,47 @@ public class OtherUserActivity extends Activity {
             Toast.makeText(OtherUserActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
+    /**
+     * 取消关注用户回调接口
+     */
+    class CollectionArticleCancelRequestCallback extends RequestCallBack<String> {
 
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            try {
+                JSONObject json = new JSONObject(stringResponseInfo.result);
+                String status = json.getString("status");
+                String data = json.getString("data");
+                if("1".equals(status) && "success".equals(data)) {
+                    attentionId = null;
+                    attention.setTextColor(getResources().getColor(R.color.white));
+                    attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_dark),null,null,null);
+                    Toast.makeText(OtherUserActivity.this, "取消关注用户成功", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            Log.e(TAG, s);
+            Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public Drawable setImgDrawTextPosition(int img) {
+        Drawable drawable = this.getResources().getDrawable(img);
+        // 调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        return drawable;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getUserInfo2Service();
+    }
 }

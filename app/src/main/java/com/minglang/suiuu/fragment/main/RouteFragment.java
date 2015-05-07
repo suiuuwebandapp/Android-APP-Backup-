@@ -1,14 +1,14 @@
 package com.minglang.suiuu.fragment.main;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +28,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuDetailActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
+import com.minglang.suiuu.customview.PullToRefreshView;
 import com.minglang.suiuu.entity.SuiuuDataList;
 import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.utils.ConstantUtil;
@@ -37,17 +37,18 @@ import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
+import java.util.Date;
 import java.util.List;
 
 /**
  * 随游页面
  */
-public class RouteFragment extends Fragment {
+public class RouteFragment extends Fragment implements PullToRefreshView.OnHeaderRefreshListener, PullToRefreshView.OnFooterRefreshListener {
     private TextView titleInfo;
     private ListView lv_suiuu;
     private JsonUtil jsonUtil = JsonUtil.getInstance();
     private List<SuiuuDataList> suiuuDataList;
-    private Dialog dialog;
+    private ProgressDialog dialog;
     /**
      * @description PopupWindow
      */
@@ -55,8 +56,10 @@ public class RouteFragment extends Fragment {
     private TextView tv_country;
     private TextView tv_city;
     private TextView tv_type;
+    private PullToRefreshView mPullToRefreshView;
 //    private ImageView iv_choice;
-
+    private int page = 1;
+    private TextView tv_nodata_load;
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,8 +67,8 @@ public class RouteFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_route, null);
         innitView(rootView);
-        loadDate(null, null, null);
-        RelativeLayout.LayoutParams paramTest = (RelativeLayout.LayoutParams) lv_suiuu.getLayoutParams();
+        loadDate(null, null, null,page);
+        LinearLayout.LayoutParams paramTest = (LinearLayout.LayoutParams) lv_suiuu.getLayoutParams();
         //paramTest.topMargin = ConstantUtil.topHeight;
         paramTest.setMargins(10, ConstantUtil.topHeight + 10, 10, 0);
         lv_suiuu.setLayoutParams(paramTest);
@@ -82,7 +85,14 @@ public class RouteFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
+        tv_nodata_load.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                page=1;
+                loadDate(null, null, null,page);
+                tv_nodata_load.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void innitView(View rootView) {
@@ -90,9 +100,19 @@ public class RouteFragment extends Fragment {
         titleInfo = (TextView) rootView.findViewById(R.id.titleInfo);
         titleInfo.setVisibility(View.GONE);
         lv_suiuu = (ListView) rootView.findViewById(R.id.lv_suiuu);
-        dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.progress_bar);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+//        dialog = new Dialog(getActivity());
+//        dialog.setContentView(R.layout.progress_bar);
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        dialog = new ProgressDialog(getActivity());
+        dialog.setMessage(getResources().getString(R.string.load_wait));
+
+        dialog.setCanceledOnTouchOutside(false);
+
+        mPullToRefreshView = (PullToRefreshView) rootView.findViewById(R.id.main_pull_refresh_view);
+        tv_nodata_load = (TextView) rootView.findViewById(R.id.tv_nodata_load);
+        mPullToRefreshView.setVisibility(View.GONE);
+        mPullToRefreshView.setOnHeaderRefreshListener(this);
+        mPullToRefreshView.setOnFooterRefreshListener(this);
         initPopWindow(getActivity());
 
 
@@ -105,7 +125,7 @@ public class RouteFragment extends Fragment {
      * @param cityId
      * @param tags
      */
-    private void loadDate(String countryId, String cityId, String tags) {
+    private void loadDate(String countryId, String cityId, String tags,int page) {
         dialog.show();
         String str = SuiuuInfo.ReadVerification(getActivity().getApplicationContext());
         RequestParams params = new RequestParams();
@@ -119,11 +139,43 @@ public class RouteFragment extends Fragment {
         if (!TextUtils.isEmpty(tags)) {
             params.addBodyParameter("tag", tags);
         }
-
+        params.addBodyParameter("page", Integer.toString(page));
+        params.addBodyParameter("number", "20");
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuList, new getSuiuuDateCallBack());
         suHttpRequest.setParams(params);
         suHttpRequest.requestNetworkData();
+    }
+
+    @Override
+    public void onFooterRefresh(PullToRefreshView view) {
+        mPullToRefreshView.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                //重新加载数据
+                page+=1;
+                loadDate(null, null, null,page);
+                mPullToRefreshView.onFooterRefreshComplete();
+            }
+        }, 1000);
+    }
+
+    @Override
+    public void onHeaderRefresh(PullToRefreshView view) {
+        mPullToRefreshView.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // 设置更新时间
+                page=1;
+                loadDate(null, null, null,page);
+                mPullToRefreshView.onHeaderRefreshComplete("最近更新:" + new Date().toLocaleString());
+                mPullToRefreshView.onHeaderRefreshComplete();
+            }
+        }, 1000);
+
+
     }
 
     /**
@@ -133,11 +185,17 @@ public class RouteFragment extends Fragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            Log.i("suiuu",stringResponseInfo.result);
             dialog.dismiss();
             try {
                 SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, stringResponseInfo.result);
                 if ("1".equals(baseCollection.getStatus())) {
+                    mPullToRefreshView.setVisibility(View.VISIBLE);
                     suiuuDataList = baseCollection.getData();
+                    if(suiuuDataList.size()<1) {
+                        mPullToRefreshView.setVisibility(View.INVISIBLE);
+                        tv_nodata_load.setVisibility(View.VISIBLE);
+                    }
                     lv_suiuu.setAdapter(new ShowSuiuuAdapter(getActivity().getApplicationContext(), suiuuDataList));
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
@@ -171,16 +229,6 @@ public class RouteFragment extends Fragment {
                 popWindow.dismiss();
                 lv_suiuu.setClickable(true);
 
-            }
-        });
-
-        tv_city.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                popWindow.dismiss();
-                lv_suiuu.setClickable(true);
             }
         });
     }
