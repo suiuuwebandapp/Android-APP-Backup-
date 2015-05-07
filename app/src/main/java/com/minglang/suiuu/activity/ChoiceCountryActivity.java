@@ -18,7 +18,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.chat.widgt.Sidebar;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 
 /**
  * 项目名称：Suiuu
@@ -64,7 +64,7 @@ public class ChoiceCountryActivity extends Activity {
      */
     private void loadDate() {
         dialog.show();
-        String str = SuiuuInformation.ReadVerification(this.getApplicationContext());
+        String str = SuiuuInfo.ReadVerification(this.getApplicationContext());
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,

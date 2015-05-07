@@ -22,7 +22,7 @@ import com.minglang.suiuu.entity.SuiuuDetailForPublisherList;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -59,7 +59,7 @@ public class SuiuuDetailActivity extends Activity {
         setContentView(R.layout.suiuu_details_activity);
         String tripId = this.getIntent().getStringExtra("tripId");
         Log.i("suiuu","tripId="+tripId);
-        Verification = SuiuuInformation.ReadVerification(this);
+        Verification = SuiuuInfo.ReadVerification(this);
         initView();
         loadDate(tripId);
     }

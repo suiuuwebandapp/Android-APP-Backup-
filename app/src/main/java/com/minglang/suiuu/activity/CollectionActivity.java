@@ -19,7 +19,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.CollectionAdapter;
 import com.minglang.suiuu.fragment.collection.CollectionLoopFragment;
 import com.minglang.suiuu.fragment.collection.CollectionSuiuuFragment;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.ArrayList;
@@ -164,8 +164,8 @@ public class CollectionActivity extends FragmentActivity {
 
         List<Fragment> collectionList = new ArrayList<>();
 
-        String userSign = SuiuuInformation.ReadUserSign(this);
-        String verification = SuiuuInformation.ReadVerification(this);
+        String userSign = SuiuuInfo.ReadUserSign(this);
+        String verification = SuiuuInfo.ReadVerification(this);
 
         CollectionLoopFragment collectionLoopFragment = CollectionLoopFragment.newInstance(userSign, verification);
         CollectionSuiuuFragment collectionSuiuuFragment = CollectionSuiuuFragment.newInstance(userSign, verification);

@@ -35,7 +35,7 @@ import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.List;
 
@@ -107,7 +107,7 @@ public class RouteFragment extends Fragment {
      */
     private void loadDate(String countryId, String cityId, String tags) {
         dialog.show();
-        String str = SuiuuInformation.ReadVerification(getActivity().getApplicationContext());
+        String str = SuiuuInfo.ReadVerification(getActivity().getApplicationContext());
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
         if (!TextUtils.isEmpty(countryId)) {

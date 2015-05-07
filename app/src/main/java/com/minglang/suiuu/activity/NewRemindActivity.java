@@ -21,7 +21,7 @@ import com.minglang.suiuu.fragment.remind.NewAtFragment;
 import com.minglang.suiuu.fragment.remind.NewAttentionFragment;
 import com.minglang.suiuu.fragment.remind.NewCommentFragment;
 import com.minglang.suiuu.fragment.remind.NewReplyFragment;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.ArrayList;
@@ -79,8 +79,8 @@ public class NewRemindActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_remind);
 
-        userSign = SuiuuInformation.ReadUserSign(this);
-        verification = SuiuuInformation.ReadVerification(this);
+        userSign = SuiuuInfo.ReadUserSign(this);
+        verification = SuiuuInfo.ReadVerification(this);
 
         initView();
 

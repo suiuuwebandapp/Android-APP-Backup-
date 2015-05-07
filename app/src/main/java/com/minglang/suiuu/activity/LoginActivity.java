@@ -53,8 +53,9 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.MD5Utils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.qq.TencentUtil;
+import com.minglang.suiuu.utils.wechat.WeChatConstant;
 import com.minglang.suiuu.utils.weibo.WeiboAccessTokenKeeper;
 import com.minglang.suiuu.utils.weibo.WeiboConstants;
 import com.sina.weibo.sdk.auth.AuthInfo;
@@ -65,6 +66,9 @@ import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.openapi.UsersAPI;
 import com.sina.weibo.sdk.openapi.models.ErrorInfo;
 import com.tencent.connect.common.Constants;
+import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -82,6 +86,7 @@ import java.util.Map;
 /**
  * 登录页面
  */
+@SuppressWarnings("deprecation")
 public class LoginActivity extends Activity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
@@ -215,16 +220,12 @@ public class LoginActivity extends Activity {
 
     //微博相关类实例
     /**
-     * 授权认证所需的信息
-     */
-    private AuthInfo authInfo;
-    /**
      * 微博授权认证回调
      */
     private AuthListener authListener = new AuthListener();
 
     /**
-     * SSO 授权认证实例
+     * 微博SSO 授权认证实例
      */
     private SsoHandler ssoHandler;
 
@@ -252,6 +253,9 @@ public class LoginActivity extends Activity {
      */
     private QQInfo qqInfo;
 
+    //微信相关
+    private IWXAPI weChatApi;
+
     /**
      * 第三方登陆类型
      */
@@ -262,13 +266,16 @@ public class LoginActivity extends Activity {
      */
     private ProgressDialog loginDialog;
 
+    /**
+     * 注册进度框
+     */
     private ProgressDialog registerDialog;
+
+    private ProgressDialog weChatLoadDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        tencent = Tencent.createInstance("1104557000", this.getApplicationContext());
 
         //		 如果用户名密码都有，直接进入主页面
 //        if (DemoHXSDKHelper.getInstance().isLogined()) {
@@ -278,6 +285,7 @@ public class LoginActivity extends Activity {
 //        }
         DemoApplication.addActivity(this);
         setContentView(R.layout.activity_login);
+
         initView();
         initThirdParty();
         getInternationalAreaCode();
@@ -293,6 +301,9 @@ public class LoginActivity extends Activity {
         httpRequest.requestNetworkData();
     }
 
+    /**
+     * 获取国际电话区号网络请求回调接口
+     */
     private class AreaCodeRequestCallBack extends RequestCallBack<String> {
 
         @Override
@@ -422,6 +433,16 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 type = "2";
+
+                if (!weChatApi.isWXAppInstalled()) {
+                    Toast.makeText(LoginActivity.this, "您尚未安装微信，请安装后再用！", Toast.LENGTH_SHORT).show();
+                }
+
+                weChatApi.registerApp(WeChatConstant.APP_ID);
+                final SendAuth.Req req = new SendAuth.Req();
+                req.scope = "snsapi_userinfo";
+                req.state = "suiuu";
+                weChatApi.sendReq(req);
             }
         });
 
@@ -456,7 +477,7 @@ public class LoginActivity extends Activity {
                 String dataInfo = data.getString("0");
                 if (status.equals("1")) {
                     popupWindowRegister1.dismiss();
-                    popupWindowRegister2.showAtLocation(popupRegisterView1, Gravity.CENTER_HORIZONTAL, 0, 0);
+                    popupWindowRegister2.showAtLocation(popupRegisterView2, Gravity.CENTER_HORIZONTAL, 0, 0);
                     Toast.makeText(LoginActivity.this, "发送成功！", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.e(TAG, "发送失败:" + dataInfo);
@@ -514,8 +535,8 @@ public class LoginActivity extends Activity {
                 UserBack user = JsonUtil.getInstance().fromJSON(UserBack.class, str);
                 if (user.getStatus().equals("1")) {
                     popupWindowRegister2.dismiss();
-                    SuiuuInformation.WriteVerification(LoginActivity.this, user.getMessage());
-                    SuiuuInformation.WriteUserSign(LoginActivity.this, user.getData().getUserSign());
+                    SuiuuInfo.WriteVerification(LoginActivity.this, user.getMessage());
+                    SuiuuInfo.WriteUserSign(LoginActivity.this, user.getData().getUserSign());
                     huanXinUsername = user.getData().getUserSign();
                     huanXinLogin();
                 } else {
@@ -574,8 +595,8 @@ public class LoginActivity extends Activity {
             try {
                 UserBack user = JsonUtil.getInstance().fromJSON(UserBack.class, str);
                 if (user.getStatus().equals("1")) {
-                    SuiuuInformation.WriteVerification(LoginActivity.this, user.getMessage());
-                    SuiuuInformation.WriteUserSign(LoginActivity.this, user.getData().getUserSign());
+                    SuiuuInfo.WriteVerification(LoginActivity.this, user.getMessage());
+                    SuiuuInfo.WriteUserSign(LoginActivity.this, user.getData().getUserSign());
                     huanXinUsername = user.getData().getUserSign();
                     huanXinLogin();
                 } else {
@@ -800,15 +821,25 @@ public class LoginActivity extends Activity {
      * 初始化第三方相关实例
      */
     private void initThirdParty() {
-        authInfo = new AuthInfo(this, WeiboConstants.APP_KEY, WeiboConstants.REDIRECT_URL, WeiboConstants.SCOPE);
+
+        tencent = Tencent.createInstance("1104557000", this.getApplicationContext());
+
+        //微博授权认证所需的信息
+        AuthInfo authInfo = new AuthInfo(this, WeiboConstants.APP_KEY, WeiboConstants.REDIRECT_URL, WeiboConstants.SCOPE);
         ssoHandler = new SsoHandler(this, authInfo);
         if (accessToken != null) {
             usersAPI = new UsersAPI(this, WeiboConstants.APP_KEY, accessToken);
         } else {
             usersAPI = new UsersAPI(this, WeiboConstants.APP_KEY, WeiboAccessTokenKeeper.readAccessToken(this));
         }
+
+        weChatApi = WXAPIFactory.createWXAPI(this, WeChatConstant.APP_ID, false);
+
     }
 
+    /**
+     * 初始化方法
+     */
     private void initView() {
 
         loginDialog = new ProgressDialog(this);
@@ -823,6 +854,12 @@ public class LoginActivity extends Activity {
         registerDialog.setCancelable(true);
         registerDialog.setMessage(getResources().getString(R.string.register_wait));
 
+        weChatLoadDialog = new ProgressDialog(this);
+        weChatLoadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        weChatLoadDialog.setCanceledOnTouchOutside(false);
+        weChatLoadDialog.setCancelable(true);
+        weChatLoadDialog.setMessage(getResources().getString(R.string.login_wait));
+
         loginBtn = (Button) findViewById(R.id.loginBtn);
         registerBtn = (Button) findViewById(R.id.registerBtn);
 
@@ -832,9 +869,9 @@ public class LoginActivity extends Activity {
         qq_login = (ImageView) findViewById(R.id.qq_login);
         weChat_login = (ImageView) findViewById(R.id.weChat_login);
 
-        microBlog_login.setEnabled(false);
-        qq_login.setEnabled(false);
-        weChat_login.setEnabled(false);
+//        microBlog_login.setEnabled(false);
+//        qq_login.setEnabled(false);
+//        weChat_login.setEnabled(false);
     }
 
     /**
@@ -925,6 +962,15 @@ public class LoginActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        String code = SuiuuInfo.ReadWxCode(this);
+        if (!TextUtils.isEmpty(code)) {
+            if (weChatLoadDialog != null) {
+                weChatLoadDialog.show();
+            }
+            getWeChatToken(code);
+        }
+
         if (autoLogin) {
             return;
         }
@@ -940,25 +986,252 @@ public class LoginActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        String tag = intent.getStringExtra("TAG");
+        if (tag.equals(TAG)) {
+            String code = intent.getStringExtra("code");
+            if (!TextUtils.isEmpty(code)) {
+                if (weChatLoadDialog != null) {
+                    weChatLoadDialog.show();
+                }
+                getWeChatToken(code);
+            }
+        }
+    }
+
+    /**
+     * 根据code获取access_token
+     *
+     * @param code 微信code
+     */
+    private void getWeChatToken(String code) {
+        String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeChatConstant.APP_ID
+                + "&secret=" + WeChatConstant.APPSECRET + "&code=" + code + "&grant_type=" + WeChatConstant.AUTHORIZATION_CODE;
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.GET, url, new WXEntryRequestCallBack());
+        httpRequest.requestNetworkData();
+    }
+
+    private String access_token;
+
+    private String weChatNickName;
+
+    private String weChatGender;
+
+    private String weChatOpenId;
+
+    private String weChatUnionId;
+
+    private String weChatHeadImagePath;
+
+    private String sign;
+
+    /**
+     * 获取微信access_token网络请求回调接口
+     */
+    private class WXEntryRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+
+            String str = stringResponseInfo.result;
+            Log.i(TAG, "通过code获取access_token的数据:" + str);
+
+            try {
+
+                JSONObject object = new JSONObject(str);
+                access_token = object.getString("access_token");
+                weChatOpenId = object.getString("openid");
+                weChatUnionId = object.getString("unionid");
+                getWeChatPersonInfo();
+
+            } catch (JSONException e) {
+
+                e.printStackTrace();
+                Log.e(TAG, "获取微信access_token数据解析错误:" + e.getMessage());
+
+                if (weChatLoadDialog.isShowing()) {
+                    weChatLoadDialog.dismiss();
+                }
+
+                Toast.makeText(LoginActivity.this,
+                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+
+            Log.e(TAG, "通过code获取access_token发生错误:" + s);
+
+            if (weChatLoadDialog.isShowing()) {
+                weChatLoadDialog.dismiss();
+            }
+
+            Toast.makeText(LoginActivity.this,
+                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    /**
+     * 获取用户信息网络请求
+     */
+    private void getWeChatPersonInfo() {
+
+        Log.e(TAG, "access_token:" + access_token);
+        Log.e(TAG, "openId:" + weChatOpenId);
+
+        String url = "https://api.weixin.qq.com/sns/userinfo?access_token="
+                + access_token + "&openid=" + weChatOpenId;
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.GET,
+                url, new WXUserInfoRequestCallBack());
+        httpRequest.requestNetworkData();
+    }
+
+    /**
+     * 获取用户信息网络请求回调接口
+     */
+    private class WXUserInfoRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+
+            String str = stringResponseInfo.result;
+            Log.i(TAG, "用户信息数据:" + str);
+
+            try {
+
+                JSONObject object = new JSONObject(str);
+                weChatNickName = object.getString("nickname");
+                weChatGender = object.getString("sex");
+                weChatHeadImagePath = object.getString("headimgurl");
+
+                SuiuuInfo.WriteInformation(LoginActivity.this,
+                        new RequestData(weChatUnionId, weChatNickName, weChatGender, weChatHeadImagePath, type));
+
+                sendWeChatInfo2Service();
+
+            } catch (JSONException e) {
+
+                e.printStackTrace();
+                Log.e(TAG, "解析返回的微信用户信息是发生错误" + e.getMessage());
+
+                if (weChatLoadDialog.isShowing()) {
+                    weChatLoadDialog.dismiss();
+                }
+
+                Toast.makeText(LoginActivity.this,
+                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+
+            }
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+
+            Log.e(TAG, "获取用户信息发生错误:" + s);
+
+            if (weChatLoadDialog.isShowing()) {
+                weChatLoadDialog.dismiss();
+            }
+
+            Toast.makeText(LoginActivity.this,
+                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 发送微信相关信息到服务器
+     */
+    private void sendWeChatInfo2Service() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("openId", weChatUnionId);
+        params.addBodyParameter("nickname", weChatNickName);
+        params.addBodyParameter("sex", weChatGender);
+        params.addBodyParameter("headImg", weChatHeadImagePath);
+        params.addBodyParameter("type", type);
+        try {
+            sign = MD5Utils.getMD5(weChatUnionId + type + HttpServicePath.ConfusedCode);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        params.addBodyParameter("sign", sign);
+
+        SuHttpRequest http = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.ThirdPartyPath, new WXRequestCallBack());
+        http.setParams(params);
+        http.requestNetworkData();
+    }
+
+    /**
+     * 发送微信数据数据到服务器的网络请求回调接口
+     */
+    private class WXRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+
+            String str = stringResponseInfo.result;
+            Log.i(TAG, "本地服务器返回的数据:" + str);
+
+            try {
+                UserBack userBack = JsonUtil.getInstance().fromJSON(UserBack.class, str);
+                if (userBack.status.equals("1")) {
+
+                    String message = userBack.getMessage();
+                    if (!TextUtils.isEmpty(message)) {
+                        SuiuuInfo.WriteVerification(LoginActivity.this, message);
+                    }
+
+                    String userSign = userBack.getData().getUserSign();
+                    if (!TextUtils.isEmpty(userSign)) {
+                        SuiuuInfo.WriteUserSign(LoginActivity.this, userSign);
+                    }
+
+                    huanXinUsername = userBack.getData().getUserSign();
+                    huanXinLogin();
+                } else {
+
+                    if (weChatLoadDialog.isShowing()) {
+                        weChatLoadDialog.dismiss();
+                    }
+
+                    Toast.makeText(LoginActivity.this, "登录失败，请重试！", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "微信数据发送到服务器返回数据解析错误:" + e.getMessage());
+
+                if (weChatLoadDialog.isShowing()) {
+                    weChatLoadDialog.dismiss();
+                }
+
+                Toast.makeText(LoginActivity.this,
+                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+
+            }
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+
+            Log.e(TAG, "发送微信信息到服务器发生错误:" + s);
+
+            if (weChatLoadDialog.isShowing()) {
+                weChatLoadDialog.dismiss();
+            }
+
+            Toast.makeText(LoginActivity.this,
+                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+
     //↓↓↓微博登陆的一系列相关方法↓↓↓
 
     /**
-     * 微博用户UID
-     */
-    private String WeiBoUserID;
-
-    /**
-     * 微博用户名
-     */
-    private String WeiBoUserName;
-
-    /**
-     * 性别
-     */
-    private String WeiBoGender;
-
-    /**
-     * 授权结果回调
+     * 微博授权结果回调
      */
     private class AuthListener implements WeiboAuthListener {
 
@@ -1017,20 +1290,23 @@ public class LoginActivity extends Activity {
                 loginDialog.show();
             }
 
-            WeiBoUserID = user.id;
-            WeiBoUserName = user.screen_name;
-            /**
-             微博头像地址
-             */
+            //微博用户UID
+            String weiBoUserID = user.id;
+            //微博用户名
+            String weiBoUserName = user.screen_name;
+            //微博头像地址
             String weiBoImagePath = user.avatar_large;
-            WeiBoGender = user.gender;
+            //性别
+            String weiBoGender = user.gender;
+
+            SuiuuInfo.WriteUserBasicInfo(LoginActivity.this, weiBoUserName, weiBoGender, weiBoImagePath);
 
             SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                     HttpServicePath.ThirdPartyPath, new WeiBoRequestCallBack());
 
             String code;
 
-            switch (WeiBoGender) {
+            switch (weiBoGender) {
                 case "男":
                     code = "1";
                     break;
@@ -1043,25 +1319,25 @@ public class LoginActivity extends Activity {
             }
 
             RequestParams params = new RequestParams();
-            params.addBodyParameter("openId", WeiBoUserID);
-            params.addBodyParameter("nickname", WeiBoUserName);
+            params.addBodyParameter("openId", weiBoUserID);
+            params.addBodyParameter("nickname", weiBoUserName);
             params.addBodyParameter("sex", code);
             params.addBodyParameter("headImg", weiBoImagePath);
             params.addBodyParameter("type", type);
 
             String sign = null;
             try {
-                sign = MD5Utils.getMD5(WeiBoUserID + type + HttpServicePath.ConfusedCode);
+                sign = MD5Utils.getMD5(weiBoUserID + type + HttpServicePath.ConfusedCode);
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
             params.addBodyParameter("sign", sign);
 
 
-            Log.i(TAG, "openID:" + WeiBoUserID + ",nickName:" + WeiBoUserName + ",sex:" + code +
+            Log.i(TAG, "openID:" + weiBoUserID + ",nickName:" + weiBoUserName + ",sex:" + code +
                     ",headImage:" + weiBoImagePath + ",type:" + type + ",sign:" + sign);
 
-            SuiuuInformation.WriteInformation(LoginActivity.this, new RequestData(WeiBoUserID, WeiBoUserName,
+            SuiuuInfo.WriteInformation(LoginActivity.this, new RequestData(weiBoUserID, weiBoUserName,
                     code, weiBoImagePath, type));
 
             httpRequest.setParams(params);
@@ -1070,9 +1346,9 @@ public class LoginActivity extends Activity {
             Toast.makeText(LoginActivity.this, "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
-
     //↑↑↑微博登陆的一系列相关方法↑↑↑
 
+    //*************************
 
     //↓↓↓QQ登陆的一系列相关方法↓↓↓
 
@@ -1086,9 +1362,11 @@ public class LoginActivity extends Activity {
                 loginDialog.show();
             }
 
-            String qqNickName = qqInfo.getNickName();
-            String qqImagePath = qqInfo.getImagePath();
+            String nickName = qqInfo.getNickName();
+            String headImagePath = qqInfo.getImagePath();
             String gender = qqInfo.getGender();
+
+            SuiuuInfo.WriteUserBasicInfo(LoginActivity.this, nickName, gender, headImagePath);
 
             String code;
             switch (gender) {
@@ -1108,9 +1386,9 @@ public class LoginActivity extends Activity {
 
             RequestParams params = new RequestParams();
             params.addBodyParameter("openId", qqOpenId);
-            params.addBodyParameter("nickname", qqNickName);
+            params.addBodyParameter("nickname", nickName);
             params.addBodyParameter("sex", code);
-            params.addBodyParameter("headImg", qqImagePath);
+            params.addBodyParameter("headImg", headImagePath);
             params.addBodyParameter("type", type);
 
             String sign = null;
@@ -1121,15 +1399,70 @@ public class LoginActivity extends Activity {
             }
             params.addBodyParameter("sign", sign);
 
-            Log.i(TAG, "openID:" + qqOpenId + ",nickName:" + qqNickName + ",sex:" + code +
-                    ",headImage:" + qqImagePath + ",type:" + type + ",sign:" + sign);
+            Log.i(TAG, "openID:" + qqOpenId + ",nickName:" + nickName + ",sex:" + code +
+                    ",headImage:" + headImagePath + ",type:" + type + ",sign:" + sign);
 
-            SuiuuInformation.WriteInformation(LoginActivity.this, new RequestData(qqOpenId, qqNickName, code, qqImagePath, type));
+            SuiuuInfo.WriteInformation(LoginActivity.this, new RequestData(qqOpenId, nickName, code, headImagePath, type));
 
             http.setParams(params);
             http.requestNetworkData();
         } else {
             Toast.makeText(LoginActivity.this, "获取信息失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 发送QQ相关信息到服务器的回调接口
+     */
+    class QQRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+
+            if (loginDialog != null && loginDialog.isShowing()) {
+                loginDialog.dismiss();
+            }
+
+            String str = responseInfo.result;
+            try {
+                UserBack userBack = JsonUtil.getInstance().fromJSON(UserBack.class, str);
+                if (userBack.status.equals("1")) {
+
+                    String message = userBack.getMessage();
+                    if (!TextUtils.isEmpty(message)) {
+                        SuiuuInfo.WriteVerification(LoginActivity.this, message);
+                    }
+
+                    String userSign = userBack.getData().getUserSign();
+                    if (!TextUtils.isEmpty(userSign)) {
+                        SuiuuInfo.WriteUserSign(LoginActivity.this, userSign);
+                    }
+
+                    huanXinUsername = userBack.getData().getUserSign();
+                    huanXinLogin();
+                } else {
+                    Log.e(TAG, "QQRequestCallBack:返回数据有误！");
+                    Toast.makeText(LoginActivity.this,
+                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "QQ登陆数据解析错误:" + e.getMessage());
+                Toast.makeText(LoginActivity.this,
+                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        @Override
+        public void onFailure(HttpException error, String msg) {
+            Log.i(TAG, msg);
+
+            if (loginDialog != null && loginDialog.isShowing()) {
+                loginDialog.dismiss();
+            }
+
+            Toast.makeText(LoginActivity.this,
+                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1273,48 +1606,6 @@ public class LoginActivity extends Activity {
     //↑↑↑QQ登陆的一系列相关方法↑↑↑
 
     /**
-     * 发送QQ相关信息到服务器的回调接口
-     */
-    class QQRequestCallBack extends RequestCallBack<String> {
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-
-            if (loginDialog != null && loginDialog.isShowing()) {
-                loginDialog.dismiss();
-            }
-
-            String str = responseInfo.result;
-            UserBack userBack = JsonUtil.getInstance().fromJSON(UserBack.class, str);
-
-            if (userBack != null) {
-                if (userBack.status.equals("1")) {
-                    SuiuuInformation.WriteVerification(LoginActivity.this, userBack.getMessage());
-                    SuiuuInformation.WriteUserSign(LoginActivity.this, userBack.getData().getUserSign());
-                    huanXinUsername = userBack.getData().getUserSign();
-                    huanXinLogin();
-                } else {
-                    Toast.makeText(LoginActivity.this, "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(LoginActivity.this, "网络错误，请稍候再试！", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-
-        @Override
-        public void onFailure(HttpException error, String msg) {
-            Log.i(TAG, msg);
-
-            if (loginDialog != null && loginDialog.isShowing()) {
-                loginDialog.dismiss();
-            }
-
-            Toast.makeText(LoginActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
      * 发送微博相关信息到服务器的回调接口
      */
     class WeiBoRequestCallBack extends RequestCallBack<String> {
@@ -1331,8 +1622,8 @@ public class LoginActivity extends Activity {
 
             if (userBack != null) {
                 if (userBack.status.equals("1")) {
-                    SuiuuInformation.WriteVerification(LoginActivity.this, userBack.getMessage());
-                    SuiuuInformation.WriteUserSign(LoginActivity.this, userBack.getData().getUserSign());
+                    SuiuuInfo.WriteVerification(LoginActivity.this, userBack.getMessage());
+                    SuiuuInfo.WriteUserSign(LoginActivity.this, userBack.getData().getUserSign());
                     huanXinUsername = userBack.getData().getUserSign();
                     huanXinLogin();
                 } else {

@@ -1,7 +1,5 @@
 package com.minglang.suiuu.entity;
 
-import java.util.List;
-
 /**
  * 消息数据实体类
  * <p/>
@@ -11,7 +9,7 @@ public class SuiuuMessage {
 
     public String status;
 
-    public List<SuiuuMessageData> data;
+    public SuiuuMessageBase data;
 
     public String message;
 
@@ -21,7 +19,7 @@ public class SuiuuMessage {
         return status;
     }
 
-    public List<SuiuuMessageData> getData() {
+    public SuiuuMessageBase getData() {
         return data;
     }
 

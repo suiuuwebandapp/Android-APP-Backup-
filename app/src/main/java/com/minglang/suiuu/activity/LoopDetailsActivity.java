@@ -29,7 +29,7 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import org.json.JSONException;
@@ -99,7 +99,7 @@ public class LoopDetailsActivity extends Activity {
         circleId = getIntent().getStringExtra(CIRCLEID);
         loopName = getIntent().getStringExtra("name");
 
-        Verification = SuiuuInformation.ReadVerification(this);
+        Verification = SuiuuInfo.ReadVerification(this);
 
         initView();
         ViewAction();

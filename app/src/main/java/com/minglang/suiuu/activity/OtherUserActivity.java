@@ -27,7 +27,7 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -108,7 +108,7 @@ public class OtherUserActivity extends Activity {
             dialog.show();
         }
 
-        String msg = SuiuuInformation.ReadVerification(this);
+        String msg = SuiuuInfo.ReadVerification(this);
 
         RequestParams params = new RequestParams();
         params.addBodyParameter(USERSIGNKEY, userSign);

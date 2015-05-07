@@ -199,7 +199,7 @@ public class NewAtFragment extends Fragment {
             Log.i(TAG, "新@数据:" + str);
             try {
                 SuiuuMessage message = JsonUtil.getInstance().fromJSON(SuiuuMessage.class, str);
-                list = message.getData();
+                list = message.getData().getData();
                 MessageAdapter adapter = new MessageAdapter(getActivity(), list, "1");
                 newAtList.setAdapter(adapter);
             } catch (Exception e) {

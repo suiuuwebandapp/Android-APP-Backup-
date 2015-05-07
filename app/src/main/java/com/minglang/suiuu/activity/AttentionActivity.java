@@ -20,7 +20,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.AttentionPagerAdapter;
 import com.minglang.suiuu.fragment.attention.AttentionLoopFragment;
 import com.minglang.suiuu.fragment.attention.AttentionUserFragment;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 import com.minglang.suiuu.utils.Utils;
 
@@ -154,8 +154,8 @@ public class AttentionActivity extends FragmentActivity {
         attentionThemeTitle = (TextView) findViewById(R.id.attention_theme_title);
         attentionUserTitle = (TextView) findViewById(R.id.attention_user_title);
 
-        String userSign = SuiuuInformation.ReadUserSign(this);
-        String verification = SuiuuInformation.ReadVerification(this);
+        String userSign = SuiuuInfo.ReadUserSign(this);
+        String verification = SuiuuInfo.ReadVerification(this);
 
         List<Fragment> fragmentList = new ArrayList<>();
 

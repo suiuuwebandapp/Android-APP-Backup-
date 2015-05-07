@@ -198,7 +198,7 @@ public class NewCommentFragment extends Fragment {
             Log.i(TAG, "新评论数据:" + str);
             try {
                 SuiuuMessage message = JsonUtil.getInstance().fromJSON(SuiuuMessage.class, str);
-                list = message.getData();
+                list = message.getData().getData();
                 MessageAdapter adapter = new MessageAdapter(getActivity(), list, "2");
                 newCommentList.setAdapter(adapter);
             } catch (Exception e) {

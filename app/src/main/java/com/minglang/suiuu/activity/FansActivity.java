@@ -25,7 +25,7 @@ import com.minglang.suiuu.entity.FansData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.List;
@@ -69,7 +69,7 @@ public class FansActivity extends Activity {
 
     private void getFansData2Service() {
 
-        String msg = SuiuuInformation.ReadVerification(this);
+        String msg = SuiuuInfo.ReadVerification(this);
 
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, msg);

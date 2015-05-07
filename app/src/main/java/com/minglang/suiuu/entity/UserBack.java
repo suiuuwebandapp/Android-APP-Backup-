@@ -23,32 +23,16 @@ public class UserBack implements Serializable {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public UserBackData getData() {
         return data;
-    }
-
-    public void setData(UserBackData data) {
-        this.data = data;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public String getToken() {
         return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     @Override

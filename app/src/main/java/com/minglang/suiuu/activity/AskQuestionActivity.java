@@ -45,7 +45,7 @@ import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -276,7 +276,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
 
     //点击发布按钮
     private void publish() {
-        String str = SuiuuInformation.ReadVerification(this);
+        String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
         if (TextUtils.isEmpty(et_search_question.getText().toString().trim())) {
             if (record == 1) {
@@ -334,7 +334,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
     }
 
     private void loadAreaDate() {
-        String str = SuiuuInformation.ReadVerification(this);
+        String str = SuiuuInfo.ReadVerification(this);
 
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
@@ -367,7 +367,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
 
     //访问主题的数据
     public void loadThemeDate() {
-        String str = SuiuuInformation.ReadVerification(this);
+        String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
         params.addBodyParameter("type", "1");

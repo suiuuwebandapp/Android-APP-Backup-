@@ -41,7 +41,7 @@ import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
 
 import org.json.JSONException;
@@ -242,7 +242,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
 
     //访问主题的数据
     public void loadThemeDate() {
-        String str = SuiuuInformation.ReadVerification(this);
+        String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
         params.addBodyParameter("type", "1");
@@ -285,7 +285,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     }
 
     private void loadAreaDate() {
-        String str = SuiuuInformation.ReadVerification(this);
+        String str = SuiuuInfo.ReadVerification(this);
 
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
@@ -348,7 +348,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         }
         //访问网络相关
         dialog.show();
-        String str = SuiuuInformation.ReadVerification(this);
+        String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
         params.addBodyParameter("type", 1 + "");
         params.addBodyParameter(HttpServicePath.key, str);

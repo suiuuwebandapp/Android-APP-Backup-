@@ -35,7 +35,7 @@ import com.minglang.suiuu.fragment.loop.ThemeFragment;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -279,8 +279,8 @@ public class LoopFragment extends Fragment {
         loopViewPager = (ViewPager) rootView.findViewById(R.id.loopViewPager);
         loopViewPager.setOffscreenPageLimit(2);
 
-        String userSign = SuiuuInformation.ReadUserSign(getActivity());
-        String verification = SuiuuInformation.ReadVerification(getActivity());
+        String userSign = SuiuuInfo.ReadUserSign(getActivity());
+        String verification = SuiuuInfo.ReadVerification(getActivity());
 
         //主题页面
         ThemeFragment themeFragment = ThemeFragment.newInstance(userSign, verification);

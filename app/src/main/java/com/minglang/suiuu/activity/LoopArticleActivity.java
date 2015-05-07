@@ -39,7 +39,7 @@ import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInformation;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -179,7 +179,7 @@ public class LoopArticleActivity extends Activity {
 
         articleId = getIntent().getStringExtra(ARTICLEID);
         OtherTAG = getIntent().getStringExtra("TAG");
-        Verification = SuiuuInformation.ReadVerification(this);
+        Verification = SuiuuInfo.ReadVerification(this);
 
         Log.i(TAG, "articleId:" + articleId);
         Log.i(TAG, "Verification:" + Verification);
@@ -195,7 +195,7 @@ public class LoopArticleActivity extends Activity {
                 .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
-        myUserSign = SuiuuInformation.ReadUserSign(this);
+        myUserSign = SuiuuInfo.ReadUserSign(this);
 
         initView();
         ViewAction();

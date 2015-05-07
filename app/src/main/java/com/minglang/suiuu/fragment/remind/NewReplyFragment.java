@@ -198,7 +198,7 @@ public class NewReplyFragment extends Fragment {
             Log.i(TAG, "新回复数据:" + str);
             try {
                 SuiuuMessage message = JsonUtil.getInstance().fromJSON(SuiuuMessage.class, str);
-                list = message.getData();
+                list = message.getData().getData();
                 MessageAdapter adapter = new MessageAdapter(getActivity(), list, "4");
                 newReplyList.setAdapter(adapter);
             } catch (Exception e) {
