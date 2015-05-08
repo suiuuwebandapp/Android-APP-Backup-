@@ -158,6 +158,12 @@
                     android:layout_height="wrap_content">
 
                 </com.minglang.suiuu.customview.NoScrollBarGridView>
+
+                <RelativeLayout
+                    android:id="@+id/main_fragment_foot_black_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/backgroundColor"/>
             </LinearLayout>
         </ScrollView>
 

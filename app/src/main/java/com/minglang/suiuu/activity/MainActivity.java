@@ -609,10 +609,6 @@ public class MainActivity extends FragmentActivity {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         screenWidth = dm.widthPixels;
-
-        /**
-         屏幕高度
-         */
         int screenHeight = dm.heightPixels;
 
         Log.i(TAG, "屏幕宽度:" + String.valueOf(screenWidth));
@@ -650,7 +646,7 @@ public class MainActivity extends FragmentActivity {
         conversationFragment = new ChatAllHistoryFragment();
 
         im_search = (ImageView) findViewById(R.id.mainPagerSearch);
-        im_search.setEnabled(false);
+        im_search.setVisibility(View.GONE);
 
         errorItem = (RelativeLayout) findViewById(R.id.rl_error_item);
         errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
@@ -668,24 +664,13 @@ public class MainActivity extends FragmentActivity {
 
         if (isNavigationBar) {
             if (isKITKAT) {
-                mDrawerLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+//                mDrawerLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
                 mainShowLayout.setPadding(0, 0, 0, navigationBarHeight);
-
-//                RelativeLayout.LayoutParams tabSelectParams = new RelativeLayout.LayoutParams(tabSelect.getLayoutParams());
-//                screenHeight - navigationBarHeight - statusBarHeight
-//                tabSelectParams.setMargins(0, screenHeight - navigationBarHeight - statusBarHeight*2, 0, 0);
-//                tabSelect.setLayoutParams(tabSelectParams);
-
                 Log.i(TAG, "4.4以上，有虚拟按键");
-
+            } else {
+                mDrawerLayout.setPadding(0, 0, 0, navigationBarHeight);
+                Log.i(TAG, "4.4以下，有虚拟按键");
             }
-//            else {
-//                mDrawerLayout.setPadding(0, 0, 0, navigationBarHeight);
-//                RelativeLayout.LayoutParams tabSelectParams = new RelativeLayout.LayoutParams(tabSelect.getLayoutParams());
-//                tabSelectParams.setMargins(0, screenHeight - navigationBarHeight - statusBarHeight, 0, 0);
-//                tabSelect.setLayoutParams(tabSelectParams);
-            Log.i(TAG, "4.4以下，有虚拟按键");
-//            }
         } else {
             if (isKITKAT) {
                 mDrawerLayout.setPadding(0, statusBarHeight, 0, 0);

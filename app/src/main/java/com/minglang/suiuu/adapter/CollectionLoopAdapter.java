@@ -74,7 +74,7 @@ public class CollectionLoopAdapter extends BaseAdapter {
         Log.i(TAG, "屏幕显示区域高度为:" + String.valueOf(this.screenHeight));
     }
 
-    public void setListData(List<CollectionLoopData> list){
+    public void setListData(List<CollectionLoopData> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -112,7 +112,7 @@ public class CollectionLoopAdapter extends BaseAdapter {
         //主要图片
         ImageView imageView = holder.getView(R.id.item_collection_loop_image);
         //头像
-        CircleImageView headImage = holder.getView(R.id.item_collection_loop_head_image);
+        CircleImageView headImageView = holder.getView(R.id.item_collection_loop_head_image);
         //用户名
         TextView userName = holder.getView(R.id.item_collection_loop_user_name);
         //标题
@@ -124,13 +124,15 @@ public class CollectionLoopAdapter extends BaseAdapter {
 
         String mainImagePath = collectionLoopData.getaImg();
         if (!TextUtils.isEmpty(mainImagePath)) {
-            loader.displayImage(collectionLoopData.getaImg(), imageView, displayImageOptions1);
+            loader.displayImage(mainImagePath.trim().trim(), imageView, displayImageOptions1);
         }
+        Log.i(TAG, "收藏的圈子的图片地址:" + mainImagePath);
 
         String headImagePath = collectionLoopData.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            loader.displayImage(headImagePath, headImage);
+            loader.displayImage(headImagePath.trim(), headImageView);
         }
+        Log.i(TAG, "收藏的圈子的用户的头像地址:" + headImagePath);
 
         String strNickName = collectionLoopData.getNickname();
         if (!TextUtils.isEmpty(strNickName)) {

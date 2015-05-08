@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.CollectionSuiuuData;
-import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -125,13 +124,15 @@ public class CollectionSuiuuAdapter extends BaseAdapter {
 
         String imagePath = data.getTitleImg();
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imagePath, mainImage, options);
+            imageLoader.displayImage(imagePath.trim(), mainImage, options);
         }
+        Log.i(TAG, "收藏随游图片地址:" + imagePath);
 
         String headImagePath = data.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + headImagePath, headImage);
+            imageLoader.displayImage(headImagePath.trim(), headImage);
         }
+        Log.i(TAG, "收藏随游用户头像地址:" + headImagePath);
 
         String strUserName = data.getNickname();
         if (!TextUtils.isEmpty(strUserName)) {

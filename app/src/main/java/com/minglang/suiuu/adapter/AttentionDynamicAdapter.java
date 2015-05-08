@@ -3,6 +3,8 @@ package com.minglang.suiuu.adapter;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,12 +28,18 @@ public class AttentionDynamicAdapter extends LinearLayoutBaseAdapter {
 
     private ImageLoader imageLoader;
 
+    private int ScreenHeight;
+
     public AttentionDynamicAdapter(Context context, List<MainDynamicDataUser> list) {
         super(context, list);
         this.list = list;
 
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+    }
+
+    public void setScreenHeight(int ScreenHeight) {
+        this.ScreenHeight = ScreenHeight;
     }
 
     @Override
@@ -69,6 +77,11 @@ public class AttentionDynamicAdapter extends LinearLayoutBaseAdapter {
         } else {
             content.setText("");
         }
+
+        int itemHeight = ScreenHeight / 4;
+
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, itemHeight);
+        view.setLayoutParams(params);
 
         return view;
     }

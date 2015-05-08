@@ -3,6 +3,8 @@ package com.minglang.suiuu.fragment.main;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,11 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
@@ -39,8 +43,7 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,15 +71,6 @@ public class MainFragment extends Fragment {
     private PtrClassicFrameLayout mPtrFrame;
 
     private ScrollView scrollView;
-
-    private MaterialHeader header;
-
-    /**
-     * 数据总集
-     */
-    private MainDynamic mainDynamic;
-
-    private ImageLoader imageLoader;
 
     /**
      * 关注动态数据集合
@@ -117,6 +111,9 @@ public class MainFragment extends Fragment {
      */
     private NoScrollBarGridView loopDynamicGridView;
 
+    /**
+     * 点击查看更多动态
+     */
     private TextView moreButton;
 
     private ProgressDialog progressDialog;
@@ -126,9 +123,6 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_main, null);
-
-        imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
 
         initView(rootView);
 
@@ -146,19 +140,21 @@ public class MainFragment extends Fragment {
      */
     private void bindData2View(String str) {
         try {
-            mainDynamic = JsonUtil.getInstance().fromJSON(MainDynamic.class, str);
+            MainDynamic mainDynamic = JsonUtil.getInstance().fromJSON(MainDynamic.class, str);
             MainDynamicData data = mainDynamic.getData();
 
             //关注动态
             mainDynamicDataUserList = data.getUserDynamic().getData();
             AttentionDynamicAdapter attentionDynamicAdapter = new AttentionDynamicAdapter(getActivity(),
                     mainDynamicDataUserList);
+            attentionDynamicAdapter.setScreenHeight(screenHeight);
             attentionDynamicLayout.setAdapter(attentionDynamicAdapter);
 
             //热门推荐
             mainDynamicDataRecommendTravelList = data.getRecommendTravel().getData();
             RecommendTravelAdapter recommendTravelAdapter = new RecommendTravelAdapter(getActivity(),
                     mainDynamicDataRecommendTravelList);
+            recommendTravelAdapter.setScreenHeight(screenHeight);
             recommendDynamicLayout.setAdapter(recommendTravelAdapter);
 
             //今日之星
@@ -184,8 +180,12 @@ public class MainFragment extends Fragment {
      * 网络请求数据
      */
     private void getMainDynamic4Service() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("n", "6");
+
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.MainDynamicPath, new MainDynamicRequestCallBack());
+        httpRequest.setParams(params);
         httpRequest.requestNetworkData();
 
         if (progressDialog != null) {
@@ -275,14 +275,13 @@ public class MainFragment extends Fragment {
         screenWidth = screenUtils.getScreenWidth();
         screenHeight = screenUtils.getScreenHeight();
 
-
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
         progressDialog.setCanceledOnTouchOutside(false);
 
         mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.main_fragment_head_frame);
 
-        header = new MaterialHeader(getActivity());
+        MaterialHeader header = new MaterialHeader(getActivity());
         int[] colors = getResources().getIntArray(R.array.google_colors);
         header.setColorSchemeColors(colors);
         header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
@@ -290,6 +289,13 @@ public class MainFragment extends Fragment {
         header.setPtrFrameLayout(mPtrFrame);
 
         scrollView = (ScrollView) rootView.findViewById(R.id.main_fragment_scrollView);
+
+        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        if (isKITKAT) {
+            SystemBarTintManager.SystemBarConfig systemBarConfig = new SystemBarTintManager(getActivity()).getConfig();
+            int statusHeight = systemBarConfig.getStatusBarHeight();
+            scrollView.setPadding(0, statusHeight, 0, 0);
+        }
 
         mPtrFrame.setHeaderView(header);
         mPtrFrame.addPtrUIHandler(header);
@@ -314,6 +320,12 @@ public class MainFragment extends Fragment {
         loopDynamicGridView = (NoScrollBarGridView) rootView.findViewById(R.id.mainLoopDynamicGridView);
 
         moreButton = (TextView) rootView.findViewById(R.id.main_fragment_more);
+
+        RelativeLayout footBlackView = (RelativeLayout) rootView.findViewById(R.id.main_fragment_foot_black_view);
+        ViewGroup.LayoutParams params = footBlackView.getLayoutParams();
+        params.height = BitmapFactory.decodeResource(getResources(), R.drawable.main_guide_line).getHeight();
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        footBlackView.setLayoutParams(params);
     }
 
     /**

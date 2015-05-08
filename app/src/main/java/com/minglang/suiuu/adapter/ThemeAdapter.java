@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.LoopBaseData;
-import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -96,8 +95,9 @@ public class ThemeAdapter extends BaseAdapter {
         LoopBaseData loopBaseData = list.get(position);
 
         String imagePath = loopBaseData.getCpic();
+        Log.i(TAG, "imagePath:" + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imagePath, imageView, displayImageOptions);
+            imageLoader.displayImage(imagePath, imageView, displayImageOptions);
         }
 
         String name = loopBaseData.getcName();

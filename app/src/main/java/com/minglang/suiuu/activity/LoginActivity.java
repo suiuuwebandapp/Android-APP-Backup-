@@ -7,8 +7,6 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -45,34 +43,26 @@ import com.minglang.suiuu.chat.dao.UserDao;
 import com.minglang.suiuu.chat.utils.CommonUtils;
 import com.minglang.suiuu.entity.AreaCode;
 import com.minglang.suiuu.entity.AreaCodeData;
-import com.minglang.suiuu.entity.QQInfo;
 import com.minglang.suiuu.entity.RequestData;
 import com.minglang.suiuu.entity.UserBack;
-import com.minglang.suiuu.thread.QQThread;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.MD5Utils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.qq.TencentUtil;
+import com.minglang.suiuu.utils.qq.TencentConstant;
 import com.minglang.suiuu.utils.wechat.WeChatConstant;
-import com.minglang.suiuu.utils.weibo.WeiboAccessTokenKeeper;
-import com.minglang.suiuu.utils.weibo.WeiboConstants;
-import com.sina.weibo.sdk.auth.AuthInfo;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.WeiboAuthListener;
-import com.sina.weibo.sdk.auth.sso.SsoHandler;
-import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.openapi.UsersAPI;
-import com.sina.weibo.sdk.openapi.models.ErrorInfo;
-import com.tencent.connect.common.Constants;
-import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.tencent.tauth.IUiListener;
-import com.tencent.tauth.Tencent;
-import com.tencent.tauth.UiError;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.controller.listener.SocializeListeners;
+import com.umeng.socialize.exception.SocializeException;
+import com.umeng.socialize.sso.UMQQSsoHandler;
+import com.umeng.socialize.sso.UMSsoHandler;
+import com.umeng.socialize.weixin.controller.UMWXHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -218,41 +208,6 @@ public class LoginActivity extends Activity {
      */
     private ImageView microBlog_login, qq_login, weChat_login;
 
-    //微博相关类实例
-    /**
-     * 微博授权认证回调
-     */
-    private AuthListener authListener = new AuthListener();
-
-    /**
-     * 微博SSO 授权认证实例
-     */
-    private SsoHandler ssoHandler;
-
-    /**
-     * 微博Token
-     */
-    private Oauth2AccessToken accessToken;
-
-    /**
-     * 用户信息接口
-     */
-    private UsersAPI usersAPI;
-
-    /**
-     * 微博 OpenAPI 回调接口。
-     */
-    private WeiBoRequestListener weiboRequestListener = new WeiBoRequestListener();
-
-
-    //QQ相关类实例
-    private static Tencent tencent;
-
-    /**
-     * 自定义QQ用户信息类
-     */
-    private QQInfo qqInfo;
-
     //微信相关
     private IWXAPI weChatApi;
 
@@ -272,6 +227,8 @@ public class LoginActivity extends Activity {
     private ProgressDialog registerDialog;
 
     private ProgressDialog weChatLoadDialog;
+
+    private UMSocialService mController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -374,7 +331,8 @@ public class LoginActivity extends Activity {
                 AreaCodeData data = areaCodeDataList.get(position);
                 areaName = data.getCname();
                 internationalAreaCode = data.getAreaCode();
-                Toast.makeText(LoginActivity.this, "您已选择" + areaName + ":" + internationalAreaCode, Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this,
+                        "您已选择" + areaName + ":" + internationalAreaCode, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -415,7 +373,10 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 type = "3";
-                ssoHandler.authorize(authListener);
+
+                mController.doOauthVerify(LoginActivity.this, SHARE_MEDIA.SINA, new MicroBlog4UMAuthListener());
+
+
             }
         });
 
@@ -423,9 +384,12 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 type = "1";
-                if (!tencent.isSessionValid()) {//检测是否已登录
-                    tencent.login(LoginActivity.this, "all", loginListener);
-                }
+
+                UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(LoginActivity.this,
+                        TencentConstant.APP_ID, TencentConstant.APP_KEY);
+                qqSsoHandler.addToSocialSDK();
+
+                mController.doOauthVerify(LoginActivity.this, SHARE_MEDIA.QQ, new QQLogin4UMAuthListener());
             }
         });
 
@@ -436,13 +400,15 @@ public class LoginActivity extends Activity {
 
                 if (!weChatApi.isWXAppInstalled()) {
                     Toast.makeText(LoginActivity.this, "您尚未安装微信，请安装后再用！", Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
-                weChatApi.registerApp(WeChatConstant.APP_ID);
-                final SendAuth.Req req = new SendAuth.Req();
-                req.scope = "snsapi_userinfo";
-                req.state = "suiuu";
-                weChatApi.sendReq(req);
+                UMWXHandler wxHandler = new UMWXHandler(LoginActivity.this,
+                        WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
+                wxHandler.addToSocialSDK();
+
+                mController.doOauthVerify(LoginActivity.this, SHARE_MEDIA.WEIXIN, new WeChat4UMAuthListener());
+
             }
         });
 
@@ -822,19 +788,9 @@ public class LoginActivity extends Activity {
      */
     private void initThirdParty() {
 
-        tencent = Tencent.createInstance("1104557000", this.getApplicationContext());
-
-        //微博授权认证所需的信息
-        AuthInfo authInfo = new AuthInfo(this, WeiboConstants.APP_KEY, WeiboConstants.REDIRECT_URL, WeiboConstants.SCOPE);
-        ssoHandler = new SsoHandler(this, authInfo);
-        if (accessToken != null) {
-            usersAPI = new UsersAPI(this, WeiboConstants.APP_KEY, accessToken);
-        } else {
-            usersAPI = new UsersAPI(this, WeiboConstants.APP_KEY, WeiboAccessTokenKeeper.readAccessToken(this));
-        }
-
         weChatApi = WXAPIFactory.createWXAPI(this, WeChatConstant.APP_ID, false);
 
+        mController = UMServiceFactory.getUMSocialService("com.umeng.login");
     }
 
     /**
@@ -869,9 +825,6 @@ public class LoginActivity extends Activity {
         qq_login = (ImageView) findViewById(R.id.qq_login);
         weChat_login = (ImageView) findViewById(R.id.weChat_login);
 
-//        microBlog_login.setEnabled(false);
-//        qq_login.setEnabled(false);
-//        weChat_login.setEnabled(false);
     }
 
     /**
@@ -940,204 +893,297 @@ public class LoginActivity extends Activity {
         popupWindowRegister2.setBackgroundDrawable(new BitmapDrawable());
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-        tencent.onActivityResult(requestCode, resultCode, data);
-    }
+    /**
+     * 友盟for微博第三方登陆授权回调接口
+     */
+    private class MicroBlog4UMAuthListener implements SocializeListeners.UMAuthListener {
 
-    @Override
-    public void onBackPressed() {
-        if (popupWindowLogin.isShowing()) {
-            popupWindowLogin.dismiss();
-        } else if (popupWindowRegister1.isShowing()) {
-            popupWindowRegister1.dismiss();
-        } else if (popupWindowRegister2.isShowing()) {
-            popupWindowRegister2.dismiss();
-        } else {
-            super.onBackPressed();
-        }
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        String code = SuiuuInfo.ReadWxCode(this);
-        if (!TextUtils.isEmpty(code)) {
-            if (weChatLoadDialog != null) {
-                weChatLoadDialog.show();
-            }
-            getWeChatToken(code);
+        @Override
+        public void onStart(SHARE_MEDIA share_media) {
+            Log.i(TAG, "新浪微博授权开始！");
         }
 
-        if (autoLogin) {
-            return;
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (popupWindowLogin != null) {
-            if (popupWindowLogin.isShowing()) {
-                popupWindowLogin.dismiss();
+        @Override
+        public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
+            Log.i(TAG, "新浪微博授权完成！");
+            if (bundle != null && !TextUtils.isEmpty(bundle.getString("uid"))) {
+                Log.i(TAG, "新浪微博授权成功！");
+                Log.i(TAG, "新浪微博授权信息:" + bundle.toString());
+                mController.getPlatformInfo(LoginActivity.this,
+                        SHARE_MEDIA.SINA, new MicroBlog4UMDataListener());
+            } else {
+                Log.i(TAG, "新浪微博授权失败！");
             }
         }
+
+        @Override
+        public void onError(SocializeException e, SHARE_MEDIA share_media) {
+            Log.e(TAG, "新浪微博授权错误！" + e.getMessage());
+            Log.e(TAG, "新浪微博错误代码:" + e.getErrorCode());
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA share_media) {
+            Log.i(TAG, "新浪微博授权取消！");
+        }
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        String tag = intent.getStringExtra("TAG");
-        if (tag.equals(TAG)) {
-            String code = intent.getStringExtra("code");
-            if (!TextUtils.isEmpty(code)) {
-                if (weChatLoadDialog != null) {
-                    weChatLoadDialog.show();
-                }
-                getWeChatToken(code);
+    /**
+     * 友盟for微博第三方登陆数据回调接口
+     */
+    private class MicroBlog4UMDataListener implements SocializeListeners.UMDataListener {
+
+        @Override
+        public void onStart() {
+            Log.i(TAG, "正在获取微博数据");
+        }
+
+        @Override
+        public void onComplete(int status, Map<String, Object> info) {
+            if (status == 200 && info != null) {
+                Log.i(TAG, "微博返回数据为:" + info.toString());
+            } else {
+                Log.e(TAG, "发生错误，未接收到数据！");
             }
         }
     }
 
     /**
-     * 根据code获取access_token
-     *
-     * @param code 微信code
+     * QQ的openId,昵称,性别,头像URL
      */
-    private void getWeChatToken(String code) {
-        String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeChatConstant.APP_ID
-                + "&secret=" + WeChatConstant.APPSECRET + "&code=" + code + "&grant_type=" + WeChatConstant.AUTHORIZATION_CODE;
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.GET, url, new WXEntryRequestCallBack());
-        httpRequest.requestNetworkData();
+    private String qq_open_id, qq_nick_Name, qq_gender, qq_head_image_path;
+
+    /**
+     * 友盟forQQ第三方登陆授权回调接口
+     */
+    private class QQLogin4UMAuthListener implements SocializeListeners.UMAuthListener {
+
+        @Override
+        public void onStart(SHARE_MEDIA share_media) {
+            Log.i(TAG, "QQ授权开始");
+        }
+
+        @Override
+        public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
+            Log.i(TAG, "QQ授权完成");
+            Log.i(TAG, "QQ授权信息:" + bundle.toString());
+            if (bundle != null) {
+                qq_open_id = bundle.getString("openid");
+            }
+            mController.getPlatformInfo(LoginActivity.this, SHARE_MEDIA.QQ, new QQ4UMDataListener());
+        }
+
+        @Override
+        public void onError(SocializeException e, SHARE_MEDIA share_media) {
+            Log.i(TAG, "QQ授权错误");
+            Log.e(TAG, "QQ登陆错误:" + e.getMessage());
+            Log.e(TAG, "错误代码:" + e.getErrorCode());
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA share_media) {
+            Log.i(TAG, "QQ授权取消");
+        }
     }
 
-    private String access_token;
+    /**
+     * 友盟forQQ第三方登陆数据回调接口
+     */
+    private class QQ4UMDataListener implements SocializeListeners.UMDataListener {
 
-    private String weChatNickName;
+        @Override
+        public void onStart() {
+            Log.i(TAG, "开始获取QQ数据");
+        }
 
-    private String weChatGender;
+        @Override
+        public void onComplete(int status, Map<String, Object> info) {
+            Log.i(TAG, "QQ数据获取完成");
 
-    private String weChatOpenId;
+            if (status == 200 && info != null) {
+                String sex = info.get("gender").toString();
+                if (!TextUtils.isEmpty(sex)) {
+                    switch (sex) {
+                        case "男":
+                            qq_gender = "1";
+                            break;
+                        case "女":
+                            qq_gender = "0";
+                            break;
+                        default:
+                            qq_gender = "2";
+                            break;
+                    }
+                }
+                qq_nick_Name = info.get("screen_name").toString();
+                qq_head_image_path = info.get("profile_image_url").toString();
 
-    private String weChatUnionId;
+                setQQData2Service();
+            }
+        }
 
-    private String weChatHeadImagePath;
+    }
+
+    /**
+     * 发送QQ相关信息到服务器
+     */
+    private void setQQData2Service() {
+
+        SuHttpRequest http = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.ThirdPartyPath, new QQRequestCallBack());
+
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("openId", qq_open_id);
+        params.addBodyParameter("nickname", qq_nick_Name);
+        params.addBodyParameter("sex", qq_gender);
+        params.addBodyParameter("headImg", qq_head_image_path);
+        params.addBodyParameter("type", type);
+
+        String sign = null;
+        try {
+            sign = MD5Utils.getMD5(qq_open_id + type + HttpServicePath.ConfusedCode);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        params.addBodyParameter("sign", sign);
+
+        Log.i(TAG, "openID:" + qq_open_id + ",nickName:" + qq_nick_Name + ",sex:" + qq_gender +
+                ",headImage:" + qq_head_image_path + ",type:" + type + ",sign:" + sign);
+
+        SuiuuInfo.WriteInformation(LoginActivity.this,
+                new RequestData(qq_open_id, qq_nick_Name, qq_gender, qq_head_image_path, type));
+
+        http.setParams(params);
+        http.requestNetworkData();
+    }
+
+    /**
+     * 发送QQ相关信息到服务器的回调接口
+     */
+    class QQRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+
+            if (loginDialog != null && loginDialog.isShowing()) {
+                loginDialog.dismiss();
+            }
+
+            String str = responseInfo.result;
+            try {
+                UserBack userBack = JsonUtil.getInstance().fromJSON(UserBack.class, str);
+                if (userBack.status.equals("1")) {
+
+                    String message = userBack.getMessage();
+                    if (!TextUtils.isEmpty(message)) {
+                        SuiuuInfo.WriteVerification(LoginActivity.this, message);
+                    }
+
+                    String userSign = userBack.getData().getUserSign();
+                    if (!TextUtils.isEmpty(userSign)) {
+                        SuiuuInfo.WriteUserSign(LoginActivity.this, userSign);
+                    }
+
+                    huanXinUsername = userBack.getData().getUserSign();
+                    huanXinLogin();
+                } else {
+                    Log.e(TAG, "QQRequestCallBack:返回数据有误！");
+                    Toast.makeText(LoginActivity.this,
+                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "QQ登陆数据解析错误:" + e.getMessage());
+                Toast.makeText(LoginActivity.this,
+                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        @Override
+        public void onFailure(HttpException error, String msg) {
+            Log.i(TAG, msg);
+
+            if (loginDialog != null && loginDialog.isShowing()) {
+                loginDialog.dismiss();
+            }
+
+            Toast.makeText(LoginActivity.this,
+                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 微信token，微信用户昵称，微信用户性别，微信用户openID，微信用户uID，微信用户头像URL
+     */
+    private String weChatNickName, weChatGender, weChatUnionId, weChatHeadImagePath;
 
     private String sign;
 
     /**
-     * 获取微信access_token网络请求回调接口
+     * 友盟for微信第三方登陆授权回调接口
      */
-    private class WXEntryRequestCallBack extends RequestCallBack<String> {
+    private class WeChat4UMAuthListener implements SocializeListeners.UMAuthListener {
 
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+        public void onStart(SHARE_MEDIA share_media) {
+            Log.i(TAG, "微信授权开始");
+        }
 
-            String str = stringResponseInfo.result;
-            Log.i(TAG, "通过code获取access_token的数据:" + str);
+        @Override
+        public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
+            Log.i(TAG, "微信授权完成");
+            Log.i(TAG, "微信授权数据:" + bundle.toString());
+            mController.getPlatformInfo(LoginActivity.this, SHARE_MEDIA.WEIXIN, new WeChat4UMDataListener());
+        }
 
-            try {
+        @Override
+        public void onError(SocializeException e, SHARE_MEDIA share_media) {
+            Log.i(TAG, "微信授权错误:" + e.getMessage());
+            Log.i(TAG, "微信授权错误码:" + e.getErrorCode());
+        }
 
-                JSONObject object = new JSONObject(str);
-                access_token = object.getString("access_token");
-                weChatOpenId = object.getString("openid");
-                weChatUnionId = object.getString("unionid");
-                getWeChatPersonInfo();
+        @Override
+        public void onCancel(SHARE_MEDIA share_media) {
+            Log.i(TAG, "微信授权取消");
+        }
+    }
 
-            } catch (JSONException e) {
+    /**
+     * 友盟for微信第三方登陆数据回调接口
+     */
+    private class WeChat4UMDataListener implements SocializeListeners.UMDataListener {
 
-                e.printStackTrace();
-                Log.e(TAG, "获取微信access_token数据解析错误:" + e.getMessage());
+        @Override
+        public void onStart() {
+            Log.i(TAG, "正在获取微信数据");
+        }
 
-                if (weChatLoadDialog.isShowing()) {
-                    weChatLoadDialog.dismiss();
+        @Override
+        public void onComplete(int status, Map<String, Object> info) {
+            Log.i(TAG, "微信数据获取完成");
+            if (status == 200 && info != null) {
+                Log.i(TAG, "微信数据:" + info.toString());
+                weChatUnionId = info.get("unionid").toString();
+                weChatNickName = info.get("nickname").toString();
+                String sex = info.get("sex").toString();
+                switch (sex) {
+                    case "1":
+                        weChatGender = "1";
+                        break;
+                    case "2":
+                        weChatGender = "0";
+                        break;
+                    default:
+                        weChatGender = "2";
+                        break;
                 }
-
-                Toast.makeText(LoginActivity.this,
-                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-
-            Log.e(TAG, "通过code获取access_token发生错误:" + s);
-
-            if (weChatLoadDialog.isShowing()) {
-                weChatLoadDialog.dismiss();
-            }
-
-            Toast.makeText(LoginActivity.this,
-                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
-
-        }
-    }
-
-    /**
-     * 获取用户信息网络请求
-     */
-    private void getWeChatPersonInfo() {
-
-        Log.e(TAG, "access_token:" + access_token);
-        Log.e(TAG, "openId:" + weChatOpenId);
-
-        String url = "https://api.weixin.qq.com/sns/userinfo?access_token="
-                + access_token + "&openid=" + weChatOpenId;
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.GET,
-                url, new WXUserInfoRequestCallBack());
-        httpRequest.requestNetworkData();
-    }
-
-    /**
-     * 获取用户信息网络请求回调接口
-     */
-    private class WXUserInfoRequestCallBack extends RequestCallBack<String> {
-
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-
-            String str = stringResponseInfo.result;
-            Log.i(TAG, "用户信息数据:" + str);
-
-            try {
-
-                JSONObject object = new JSONObject(str);
-                weChatNickName = object.getString("nickname");
-                weChatGender = object.getString("sex");
-                weChatHeadImagePath = object.getString("headimgurl");
-
-                SuiuuInfo.WriteInformation(LoginActivity.this,
-                        new RequestData(weChatUnionId, weChatNickName, weChatGender, weChatHeadImagePath, type));
+                weChatHeadImagePath = info.get("headimgurl").toString();
 
                 sendWeChatInfo2Service();
-
-            } catch (JSONException e) {
-
-                e.printStackTrace();
-                Log.e(TAG, "解析返回的微信用户信息是发生错误" + e.getMessage());
-
-                if (weChatLoadDialog.isShowing()) {
-                    weChatLoadDialog.dismiss();
-                }
-
-                Toast.makeText(LoginActivity.this,
-                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-
+            } else {
+                Log.i(TAG, "微信数据获取失败");
             }
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-
-            Log.e(TAG, "获取用户信息发生错误:" + s);
-
-            if (weChatLoadDialog.isShowing()) {
-                weChatLoadDialog.dismiss();
-            }
-
-            Toast.makeText(LoginActivity.this,
-                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1157,6 +1203,9 @@ public class LoginActivity extends Activity {
             e.printStackTrace();
         }
         params.addBodyParameter("sign", sign);
+
+        Log.i(TAG, "发送微信数据:[openId:" + weChatUnionId + ",nickname:" + weChatNickName
+                + ",sex:" + weChatGender + ",headImg:" + weChatHeadImagePath + ",type:" + type + ",sign:" + sign + "]");
 
         SuHttpRequest http = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.ThirdPartyPath, new WXRequestCallBack());
@@ -1224,57 +1273,6 @@ public class LoginActivity extends Activity {
             Toast.makeText(LoginActivity.this,
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
 
-        }
-    }
-
-
-    //↓↓↓微博登陆的一系列相关方法↓↓↓
-
-    /**
-     * 微博授权结果回调
-     */
-    private class AuthListener implements WeiboAuthListener {
-
-        @Override
-        public void onComplete(Bundle bundle) {
-            accessToken = Oauth2AccessToken.parseAccessToken(bundle);
-            if (accessToken != null && accessToken.isSessionValid()) {
-                WeiboAccessTokenKeeper.writeAccessToken(LoginActivity.this, accessToken);
-
-                long uid = Long.parseLong(accessToken.getUid());
-
-                usersAPI.show(uid, weiboRequestListener);
-            }
-        }
-
-        @Override
-        public void onWeiboException(WeiboException e) {
-            Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onCancel() {
-            Toast.makeText(LoginActivity.this, "您已取消授权", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * 微博 OpenAPI 回调接口。
-     */
-    private class WeiBoRequestListener implements com.sina.weibo.sdk.net.RequestListener {
-
-        @Override
-        public void onComplete(String s) {
-            if (!TextUtils.isEmpty(s)) {
-                com.sina.weibo.sdk.openapi.models.User user = com.sina.weibo.sdk.openapi.models.User.parse(s);
-                setWeiBoData2Service(user);
-            }
-        }
-
-        @Override
-        public void onWeiboException(WeiboException e) {
-            ErrorInfo info = ErrorInfo.parse(e.getMessage());
-            Toast.makeText(LoginActivity.this, info.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1346,264 +1344,6 @@ public class LoginActivity extends Activity {
             Toast.makeText(LoginActivity.this, "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
-    //↑↑↑微博登陆的一系列相关方法↑↑↑
-
-    //*************************
-
-    //↓↓↓QQ登陆的一系列相关方法↓↓↓
-
-    /**
-     * 发送QQ相关信息到服务器
-     */
-    private void setQQData2Service() {
-        if (qqInfo != null) {
-
-            if (loginDialog != null) {
-                loginDialog.show();
-            }
-
-            String nickName = qqInfo.getNickName();
-            String headImagePath = qqInfo.getImagePath();
-            String gender = qqInfo.getGender();
-
-            SuiuuInfo.WriteUserBasicInfo(LoginActivity.this, nickName, gender, headImagePath);
-
-            String code;
-            switch (gender) {
-                case "男":
-                    code = "1";
-                    break;
-                case "女":
-                    code = "0";
-                    break;
-                default:
-                    code = "2";
-                    break;
-            }
-
-            SuHttpRequest http = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                    HttpServicePath.ThirdPartyPath, new QQRequestCallBack());
-
-            RequestParams params = new RequestParams();
-            params.addBodyParameter("openId", qqOpenId);
-            params.addBodyParameter("nickname", nickName);
-            params.addBodyParameter("sex", code);
-            params.addBodyParameter("headImg", headImagePath);
-            params.addBodyParameter("type", type);
-
-            String sign = null;
-            try {
-                sign = MD5Utils.getMD5(qqOpenId + type + HttpServicePath.ConfusedCode);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
-            params.addBodyParameter("sign", sign);
-
-            Log.i(TAG, "openID:" + qqOpenId + ",nickName:" + nickName + ",sex:" + code +
-                    ",headImage:" + headImagePath + ",type:" + type + ",sign:" + sign);
-
-            SuiuuInfo.WriteInformation(LoginActivity.this, new RequestData(qqOpenId, nickName, code, headImagePath, type));
-
-            http.setParams(params);
-            http.requestNetworkData();
-        } else {
-            Toast.makeText(LoginActivity.this, "获取信息失败，请稍候再试！", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * 发送QQ相关信息到服务器的回调接口
-     */
-    class QQRequestCallBack extends RequestCallBack<String> {
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-
-            if (loginDialog != null && loginDialog.isShowing()) {
-                loginDialog.dismiss();
-            }
-
-            String str = responseInfo.result;
-            try {
-                UserBack userBack = JsonUtil.getInstance().fromJSON(UserBack.class, str);
-                if (userBack.status.equals("1")) {
-
-                    String message = userBack.getMessage();
-                    if (!TextUtils.isEmpty(message)) {
-                        SuiuuInfo.WriteVerification(LoginActivity.this, message);
-                    }
-
-                    String userSign = userBack.getData().getUserSign();
-                    if (!TextUtils.isEmpty(userSign)) {
-                        SuiuuInfo.WriteUserSign(LoginActivity.this, userSign);
-                    }
-
-                    huanXinUsername = userBack.getData().getUserSign();
-                    huanXinLogin();
-                } else {
-                    Log.e(TAG, "QQRequestCallBack:返回数据有误！");
-                    Toast.makeText(LoginActivity.this,
-                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "QQ登陆数据解析错误:" + e.getMessage());
-                Toast.makeText(LoginActivity.this,
-                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-            }
-
-        }
-
-        @Override
-        public void onFailure(HttpException error, String msg) {
-            Log.i(TAG, msg);
-
-            if (loginDialog != null && loginDialog.isShowing()) {
-                loginDialog.dismiss();
-            }
-
-            Toast.makeText(LoginActivity.this,
-                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * QQ
-     * <p/>
-     * 异步获取相关用户信息
-     */
-    private Handler qqHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            int what = msg.what;
-            switch (what) {
-                case 1:
-                    qqInfo = (QQInfo) msg.obj;
-                    setQQData2Service();
-                    break;
-            }
-            return false;
-        }
-    });
-
-    /**
-     * QQ
-     * <p/>
-     * 回调接口实例
-     */
-    IUiListener loginListener = new BaseUiListener() {
-        @Override
-        protected void doComplete(JSONObject values) {
-            initOpenidAndToken(values);
-            getUserNickNameAndHeadImage();
-        }
-    };
-
-
-    /**
-     * QQ
-     * <p/>
-     * 获取昵称等信息
-     */
-    private void getUserNickNameAndHeadImage() {
-        if (tencent != null && tencent.isSessionValid()) {
-            IUiListener iUiListener = new IUiListener() {
-                @Override
-                public void onComplete(Object o) {
-                    QQThread qqThread = new QQThread(qqHandler, o);
-                    qqThread.start();
-                }
-
-                @Override
-                public void onError(UiError uiError) {
-                    Toast.makeText(LoginActivity.this,
-                            "获取信息失败，请稍候再试！", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onCancel() {
-
-                }
-            };
-            /**
-             QQ 用户信息类
-             */
-            com.tencent.connect.UserInfo qqUserInfo = new com.tencent.connect.UserInfo(LoginActivity.this, tencent.getQQToken());
-            qqUserInfo.getUserInfo(iUiListener);
-        }
-    }
-
-    /**
-     * QQ
-     * <p/>
-     * 相关凭据
-     */
-    private String qq_token;
-    private String qq_expires;
-    private String qqOpenId;
-
-    /**
-     * QQ
-     * <p/>
-     * 初始化token，openid等信息
-     *
-     * @param jsonObject 接口返回的Json数据
-     */
-    private void initOpenidAndToken(JSONObject jsonObject) {
-        try {
-            qq_token = jsonObject.getString(Constants.PARAM_ACCESS_TOKEN);
-            qq_expires = jsonObject.getString(Constants.PARAM_EXPIRES_IN);
-            qqOpenId = jsonObject.getString(Constants.PARAM_OPEN_ID);
-            if (!TextUtils.isEmpty(qq_token) && !TextUtils.isEmpty(qq_expires)
-                    && !TextUtils.isEmpty(qqOpenId)) {
-                tencent.setAccessToken(qq_token, qq_expires);
-                tencent.setOpenId(qqOpenId);
-            }
-        } catch (Exception ignored) {
-            Log.e(TAG, "QQ返回的数据解析失败:" + ignored.getMessage());
-        }
-    }
-
-    /**
-     * QQ
-     * <p/>
-     * 回调接口
-     */
-    private class BaseUiListener implements IUiListener {
-
-        @Override
-        public void onComplete(Object response) {
-            if (null == response) {
-                TencentUtil.showResultDialog(LoginActivity.this, "返回为空", "登录失败");
-                return;
-            }
-            JSONObject jsonResponse = (JSONObject) response;
-            if (jsonResponse != null && jsonResponse.length() == 0) {
-                TencentUtil.showResultDialog(LoginActivity.this, "返回为空", "登录失败");
-                return;
-            }
-            //TencentUtil.showResultDialog(LoginActivity.this, response.toString(), "登录成功");
-
-            doComplete((JSONObject) response);
-        }
-
-        protected void doComplete(JSONObject values) {
-            Log.d(TAG, values.toString());
-        }
-
-        @Override
-        public void onError(UiError uiError) {
-            TencentUtil.toastMessage(LoginActivity.this, "onError: " + uiError.errorDetail);
-            TencentUtil.dismissDialog();
-        }
-
-        @Override
-        public void onCancel() {
-            TencentUtil.toastMessage(LoginActivity.this, "onCancel: ");
-            TencentUtil.dismissDialog();
-        }
-    }
-
-    //↑↑↑QQ登陆的一系列相关方法↑↑↑
 
     /**
      * 发送微博相关信息到服务器的回调接口
@@ -1646,5 +1386,53 @@ public class LoginActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode);
+        if (ssoHandler != null) {
+            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (popupWindowLogin.isShowing()) {
+            popupWindowLogin.dismiss();
+        } else if (popupWindowRegister1.isShowing()) {
+            popupWindowRegister1.dismiss();
+        } else if (popupWindowRegister2.isShowing()) {
+            popupWindowRegister2.dismiss();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+//        String code = SuiuuInfo.ReadWxCode(this);
+//        if (!TextUtils.isEmpty(code)) {
+//            if (weChatLoadDialog != null) {
+//                weChatLoadDialog.show();
+//            }
+//            getWeChatToken(code);
+//        }
+
+        if (autoLogin) {
+            return;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (popupWindowLogin != null) {
+            if (popupWindowLogin.isShowing()) {
+                popupWindowLogin.dismiss();
+            }
+        }
+    }
 
 }
