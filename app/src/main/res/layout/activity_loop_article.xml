@@ -144,12 +144,11 @@
             </HorizontalScrollView>
 
             <RelativeLayout
-                android:id="@+id/rl_showForAsk"
+                android:id="@+id/loop_article_showForAsk"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                >
+                android:layout_marginRight="10dp">
 
                 <TextView
                     android:id="@+id/loop_article_content"
@@ -175,32 +174,31 @@
                     android:numColumns="3"/>
 
 
-
             </RelativeLayout>
-            <RelativeLayout
 
-                android:id="@+id/rl_showForTakePhoto"
+            <RelativeLayout
+                android:id="@+id/loop_article_showForTakePhoto"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@color/white"
                 android:visibility="gone">
+
                 <ListView
                     android:id="@+id/loop_article_listview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:scrollbars="none"
-                    android:background="@color/white"
-                   />
+                    android:background="@color/white"/>
 
             </RelativeLayout>
+
             <TextView
                 android:id="@+id/loop_article_show_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/loop_article_grid"
                 android:layout_marginBottom="2.5dp"
                 android:layout_marginTop="@dimen/layout_8dp"
                 android:gravity="center"
@@ -210,9 +208,9 @@
                 android:textColor="@drawable/text_select_color"
                 android:textSize="18sp"
                 android:background="@color/white"/>
+
             <com.minglang.suiuu.customview.ListViewForScrollView
-                android:id="@+id/lv_comment_list"
-                android:layout_below="@+id/loop_article_show_comment"
+                android:id="@+id/loop_article_comment_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="none"

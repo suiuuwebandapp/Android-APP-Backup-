@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.LoopDetailsDataList;
-import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -136,14 +135,16 @@ public class LoopDetailsAdapter extends BaseAdapter {
 
         //加载主图片
         String imagePath = loopDetailsDataList.getaImg();
+        Log.i(TAG, "imagePath:" + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
-            loader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imagePath, mainImageView, displayImageOptions1);
+            loader.displayImage(imagePath, mainImageView, displayImageOptions1);
         }
 
         String headImagePath = loopDetailsDataList.getHeadImg();
+        Log.i(TAG, "headImagePath:" + headImagePath);
         //加载头像
         if (!TextUtils.isEmpty(headImagePath)) {
-            loader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + headImagePath, headImage, displayImageOptions2);
+            loader.displayImage(headImagePath, headImage, displayImageOptions2);
         }
 
         //加载用户名
