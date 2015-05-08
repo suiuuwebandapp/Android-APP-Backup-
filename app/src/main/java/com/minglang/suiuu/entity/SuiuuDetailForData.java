@@ -20,7 +20,7 @@ public class SuiuuDetailForData {
     private List<SuiuuDetailForPublisherList> publisherList;
     private List<SuiuuDetailForScenicList> scenicList;
     private List<SuiuuDetailForServiceList> serviceList;
-
+    private SuiuuDetailForPublisherList createPublisherInfo;
     @Override
     public String toString() {
         return "SuiuuDetailForData{" +
@@ -33,6 +33,14 @@ public class SuiuuDetailForData {
                 ", scenicList=" + scenicList +
                 ", serviceList=" + serviceList +
                 '}';
+    }
+
+    public SuiuuDetailForPublisherList getCreatePublisherInfo() {
+        return createPublisherInfo;
+    }
+
+    public void setCreatePublisherInfo(SuiuuDetailForPublisherList createPublisherInfo) {
+        this.createPublisherInfo = createPublisherInfo;
     }
 
     public List<SuiuuDetailForPraise> getPraise() {

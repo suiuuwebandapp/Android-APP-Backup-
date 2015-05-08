@@ -121,7 +121,7 @@ public class SettingActivity extends Activity {
         tv_top_right.setVisibility(View.INVISIBLE);
         btn_logout = (Button) findViewById(R.id.btn_logout);
         if(!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())){
-            btn_logout.setText(getString(R.string.button_logout) + "(" + EMChatManager.getInstance().getCurrentUser() + ")");
+            btn_logout.setText(getString(R.string.button_logout));
         }
         SystemBarTintManager mTintManager = new SystemBarTintManager(this);
         mTintManager.setStatusBarTintEnabled(true);

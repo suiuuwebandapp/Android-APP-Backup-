@@ -650,7 +650,7 @@ public class MainActivity extends FragmentActivity {
         conversationFragment = new ChatAllHistoryFragment();
 
         im_search = (ImageView) findViewById(R.id.mainPagerSearch);
-        im_search.setEnabled(false);
+        im_search.setVisibility(View.INVISIBLE);
 
         errorItem = (RelativeLayout) findViewById(R.id.rl_error_item);
         errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);

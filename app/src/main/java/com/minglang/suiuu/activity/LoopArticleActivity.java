@@ -176,7 +176,15 @@ public class LoopArticleActivity extends Activity {
     private ImageView loop_article_back;
     private boolean isClickComment;
     private String attentionId;
+    /**
+     * 点赞Id
+     */
+    private String praiseId;
     private ScrollView loop_article_scrollView;
+    //判断取消的是点赞还是收藏
+    private boolean isPrase;
+
+    private String userSingn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,6 +216,44 @@ public class LoopArticleActivity extends Activity {
         getInternetServiceData();
     }
 
+    /**
+     * 初始化方法
+     */
+    private void initView() {
+        userSingn = SuiuuInfo.ReadVerification(this);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(true);
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+
+        coverImage = (ImageView) findViewById(R.id.loop_article_cover_image);
+
+        praise = (TextView) findViewById(R.id.loop_article_praise);
+        collection = (TextView) findViewById(R.id.loop_article_collection);
+        locationName = (TextView) findViewById(R.id.loop_article_location);
+
+        headImage = (CircleImageView) findViewById(R.id.loop_article_user_head_image);
+        userName = (TextView) findViewById(R.id.loop_article_user_name);
+        userLocation = (TextView) findViewById(R.id.loop_article_user_location);
+
+        editor = (TextView) findViewById(R.id.loop_article_editor);
+        delete = (TextView) findViewById(R.id.loop_article_delete);
+
+        articleContent = (TextView) findViewById(R.id.loop_article_content);
+        noScrollBarGridView = (NoScrollBarGridView) findViewById(R.id.loop_article_grid);
+        showComments = (TextView) findViewById(R.id.loop_article_show_comment);
+
+        share = (TextView) findViewById(R.id.loop_article_share);
+        comments = (TextView) findViewById(R.id.loop_article_comments);
+        rl_showForTakePhoto = (RelativeLayout) findViewById(R.id.rl_showForTakePhoto);
+        rl_showForAsk = (RelativeLayout) findViewById(R.id.rl_showForAsk);
+        loop_article_listview = (ListView) findViewById(R.id.loop_article_listview);
+        loop_article_back = (ImageView) findViewById(R.id.loop_article_back);
+        lv_comment_list = (ListView) findViewById(R.id.lv_comment_list);
+        loop_article_scrollView = (ScrollView) findViewById(R.id.loop_article_scrollView);
+
+    }
 
     /**
      * 控件动作
@@ -217,17 +263,24 @@ public class LoopArticleActivity extends Activity {
         praise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(TextUtils.isEmpty(praiseId)) {
+                    //为空添加点赞
+                    addPraseRequest();
+                }else {
+                    isPrase = true;
+                    collectionArticleCancle(praiseId);
+                }
             }
         });
 
         collection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(TextUtils.isEmpty(attentionId)) {
+                if (TextUtils.isEmpty(attentionId)) {
                     collectionArticle();
-                }else {
-                    collectionArticleCancle();
+                } else {
+                    isPrase = false;
+                    collectionArticleCancle(attentionId);
                 }
             }
         });
@@ -274,14 +327,14 @@ public class LoopArticleActivity extends Activity {
             public void onClick(View v) {
                 if (isClickComment) {
                     lv_comment_list.setVisibility(View.GONE);
-                    loop_article_scrollView.smoothScrollTo(0,0);
+                    loop_article_scrollView.smoothScrollTo(0, 0);
                     isClickComment = false;
                 } else {
                     List<LoopArticleCommentList> commentList = loopArticleData.getCommentList();
                     if (commentList.size() > 0) {
                         lv_comment_list.setVisibility(View.VISIBLE);
                         lv_comment_list.setAdapter(new CommentAdapter(LoopArticleActivity.this, commentList));
-                        loop_article_scrollView.smoothScrollBy(0,100);
+                        loop_article_scrollView.smoothScrollBy(0, 100);
                     } else {
                         Toast.makeText(LoopArticleActivity.this, R.string.thisArticNoComment, Toast.LENGTH_SHORT).show();
                     }
@@ -321,26 +374,38 @@ public class LoopArticleActivity extends Activity {
             }
         });
     }
-
+    /**
+     * 点赞接口
+     */
+    private void addPraseRequest() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("articleId", articleId);
+        params.addBodyParameter(HttpServicePath.key, Verification);
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.articleAddPraise, new addPraseRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
+    }
     /**
      * 收藏文章
      */
     private void collectionArticle() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
-
+        params.addBodyParameter(HttpServicePath.key, Verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionArticlePath, new CollectionArticleRequestCallback());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
+
     /**
      * 收藏文章取消
      */
-    private void collectionArticleCancle() {
+    private void collectionArticleCancle(String cancelId) {
         RequestParams params = new RequestParams();
-        params.addBodyParameter("attentionId", attentionId);
-
+        params.addBodyParameter("attentionId", cancelId);
+        params.addBodyParameter(HttpServicePath.key, Verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionArticleCancelPath, new CollectionArticleCancelRequestCallback());
         httpRequest.setParams(params);
@@ -354,7 +419,6 @@ public class LoopArticleActivity extends Activity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter(HttpServicePath.key, Verification);
-
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.DeleteArticlePath, new DeleteArticleRequestCallBack());
         httpRequest.setParams(params);
@@ -375,6 +439,7 @@ public class LoopArticleActivity extends Activity {
                 HttpServicePath.LoopArticlePath, new LoopArticleRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
+
     }
 
     /**
@@ -394,8 +459,8 @@ public class LoopArticleActivity extends Activity {
         }
         attentionId = loopArticleData.getAttentionId();
         if (!TextUtils.isEmpty(attentionId)) {
-           collection.setTextColor(getResources().getColor(R.color.text_select_true));
-           collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_yellow),null,null,null);
+            collection.setTextColor(getResources().getColor(R.color.text_select_true));
+            collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_yellow), null, null, null);
 
         }
         String imageListPath = loopArticleData.getaImgList();
@@ -443,47 +508,41 @@ public class LoopArticleActivity extends Activity {
         } else {
             Log.e(TAG, "imageListPath==null!");
         }
+        praiseId = loopArticleData.getPraise();
+        if(!TextUtils.isEmpty(praiseId)) {
+            praise.setTextColor(getResources().getColor(R.color.text_select_true));
+            praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_red),null,null,null);
+        }
     }
 
     /**
-     * 初始化方法
+     * 点赞回调接口
      */
-    private void initView() {
+    class addPraseRequestCallBack extends RequestCallBack<String> {
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(true);
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
-
-        coverImage = (ImageView) findViewById(R.id.loop_article_cover_image);
-
-        praise = (TextView) findViewById(R.id.loop_article_praise);
-        collection = (TextView) findViewById(R.id.loop_article_collection);
-        locationName = (TextView) findViewById(R.id.loop_article_location);
-
-        headImage = (CircleImageView) findViewById(R.id.loop_article_user_head_image);
-        userName = (TextView) findViewById(R.id.loop_article_user_name);
-        userLocation = (TextView) findViewById(R.id.loop_article_user_location);
-
-        editor = (TextView) findViewById(R.id.loop_article_editor);
-        delete = (TextView) findViewById(R.id.loop_article_delete);
-
-        articleContent = (TextView) findViewById(R.id.loop_article_content);
-        noScrollBarGridView = (NoScrollBarGridView) findViewById(R.id.loop_article_grid);
-        showComments = (TextView) findViewById(R.id.loop_article_show_comment);
-
-        share = (TextView) findViewById(R.id.loop_article_share);
-        comments = (TextView) findViewById(R.id.loop_article_comments);
-        rl_showForTakePhoto = (RelativeLayout) findViewById(R.id.rl_showForTakePhoto);
-        rl_showForAsk = (RelativeLayout) findViewById(R.id.rl_showForAsk);
-        loop_article_listview = (ListView) findViewById(R.id.loop_article_listview);
-        loop_article_back = (ImageView) findViewById(R.id.loop_article_back);
-        lv_comment_list = (ListView) findViewById(R.id.lv_comment_list);
-        loop_article_scrollView = (ScrollView) findViewById(R.id.loop_article_scrollView);
-
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            try {
+                JSONObject json = new JSONObject(stringResponseInfo.result);
+                String status = json.getString("status");
+                String data = json.getString("data");
+                if("1".equals(status)) {
+                    praiseId = data;
+                    praise.setTextColor(getResources().getColor(R.color.text_select_true));
+                    praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_red),null,null,null);
+                    Toast.makeText(LoopArticleActivity.this, "点赞成功", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(LoopArticleActivity.this, "点赞失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+            }
+        }
+        @Override
+        public void onFailure(HttpException e, String s) {
+            Log.i("i", s);
+            Toast.makeText(LoopArticleActivity.this, "点赞失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+        }
     }
-
     /**
      * 请求数据网络接口回调
      */
@@ -593,10 +652,10 @@ public class LoopArticleActivity extends Activity {
                 JSONObject json = new JSONObject(stringResponseInfo.result);
                 String status = json.getString("status");
                 String data = json.getString("data");
-                if("1".equals(status)) {
+                if ("1".equals(status)) {
                     attentionId = data;
                     collection.setTextColor(getResources().getColor(R.color.text_select_true));
-                    collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_yellow),null,null,null);
+                    collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_yellow), null, null, null);
                     Toast.makeText(LoopArticleActivity.this, "收藏文章成功", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
@@ -611,7 +670,9 @@ public class LoopArticleActivity extends Activity {
             Log.e(TAG, s);
             Toast.makeText(LoopArticleActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
-    } /**
+    }
+
+    /**
      * 取消收藏文章回调接口
      */
     class CollectionArticleCancelRequestCallback extends RequestCallBack<String> {
@@ -622,16 +683,23 @@ public class LoopArticleActivity extends Activity {
                 JSONObject json = new JSONObject(stringResponseInfo.result);
                 String status = json.getString("status");
                 String data = json.getString("data");
-                if("1".equals(status) && "success".equals(data)) {
-                    attentionId = null;
-                    collection.setTextColor(getResources().getColor(R.color.white));
-                    collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_white),null,null,null);
-                    Toast.makeText(LoopArticleActivity.this, "取消收藏成功", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(LoopArticleActivity.this, "取消收藏失败", Toast.LENGTH_SHORT).show();
+                if ("1".equals(status) && "success".equals(data)) {
+                    if(isPrase) {
+                        praiseId = null;
+                        praise.setTextColor(getResources().getColor(R.color.white));
+                        praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_white), null, null, null);
+                        Toast.makeText(LoopArticleActivity.this, "取消点赞成功", Toast.LENGTH_SHORT).show();
+                    }else {
+                        attentionId = null;
+                        collection.setTextColor(getResources().getColor(R.color.white));
+                        collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_white), null, null, null);
+                        Toast.makeText(LoopArticleActivity.this, "取消收藏成功", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(LoopArticleActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
-                Toast.makeText(LoopArticleActivity.this, "取消收藏失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoopArticleActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -639,7 +707,7 @@ public class LoopArticleActivity extends Activity {
         @Override
         public void onFailure(HttpException e, String s) {
             Log.e(TAG, s);
-            Toast.makeText(LoopArticleActivity.this, "取消收藏失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoopArticleActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
 

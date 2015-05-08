@@ -27,6 +27,7 @@ import com.minglang.suiuu.entity.LoopArticleCommentList;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import org.json.JSONException;
@@ -53,30 +54,48 @@ public class CommentsActivity extends Activity {
     private EditText et_input_comment;
     private Button bt_send_comment;
     private String articleId;
+    private String tripId;
     private JsonUtil jsonUtil = JsonUtil.getInstance();
     private List<LoopArticleCommentList> commentLists;
-    private TextView tv_top_right,tv_top_center;
+    private TextView tv_top_right, tv_top_center;
     private ProgressDialog dialog;
+    private String Verification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
         articleId = this.getIntent().getStringExtra("articleId");
+        tripId = this.getIntent().getStringExtra("tripId");
 
+        Log.i("suiuu", "articleId = " + articleId);
         initView();
 
         ViewAction();
-
-        origainData();
+        if (!TextUtils.isEmpty(articleId))
+            origainDataArtcle();
+        if (!TextUtils.isEmpty(tripId))
+            origainDataSuiuu(tripId,"1");
     }
-
-    private void origainData() {
+    //根据文章Id请求评论列表
+    private void origainDataArtcle() {
         dialog.show();
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getCommentListByArticleId, new getCommentListCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
+    }
+    //根据随UUId请求评论列表
+    private void origainDataSuiuu(String tripId,String pageNumber) {
+        dialog.show();
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("tripId", tripId);
+        params.addBodyParameter("numb", "20");
+        params.addBodyParameter("cPage", pageNumber);
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.getCommentListByTripId, new getCommentListCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
@@ -93,9 +112,9 @@ public class CommentsActivity extends Activity {
             @Override
             public void onClick(View v) {
                 String commentContent = et_input_comment.getText().toString().trim();
-                if(TextUtils.isEmpty(commentContent)) {
+                if (TextUtils.isEmpty(commentContent)) {
                     Toast.makeText(CommentsActivity.this, "请输入评论内容", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     dialog.show();
                     requestCommentSend(commentContent, "0");
                 }
@@ -103,16 +122,18 @@ public class CommentsActivity extends Activity {
         });
     }
 
-    private void requestCommentSend(String commentContent,String rId) {
+    private void requestCommentSend(String commentContent, String rId) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter("content", commentContent);
         params.addBodyParameter("rId", rId);
+        params.addBodyParameter(HttpServicePath.key, Verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.createComment, new requestComentSendCallBack());
+                HttpServicePath.artilceCreateComment, new requestComentSendCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
+
     class requestComentSendCallBack extends RequestCallBack<String> {
 
         @Override
@@ -121,9 +142,9 @@ public class CommentsActivity extends Activity {
                 JSONObject json = new JSONObject(responseInfo.result);
                 String status = json.getString("status");
                 String data = json.getString("data");
-                if("1".equals(status) && "success".equals(data)) {
+                if ("1".equals(status) && "success".equals(data)) {
                     et_input_comment.setText("");
-                    origainData();
+                    origainDataArtcle();
                     Toast.makeText(CommentsActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
@@ -131,8 +152,7 @@ public class CommentsActivity extends Activity {
                 e.printStackTrace();
                 Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
-            Log.i("suiuu","success="+responseInfo.result);
-
+            Log.i("suiuu", "success=" + responseInfo.result);
         }
 
         @Override
@@ -141,17 +161,18 @@ public class CommentsActivity extends Activity {
             Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
+
     class getCommentListCallBack extends RequestCallBack<String> {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            Log.i("suiuu","getList+" +responseInfo.result);
-            CommentList list = jsonUtil.fromJSON(CommentList.class,responseInfo.result);
-            if("1".equals(list.getStatus())) {
+            Log.i("suiuu", "getList+" + responseInfo.result);
+            CommentList list = jsonUtil.fromJSON(CommentList.class, responseInfo.result);
+            if ("1".equals(list.getStatus())) {
                 commentLists = list.getData().getData();
                 mListView.setAdapter(new CommentAdapter(CommentsActivity.this, commentLists));
                 dialog.dismiss();
-            }else {
+            } else {
                 Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
 
             }
@@ -168,7 +189,7 @@ public class CommentsActivity extends Activity {
      * 初始化方法
      */
     private void initView() {
-
+        Verification = SuiuuInfo.ReadVerification(this);
         SystemBarTintManager mTintManager = new SystemBarTintManager(this);
         mTintManager.setStatusBarTintEnabled(true);
         mTintManager.setNavigationBarTintEnabled(false);
@@ -193,10 +214,8 @@ public class CommentsActivity extends Activity {
         tv_top_center.setText("评论");
         tv_top_right = (TextView) findViewById(R.id.tv_top_right);
         tv_top_right.setVisibility(View.GONE);
-
         dialog = new ProgressDialog(this);
         dialog.setMessage(getResources().getString(R.string.load_wait));
-
         dialog.setCanceledOnTouchOutside(false);
 
     }

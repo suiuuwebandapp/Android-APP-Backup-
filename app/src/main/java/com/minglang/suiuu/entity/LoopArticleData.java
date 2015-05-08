@@ -47,6 +47,16 @@ public class LoopArticleData {
 
     public List<LoopArticleCommentList> commentList;
 
+    public String praise;
+
+    public String getPraise() {
+        return praise;
+    }
+
+    public void setPraise(String praise) {
+        this.praise = praise;
+    }
+
     public String getcId() {
         return cId;
     }

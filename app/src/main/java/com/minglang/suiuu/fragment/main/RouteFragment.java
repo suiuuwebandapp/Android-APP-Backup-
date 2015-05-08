@@ -185,7 +185,7 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            Log.i("suiuu",stringResponseInfo.result);
+            Log.i("suiuu",stringResponseInfo.result+"what-----------");
             dialog.dismiss();
             try {
                 SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, stringResponseInfo.result);

@@ -445,6 +445,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String result = stringResponseInfo.result;
+            Log.i("suiuu","ask="+result);
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");

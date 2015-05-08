@@ -89,6 +89,7 @@ public class OtherUserActivity extends Activity {
     private TextView otherUserName, otherUserLocation, otherUserSignature;
 
     private String attentionId;
+    private String Verification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +134,7 @@ public class OtherUserActivity extends Activity {
     private void AddAttentionRequest4Service() {
         RequestParams params = new RequestParams();
         params.addBodyParameter(USERSIGNKEY, userSign);
-
+        params.addBodyParameter(HttpServicePath.key, Verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.AddAttentionUserPath, new AddAttentionRequestCallBack());
         httpRequest.setParams(params);
@@ -145,6 +146,7 @@ public class OtherUserActivity extends Activity {
     private void cancelAttentionRequst() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("attentionId", attentionId);
+        params.addBodyParameter(HttpServicePath.key, Verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionArticleCancelPath, new CollectionArticleCancelRequestCallback());
         httpRequest.setParams(params);
@@ -178,7 +180,7 @@ public class OtherUserActivity extends Activity {
      * 初始化方法
      */
     private void initView() {
-
+        Verification = SuiuuInfo.ReadVerification(this);
         dialog = new ProgressDialog(this);
         dialog.setMessage(getResources().getString(R.string.load_wait));
         dialog.setCanceledOnTouchOutside(false);
@@ -213,7 +215,6 @@ public class OtherUserActivity extends Activity {
             attention.setTextColor(getResources().getColor(R.color.text_select_true));
             attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_light),null,null,null);
         }
-
     }
 
     /**
@@ -307,6 +308,7 @@ public class OtherUserActivity extends Activity {
                 JSONObject object = new JSONObject(str);
                 String status = object.getString("status");
                 if (status.equals("1")) {
+                    attentionId = object.getString("data");
                     attention.setTextColor(getResources().getColor(R.color.text_select_true));
                     attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_light),null,null,null);
                     Toast.makeText(OtherUserActivity.this, "关注成功！", Toast.LENGTH_SHORT).show();
