@@ -42,10 +42,21 @@ import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.qq.TencentConstant;
+import com.minglang.suiuu.utils.wechat.WeChatConstant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.bean.SocializeConfig;
+import com.umeng.socialize.bean.SocializeEntity;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.controller.listener.SocializeListeners;
+import com.umeng.socialize.sso.SinaSsoHandler;
+import com.umeng.socialize.sso.UMQQSsoHandler;
+import com.umeng.socialize.weixin.controller.UMWXHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,6 +69,7 @@ import java.util.List;
  * <p/>
  * 网络部分未完成
  */
+@SuppressWarnings("deprecation")
 public class LoopArticleActivity extends Activity {
 
     private static final String TAG = LoopArticleActivity.class.getSimpleName();
@@ -136,11 +148,6 @@ public class LoopArticleActivity extends Activity {
      */
     private TextView comments;
 
-    /**
-     * 图片适配器
-     */
-    private LoopArticleImageAdapter imageAdapter;
-
     private String articleId;
 
     /**
@@ -182,9 +189,9 @@ public class LoopArticleActivity extends Activity {
     private String praiseId;
     private ScrollView loop_article_scrollView;
     //判断取消的是点赞还是收藏
-    private boolean isPrase;
+    private boolean isPraise;
 
-    private String userSingn;
+    private UMSocialService mController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,32 +202,43 @@ public class LoopArticleActivity extends Activity {
         OtherTAG = getIntent().getStringExtra("TAG");
         Verification = SuiuuInfo.ReadVerification(this);
 
+        initImageLoader();
+
         Log.i(TAG, "articleId:" + articleId);
         Log.i(TAG, "Verification:" + Verification);
 
+        myUserSign = SuiuuInfo.ReadUserSign(this);
+
+        initView();
+        initShareData();
+        ViewAction();
+        getInternetServiceData();
+    }
+
+    /**
+     * 初始化图片加载器
+     */
+    private void initImageLoader() {
         imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(this));
+        if (imageLoader.isInited()) {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(this));
+        }
 
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
                 .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
+
         options1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
                 .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
-        myUserSign = SuiuuInfo.ReadUserSign(this);
-
-        initView();
-        ViewAction();
-        getInternetServiceData();
     }
 
     /**
      * 初始化方法
      */
     private void initView() {
-        userSingn = SuiuuInfo.ReadVerification(this);
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -246,11 +264,11 @@ public class LoopArticleActivity extends Activity {
 
         share = (TextView) findViewById(R.id.loop_article_share);
         comments = (TextView) findViewById(R.id.loop_article_comments);
-        rl_showForTakePhoto = (RelativeLayout) findViewById(R.id.rl_showForTakePhoto);
-        rl_showForAsk = (RelativeLayout) findViewById(R.id.rl_showForAsk);
+        rl_showForTakePhoto = (RelativeLayout) findViewById(R.id.loop_article_showForTakePhoto);
+        rl_showForAsk = (RelativeLayout) findViewById(R.id.loop_article_showForAsk);
         loop_article_listview = (ListView) findViewById(R.id.loop_article_listview);
         loop_article_back = (ImageView) findViewById(R.id.loop_article_back);
-        lv_comment_list = (ListView) findViewById(R.id.lv_comment_list);
+        lv_comment_list = (ListView) findViewById(R.id.loop_article_comment_list);
         loop_article_scrollView = (ScrollView) findViewById(R.id.loop_article_scrollView);
 
     }
@@ -263,12 +281,12 @@ public class LoopArticleActivity extends Activity {
         praise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(TextUtils.isEmpty(praiseId)) {
+                if (TextUtils.isEmpty(praiseId)) {
                     //为空添加点赞
                     addPraseRequest();
-                }else {
-                    isPrase = true;
-                    collectionArticleCancle(praiseId);
+                } else {
+                    isPraise = true;
+                    collectionArticleCancel(praiseId);
                 }
             }
         });
@@ -279,8 +297,8 @@ public class LoopArticleActivity extends Activity {
                 if (TextUtils.isEmpty(attentionId)) {
                     collectionArticle();
                 } else {
-                    isPrase = false;
-                    collectionArticleCancle(attentionId);
+                    isPraise = false;
+                    collectionArticleCancel(attentionId);
                 }
             }
         });
@@ -297,18 +315,21 @@ public class LoopArticleActivity extends Activity {
             public void onClick(View v) {
                 new AlertDialog.Builder(LoopArticleActivity.this).setTitle(getResources().
                         getString(R.string.sure_delete))
-                        .setNegativeButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                deleteArticle();
-                            }
-                        })
-                        .setPositiveButton(getResources().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(LoopArticleActivity.this, "已取消删除", Toast.LENGTH_SHORT).show();
-                            }
-                        }).create().show();
+                        .setNegativeButton(getResources().getString(android.R.string.ok),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        deleteArticle();
+                                    }
+                                })
+                        .setPositiveButton(getResources().getString(android.R.string.cancel),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Toast.makeText(LoopArticleActivity.this,
+                                                "已取消删除", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).create().show();
             }
         });
 
@@ -346,7 +367,17 @@ public class LoopArticleActivity extends Activity {
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mController.openShare(LoopArticleActivity.this, new SocializeListeners.SnsPostListener() {
+                    @Override
+                    public void onStart() {
 
+                    }
+
+                    @Override
+                    public void onComplete(SHARE_MEDIA share_media, int i, SocializeEntity socializeEntity) {
+
+                    }
+                });
             }
         });
 
@@ -374,6 +405,7 @@ public class LoopArticleActivity extends Activity {
             }
         });
     }
+
     /**
      * 点赞接口
      */
@@ -386,6 +418,7 @@ public class LoopArticleActivity extends Activity {
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
+
     /**
      * 收藏文章
      */
@@ -402,7 +435,7 @@ public class LoopArticleActivity extends Activity {
     /**
      * 收藏文章取消
      */
-    private void collectionArticleCancle(String cancelId) {
+    private void collectionArticleCancel(String cancelId) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("attentionId", cancelId);
         params.addBodyParameter(HttpServicePath.key, Verification);
@@ -496,7 +529,8 @@ public class LoopArticleActivity extends Activity {
                             articleContent.setText("");
                             Log.e(TAG, "***content==null!");
                         }
-                        imageAdapter = new LoopArticleImageAdapter(this, imageList);
+                        //图片适配器
+                        LoopArticleImageAdapter imageAdapter = new LoopArticleImageAdapter(this, imageList);
                         noScrollBarGridView.setAdapter(imageAdapter);
                     }
                 } else {
@@ -508,11 +542,63 @@ public class LoopArticleActivity extends Activity {
         } else {
             Log.e(TAG, "imageListPath==null!");
         }
-        praiseId = loopArticleData.getPraise();
-        if(!TextUtils.isEmpty(praiseId)) {
-            praise.setTextColor(getResources().getColor(R.color.text_select_true));
-            praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_red),null,null,null);
-        }
+    }
+
+    /**
+     * 初始化分享
+     */
+    private void initShareData() {
+        mController = UMServiceFactory.getUMSocialService("com.umeng.login");
+        SocializeConfig config = mController.getConfig();
+        config.removePlatform(SHARE_MEDIA.TENCENT);
+        config.removePlatform(SHARE_MEDIA.QZONE);
+
+        // 添加新浪和qq空间的SSO授权支持
+        config.setSsoHandler(new SinaSsoHandler());
+        //*******************************
+
+        //添加微信
+        UMWXHandler wxHandler = new UMWXHandler(LoopArticleActivity.this, WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
+        wxHandler.addToSocialSDK();
+        //*******************************
+
+        //微信朋友圈
+        UMWXHandler wxCircleHandler = new UMWXHandler(LoopArticleActivity.this, WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
+        wxCircleHandler.setToCircle(true);
+        wxCircleHandler.addToSocialSDK();
+
+        // 设置微信朋友圈分享内容
+//        CircleShareContent circleMedia = new CircleShareContent();
+//        circleMedia.setShareContent("");
+//        circleMedia.setTitle(""); //设置朋友圈title
+//        circleMedia.setShareImage(mUMImgBitmap);
+//        circleMedia.setTargetUrl("");//设置分享内容跳转URL
+//        mController.setShareMedia(circleMedia);
+
+        //*******************************
+
+        //微信好友分享
+//        WeiXinShareContent weiXinContent = new WeiXinShareContent();
+//        weiXinContent.setShareContent("");//分享文字
+//        weiXinContent.setTitle(""); //设置title
+//        weiXinContent.setTargetUrl("");//设置分享内容跳转URL
+//        weiXinContent.setShareImage(UMImgBitmap);//设置分享图片
+//        mController.setShareMedia(weiXinContent);
+
+        //*******************************
+
+        //添加QQ支持
+        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(LoopArticleActivity.this,
+                TencentConstant.APP_ID, TencentConstant.APP_KEY);
+        qqSsoHandler.addToSocialSDK();
+
+        //  QQ要分享的内容
+//        QQShareContent qqShareContent = new QQShareContent();
+//        qqShareContent.setShareContent("");//分享文字
+//        qqShareContent.setTitle("");//设置title
+//        qqShareContent.setShareImage(mUMImgBitmap);//设置分享图片
+//        qqShareContent.setTargetUrl("");//设置分享内容跳转URL
+//        mController.setShareMedia(qqShareContent);
     }
 
     /**
@@ -526,10 +612,10 @@ public class LoopArticleActivity extends Activity {
                 JSONObject json = new JSONObject(stringResponseInfo.result);
                 String status = json.getString("status");
                 String data = json.getString("data");
-                if("1".equals(status)) {
+                if ("1".equals(status)) {
                     praiseId = data;
                     praise.setTextColor(getResources().getColor(R.color.text_select_true));
-                    praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_red),null,null,null);
+                    praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_red), null, null, null);
                     Toast.makeText(LoopArticleActivity.this, "点赞成功", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
@@ -537,12 +623,14 @@ public class LoopArticleActivity extends Activity {
                 Toast.makeText(LoopArticleActivity.this, "点赞失败，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
         }
+
         @Override
         public void onFailure(HttpException e, String s) {
             Log.i("i", s);
             Toast.makeText(LoopArticleActivity.this, "点赞失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
+
     /**
      * 请求数据网络接口回调
      */
@@ -684,12 +772,12 @@ public class LoopArticleActivity extends Activity {
                 String status = json.getString("status");
                 String data = json.getString("data");
                 if ("1".equals(status) && "success".equals(data)) {
-                    if(isPrase) {
+                    if (isPraise) {
                         praiseId = null;
                         praise.setTextColor(getResources().getColor(R.color.white));
                         praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_white), null, null, null);
                         Toast.makeText(LoopArticleActivity.this, "取消点赞成功", Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         attentionId = null;
                         collection.setTextColor(getResources().getColor(R.color.white));
                         collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_white), null, null, null);
