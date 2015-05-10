@@ -24,6 +24,7 @@ import com.minglang.suiuu.entity.AllAttentionDynamicData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,8 @@ public class AllAttentionDynamicActivity extends Activity {
 
     private ImageView back;
 
+    private boolean isRefresh;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,8 +106,13 @@ public class AllAttentionDynamicActivity extends Activity {
 
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
+
+                isRefresh = true;
+
                 RequestParams params = new RequestParams();
                 params.addBodyParameter(PAGE, "1");
+                params.addBodyParameter(HttpServicePath.key,
+                        SuiuuInfo.ReadVerification(AllAttentionDynamicActivity.this));
 
                 SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                         HttpServicePath.AllAttentionDynamicPath, new AllAttentionDynamicRequestCallBack());
@@ -118,6 +126,8 @@ public class AllAttentionDynamicActivity extends Activity {
             public void onLoadMore(LoadMoreContainer loadMoreContainer) {
 
                 page = page + 1;
+
+                isRefresh = false;
 
                 RequestParams params = new RequestParams();
                 params.addBodyParameter(PAGE, String.valueOf(page));
@@ -151,7 +161,7 @@ public class AllAttentionDynamicActivity extends Activity {
         } else {
             try {
                 AllAttentionDynamic dynamic = JsonUtil.getInstance().fromJSON(AllAttentionDynamic.class, str);
-                List<AllAttentionDynamicData> list = dynamic.getData();
+                List<AllAttentionDynamicData> list = dynamic.getData().getData();
                 if (list != null && list.size() > 0) {
                     listAll.addAll(list);
                     adapter.setList(listAll);
@@ -177,6 +187,8 @@ public class AllAttentionDynamicActivity extends Activity {
 
         RequestParams params = new RequestParams();
         params.addBodyParameter(PAGE, String.valueOf(page));
+        //params.addBodyParameter("usersign", sign);
+        params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.AllAttentionDynamicPath, new AllAttentionDynamicRequestCallBack());
@@ -220,6 +232,8 @@ public class AllAttentionDynamicActivity extends Activity {
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
         adapter = new AllAttentionDynamicAdapter(this);
+        listView.setAdapter(adapter);
+
     }
 
     @Override
@@ -248,7 +262,12 @@ public class AllAttentionDynamicActivity extends Activity {
             mPtrFrame.refreshComplete();
             loadMoreContainer.loadMoreFinish(true, true);
 
+            if (isRefresh) {
+                listAll.clear();
+            }
+
             String str = stringResponseInfo.result;
+            Log.i(TAG, "关注详细信息数据:" + str);
             setData2View(str);
         }
 

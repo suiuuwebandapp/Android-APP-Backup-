@@ -1,6 +1,5 @@
 package com.minglang.suiuu.entity;
 
-import java.util.List;
 
 /**
  * 详细关注动态数据实体类
@@ -11,7 +10,7 @@ public class AllAttentionDynamic {
 
     public String status;
 
-    public List<AllAttentionDynamicData> data;
+    public AllAttentionDynamicBase data;
 
     public String message;
 
@@ -21,32 +20,16 @@ public class AllAttentionDynamic {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public List<AllAttentionDynamicData> getData() {
+    public AllAttentionDynamicBase getData() {
         return data;
-    }
-
-    public void setData(List<AllAttentionDynamicData> data) {
-        this.data = data;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public String getToken() {
         return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     @Override

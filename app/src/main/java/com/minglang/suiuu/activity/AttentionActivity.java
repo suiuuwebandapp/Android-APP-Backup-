@@ -77,7 +77,7 @@ public class AttentionActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 
@@ -164,6 +164,7 @@ public class AttentionActivity extends FragmentActivity {
         /**
          关注圈子页面
          */
+
         AttentionLoopFragment attentionLoopFragment = AttentionLoopFragment.newInstance(userSign, verification);
 
         /**

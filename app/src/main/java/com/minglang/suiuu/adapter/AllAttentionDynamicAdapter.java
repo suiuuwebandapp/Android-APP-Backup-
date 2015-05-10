@@ -1,10 +1,12 @@
 package com.minglang.suiuu.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +14,8 @@ import android.widget.TextView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.AllAttentionDynamicData;
+import com.minglang.suiuu.utils.AppConstant;
+import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -35,8 +39,22 @@ public class AllAttentionDynamicAdapter extends BaseAdapter {
 
     private DisplayImageOptions displayImageOptions;
 
-    public AllAttentionDynamicAdapter(Context context){
+    private int screenHeight;
+
+    public AllAttentionDynamicAdapter(Context context) {
         this.context = context;
+
+        imageLoader = ImageLoader.getInstance();
+        if (!imageLoader.isInited()) {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
+
+        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_background_image)
+                .showImageForEmptyUri(R.drawable.default_background_image).showImageOnFail(R.drawable.default_background_image)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        screenHeight = new ScreenUtils((Activity) context).getScreenHeight();
     }
 
     public AllAttentionDynamicAdapter(Context context, List<AllAttentionDynamicData> list) {
@@ -46,10 +64,13 @@ public class AllAttentionDynamicAdapter extends BaseAdapter {
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 
-        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_background_image)
-                .showImageForEmptyUri(R.drawable.default_background_image).showImageOnFail(R.drawable.default_background_image)
+        displayImageOptions = new DisplayImageOptions.Builder().
+                showImageOnLoading(R.drawable.default_background_image)
+                .showImageForEmptyUri(R.drawable.default_background_image)
+                .showImageOnFail(R.drawable.default_background_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     @Override
@@ -84,7 +105,8 @@ public class AllAttentionDynamicAdapter extends BaseAdapter {
 
         AllAttentionDynamicData data = list.get(position);
 
-        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_all_attention_dtnamic, position);
+        ViewHolder holder = ViewHolder.get(context, convertView, parent,
+                R.layout.item_all_attention_dtnamic, position);
 
         ImageView mainImage = holder.getView(R.id.item_all_attention_dynamic_image);
         CircleImageView headImage = holder.getView(R.id.item_all_attention_dynamic_head);
@@ -93,12 +115,13 @@ public class AllAttentionDynamicAdapter extends BaseAdapter {
 
         String mainImagePath = data.getaImg();
         if (!TextUtils.isEmpty(mainImagePath)) {
-            imageLoader.displayImage(mainImagePath, mainImage, displayImageOptions);
+            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + mainImagePath,
+                    mainImage, displayImageOptions);
         }
 
         String headImagePath = data.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            imageLoader.displayImage(headImagePath, headImage);
+            imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + headImagePath, headImage);
         }
 
         String strTitle = data.getaTitle();
@@ -116,6 +139,9 @@ public class AllAttentionDynamicAdapter extends BaseAdapter {
         }
 
         convertView = holder.getConvertView();
+        AbsListView.LayoutParams params = new AbsListView
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, screenHeight / 4);
+        convertView.setLayoutParams(params);
         return convertView;
     }
 }

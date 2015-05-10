@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/item_all_attention_dynamic_image"
         android:layout_alignParentTop="true"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:src="@drawable/default_background_image"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
