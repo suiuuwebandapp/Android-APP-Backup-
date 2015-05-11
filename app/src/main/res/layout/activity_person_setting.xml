@@ -3,7 +3,6 @@
     android:id="@+id/personalRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.minglang.suiuu.activity.PersonSettingActivity">
 
     <RelativeLayout
@@ -28,58 +27,63 @@
             android:id="@+id/personalSettingBack"
             style="@style/backKeyStyle"
             android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/personal_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/layout_5dp"
+            android:layout_marginRight="@dimen/layout_5dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:text="@string/save" />
     </RelativeLayout>
 
     <ScrollView
         android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/relativeLayout4"
-        android:layout_gravity="center_vertical">
+        android:layout_below="@+id/relativeLayout4">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/personalSettingHeadLayout"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
-                android:orientation="horizontal">
+                android:background="@color/btn_white_pressed"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/personalSettingHeadImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                <com.minglang.suiuu.customview.CircleImageView
+                    android:id="@+id/headImageView"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_horizontal"
                     android:layout_margin="5dp"
-                    android:src="@drawable/ic_launcher" />
+                    android:src="@drawable/default_head_image3" />
 
-                <TextView
-                    android:id="@+id/textView23"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:layout_margin="5dp"
-                    android:text="@string/clickHead"
-                    android:textSize="20sp" />
             </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="5dp"
+                android:background="@color/btn_white_pressed">
 
                 <EditText
                     android:id="@+id/editNickName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:focusable="false"
                     android:hint="@string/nickname_hint" />
             </RelativeLayout>
 
@@ -87,14 +91,14 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:background="@color/btn_white_pressed">
 
                 <EditText
                     android:id="@+id/editLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:focusable="false"
                     android:hint="@string/Location_hint" />
             </RelativeLayout>
 
@@ -102,29 +106,29 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:background="@color/btn_white_pressed">
 
                 <EditText
                     android:id="@+id/editTrade"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:focusable="false"
                     android:hint="@string/trade_hint" />
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="5dp"
+                android:background="@color/btn_white_pressed">
 
                 <EditText
                     android:id="@+id/editSign"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:focusable="false"
                     android:hint="@string/Signature_hint" />
             </RelativeLayout>
         </LinearLayout>
