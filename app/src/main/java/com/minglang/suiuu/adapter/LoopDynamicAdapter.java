@@ -3,6 +3,7 @@ package com.minglang.suiuu.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.MainDynamicDataLoop;
+import com.minglang.suiuu.fragment.main.MainFragment;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -36,24 +38,25 @@ public class LoopDynamicAdapter extends BaseAdapter {
 
     private DisplayImageOptions displayImageOptions;
 
-    private int screenWidth, screenHeight;
+    private int screenWidth;
 
     public LoopDynamicAdapter(Context context, List<MainDynamicDataLoop> list) {
         this.context = context;
         this.list = list;
 
         imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        if (!imageLoader.isInited()) {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
 
-        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_background_image)
-                .showImageForEmptyUri(R.drawable.default_background_image).showImageOnFail(R.drawable.default_background_image)
+        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.user_background)
+                .showImageForEmptyUri(R.drawable.user_background).showImageOnFail(R.drawable.user_background)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
-    public void setScrrenParams(int screenWidth, int screenHeight) {
+    public void setScreenParams(int screenWidth) {
         this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
     }
 
     @Override
@@ -91,6 +94,7 @@ public class LoopDynamicAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(imagePath)) {
             imageLoader.displayImage(imagePath, imageView, displayImageOptions);
         }
+        Log.i(MainFragment.class.getSimpleName(), "圈子动态图片URL:" + imagePath);
 
         String strName = list.get(position).getcName();
         if (!TextUtils.isEmpty(strName)) {

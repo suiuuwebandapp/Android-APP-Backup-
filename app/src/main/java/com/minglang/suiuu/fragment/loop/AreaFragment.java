@@ -187,8 +187,8 @@ public class AreaFragment extends Fragment {
                 LoopBase loopBase = JsonUtil.getInstance().fromJSON(LoopBase.class, str);
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
                     list = loopBase.getData().getData();
-                    AreaAdapter areaAdapter = new AreaAdapter(getActivity(), loopBase, list);
-                    areaAdapter.setScreenParams(screenWidth, screenHeight);
+                    AreaAdapter areaAdapter = new AreaAdapter(getActivity(), list);
+                    areaAdapter.setScreenParams(screenWidth);
                     areaGridView.setAdapter(areaAdapter);
                 } else {
                     Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();

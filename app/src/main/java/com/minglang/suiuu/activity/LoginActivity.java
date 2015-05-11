@@ -45,6 +45,7 @@ import com.minglang.suiuu.entity.AreaCode;
 import com.minglang.suiuu.entity.AreaCodeData;
 import com.minglang.suiuu.entity.RequestData;
 import com.minglang.suiuu.entity.UserBack;
+import com.minglang.suiuu.entity.UserBackData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.MD5Utils;
@@ -229,6 +230,8 @@ public class LoginActivity extends Activity {
     private ProgressDialog weChatLoadDialog;
 
     private UMSocialService mController;
+
+    private ProgressDialog tencentLoginDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -561,8 +564,11 @@ public class LoginActivity extends Activity {
             try {
                 UserBack user = JsonUtil.getInstance().fromJSON(UserBack.class, str);
                 if (user.getStatus().equals("1")) {
+                    UserBackData data = user.getData();
                     SuiuuInfo.WriteVerification(LoginActivity.this, user.getMessage());
-                    SuiuuInfo.WriteUserSign(LoginActivity.this, user.getData().getUserSign());
+                    SuiuuInfo.WriteUserSign(LoginActivity.this, data.getUserSign());
+                    SuiuuInfo.WriteUserBasicInfo(LoginActivity.this, data.getNickname(),
+                            data.getSex(), data.getHeadImg());
                     huanXinUsername = user.getData().getUserSign();
                     huanXinLogin();
                 } else {
@@ -810,6 +816,11 @@ public class LoginActivity extends Activity {
         registerDialog.setCancelable(true);
         registerDialog.setMessage(getResources().getString(R.string.register_wait));
 
+        tencentLoginDialog = new ProgressDialog(this);
+        tencentLoginDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        tencentLoginDialog.setCanceledOnTouchOutside(false);
+        tencentLoginDialog.setMessage(getResources().getString(R.string.login_wait));
+
         weChatLoadDialog = new ProgressDialog(this);
         weChatLoadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         weChatLoadDialog.setCanceledOnTouchOutside(false);
@@ -824,7 +835,6 @@ public class LoginActivity extends Activity {
         microBlog_login = (ImageView) findViewById(R.id.microBlog_login);
         qq_login = (ImageView) findViewById(R.id.qq_login);
         weChat_login = (ImageView) findViewById(R.id.weChat_login);
-
     }
 
     /**
@@ -962,6 +972,7 @@ public class LoginActivity extends Activity {
         @Override
         public void onStart(SHARE_MEDIA share_media) {
             Log.i(TAG, "QQ授权开始");
+            tencentLoginDialog.show();
         }
 
         @Override
@@ -979,11 +990,23 @@ public class LoginActivity extends Activity {
             Log.i(TAG, "QQ授权错误");
             Log.e(TAG, "QQ登陆错误:" + e.getMessage());
             Log.e(TAG, "错误代码:" + e.getErrorCode());
+
+            if (tencentLoginDialog.isShowing()) {
+                tencentLoginDialog.dismiss();
+            }
+
+            Toast.makeText(LoginActivity.this, "授权失败！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
             Log.i(TAG, "QQ授权取消");
+
+            if (tencentLoginDialog.isShowing()) {
+                tencentLoginDialog.dismiss();
+            }
+
+            Toast.makeText(LoginActivity.this, "您已取消授权！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1000,6 +1023,10 @@ public class LoginActivity extends Activity {
         @Override
         public void onComplete(int status, Map<String, Object> info) {
             Log.i(TAG, "QQ数据获取完成");
+
+            if (tencentLoginDialog.isShowing()) {
+                tencentLoginDialog.dismiss();
+            }
 
             if (status == 200 && info != null) {
                 String sex = info.get("gender").toString();
@@ -1020,6 +1047,9 @@ public class LoginActivity extends Activity {
                 qq_head_image_path = info.get("profile_image_url").toString();
 
                 setQQData2Service();
+            } else {
+                Log.e(TAG, "QQ数据获取失败");
+                Toast.makeText(LoginActivity.this, "数据获取失败,请重试！", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -1050,9 +1080,7 @@ public class LoginActivity extends Activity {
 
         Log.i(TAG, "openID:" + qq_open_id + ",nickName:" + qq_nick_Name + ",sex:" + qq_gender +
                 ",headImage:" + qq_head_image_path + ",type:" + type + ",sign:" + sign);
-
-        SuiuuInfo.WriteInformation(LoginActivity.this,
-                new RequestData(qq_open_id, qq_nick_Name, qq_gender, qq_head_image_path, type));
+        SuiuuInfo.WriteUserBasicInfo(LoginActivity.this, qq_nick_Name, qq_gender, qq_head_image_path);
 
         http.setParams(params);
         http.requestNetworkData();
@@ -1071,6 +1099,7 @@ public class LoginActivity extends Activity {
             }
 
             String str = responseInfo.result;
+            Log.i(TAG, "QQ登陆返回的信息:" + str);
             try {
                 UserBack userBack = JsonUtil.getInstance().fromJSON(UserBack.class, str);
                 if (userBack.status.equals("1")) {
@@ -1128,6 +1157,7 @@ public class LoginActivity extends Activity {
         @Override
         public void onStart(SHARE_MEDIA share_media) {
             Log.i(TAG, "微信授权开始");
+            weChatLoadDialog.show();
         }
 
         @Override
@@ -1141,11 +1171,18 @@ public class LoginActivity extends Activity {
         public void onError(SocializeException e, SHARE_MEDIA share_media) {
             Log.i(TAG, "微信授权错误:" + e.getMessage());
             Log.i(TAG, "微信授权错误码:" + e.getErrorCode());
+
+            if (weChatLoadDialog.isShowing()) {
+                weChatLoadDialog.dismiss();
+            }
+
+            Toast.makeText(LoginActivity.this, "授权失败！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
             Log.i(TAG, "微信授权取消");
+            Toast.makeText(LoginActivity.this, "您已取消授权！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1162,6 +1199,11 @@ public class LoginActivity extends Activity {
         @Override
         public void onComplete(int status, Map<String, Object> info) {
             Log.i(TAG, "微信数据获取完成");
+
+            if (weChatLoadDialog.isShowing()) {
+                weChatLoadDialog.dismiss();
+            }
+
             if (status == 200 && info != null) {
                 Log.i(TAG, "微信数据:" + info.toString());
                 weChatUnionId = info.get("unionid").toString();
@@ -1171,9 +1213,11 @@ public class LoginActivity extends Activity {
                     case "1":
                         weChatGender = "1";
                         break;
+
                     case "2":
                         weChatGender = "0";
                         break;
+
                     default:
                         weChatGender = "2";
                         break;
@@ -1206,6 +1250,7 @@ public class LoginActivity extends Activity {
 
         Log.i(TAG, "发送微信数据:[openId:" + weChatUnionId + ",nickname:" + weChatNickName
                 + ",sex:" + weChatGender + ",headImg:" + weChatHeadImagePath + ",type:" + type + ",sign:" + sign + "]");
+        SuiuuInfo.WriteUserBasicInfo(LoginActivity.this, weChatNickName, weChatGender, weChatHeadImagePath);
 
         SuHttpRequest http = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.ThirdPartyPath, new WXRequestCallBack());
@@ -1411,15 +1456,6 @@ public class LoginActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
-//        String code = SuiuuInfo.ReadWxCode(this);
-//        if (!TextUtils.isEmpty(code)) {
-//            if (weChatLoadDialog != null) {
-//                weChatLoadDialog.show();
-//            }
-//            getWeChatToken(code);
-//        }
-
         if (autoLogin) {
             return;
         }

@@ -21,48 +21,24 @@ public class OtherUserDataAttentionRest {
         return attentionId;
     }
 
-    public void setAttentionId(String attentionId) {
-        this.attentionId = attentionId;
-    }
-
     public String getRelativeId() {
         return relativeId;
-    }
-
-    public void setRelativeId(String relativeId) {
-        this.relativeId = relativeId;
     }
 
     public String getRelativeType() {
         return relativeType;
     }
 
-    public void setRelativeType(String relativeType) {
-        this.relativeType = relativeType;
-    }
-
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getAddTime() {
         return addTime;
     }
 
-    public void setAddTime(String addTime) {
-        this.addTime = addTime;
-    }
-
     public String getUserSign() {
         return userSign;
-    }
-
-    public void setUserSign(String userSign) {
-        this.userSign = userSign;
     }
 
     @Override

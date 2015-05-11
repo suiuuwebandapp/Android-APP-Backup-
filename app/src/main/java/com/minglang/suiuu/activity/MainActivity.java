@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -53,11 +54,15 @@ import com.minglang.suiuu.chat.activity.ChatAllHistoryFragment;
 import com.minglang.suiuu.chat.chat.Constant;
 import com.minglang.suiuu.chat.chat.DemoApplication;
 import com.minglang.suiuu.chat.utils.CommonUtils;
+import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.fragment.main.LoopFragment;
 import com.minglang.suiuu.fragment.main.MainFragment;
 import com.minglang.suiuu.fragment.main.RouteFragment;
 import com.minglang.suiuu.utils.ConstantUtil;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -93,7 +98,7 @@ public class MainActivity extends FragmentActivity {
     /**
      * 点击修改头像
      */
-    private ImageView headImage;
+    private CircleImageView headImageView;
 
     /**
      * 各个Tab页
@@ -186,9 +191,6 @@ public class MainActivity extends FragmentActivity {
     private RelativeLayout errorItem;
     private TextView errorText;
 
-    /**
-     * 搜索
-     */
     private ImageView im_search;
 
     private ImageView iv_theme;
@@ -200,6 +202,8 @@ public class MainActivity extends FragmentActivity {
     private ImageView iv_conversation;
     private TextView tv_conversation_text;
     private RelativeLayout titleLayout;
+
+    private ImageLoader imageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -306,6 +310,9 @@ public class MainActivity extends FragmentActivity {
                         break;
 
                     case R.id.headImage:
+                        Intent headIntent = new Intent(MainActivity.this, PersonalActivity.class);
+                        startActivity(headIntent);
+                        mDrawerLayout.closeDrawer(slideLayout);
                         break;
 
                     case R.id.nickName:
@@ -313,6 +320,7 @@ public class MainActivity extends FragmentActivity {
                         startActivity(nickIntent);
                         mDrawerLayout.closeDrawer(slideLayout);
                         break;
+
                     case R.id.tab1:
                         titleInfo.setText(getResources().getString(R.string.title1));
                         adjustAnimation();
@@ -322,6 +330,7 @@ public class MainActivity extends FragmentActivity {
                         changeConversation(false);
                         LoadMainFragment();
                         break;
+
                     case R.id.tab2:
                         titleInfo.setText(getResources().getString(R.string.title2));
                         adjustAnimation();
@@ -371,7 +380,7 @@ public class MainActivity extends FragmentActivity {
 
         nickNameView.setOnClickListener(onClickListener);
 
-        headImage.setOnClickListener(onClickListener);
+        headImageView.setOnClickListener(onClickListener);
 
         tab1.setOnClickListener(onClickListener);
         tab2.setOnClickListener(onClickListener);
@@ -389,36 +398,30 @@ public class MainActivity extends FragmentActivity {
                     case 0:
                         Intent intent0 = new Intent(MainActivity.this, CollectionActivity.class);
                         startActivity(intent0);
-                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         break;
                     //关注
                     case 1:
                         Intent intent1 = new Intent(MainActivity.this, AttentionActivity.class);
                         startActivity(intent1);
-                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         break;
                     //新提醒
                     case 2:
                         Intent intent2 = new Intent(MainActivity.this, NewRemindActivity.class);
                         startActivity(intent2);
-                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         break;
                     //粉丝
                     case 3:
                         Intent intent3 = new Intent(MainActivity.this, FansActivity.class);
                         startActivity(intent3);
-                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         break;
                     //设置
                     case 4:
                         Intent intent4 = new Intent(MainActivity.this, SettingActivity.class);
                         startActivity(intent4);
-                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         break;
                     //退出
                     case 5:
                         finish();
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         break;
 
                 }
@@ -640,6 +643,11 @@ public class MainActivity extends FragmentActivity {
         isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
         isNavigationBar = systemBarConfig.hasNavigtionBar();
+
+        imageLoader = ImageLoader.getInstance();
+        if (!imageLoader.isInited()) {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(this));
+        }
     }
 
     /**
@@ -664,34 +672,21 @@ public class MainActivity extends FragmentActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mDrawerLayout.setFocusableInTouchMode(true);
         RelativeLayout mainShowLayout = (RelativeLayout) findViewById(R.id.mainShowLayout);
-//        LinearLayout tabSelect = (LinearLayout) findViewById(R.id.tabSelect);
 
         if (isNavigationBar) {
             if (isKITKAT) {
                 mDrawerLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
                 mainShowLayout.setPadding(0, 0, 0, navigationBarHeight);
-
-//                RelativeLayout.LayoutParams tabSelectParams = new RelativeLayout.LayoutParams(tabSelect.getLayoutParams());
-//                screenHeight - navigationBarHeight - statusBarHeight
-//                tabSelectParams.setMargins(0, screenHeight - navigationBarHeight - statusBarHeight*2, 0, 0);
-//                tabSelect.setLayoutParams(tabSelectParams);
-
                 Log.i(TAG, "4.4以上，有虚拟按键");
-
-            }
-//            else {
+            } else {
 //                mDrawerLayout.setPadding(0, 0, 0, navigationBarHeight);
-//                RelativeLayout.LayoutParams tabSelectParams = new RelativeLayout.LayoutParams(tabSelect.getLayoutParams());
-//                tabSelectParams.setMargins(0, screenHeight - navigationBarHeight - statusBarHeight, 0, 0);
-//                tabSelect.setLayoutParams(tabSelectParams);
-            Log.i(TAG, "4.4以下，有虚拟按键");
-//            }
+                Log.i(TAG, "4.4以下，有虚拟按键");
+            }
         } else {
             if (isKITKAT) {
                 mDrawerLayout.setPadding(0, statusBarHeight, 0, 0);
                 Log.i(TAG, "4.4以上，无虚拟按键");
             } else {
-                //Nothing
                 Log.i(TAG, "4.4以下，无虚拟按键");
             }
         }
@@ -721,8 +716,18 @@ public class MainActivity extends FragmentActivity {
         drawerSwitch = (ImageView) findViewById(R.id.drawerSwitch);
 
         nickNameView = (TextView) findViewById(R.id.nickName);
+        String strNickName = SuiuuInfo.ReadUserName(this);
+        Log.i(TAG, "用户昵称:" + strNickName);
+        if (!TextUtils.isEmpty(strNickName)) {
+            nickNameView.setText(strNickName);
+        }
 
-        headImage = (ImageView) findViewById(R.id.headImage);
+        headImageView = (CircleImageView) findViewById(R.id.headImage);
+        String strHeadImagePath = SuiuuInfo.ReadUserHeadImagePath(this);
+        Log.i(TAG, "用户头像URL:" + strHeadImagePath);
+        if (!TextUtils.isEmpty(strHeadImagePath)) {
+            imageLoader.displayImage(strHeadImagePath, headImageView);
+        }
 
         tab1 = (LinearLayout) findViewById(R.id.tab1);
         tab2 = (LinearLayout) findViewById(R.id.tab2);
@@ -750,15 +755,11 @@ public class MainActivity extends FragmentActivity {
         record = (ImageView) findViewById(R.id.main_record);
 
         List<String> stringList = new ArrayList<>();
-
         Collections.addAll(stringList, TITLE);
-
         MainSliderAdapter mainSliderAdapter = new MainSliderAdapter(this, stringList);
-
         mListView.setAdapter(mainSliderAdapter);
 
         fm = getSupportFragmentManager();
-
         mainFragment = new MainFragment();
 
         LoadDefaultFragment();
@@ -864,6 +865,12 @@ public class MainActivity extends FragmentActivity {
         public void onAnimationStart(Animation animation) {
 
         }
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     @Override
@@ -1040,9 +1047,7 @@ public class MainActivity extends FragmentActivity {
             if (conversation != null) {
                 // 把message设为已读
                 EMMessage msg = conversation.getMessage(msgId);
-
                 if (msg != null) {
-
                     // 2014-11-5 修复在某些机器上，在聊天页面对方发送已读回执时不立即显示已读的bug
                     if (ChatActivity.activityInstance != null) {
                         if (msg.getChatType() == ChatType.Chat) {
@@ -1050,11 +1055,9 @@ public class MainActivity extends FragmentActivity {
                                 return;
                         }
                     }
-
                     msg.isAcked = true;
                 }
             }
-
         }
     };
     /**
@@ -1227,7 +1230,8 @@ public class MainActivity extends FragmentActivity {
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
-                DemoApplication.getInstance().exit();
+//                DemoApplication.getInstance().exit();
+                finish();
             }
             return true;
         }

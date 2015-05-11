@@ -188,7 +188,7 @@ public class ThemeFragment extends Fragment {
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
                     list = loopBase.getData().getData();
                     ThemeAdapter themeAdapter = new ThemeAdapter(getActivity(), list);
-                    themeAdapter.setScreenParams(screenWidth, screenHeight);
+                    themeAdapter.setScreenParams(screenWidth);
                     themeGridView.setAdapter(themeAdapter);
                 } else {
                     Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();

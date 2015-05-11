@@ -37,6 +37,7 @@
                     android:background="@color/backgroundColor"/>
 
                 <RelativeLayout
+                    android:id="@+id/AttentionDynamicTitleLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="3dp">
@@ -78,6 +79,7 @@
                     android:id="@+id/mainAttentionLayout"/>
 
                 <RelativeLayout
+                    android:id="@+id/RecommendTravelTitleLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
@@ -102,6 +104,7 @@
                     android:id="@+id/mainRecommendationLayout"/>
 
                 <RelativeLayout
+                    android:id="@+id/TodayStarTitleLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
@@ -131,6 +134,7 @@
                 </com.minglang.suiuu.customview.NoScrollBarGridView>
 
                 <RelativeLayout
+                    android:id="@+id/LoopDynamicTitleLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"

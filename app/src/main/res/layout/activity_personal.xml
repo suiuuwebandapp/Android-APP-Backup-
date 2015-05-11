@@ -1,4 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/personalRootLayout"
     android:layout_width="match_parent"
@@ -8,131 +9,95 @@
 
 
     <RelativeLayout
-        android:id="@+id/relativeLayout7"
+        android:id="@+id/personalBackgroundLayout"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/user_background"
+            android:id="@+id/personalHeadLayoutImage"
+            android:scaleType="fitXY"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:drawableLeft="@drawable/icon_praise"
+            android:drawableStart="@drawable/icon_praise"
+            android:drawablePadding="5dp"
+            android:id="@+id/personalCollection"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_10dp"/>
+
+        <com.minglang.suiuu.customview.CircleImageView
+            android:layout_width="@dimen/layout_60dp"
+            android:layout_height="@dimen/layout_60dp"
+            android:id="@+id/personalHeadImage"
+            android:src="@drawable/default_head_image3"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/personalHeadImage">
+
+            <TextView
+                style="@style/otherUserInfo"
+                android:textColor="@color/white"
+                android:text="@string/blankNickName"
+                android:id="@+id/personalName"/>
+
+            <TextView
+                style="@style/otherUserInfo"
+                android:textColor="@color/white"
+                android:text="@string/location"
+                android:id="@+id/personalLocation"/>
+
+            <TextView
+                style="@style/otherUserInfo"
+                android:textColor="@color/white"
+                android:text="@string/blankSignature"
+                android:id="@+id/personalSignature"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/transparent"
         android:layout_alignParentTop="true"
-        android:background="@color/tr_black">
+        android:id="@+id/relativeLayout9">
 
         <ImageView
             android:id="@+id/personalBack"
             style="@style/backKeyStyle"
-            android:src="@drawable/back" />
+            android:src="@drawable/back2"/>
 
-        <TextView
-            android:id="@+id/textView26"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/personalInfo"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/personalSave"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:gravity="center_vertical"
-            android:text="@string/save"
-            android:textColor="@color/remindColor"
-            android:textSize="18sp" />
 
     </RelativeLayout>
 
-    <ScrollView
-        android:id="@+id/scrollView2"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/personalShowPage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/relativeLayout7"
-        android:layout_centerHorizontal="true">
+        android:layout_below="@+id/personalBackgroundLayout"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <com.minglang.suiuu.customview.CircleImageView
-                android:id="@+id/personalHeadImage"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/default_head_image3" />
-
-            <LinearLayout style="@style/personalItemStyle">
-
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/gender"
-                    android:textSize="18sp"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-            <LinearLayout style="@style/personalItemStyle">
-
-                <TextView
-                    android:id="@+id/textView9"
-                    style="@style/personalTextStyle"
-                    android:text="昵称    "
-                    android:visibility="gone" />
-
-                <EditText
-                    android:id="@+id/personalNickName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:hint="@string/nickname_hint" />
-
-            </LinearLayout>
-
-            <LinearLayout style="@style/personalItemStyle">
-
-                <TextView
-                    android:id="@+id/textView11"
-                    style="@style/personalTextStyle"
-                    android:text="@string/location"
-                    android:visibility="gone" />
-
-                <EditText
-                    android:id="@+id/personalLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:hint="@string/Location_hint" />
-
-            </LinearLayout>
-
-            <LinearLayout style="@style/personalItemStyle">
-
-                <TextView
-                    android:id="@+id/textView13"
-                    style="@style/personalTextStyle"
-                    android:text="签名    "
-                    android:visibility="gone" />
-
-                <EditText
-                    android:id="@+id/personalSignature"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:hint="@string/Signature_hint" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-    </ScrollView>
 </RelativeLayout>

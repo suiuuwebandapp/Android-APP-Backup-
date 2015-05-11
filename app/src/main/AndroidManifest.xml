@@ -67,11 +67,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/FullBleedTheme"/>
         <activity
-            android:name=".activity.SendPostActivity_One"
-            android:label="@string/title_activity_send_post_activity__one"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
-        <activity
             android:name=".activity.PersonalActivity"
             android:label="@string/title_activity_personal"
             android:screenOrientation="portrait"

@@ -40,7 +40,7 @@ public class LoopDetailsAdapter extends BaseAdapter {
 
     private DisplayImageOptions displayImageOptions1, displayImageOptions2;
 
-    private int screenWidth, screenHeight;
+    private int screenWidth;
 
     public LoopDetailsAdapter(Context context) {
         this.context = context;
@@ -50,42 +50,19 @@ public class LoopDetailsAdapter extends BaseAdapter {
             loader.init(ImageLoaderConfiguration.createDefault(context));
         }
 
-        displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_background_image)
-                .showImageForEmptyUri(R.drawable.default_background_image).showImageOnFail(R.drawable.default_background_image)
+        displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.user_background)
+                .showImageForEmptyUri(R.drawable.user_background).showImageOnFail(R.drawable.user_background)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
-        displayImageOptions2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image2)
-                .showImageForEmptyUri(R.drawable.default_head_image2).showImageOnFail(R.drawable.default_head_image2)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
-    }
-
-    public LoopDetailsAdapter(Context context, List<LoopDetailsDataList> list) {
-        this.context = context;
-        this.list = list;
-
-        loader = ImageLoader.getInstance();
-        if (loader.isInited()) {
-            loader.init(ImageLoaderConfiguration.createDefault(context));
-        }
-
-        displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_background_image)
-                .showImageForEmptyUri(R.drawable.default_background_image).showImageOnFail(R.drawable.default_background_image)
+        displayImageOptions2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
-
-        displayImageOptions2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image2)
-                .showImageForEmptyUri(R.drawable.default_head_image2).showImageOnFail(R.drawable.default_head_image2)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
-
-        Log.i(TAG, String.valueOf(this.list.size()));
     }
 
-    public void setScreenParams(int screenWidth, int screenHeight) {
+    public void setScreenParams(int screenWidth) {
         this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
     }
 
     public void setDataList(List<LoopDetailsDataList> list) {
@@ -125,10 +102,11 @@ public class LoopDetailsAdapter extends BaseAdapter {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_loop_details, position);
 
         ImageView mainImageView = holder.getView(R.id.item_loop_details_image);
-        CircleImageView headImage = holder.getView(R.id.item_loop_details_head_image);
+        CircleImageView headImageView = holder.getView(R.id.item_loop_details_head_image);
+//        RelativeLayout.LayoutParams headImageViewParams = new RelativeLayout.LayoutParams(screenWidth / 8, screenWidth / 8);
+//        headImageView.setLayoutParams(headImageViewParams);
 
         TextView userName = holder.getView(R.id.item_loop_details_user_name);
-
         TextView title = holder.getView(R.id.item_loop_details_title);
         TextView praise = holder.getView(R.id.item_loop_details_praise);
         TextView comments = holder.getView(R.id.item_loop_details_comments);
@@ -144,7 +122,7 @@ public class LoopDetailsAdapter extends BaseAdapter {
         Log.i(TAG, "headImagePath:" + headImagePath);
         //加载头像
         if (!TextUtils.isEmpty(headImagePath)) {
-            loader.displayImage(headImagePath, headImage, displayImageOptions2);
+            loader.displayImage(headImagePath, headImageView, displayImageOptions2);
         }
 
         //加载用户名

@@ -103,6 +103,13 @@ public class LoopDetailsActivity extends Activity {
 
         initView();
         ViewAction();
+        getData();
+    }
+
+    private void getData() {
+        if (progressDialog != null) {
+            progressDialog.show();
+        }
         getInternetServiceData();
     }
 
@@ -110,10 +117,6 @@ public class LoopDetailsActivity extends Activity {
      * 网络数据请求
      */
     private void getInternetServiceData() {
-        if (progressDialog != null) {
-            progressDialog.show();
-        }
-
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, Verification);
         params.addBodyParameter(CIRCLEID, circleId);
@@ -154,7 +157,6 @@ public class LoopDetailsActivity extends Activity {
                 intent.putExtra(ARTICLEID, articleId);
                 intent.putExtra("TAG", TAG);
                 startActivity(intent);
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 
@@ -166,6 +168,7 @@ public class LoopDetailsActivity extends Activity {
     private void setAddAttention2Service() {
         RequestParams params = new RequestParams();
         params.addBodyParameter(CID, circleId);
+        params.addBodyParameter(HttpServicePath.key, Verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.setAddAttentionPath, new AddAttentionRequestCallBack());
         httpRequest.setParams(params);
@@ -209,11 +212,16 @@ public class LoopDetailsActivity extends Activity {
 
         ScreenUtils screenUtils = new ScreenUtils(this);
         int screenWidth = screenUtils.getScreenWidth();
-        int screenHeight = screenUtils.getScreenHeight();
 
         loopDetailsAdapter = new LoopDetailsAdapter(this);
-        loopDetailsAdapter.setScreenParams(screenWidth, screenHeight);
+        loopDetailsAdapter.setScreenParams(screenWidth);
         loopDetailsGridView.setAdapter(loopDetailsAdapter);
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     @Override

@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
@@ -34,34 +33,31 @@ public class AreaAdapter extends BaseAdapter {
 
     private Context context;
 
-    private LoopBase loopBaseInfo;
-
     private List<LoopBaseData> list;
 
     private ImageLoader imageLoader;
 
-    private DisplayImageOptions displayImageOptions;
+    private DisplayImageOptions options;
 
-    private int screenWidth, screenHeight;
+    private int screenWidth;
 
-    public AreaAdapter(Context context, LoopBase loopBaseInfo, List<LoopBaseData> list) {
+    public AreaAdapter(Context context, List<LoopBaseData> list) {
         this.context = context;
-        this.loopBaseInfo = loopBaseInfo;
         this.list = list;
 
         imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll5)
+        if (!imageLoader.isInited()) {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
+
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll5)
                 .showImageForEmptyUri(R.drawable.scroll5).showImageOnFail(R.drawable.scroll5)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
-
-        Log.i(TAG, String.valueOf(list.size()));
     }
 
-    public void setScreenParams(int screenWidth, int screenHeight) {
+    public void setScreenParams(int screenWidth) {
         this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
     }
 
     @Override
@@ -98,7 +94,7 @@ public class AreaAdapter extends BaseAdapter {
         String imagePath = loopBaseData.getCpic();
         Log.i(TAG, "imagePath:" + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, imageView, displayImageOptions);
+            imageLoader.displayImage(imagePath, imageView, options);
         }
 
         String name = loopBaseData.getcName();

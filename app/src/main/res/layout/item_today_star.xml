@@ -14,8 +14,8 @@
         android:src="@drawable/default_background_image"/>
 
     <com.minglang.suiuu.customview.CircleImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/layout_60dp"
+        android:layout_height="@dimen/layout_60dp"
         android:id="@+id/item_today_star_head_image"
         android:src="@drawable/default_head_image2"
         android:layout_centerVertical="true"
@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
+        android:textColor="@color/white"
         android:layout_marginTop="5dp"
         android:id="@+id/item_today_star_user_name"
         android:layout_below="@+id/item_today_star_head_image"
@@ -34,6 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
+        android:textColor="@color/white"
         android:id="@+id/item_today_star_fans_count"
         android:layout_marginTop="5dp"
         android:layout_below="@+id/item_today_star_user_name"

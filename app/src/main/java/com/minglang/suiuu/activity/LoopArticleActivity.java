@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,11 +27,12 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.CommentAdapter;
+import com.minglang.suiuu.adapter.ArticleCommentAdapter;
 import com.minglang.suiuu.adapter.LoopArticleImageAdapter;
 import com.minglang.suiuu.adapter.showPicDescriptionAdapter;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
 import com.minglang.suiuu.customview.CircleImageView;
+import com.minglang.suiuu.customview.LinearLayoutForListView;
 import com.minglang.suiuu.customview.NoScrollBarGridView;
 import com.minglang.suiuu.entity.DeleteArticle;
 import com.minglang.suiuu.entity.LoopArticle;
@@ -41,6 +43,7 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.SystemBarTintManager;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.qq.TencentConstant;
 import com.minglang.suiuu.utils.wechat.WeChatConstant;
@@ -54,6 +57,7 @@ import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners;
+import com.umeng.socialize.media.QQShareContent;
 import com.umeng.socialize.sso.SinaSsoHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
@@ -170,8 +174,8 @@ public class LoopArticleActivity extends Activity {
      */
     private ImageLoader imageLoader;
 
-    private DisplayImageOptions options;
     private DisplayImageOptions options1;
+    private DisplayImageOptions options2;
 
     private ProgressDialog progressDialog;
 
@@ -179,7 +183,8 @@ public class LoopArticleActivity extends Activity {
     private List<String> imageList;
     private RelativeLayout rl_showForAsk;
     private RelativeLayout rl_showForTakePhoto;
-    private ListView loop_article_listview, lv_comment_list;
+    private ListView loop_article_listview;
+    private LinearLayoutForListView commentListView;
     private ImageView loop_article_back;
     private boolean isClickComment;
     private String attentionId;
@@ -204,9 +209,6 @@ public class LoopArticleActivity extends Activity {
 
         initImageLoader();
 
-        Log.i(TAG, "articleId:" + articleId);
-        Log.i(TAG, "Verification:" + Verification);
-
         myUserSign = SuiuuInfo.ReadUserSign(this);
 
         initView();
@@ -220,25 +222,46 @@ public class LoopArticleActivity extends Activity {
      */
     private void initImageLoader() {
         imageLoader = ImageLoader.getInstance();
-        if (imageLoader.isInited()) {
+        if (!imageLoader.isInited()) {
             imageLoader.init(ImageLoaderConfiguration.createDefault(this));
         }
 
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
-                .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
+        options1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.user_background)
+                .showImageForEmptyUri(R.drawable.user_background).showImageOnFail(R.drawable.user_background)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
-        options1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
+        options2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
                 .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     /**
      * 初始化方法
      */
     private void initView() {
+
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setTintColor(getResources().getColor(R.color.tr_black));
+        SystemBarTintManager.SystemBarConfig config = tintManager.getConfig();
+
+        int statusHeight = config.getStatusBarHeight();
+        int navigationBarHeight = config.getNavigationBarHeight();
+
+        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        boolean isNavigationBar = config.hasNavigtionBar();
+
+        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.loop_article_root_layout);
+
+        if(isKITKAT){
+            if(isNavigationBar){
+                rootLayout.setPadding(0,statusHeight,0,navigationBarHeight);
+            }else{
+                rootLayout.setPadding(0,statusHeight,0,0);
+            }
+        }
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -268,7 +291,7 @@ public class LoopArticleActivity extends Activity {
         rl_showForAsk = (RelativeLayout) findViewById(R.id.loop_article_showForAsk);
         loop_article_listview = (ListView) findViewById(R.id.loop_article_listview);
         loop_article_back = (ImageView) findViewById(R.id.loop_article_back);
-        lv_comment_list = (ListView) findViewById(R.id.loop_article_comment_list);
+        commentListView = (LinearLayoutForListView) findViewById(R.id.loop_article_comment_list);
         loop_article_scrollView = (ScrollView) findViewById(R.id.loop_article_scrollView);
 
     }
@@ -283,7 +306,7 @@ public class LoopArticleActivity extends Activity {
             public void onClick(View v) {
                 if (TextUtils.isEmpty(praiseId)) {
                     //为空添加点赞
-                    addPraseRequest();
+                    addPraiseRequest();
                 } else {
                     isPraise = true;
                     collectionArticleCancel(praiseId);
@@ -347,14 +370,14 @@ public class LoopArticleActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (isClickComment) {
-                    lv_comment_list.setVisibility(View.GONE);
+                    commentListView.setVisibility(View.GONE);
                     loop_article_scrollView.smoothScrollTo(0, 0);
                     isClickComment = false;
                 } else {
                     List<LoopArticleCommentList> commentList = loopArticleData.getCommentList();
                     if (commentList.size() > 0) {
-                        lv_comment_list.setVisibility(View.VISIBLE);
-                        lv_comment_list.setAdapter(new CommentAdapter(LoopArticleActivity.this, commentList));
+                        commentListView.setVisibility(View.VISIBLE);
+                        commentListView.setAdapter(new ArticleCommentAdapter(LoopArticleActivity.this, commentList));
                         loop_article_scrollView.smoothScrollBy(0, 100);
                     } else {
                         Toast.makeText(LoopArticleActivity.this, R.string.thisArticNoComment, Toast.LENGTH_SHORT).show();
@@ -409,12 +432,12 @@ public class LoopArticleActivity extends Activity {
     /**
      * 点赞接口
      */
-    private void addPraseRequest() {
+    private void addPraiseRequest() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter(HttpServicePath.key, Verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.articleAddPraise, new addPraseRequestCallBack());
+                HttpServicePath.articleAddPraise, new addPraiseRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
@@ -482,7 +505,7 @@ public class LoopArticleActivity extends Activity {
         rl_showForTakePhoto.setVisibility(View.GONE);
         rl_showForAsk.setVisibility(View.VISIBLE);
         locationName.setText(loopArticleData.getaTitle());
-        imageLoader.displayImage(loopArticleData.getHeadImg(), headImage, options1);
+        imageLoader.displayImage(loopArticleData.getHeadImg(), headImage, options2);
         userName.setText(loopArticleData.getNickname());
         String address = loopArticleData.getaAddr();
         if (!TextUtils.isEmpty(address)) {
@@ -502,7 +525,7 @@ public class LoopArticleActivity extends Activity {
             }.getType(), imageListPath);
             if (imageList != null) {
                 if (imageList.size() >= 1) {
-                    imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(0), coverImage, options);
+                    imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(0), coverImage, options1);
                 }
                 String content = loopArticleData.getaContent();
                 String type = loopArticleData.getaType();
@@ -593,18 +616,18 @@ public class LoopArticleActivity extends Activity {
         qqSsoHandler.addToSocialSDK();
 
         //  QQ要分享的内容
-//        QQShareContent qqShareContent = new QQShareContent();
-//        qqShareContent.setShareContent("");//分享文字
+        QQShareContent qqShareContent = new QQShareContent();
+        qqShareContent.setShareContent(HttpServicePath.RootPath + HttpServicePath.SharePath + articleId);//分享文字
 //        qqShareContent.setTitle("");//设置title
 //        qqShareContent.setShareImage(mUMImgBitmap);//设置分享图片
-//        qqShareContent.setTargetUrl("");//设置分享内容跳转URL
-//        mController.setShareMedia(qqShareContent);
+        qqShareContent.setTargetUrl(HttpServicePath.RootPath + HttpServicePath.SharePath + articleId);//设置分享内容跳转URL
+        mController.setShareMedia(qqShareContent);
     }
 
     /**
      * 点赞回调接口
      */
-    class addPraseRequestCallBack extends RequestCallBack<String> {
+    class addPraiseRequestCallBack extends RequestCallBack<String> {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {

@@ -63,8 +63,8 @@
     </RelativeLayout>
 
     <com.minglang.suiuu.customview.CircleImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/layout_60dp"
+        android:layout_height="@dimen/layout_60dp"
         android:id="@+id/item_attention_dynamic_head"
         android:src="@drawable/default_head_image"
         android:layout_alignParentRight="true"

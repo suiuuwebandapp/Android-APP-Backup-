@@ -37,17 +37,20 @@ public class ThemeAdapter extends BaseAdapter {
 
     private ImageLoader imageLoader;
 
-    private DisplayImageOptions displayImageOptions;
+    private DisplayImageOptions options;
 
-    private int screenWidth, screenHeight;
+    private int screenWidth;
 
     public ThemeAdapter(Context context, List<LoopBaseData> list) {
         this.context = context;
         this.list = list;
 
         imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
+        if (!imageLoader.isInited()) {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
+
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
                 .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
@@ -55,10 +58,8 @@ public class ThemeAdapter extends BaseAdapter {
         Log.i(TAG, String.valueOf(list.size()));
     }
 
-    public void setScreenParams(int screenWidth, int screenHeight) {
+    public void setScreenParams(int screenWidth) {
         this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-        Log.i(TAG, "屏幕高度:" + this.screenHeight);
     }
 
     @Override
@@ -97,7 +98,7 @@ public class ThemeAdapter extends BaseAdapter {
         String imagePath = loopBaseData.getCpic();
         Log.i(TAG, "imagePath:" + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, imageView, displayImageOptions);
+            imageLoader.displayImage(imagePath, imageView, options);
         }
 
         String name = loopBaseData.getcName();

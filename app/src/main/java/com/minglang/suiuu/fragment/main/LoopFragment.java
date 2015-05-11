@@ -233,19 +233,19 @@ public class LoopFragment extends Fragment {
 
         imageView1 = new ImageView(getActivity());
         imageView1.setTag(IMAGEID1);
-        imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView1.setScaleType(ImageView.ScaleType.FIT_XY);
         imageView2 = new ImageView(getActivity());
         imageView2.setTag(IMAGEID2);
-        imageView2.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView2.setScaleType(ImageView.ScaleType.FIT_XY);
         imageView3 = new ImageView(getActivity());
         imageView3.setTag(IMAGEID3);
-        imageView3.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView3.setScaleType(ImageView.ScaleType.FIT_XY);
         imageView4 = new ImageView(getActivity());
         imageView4.setTag(IMAGEID4);
-        imageView4.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView4.setScaleType(ImageView.ScaleType.FIT_XY);
         imageView5 = new ImageView(getActivity());
         imageView5.setTag(IMAGEID5);
-        imageView5.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView5.setScaleType(ImageView.ScaleType.FIT_XY);
 
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -277,7 +277,6 @@ public class LoopFragment extends Fragment {
         sliderView.setLayoutParams(sliderParams);
 
         loopViewPager = (ViewPager) rootView.findViewById(R.id.loopViewPager);
-        loopViewPager.setOffscreenPageLimit(2);
 
         String userSign = SuiuuInfo.ReadUserSign(getActivity());
         String verification = SuiuuInfo.ReadVerification(getActivity());

@@ -47,16 +47,6 @@ public class SuiuuInfo implements Serializable {
 
     private static final String MESSAGE = "message";
 
-    public static String ReadWxCode(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME1, Context.MODE_APPEND);
-        return sp.getString("code", "");
-    }
-
-    public static void WriteWxCode(Context context, String code) {
-        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME1, Context.MODE_APPEND);
-        sp.edit().putString("code", code).apply();
-    }
-
     /**
      * 读取用户头像URL
      *
@@ -104,7 +94,7 @@ public class SuiuuInfo implements Serializable {
      *
      * @param context           上下文对象
      * @param userName          用户名
-     * @param userGender        用户性别
+     * @param userGender        用户性别(微信:1 男、2 女)
      * @param userHeadImagePath 用户头像地址
      */
     public static void WriteUserBasicInfo(Context context, String userName, String userGender, String userHeadImagePath) {
@@ -152,6 +142,16 @@ public class SuiuuInfo implements Serializable {
     }
 
     /**
+     * 清除第三方相关信息
+     *
+     * @param context 上下文对象
+     */
+    public static void ClearInformation(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME1, Context.MODE_APPEND);
+        sp.edit().clear().commit();
+    }
+
+    /**
      * 第三方相关信息保存到本地
      *
      * @param context     上下文对象
@@ -178,7 +178,7 @@ public class SuiuuInfo implements Serializable {
     }
 
     /**
-     * 从本地读取
+     * 从本地读取第三方相关信息
      *
      * @param context 上下文对象
      * @return 相关数据实体
@@ -192,6 +192,16 @@ public class SuiuuInfo implements Serializable {
         requestData.setImagePath(sp.getString(HEAD_IMG, ""));
         requestData.setType(sp.getString(TYPE, ""));
         return requestData;
+    }
+
+    /**
+     * 清除用户身份信息
+     *
+     * @param context
+     */
+    public static void ClearVerification(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND);
+        sp.edit().clear().commit();
     }
 
     /**

@@ -120,7 +120,7 @@ public class OtherUserActivity extends Activity {
         params.addBodyParameter(HttpServicePath.key, msg);
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.OtherUserInformationPath, new GetOtherUserInformationRequestCallBack());
+                HttpServicePath.userInformationPath, new GetOtherUserInformationRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
 
@@ -268,12 +268,12 @@ public class OtherUserActivity extends Activity {
             }
 
             String str = stringResponseInfo.result;
-            Log.i("suiuu", str);
             try {
                 otherUser = JsonUtil.getInstance().fromJSON(OtherUser.class, str);
                 articleList = otherUser.getData().getArticleList();
                 fullData();
-                OtherUserArticleAdapter adapter = new OtherUserArticleAdapter(OtherUserActivity.this, articleList, screenWidth, screenHeight);
+                OtherUserArticleAdapter adapter = new OtherUserArticleAdapter(OtherUserActivity.this,
+                        articleList, screenWidth, screenHeight);
                 otherUserLoop.setAdapter(adapter);
             } catch (Exception e) {
                 Log.e(TAG, "用户数据解析失败异常信息:" + e.getMessage());
@@ -303,7 +303,6 @@ public class OtherUserActivity extends Activity {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
-            Log.i("suiuu","关注"+str);
             try {
                 JSONObject object = new JSONObject(str);
                 String status = object.getString("status");

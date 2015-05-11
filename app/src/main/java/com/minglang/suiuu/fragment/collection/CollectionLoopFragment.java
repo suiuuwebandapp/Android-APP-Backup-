@@ -168,6 +168,7 @@ public class CollectionLoopFragment extends Fragment {
         RequestParams params = new RequestParams();
         params.addBodyParameter("page", String.valueOf(page));
         params.addBodyParameter(HttpServicePath.key, verification);
+        Log.i(TAG,"verification:"+verification);
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionLoopPath, new CollectionLoopRequestCallBack());
@@ -233,6 +234,7 @@ public class CollectionLoopFragment extends Fragment {
             }
 
             String str = stringResponseInfo.result;
+            Log.i(TAG, "str:" + str);
             try {
                 CollectionLoop collectionLoop = JsonUtil.getInstance().fromJSON(CollectionLoop.class, str);
                 List<CollectionLoopData> list = collectionLoop.getData().getData();

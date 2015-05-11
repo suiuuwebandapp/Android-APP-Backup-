@@ -17,6 +17,30 @@ public class TravelList {
     private String title;
     private String titleImg;
 
+    public String getTripId() {
+        return tripId;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getHeadImg() {
+        return headImg;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getTitleImg() {
+        return titleImg;
+    }
+
     @Override
     public String toString() {
         return "TravelList{" +
@@ -29,51 +53,4 @@ public class TravelList {
                 '}';
     }
 
-    public String getTripId() {
-        return tripId;
-    }
-
-    public void setTripId(String tripId) {
-        this.tripId = tripId;
-    }
-
-    public String getScore() {
-        return score;
-    }
-
-    public void setScore(String score) {
-        this.score = score;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getHeadImg() {
-        return headImg;
-    }
-
-    public void setHeadImg(String headImg) {
-        this.headImg = headImg;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getTitleImg() {
-        return titleImg;
-    }
-
-    public void setTitleImg(String titleImg) {
-        this.titleImg = titleImg;
-    }
 }

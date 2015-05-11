@@ -48,6 +48,8 @@ public class AllAttentionDynamicActivity extends Activity {
 
     private static final String PAGE = "page";
 
+    private static final String ARTICLEID = "articleId";
+
     /**
      * 下拉刷新组件
      */
@@ -81,7 +83,7 @@ public class AllAttentionDynamicActivity extends Activity {
 
         ViewAction();
 
-        getDynamicData4Service();
+        getData();
     }
 
     /**
@@ -100,42 +102,22 @@ public class AllAttentionDynamicActivity extends Activity {
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-
                 return PtrDefaultHandler.checkContentCanBePulledDown(frame, listView, header);
             }
 
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-
                 isRefresh = true;
-
-                RequestParams params = new RequestParams();
-                params.addBodyParameter(PAGE, "1");
-                params.addBodyParameter(HttpServicePath.key,
-                        SuiuuInfo.ReadVerification(AllAttentionDynamicActivity.this));
-
-                SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                        HttpServicePath.AllAttentionDynamicPath, new AllAttentionDynamicRequestCallBack());
-                httpRequest.setParams(params);
-                httpRequest.requestNetworkData();
+                getDynamicData4Service(1);
             }
         });
 
         loadMoreContainer.setLoadMoreHandler(new LoadMoreHandler() {
             @Override
             public void onLoadMore(LoadMoreContainer loadMoreContainer) {
-
-                page = page + 1;
-
                 isRefresh = false;
-
-                RequestParams params = new RequestParams();
-                params.addBodyParameter(PAGE, String.valueOf(page));
-
-                SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                        HttpServicePath.AllAttentionDynamicPath, new AllAttentionDynamicRequestCallBack());
-                httpRequest.setParams(params);
-                httpRequest.requestNetworkData();
+                page = page + 1;
+                getDynamicData4Service(page);
             }
         });
 
@@ -144,7 +126,8 @@ public class AllAttentionDynamicActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String articleId = listAll.get(position).getArticleId();
                 Intent intent = new Intent(AllAttentionDynamicActivity.this, LoopArticleActivity.class);
-                intent.putExtra("articleId", articleId);
+                intent.putExtra("TAG", TAG);
+                intent.putExtra(ARTICLEID, articleId);
                 startActivity(intent);
             }
         });
@@ -176,18 +159,22 @@ public class AllAttentionDynamicActivity extends Activity {
         }
     }
 
-    /**
-     * 从网络获取数据
-     */
-    private void getDynamicData4Service() {
+    private void getData() {
 
         if (dialog != null) {
             dialog.show();
         }
 
+        getDynamicData4Service(page);
+    }
+
+    /**
+     * 从网络获取数据
+     */
+    private void getDynamicData4Service(int page) {
+
         RequestParams params = new RequestParams();
         params.addBodyParameter(PAGE, String.valueOf(page));
-        //params.addBodyParameter("usersign", sign);
         params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
@@ -234,6 +221,12 @@ public class AllAttentionDynamicActivity extends Activity {
         adapter = new AllAttentionDynamicAdapter(this);
         listView.setAdapter(adapter);
 
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     @Override

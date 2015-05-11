@@ -18,9 +18,11 @@ public class HttpServicePath {
      * 服务器地址
      * <p/>
      * http://test.suiuu.com
-     * http://192.168.11.220
+     * http://192.168.11.122
      */
-    private static String RootPath = "http://test.suiuu.com";
+    public static String RootPath = "http://test.suiuu.com";
+
+    public static String SharePath = "/circle/web-info?infoId=";
 
     /**
      * 应用自带登陆URL
@@ -191,7 +193,7 @@ public class HttpServicePath {
      * <p/>
      * 请求参数:用户标识 userSign、统一参数key{@link #key}
      */
-    public static String OtherUserInformationPath = RootPath + "/circle/get-homepage-info";
+    public static String userInformationPath = RootPath + "/circle/get-homepage-info";
 
     /**
      * 获取消息列表
