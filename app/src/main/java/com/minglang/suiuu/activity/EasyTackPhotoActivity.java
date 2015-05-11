@@ -1,9 +1,7 @@
 package com.minglang.suiuu.activity;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -36,6 +34,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.EasyTackPhotoAdapter;
 import com.minglang.suiuu.chat.activity.BaiduMapActivity;
+import com.minglang.suiuu.customview.mProgressDialog;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.HttpServicePath;
@@ -114,7 +113,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     protected static final int getData_Success = 0;
     protected static final int getData_FAILURE = 1;
     int status = 0;
-    private Dialog dialog;
+    private mProgressDialog dialog;
     private ImageView iv_top_back;
     private ScrollView sll;
     private String dataNum;
@@ -125,19 +124,19 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
             switch (msg.what) {
                 case getData_Success:
                     if (1 == status && picSuccessCount == picList.size()) {
-                        dialog.dismiss();
+                        dialog.dismissDialog();
                         Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
                         //TODO 发布完成后在此跳转
                         Intent intent = new Intent(EasyTackPhotoActivity.this,LoopArticleActivity.class);
                         intent.putExtra("articleId",dataNum);
                         startActivity(intent);
                     } else {
-                        dialog.dismiss();
+                        dialog.dismissDialog();
                         Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case getData_FAILURE:
-                    dialog.dismiss();
+                    dialog.dismissDialog();
                     Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
                     break;
                 default:
@@ -347,7 +346,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
             return;
         }
         //访问网络相关
-        dialog.show();
+        dialog.showDialog();
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
         params.addBodyParameter("type", 1 + "");
@@ -373,9 +372,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
 
     //初始化popupWindow
     public void initPopupWindow() {
-        dialog = new Dialog(this);
-        dialog.setContentView(R.layout.progress_bar);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        dialog = new mProgressDialog(this);
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.pop_select_list, null);
         listView = (ListView) view.findViewById(R.id.pictureSelectList);
@@ -383,7 +380,6 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         //自适配长、框设置
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-
         popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.listview_background));
         popupWindow.setOutsideTouchable(true);
         popupWindow.setAnimationStyle(android.R.style.Animation_Dialog);

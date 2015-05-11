@@ -68,17 +68,18 @@ public class CommentsActivity extends Activity {
         articleId = this.getIntent().getStringExtra("articleId");
         tripId = this.getIntent().getStringExtra("tripId");
 
-        Log.i("suiuu", "articleId = " + articleId);
+        Log.i("suiuu", "articleId = " + articleId+"tripId"+tripId);
+
         initView();
 
         ViewAction();
         if (!TextUtils.isEmpty(articleId))
-            origainDataArtcle();
+            origainDataArticle();
         if (!TextUtils.isEmpty(tripId))
             origainDataSuiuu(tripId,"1");
     }
     //根据文章Id请求评论列表
-    private void origainDataArtcle() {
+    private void origainDataArticle() {
         dialog.show();
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
@@ -116,13 +117,17 @@ public class CommentsActivity extends Activity {
                     Toast.makeText(CommentsActivity.this, "请输入评论内容", Toast.LENGTH_SHORT).show();
                 } else {
                     dialog.show();
-                    requestCommentSend(commentContent, "0");
+                    if(!TextUtils.isEmpty(articleId)) {
+                        requestArticleCommentSend(commentContent, "0");
+                    }else {
+                        requestSuiuuCommentSend(commentContent,"0","0");
+                    }
                 }
             }
         });
     }
-
-    private void requestCommentSend(String commentContent, String rId) {
+    //文章详情发送评论
+    private void requestArticleCommentSend(String commentContent, String rId) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter("content", commentContent);
@@ -133,6 +138,20 @@ public class CommentsActivity extends Activity {
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
+    //文章详情发送评论
+    private void requestSuiuuCommentSend(String commentContent, String rId,String rTitle) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("tripId", tripId);
+        Log.i("suiuu","请求的tripId="+tripId);
+        params.addBodyParameter("content", commentContent);
+        params.addBodyParameter("rId", rId);
+        params.addBodyParameter("rTitle", rTitle);
+        params.addBodyParameter(HttpServicePath.key, Verification);
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.suiuuCreateComment, new requestComentSendCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
+    }
 
     class requestComentSendCallBack extends RequestCallBack<String> {
 
@@ -140,11 +159,17 @@ public class CommentsActivity extends Activity {
         public void onSuccess(ResponseInfo<String> responseInfo) {
             try {
                 JSONObject json = new JSONObject(responseInfo.result);
+                Log.i("suiuu",responseInfo.result);
                 String status = json.getString("status");
                 String data = json.getString("data");
                 if ("1".equals(status) && "success".equals(data)) {
                     et_input_comment.setText("");
-                    origainDataArtcle();
+                    if(TextUtils.isEmpty(tripId)) {
+                        origainDataArticle();
+                    }else {
+                        origainDataSuiuu(tripId,"1");
+                    }
+
                     Toast.makeText(CommentsActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
@@ -211,6 +236,7 @@ public class CommentsActivity extends Activity {
         bt_send_comment = (Button) findViewById(R.id.bt_send_comment);
         adapter = new CommentAdapter(this);
         tv_top_center = (TextView) findViewById(R.id.tv_top_center);
+        tv_top_center.setVisibility(View.VISIBLE);
         tv_top_center.setText("评论");
         tv_top_right = (TextView) findViewById(R.id.tv_top_right);
         tv_top_right.setVisibility(View.GONE);

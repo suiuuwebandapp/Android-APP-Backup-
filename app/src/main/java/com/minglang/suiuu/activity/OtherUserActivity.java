@@ -134,7 +134,9 @@ public class OtherUserActivity extends Activity {
     private void AddAttentionRequest4Service() {
         RequestParams params = new RequestParams();
         params.addBodyParameter(USERSIGNKEY, userSign);
+
         params.addBodyParameter(HttpServicePath.key, Verification);
+        Log.i("suiuu",userSign +"verfication="+Verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.AddAttentionUserPath, new AddAttentionRequestCallBack());
         httpRequest.setParams(params);
@@ -201,7 +203,7 @@ public class OtherUserActivity extends Activity {
     }
 
     /**
-     * 用户信息回调接口
+     * 填充数据
      */
     private void fullData() {
         OtherUserDataInfo user = otherUser.getData().getUser();

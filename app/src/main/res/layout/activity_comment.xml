@@ -15,6 +15,7 @@
         android:layout_marginTop="@dimen/layout_10dp"
         android:background="@color/white"
         ></ListView>
+
     <LinearLayout
         android:background="@color/divider_list"
         android:layout_alignParentBottom="true"

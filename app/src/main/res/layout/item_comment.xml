@@ -19,7 +19,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/item_comment_title"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
@@ -28,14 +27,13 @@
         android:textColor="@color/comment_title_color2"
         android:layout_alignTop="@+id/item_comment_head_image"
         android:layout_toRightOf="@+id/item_comment_head_image"
-        android:layout_toEndOf="@+id/item_comment_head_image" />
+        android:layout_toEndOf="@+id/item_comment_head_image"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/item_comment_content"
-        android:layout_marginTop="@dimen/layout_8dp"
         android:textSize="@dimen/layout_15sp"
         android:textColor="@color/tr_black"
         android:maxLines="2"

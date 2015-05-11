@@ -21,6 +21,7 @@ public class SuiuuDetailForData {
     private List<SuiuuDetailForScenicList> scenicList;
     private List<SuiuuDetailForServiceList> serviceList;
     private SuiuuDetailForPublisherList createPublisherInfo;
+    private UserBackData userInfo;
     @Override
     public String toString() {
         return "SuiuuDetailForData{" +
@@ -33,6 +34,14 @@ public class SuiuuDetailForData {
                 ", scenicList=" + scenicList +
                 ", serviceList=" + serviceList +
                 '}';
+    }
+
+    public UserBackData getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserBackData userInfo) {
+        this.userInfo = userInfo;
     }
 
     public SuiuuDetailForPublisherList getCreatePublisherInfo() {

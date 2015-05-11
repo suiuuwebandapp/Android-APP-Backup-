@@ -2,10 +2,8 @@ package com.minglang.suiuu.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -40,6 +37,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.ShowGVPictureAdapter;
 import com.minglang.suiuu.chat.activity.BaiduMapActivity;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
+import com.minglang.suiuu.customview.mProgressDialog;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.HttpServicePath;
@@ -77,7 +75,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
     private TextView tv_top_right;
     private static OSSService ossService = OSSServiceProvider.getService();
     private static OSSBucket bucket = ossService.getOssBucket("suiuu");
-    private Dialog dialog;
+    private mProgressDialog dialog;
     private PopupWindow popupWindow;
     private ListView listView;
     private int record = 0;
@@ -101,19 +99,19 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
             switch (msg.what) {
                 case getData_Success:
                     if (1 == status && picSuccessCount == listPicture.size()) {
-                        dialog.dismiss();
+                        dialog.dismissDialog();
                         Toast.makeText(AskQuestionActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(AskQuestionActivity.this,LoopArticleActivity.class);
                         intent.putExtra("articleId",dataNum);
                         intent.putExtra("TAG",TAG);
                         startActivity(intent);
                     } else {
-                        dialog.dismiss();
+                        dialog.dismissDialog();
                         Toast.makeText(AskQuestionActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case getData_FAILURE:
-                    dialog.dismiss();
+                    dialog.dismissDialog();
                     Toast.makeText(AskQuestionActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
                     break;
                 default:
@@ -210,11 +208,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
      */
     public void initView() {
 
-        dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progress_bar);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-
+        dialog = new mProgressDialog(this);
         listPicture = new ArrayList<>();
 
         tv_top_right = (TextView) findViewById(R.id.tv_top_right);
@@ -304,7 +298,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                 return;
             }
         }
-        dialog.show();
+        dialog.showDialog();
         if (record == 1) {
             params.addBodyParameter("type", String.valueOf(3));
         } else {
@@ -450,6 +444,9 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
                 dataNum = (String)json.get("data");
+                if(listPicture.size()<1) {
+                    handler.sendEmptyMessage(getData_Success);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }

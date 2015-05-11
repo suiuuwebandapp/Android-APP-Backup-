@@ -1,7 +1,6 @@
 package com.minglang.suiuu.fragment.main;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -29,6 +28,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuDetailActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.customview.PullToRefreshView;
+import com.minglang.suiuu.customview.mProgressDialog;
 import com.minglang.suiuu.entity.SuiuuDataList;
 import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.utils.ConstantUtil;
@@ -48,7 +48,7 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
     private ListView lv_suiuu;
     private JsonUtil jsonUtil = JsonUtil.getInstance();
     private List<SuiuuDataList> suiuuDataList;
-    private ProgressDialog dialog;
+
     /**
      * @description PopupWindow
      */
@@ -57,9 +57,9 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
     private TextView tv_city;
     private TextView tv_type;
     private PullToRefreshView mPullToRefreshView;
-//    private ImageView iv_choice;
     private int page = 1;
     private TextView tv_nodata_load;
+    private mProgressDialog dialog;
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,21 +100,13 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
         titleInfo = (TextView) rootView.findViewById(R.id.titleInfo);
         titleInfo.setVisibility(View.GONE);
         lv_suiuu = (ListView) rootView.findViewById(R.id.lv_suiuu);
-//        dialog = new Dialog(getActivity());
-//        dialog.setContentView(R.layout.progress_bar);
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-        dialog = new ProgressDialog(getActivity());
-        dialog.setMessage(getResources().getString(R.string.load_wait));
-
-        dialog.setCanceledOnTouchOutside(false);
-
         mPullToRefreshView = (PullToRefreshView) rootView.findViewById(R.id.main_pull_refresh_view);
         tv_nodata_load = (TextView) rootView.findViewById(R.id.tv_nodata_load);
         mPullToRefreshView.setVisibility(View.GONE);
         mPullToRefreshView.setOnHeaderRefreshListener(this);
         mPullToRefreshView.setOnFooterRefreshListener(this);
         initPopWindow(getActivity());
-
+        dialog = new mProgressDialog(getActivity());
 
     }
 
@@ -126,7 +118,7 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
      * @param tags
      */
     private void loadDate(String countryId, String cityId, String tags,int page) {
-        dialog.show();
+        dialog.showDialog();
         String str = SuiuuInfo.ReadVerification(getActivity().getApplicationContext());
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
@@ -186,7 +178,7 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             Log.i("suiuu",stringResponseInfo.result+"what-----------");
-            dialog.dismiss();
+            dialog.dismissDialog();
             try {
                 SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, stringResponseInfo.result);
                 if ("1".equals(baseCollection.getStatus())) {
@@ -207,7 +199,7 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
 
         @Override
         public void onFailure(HttpException e, String s) {
-            dialog.dismiss();
+            dialog.dismissDialog();
             Toast.makeText(getActivity().getApplicationContext(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
     }

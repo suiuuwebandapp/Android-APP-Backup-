@@ -105,7 +105,7 @@
                     </LinearLayout>
 
                     <RelativeLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="end"
                         android:orientation="horizontal">
@@ -114,9 +114,7 @@
                             android:id="@+id/loop_article_editor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:layout_gravity="center"
                             android:drawableLeft="@drawable/icon_edit_selector"
                             android:drawableStart="@drawable/icon_edit_selector"
                             android:gravity="center"
@@ -155,7 +153,6 @@
                     android:id="@+id/loop_article_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:text="@string/article_temp"
                     android:textSize="18sp"
                     android:textColor="@color/tr_black"

@@ -716,9 +716,7 @@ public class LoopArticleActivity extends Activity {
 
         @Override
         public void onFailure(HttpException error, String msg) {
-
             Log.e(TAG, "网络请求失败:" + msg);
-
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
@@ -739,6 +737,7 @@ public class LoopArticleActivity extends Activity {
             if (deleteArticle != null) {
                 if (deleteArticle.getStatus().equals("1")) {
                     Toast.makeText(LoopArticleActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                    finish();
                 } else {
                     Toast.makeText(LoopArticleActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
                 }
@@ -832,18 +831,10 @@ public class LoopArticleActivity extends Activity {
         }
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
-
     @Override
     public void onBackPressed() {
         finish();
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getInternetServiceData();
-    }
-
     public Drawable setImgDrawTextPosition(int img) {
         Drawable drawable = this.getResources().getDrawable(img);
         // 调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
