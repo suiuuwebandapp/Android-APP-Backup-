@@ -61,6 +61,7 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
         View view = View.inflate(context, R.layout.item_easy_tackphoto, null);
         iv_picture = (ImageView) view.findViewById(R.id.iv_item_tackphoto);
         et_pic_description = (EditText) view.findViewById(R.id.et_item_description);
+
         if (position >= list.size()) {
             iv_picture.setImageResource(R.drawable.btn_add_picture2);
         } else {
@@ -77,6 +78,7 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
                     }else {
                         Intent showPicture = new Intent(context, ShowBigImage.class);
                         showPicture.putExtra("path", list.get(position));
+                        showPicture.putExtra("isHuanXin",false);
                         activity.startActivity(showPicture);
                     }
                 }

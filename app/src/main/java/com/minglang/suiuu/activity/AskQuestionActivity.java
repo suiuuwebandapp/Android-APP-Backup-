@@ -1,8 +1,5 @@
 package com.minglang.suiuu.activity;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,10 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -28,22 +25,27 @@ import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
 import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSFile;
+import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.MyListAdapter;
 import com.minglang.suiuu.adapter.ShowGVPictureAdapter;
 import com.minglang.suiuu.chat.activity.BaiduMapActivity;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
 import com.minglang.suiuu.customview.mProgressDialog;
+import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
+import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,6 +94,9 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
     private String areaCid;
     private int status = 0;
     private String dataNum;
+    private LoopArticleData articleDetail;
+    //修改文章进来是否重新选择图片
+    private boolean isChangePic = false;
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -126,13 +131,17 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ask_question);
         record = getIntent().getIntExtra("record", 0);
+        articleDetail = (LoopArticleData) this.getIntent().getSerializableExtra("articleDetail");
+        if (ConstantUtil.isKITKAT) {
+            LinearLayout rootLayout = (LinearLayout)findViewById(R.id.root);
+            rootLayout.setPadding(0, Utils.getStatusHeight1(this), 0, 0);
+        }
         initView();
-
         ViewAction();
     }
 
     private void ViewAction() {
-        gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture));
+
         tv_top_right.setOnClickListener(this);
         iv_top_back.setOnClickListener(this);
         tv_show_your_location.setOnClickListener(this);
@@ -143,6 +152,9 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 if (position == listPicture.size()) {
+                    if(articleDetail != null) {
+                        isChangePic = true;
+                    }
                     Intent intent = new Intent(AskQuestionActivity.this, SelectPictureActivity.class);
                     startActivityForResult(intent, 1);
                 } else {
@@ -167,7 +179,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
             }
         });
     }
-
+    //上传图片
     private void updateDate(String path) {
         String type = path.substring(path.lastIndexOf("/"));
         String name = type.substring(type.lastIndexOf(".") + 1);
@@ -182,14 +194,11 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                     if (picSuccessCount == listPicture.size()) {
                         handler.sendEmptyMessage(getData_Success);
                     }
-
                 }
-
                 @Override
                 public void onProgress(String objectKey, int byteCount, int totalSize) {
                     Log.i(TAG, "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
                 }
-
                 @Override
                 public void onFailure(String objectKey, OSSException ossException) {
                     handler.sendEmptyMessage(getData_FAILURE);
@@ -219,14 +228,32 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         tv_show_your_location = (TextView) findViewById(R.id.tv_show_your_location);
         tv_theme_choice = (TextView) findViewById(R.id.tv_theme_choice);
         tv_area_choice = (TextView) findViewById(R.id.tv_area_choice);
-
+        gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture,"0"));
         initPopupWindow();
-
         if (record == 1) {
             et_search_question.setHint(R.string.image_theme);
             et_question_description.setHint(R.string.activity_description);
         }
+        if(articleDetail!=null ) {
+            changeArticleFullData();
+        }
+    }
 
+    /**
+     * 修改文章填充内容
+     */
+    private void changeArticleFullData() {
+        tv_area_choice.setVisibility(View.GONE);
+        tv_theme_choice.setVisibility(View.GONE);
+        et_search_question.setText(articleDetail.getaTitle());
+        et_question_description.setText(articleDetail.getaContent());
+        List<String> changePicList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>(){}.getType(),articleDetail.getaImgList());
+        for(String string:changePicList) {
+            Log.i("suiuu","askActivity="+string);
+        }
+        gv_show_picture.setAdapter(new ShowGVPictureAdapter(this,changePicList,"1" ));
+        Log.i("suiuu", "怎么没有设置了");
+        tv_show_your_location.setText(articleDetail.getaAddr());
     }
 
     @Override
@@ -235,7 +262,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == 9) {
             listPicture = data.getStringArrayListExtra("pictureMessage");
-            gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture));
+            gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture,"0"));
         } else if (data != null && requestCode == REQUEST_CODE_MAP) {
             double latitude = data.getDoubleExtra("latitude", 0);
             double longitude = data.getDoubleExtra("longitude", 0);
@@ -256,7 +283,13 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         int mId = v.getId();
         //右边完成按钮
         if (mId == R.id.tv_top_right) {
-            publish();
+            if(articleDetail==null) {
+                publish();
+
+            }else {
+                //修改文章接口
+                changeArticlePublish();
+            }
         } else if (mId == R.id.tv_theme_choice) {
             loadThemeDate();
         } else if (mId == R.id.iv_top_back) {
@@ -272,32 +305,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
     private void publish() {
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
-        if (TextUtils.isEmpty(et_search_question.getText().toString().trim())) {
-            if (record == 1) {
-                Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
-                return;
-            } else {
-                Toast.makeText(this, R.string.your_ask_is_empty, Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-        if ("".equals(tv_theme_choice.getText().toString().trim())) {
-            Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if ("".equals(tv_area_choice.getText().toString().trim())) {
-            Toast.makeText(this, R.string.area_is_empty, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(et_question_description.getText().toString().trim())) {
-            if (record == 1) {
-                Toast.makeText(this, R.string.activity_description_is_empty, Toast.LENGTH_SHORT).show();
-                return;
-            } else {
-                Toast.makeText(this, R.string.ask_description_is_empty, Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
+        judgeData();
         dialog.showDialog();
         if (record == 1) {
             params.addBodyParameter("type", String.valueOf(3));
@@ -325,6 +333,70 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         suHttpRequest.setParams(params);
         suHttpRequest.requestNetworkData();
 
+    }
+    //点击发布按钮 修改文章内容
+    private void changeArticlePublish() {
+        String str = SuiuuInfo.ReadVerification(this);
+        RequestParams params = new RequestParams();
+        judgeData();
+        dialog.showDialog();
+        params.addBodyParameter(HttpServicePath.key, str);
+        params.addBodyParameter("articleId",articleDetail.getArticleId());
+        params.addBodyParameter("title", et_search_question.getText().toString().trim());
+        params.addBodyParameter("content", et_question_description.getText().toString().trim());
+        params.addBodyParameter("addr", tv_show_your_location.getText().toString().trim());
+
+        List<String> picNameList = new ArrayList<>();
+        if(isChangePic) {
+            for (String string : listPicture) {
+                updateDate(string);
+                String substring = string.substring(string.lastIndexOf("/"));
+                picNameList.add(substring);
+            }
+            params.addBodyParameter("imgList", JsonUtil.getInstance().toJSON(picNameList));
+            if(picNameList.size()>1) {
+                params.addBodyParameter("img", picNameList.get(0));
+            }
+        }else {
+            params.addBodyParameter("imgList", articleDetail.getaImgList());
+            params.addBodyParameter("img",articleDetail.getaImg());
+        }
+        SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.updateLoop, new UpdateLoopCallBack());
+        suHttpRequest.setParams(params);
+        suHttpRequest.requestNetworkData();
+
+    }
+
+    private void judgeData() {
+        if (TextUtils.isEmpty(et_search_question.getText().toString().trim())) {
+            if (record == 1) {
+                Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                Toast.makeText(this, R.string.your_ask_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        if(articleDetail == null ) {
+            if ("".equals(tv_theme_choice.getText().toString().trim())) {
+                Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if ("".equals(tv_area_choice.getText().toString().trim())) {
+                Toast.makeText(this, R.string.area_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        if (TextUtils.isEmpty(et_question_description.getText().toString().trim())) {
+            if (record == 1) {
+                Toast.makeText(this, R.string.activity_description_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                Toast.makeText(this, R.string.ask_description_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
     }
 
     private void loadAreaDate() {
@@ -386,7 +458,8 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                     for (LoopBaseData date : list) {
                         Log.i(TAG, date.toString());
                     }
-                    listView.setAdapter(new MyListAdapter(AskQuestionActivity.this, list));
+                    MyListAdapter adapter = new MyListAdapter(AskQuestionActivity.this, list);
+                    listView.setAdapter(adapter);
                     themeOrArea = 1;
                     popupWindow.showAsDropDown(tv_theme_choice, 0, 10);
                 } else {
@@ -414,7 +487,8 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
             if (loopBase != null) {
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
                     list = loopBase.getData().getData();
-                    listView.setAdapter(new MyListAdapter(AskQuestionActivity.this, list));
+                    MyListAdapter adapter = new MyListAdapter(AskQuestionActivity.this, list);
+                    listView.setAdapter(adapter);
                     themeOrArea = 2;
                     popupWindow.showAsDropDown(tv_area_choice, 0, 10);
                 } else {
@@ -451,6 +525,40 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                 e.printStackTrace();
             }
         }
+        @Override
+        public void onFailure(HttpException e, String s) {
+            handler.sendEmptyMessage(getData_FAILURE);
+            Log.e(TAG, "发布文章失败:" + s);
+        }
+    }
+    /**
+     * 修改圈子文章回调接口
+     */
+    class UpdateLoopCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            String result = stringResponseInfo.result;
+            Log.i("suiuu","ask="+result);
+            try {
+                JSONObject json = new JSONObject(result);
+                status = (int) json.get("status");
+                dataNum = (String)json.get("data");
+                Log.i("suiuu",status+"dataNum"+dataNum);
+               if("success".equals(dataNum)) {
+                   Toast.makeText(AskQuestionActivity.this, R.string.article_update_success, Toast.LENGTH_SHORT).show();
+                   Intent intent = new Intent(AskQuestionActivity.this,LoopArticleActivity.class);
+                   intent.putExtra("articleId",articleDetail.getArticleId());
+                   intent.putExtra("TAG",TAG);
+                   startActivity(intent);
+               }else {
+                   handler.sendEmptyMessage(getData_FAILURE);
+               }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                handler.sendEmptyMessage(getData_FAILURE);
+            }
+        }
 
         @Override
         public void onFailure(HttpException e, String s) {
@@ -460,42 +568,4 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
     }
 }
 
-class MyListAdapter extends BaseAdapter {
-
-    private static final String TAG = MyListAdapter.class.getSimpleName();
-
-    private List<LoopBaseData> list;
-    private Context context;
-
-    public MyListAdapter(Context context, List<LoopBaseData> list) {
-        this.list = list;
-        this.context = context;
-    }
-
-    @Override
-    public int getCount() {
-        return list.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        @SuppressLint("ViewHolder")
-        View view = View.inflate(context, R.layout.adapter_simple_string, null);
-        TextView tv_theme = (TextView) view.findViewById(R.id.tv_theme);
-        tv_theme.setText(list.get(position).getcName());
-        Log.i(TAG, list.get(position).getcName() + "----------");
-        return view;
-    }
-
-}
 

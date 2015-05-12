@@ -28,7 +28,7 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.SystemBarTintManager;
+import com.minglang.suiuu.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -199,13 +199,14 @@ public class CommentsActivity extends Activity {
                 dialog.dismiss();
             } else {
                 Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
-
             }
+            dialog.dismiss();
         }
 
         @Override
         public void onFailure(HttpException error, String msg) {
             Log.e("suiuu", "网络请求失败:" + msg);
+            dialog.dismiss();
             Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -215,12 +216,8 @@ public class CommentsActivity extends Activity {
      */
     private void initView() {
         Verification = SuiuuInfo.ReadVerification(this);
-        SystemBarTintManager mTintManager = new SystemBarTintManager(this);
-        mTintManager.setStatusBarTintEnabled(true);
-        mTintManager.setNavigationBarTintEnabled(false);
-        mTintManager.setTintColor(getResources().getColor(R.color.tr_black));
-        int statusHeight = mTintManager.getConfig().getStatusBarHeight();
 
+        int statusHeight = Utils.getStatusHeight1(this);
         /**
          系统版本是否高于4.4
          */

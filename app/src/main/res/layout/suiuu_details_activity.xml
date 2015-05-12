@@ -2,27 +2,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor">
+    android:background="@color/backgroundColor"
+    android:id="@+id/suiuu_detail_root">
+
     <RelativeLayout
         android:id="@+id/viewPager"
         android:layout_width="fill_parent"
         android:layout_height="185dp">
-    <LinearLayout
-        android:id="@+id/top_news_viewpager"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/layout_200dp"
-        android:orientation="horizontal" />
 
-    <LinearLayout
-        android:layout_centerHorizontal="true"
-        android:id="@+id/dots_ll"
-        android:layout_width="fill_parent"
-        android:layout_height="30dp"
-        android:layout_alignParentBottom="true"
-        android:background="#00000000"
-        android:gravity="center"
-        android:orientation="horizontal" >
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/top_news_viewpager"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/layout_200dp"
+            android:orientation="horizontal" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:background="#00000000"
+            >
+
+            <LinearLayout
+                android:id="@+id/dots_ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+               android:layout_centerInParent="true"
+                android:orientation="horizontal" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -121,8 +128,7 @@
                     android:textSize="@dimen/layout_15sp"
                     android:layout_below="@+id/tv_nickname"
                     android:id="@+id/tv_self_sign"
-                    android:layout_marginLeft="@dimen/layout_5dp"
-                     />
+                    android:layout_marginLeft="@dimen/layout_5dp" />
 
                 <RatingBar
                     android:layout_width="wrap_content"
@@ -131,12 +137,13 @@
                     style="?android:attr/ratingBarStyleSmall"
                     android:numStars="5"
                     android:rating="2"
-                    android:isIndicator="false"
+                    android:isIndicator="true"
                     android:progressDrawable="@drawable/food_rating_bar_full"
                     android:layout_below="@+id/tv_self_sign"
                     android:layout_toRightOf="@+id/suiuu_details_user_head_image"
                     android:layout_toEndOf="@+id/suiuu_details_user_head_image"
                     android:layout_alignBottom="@+id/suiuu_details_user_head_image" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -168,7 +175,7 @@
                     android:layout_toRightOf="@+id/tv_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:isIndicator="false"
+                    android:isIndicator="true"
                     style="?android:attr/ratingBarStyleSmall"
                     android:rating="2"
                     android:numStars="5"
@@ -231,6 +238,7 @@
                     android:textColor="@color/gray" />
 
             </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_description"
                 android:layout_width="wrap_content"
@@ -238,7 +246,7 @@
                 android:padding="@dimen/layout_8dp"
                 android:textSize="@dimen/layout_12sp"
                 android:text="随游预定服务暂未开放请登录www.suiuu.com进行预定"
-                android:layout_above="@+id/suiuu_details_bottom_layout"/>
+                android:layout_above="@+id/suiuu_details_bottom_layout" />
         </LinearLayout>
     </ScrollView>
 

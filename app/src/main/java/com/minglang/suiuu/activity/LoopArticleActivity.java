@@ -329,7 +329,11 @@ public class LoopArticleActivity extends Activity {
         editor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(LoopArticleActivity.this,AskQuestionActivity.class);
+                Bundle mBundle = new Bundle();
+                mBundle.putSerializable("articleDetail",loopArticleData);
+                intent.putExtras(mBundle);
+                startActivity(intent);
             }
         });
 
@@ -700,9 +704,6 @@ public class LoopArticleActivity extends Activity {
                             getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "数据解析失败1:" + e.toString());
-                Log.e(TAG, "数据解析失败2:" + e.getMessage());
-                Log.e(TAG, "数据解析失败3:" + e.getLocalizedMessage());
                 Toast.makeText(LoopArticleActivity.this,
                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
@@ -743,14 +744,12 @@ public class LoopArticleActivity extends Activity {
                 }
             }
         }
-
         @Override
         public void onFailure(HttpException error, String msg) {
             Log.i(TAG, msg);
             Toast.makeText(LoopArticleActivity.this, "删除失败，请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
-
     /**
      * 收藏文章回调接口
      */
@@ -786,7 +785,6 @@ public class LoopArticleActivity extends Activity {
      * 取消收藏文章回调接口
      */
     class CollectionArticleCancelRequestCallback extends RequestCallBack<String> {
-
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             try {
@@ -811,16 +809,13 @@ public class LoopArticleActivity extends Activity {
             } catch (JSONException e) {
                 Toast.makeText(LoopArticleActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
             }
-
         }
-
         @Override
         public void onFailure(HttpException e, String s) {
             Log.e(TAG, s);
             Toast.makeText(LoopArticleActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
-
     @Override
     public void finish() {
         if (OtherTAG.equals(AskQuestionActivity.class.getSimpleName())) {

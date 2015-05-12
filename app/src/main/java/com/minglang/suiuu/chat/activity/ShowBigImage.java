@@ -90,7 +90,6 @@ public class ShowBigImage extends BaseActivity {
                     .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                     .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
             imageLoader.displayImage(remotepath, image, options);
-            return;
         }
         //传过路径显示图片
         if (path != null) {

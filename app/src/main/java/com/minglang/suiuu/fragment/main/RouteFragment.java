@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.Utils;
 
 import java.util.Date;
 import java.util.List;
@@ -66,6 +68,10 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_route, null);
+        if (ConstantUtil.isKITKAT) {
+            RelativeLayout rootLayout = (RelativeLayout) rootView.findViewById(R.id.suiuu_root);
+            rootLayout.setPadding(0, Utils.getStatusHeight1(getActivity()), 0, 0);
+        }
         innitView(rootView);
         loadDate(null, null, null,page);
         LinearLayout.LayoutParams paramTest = (LinearLayout.LayoutParams) lv_suiuu.getLayoutParams();
@@ -146,9 +152,11 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
             @Override
             public void run() {
                 //重新加载数据
-                page+=1;
-                loadDate(null, null, null,page);
-                mPullToRefreshView.onFooterRefreshComplete();
+                if(!dialog.isShow()) {
+                    page += 1;
+                    loadDate(null, null, null, page);
+                    mPullToRefreshView.onFooterRefreshComplete();
+                }
             }
         }, 1000);
     }

@@ -1,5 +1,6 @@
 package com.minglang.suiuu.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * <p/>
  * Created by Administrator on 2015/4/25.
  */
-public class LoopArticleData {
+public class LoopArticleData implements Serializable{
 
     public String cId;
 

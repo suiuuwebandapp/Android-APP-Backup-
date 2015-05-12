@@ -33,10 +33,12 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.EasyTackPhotoAdapter;
+import com.minglang.suiuu.adapter.MyListAdapter;
 import com.minglang.suiuu.chat.activity.BaiduMapActivity;
 import com.minglang.suiuu.customview.mProgressDialog;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
+import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -154,6 +156,10 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         picList = this.getIntent().getStringArrayListExtra("pictureMessage");
 
         initView();
+        if (ConstantUtil.isKITKAT) {
+            LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
+            rootLayout.setPadding(0, Utils.getStatusHeight1(this), 0, 0);
+        }
         lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, picList));
         Utils.setListViewHeightBasedOnChildren(lv_picture_description);
 //        iv_cancel.setVisibility(View.GONE);
@@ -207,6 +213,8 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == 9) {
             picList = data.getStringArrayListExtra("pictureMessage");
+            lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, picList));
+            Utils.setListViewHeightBasedOnChildren(lv_picture_description);
         } else if (data != null && requestCode == REQUEST_CODE_MAP) {
             double latitude = data.getDoubleExtra("latitude", 0);
             double longitude = data.getDoubleExtra("longitude", 0);
@@ -308,6 +316,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
             if (loopBase != null) {
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
                     list = loopBase.getData().getData();
+
                     listView.setAdapter(new MyListAdapter(EasyTackPhotoActivity.this, list));
                     themeOrArea = 2;
                     popupWindow.showAsDropDown(tv_area_choice, 0, 10);
