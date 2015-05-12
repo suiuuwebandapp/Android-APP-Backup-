@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RatingBar;
@@ -31,6 +32,7 @@ import com.minglang.suiuu.entity.SuiuuDetailForData;
 import com.minglang.suiuu.entity.SuiuuDetailForInfo;
 import com.minglang.suiuu.entity.SuiuuDetailForPicList;
 import com.minglang.suiuu.entity.SuiuuDetailForPublisherList;
+import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -101,6 +103,7 @@ public class SuiuuDetailActivity extends Activity {
     private List<String> titleLists;
     private List<String> imageUrlLists;
     private TextView tv_choiced;
+    private ImageView suiuu_details_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +112,10 @@ public class SuiuuDetailActivity extends Activity {
         tripId = this.getIntent().getStringExtra("tripId");
         Log.i("suiuu", "tripId=" + tripId);
         Verification = SuiuuInfo.ReadVerification(this);
+        if (ConstantUtil.isKITKAT) {
+            RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.suiuu_detail_root);
+            rootLayout.setPadding(0, Utils.getStatusHeight1(this), 0, 0);
+        }
         initView();
         loadDate(tripId);
         viewAction();
@@ -118,7 +125,8 @@ public class SuiuuDetailActivity extends Activity {
         suiuu_details_praise.setOnClickListener(new MyOnclick());
         suiuu_details_collection.setOnClickListener(new MyOnclick());
         suiuu_details_comments.setOnClickListener(new MyOnclick());
-
+        suiuu_details_user_head_image.setOnClickListener(new MyOnclick());
+        suiuu_details_back.setOnClickListener(new MyOnclick());
     }
 
     private void initView() {
@@ -146,13 +154,15 @@ public class SuiuuDetailActivity extends Activity {
         dots_ll = (LinearLayout) findViewById(R.id.dots_ll);
         top_news_viewpager = (LinearLayout) findViewById(R.id.top_news_viewpager);
         tv_choiced = (TextView) findViewById(R.id.tv_choiced);
+        suiuu_details_back = (ImageView) findViewById(R.id.suiuu_details_back);
     }
+
     //填充数据
     public void fullOfData() {
-        tv_choiced.setText(detailInfo.getTravelTime()+"人选择过");
+        tv_choiced.setText(detailInfo.getTravelTime() + "人选择过");
         tv_title.setText(detailInfo.getTitle());
         tv_content.setText(detailInfo.getInfo());
-            tv_nikename.setText(suiuuDetailData.getUserInfo().getNickname());
+        tv_nikename.setText(suiuuDetailData.getUserInfo().getNickname());
         if (TextUtils.isEmpty(suiuuDetailData.getUserInfo().getIntro())) {
             tv_selfsign.setText("该用户没有个性签名");
         } else {
@@ -162,7 +172,11 @@ public class SuiuuDetailActivity extends Activity {
         Log.i("suiuu", "startTime=" + detailInfo.getStartTime() + ",endTime=" + detailInfo.getEndTime());
         tv_service_time.setText("服务时间:     " + detailInfo.getStartTime() + "-" + detailInfo.getEndTime());
         tv_suiuu_travel_time.setText("随游时长:     " + detailInfo.getTravelTime() + "个小时");
-        tv_atmost_people.setText("最多人数:     " + detailInfo.getMakeUserCount() + "人");
+        if ("".equals(detailInfo.getMakeUserCount())) {
+            tv_atmost_people.setText("最多人数:     0 人");
+        } else {
+            tv_atmost_people.setText("最多人数:     " + detailInfo.getMakeUserCount() + "人");
+        }
         tv_price.setText("￥:  " + detailInfo.getBasePrice());
         //判断是否显示点赞
         if (suiuuDetailData.getPraise().size() >= 1) {
@@ -180,22 +194,21 @@ public class SuiuuDetailActivity extends Activity {
             suiuu_details_collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_yellow), null, null, null);
         }
         picList = suiuuDetailData.getPicList();
-        if(picList.size()>=1) {
+        if (picList.size() >= 1) {
             setViewPager();
         }
         dialog.dismissDialog();
-
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void setViewPager() {
         initDot(picList.size());
-        RollViewPager mViewPager = new RollViewPager(this, dotLists,new RollViewPager.PagerClickCallBack(){
+        RollViewPager mViewPager = new RollViewPager(this, dotLists, new RollViewPager.PagerClickCallBack() {
             @Override
             public void pagerClick(int postion) {
 //				Intent intent = new Intent(ct,DetaiAct.class);
 //				ct.startActivity(intent);
-                Toast.makeText(SuiuuDetailActivity.this, "xxxxxx", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SuiuuDetailActivity.this, "xxxxxx", Toast.LENGTH_SHORT).show();
             }
         });
         //设置viewpager的宽高
@@ -204,9 +217,9 @@ public class SuiuuDetailActivity extends Activity {
                         LayoutParams.WRAP_CONTENT));
         titleLists = new ArrayList<>();
         imageUrlLists = new ArrayList<>();
-       for (SuiuuDetailForPicList picDetail : picList) {
-           imageUrlLists.add(picDetail.getUrl());
-       }
+        for (SuiuuDetailForPicList picDetail : picList) {
+            imageUrlLists.add(picDetail.getUrl());
+        }
         // 把图片的url地址传进去
         mViewPager.setimageUrlList(imageUrlLists);
         // 把title的url地址传进去
@@ -229,13 +242,12 @@ public class SuiuuDetailActivity extends Activity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("trId", tripId);
         params.addBodyParameter(HttpServicePath.key, Verification);
-        Log.i("suiuu","userSing="+Verification);
+        Log.i("suiuu", "userSing=" + Verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuItemInfo, new SuiuuItemInfoCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
-
 
 
     /**
@@ -245,7 +257,7 @@ public class SuiuuDetailActivity extends Activity {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            Log.i("suiuu",responseInfo.result);
+            Log.i("suiuu", responseInfo.result);
             try {
                 SuiuuDataDetail detail = jsonUtil.fromJSON(SuiuuDataDetail.class, responseInfo.result);
                 if ("1".equals(detail.getStatus())) {
@@ -264,12 +276,14 @@ public class SuiuuDetailActivity extends Activity {
             } finally {
             }
         }
+
         @Override
         public void onFailure(HttpException error, String msg) {
             dialog.dismissDialog();
             Toast.makeText(SuiuuDetailActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
+
     /**
      * 点赞接口
      */
@@ -282,6 +296,7 @@ public class SuiuuDetailActivity extends Activity {
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
+
     /**
      * 收藏随游接口
      */
@@ -297,6 +312,7 @@ public class SuiuuDetailActivity extends Activity {
 
     /**
      * 点赞,收藏取消接口
+     *
      * @param cancelId 取消Id
      */
     private void collectionArticleCancle(String cancelId) {
@@ -308,6 +324,7 @@ public class SuiuuDetailActivity extends Activity {
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
+
     /**
      * 点赞回调接口
      */
@@ -319,10 +336,10 @@ public class SuiuuDetailActivity extends Activity {
                 JSONObject json = new JSONObject(stringResponseInfo.result);
                 String status = json.getString("status");
                 String data = json.getString("data");
-                if("1".equals(status)) {
+                if ("1".equals(status)) {
                     attentionId = data;
                     suiuu_details_praise.setTextColor(getResources().getColor(R.color.text_select_true));
-                    suiuu_details_praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_red),null,null,null);
+                    suiuu_details_praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_red), null, null, null);
                     Toast.makeText(SuiuuDetailActivity.this, "点赞成功", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
@@ -330,12 +347,14 @@ public class SuiuuDetailActivity extends Activity {
                 Toast.makeText(SuiuuDetailActivity.this, "点赞失败，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
         }
+
         @Override
         public void onFailure(HttpException e, String s) {
             Log.i("i", s);
             Toast.makeText(SuiuuDetailActivity.this, "点赞失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
+
     /**
      * 取消点赞收藏回调接口
      */
@@ -348,12 +367,12 @@ public class SuiuuDetailActivity extends Activity {
                 String status = json.getString("status");
                 String data = json.getString("data");
                 if ("1".equals(status) && "success".equals(data)) {
-                    if(isPrase) {
+                    if (isPrase) {
                         attentionId = null;
                         suiuu_details_praise.setTextColor(getResources().getColor(R.color.white));
                         suiuu_details_praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_white), null, null, null);
                         Toast.makeText(SuiuuDetailActivity.this, "取消点赞成功", Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         collectionId = null;
                         suiuu_details_collection.setTextColor(getResources().getColor(R.color.white));
                         suiuu_details_collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_white), null, null, null);
@@ -382,6 +401,7 @@ public class SuiuuDetailActivity extends Activity {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            Log.i("suiuu", stringResponseInfo.result);
             try {
                 JSONObject json = new JSONObject(stringResponseInfo.result);
                 String status = json.getString("status");
@@ -400,6 +420,7 @@ public class SuiuuDetailActivity extends Activity {
 
         @Override
         public void onFailure(HttpException e, String s) {
+            Log.i("suiuu", s);
             Toast.makeText(SuiuuDetailActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -410,35 +431,44 @@ public class SuiuuDetailActivity extends Activity {
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         return drawable;
     }
-    class MyOnclick implements View.OnClickListener{
+
+    class MyOnclick implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
             int vId = v.getId();
             switch (vId) {
                 case R.id.suiuu_details_praise:
-                    if(TextUtils.isEmpty(attentionId)) {
+                    if (TextUtils.isEmpty(attentionId)) {
                         //为空添加点赞
                         addPraseRequest();
-                    }else {
+                    } else {
                         isPrase = true;
                         //取消点赞
                         collectionArticleCancle(attentionId);
                     }
                     break;
                 case R.id.suiuu_details_collection:
-                    if(TextUtils.isEmpty(collectionId)) {
+                    if (TextUtils.isEmpty(collectionId)) {
                         addCollection();
-                    }else {
+                    } else {
                         isPrase = false;
                         //取消点赞
                         collectionArticleCancle(collectionId);
                     }
                     break;
                 case R.id.suiuu_details_comments:
-                    Intent intent = new Intent(SuiuuDetailActivity.this,CommentsActivity.class);
-                    intent.putExtra("tripId",tripId);
+                    Intent intent = new Intent(SuiuuDetailActivity.this, CommentsActivity.class);
+                    intent.putExtra("tripId", tripId);
                     startActivity(intent);
+                    break;
+                case R.id.suiuu_details_user_head_image:
+                    Intent intentOtherUser = new Intent(SuiuuDetailActivity.this, OtherUserActivity.class);
+                    intentOtherUser.putExtra("userSign", suiuuDetailData.getUserInfo().getUserSign());
+                    startActivity(intentOtherUser);
+                    break;
+                case R.id.suiuu_details_back:
+                    finish();
                     break;
 
                 default:
@@ -446,6 +476,7 @@ public class SuiuuDetailActivity extends Activity {
             }
         }
     }
+
     /**
      * 动态初始化点
      *
@@ -456,24 +487,21 @@ public class SuiuuDetailActivity extends Activity {
         Utils util = new Utils(this);
         dotLists = new ArrayList<>();
         dots_ll.removeAllViews();
+        LayoutParams params;
         for (int i = 0; i < size; i++) {
-            // 设置点的宽高
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    new LayoutParams(util.dip2px(15),
-                            util.dip2px(15)));
-            View m = new View(this);
-            m.setMinimumWidth(10);
-            m.offsetLeftAndRight(20);
-//            params.setMargins(20, 0, 20, 0);
-//            params.setMarginStart(20);
-            m.setLayoutParams(params);
+            View pointView = new View(this);
+            params = new LayoutParams(util.dip2px(15), util.dip2px(15));
+            params.leftMargin = util.dip2px(10);
+            pointView.setLayoutParams(params);
+            pointView.setEnabled(false);
+            pointView.setBackgroundResource(R.drawable.ic_launcher);
             if (i == 0) {
-                m.setBackgroundResource(R.drawable.choiced_press);
+                pointView.setBackgroundResource(R.drawable.choiced_press);
             } else {
-                m.setBackgroundResource(R.drawable.choiced_normal);
+                pointView.setBackgroundResource(R.drawable.choiced_normal);
             }
-            dotLists.add(m);
-            dots_ll.addView(m);
+            dotLists.add(pointView);
+            dots_ll.addView(pointView);
         }
     }
 }

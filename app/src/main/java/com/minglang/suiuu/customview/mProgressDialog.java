@@ -59,15 +59,20 @@ public class mProgressDialog {
 		loadingDialog.setContentView(layout, new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.FILL_PARENT,
 				LinearLayout.LayoutParams.FILL_PARENT));// 设置布局
+        loadingDialog.setCancelable(false);
 	}
 	
 	/**
 	 * 显示loadingDialog
 	 */
 	public void showDialog(){
-		if(loadingDialog != null){
-			loadingDialog.show();
-		}
+        try {
+            if (loadingDialog != null) {
+                loadingDialog.show();
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 	
 	/**
@@ -78,4 +83,11 @@ public class mProgressDialog {
 			loadingDialog.dismiss();
 		}
 	}
+    public boolean isShow() {
+        if(loadingDialog.isShowing()) {
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

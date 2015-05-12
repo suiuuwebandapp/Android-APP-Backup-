@@ -64,7 +64,7 @@ public class MainFragment extends Fragment {
 
     private static final String TAG = MainFragment.class.getSimpleName();
 
-    private static final String USERSIGNKEY = "usersign";
+    private static final String USERSIGNKEY = "userSign";
     private static final String ARTICLEID = "articleId";
 
     private int screenWidth, screenHeight;
@@ -359,7 +359,6 @@ public class MainFragment extends Fragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }

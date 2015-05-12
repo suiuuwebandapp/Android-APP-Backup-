@@ -20,7 +20,7 @@ public class HttpServicePath {
      * http://test.suiuu.com
      * http://192.168.11.122
      */
-    public static String RootPath = "http://test.suiuu.com";
+    public static String RootPath = "http://192.168.11.122";
 
     public static String SharePath = "/circle/web-info?infoId=";
 
@@ -100,6 +100,10 @@ public class HttpServicePath {
      * 发布圈子文章
      */
     public static String createLoop = RootPath + "/circle/create-article";
+    /**
+     * 修改圈子文章
+     */
+    public static String updateLoop = RootPath + "/circle/up-date-article";
 
 
     /**

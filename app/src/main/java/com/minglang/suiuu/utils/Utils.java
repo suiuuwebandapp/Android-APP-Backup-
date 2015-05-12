@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.minglang.suiuu.R;
+
 public class Utils {
 
     private static final String TAG = Utils.class.getSimpleName();
@@ -80,6 +82,20 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return statusHeight;
+    }
+
+    /**
+     * 得到状态栏高度另一种方法
+     * @param contexts
+     * @return
+     */
+    public static int getStatusHeight1(Context contexts) {
+        SystemBarTintManager mTintManager = new SystemBarTintManager((Activity) contexts);
+        mTintManager.setStatusBarTintEnabled(true);
+        mTintManager.setNavigationBarTintEnabled(false);
+        mTintManager.setTintColor(contexts.getResources().getColor(R.color.tr_black));
+        int statusHeight = mTintManager.getConfig().getStatusBarHeight();
         return statusHeight;
     }
 

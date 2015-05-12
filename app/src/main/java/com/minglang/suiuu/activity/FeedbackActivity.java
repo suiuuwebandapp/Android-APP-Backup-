@@ -101,7 +101,7 @@ public class FeedbackActivity extends Activity {
 
             }
         });
-        gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture));
+        gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture,"0"));
         gv_show_picture.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -154,7 +154,7 @@ public class FeedbackActivity extends Activity {
             for (String string : listPicture) {
                 Log.i("suiuu", string);
             }
-            gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture));
+            gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture,"0"));
         }
     }
 }

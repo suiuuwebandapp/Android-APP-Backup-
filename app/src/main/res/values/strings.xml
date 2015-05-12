@@ -96,6 +96,7 @@
     <string name="title_is_empty">你的标题不能为空</string>
     <string name="article_publish_success">文章发布成功</string>
     <string name="article_publish_failure">文章发布失败</string>
+    <string name="article_update_success">文章更新成功</string>
 
     <string name="UnknownArea">未知地区</string>
     <string name="title">标题</string>

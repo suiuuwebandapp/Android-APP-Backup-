@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,8 @@ import com.minglang.suiuu.adapter.SelectPictureAdapter;
 import com.minglang.suiuu.popupwindow.BasePopupWindowForListView;
 import com.minglang.suiuu.entity.ImageFolder;
 import com.minglang.suiuu.entity.ImageItem;
+import com.minglang.suiuu.utils.ConstantUtil;
+import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -114,7 +117,10 @@ public class SelectPictureActivity extends Activity {
         setContentView(R.layout.activity_select_picture);
         state = this.getIntent().getIntExtra("state",0);
         initView();
-
+        if (ConstantUtil.isKITKAT) {
+            RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.selectPicture_root);
+            rootLayout.setPadding(0, Utils.getStatusHeight1(this), 0, 0);
+        }
         initPopupWindow();
 
         ObtainThumbnail();
