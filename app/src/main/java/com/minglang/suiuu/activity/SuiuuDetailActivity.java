@@ -278,7 +278,7 @@ public class SuiuuDetailActivity extends Activity {
         params.addBodyParameter("travelId", detailInfo.getTripId());
         params.addBodyParameter(HttpServicePath.key, Verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.travelAddPrase, new addPraseRequestCallBack());
+                HttpServicePath.travelAddPraise, new addPraseRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }

@@ -20,7 +20,7 @@ public class HttpServicePath {
      * http://test.suiuu.com
      * http://192.168.11.122
      */
-    public static String RootPath = "http://test.suiuu.com";
+    public static String RootPath = "http://192.168.11.122";
 
     public static String SharePath = "/circle/web-info?infoId=";
 
@@ -143,7 +143,7 @@ public class HttpServicePath {
      * <p/>
      * 请求参数：无
      */
-    public static String MainDynamicPath = RootPath + "/attention/get-index-list";
+    public static String MainDynamicPath = RootPath + "/app-main/get-index-list";
 
     /**
      * 得到详细关注动态数据
@@ -193,7 +193,7 @@ public class HttpServicePath {
      * <p/>
      * 请求参数:用户标识 userSign、统一参数key{@link #key}
      */
-    public static String userInformationPath = RootPath + "/circle/get-homepage-info";
+    public static String userInformationPath = RootPath + "/app-main/get-homepage-info";
 
     /**
      * 获取消息列表
@@ -234,6 +234,7 @@ public class HttpServicePath {
      * 得到选择国家的数据
      */
     public static String getCountryData = RootPath + "/app-travel/get-country";
+
     /**
      * 添加关注的圈子
      * <p/>
@@ -270,9 +271,19 @@ public class HttpServicePath {
     /**
      * 随游中添加点赞
      */
-    public static String travelAddPrase = RootPath + "/attention/add-praise-travel";
+    public static String travelAddPraise = RootPath + "/attention/add-praise-travel";
     /**
      * 圈子中添加点赞
      */
     public static String articleAddPraise = RootPath + "/attention/add-praise-circle-article";
+
+    /**
+     * 更新个人信息状态
+     * <p/>
+     * 请求方式:POST
+     *
+     * 请求参数:sex 性别、nickname 昵称、birthday 生日、intro 短简介
+     * info 详情介绍、countryId、国家id cityI、城市id、lon经度、lat 维度、profession 职业
+     */
+    public static String upDatePersonalStatus = RootPath + "/app-main/update-user-info";
 }

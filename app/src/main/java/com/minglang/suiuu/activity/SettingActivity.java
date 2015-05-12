@@ -70,7 +70,7 @@ public class SettingActivity extends Activity {
                 switch (position) {
 
                     case 0:
-                        Intent intent0 = new Intent(SettingActivity.this, PersonSettingActivity.class);
+                        Intent intent0 = new Intent(SettingActivity.this, PersonalSettingActivity.class);
                         startActivity(intent0);
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         break;

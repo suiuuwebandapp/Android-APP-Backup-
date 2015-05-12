@@ -39,10 +39,6 @@ public class ImageLoaderUtils {
      * 任务队列
      */
     private LinkedList<Runnable> mTasks;
-    /**
-     * 轮询的线程
-     */
-    private Thread mPoolThread;
     private Handler mPoolThreadHandler;
 
     /**
@@ -91,8 +87,8 @@ public class ImageLoaderUtils {
     }
 
     private void init(int threadCount, Type type) {
-        // loop thread
-        mPoolThread = new Thread() {
+        //轮询的线程
+        Thread mPoolThread = new Thread() {
             @Override
             public void run() {
                 Looper.prepare();

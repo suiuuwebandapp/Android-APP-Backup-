@@ -131,6 +131,13 @@
     <string name="pull_to_refresh_footer_refreshing_label">加载中\u2026</string>
     <string name="loadDataComplete">数据加载完毕,点击刷新</string>
 
+    <string name="man">男</string>
+    <string name="woman">女</string>
+
+    <string name="country">国家</string>
+    <string name="city">城市</string>
+    <string name="countryDetails">请选择国家</string>
+    <string name="cityDetails">请选择城市</string>
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>

@@ -1,5 +1,6 @@
 package com.minglang.suiuu.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -567,8 +568,7 @@ public class LoginActivity extends Activity {
                     UserBackData data = user.getData();
                     SuiuuInfo.WriteVerification(LoginActivity.this, user.getMessage());
                     SuiuuInfo.WriteUserSign(LoginActivity.this, data.getUserSign());
-                    SuiuuInfo.WriteUserBasicInfo(LoginActivity.this, data.getNickname(),
-                            data.getSex(), data.getHeadImg());
+                    SuiuuInfo.WriteUserData(LoginActivity.this, data);
                     huanXinUsername = user.getData().getUserSign();
                     huanXinLogin();
                 } else {
@@ -840,6 +840,7 @@ public class LoginActivity extends Activity {
     /**
      * 初始化PopupWindow
      */
+    @SuppressLint("InflateParams")
     private void initPopupWindow() {
         DisplayMetrics dm = getResources().getDisplayMetrics();
 
@@ -1080,7 +1081,6 @@ public class LoginActivity extends Activity {
 
         Log.i(TAG, "openID:" + qq_open_id + ",nickName:" + qq_nick_Name + ",sex:" + qq_gender +
                 ",headImage:" + qq_head_image_path + ",type:" + type + ",sign:" + sign);
-        SuiuuInfo.WriteUserBasicInfo(LoginActivity.this, qq_nick_Name, qq_gender, qq_head_image_path);
 
         http.setParams(params);
         http.requestNetworkData();
@@ -1113,6 +1113,9 @@ public class LoginActivity extends Activity {
                     if (!TextUtils.isEmpty(userSign)) {
                         SuiuuInfo.WriteUserSign(LoginActivity.this, userSign);
                     }
+
+                    SuiuuInfo.WriteUserSign(LoginActivity.this, userBack.getData().getIntro());
+                    SuiuuInfo.WriteUserData(LoginActivity.this, userBack.getData());
 
                     huanXinUsername = userBack.getData().getUserSign();
                     huanXinLogin();
@@ -1250,7 +1253,6 @@ public class LoginActivity extends Activity {
 
         Log.i(TAG, "发送微信数据:[openId:" + weChatUnionId + ",nickname:" + weChatNickName
                 + ",sex:" + weChatGender + ",headImg:" + weChatHeadImagePath + ",type:" + type + ",sign:" + sign + "]");
-        SuiuuInfo.WriteUserBasicInfo(LoginActivity.this, weChatNickName, weChatGender, weChatHeadImagePath);
 
         SuHttpRequest http = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.ThirdPartyPath, new WXRequestCallBack());
@@ -1282,6 +1284,9 @@ public class LoginActivity extends Activity {
                     if (!TextUtils.isEmpty(userSign)) {
                         SuiuuInfo.WriteUserSign(LoginActivity.this, userSign);
                     }
+
+                    SuiuuInfo.WriteUserSign(LoginActivity.this, userBack.getData().getIntro());
+                    SuiuuInfo.WriteUserData(LoginActivity.this, userBack.getData());
 
                     huanXinUsername = userBack.getData().getUserSign();
                     huanXinLogin();
@@ -1341,8 +1346,6 @@ public class LoginActivity extends Activity {
             String weiBoImagePath = user.avatar_large;
             //性别
             String weiBoGender = user.gender;
-
-            SuiuuInfo.WriteUserBasicInfo(LoginActivity.this, weiBoUserName, weiBoGender, weiBoImagePath);
 
             SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                     HttpServicePath.ThirdPartyPath, new WeiBoRequestCallBack());

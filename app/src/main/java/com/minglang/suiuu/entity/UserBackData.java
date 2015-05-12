@@ -27,6 +27,8 @@ public class UserBackData {
 
     public String hobby;
 
+    public String profession;
+
     public String school;
 
     public String intro;
@@ -56,6 +58,110 @@ public class UserBackData {
     public String lon;
 
     public String lat;
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public void setHeadImg(String headImg) {
+        this.headImg = headImg;
+    }
+
+    public void setHobby(String hobby) {
+        this.hobby = hobby;
+    }
+
+    public void setProfession(String profession) {
+        this.profession = profession;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
+    public void setTravelCount(String travelCount) {
+        this.travelCount = travelCount;
+    }
+
+    public void setRegisterIp(String registerIp) {
+        this.registerIp = registerIp;
+    }
+
+    public void setRegisterTime(String registerTime) {
+        this.registerTime = registerTime;
+    }
+
+    public void setLastLoginIp(String lastLoginIp) {
+        this.lastLoginIp = lastLoginIp;
+    }
+
+    public void setLastLoginTime(String lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
+    }
+
+    public void setUserSign(String userSign) {
+        this.userSign = userSign;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setIsPublisher(String isPublisher) {
+        this.isPublisher = isPublisher;
+    }
+
+    public void setCountryId(String countryId) {
+        this.countryId = countryId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
+    public void setLon(String lon) {
+        this.lon = lon;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
 
     public String getUserId() {
         return userId;
@@ -95,6 +201,10 @@ public class UserBackData {
 
     public String getHobby() {
         return hobby;
+    }
+
+    public String getProfession() {
+        return profession;
     }
 
     public String getSchool() {
@@ -160,31 +270,32 @@ public class UserBackData {
     @Override
     public String toString() {
         return "UserBackData{" +
-                "userId='" + userId + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", areaCode='" + areaCode + '\'' +
-                ", sex='" + sex + '\'' +
-                ", birthday='" + birthday + '\'' +
-                ", headImg='" + headImg + '\'' +
-                ", hobby='" + hobby + '\'' +
-                ", school='" + school + '\'' +
-                ", intro='" + intro + '\'' +
-                ", info='" + info + '\'' +
-                ", travelCount='" + travelCount + '\'' +
-                ", registerIp='" + registerIp + '\'' +
-                ", registerTime='" + registerTime + '\'' +
-                ", lastLoginIp='" + lastLoginIp + '\'' +
-                ", lastLoginTime='" + lastLoginTime + '\'' +
-                ", userSign='" + userSign + '\'' +
-                ", status='" + status + '\'' +
-                ", isPublisher='" + isPublisher + '\'' +
-                ", countryId='" + countryId + '\'' +
-                ", cityId='" + cityId + '\'' +
+                "lat='" + lat + '\'' +
                 ", lon='" + lon + '\'' +
-                ", lat='" + lat + '\'' +
+                ", cityId='" + cityId + '\'' +
+                ", countryId='" + countryId + '\'' +
+                ", isPublisher='" + isPublisher + '\'' +
+                ", status='" + status + '\'' +
+                ", userSign='" + userSign + '\'' +
+                ", lastLoginTime='" + lastLoginTime + '\'' +
+                ", lastLoginIp='" + lastLoginIp + '\'' +
+                ", registerTime='" + registerTime + '\'' +
+                ", registerIp='" + registerIp + '\'' +
+                ", travelCount='" + travelCount + '\'' +
+                ", info='" + info + '\'' +
+                ", intro='" + intro + '\'' +
+                ", school='" + school + '\'' +
+                ", profession='" + profession + '\'' +
+                ", hobby='" + hobby + '\'' +
+                ", headImg='" + headImg + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", sex='" + sex + '\'' +
+                ", areaCode='" + areaCode + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", userId='" + userId + '\'' +
                 '}';
     }
 }

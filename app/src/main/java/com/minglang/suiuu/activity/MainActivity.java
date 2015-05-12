@@ -716,14 +716,14 @@ public class MainActivity extends FragmentActivity {
         drawerSwitch = (ImageView) findViewById(R.id.drawerSwitch);
 
         nickNameView = (TextView) findViewById(R.id.nickName);
-        String strNickName = SuiuuInfo.ReadUserName(this);
+        String strNickName = SuiuuInfo.ReadUserData(this).getNickname();
         Log.i(TAG, "用户昵称:" + strNickName);
         if (!TextUtils.isEmpty(strNickName)) {
             nickNameView.setText(strNickName);
         }
 
         headImageView = (CircleImageView) findViewById(R.id.headImage);
-        String strHeadImagePath = SuiuuInfo.ReadUserHeadImagePath(this);
+        String strHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
         Log.i(TAG, "用户头像URL:" + strHeadImagePath);
         if (!TextUtils.isEmpty(strHeadImagePath)) {
             imageLoader.displayImage(strHeadImagePath, headImageView);

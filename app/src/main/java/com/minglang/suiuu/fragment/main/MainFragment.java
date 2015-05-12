@@ -142,6 +142,7 @@ public class MainFragment extends Fragment {
      * @param str Json字符串
      */
     private void bindData2View(String str) {
+        Log.i(TAG, "str:" + str);
         try {
             MainDynamic mainDynamic = JsonUtil.getInstance().fromJSON(MainDynamic.class, str);
             MainDynamicData data = mainDynamic.getData();
@@ -198,9 +199,13 @@ public class MainFragment extends Fragment {
      * 网络请求数据
      */
     private void getMainDynamic4Service() {
+
+        String verification = SuiuuInfo.ReadVerification(getActivity());
+        Log.i(TAG, "verification:" + verification);
+
         RequestParams params = new RequestParams();
         params.addBodyParameter("n", "6");
-        params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(getActivity()));
+        params.addBodyParameter(HttpServicePath.key, verification);
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.MainDynamicPath, new MainDynamicRequestCallBack());
