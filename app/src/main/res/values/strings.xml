@@ -139,6 +139,8 @@
     <string name="city">城市</string>
     <string name="countryDetails">请选择国家</string>
     <string name="cityDetails">请选择城市</string>
+
+    <string name="next">下一步</string>
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>
@@ -415,5 +417,6 @@
     <string name="title_activity_loop_article">LoopArticleActivity</string>
     <string name="title_activity_all_attention_dynamic">AllAttentionDynamicActivity</string>
     <string name="title_activity_wxentry">WXEntryActivity</string>
+    <string name="title_activity_select_country">SelectCountryActivity</string>
 
 </resources>
