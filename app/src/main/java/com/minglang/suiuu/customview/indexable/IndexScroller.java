@@ -229,41 +229,38 @@ public class IndexScroller {
 		mHandler.sendEmptyMessageAtTime(0, SystemClock.uptimeMillis() + delay);
 	}
 	
-	private Handler mHandler = new Handler() {
+	private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (mState) {
+                case STATE_SHOWING:
+                    // Fade in effect
+                    mAlphaRate += (1 - mAlphaRate) * 0.2;
+                    if (mAlphaRate > 0.9) {
+                        mAlphaRate = 1;
+                        setState(STATE_SHOWN);
+                    }
 
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			
-			switch (mState) {
-			case STATE_SHOWING:
-				// Fade in effect
-				mAlphaRate += (1 - mAlphaRate) * 0.2;
-				if (mAlphaRate > 0.9) {
-					mAlphaRate = 1;
-					setState(STATE_SHOWN);
-				}
-				
-				mListView.invalidate();
-				fade(10);
-				break;
-			case STATE_SHOWN:
-				// If no action, hide automatically
-				setState(STATE_HIDING);
-				break;
-			case STATE_HIDING:
-				// Fade out effect
-				mAlphaRate -= mAlphaRate * 0.2;
-				if (mAlphaRate < 0.1) {
-					mAlphaRate = 0;
-					setState(STATE_HIDDEN);
-				}
-				
-				mListView.invalidate();
-				fade(10);
-				break;
-			}
-		}
-		
-	};
+                    mListView.invalidate();
+                    fade(10);
+                    break;
+                case STATE_SHOWN:
+                    // If no action, hide automatically
+                    setState(STATE_HIDING);
+                    break;
+                case STATE_HIDING:
+                    // Fade out effect
+                    mAlphaRate -= mAlphaRate * 0.2;
+                    if (mAlphaRate < 0.1) {
+                        mAlphaRate = 0;
+                        setState(STATE_HIDDEN);
+                    }
+
+                    mListView.invalidate();
+                    fade(10);
+                    break;
+            }
+            return false;
+        }
+    });
 }

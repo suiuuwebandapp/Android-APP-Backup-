@@ -569,6 +569,7 @@ public class LoginActivity extends Activity {
                     SuiuuInfo.WriteVerification(LoginActivity.this, user.getMessage());
                     SuiuuInfo.WriteUserSign(LoginActivity.this, data.getUserSign());
                     SuiuuInfo.WriteUserData(LoginActivity.this, data);
+                    Log.i(TAG, "头像URL:" + data.getHeadImg());
                     huanXinUsername = user.getData().getUserSign();
                     huanXinLogin();
                 } else {
@@ -1116,6 +1117,7 @@ public class LoginActivity extends Activity {
 
                     SuiuuInfo.WriteUserSign(LoginActivity.this, userBack.getData().getIntro());
                     SuiuuInfo.WriteUserData(LoginActivity.this, userBack.getData());
+                    Log.i(TAG,"用户头像URL:"+userBack.getData().getHeadImg());
 
                     huanXinUsername = userBack.getData().getUserSign();
                     huanXinLogin();

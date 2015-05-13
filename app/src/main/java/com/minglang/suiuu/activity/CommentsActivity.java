@@ -134,7 +134,7 @@ public class CommentsActivity extends Activity {
         params.addBodyParameter("rId", rId);
         params.addBodyParameter(HttpServicePath.key, Verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.artilceCreateComment, new requestComentSendCallBack());
+                HttpServicePath.articleCreateComment, new requestComentSendCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }

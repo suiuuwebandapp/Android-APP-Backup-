@@ -58,6 +58,55 @@ public class SuiuuInfo implements Serializable {
     private static final String SIGNATURE = "Signature";
 
     /**
+     * 居住地国家
+     */
+    private static final String DomicileCountry = "domicileCountry";
+
+    /**
+     * 居住地城市
+     */
+    private static final String DomicileCity = "domicileCity";
+
+    /**
+     * 读取居住地城市信息
+     *
+     * @param context 上下文对象
+     * @return 居住度城市信息
+     */
+    public static String ReadDomicilCity(Context context) {
+        return context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).getString(DomicileCity, "");
+    }
+
+    /**
+     * 读取居住地国家
+     *
+     * @param context 上下文对象
+     * @return 居住地国家信息
+     */
+    public static String ReadDomicileCountry(Context context) {
+        return context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).getString(DomicileCountry, "");
+    }
+
+    /**
+     * 保存居住地信息
+     *
+     * @param context         上下文对象
+     * @param domicileCountry 居住地国家
+     * @param domicileCity    居住地城市
+     */
+    public static void WriteDomicileInfo(Context context, String domicileCountry, String domicileCity) {
+        if (context == null) {
+            return;
+        }
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).edit();
+        editor.putString(DomicileCountry, domicileCountry);
+        editor.putString(DomicileCity, domicileCity);
+        editor.apply();
+
+    }
+
+
+    /**
      * 读取个性签名
      *
      * @param context 上下文对象

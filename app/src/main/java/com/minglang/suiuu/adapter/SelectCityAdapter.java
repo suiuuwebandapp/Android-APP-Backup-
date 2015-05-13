@@ -9,34 +9,23 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.CountryAssistData;
+import com.minglang.suiuu.entity.CityAssistData;
 import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.List;
 
 /**
- * 选择国家数据适配器
- * <p/>
- * Created by LZY on 2015/5/12 0012.
+ * Created by Administrator on 2015/5/13.
  */
-public class SelectCountryAdapter extends BaseAdapter implements SectionIndexer {
+public class SelectCityAdapter extends BaseAdapter implements SectionIndexer {
 
     private Context context;
 
-    private List<CountryAssistData> list;
+    private List<CityAssistData> list;
 
-    public SelectCountryAdapter(Context context) {
-        this.context = context;
-    }
-
-    public SelectCountryAdapter(Context context, List<CountryAssistData> list) {
+    public SelectCityAdapter(Context context, List<CityAssistData> list) {
         this.context = context;
         this.list = list;
-    }
-
-    public void setList(List<CountryAssistData> list) {
-        this.list = list;
-        notifyDataSetChanged();
     }
 
     @Override
@@ -65,32 +54,32 @@ public class SelectCountryAdapter extends BaseAdapter implements SectionIndexer 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        CountryAssistData data = list.get(position);
+        CityAssistData data = list.get(position);
 
-        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_country, position);
-        TextView countryName = holder.getView(R.id.item_country_name);
-        TextView indexLetter = holder.getView(R.id.item_country_index_letter);
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_city, position);
+        TextView indexText = holder.getView(R.id.item_city_index_letter);
+        TextView cityName = holder.getView(R.id.item_city_name);
 
         // 根据position获取分类的首字母的Char ascii值
         int section = getSectionForPosition(position);
 
         if (position == getPositionForSection(section)) {
-            indexLetter.setText(data.getFirstLetter());
-            indexLetter.setVisibility(View.VISIBLE);
+            indexText.setText(data.getFirstLetter());
+            indexText.setVisibility(View.VISIBLE);
         } else {
-            indexLetter.setVisibility(View.GONE);
+            indexText.setVisibility(View.GONE);
         }
 
         String StrCnName = data.getCname();
         String StrUsName = data.getEname();
         if (!TextUtils.isEmpty(StrCnName)) {
             if (!TextUtils.isEmpty(StrUsName)) {
-                countryName.setText(StrCnName + "   " + StrUsName);
+                cityName.setText(StrCnName + "   " + StrUsName);
             } else {
-                countryName.setText(StrCnName);
+                cityName.setText(StrCnName);
             }
         } else {
-            countryName.setText("");
+            cityName.setText("");
         }
 
         convertView = holder.getConvertView();

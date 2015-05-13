@@ -19,6 +19,7 @@ import com.easemob.chat.EMChatManager;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.SettingAdapter;
 import com.minglang.suiuu.chat.chat.DemoApplication;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.ArrayList;
@@ -60,7 +61,6 @@ public class SettingActivity extends Activity {
             @Override
             public void onClick(View v) {
                 finish();
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 
@@ -72,12 +72,10 @@ public class SettingActivity extends Activity {
                     case 0:
                         Intent intent0 = new Intent(SettingActivity.this, PersonalSettingActivity.class);
                         startActivity(intent0);
-                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         break;
 
                     case 1:
-                        startActivity(new Intent(SettingActivity.this,NormalSettingActivity.class));
-                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                        startActivity(new Intent(SettingActivity.this, NormalSettingActivity.class));
                         break;
 
                     case 2:
@@ -86,13 +84,11 @@ public class SettingActivity extends Activity {
                     case 3:
                         Intent intent3 = new Intent(SettingActivity.this, ContactUsActivity.class);
                         startActivity(intent3);
-                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         break;
 
                     case 4:
                         Intent intent4 = new Intent(SettingActivity.this, FeedbackActivity.class);
                         startActivity(intent4);
-                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                         break;
 
                     case 5:
@@ -103,8 +99,9 @@ public class SettingActivity extends Activity {
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            logout();
-
+                SuiuuInfo.ClearSuiuuInfo(SettingActivity.this);
+                SuiuuInfo.ClearSuiuuThird(SettingActivity.this);
+                logout();
             }
         });
 
@@ -120,7 +117,7 @@ public class SettingActivity extends Activity {
         tv_top_right = (TextView) findViewById(R.id.tv_top_right);
         tv_top_right.setVisibility(View.INVISIBLE);
         btn_logout = (Button) findViewById(R.id.btn_logout);
-        if(!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())){
+        if (!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())) {
             btn_logout.setText(getString(R.string.button_logout));
         }
         SystemBarTintManager mTintManager = new SystemBarTintManager(this);
@@ -150,6 +147,7 @@ public class SettingActivity extends Activity {
         settingList.setAdapter(adapter);
 
     }
+
     public void logout() {
         final ProgressDialog pd = new ProgressDialog(this);
         String st = getResources().getString(R.string.Are_logged_out);
@@ -179,6 +177,23 @@ public class SettingActivity extends Activity {
             public void onError(int code, String message) {
             }
         });
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
 }

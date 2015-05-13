@@ -31,9 +31,11 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
+import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.entity.UserBackData;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
@@ -76,7 +78,7 @@ public class PersonalSettingActivity extends Activity {
      */
     private EditText editNickName;
 
-    private TextView countryDetails, cityDetails;
+    private TextView localDetails;
 
     /**
      * 职业编辑框
@@ -137,7 +139,7 @@ public class PersonalSettingActivity extends Activity {
                         upLoadDialog.dismiss();
                     }
 
-                    Toast.makeText(PersonalSettingActivity.this, "头像上传成功！", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(PersonalSettingActivity.this, "头像上传成功！", Toast.LENGTH_SHORT).show();
                     setData();
                     break;
 
@@ -152,6 +154,8 @@ public class PersonalSettingActivity extends Activity {
             return false;
         }
     });
+
+    private String countryId, cityId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,7 +197,7 @@ public class PersonalSettingActivity extends Activity {
                     Toast.makeText(PersonalSettingActivity.this, "签名不能为空！", Toast.LENGTH_SHORT).show();
                 } else {
 //                    if (isSelectHeadImage) {
-                    if (TextUtils.isEmpty(nativeImagePath)) {
+                    if (TextUtils.isEmpty(networkImagePath)) {
                         Toast.makeText(PersonalSettingActivity.this, "请选择头像！", Toast.LENGTH_SHORT).show();
                     } else {
                         isSelectHeadImage = false;
@@ -239,14 +243,19 @@ public class PersonalSettingActivity extends Activity {
             }
         });
 
-        countryDetails.setOnClickListener(new View.OnClickListener() {
+        localDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(PersonalSettingActivity.this, SelectCountryActivity.class);
+                startActivityForResult(intent, AppConstant.SELECT_COUNTRY_OK);
             }
         });
 
     }
 
+    /**
+     * 上传头像到服务器
+     */
     private void upLoadImage() {
         String type = nativeImagePath.substring(nativeImagePath.lastIndexOf("/"));
         String name = type.substring(type.lastIndexOf(".") + 1);
@@ -265,7 +274,7 @@ public class PersonalSettingActivity extends Activity {
                 @Override
                 public void onProgress(String objectKey, int byteCount, int totalSize) {
                     Log.i(TAG, "图片上传中:" + objectKey + ",byteCount:" + byteCount + ",totalSize:" + totalSize);
-                    int percent = byteCount / totalSize;
+                    double percent = byteCount / totalSize;
                     Log.i(TAG, "百分比:" + percent + "%");
                 }
 
@@ -302,8 +311,8 @@ public class PersonalSettingActivity extends Activity {
         params.addBodyParameter("birthday", data.getBirthday());
         params.addBodyParameter("intro", str_Sign);
         params.addBodyParameter("info", data.getInfo());
-        params.addBodyParameter("countryId", "0");
-        params.addBodyParameter("cityId", "0");
+        params.addBodyParameter("countryId", countryId);
+        params.addBodyParameter("cityId", cityId);
         params.addBodyParameter("lon", data.getLon());
         params.addBodyParameter("lat", data.getLat());
         params.addBodyParameter("profession", str_Trade);
@@ -319,14 +328,14 @@ public class PersonalSettingActivity extends Activity {
      * 添加初始化数据
      */
     private void initLoadDefaultData() {
-        String headImagePath = data.getHeadImg();
-        String NativeHeadImagePath = SuiuuInfo.ReadNativeHeadImagePath(this);
+        networkImagePath = data.getHeadImg();
+        nativeImagePath = SuiuuInfo.ReadNativeHeadImagePath(this);
 
-        if (!TextUtils.isEmpty(headImagePath)) {
-            imageLoader.displayImage(headImagePath, headImageView, options);
+        if (!TextUtils.isEmpty(networkImagePath)) {
+            imageLoader.displayImage(networkImagePath, headImageView, options);
         } else {
-            if (!TextUtils.isEmpty(NativeHeadImagePath)) {
-                imageLoader.displayImage("file://" + NativeHeadImagePath, headImageView, options);
+            if (!TextUtils.isEmpty(nativeImagePath)) {
+                imageLoader.displayImage("file://" + nativeImagePath, headImageView, options);
             }
         }
 
@@ -337,16 +346,32 @@ public class PersonalSettingActivity extends Activity {
 
         String strGender = data.getSex();
         if (!TextUtils.isEmpty(strGender)) {
-            switch (strGender) {
-                case "1":
-                    sex_man.setCompoundDrawablesWithIntrinsicBounds
-                            (getResources().getDrawable(R.drawable.sex_man), null, null, null);
-                    break;
-                case "0":
-                    sex_woman.setCompoundDrawablesWithIntrinsicBounds
-                            (getResources().getDrawable(R.drawable.sex_woman), null, null, null);
-                    break;
+            if (strGender.equals("1")) {
+                sex_man.setCompoundDrawablesWithIntrinsicBounds
+                        (getResources().getDrawable(R.drawable.sex_man), null, null, null);
+                Log.i(TAG, "男");
+            } else if (strGender.equals("0")) {
+                sex_woman.setCompoundDrawablesWithIntrinsicBounds
+                        (getResources().getDrawable(R.drawable.sex_woman), null, null, null);
+                Log.i(TAG, "女");
             }
+        }
+
+        String countryName = SuiuuInfo.ReadDomicileCountry(this);
+        String cityName = SuiuuInfo.ReadDomicilCity(this);
+        if (!TextUtils.isEmpty(countryName) && !TextUtils.isEmpty(cityName)) {
+            localDetails.setText(countryName + "," + cityName);
+        } else if (TextUtils.isEmpty(countryName) && !TextUtils.isEmpty(cityName)) {
+            localDetails.setText(cityName);
+        } else if (!TextUtils.isEmpty(countryName) && TextUtils.isEmpty(cityName)) {
+            localDetails.setText(countryName);
+        } else {
+            localDetails.setText(getResources().getString(R.string.local));
+        }
+
+        String profession = data.getProfession();
+        if (!TextUtils.isEmpty(profession)) {
+            editTrade.setText(profession);
         }
 
         String signature = data.getIntro();
@@ -387,8 +412,7 @@ public class PersonalSettingActivity extends Activity {
         sex_man = (TextView) findViewById(R.id.personal_setting_man);
         sex_woman = (TextView) findViewById(R.id.personal_setting_woman);
 
-        countryDetails = (TextView) findViewById(R.id.countryDetails);
-        cityDetails = (TextView) findViewById(R.id.cityDetails);
+        localDetails = (TextView) findViewById(R.id.localDetails);
 
         editNickName = (EditText) findViewById(R.id.editNickName);
         editTrade = (EditText) findViewById(R.id.editTrade);
@@ -403,7 +427,7 @@ public class PersonalSettingActivity extends Activity {
         progressDialog.setCanceledOnTouchOutside(false);
 
         imageLoader = ImageLoader.getInstance();
-        if (imageLoader.isInited()) {
+        if (!imageLoader.isInited()) {
             imageLoader.init(ImageLoaderConfiguration.createDefault(this));
         }
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
@@ -442,12 +466,30 @@ public class PersonalSettingActivity extends Activity {
                 break;
 
             case AppConstant.INTENT_CROP:
-                Log.i(TAG, "裁剪返回的数据:" + data.toString());
                 Bitmap bitmap = data.getParcelableExtra("data");
                 headImageView.setImageBitmap(bitmap);
                 isSelectHeadImage = true;
                 break;
+
+            case AppConstant.SELECT_COUNTRY_OK:
+                countryId = data.getStringExtra("countryId");
+                cityId = data.getStringExtra("cityId");
+                String countryCNname = data.getStringExtra("countryCNname");
+                String cityName = data.getStringExtra("cityName");
+                Log.i(TAG, "countryId:" + countryId);
+                Log.i(TAG, "countryCNname:" + countryCNname);
+                Log.i(TAG, "cityId:" + cityId);
+                Log.i(TAG, "cityName:" + cityName);
+                SuiuuInfo.WriteDomicileInfo(this, countryCNname, cityName);
+                localDetails.setText(countryCNname + "," + cityName);
+                break;
         }
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     @Override
@@ -467,6 +509,9 @@ public class PersonalSettingActivity extends Activity {
         finish();
     }
 
+    /**
+     * 发送个人资料到服务器的网络请求回调接口
+     */
     private class PersonalSettingRequestCallBack extends RequestCallBack<String> {
 
         @Override
@@ -476,7 +521,29 @@ public class PersonalSettingActivity extends Activity {
             }
 
             String str = stringResponseInfo.result;
-            Log.i(TAG, "个人数据保存成功:" + str);
+            if (TextUtils.isEmpty(str)) {
+                Toast.makeText(PersonalSettingActivity.this,
+                        getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+            } else {
+                Log.i(TAG, "更新成功:" + str);
+                try {
+                    UserBack userBack = JsonUtil.getInstance().fromJSON(UserBack.class, str);
+                    String status = userBack.getStatus();
+                    if (!TextUtils.isEmpty(status)) {
+                        if (status.equals("1")) {
+                            UserBackData userBackData = userBack.getData();
+                            SuiuuInfo.WriteUserData(PersonalSettingActivity.this, userBackData);
+                        } else {
+                            Toast.makeText(PersonalSettingActivity.this,
+                                    getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "更新个人资料的返回数据解析失败:" + e.getMessage());
+                    Toast.makeText(PersonalSettingActivity.this,
+                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                }
+            }
         }
 
         @Override
