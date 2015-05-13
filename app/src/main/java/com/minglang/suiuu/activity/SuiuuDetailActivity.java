@@ -203,7 +203,7 @@ public class SuiuuDetailActivity extends Activity {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void setViewPager() {
         initDot(picList.size());
-        RollViewPager mViewPager = new RollViewPager(this, dotLists, new RollViewPager.PagerClickCallBack() {
+        RollViewPager mViewPager = new RollViewPager(this,dotLists, new RollViewPager.PagerClickCallBack() {
             @Override
             public void pagerClick(int postion) {
 //				Intent intent = new Intent(ct,DetaiAct.class);

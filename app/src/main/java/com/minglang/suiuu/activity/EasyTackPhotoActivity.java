@@ -26,6 +26,7 @@ import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
 import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSFile;
+import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -36,6 +37,7 @@ import com.minglang.suiuu.adapter.EasyTackPhotoAdapter;
 import com.minglang.suiuu.adapter.MyListAdapter;
 import com.minglang.suiuu.chat.activity.BaiduMapActivity;
 import com.minglang.suiuu.customview.mProgressDialog;
+import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.ConstantUtil;
@@ -119,6 +121,11 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     private ImageView iv_top_back;
     private ScrollView sll;
     private String dataNum;
+    private LoopArticleData articleDetail;
+    private List<String> changePicList;
+    private JsonUtil jsonUtil = JsonUtil.getInstance();
+    //修改文章进来是否重新选择图片
+    private boolean isChangePic = false;
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -131,6 +138,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
                         //TODO 发布完成后在此跳转
                         Intent intent = new Intent(EasyTackPhotoActivity.this,LoopArticleActivity.class);
                         intent.putExtra("articleId",dataNum);
+                        intent.putExtra("TAG",TAG);
                         startActivity(intent);
                     } else {
                         dialog.dismissDialog();
@@ -154,14 +162,15 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         setContentView(R.layout.activity_easy_tackphoto);
 
         picList = this.getIntent().getStringArrayListExtra("pictureMessage");
-
+        articleDetail = (LoopArticleData) this.getIntent().getSerializableExtra("articleDetail");
         initView();
         if (ConstantUtil.isKITKAT) {
             LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
             rootLayout.setPadding(0, Utils.getStatusHeight1(this), 0, 0);
         }
-        lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, picList));
-        Utils.setListViewHeightBasedOnChildren(lv_picture_description);
+        //判断如果文章详情信息不为空就是修改文章的图片反之为新文章图片
+
+
 //        iv_cancel.setVisibility(View.GONE);
         tv_cancel.setVisibility(View.VISIBLE);
 
@@ -195,6 +204,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     }
 
     private void initView() {
+        picDescriptionList = new ArrayList<>();
         iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
         iv_top_back.setVisibility(View.GONE);
         tv_cancel = (TextView) findViewById(R.id.tv_top_cancel);
@@ -206,14 +216,35 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         tv_show_your_location = (TextView) findViewById(R.id.tv_show_your_location);
         sll = (ScrollView) findViewById(R.id.sll);
         sll.smoothScrollTo(0, 0);
+
+        if(articleDetail!=null ) {
+            changeArticleFullData();
+        }else {
+            lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, picList, "0"));
+            Utils.setListViewHeightBasedOnChildren(lv_picture_description);
+        }
+    }
+
+    private void changeArticleFullData() {
+        tv_theme_choice.setVisibility(View.GONE);
+        tv_area_choice.setVisibility(View.GONE);
+        search_question.setText(articleDetail.getaTitle());
+        tv_show_your_location.setText(articleDetail.getaAddr());
+        changePicList = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>(){}.getType(),articleDetail.getaImgList());
+        List<String> changeContentList = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>(){}.getType(),articleDetail.getaContent());
+        lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, changePicList,changeContentList,"1"));
+        Utils.setListViewHeightBasedOnChildren(lv_picture_description);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == 9) {
+            if(articleDetail != null) {
+                isChangePic = true;
+            }
             picList = data.getStringArrayListExtra("pictureMessage");
-            lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, picList));
+            lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, picList,"0"));
             Utils.setListViewHeightBasedOnChildren(lv_picture_description);
         } else if (data != null && requestCode == REQUEST_CODE_MAP) {
             double latitude = data.getDoubleExtra("latitude", 0);
@@ -235,7 +266,11 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         if (mId == R.id.tv_top_cancel) {
             finish();
         } else if (mId == R.id.tv_top_right) {
-            loadDate();
+            if(articleDetail != null) {
+                changeLoadDate();
+            }else {
+                loadDate();
+            }
         } else if (mId == R.id.tv_theme_choice) {
             loadThemeDate();
         } else if (mId == R.id.tv_area_choice) {
@@ -333,19 +368,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     }
 
     private void loadDate() {
-        picDescriptionList = new ArrayList<>();
-        ListView list = (ListView) findViewById(R.id.lv_picture_description);//获得listview
-        for (int i = 0; i < list.getChildCount() - 1; i++) {
-            LinearLayout layout = (LinearLayout) list.getChildAt(i);// 获得子item的layout
-            EditText et = (EditText) layout.findViewById(R.id.et_item_description);// 从layout中获得控件,根据其id
-            // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
-            picDescriptionList.add(et.getText().toString());
-            Log.i(TAG, "the text of " + i + "'s EditText：----------->" + et.getText());
-        }
-        if (TextUtils.isEmpty(search_question.getText().toString().trim())) {
-            Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
-            return;
-        }
+         judgeData();
         if ("".equals(tv_theme_choice.getText().toString().trim())) {
             Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
             return;
@@ -363,7 +386,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         params.addBodyParameter("title", search_question.getText().toString().trim());
         params.addBodyParameter("addrId", areaCid);
         params.addBodyParameter("circleId", themeCid);
-        params.addBodyParameter("content", JsonUtil.getInstance().toJSON(picDescriptionList));
+        params.addBodyParameter("content", jsonUtil.toJSON(picDescriptionList));
         params.addBodyParameter("addr", tv_show_your_location.getText().toString().trim());
         List<String> picNameList = new ArrayList<>();
         for (String string : picList) {
@@ -371,10 +394,56 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
             String substring = string.substring(string.lastIndexOf("/"));
             picNameList.add(substring);
         }
-        params.addBodyParameter("imgList", JsonUtil.getInstance().toJSON(picNameList));
+        params.addBodyParameter("imgList", jsonUtil.toJSON(picNameList));
         params.addBodyParameter("img", picNameList.get(0));
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.createLoop, new CreateLoopCallBack());
+        suHttpRequest.setParams(params);
+        suHttpRequest.requestNetworkData();
+    }
+
+    private void judgeData() {
+        ListView list = (ListView) findViewById(R.id.lv_picture_description);//获得listview
+        for (int i = 0; i < list.getChildCount() - 1; i++) {
+            LinearLayout layout = (LinearLayout) list.getChildAt(i);// 获得子item的layout
+            EditText et = (EditText) layout.findViewById(R.id.et_item_description);// 从layout中获得控件,根据其id
+            // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
+            picDescriptionList.add(et.getText().toString());
+        }
+        if (TextUtils.isEmpty(search_question.getText().toString().trim())) {
+            Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
+            return;
+        }
+    }
+
+    private void changeLoadDate() {
+        String str = SuiuuInfo.ReadVerification(this);
+        RequestParams params = new RequestParams();
+        judgeData();
+        dialog.showDialog();
+        params.addBodyParameter(HttpServicePath.key, str);
+        params.addBodyParameter("articleId",articleDetail.getArticleId());
+        params.addBodyParameter("title", search_question.getText().toString().trim());
+        params.addBodyParameter("content", jsonUtil.toJSON(picDescriptionList));
+        params.addBodyParameter("addr", tv_show_your_location.getText().toString().trim());
+
+        List<String> picNameList = new ArrayList<>();
+        if(isChangePic) {
+            for (String string : picList) {
+                updateDate(string);
+                String substring = string.substring(string.lastIndexOf("/"));
+                picNameList.add(substring);
+            }
+            params.addBodyParameter("imgList", JsonUtil.getInstance().toJSON(picNameList));
+            if(picNameList.size()>1) {
+                params.addBodyParameter("img", picNameList.get(0));
+            }
+        }else {
+            params.addBodyParameter("imgList", articleDetail.getaImgList());
+            params.addBodyParameter("img",articleDetail.getaImg());
+        }
+        SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.updateLoop, new UpdateLoopCallBack());
         suHttpRequest.setParams(params);
         suHttpRequest.requestNetworkData();
     }
@@ -455,6 +524,41 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         public void onFailure(HttpException e, String s) {
             handler.sendEmptyMessage(getData_FAILURE);
             Log.i(TAG, "请求失败------------------------------------" + s);
+        }
+    }
+    /**
+     * 修改圈子文章回调接口
+     */
+    class UpdateLoopCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            String result = stringResponseInfo.result;
+            Log.i("suiuu","ask="+result);
+            try {
+                JSONObject json = new JSONObject(result);
+                status = (int) json.get("status");
+                dataNum = (String)json.get("data");
+                Log.i("suiuu",status+"dataNum"+dataNum);
+                if("success".equals(dataNum)) {
+                    Toast.makeText(EasyTackPhotoActivity.this, R.string.article_update_success, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(EasyTackPhotoActivity.this,LoopArticleActivity.class);
+                    intent.putExtra("articleId",articleDetail.getArticleId());
+                    intent.putExtra("TAG",TAG);
+                    startActivity(intent);
+                }else {
+                    handler.sendEmptyMessage(getData_FAILURE);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                handler.sendEmptyMessage(getData_FAILURE);
+            }
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            handler.sendEmptyMessage(getData_FAILURE);
+            Log.e(TAG, "发布文章失败:" + s);
         }
     }
 

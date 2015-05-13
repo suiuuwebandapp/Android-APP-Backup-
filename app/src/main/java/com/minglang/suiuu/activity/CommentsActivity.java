@@ -7,11 +7,12 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,11 +61,15 @@ public class CommentsActivity extends Activity {
     private TextView tv_top_right, tv_top_center;
     private ProgressDialog dialog;
     private String Verification;
+    private String rId;
+    private String rTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_comment);
+
         articleId = this.getIntent().getStringExtra("articleId");
         tripId = this.getIntent().getStringExtra("tripId");
 
@@ -118,11 +123,21 @@ public class CommentsActivity extends Activity {
                 } else {
                     dialog.show();
                     if(!TextUtils.isEmpty(articleId)) {
-                        requestArticleCommentSend(commentContent, "0");
+                        requestArticleCommentSend(commentContent, rId);
                     }else {
-                        requestSuiuuCommentSend(commentContent,"0","0");
+                        requestSuiuuCommentSend(commentContent,rId,rTitle);
                     }
                 }
+            }
+        });
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LoopArticleCommentList itemComment = commentLists.get(position);
+                et_input_comment.setHint("回复" + itemComment.getNickname());
+                rId = itemComment.getCommentId();
+                rTitle = "@"+itemComment.getNickname();
+
             }
         });
     }
@@ -137,8 +152,9 @@ public class CommentsActivity extends Activity {
                 HttpServicePath.artilceCreateComment, new requestComentSendCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
+
     }
-    //文章详情发送评论
+    //随游详情发送评论
     private void requestSuiuuCommentSend(String commentContent, String rId,String rTitle) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("tripId", tripId);
@@ -151,6 +167,7 @@ public class CommentsActivity extends Activity {
                 HttpServicePath.suiuuCreateComment, new requestComentSendCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
+
     }
 
     class requestComentSendCallBack extends RequestCallBack<String> {
@@ -169,13 +186,19 @@ public class CommentsActivity extends Activity {
                     }else {
                         origainDataSuiuu(tripId,"1");
                     }
-
+                    rId = null;
+                    rTitle = null;
+                    et_input_comment.setText("");
                     Toast.makeText(CommentsActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
             } catch (JSONException e) {
+
                 e.printStackTrace();
                 Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+                rId = null;
+                rTitle = null;
+                et_input_comment.setText("");
             }
             Log.i("suiuu", "success=" + responseInfo.result);
         }
@@ -183,6 +206,9 @@ public class CommentsActivity extends Activity {
         @Override
         public void onFailure(HttpException error, String msg) {
             Log.e("suiuu", "网络请求失败:" + msg);
+            rId = null;
+            rTitle = null;
+            et_input_comment.setText("");
             Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -222,11 +248,10 @@ public class CommentsActivity extends Activity {
          系统版本是否高于4.4
          */
         boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
-        if (isKITKAT) {
-            RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.CommentRootLayout);
-            rootLayout.setPadding(0, statusHeight, 0, 0);
-        }
+//        if (isKITKAT) {
+//            RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.CommentRootLayout);
+//            rootLayout.setPadding(0, statusHeight, 0, 0);
+//        }
         back = (ImageView) findViewById(R.id.iv_top_back);
         mListView = (ListView) findViewById(R.id.lv_activity_commentlist);
         et_input_comment = (EditText) findViewById(R.id.et_input_comment);

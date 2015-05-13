@@ -129,7 +129,8 @@
         <activity
             android:name=".activity.CommentsActivity"
             android:label="@string/title_activity_comments"
-            android:theme="@style/FullBleedTheme" />
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity
             android:name=".activity.SelectPictureActivity"
             android:label="@string/title_activity_select_picture"

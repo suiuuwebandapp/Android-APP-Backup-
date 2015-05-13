@@ -60,7 +60,7 @@ public class ShowSuiuuAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
         View view;
         if (convertView != null && convertView instanceof RelativeLayout) {
             view = convertView;

@@ -22,7 +22,6 @@
             android:layout_alignParentBottom="true"
             android:background="#00000000"
             >
-
             <LinearLayout
                 android:id="@+id/dots_ll"
                 android:layout_width="wrap_content"

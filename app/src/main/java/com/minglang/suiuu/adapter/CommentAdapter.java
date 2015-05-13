@@ -79,7 +79,13 @@ public class CommentAdapter extends BaseAdapter {
             bitMap.display(holder.headImage, list.get(position).getHeadImg());
         }
         holder.title.setText(list.get(position).getNickname());
-        holder.content.setText(list.get(position).getContent());
+        if(!TextUtils.isEmpty(list.get(position).getrTitle())) {
+            holder.content.setText(list.get(position).getrTitle() +"  "+list.get(position).getContent());
+        }else {
+            holder.content.setText(list.get(position).getContent());
+
+        }
+
         return convertView;
     }
 

@@ -30,6 +30,15 @@ public class LoopArticleCommentList {
     public String nickname;
 
     public String headImg;
+    public String rTitle;
+
+    public String getrTitle() {
+        return rTitle;
+    }
+
+    public void setrTitle(String rTitle) {
+        this.rTitle = rTitle;
+    }
 
     public String getCommentId() {
         return commentId;

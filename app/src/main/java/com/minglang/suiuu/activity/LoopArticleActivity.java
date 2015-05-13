@@ -329,7 +329,13 @@ public class LoopArticleActivity extends Activity {
         editor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoopArticleActivity.this,AskQuestionActivity.class);
+                Intent intent;
+                Log.i("suiuu","type="+loopArticleData.getaType());
+                if("1".equals(loopArticleData.getaType())) {
+                    intent = new Intent(LoopArticleActivity.this,EasyTackPhotoActivity.class);
+                }else {
+                    intent = new Intent(LoopArticleActivity.this,AskQuestionActivity.class);
+                }
                 Bundle mBundle = new Bundle();
                 mBundle.putSerializable("articleDetail",loopArticleData);
                 intent.putExtras(mBundle);
@@ -821,7 +827,9 @@ public class LoopArticleActivity extends Activity {
         if (OtherTAG.equals(AskQuestionActivity.class.getSimpleName())) {
             startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
             super.finish();
-        } else {
+        } else if(OtherTAG.equals(EasyTackPhotoActivity.class.getSimpleName())) {
+            super.finish();
+        }else {
             super.finish();
         }
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);

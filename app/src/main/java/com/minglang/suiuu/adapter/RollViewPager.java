@@ -252,7 +252,6 @@ public class RollViewPager extends ViewPager {
 
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
-			// TODO Auto-generated method stub
 			((ViewPager) container).removeView((View) object);
 		}
 

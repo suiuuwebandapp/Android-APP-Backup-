@@ -21,7 +21,7 @@
         android:layout_alignParentBottom="true"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/layout_50dp">
-        <EditText
+        <com.minglang.suiuu.chat.widgt.PasteEditText
             android:id="@+id/et_input_comment"
             android:layout_margin="@dimen/layout_8dp"
             android:padding="@dimen/layout_8dp"
@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:textSize="@dimen/layout_15sp"
+            android:singleLine="true"
             android:textColor="@color/textColor"
             android:hint="请输入你的评论"
             android:layout_weight="12"
