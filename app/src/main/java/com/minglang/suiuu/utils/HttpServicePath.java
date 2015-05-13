@@ -255,7 +255,7 @@ public class HttpServicePath {
     /**
      * 创建一条评论
      */
-    public static String artilceCreateComment = RootPath + "/circle/create-comment";
+    public static String articleCreateComment = RootPath + "/circle/create-comment";
     /**
      * 创建一条评论
      */
@@ -290,4 +290,13 @@ public class HttpServicePath {
      * info 详情介绍、countryId、国家id cityI、城市id、lon经度、lat 维度、profession 职业
      */
     public static String upDatePersonalStatus = RootPath + "/app-main/update-user-info";
+
+    /**
+     * 得到城市列表
+     *
+     * 请求方式:POST
+     *
+     * 请求参数:国家ID countryId
+     */
+    public static String getCityListPath = RootPath+"/app-travel/get-city";
 }

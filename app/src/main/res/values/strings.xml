@@ -40,10 +40,10 @@
     <string name="clickHead">点击修改头像</string>
     <string name="personalInfo">个人信息</string>
 
-    <string name="nickname_hint">请输入您的昵称</string>
-    <string name="Location_hint">请输入您的所在地</string>
-    <string name="trade_hint">请输入您的职业</string>
-    <string name="Signature_hint">请输入您的个性签名</string>
+    <string name="nickname_hint">昵称</string>
+    <string name="Location_hint">所在地</string>
+    <string name="trade_hint">职业</string>
+    <string name="Signature_hint">个性签名</string>
 
     <string name="NewRemind">新提醒</string>
     <string name="newAt">新@我的</string>
@@ -137,10 +137,12 @@
 
     <string name="country">国家</string>
     <string name="city">城市</string>
+    <string name="local">请选择所在地</string>
     <string name="countryDetails">请选择国家</string>
     <string name="cityDetails">请选择城市</string>
 
     <string name="next">下一步</string>
+    <string name="a">A</string>
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>
@@ -418,5 +420,6 @@
     <string name="title_activity_all_attention_dynamic">AllAttentionDynamicActivity</string>
     <string name="title_activity_wxentry">WXEntryActivity</string>
     <string name="title_activity_select_country">SelectCountryActivity</string>
+    <string name="title_activity_select_city">SelectCityActivity</string>
 
 </resources>

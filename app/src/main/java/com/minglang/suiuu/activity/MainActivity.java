@@ -428,7 +428,6 @@ public class MainActivity extends FragmentActivity {
             }
         });
 
-
         ask.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -613,32 +612,25 @@ public class MainActivity extends FragmentActivity {
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         screenWidth = dm.widthPixels;
 
-        /**
-         屏幕高度
-         */
+        //屏幕高度
         int screenHeight = dm.heightPixels;
-
         Log.i(TAG, "屏幕宽度:" + String.valueOf(screenWidth));
         Log.i(TAG, "屏幕高度:" + String.valueOf(screenHeight));
 
         mTintManager = new SystemBarTintManager(this);
-
         SystemBarTintManager.SystemBarConfig systemBarConfig = mTintManager.getConfig();
 
-        /**
-         虚拟按键高度
-         */
+        //虚拟按键高度
         navigationBarHeight = systemBarConfig.getNavigationBarHeight();
-        Log.i(TAG, "NavigationBarHeight:" + String.valueOf(navigationBarHeight));
+        Log.i(TAG, "虚拟按键高度:" + String.valueOf(navigationBarHeight));
 
-        /**
-         虚拟按键宽度(?)
-         */
+        //虚拟按键宽度(?)
         int navigationBarWidth = systemBarConfig.getNavigationBarWidth();
         Log.i(TAG, "NavigationBarWidth:" + String.valueOf(navigationBarWidth));
 
+        //状态栏高度
         statusBarHeight = systemBarConfig.getStatusBarHeight();
-        Log.i(TAG, "statusBarHeight:" + String.valueOf(statusBarHeight));
+        Log.i(TAG, "状态栏高度:" + String.valueOf(statusBarHeight));
 
         isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
@@ -875,7 +867,6 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
         if (mDrawerLayout.isDrawerVisible(slideLayout)) {
             mDrawerLayout.closeDrawer(slideLayout);
         } else {
