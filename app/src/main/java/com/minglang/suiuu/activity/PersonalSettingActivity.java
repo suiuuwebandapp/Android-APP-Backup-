@@ -129,7 +129,7 @@ public class PersonalSettingActivity extends Activity {
                     String s = msg.obj.toString();
 
                     Log.i(TAG, "图片上传成功:" + s);
-                    networkImagePath = AppConstant.IMG_FROM_SUIUU_CONTENT + s;
+                    networkImagePath = AppConstant.IMG_FROM_SUIUU + s;
                     Log.i(TAG, "NetworkImagePath:" + networkImagePath);
 
                     SuiuuInfo.WriteNativeHeadImagePath(PersonalSettingActivity.this, nativeImagePath);
