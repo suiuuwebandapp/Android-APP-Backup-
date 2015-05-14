@@ -1,7 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/attentionRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -18,12 +20,12 @@
             android:layout_centerVertical="true"
             android:text="@string/attention"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
         <ImageView
             android:id="@+id/AttentionBack"
             style="@style/backKeyStyle"
-            android:src="@drawable/back" />
+            android:src="@drawable/back"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -40,9 +42,9 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.5"
             android:gravity="center"
-            android:text="@string/themes"
+            android:text="@string/title2"
             android:textColor="@color/slider_line_color"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/attention_user_title"
@@ -53,7 +55,7 @@
             android:gravity="center"
             android:text="@string/user"
             android:textColor="@color/textColor"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
     </LinearLayout>
 
     <ImageView
@@ -61,12 +63,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleType="matrix"
-        android:src="@drawable/slider" />
+        android:src="@drawable/slider"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/slider_line_color" />
+        android:background="@color/slider_line_color"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/attentionPager"

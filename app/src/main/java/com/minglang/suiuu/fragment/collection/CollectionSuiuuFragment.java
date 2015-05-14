@@ -1,7 +1,7 @@
 package com.minglang.suiuu.fragment.collection;
 
-
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +19,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.SuiuuDetailActivity;
 import com.minglang.suiuu.adapter.CollectionSuiuuAdapter;
 import com.minglang.suiuu.entity.CollectionSuiuu;
 import com.minglang.suiuu.entity.CollectionSuiuuData;
@@ -59,7 +60,6 @@ public class CollectionSuiuuFragment extends Fragment {
     private String userSign;
     private String verification;
 
-
     private PtrClassicFrameLayout mPtrFrame;
 
     private LoadMoreGridViewContainer ptrLoadMore;
@@ -68,11 +68,11 @@ public class CollectionSuiuuFragment extends Fragment {
 
     private int page = 1;
 
-    CollectionSuiuuAdapter adapter;
-
     private List<CollectionSuiuuData> listAll = new ArrayList<>();
 
     private Dialog dialog;
+
+    private CollectionSuiuuAdapter collectionSuiuuAdapter;
 
     private boolean clearFlag;
 
@@ -133,8 +133,8 @@ public class CollectionSuiuuFragment extends Fragment {
      */
     private void getCollectionSuiuu4Service(int page) {
         RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter("page", String.valueOf(page));
+        params.addBodyParameter(HttpServicePath.key, verification);
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.GetCollectionSuiuuPath, new CollectionSuiuuRequestCallBack());
@@ -172,7 +172,10 @@ public class CollectionSuiuuFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                String tripId = listAll.get(position).getTripId();
+                Intent intent = new Intent(getActivity(), SuiuuDetailActivity.class);
+                intent.putExtra("tripId", tripId);
+                startActivity(intent);
             }
         });
     }
@@ -219,11 +222,16 @@ public class CollectionSuiuuFragment extends Fragment {
 
         ScreenUtils utils = new ScreenUtils(getActivity());
         int screenWidth = utils.getScreenWidth();
-        int screenHeight = utils.getScreenHeight();
 
-        adapter = new CollectionSuiuuAdapter(getActivity());
-        adapter.setScreenParams(screenWidth, screenHeight);
-        gridView.setAdapter(adapter);
+        collectionSuiuuAdapter = new CollectionSuiuuAdapter(getActivity());
+        collectionSuiuuAdapter.setScreenParams(screenWidth);
+        gridView.setAdapter(collectionSuiuuAdapter);
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     /**
@@ -242,19 +250,32 @@ public class CollectionSuiuuFragment extends Fragment {
             ptrLoadMore.loadMoreFinish(true, true);
 
             if (clearFlag) {
-                listAll.clear();
+                if (listAll != null && listAll.size() > 0) {
+                    listAll.clear();
+                }
             }
 
             String str = stringResponseInfo.result;
+            Log.i(TAG, "收藏的随游的数据:" + str);
             try {
-                CollectionSuiuu suiuu = JsonUtil.getInstance().fromJSON(CollectionSuiuu.class, str);
-                List<CollectionSuiuuData> list = suiuu.getData().getData();
-                listAll.addAll(list);
-                adapter.setListData(listAll);
-
+                CollectionSuiuu collectionSuiuu = JsonUtil.getInstance().fromJSON(CollectionSuiuu.class, str);
+                if (collectionSuiuu.getStatus().equals("1")) {
+                    List<CollectionSuiuuData> list = collectionSuiuu.getData().getData();
+                    if (list != null && list.size() > 0) {
+                        listAll.addAll(list);
+                        collectionSuiuuAdapter.setListData(listAll);
+                    } else {
+                        Toast.makeText(getActivity(),"随游收藏"+
+                                getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(),
+                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                }
             } catch (Exception e) {
                 Log.e(TAG, "收藏的随游数据解析失败" + e.getMessage());
-                Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),
+                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -262,16 +283,16 @@ public class CollectionSuiuuFragment extends Fragment {
         @Override
         public void onFailure(HttpException e, String s) {
 
+            if (page > 1) {
+                page = page - 1;
+            }
+
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
 
             mPtrFrame.refreshComplete();
-            ptrLoadMore.loadMoreFinish(true, true);
-
-            if (page > 1) {
-                page = page - 1;
-            }
+            ptrLoadMore.loadMoreError(0, "加载失败，请重试");
 
             Log.e(TAG, "收藏的随游数据请求失败:" + s);
             Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();

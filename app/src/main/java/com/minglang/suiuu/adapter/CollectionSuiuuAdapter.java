@@ -38,7 +38,6 @@ public class CollectionSuiuuAdapter extends BaseAdapter {
     private List<CollectionSuiuuData> list;
 
     private int screenWidth;
-    private int screenHeight;
 
     private ImageLoader imageLoader;
 
@@ -76,10 +75,8 @@ public class CollectionSuiuuAdapter extends BaseAdapter {
 
     }
 
-    public void setScreenParams(int screenWidth, int screenHeight) {
+    public void setScreenParams(int screenWidth) {
         this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-        Log.i(TAG, "屏幕显示区域高度为:" + String.valueOf(this.screenHeight));
     }
 
     public void setListData(List<CollectionSuiuuData> list) {
@@ -116,10 +113,16 @@ public class CollectionSuiuuAdapter extends BaseAdapter {
         CollectionSuiuuData data = list.get(position);
 
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_collection_suiuu, position);
+
+        //主要图片
         ImageView mainImage = holder.getView(R.id.item_collection_suiuu_image);
+        //头像
         CircleImageView headImage = holder.getView(R.id.item_collection_suiuu_head_image);
+        //用户名
         TextView userName = holder.getView(R.id.item_collection_suiuu_name);
+        //标题
         TextView title = holder.getView(R.id.item_collection_suiuu_title);
+        //星级评分
         RatingBar ratingBar = holder.getView(R.id.item_collection_loop_indicator);
 
         String imagePath = data.getTitleImg();
@@ -157,7 +160,6 @@ public class CollectionSuiuuAdapter extends BaseAdapter {
         }
 
         convertView = holder.getConvertView();
-
         int itemParams = screenWidth / 2 - Utils.newInstance(context).dip2px(10);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemParams, itemParams);
         convertView.setLayoutParams(params);

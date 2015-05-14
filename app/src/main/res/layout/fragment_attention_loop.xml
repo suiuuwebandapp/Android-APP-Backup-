@@ -3,35 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/layout_5dp"
-    android:background="@color/white"
-    tools:context="com.minglang.suiuu.fragment.collection.CollectionSuiuuFragment">
+    android:padding="5dp"
+    tools:context="com.minglang.suiuu.fragment.attention.AttentionLoopFragment">
 
     <in.srain.cube.views.ptr.PtrClassicFrameLayout
-        android:id="@+id/collection_suiuu_grid_view_frame"
+        android:id="@+id/attention_loop_grid_view_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <in.srain.cube.views.loadmore.LoadMoreGridViewContainer
-            android:id="@+id/collection_suiuu_load_more_container"
+            android:id="@+id/attention_loop_load_more_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/cube_mints_white">
 
             <in.srain.cube.views.GridViewWithHeaderAndFooter
-                android:id="@+id/collection_suiuu_grid_view"
+                android:id="@+id/attentionThemeGridView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fadingEdge="none"
-                android:focusable="false"
-                android:horizontalSpacing="@dimen/layout_10dp"
-                android:verticalSpacing="@dimen/layout_10dp"
-                android:listSelector="@android:color/transparent"
-                android:numColumns="2"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:scrollbarStyle="outsideOverlay"
-                android:stretchMode="columnWidth"/>
+                android:numColumns="3"
+                android:horizontalSpacing="10dp"
+                android:verticalSpacing="10dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
 
         </in.srain.cube.views.loadmore.LoadMoreGridViewContainer>
 

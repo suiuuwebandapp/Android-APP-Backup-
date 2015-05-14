@@ -357,6 +357,12 @@ public class MainFragment extends Fragment {
         LoopDynamicTitleLayout = (RelativeLayout) rootView.findViewById(R.id.LoopDynamicTitleLayout);
     }
 
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
     /**
      * 网络请求回调接口
      */

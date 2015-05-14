@@ -1,5 +1,6 @@
 package com.minglang.suiuu.activity;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
@@ -220,6 +221,18 @@ public class NewRemindActivity extends FragmentActivity {
         newCommentFragment = NewCommentFragment.newInstance(userSign, verification);
         newReplyFragment = NewReplyFragment.newInstance(userSign, verification);
         newAttentionFragment = NewAttentionFragment.newInstance(userSign, verification);
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     class NewRemindClick implements View.OnClickListener {

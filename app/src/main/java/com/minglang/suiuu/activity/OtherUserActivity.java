@@ -145,7 +145,7 @@ public class OtherUserActivity extends Activity {
     /**
      * 关注用户取消取消
      */
-    private void cancelAttentionRequst() {
+    private void cancelAttentionRequest() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("attentionId", attentionId);
         params.addBodyParameter(HttpServicePath.key, Verification);
@@ -154,7 +154,6 @@ public class OtherUserActivity extends Activity {
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
-
 
     /**
      * 控件动作
@@ -241,7 +240,7 @@ public class OtherUserActivity extends Activity {
                     if(TextUtils.isEmpty(attentionId)) {
                         AddAttentionRequest4Service();
                     }else {
-                        cancelAttentionRequst();
+                        cancelAttentionRequest();
                     }
                     break;
 
@@ -359,6 +358,7 @@ public class OtherUserActivity extends Activity {
             Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
         }
     }
+
     public Drawable setImgDrawTextPosition(int img) {
         Drawable drawable = this.getResources().getDrawable(img);
         // 调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
@@ -370,5 +370,17 @@ public class OtherUserActivity extends Activity {
     protected void onResume() {
         super.onResume();
         getUserInfo2Service();
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

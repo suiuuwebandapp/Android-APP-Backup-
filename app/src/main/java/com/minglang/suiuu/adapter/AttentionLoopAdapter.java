@@ -37,14 +37,13 @@ public class AttentionLoopAdapter extends BaseAdapter {
 
     private DisplayImageOptions displayImageOptions;
 
-    private int screenWidth, screenHeight;
+    private int screenWidth;
 
-    public AttentionLoopAdapter(Context context, List<AttentionLoopData> list) {
+    public AttentionLoopAdapter(Context context) {
         this.context = context;
-        this.list = list;
 
         imageLoader = ImageLoader.getInstance();
-        if(!imageLoader.isInited()){
+        if (!imageLoader.isInited()) {
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
 
@@ -54,9 +53,13 @@ public class AttentionLoopAdapter extends BaseAdapter {
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
-    public void setScreenParams(int screenWidth, int screenHeight) {
+    public void setScreenParams(int screenWidth) {
         this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
+    }
+
+    public void setList(List<AttentionLoopData> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     @Override

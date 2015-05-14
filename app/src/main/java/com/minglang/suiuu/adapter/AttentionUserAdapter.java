@@ -34,9 +34,8 @@ public class AttentionUserAdapter extends BaseAdapter {
 
     private DisplayImageOptions displayImageOptions;
 
-    public AttentionUserAdapter(Context context, List<AttentionUserData> list) {
+    public AttentionUserAdapter(Context context) {
         this.context = context;
-        this.list = list;
 
         imageLoader = ImageLoader.getInstance();
         if (!imageLoader.isInited()) {
@@ -47,6 +46,11 @@ public class AttentionUserAdapter extends BaseAdapter {
                 .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
+    }
+
+    public void setList(List<AttentionUserData> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     @Override

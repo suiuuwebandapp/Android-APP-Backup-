@@ -1,6 +1,5 @@
 package com.minglang.suiuu.fragment.collection;
 
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -34,6 +33,9 @@ import java.util.List;
 
 import in.srain.cube.util.LocalDisplay;
 import in.srain.cube.views.GridViewWithHeaderAndFooter;
+import in.srain.cube.views.loadmore.LoadMoreContainer;
+import in.srain.cube.views.loadmore.LoadMoreGridViewContainer;
+import in.srain.cube.views.loadmore.LoadMoreHandler;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -59,6 +61,8 @@ public class CollectionLoopFragment extends Fragment {
 
     private PtrClassicFrameLayout mPtrFrame;
 
+    private LoadMoreGridViewContainer ptrLoadMore;
+
     private GridViewWithHeaderAndFooter gridView;
 
     private int page = 1;
@@ -68,8 +72,6 @@ public class CollectionLoopFragment extends Fragment {
     private Dialog dialog;
 
     private CollectionLoopAdapter collectionLoopAdapter;
-
-    private int screenWidth, screenHeight;
 
     private boolean clearFlag;
 
@@ -107,10 +109,6 @@ public class CollectionLoopFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_collection_loop, container, false);
 
-        ScreenUtils utils = new ScreenUtils(getActivity());
-        screenWidth = utils.getScreenWidth();
-        screenHeight = utils.getScreenHeight();
-
         initView(rootView);
 
         ViewAction();
@@ -118,6 +116,29 @@ public class CollectionLoopFragment extends Fragment {
         getData();
 
         return rootView;
+    }
+
+    private void getData() {
+
+        if (dialog != null) {
+            dialog.show();
+        }
+
+        getCollectionLoop4Service(1);
+    }
+
+    /**
+     * 从网络获取收藏的圈子数据
+     */
+    private void getCollectionLoop4Service(int page) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("page", String.valueOf(page));
+        params.addBodyParameter(HttpServicePath.key, verification);
+
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.CollectionLoopPath, new CollectionLoopRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
     }
 
     /**
@@ -138,6 +159,15 @@ public class CollectionLoopFragment extends Fragment {
             }
         });
 
+        ptrLoadMore.setLoadMoreHandler(new LoadMoreHandler() {
+            @Override
+            public void onLoadMore(LoadMoreContainer loadMoreContainer) {
+                clearFlag = false;
+                page = page + 1;
+                getCollectionLoop4Service(page);
+            }
+        });
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -148,32 +178,6 @@ public class CollectionLoopFragment extends Fragment {
                 startActivity(intent);
             }
         });
-    }
-
-    private void getData() {
-
-        if (dialog != null) {
-            dialog.show();
-        }
-
-        getCollectionLoop4Service(1);
-    }
-
-    /**
-     * 从网络获取收藏的圈子数据
-     */
-    private void getCollectionLoop4Service(int page) {
-
-
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("page", String.valueOf(page));
-        params.addBodyParameter(HttpServicePath.key, verification);
-        Log.i(TAG,"verification:"+verification);
-
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.CollectionLoopPath, new CollectionLoopRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
     }
 
     /**
@@ -189,6 +193,7 @@ public class CollectionLoopFragment extends Fragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
         mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.collection_loop_grid_view_frame);
+        ptrLoadMore = (LoadMoreGridViewContainer) rootView.findViewById(R.id.collection_loop_load_more_container);
 
         MaterialHeader header = new MaterialHeader(getActivity());
         int[] colors = getResources().getIntArray(R.array.google_colors);
@@ -213,12 +218,26 @@ public class CollectionLoopFragment extends Fragment {
 
         gridView = (GridViewWithHeaderAndFooter) rootView.findViewById(R.id.collection_loop_grid_view);
 
+        ScreenUtils utils = new ScreenUtils(getActivity());
+        int screenWidth = utils.getScreenWidth();
+
         collectionLoopAdapter = new CollectionLoopAdapter(getActivity());
-        collectionLoopAdapter.setScreenParams(screenWidth, screenHeight);
+        collectionLoopAdapter.setScreenParams(screenWidth);
         gridView.setAdapter(collectionLoopAdapter);
+
+        Log.i(TAG, "userSign:" + userSign);
     }
 
-    class CollectionLoopRequestCallBack extends RequestCallBack<String> {
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    /**
+     * 获取收藏的圈子网络请求回调接口
+     */
+    private class CollectionLoopRequestCallBack extends RequestCallBack<String> {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
@@ -228,21 +247,35 @@ public class CollectionLoopFragment extends Fragment {
             }
 
             mPtrFrame.refreshComplete();
+            ptrLoadMore.loadMoreFinish(true, true);
 
             if (clearFlag) {
-                listAll.clear();
+                if (listAll != null && listAll.size() > 0) {
+                    listAll.clear();
+                }
             }
 
             String str = stringResponseInfo.result;
-            Log.i(TAG, "str:" + str);
+            Log.i(TAG, "收藏的圈子数据:" + str);
             try {
                 CollectionLoop collectionLoop = JsonUtil.getInstance().fromJSON(CollectionLoop.class, str);
-                List<CollectionLoopData> list = collectionLoop.getData().getData();
-                listAll.addAll(list);
-                collectionLoopAdapter.setListData(listAll);
+                if (collectionLoop.getStatus().equals("1")) {
+                    List<CollectionLoopData> list = collectionLoop.getData().getData();
+                    if (list != null && list.size() > 0) {
+                        listAll.addAll(list);
+                        collectionLoopAdapter.setListData(listAll);
+                    } else {
+                        Toast.makeText(getActivity(), "圈子收藏" +
+                                getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(),
+                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                }
             } catch (Exception e) {
                 Log.e(TAG, "收藏的圈子的数据解析异常:" + e.getMessage());
-                Toast.makeText(getActivity(), "数据异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),
+                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -258,9 +291,11 @@ public class CollectionLoopFragment extends Fragment {
             }
 
             mPtrFrame.refreshComplete();
+            ptrLoadMore.loadMoreError(0, "加载失败，请重试");
 
             Log.e(TAG, "收藏的圈子数据请求失败:" + s);
-            Toast.makeText(getActivity(), "网络异常，请重试！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),
+                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
 

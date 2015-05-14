@@ -90,7 +90,7 @@ public class SuiuuDetailActivity extends Activity {
     private String Verification;
     private mProgressDialog dialog;
     //判断取消的是点赞还是收藏
-    private boolean isPrase;
+    private boolean isPraise;
     private TextView suiuu_details_comments;
     private String tripId;
     private ImageLoader imageLoader;
@@ -102,7 +102,7 @@ public class SuiuuDetailActivity extends Activity {
     private List<View> dotLists;
     private List<String> titleLists;
     private List<String> imageUrlLists;
-    private TextView tv_choiced;
+    private TextView tv_choice;
     private ImageView suiuu_details_back;
 
     @Override
@@ -153,13 +153,13 @@ public class SuiuuDetailActivity extends Activity {
         suiuu_details_comments = (TextView) findViewById(R.id.suiuu_details_comments);
         dots_ll = (LinearLayout) findViewById(R.id.dots_ll);
         top_news_viewpager = (LinearLayout) findViewById(R.id.top_news_viewpager);
-        tv_choiced = (TextView) findViewById(R.id.tv_choiced);
+        tv_choice = (TextView) findViewById(R.id.tv_choiced);
         suiuu_details_back = (ImageView) findViewById(R.id.suiuu_details_back);
     }
 
     //填充数据
     public void fullOfData() {
-        tv_choiced.setText(detailInfo.getTravelTime() + "人选择过");
+        tv_choice.setText(detailInfo.getTravelTime() + "人选择过");
         tv_title.setText(detailInfo.getTitle());
         tv_content.setText(detailInfo.getInfo());
         tv_nikename.setText(suiuuDetailData.getUserInfo().getNickname());
@@ -249,7 +249,6 @@ public class SuiuuDetailActivity extends Activity {
         httpRequest.requestNetworkData();
     }
 
-
     /**
      * 请求数据网络接口回调
      */
@@ -287,12 +286,12 @@ public class SuiuuDetailActivity extends Activity {
     /**
      * 点赞接口
      */
-    private void addPraseRequest() {
+    private void addPraiseRequest() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("travelId", detailInfo.getTripId());
         params.addBodyParameter(HttpServicePath.key, Verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.travelAddPraise, new addPraseRequestCallBack());
+                HttpServicePath.travelAddPraise, new addPraiseRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
@@ -315,7 +314,7 @@ public class SuiuuDetailActivity extends Activity {
      *
      * @param cancelId 取消Id
      */
-    private void collectionArticleCancle(String cancelId) {
+    private void collectionArticleCancel(String cancelId) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("attentionId", cancelId);
         params.addBodyParameter(HttpServicePath.key, Verification);
@@ -328,7 +327,7 @@ public class SuiuuDetailActivity extends Activity {
     /**
      * 点赞回调接口
      */
-    class addPraseRequestCallBack extends RequestCallBack<String> {
+    class addPraiseRequestCallBack extends RequestCallBack<String> {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
@@ -367,7 +366,7 @@ public class SuiuuDetailActivity extends Activity {
                 String status = json.getString("status");
                 String data = json.getString("data");
                 if ("1".equals(status) && "success".equals(data)) {
-                    if (isPrase) {
+                    if (isPraise) {
                         attentionId = null;
                         suiuu_details_praise.setTextColor(getResources().getColor(R.color.white));
                         suiuu_details_praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_white), null, null, null);
@@ -441,20 +440,20 @@ public class SuiuuDetailActivity extends Activity {
                 case R.id.suiuu_details_praise:
                     if (TextUtils.isEmpty(attentionId)) {
                         //为空添加点赞
-                        addPraseRequest();
+                        addPraiseRequest();
                     } else {
-                        isPrase = true;
+                        isPraise = true;
                         //取消点赞
-                        collectionArticleCancle(attentionId);
+                        collectionArticleCancel(attentionId);
                     }
                     break;
                 case R.id.suiuu_details_collection:
                     if (TextUtils.isEmpty(collectionId)) {
                         addCollection();
                     } else {
-                        isPrase = false;
+                        isPraise = false;
                         //取消点赞
-                        collectionArticleCancle(collectionId);
+                        collectionArticleCancel(collectionId);
                     }
                     break;
                 case R.id.suiuu_details_comments:
@@ -503,5 +502,17 @@ public class SuiuuDetailActivity extends Activity {
             dotLists.add(pointView);
             dots_ll.addView(pointView);
         }
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

@@ -20,6 +20,7 @@
     <RatingBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:id="@+id/item_collection_loop_indicator"
         android:isIndicator="true"
         style="?android:attr/ratingBarStyleSmall"
@@ -30,8 +31,8 @@
         android:stepSize="0.5"/>
 
     <com.minglang.suiuu.customview.CircleImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/layout_45dp"
+        android:layout_height="@dimen/layout_45dp"
         android:id="@+id/item_collection_suiuu_head_image"
         android:src="@drawable/default_head_image"
         android:layout_marginLeft="5dp"
@@ -43,7 +44,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="@string/Singapore_n"
         android:id="@+id/item_collection_suiuu_title"
         android:layout_above="@+id/item_collection_loop_indicator"
         android:textSize="20sp"
@@ -58,16 +59,20 @@
         android:layout_alignParentEnd="true"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="@string/user_name"
         android:id="@+id/item_collection_suiuu_name"
         android:textSize="18sp"
         android:singleLine="true"
         android:layout_marginLeft="@dimen/layout_5dp"
         android:layout_marginStart="@dimen/layout_5dp"
+        android:layout_marginRight="@dimen/layout_5dp"
+        android:layout_marginEnd="@dimen/layout_5dp"
         android:layout_toRightOf="@+id/item_collection_suiuu_head_image"
         android:layout_toEndOf="@+id/item_collection_suiuu_head_image"
-        android:layout_alignBottom="@+id/item_collection_suiuu_head_image"/>
+        android:layout_alignBottom="@+id/item_collection_suiuu_head_image"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

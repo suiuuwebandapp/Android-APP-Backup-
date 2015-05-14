@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.attention;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
@@ -27,7 +27,19 @@ import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import in.srain.cube.util.LocalDisplay;
+import in.srain.cube.views.GridViewWithHeaderAndFooter;
+import in.srain.cube.views.loadmore.LoadMoreContainer;
+import in.srain.cube.views.loadmore.LoadMoreGridViewContainer;
+import in.srain.cube.views.loadmore.LoadMoreHandler;
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
+import in.srain.cube.views.ptr.header.MaterialHeader;
 
 /**
  * 关注主题
@@ -43,13 +55,19 @@ public class AttentionLoopFragment extends Fragment {
     private String userSign;
     private String verification;
 
-    private GridView attentionThemeGridView;
+    private PtrClassicFrameLayout mPtrFrame;
+    private LoadMoreGridViewContainer ptrLoadMore;
+    private GridViewWithHeaderAndFooter attentionThemeGridView;
 
     private int page = 1;
 
-    private List<AttentionLoopData> list;
+    private List<AttentionLoopData> listAll = new ArrayList<>();
 
-    private int screenWidth, screenHeight;
+    private ProgressDialog progressDialog;
+
+    private boolean clearFlag;
+
+    private AttentionLoopAdapter attentionLoopAdapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -84,24 +102,44 @@ public class AttentionLoopFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_attention_theme, container, false);
-
+        View rootView = inflater.inflate(R.layout.fragment_attention_loop, container, false);
         initView(rootView);
-        getAttentionData4Service();
+        getData();
         ViewAction();
 
         return rootView;
     }
 
     private void ViewAction() {
+
+        mPtrFrame.setPtrHandler(new PtrHandler() {
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, attentionThemeGridView, header);
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
+                clearFlag = true;
+                getAttentionData4Service(1);
+            }
+        });
+
+        ptrLoadMore.setLoadMoreHandler(new LoadMoreHandler() {
+            @Override
+            public void onLoadMore(LoadMoreContainer loadMoreContainer) {
+                clearFlag = false;
+                page = page + 1;
+                getAttentionData4Service(page);
+            }
+        });
+
         attentionThemeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AttentionLoopData attentionLoopData = list.get(position);
-                
-                String cID = attentionLoopData.getcId();
-                String type = attentionLoopData.getcType();
-                String loopName = attentionLoopData.getcName();
+                String cID = listAll.get(position).getcId();
+                String type = listAll.get(position).getcType();
+                String loopName = listAll.get(position).getcName();
 
                 Intent intent = new Intent(getActivity(), LoopDetailsActivity.class);
                 intent.putExtra("type", type);
@@ -112,20 +150,25 @@ public class AttentionLoopFragment extends Fragment {
         });
     }
 
+    private void getData() {
+        if (progressDialog != null) {
+            progressDialog.show();
+        }
+        getAttentionData4Service(page);
+    }
+
     /**
      * 从服务器获取数据
      */
-    private void getAttentionData4Service() {
-
+    private void getAttentionData4Service(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, verification);
-//        params.addBodyParameter("page", String.valueOf(page));
+        params.addBodyParameter("page", String.valueOf(page));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.AttentionLoopPath, new AttentionLoopRequestCallback());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
-
     }
 
     /**
@@ -135,10 +178,42 @@ public class AttentionLoopFragment extends Fragment {
      */
     private void initView(View rootView) {
         ScreenUtils utils = new ScreenUtils(getActivity());
-        screenWidth = utils.getScreenWidth();
-        screenHeight = utils.getScreenHeight();
+        int screenWidth = utils.getScreenWidth();
 
-        attentionThemeGridView = (GridView) rootView.findViewById(R.id.attentionThemeGridView);
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.attention_loop_grid_view_frame);
+        ptrLoadMore = (LoadMoreGridViewContainer) rootView.findViewById(R.id.attention_loop_load_more_container);
+        attentionThemeGridView = (GridViewWithHeaderAndFooter) rootView.findViewById(R.id.attentionThemeGridView);
+
+        MaterialHeader header = new MaterialHeader(getActivity());
+        int[] colors = getResources().getIntArray(R.array.google_colors);
+        header.setColorSchemeColors(colors);
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
+        header.setPtrFrameLayout(mPtrFrame);
+
+        mPtrFrame.setHeaderView(header);
+        mPtrFrame.addPtrUIHandler(header);
+        mPtrFrame.setPinContent(true);
+
+        // the following are default settings
+        mPtrFrame.setResistance(1.7f);
+        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
+        mPtrFrame.setDurationToClose(200);
+        mPtrFrame.setDurationToCloseHeader(1000);
+        // default is false
+        mPtrFrame.setPullToRefresh(false);
+        // default is true
+        mPtrFrame.setKeepHeaderWhenRefresh(true);
+
+        attentionLoopAdapter = new AttentionLoopAdapter(getActivity());
+        attentionLoopAdapter.setScreenParams(screenWidth);
+        attentionThemeGridView.setAdapter(attentionLoopAdapter);
+
+        Log.i(TAG, "userSign:" + userSign);
     }
 
     @Override
@@ -165,31 +240,55 @@ public class AttentionLoopFragment extends Fragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            String str = stringResponseInfo.result;
 
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+            mPtrFrame.refreshComplete();
+            ptrLoadMore.loadMoreFinish(true, true);
+
+            if (clearFlag) {
+                if (listAll != null && listAll.size() > 0) {
+                    listAll.clear();
+                }
+            }
+
+            String str = stringResponseInfo.result;
+            Log.i(TAG, "关注的圈子的数据:" + str);
             try {
                 AttentionLoop attentionLoop = JsonUtil.getInstance().fromJSON(AttentionLoop.class, str);
                 if (attentionLoop.getStatus().equals("1")) {
-
-                    list = attentionLoop.getData().getData();
-
-                    AttentionLoopAdapter attentionLoopAdapter = new AttentionLoopAdapter(getActivity(), list);
-                    attentionLoopAdapter.setScreenParams(screenWidth, screenHeight);
-                    attentionThemeGridView.setAdapter(attentionLoopAdapter);
-
+                    List<AttentionLoopData> list = attentionLoop.getData().getData();
+                    if (list != null && list.size() > 0) {
+                        listAll.addAll(list);
+                        attentionLoopAdapter.setList(listAll);
+                    } else {
+                        Toast.makeText(getActivity(), "关注圈子" +
+                                getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(getActivity(), "数据获取异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),
+                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 Log.e(TAG, "关注的圈子数据解析异常:" + e.getMessage());
-                Toast.makeText(getActivity(), "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),
+                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
             Log.e(TAG, "关注的圈子数据请求失败:" + s);
-            Toast.makeText(getActivity(), "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+            mPtrFrame.refreshComplete();
+            ptrLoadMore.loadMoreError(0, "加载失败，请重试");
+
+            Toast.makeText(getActivity(),
+                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
 

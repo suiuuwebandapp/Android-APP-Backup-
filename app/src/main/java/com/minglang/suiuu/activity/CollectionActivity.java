@@ -1,5 +1,6 @@
 package com.minglang.suiuu.activity;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
@@ -83,7 +84,6 @@ public class CollectionActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
 
@@ -219,4 +219,15 @@ public class CollectionActivity extends FragmentActivity {
         }
     }
 
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
 }

@@ -40,7 +40,7 @@ public class CollectionLoopAdapter extends BaseAdapter {
 
     private DisplayImageOptions displayImageOptions1;
 
-    private int screenWidth, screenHeight;
+    private int screenWidth;
 
     public CollectionLoopAdapter(Context context) {
         this.context = context;
@@ -68,10 +68,8 @@ public class CollectionLoopAdapter extends BaseAdapter {
 
     }
 
-    public void setScreenParams(int screenWidth, int screenHeight) {
+    public void setScreenParams(int screenWidth) {
         this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-        Log.i(TAG, "屏幕显示区域高度为:" + String.valueOf(this.screenHeight));
     }
 
     public void setListData(List<CollectionLoopData> list) {

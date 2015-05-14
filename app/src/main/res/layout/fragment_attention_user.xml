@@ -1,17 +1,32 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.minglang.suiuu.fragment.attention.AttentionUserFragment">
 
+    <in.srain.cube.views.ptr.PtrClassicFrameLayout
+        android:id="@+id/attention_user_grid_view_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/attention_user_ListView"
-        android:choiceMode="none"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        <in.srain.cube.views.loadmore.LoadMoreListViewContainer
+            android:id="@+id/attention_user_load_more_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/cube_mints_white">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/attention_user_ListView"
+                android:choiceMode="none"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+
+        </in.srain.cube.views.loadmore.LoadMoreListViewContainer>
+
+    </in.srain.cube.views.ptr.PtrClassicFrameLayout>
 
 </RelativeLayout>

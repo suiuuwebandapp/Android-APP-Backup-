@@ -102,7 +102,7 @@ public class PersonalSettingActivity extends Activity {
 
     private String networkImagePath;
 
-    private boolean isSelectHeadImage;
+//    private boolean isSelectHeadImage;
 
     /**
      * 上传进度框
@@ -200,7 +200,7 @@ public class PersonalSettingActivity extends Activity {
                     if (TextUtils.isEmpty(networkImagePath)) {
                         Toast.makeText(PersonalSettingActivity.this, "请选择头像！", Toast.LENGTH_SHORT).show();
                     } else {
-                        isSelectHeadImage = false;
+//                        isSelectHeadImage = false;
 
                         if (upLoadDialog != null) {
                             upLoadDialog.show();
@@ -468,7 +468,7 @@ public class PersonalSettingActivity extends Activity {
             case AppConstant.INTENT_CROP:
                 Bitmap bitmap = data.getParcelableExtra("data");
                 headImageView.setImageBitmap(bitmap);
-                isSelectHeadImage = true;
+//                isSelectHeadImage = true;
                 break;
 
             case AppConstant.SELECT_COUNTRY_OK:
