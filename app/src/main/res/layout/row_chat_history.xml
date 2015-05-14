@@ -11,14 +11,14 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true" >
 
-      <ImageView
+      <com.minglang.suiuu.customview.CircleImageView
             android:id="@+id/avatar"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:scaleType="fitXY"
-            android:src="@drawable/default_avatar" />
+             />
 
         <TextView
             android:id="@+id/unread_msg_number"

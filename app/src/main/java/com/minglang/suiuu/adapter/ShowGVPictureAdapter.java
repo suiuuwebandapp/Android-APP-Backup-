@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.utils.AppConstant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -70,7 +69,7 @@ public class ShowGVPictureAdapter extends BaseAdapter {
             iv_picture.setImageResource(R.drawable.btn_add_picture);
         }else {
             if("1".equals(type)) {
-                imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + list.get(position), iv_picture, options);
+                imageLoader.displayImage(list.get(position), iv_picture, options);
             }else {
                 bitmapUtils.display(iv_picture, list.get(position));
             }

@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -73,7 +72,7 @@ public class LoopArticleImageAdapter extends BaseAdapter {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_loop_article_image, position);
         String str = list.get(position);
         ImageView imageView = holder.getView(R.id.iv_picture);
-        imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + str, imageView, options);
+        imageLoader.displayImage(list.get(position), imageView, options);
         return holder.getConvertView();
     }
 }

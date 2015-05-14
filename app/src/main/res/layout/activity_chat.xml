@@ -21,7 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            />
 
         <RelativeLayout
             android:id="@+id/container_remove"

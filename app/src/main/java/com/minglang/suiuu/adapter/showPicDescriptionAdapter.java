@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
-import com.minglang.suiuu.utils.AppConstant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -81,7 +80,7 @@ public class showPicDescriptionAdapter extends BaseAdapter {
             view.setTag(holder);
         }
 
-        imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position), holder.picContent, options);
+        imageLoader.displayImage(imageList.get(position), holder.picContent, options);
 
 
             if (TextUtils.isEmpty(contentList.get(position))) {
@@ -95,7 +94,7 @@ public class showPicDescriptionAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent showPic = new Intent(context, ShowBigImage.class);
-                    showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position));
+                    showPic.putExtra("remotepath", imageList.get(position));
                     showPic.putExtra("isHuanXin", false);
                     context.startActivity(showPic);
                 }

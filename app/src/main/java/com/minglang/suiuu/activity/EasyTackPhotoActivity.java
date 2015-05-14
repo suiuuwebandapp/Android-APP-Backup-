@@ -40,6 +40,7 @@ import com.minglang.suiuu.customview.mProgressDialog;
 import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
+import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
@@ -162,7 +163,8 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         setContentView(R.layout.activity_easy_tackphoto);
 
         picList = this.getIntent().getStringArrayListExtra("pictureMessage");
-        articleDetail = (LoopArticleData) this.getIntent().getSerializableExtra("articleDetail");
+//        articleDetail = (LoopArticleData)getIntent().getSerializableExtra("articleDetail");
+        articleDetail = jsonUtil.fromJSON(LoopArticleData.class,getIntent().getStringExtra("articleDetail"));
         initView();
         if (ConstantUtil.isKITKAT) {
             LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
@@ -392,7 +394,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         for (String string : picList) {
             updateDate(string);
             String substring = string.substring(string.lastIndexOf("/"));
-            picNameList.add(substring);
+            picNameList.add(AppConstant.IMG_FROM_SUIUU+"suiuu_content"+substring);
         }
         params.addBodyParameter("imgList", jsonUtil.toJSON(picNameList));
         params.addBodyParameter("img", picNameList.get(0));
@@ -432,10 +434,10 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
             for (String string : picList) {
                 updateDate(string);
                 String substring = string.substring(string.lastIndexOf("/"));
-                picNameList.add(substring);
+                picNameList.add(AppConstant.IMG_FROM_SUIUU+"suiuu_content"+substring);
             }
             params.addBodyParameter("imgList", JsonUtil.getInstance().toJSON(picNameList));
-            if(picNameList.size()>1) {
+            if(picNameList.size()>=1) {
                 params.addBodyParameter("img", picNameList.get(0));
             }
         }else {

@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.OtherUserDataArticle;
-import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 
@@ -80,7 +79,7 @@ public class OtherUserArticleAdapter extends BaseAdapter {
         String imagePath = article.getaImg();
         Log.i("suiuu","imagePath" + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
-            bitmapUtils.display(image, AppConstant.IMG_FROM_SUIUU_CONTENT + imagePath);
+            bitmapUtils.display(image, imagePath);
         }
 
         String strTitle = article.getaTitle();

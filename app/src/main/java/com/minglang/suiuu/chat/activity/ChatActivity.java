@@ -314,8 +314,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 
 		if (chatType == CHATTYPE_SINGLE) { // 单聊
 			toChatUsername = getIntent().getStringExtra("userId");
-			String nikeName = getIntent().getStringExtra("nikeName");
-			((TextView) findViewById(R.id.name)).setText(nikeName);
+
+			((TextView) findViewById(R.id.name)).setText(toChatUsername);
 			// conversation =
 			// EMChatManager.getInstance().getConversation(toChatUsername,false);
 		} else {

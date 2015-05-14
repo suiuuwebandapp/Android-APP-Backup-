@@ -15,7 +15,6 @@ import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SelectPictureActivity;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
-import com.minglang.suiuu.utils.AppConstant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -99,9 +98,9 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
             iv_picture.setImageResource(R.drawable.btn_add_picture2);
         } else {
             if ("1".equals(type)) {
-                Log.i("suiuu", "图片地址=" + AppConstant.IMG_FROM_SUIUU_CONTENT + list.get(position));
+                Log.i("suiuu", "图片地址=" + list.get(position));
                 et_pic_description.setText(changeContentList.get(position));
-                imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + list.get(position), iv_picture, options);
+                imageLoader.displayImage(list.get(position), iv_picture, options);
             } else {
                 bitmapUtils.display(iv_picture, list.get(position));
             }
@@ -115,7 +114,7 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
                     activity.startActivityForResult(intent, 0);
                 } else {
                     Intent showPicture = new Intent(context, ShowBigImage.class);
-                    showPicture.putExtra("path", list.get(position));
+                    showPicture.putExtra("remotepath", list.get(position));
                     showPicture.putExtra("isHuanXin", false);
                     activity.startActivity(showPicture);
                 }

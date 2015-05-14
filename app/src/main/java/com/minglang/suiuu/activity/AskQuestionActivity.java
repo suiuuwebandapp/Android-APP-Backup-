@@ -40,6 +40,7 @@ import com.minglang.suiuu.customview.mProgressDialog;
 import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
+import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
@@ -97,17 +98,19 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
     private LoopArticleData articleDetail;
     //修改文章进来是否重新选择图片
     private boolean isChangePic = false;
+    private List<String> changePicList;
+    private JsonUtil jsonUtil = JsonUtil.getInstance();
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case getData_Success:
-                    if (1 == status && picSuccessCount == listPicture.size()) {
+                    if (1 == status && picSuccessCount == (articleDetail==null ? listPicture.size():changePicList.size())) {
                         dialog.dismissDialog();
                         Toast.makeText(AskQuestionActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(AskQuestionActivity.this,LoopArticleActivity.class);
-                        intent.putExtra("articleId",dataNum);
+                        intent.putExtra("articleId",articleDetail==null?dataNum:articleDetail.getArticleId());
                         intent.putExtra("TAG",TAG);
                         startActivity(intent);
                     } else {
@@ -131,7 +134,8 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ask_question);
         record = getIntent().getIntExtra("record", 0);
-        articleDetail = (LoopArticleData) this.getIntent().getSerializableExtra("articleDetail");
+//        articleDetail = (LoopArticleData) getIntent().getSerializableExtra("articleDetail");
+        articleDetail = jsonUtil.fromJSON(LoopArticleData.class,getIntent().getStringExtra("articleDetail"));
         if (ConstantUtil.isKITKAT) {
             LinearLayout rootLayout = (LinearLayout)findViewById(R.id.root);
             rootLayout.setPadding(0, Utils.getStatusHeight1(this), 0, 0);
@@ -150,8 +154,8 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         gv_show_picture.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                if (position == listPicture.size()) {
+                int picSize = articleDetail != null? changePicList.size() :listPicture.size();
+                if (position == picSize) {
                     if(articleDetail != null) {
                         isChangePic = true;
                     }
@@ -159,7 +163,8 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                     startActivityForResult(intent, 1);
                 } else {
                     Intent showPicture = new Intent(AskQuestionActivity.this, ShowBigImage.class);
-                    showPicture.putExtra("path", listPicture.get(position));
+                    showPicture.putExtra("remotepath", articleDetail != null?changePicList.get(position):listPicture.get(position));
+                    showPicture.putExtra("isHuanXin", false);
                     startActivity(showPicture);
                 }
             }
@@ -247,7 +252,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         tv_theme_choice.setVisibility(View.GONE);
         et_search_question.setText(articleDetail.getaTitle());
         et_question_description.setText(articleDetail.getaContent());
-        List<String> changePicList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>(){}.getType(),articleDetail.getaImgList());
+        changePicList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>(){}.getType(),articleDetail.getaImgList());
         for(String string:changePicList) {
             Log.i("suiuu","askActivity="+string);
         }
@@ -303,6 +308,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
 
     //点击发布按钮
     private void publish() {
+        Log.i("suiuu","是发布");
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
         judgeData();
@@ -322,7 +328,8 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         for (String string : listPicture) {
             updateDate(string);
             String substring = string.substring(string.lastIndexOf("/"));
-            picNameList.add(substring);
+            picNameList.add(AppConstant.IMG_FROM_SUIUU+"suiuu_content"+substring);
+            Log.i("suiuu","img"+AppConstant.IMG_FROM_SUIUU+"suiuu_content"+substring);
         }
         params.addBodyParameter("imgList", JsonUtil.getInstance().toJSON(picNameList));
         if(picNameList.size()>1) {
@@ -336,6 +343,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
     }
     //点击发布按钮 修改文章内容
     private void changeArticlePublish() {
+        Log.i("suiuu","是更改发布");
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
         judgeData();
@@ -351,10 +359,10 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
             for (String string : listPicture) {
                 updateDate(string);
                 String substring = string.substring(string.lastIndexOf("/"));
-                picNameList.add(substring);
+                picNameList.add(AppConstant.IMG_FROM_SUIUU+"suiuu_content"+substring);
             }
             params.addBodyParameter("imgList", JsonUtil.getInstance().toJSON(picNameList));
-            if(picNameList.size()>1) {
+            if(picNameList.size()>=1) {
                 params.addBodyParameter("img", picNameList.get(0));
             }
         }else {
@@ -546,17 +554,17 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                 dataNum = (String)json.get("data");
                 Log.i("suiuu",status+"dataNum"+dataNum);
                if("success".equals(dataNum)) {
-                   Toast.makeText(AskQuestionActivity.this, R.string.article_update_success, Toast.LENGTH_SHORT).show();
-                   Intent intent = new Intent(AskQuestionActivity.this,LoopArticleActivity.class);
-                   intent.putExtra("articleId",articleDetail.getArticleId());
-                   intent.putExtra("TAG",TAG);
-                   startActivity(intent);
+                   if(!isChangePic) {
+                       Intent intent = new Intent(AskQuestionActivity.this,LoopArticleActivity.class);
+                       intent.putExtra("articleId",articleDetail.getArticleId());
+                       intent.putExtra("TAG",TAG);
+                       startActivity(intent);
+                   }
                }else {
                    handler.sendEmptyMessage(getData_FAILURE);
                }
             } catch (JSONException e) {
                 e.printStackTrace();
-                handler.sendEmptyMessage(getData_FAILURE);
             }
         }
 

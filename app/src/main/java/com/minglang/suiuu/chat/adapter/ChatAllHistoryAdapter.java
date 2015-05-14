@@ -111,6 +111,7 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 				holder.name.setText("申请与通知");
 			}
 			holder.name.setText(username);
+
 		}
 
 		if (conversation.getUnreadMsgCount() > 0) {

@@ -38,7 +38,6 @@ import com.minglang.suiuu.entity.DeleteArticle;
 import com.minglang.suiuu.entity.LoopArticle;
 import com.minglang.suiuu.entity.LoopArticleCommentList;
 import com.minglang.suiuu.entity.LoopArticleData;
-import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -336,9 +335,11 @@ public class LoopArticleActivity extends Activity {
                 }else {
                     intent = new Intent(LoopArticleActivity.this,AskQuestionActivity.class);
                 }
-                Bundle mBundle = new Bundle();
-                mBundle.putSerializable("articleDetail",loopArticleData);
-                intent.putExtras(mBundle);
+                Log.i("suiuu",loopArticleData.toString());
+                intent.putExtra("articleDetail",JsonUtil.getInstance().toJSON(loopArticleData));
+//                Bundle mBundle = new Bundle();
+//                mBundle.putSerializable("articleDetail", loopArticleData);
+//                intent.putExtra("articleDetail",mBundle);
                 startActivity(intent);
             }
         });
@@ -370,7 +371,7 @@ public class LoopArticleActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent showPic = new Intent(LoopArticleActivity.this, ShowBigImage.class);
-                showPic.putExtra("remotepath", AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(position));
+                showPic.putExtra("remotepath", imageList.get(position));
                 showPic.putExtra("isHuanXin", false);
                 startActivity(showPic);
             }
@@ -535,7 +536,7 @@ public class LoopArticleActivity extends Activity {
             }.getType(), imageListPath);
             if (imageList != null) {
                 if (imageList.size() >= 1) {
-                    imageLoader.displayImage(AppConstant.IMG_FROM_SUIUU_CONTENT + imageList.get(0), coverImage, options1);
+                    imageLoader.displayImage(imageList.get(0), coverImage, options1);
                 }
                 String content = loopArticleData.getaContent();
                 String type = loopArticleData.getaType();
@@ -824,10 +825,11 @@ public class LoopArticleActivity extends Activity {
     }
     @Override
     public void finish() {
-        if (OtherTAG.equals(AskQuestionActivity.class.getSimpleName())) {
+        if (OtherTAG != null && OtherTAG.equals(AskQuestionActivity.class.getSimpleName())) {
             startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
             super.finish();
         } else if(OtherTAG.equals(EasyTackPhotoActivity.class.getSimpleName())) {
+            startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
             super.finish();
         }else {
             super.finish();

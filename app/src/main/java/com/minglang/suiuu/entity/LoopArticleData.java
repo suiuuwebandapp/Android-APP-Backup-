@@ -10,6 +10,8 @@ import java.util.List;
  */
 public class LoopArticleData implements Serializable{
 
+
+
     public String cId;
 
     public String cAddrId;
