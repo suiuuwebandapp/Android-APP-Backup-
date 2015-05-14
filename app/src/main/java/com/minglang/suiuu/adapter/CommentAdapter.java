@@ -71,6 +71,7 @@ public class CommentAdapter extends BaseAdapter {
             holder.headImage = (CircleImageView) convertView.findViewById(R.id.item_comment_head_image);
             holder.title = (TextView) convertView.findViewById(R.id.item_comment_title);
             holder.content = (TextView) convertView.findViewById(R.id.item_comment_content);
+            holder.time = (TextView) convertView.findViewById(R.id.tv_time);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -79,6 +80,7 @@ public class CommentAdapter extends BaseAdapter {
             bitMap.display(holder.headImage, list.get(position).getHeadImg());
         }
         holder.title.setText(list.get(position).getNickname());
+        holder.time.setText(list.get(position).getcTime());
         if(!TextUtils.isEmpty(list.get(position).getrTitle())) {
             holder.content.setText(list.get(position).getrTitle() +"  "+list.get(position).getContent());
         }else {
@@ -93,6 +95,7 @@ public class CommentAdapter extends BaseAdapter {
         CircleImageView headImage;
         TextView title;
         TextView content;
+        TextView time;
     }
 
 }
