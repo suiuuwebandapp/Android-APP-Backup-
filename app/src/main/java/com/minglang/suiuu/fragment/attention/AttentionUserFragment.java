@@ -27,6 +27,7 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.srain.cube.util.LocalDisplay;
@@ -59,7 +60,7 @@ public class AttentionUserFragment extends Fragment {
 
     private int page = 1;
 
-    private List<AttentionUserData> listAll;
+    private List<AttentionUserData> listAll = new ArrayList<>();
 
     private ProgressDialog progressDialog;
 

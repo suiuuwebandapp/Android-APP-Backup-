@@ -43,7 +43,9 @@
             android:text="@string/attention"
             android:textColor="@color/white"
             android:drawableLeft="@drawable/iv_attention"
-            android:textSize="20sp"/>
+            android:drawableStart="@drawable/iv_attention"
+            android:textSize="20sp"
+            tools:ignore="RelativeOverlap"/>
     </RelativeLayout>
 
     <GridView

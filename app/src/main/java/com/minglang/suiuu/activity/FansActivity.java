@@ -110,7 +110,7 @@ public class FansActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String userSign = fansDataList.get(position).getUserSign();
                 Intent intent = new Intent(FansActivity.this, OtherUserActivity.class);
-                intent.putExtra("usersign", userSign);
+                intent.putExtra("userSign", userSign);
                 startActivity(intent);
             }
         });

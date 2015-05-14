@@ -52,7 +52,7 @@ public class PersonalActivity extends Activity {
      */
     private ImageView back;
 
-    private ImageView headLayoutImage;
+    private ImageView headLayoutBackground;
 
     /**
      * 头像
@@ -123,9 +123,10 @@ public class PersonalActivity extends Activity {
      * @param str Json字符串
      */
     private void userData2View(String str) {
+        Log.i(TAG, "个人主页数据:" + str);
         if (!TextUtils.isEmpty(str)) {
-            OtherUser user = JsonUtil.getInstance().fromJSON(OtherUser.class, str);
             try {
+                OtherUser user = JsonUtil.getInstance().fromJSON(OtherUser.class, str);
                 OtherUserDataInfo info = user.getData().getUser();
 
                 String name = info.getNickname();
@@ -258,7 +259,7 @@ public class PersonalActivity extends Activity {
         dialog.setCanceledOnTouchOutside(false);
 
         back = (ImageView) findViewById(R.id.personalBack);
-        headLayoutImage = (ImageView) findViewById(R.id.personalHeadLayoutImage);
+        headLayoutBackground = (ImageView) findViewById(R.id.personalHeadLayoutImage);
         headImageView = (CircleImageView) findViewById(R.id.personalHeadImage);
         userName = (TextView) findViewById(R.id.personalName);
         location = (TextView) findViewById(R.id.personalLocation);

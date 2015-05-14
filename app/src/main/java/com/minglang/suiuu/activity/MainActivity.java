@@ -712,6 +712,8 @@ public class MainActivity extends FragmentActivity {
         Log.i(TAG, "用户昵称:" + strNickName);
         if (!TextUtils.isEmpty(strNickName)) {
             nickNameView.setText(strNickName);
+        } else {
+            nickNameView.setText("");
         }
 
         headImageView = (CircleImageView) findViewById(R.id.headImage);
@@ -862,21 +864,6 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mDrawerLayout.isDrawerVisible(slideLayout)) {
-            mDrawerLayout.closeDrawer(slideLayout);
-        } else {
-            finish();
-        }
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
@@ -1212,17 +1199,27 @@ public class MainActivity extends FragmentActivity {
 
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
     private long exitTime;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                exitTime = System.currentTimeMillis();
+            if (mDrawerLayout.isDrawerVisible(slideLayout)) {
+                mDrawerLayout.closeDrawer(slideLayout);
             } else {
+                if ((System.currentTimeMillis() - exitTime) > 2000) {
+                    Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                    exitTime = System.currentTimeMillis();
+                } else {
 //                DemoApplication.getInstance().exit();
-                finish();
+                    finish();
+                }
             }
             return true;
         }

@@ -56,6 +56,8 @@ public class PersonalSettingActivity extends Activity {
 
     private static final int UP_LOAD_FAIL = 400;
 
+    private static final int UP_LOADING = 300;
+
     /**
      * 返回按钮
      */
@@ -100,7 +102,7 @@ public class PersonalSettingActivity extends Activity {
 
     private String nativeImagePath;
 
-    private String networkImagePath;
+    private String netWorkImagePath;
 
 //    private boolean isSelectHeadImage;
 
@@ -129,18 +131,16 @@ public class PersonalSettingActivity extends Activity {
                     String s = msg.obj.toString();
 
                     Log.i(TAG, "图片上传成功:" + s);
-                    networkImagePath = AppConstant.IMG_FROM_SUIUU + s;
-                    Log.i(TAG, "NetworkImagePath:" + networkImagePath);
+                    netWorkImagePath = AppConstant.IMG_FROM_SUIUU + s;
+                    Log.i(TAG, "NetworkImagePath:" + netWorkImagePath);
 
                     SuiuuInfo.WriteNativeHeadImagePath(PersonalSettingActivity.this, nativeImagePath);
-                    SuiuuInfo.WriteUserHeadImagePath(PersonalSettingActivity.this, networkImagePath);
+                    SuiuuInfo.WriteUserHeadImagePath(PersonalSettingActivity.this, netWorkImagePath);
 
                     if (upLoadDialog.isShowing()) {
                         upLoadDialog.dismiss();
                     }
-
-//                    Toast.makeText(PersonalSettingActivity.this, "头像上传成功！", Toast.LENGTH_SHORT).show();
-                    setData();
+                    Toast.makeText(PersonalSettingActivity.this, "操作已完成！", Toast.LENGTH_SHORT).show();
                     break;
 
                 case UP_LOAD_FAIL:
@@ -149,6 +149,12 @@ public class PersonalSettingActivity extends Activity {
                     }
                     Toast.makeText(PersonalSettingActivity.this,
                             getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case UP_LOADING:
+                    if (!upLoadDialog.isShowing()) {
+                        upLoadDialog.show();
+                    }
                     break;
             }
             return false;
@@ -197,18 +203,7 @@ public class PersonalSettingActivity extends Activity {
                     Toast.makeText(PersonalSettingActivity.this, "签名不能为空！", Toast.LENGTH_SHORT).show();
                 } else {
 //                    if (isSelectHeadImage) {
-                    if (TextUtils.isEmpty(networkImagePath)) {
-                        Toast.makeText(PersonalSettingActivity.this, "请选择头像！", Toast.LENGTH_SHORT).show();
-                    } else {
-//                        isSelectHeadImage = false;
-
-                        if (upLoadDialog != null) {
-                            upLoadDialog.show();
-                        }
-                        upLoadImage();
-                    }
-//                    } else {
-//                        Toast.makeText(PersonalSettingActivity.this, "您未修改头像！", Toast.LENGTH_SHORT).show();
+                    setData();
 //                    }
                 }
             }
@@ -274,15 +269,13 @@ public class PersonalSettingActivity extends Activity {
                 @Override
                 public void onProgress(String objectKey, int byteCount, int totalSize) {
                     Log.i(TAG, "图片上传中:" + objectKey + ",byteCount:" + byteCount + ",totalSize:" + totalSize);
-                    double percent = byteCount / totalSize;
-                    Log.i(TAG, "百分比:" + percent + "%");
+                    handler.sendEmptyMessage(UP_LOADING);
                 }
 
                 @Override
                 public void onFailure(String s, OSSException e) {
                     Log.e(TAG, "上传失败:" + s);
                     Log.e(TAG, "数据更新异常:" + e.getMessage());
-
                     handler.sendEmptyMessage(UP_LOAD_FAIL);
                 }
             });
@@ -305,7 +298,7 @@ public class PersonalSettingActivity extends Activity {
         String verification = SuiuuInfo.ReadVerification(this);
 
         RequestParams params = new RequestParams();
-        params.addBodyParameter("headImg", networkImagePath);
+        params.addBodyParameter("headImg", netWorkImagePath);
         params.addBodyParameter("sex", strGender);
         params.addBodyParameter("nickname", str_NickName);
         params.addBodyParameter("birthday", data.getBirthday());
@@ -328,11 +321,11 @@ public class PersonalSettingActivity extends Activity {
      * 添加初始化数据
      */
     private void initLoadDefaultData() {
-        networkImagePath = data.getHeadImg();
-        nativeImagePath = SuiuuInfo.ReadNativeHeadImagePath(this);
+        netWorkImagePath = data.getHeadImg();
+        //nativeImagePath = SuiuuInfo.ReadNativeHeadImagePath(this);
 
-        if (!TextUtils.isEmpty(networkImagePath)) {
-            imageLoader.displayImage(networkImagePath, headImageView, options);
+        if (!TextUtils.isEmpty(netWorkImagePath)) {
+            imageLoader.displayImage(netWorkImagePath, headImageView, options);
         } else {
             if (!TextUtils.isEmpty(nativeImagePath)) {
                 imageLoader.displayImage("file://" + nativeImagePath, headImageView, options);
@@ -348,11 +341,11 @@ public class PersonalSettingActivity extends Activity {
         if (!TextUtils.isEmpty(strGender)) {
             if (strGender.equals("1")) {
                 sex_man.setCompoundDrawablesWithIntrinsicBounds
-                        (getResources().getDrawable(R.drawable.sex_man), null, null, null);
+                        (this.getDrawable(R.drawable.sex_man), null, null, null);
                 Log.i(TAG, "男");
             } else if (strGender.equals("0")) {
                 sex_woman.setCompoundDrawablesWithIntrinsicBounds
-                        (getResources().getDrawable(R.drawable.sex_woman), null, null, null);
+                        (this.getDrawable(R.drawable.sex_woman), null, null, null);
                 Log.i(TAG, "女");
             }
         }
@@ -466,8 +459,9 @@ public class PersonalSettingActivity extends Activity {
                 break;
 
             case AppConstant.INTENT_CROP:
-                Bitmap bitmap = data.getParcelableExtra("data");
-                headImageView.setImageBitmap(bitmap);
+//                Bitmap bitmap = data.getParcelableExtra("data");
+//                headImageView.setImageBitmap(bitmap);
+                imageLoader.displayImage("file://" + nativeImagePath, headImageView);
 //                isSelectHeadImage = true;
                 break;
 
@@ -484,29 +478,6 @@ public class PersonalSettingActivity extends Activity {
                 localDetails.setText(countryCNname + "," + cityName);
                 break;
         }
-    }
-
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 
     /**
@@ -533,6 +504,11 @@ public class PersonalSettingActivity extends Activity {
                         if (status.equals("1")) {
                             UserBackData userBackData = userBack.getData();
                             SuiuuInfo.WriteUserData(PersonalSettingActivity.this, userBackData);
+
+                            if (!TextUtils.isEmpty(nativeImagePath)) {
+                                upLoadImage();
+                            }
+
                         } else {
                             Toast.makeText(PersonalSettingActivity.this,
                                     getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
@@ -558,4 +534,28 @@ public class PersonalSettingActivity extends Activity {
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
 }

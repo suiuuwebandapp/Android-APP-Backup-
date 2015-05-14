@@ -90,6 +90,8 @@ public class LoopDetailsActivity extends Activity {
 
     private String loopName;
 
+    private String attentionId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,7 +147,11 @@ public class LoopDetailsActivity extends Activity {
         addAttention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setAddAttention2Service();
+                if (TextUtils.isEmpty(attentionId)) {
+                    Toast.makeText(LoopDetailsActivity.this, "您已关注该圈子！", Toast.LENGTH_SHORT).show();
+                } else {
+                    setAddAttention2Service();
+                }
             }
         });
 
@@ -253,7 +259,7 @@ public class LoopDetailsActivity extends Activity {
                 LoopDetailsData loopDetailsData = loopDetails.getData();
                 if (loopDetailsData != null) {
                     List<LoopDetailsDataList> list = loopDetailsData.getData();
-                    if (list != null) {
+                    if (list != null && list.size() > 0) {
                         listAll.addAll(list);
                         loopDetailsAdapter.setDataList(listAll);
                     } else {
@@ -261,6 +267,14 @@ public class LoopDetailsActivity extends Activity {
                                 getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                     }
                     Log.i(TAG, "相关数据:" + loopDetailsData.getMsg().toString());
+                    attentionId = loopDetailsData.getAttentionId();
+                    if (TextUtils.isEmpty(attentionId)) {
+                        addAttention.setCompoundDrawablesWithIntrinsicBounds(
+                                getResources().getDrawable(R.drawable.attention), null, null, null);
+                    } else {
+                        addAttention.setCompoundDrawablesWithIntrinsicBounds(
+                                getResources().getDrawable(R.drawable.attention_press), null, null, null);
+                    }
                 }
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
