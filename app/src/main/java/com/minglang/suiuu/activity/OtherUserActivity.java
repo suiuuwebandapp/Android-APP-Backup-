@@ -3,6 +3,7 @@ package com.minglang.suiuu.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -30,6 +31,10 @@ import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,6 +95,9 @@ public class OtherUserActivity extends Activity {
 
     private String attentionId;
     private String Verification;
+    private ImageLoader imageLoader;
+
+    private DisplayImageOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,6 +189,13 @@ public class OtherUserActivity extends Activity {
      * 初始化方法
      */
     private void initView() {
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(this));
+
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
+                .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
         Verification = SuiuuInfo.ReadVerification(this);
         dialog = new ProgressDialog(this);
         dialog.setMessage(getResources().getString(R.string.load_wait));
@@ -206,6 +221,7 @@ public class OtherUserActivity extends Activity {
      */
     private void fullData() {
         OtherUserDataInfo user = otherUser.getData().getUser();
+        imageLoader.displayImage(user.getHeadImg(),headImage,options);
         otherUserName.setText(user.getNickname());
         otherUserSignature.setText(user.getIntro());
         collection.setText(otherUser.getData().getFansNumb());

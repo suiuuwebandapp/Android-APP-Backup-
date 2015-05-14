@@ -828,7 +828,7 @@ public class LoopArticleActivity extends Activity {
         if (OtherTAG != null && OtherTAG.equals(AskQuestionActivity.class.getSimpleName())) {
             startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
             super.finish();
-        } else if(OtherTAG.equals(EasyTackPhotoActivity.class.getSimpleName())) {
+        } else if(OtherTAG != null && OtherTAG.equals(EasyTackPhotoActivity.class.getSimpleName())) {
             startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
             super.finish();
         }else {

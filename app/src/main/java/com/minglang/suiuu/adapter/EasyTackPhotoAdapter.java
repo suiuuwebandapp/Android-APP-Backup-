@@ -58,7 +58,6 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
         this.list = list;
         activity = (Activity) context;
         this.type = type;
-        this.changeContentList = changeContentList;
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(context));
 

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -147,6 +148,7 @@ public class CommentsActivity extends Activity {
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter("content", commentContent);
         params.addBodyParameter("rId", rId);
+        params.addBodyParameter("rTitle", rTitle);
         params.addBodyParameter(HttpServicePath.key, Verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.articleCreateComment, new requestComentSendCallBack());
@@ -189,6 +191,7 @@ public class CommentsActivity extends Activity {
                     rId = null;
                     rTitle = null;
                     et_input_comment.setText("");
+                    et_input_comment.setHint("");
                     Toast.makeText(CommentsActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
@@ -248,10 +251,10 @@ public class CommentsActivity extends Activity {
          系统版本是否高于4.4
          */
         boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-//        if (isKITKAT) {
-//            RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.CommentRootLayout);
-//            rootLayout.setPadding(0, statusHeight, 0, 0);
-//        }
+        if (isKITKAT) {
+            RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.CommentRootLayout);
+            rootLayout.setPadding(0, statusHeight, 0, 0);
+        }
         back = (ImageView) findViewById(R.id.iv_top_back);
         mListView = (ListView) findViewById(R.id.lv_activity_commentlist);
         et_input_comment = (EditText) findViewById(R.id.et_input_comment);
