@@ -1,9 +1,9 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.OtherUserActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.MainDynamicDataRecommendUser;
-import com.minglang.suiuu.fragment.main.MainFragment;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -101,13 +101,11 @@ public class TodayStarAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(imagePath)) {
             imageLoader.displayImage(imagePath, imageView, options1);
         }
-        Log.i(MainFragment.class.getSimpleName(), "今日之星图片URL:" + imagePath);
 
         String headImagePath = list.get(position).getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
             imageLoader.displayImage(headImagePath, headImageViw, options2);
         }
-        Log.i(MainFragment.class.getSimpleName(), "今日之星头像URL:" + imagePath);
 
         String strUserName = list.get(position).getNickname();
         if (!TextUtils.isEmpty(strUserName)) {
@@ -123,6 +121,9 @@ public class TodayStarAdapter extends BaseAdapter {
             fansCount.setText("0");
         }
 
+        headImageViw.setTag(position);
+        headImageViw.setOnClickListener(new MyClickListener(position));
+
         convertView = holder.getConvertView();
 
         int itemParams = screenWidth / 2 - Utils.newInstance(context).dip2px(10);
@@ -132,4 +133,22 @@ public class TodayStarAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+    private class MyClickListener implements View.OnClickListener {
+
+        private int index;
+
+        private MyClickListener(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public void onClick(View v) {
+            String userSign = list.get(index).getUserSign();
+            Intent intent = new Intent(context, OtherUserActivity.class);
+            intent.putExtra("userSign", userSign);
+            context.startActivity(intent);
+        }
+    }
+
 }

@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +18,7 @@ import android.widget.Toast;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.ShowGVPictureAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * 反馈页面
  */
 
-public class FeedbackActivity extends Activity {
+public class FeedbackActivity extends BaseActivity {
 
     private static final String TAG = FeedbackActivity.class.getSimpleName();
 
@@ -50,10 +50,7 @@ public class FeedbackActivity extends Activity {
         initView();
 
         ViewAction();
-
-
     }
-
 
     private void ViewAction() {
 
@@ -118,8 +115,6 @@ public class FeedbackActivity extends Activity {
         });
     }
 
-
-
     private void initView() {
         listPicture = new ArrayList<>();
         SystemBarTintManager mTintManager = new SystemBarTintManager(this);
@@ -143,7 +138,6 @@ public class FeedbackActivity extends Activity {
 
         gv_show_picture = (GridView) findViewById(R.id.gv_show_picture);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

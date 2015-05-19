@@ -30,6 +30,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.entity.UserBackData;
@@ -48,7 +49,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import java.io.File;
 
 @SuppressWarnings("deprecation")
-public class PersonalSettingActivity extends Activity {
+public class PersonalSettingActivity extends BaseActivity {
 
     private static final String TAG = PersonalSettingActivity.class.getSimpleName();
 
@@ -341,11 +342,11 @@ public class PersonalSettingActivity extends Activity {
         if (!TextUtils.isEmpty(strGender)) {
             if (strGender.equals("1")) {
                 sex_man.setCompoundDrawablesWithIntrinsicBounds
-                        (this.getDrawable(R.drawable.sex_man), null, null, null);
+                        (getResources().getDrawable(R.drawable.sex_man), null, null, null);
                 Log.i(TAG, "男");
             } else if (strGender.equals("0")) {
                 sex_woman.setCompoundDrawablesWithIntrinsicBounds
-                        (this.getDrawable(R.drawable.sex_woman), null, null, null);
+                        (getResources().getDrawable(R.drawable.sex_woman), null, null, null);
                 Log.i(TAG, "女");
             }
         }
@@ -534,28 +535,4 @@ public class PersonalSettingActivity extends Activity {
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
-
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
 }

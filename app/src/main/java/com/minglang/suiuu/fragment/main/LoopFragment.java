@@ -186,6 +186,7 @@ public class LoopFragment extends Fragment {
     }
 
     private void LoadRecommendLoopImage() {
+        Log.i(TAG, "轮播图片URL列表:" + imagePathList.toString());
         if (imagePathList != null && imagePathList.size() > 0) {
             imageLoader.displayImage(imagePathList.get(0), imageView1, displayImageOptions);
             imageLoader.displayImage(imagePathList.get(1), imageView2, displayImageOptions);
@@ -211,8 +212,8 @@ public class LoopFragment extends Fragment {
         if (!imageLoader.isInited()) {
             imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
         }
-        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
-                .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
+        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll2)
+                .showImageForEmptyUri(R.drawable.scroll2).showImageOnFail(R.drawable.scroll2)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
@@ -384,7 +385,7 @@ public class LoopFragment extends Fragment {
                         String loopName = data.getcName();
                         intent.putExtra(TYPE, type);
                         intent.putExtra(CIRCLEID, circleId);
-                        intent.putExtra("name",loopName);
+                        intent.putExtra("name", loopName);
                         startActivity(intent);
                     }
                     break;
@@ -397,7 +398,7 @@ public class LoopFragment extends Fragment {
                         String loopName = data.getcName();
                         intent.putExtra(TYPE, type);
                         intent.putExtra(CIRCLEID, circleId);
-                        intent.putExtra("name",loopName);
+                        intent.putExtra("name", loopName);
                         startActivity(intent);
                     }
                     break;
@@ -410,7 +411,7 @@ public class LoopFragment extends Fragment {
                         String loopName = data.getcName();
                         intent.putExtra(TYPE, type);
                         intent.putExtra(CIRCLEID, circleId);
-                        intent.putExtra("name",loopName);
+                        intent.putExtra("name", loopName);
                         startActivity(intent);
                     }
                     break;
@@ -423,7 +424,7 @@ public class LoopFragment extends Fragment {
                         String loopName = data.getcName();
                         intent.putExtra(TYPE, type);
                         intent.putExtra(CIRCLEID, circleId);
-                        intent.putExtra("name",loopName);
+                        intent.putExtra("name", loopName);
                         startActivity(intent);
                     }
                     break;
@@ -436,7 +437,7 @@ public class LoopFragment extends Fragment {
                         String loopName = data.getcName();
                         intent.putExtra(TYPE, type);
                         intent.putExtra(CIRCLEID, circleId);
-                        intent.putExtra("name",loopName);
+                        intent.putExtra("name", loopName);
                         startActivity(intent);
                     }
                     break;

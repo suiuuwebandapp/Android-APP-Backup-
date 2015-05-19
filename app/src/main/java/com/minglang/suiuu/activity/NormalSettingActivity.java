@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,12 +9,13 @@ import android.widget.TextView;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.controller.HXSDKHelper;
 
 /**
  * Created by Administrator on 2015/4/25.
  */
-public class NormalSettingActivity extends Activity implements View.OnClickListener {
+public class NormalSettingActivity extends BaseActivity implements View.OnClickListener {
     /**
      * 设置新消息通知布局
      */
@@ -222,6 +222,4 @@ public class NormalSettingActivity extends Activity implements View.OnClickListe
         }
 
     }
-
-
 }

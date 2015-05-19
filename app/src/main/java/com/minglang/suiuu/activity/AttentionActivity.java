@@ -4,7 +4,6 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.AttentionPagerAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.fragment.attention.AttentionLoopFragment;
 import com.minglang.suiuu.fragment.attention.AttentionUserFragment;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * 关注页面
  */
-public class AttentionActivity extends FragmentActivity {
+public class AttentionActivity extends BaseActivity {
 
     private static final String TAG = AttentionActivity.class.getSimpleName();
 
@@ -200,12 +200,6 @@ public class AttentionActivity extends FragmentActivity {
         offsetX = (tabWidth - sliderViewWidth) / 2;
         attentionSliderView.setPadding(offsetX, 0, 0, 0);
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
     }
 
     class AttentionClick implements View.OnClickListener {

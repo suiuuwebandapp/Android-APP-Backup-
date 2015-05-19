@@ -3,7 +3,6 @@ package com.minglang.suiuu.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.MainDynamicDataLoop;
-import com.minglang.suiuu.fragment.main.MainFragment;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -94,7 +92,6 @@ public class LoopDynamicAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(imagePath)) {
             imageLoader.displayImage(imagePath, imageView, displayImageOptions);
         }
-        Log.i(MainFragment.class.getSimpleName(), "圈子动态图片URL:" + imagePath);
 
         String strName = list.get(position).getcName();
         if (!TextUtils.isEmpty(strName)) {

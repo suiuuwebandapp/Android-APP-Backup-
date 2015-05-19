@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -18,6 +17,7 @@ import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.SettingAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.chat.DemoApplication;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * 设置页面
  */
-public class SettingActivity extends Activity {
+public class SettingActivity extends BaseActivity {
 
     private static final String[] SETTINGS = {"个人设置", "通用设置", "检查更新", "联系我们", "反馈", "去评分"};
 

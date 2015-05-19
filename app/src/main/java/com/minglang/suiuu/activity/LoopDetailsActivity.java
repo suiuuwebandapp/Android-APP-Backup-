@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,6 +36,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import in.srain.cube.util.LocalDisplay;
+import in.srain.cube.views.GridViewWithHeaderAndFooter;
+import in.srain.cube.views.loadmore.LoadMoreContainer;
+import in.srain.cube.views.loadmore.LoadMoreGridViewContainer;
+import in.srain.cube.views.loadmore.LoadMoreHandler;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
+import in.srain.cube.views.ptr.header.MaterialHeader;
 
 /**
  * 圈子-详情页页面
@@ -80,7 +89,7 @@ public class LoopDetailsActivity extends Activity {
     /**
      * 数据显示控件
      */
-    private GridView loopDetailsGridView;
+    private GridViewWithHeaderAndFooter loopDetailsGridView;
 
     private List<LoopDetailsDataList> listAll = new ArrayList<>();
 
@@ -91,6 +100,14 @@ public class LoopDetailsActivity extends Activity {
     private String loopName;
 
     private String attentionId;
+
+    private PtrFrameLayout mPtrFrame;
+
+    private LoadMoreGridViewContainer loadMoreContainer;
+
+    private int page = 1;
+
+    private boolean cleanFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,23 +129,24 @@ public class LoopDetailsActivity extends Activity {
         if (progressDialog != null) {
             progressDialog.show();
         }
-        getInternetServiceData();
+        getInternetServiceData(page);
     }
 
     /**
      * 网络数据请求
      */
-    private void getInternetServiceData() {
+    private void getInternetServiceData(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, Verification);
         params.addBodyParameter(CIRCLEID, circleId);
         params.addBodyParameter(TYPE, type);
+        params.addBodyParameter("number", String.valueOf(10));
+        params.addBodyParameter("page", String.valueOf(page));
 
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.LoopDetailsPath, new LoopDetailsRequestCallBack());
         suHttpRequest.setParams(params);
         suHttpRequest.requestNetworkData();
-
     }
 
     /**
@@ -155,6 +173,19 @@ public class LoopDetailsActivity extends Activity {
             }
         });
 
+        mPtrFrame.setPtrHandler(new PtrHandler() {
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View view, View view2) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, loopDetailsGridView, view2);
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
+                cleanFlag = true;
+                getInternetServiceData(1);
+            }
+        });
+
         loopDetailsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -163,6 +194,15 @@ public class LoopDetailsActivity extends Activity {
                 intent.putExtra(ARTICLEID, articleId);
                 intent.putExtra("TAG", TAG);
                 startActivity(intent);
+            }
+        });
+
+        loadMoreContainer.setLoadMoreHandler(new LoadMoreHandler() {
+            @Override
+            public void onLoadMore(LoadMoreContainer loadMoreContainer) {
+                cleanFlag = false;
+                page = page + 1;
+                getInternetServiceData(page);
             }
         });
 
@@ -214,7 +254,11 @@ public class LoopDetailsActivity extends Activity {
         title = (TextView) findViewById(R.id.loop_details_title);
         addAttention = (TextView) findViewById(R.id.loop_details_add_attention);
 
-        loopDetailsGridView = (GridView) findViewById(R.id.loopDetailsGridView);
+        mPtrFrame = (PtrFrameLayout) findViewById(R.id.loop_details_frame);
+        loadMoreContainer = (LoadMoreGridViewContainer) findViewById(R.id.loop_details_load_more_container);
+        loadMoreContainer.useDefaultHeader();
+
+        loopDetailsGridView = (GridViewWithHeaderAndFooter) findViewById(R.id.loopDetailsGridView);
 
         ScreenUtils screenUtils = new ScreenUtils(this);
         int screenWidth = screenUtils.getScreenWidth();
@@ -222,6 +266,27 @@ public class LoopDetailsActivity extends Activity {
         loopDetailsAdapter = new LoopDetailsAdapter(this);
         loopDetailsAdapter.setScreenParams(screenWidth);
         loopDetailsGridView.setAdapter(loopDetailsAdapter);
+
+        MaterialHeader header = new MaterialHeader(this);
+        int[] colors = getResources().getIntArray(R.array.google_colors);
+        header.setColorSchemeColors(colors);
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
+        header.setPtrFrameLayout(mPtrFrame);
+
+        mPtrFrame.setHeaderView(header);
+        mPtrFrame.addPtrUIHandler(header);
+        mPtrFrame.setPinContent(true);
+
+        // the following are default settings
+        mPtrFrame.setResistance(1.7f);
+        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
+        mPtrFrame.setDurationToClose(200);
+        mPtrFrame.setDurationToCloseHeader(1000);
+        // default is false
+        mPtrFrame.setPullToRefresh(false);
+        // default is true
+        mPtrFrame.setKeepHeaderWhenRefresh(true);
     }
 
     @Override
@@ -251,6 +316,14 @@ public class LoopDetailsActivity extends Activity {
 
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
+            }
+            mPtrFrame.refreshComplete();
+            loadMoreContainer.loadMoreFinish(true, true);
+
+            if (cleanFlag) {
+                if (listAll != null && listAll.size() > 0) {
+                    listAll.clear();
+                }
             }
 
             String str = responseInfo.result;
@@ -291,6 +364,8 @@ public class LoopDetailsActivity extends Activity {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
+            mPtrFrame.refreshComplete();
+            loadMoreContainer.loadMoreError(0, "加载失败，请重试");
 
             Toast.makeText(LoopDetailsActivity.this,
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();

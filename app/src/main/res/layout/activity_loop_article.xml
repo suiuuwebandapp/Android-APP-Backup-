@@ -216,7 +216,6 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="@dimen/layout_8dp"
                 android:visibility="gone"
-                android:dividerHeight="@dimen/layout_2dp"
                 android:background="@drawable/comment_bg"/>
         </LinearLayout>
     </ScrollView>

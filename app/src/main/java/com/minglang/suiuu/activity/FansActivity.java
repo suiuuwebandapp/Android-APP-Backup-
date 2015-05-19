@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -20,6 +19,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.FansAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.entity.Fans;
 import com.minglang.suiuu.entity.FansData;
 import com.minglang.suiuu.utils.HttpServicePath;
@@ -40,7 +40,7 @@ import in.srain.cube.views.ptr.header.MaterialHeader;
 /**
  * 粉丝页面
  */
-public class FansActivity extends Activity {
+public class FansActivity extends BaseActivity {
 
     private static final String TAG = FansActivity.class.getSimpleName();
 
@@ -164,17 +164,6 @@ public class FansActivity extends Activity {
         mPtrFrame.setPullToRefresh(false);
         // default is true
         mPtrFrame.setKeepHeaderWhenRefresh(true);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 
     private class FansRequestCallBack extends RequestCallBack<String> {

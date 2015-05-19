@@ -1,11 +1,9 @@
 package com.minglang.suiuu.activity;
 
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
@@ -18,6 +16,7 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.CollectionAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.fragment.collection.CollectionLoopFragment;
 import com.minglang.suiuu.fragment.collection.CollectionSuiuuFragment;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -29,7 +28,7 @@ import java.util.List;
 /**
  * 收藏页面
  */
-public class CollectionActivity extends FragmentActivity {
+public class CollectionActivity extends BaseActivity {
 
     /**
      * 返回
@@ -199,12 +198,6 @@ public class CollectionActivity extends FragmentActivity {
         collectionSlider.setPadding(offsetX, 0, 0, 0);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
     class CollectionClick implements View.OnClickListener {
 
         private int index;
@@ -217,17 +210,5 @@ public class CollectionActivity extends FragmentActivity {
         public void onClick(View v) {
             collectionPager.setCurrentItem(index);
         }
-    }
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

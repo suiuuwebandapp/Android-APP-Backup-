@@ -3,7 +3,6 @@ package com.minglang.suiuu.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -92,7 +91,6 @@ public class AreaAdapter extends BaseAdapter {
         LoopBaseData loopBaseData = list.get(position);
 
         String imagePath = loopBaseData.getCpic();
-        Log.i(TAG, "imagePath:" + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
             imageLoader.displayImage(imagePath, imageView, options);
         }

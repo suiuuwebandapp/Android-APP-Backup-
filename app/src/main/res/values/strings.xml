@@ -421,5 +421,6 @@
     <string name="title_activity_wxentry">WXEntryActivity</string>
     <string name="title_activity_select_country">SelectCountryActivity</string>
     <string name="title_activity_select_city">SelectCityActivity</string>
+    <string name="title_activity_test_loop_detailsctivity">TestLoopDetailsctivity</string>
 
 </resources>

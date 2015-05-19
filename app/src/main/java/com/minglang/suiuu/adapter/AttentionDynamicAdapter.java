@@ -1,9 +1,9 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -11,10 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.OtherUserActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.LinearLayoutBaseAdapter;
 import com.minglang.suiuu.entity.MainDynamicDataUser;
-import com.minglang.suiuu.fragment.main.MainFragment;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -29,6 +29,8 @@ import java.util.List;
  */
 public class AttentionDynamicAdapter extends LinearLayoutBaseAdapter {
 
+    private Context context;
+
     private List<MainDynamicDataUser> list;
 
     private ImageLoader imageLoader;
@@ -39,6 +41,7 @@ public class AttentionDynamicAdapter extends LinearLayoutBaseAdapter {
 
     public AttentionDynamicAdapter(Context context, List<MainDynamicDataUser> list) {
         super(context, list);
+        this.context = context;
         this.list = list;
 
         imageLoader = ImageLoader.getInstance();
@@ -77,13 +80,11 @@ public class AttentionDynamicAdapter extends LinearLayoutBaseAdapter {
         if (!TextUtils.isEmpty(imagePath)) {
             imageLoader.displayImage(imagePath, imageView, options1);
         }
-        Log.i(MainFragment.class.getSimpleName(), "关注动态图片URL:" + imagePath);
 
         String headPath = user.getHeadImg();
         if (!TextUtils.isEmpty(headPath)) {
             imageLoader.displayImage(headPath, circleImageView, options2);
         }
-        Log.i(MainFragment.class.getSimpleName(), "关注动态头像URL:" + headPath);
 
         String strTitle = user.getaTitle();
         if (!TextUtils.isEmpty(strTitle)) {
@@ -99,6 +100,8 @@ public class AttentionDynamicAdapter extends LinearLayoutBaseAdapter {
             content.setText("");
         }
 
+        circleImageView.setOnClickListener(new MyClickListener(position));
+
         int itemHeight = ScreenHeight / 4;
 
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, itemHeight);
@@ -106,4 +109,22 @@ public class AttentionDynamicAdapter extends LinearLayoutBaseAdapter {
 
         return view;
     }
+
+    private class MyClickListener implements View.OnClickListener {
+
+        private int index;
+
+        private MyClickListener(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public void onClick(View v) {
+            String userSign = list.get(index).getUserSign();
+            Intent intent = new Intent(context, OtherUserActivity.class);
+            intent.putExtra("userSign", userSign);
+            context.startActivity(intent);
+        }
+    }
+
 }

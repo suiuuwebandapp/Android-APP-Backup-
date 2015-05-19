@@ -1,7 +1,6 @@
 package com.minglang.suiuu.activity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,14 +27,14 @@ import android.widget.Toast;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.BaseHolderAdapter;
 import com.minglang.suiuu.adapter.SelectPictureAdapter;
-import com.minglang.suiuu.popupwindow.BasePopupWindowForListView;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.entity.ImageFolder;
 import com.minglang.suiuu.entity.ImageItem;
+import com.minglang.suiuu.popupwindow.BasePopupWindowForListView;
 import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.io.File;
@@ -47,7 +46,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class SelectPictureActivity extends Activity {
+public class SelectPictureActivity extends BaseActivity {
 
     private static final String TAG = SelectPictureActivity.class.getSimpleName();
 
@@ -58,7 +57,6 @@ public class SelectPictureActivity extends Activity {
 
     private static final int OPEN_CAMERA = 100;
 
-    private ImageLoader loader;
     private DisplayImageOptions options;
 
     private ContentResolver mContentResolver;
@@ -280,7 +278,6 @@ public class SelectPictureActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && cameraPath != null) {
             selectedPicture.add(cameraPath);
         }
@@ -309,9 +306,8 @@ public class SelectPictureActivity extends Activity {
         mScreenHeight = dm.heightPixels;
 
         mContentResolver = getContentResolver();
-        loader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.ic_launcher)
-                .showImageForEmptyUri(R.drawable.ic_launcher).showImageOnFail(R.drawable.ic_launcher)
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
@@ -354,7 +350,7 @@ public class SelectPictureActivity extends Activity {
                     TextView count = helper.getView(R.id.id_dir_item_count);
                     ImageView choose = helper.getView(R.id.choose);
 
-                    loader.displayImage("file://" + item.getFirstImagePath(), imageView, options);
+                    imageLoader.displayImage("file://" + item.getFirstImagePath(), imageView, options);
                     title.setText(item.getName());
                     count.setText(item.images.size() + "张");
                     choose.setVisibility(currentImageFolder == item ? View.VISIBLE : View.GONE);

@@ -2,9 +2,9 @@ package com.minglang.suiuu.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -12,10 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.OtherUserActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.LinearLayoutBaseAdapter;
 import com.minglang.suiuu.entity.MainDynamicDataRecommendTravel;
-import com.minglang.suiuu.fragment.main.MainFragment;
 import com.minglang.suiuu.utils.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -84,13 +84,11 @@ public class RecommendTravelAdapter extends LinearLayoutBaseAdapter {
         if (!TextUtils.isEmpty(imagePath)) {
             imageLoader.displayImage(imagePath, imageView, options1);
         }
-        Log.i(MainFragment.class.getSimpleName(), "热门推荐图片URL:" + imagePath);
 
         String headPath = recommendTravel.getHeadImg();
         if (!TextUtils.isEmpty(headPath)) {
             imageLoader.displayImage(headPath, circleImageView, options2);
         }
-        Log.i(MainFragment.class.getSimpleName(), "热门推荐头像URL:" + headPath);
 
         String strTitle = recommendTravel.getTitle();
         if (!TextUtils.isEmpty(strTitle)) {
@@ -106,6 +104,8 @@ public class RecommendTravelAdapter extends LinearLayoutBaseAdapter {
             content.setText("");
         }
 
+        circleImageView.setOnClickListener(new MyClickListener(position));
+
         int itemHeight = ScreenHeight / 4 - Utils.newInstance(context).dip2px(10);
 
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, itemHeight);
@@ -113,4 +113,22 @@ public class RecommendTravelAdapter extends LinearLayoutBaseAdapter {
 
         return view;
     }
+
+    private class MyClickListener implements View.OnClickListener {
+
+        private int index;
+
+        private MyClickListener(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public void onClick(View v) {
+            String userSign = list.get(index).getUserSign();
+            Intent intent = new Intent(context, OtherUserActivity.class);
+            intent.putExtra("userSign", userSign);
+            context.startActivity(intent);
+        }
+    }
+
 }

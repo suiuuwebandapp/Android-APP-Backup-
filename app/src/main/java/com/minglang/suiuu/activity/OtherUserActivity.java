@@ -89,7 +89,7 @@ public class OtherUserActivity extends Activity {
 
     private ProgressDialog dialog;
 
-    private int screenWidth, screenHeight;
+    private int screenWidth;
 
     private TextView otherUserName, otherUserLocation, otherUserSignature;
 
@@ -203,7 +203,6 @@ public class OtherUserActivity extends Activity {
 
         ScreenUtils screenUtils = new ScreenUtils(this);
         screenWidth = screenUtils.getScreenWidth();
-        screenHeight = screenUtils.getScreenHeight();
 
         otherUserBack = (ImageView) findViewById(R.id.OtherUserBack);
         collection = (TextView) findViewById(R.id.otherUserCollection);
@@ -290,7 +289,7 @@ public class OtherUserActivity extends Activity {
                 articleList = otherUser.getData().getArticleList();
                 fullData();
                 OtherUserArticleAdapter adapter = new OtherUserArticleAdapter(OtherUserActivity.this,
-                        articleList, screenWidth, screenHeight);
+                        articleList, screenWidth);
                 otherUserLoop.setAdapter(adapter);
             } catch (Exception e) {
                 Log.e(TAG, "用户数据解析失败异常信息:" + e.getMessage());

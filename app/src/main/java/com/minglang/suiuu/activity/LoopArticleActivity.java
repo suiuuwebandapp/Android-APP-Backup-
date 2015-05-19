@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -30,6 +29,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.ArticleCommentAdapter;
 import com.minglang.suiuu.adapter.LoopArticleImageAdapter;
 import com.minglang.suiuu.adapter.showPicDescriptionAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.LinearLayoutForListView;
@@ -73,7 +73,7 @@ import java.util.List;
  * 网络部分未完成
  */
 @SuppressWarnings("deprecation")
-public class LoopArticleActivity extends Activity {
+public class LoopArticleActivity extends BaseActivity {
 
     private static final String TAG = LoopArticleActivity.class.getSimpleName();
 
@@ -823,23 +823,7 @@ public class LoopArticleActivity extends Activity {
             Toast.makeText(LoopArticleActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
-    @Override
-    public void finish() {
-        if (OtherTAG != null && OtherTAG.equals(AskQuestionActivity.class.getSimpleName())) {
-            startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
-            super.finish();
-        } else if(OtherTAG != null && OtherTAG.equals(EasyTackPhotoActivity.class.getSimpleName())) {
-            startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
-            super.finish();
-        }else {
-            super.finish();
-        }
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
+
     public Drawable setImgDrawTextPosition(int img) {
         Drawable drawable = this.getResources().getDrawable(img);
         // 调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示

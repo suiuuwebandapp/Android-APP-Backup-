@@ -30,13 +30,12 @@ public class OtherUserArticleAdapter extends BaseAdapter {
     private List<OtherUserDataArticle> list;
     BitmapUtils bitmapUtils;
 
-    private int screenWidth, screenHeight;
+    private int screenWidth;
 
-    public OtherUserArticleAdapter(Context context, List<OtherUserDataArticle> list, int screenWidth, int screenHeight) {
+    public OtherUserArticleAdapter(Context context, List<OtherUserDataArticle> list, int screenWidth) {
         this.context = context;
         this.list = list;
         this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
         bitmapUtils = new BitmapUtils(context);
     }
 

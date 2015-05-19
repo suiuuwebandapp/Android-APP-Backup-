@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +22,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.PersonalPostAdapter;
 import com.minglang.suiuu.adapter.PersonalShowPageAdapter;
 import com.minglang.suiuu.adapter.PersonalSuiuuAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.OtherUser;
 import com.minglang.suiuu.entity.OtherUserDataArticle;
@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * 个人信息
  */
-public class PersonalActivity extends Activity {
+public class PersonalActivity extends BaseActivity {
 
     private static final String TAG = PersonalActivity.class.getSimpleName();
 
@@ -301,23 +301,6 @@ public class PersonalActivity extends Activity {
 
         PersonalShowPageAdapter showPageAdapter = new PersonalShowPageAdapter(this, viewList);
         personalShowPage.setAdapter(showPageAdapter);
-    }
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 
     private class PersonalInfoCallBack extends RequestCallBack<String> {

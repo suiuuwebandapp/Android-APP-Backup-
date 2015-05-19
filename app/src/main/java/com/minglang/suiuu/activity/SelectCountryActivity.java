@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,15 +18,16 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.SelectCountryAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.SideBar;
 import com.minglang.suiuu.entity.Country;
 import com.minglang.suiuu.entity.CountryAssistData;
 import com.minglang.suiuu.entity.CountryData;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.CharacterParser;
+import com.minglang.suiuu.utils.CountryNameComparator;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
-import com.minglang.suiuu.utils.CountryNameComparator;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
@@ -36,7 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class SelectCountryActivity extends Activity {
+public class SelectCountryActivity extends BaseActivity {
 
     private static final String TAG = SelectCountryActivity.class.getSimpleName();
 
@@ -235,28 +235,4 @@ public class SelectCountryActivity extends Activity {
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
-
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
 }

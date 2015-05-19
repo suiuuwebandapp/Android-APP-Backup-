@@ -1,11 +1,9 @@
 package com.minglang.suiuu.activity;
 
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
@@ -18,6 +16,7 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.NewRemindAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.fragment.remind.NewAtFragment;
 import com.minglang.suiuu.fragment.remind.NewAttentionFragment;
 import com.minglang.suiuu.fragment.remind.NewCommentFragment;
@@ -32,7 +31,7 @@ import java.util.List;
  * 新提醒页面
  */
 
-public class NewRemindActivity extends FragmentActivity {
+public class NewRemindActivity extends BaseActivity {
 
     /**
      * 返回键
@@ -221,18 +220,6 @@ public class NewRemindActivity extends FragmentActivity {
         newCommentFragment = NewCommentFragment.newInstance(userSign, verification);
         newReplyFragment = NewReplyFragment.newInstance(userSign, verification);
         newAttentionFragment = NewAttentionFragment.newInstance(userSign, verification);
-    }
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     class NewRemindClick implements View.OnClickListener {

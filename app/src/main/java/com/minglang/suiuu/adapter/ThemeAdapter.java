@@ -96,7 +96,6 @@ public class ThemeAdapter extends BaseAdapter {
         LoopBaseData loopBaseData = list.get(position);
 
         String imagePath = loopBaseData.getCpic();
-        Log.i(TAG, "imagePath:" + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
             imageLoader.displayImage(imagePath, imageView, options);
         }

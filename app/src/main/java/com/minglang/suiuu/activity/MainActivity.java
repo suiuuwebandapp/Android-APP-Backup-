@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
@@ -49,6 +48,7 @@ import com.easemob.util.EasyUtils;
 import com.easemob.util.NetUtils;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MainSliderAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.ChatActivity;
 import com.minglang.suiuu.chat.activity.ChatAllHistoryFragment;
 import com.minglang.suiuu.chat.chat.Constant;
@@ -72,7 +72,7 @@ import java.util.List;
 /**
  * 应用程序主界面
  */
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends BaseActivity {
     protected NotificationManager notificationManager;
     private static final int notifiId = 11;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -468,28 +468,34 @@ public class MainActivity extends FragmentActivity {
      */
     private void LoadMainFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (loopFragment != null) {
-            if (loopFragment.isAdded()) {
-                ft.hide(loopFragment);
-            }
-        }
-        if (routeFragment != null) {
-            if (routeFragment.isAdded()) {
-                ft.hide(routeFragment);
-            }
-        }
-        if (conversationFragment != null) {
-            if (conversationFragment.isAdded()) {
-                ft.hide(conversationFragment);
-            }
-        }
+//        if (loopFragment != null) {
+//            if (loopFragment.isAdded()) {
+//                ft.hide(loopFragment);
+//            }
+//        }
+//        if (routeFragment != null) {
+//            if (routeFragment.isAdded()) {
+//                ft.hide(routeFragment);
+//            }
+//        }
+//        if (conversationFragment != null) {
+//            if (conversationFragment.isAdded()) {
+//                ft.hide(conversationFragment);
+//            }
+//        }
+//        if (mainFragment == null) {
+//            mainFragment = new MainFragment();
+//        }
+//        if (mainFragment.isAdded()) {
+//            ft.show(mainFragment);
+//        } else {
+//            ft.add(R.id.showLayout, mainFragment);
+//        }
         if (mainFragment == null) {
             mainFragment = new MainFragment();
-        }
-        if (mainFragment.isAdded()) {
-            ft.show(mainFragment);
+            ft.replace(R.id.showLayout, mainFragment);
         } else {
-            ft.add(R.id.showLayout, mainFragment);
+            ft.replace(R.id.showLayout, mainFragment);
         }
         currentIndex = 0;
         ft.commit();
@@ -500,28 +506,34 @@ public class MainActivity extends FragmentActivity {
      */
     private void LoadLoopFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (mainFragment != null) {
-            if (mainFragment.isAdded()) {
-                ft.hide(mainFragment);
-            }
-        }
-        if (routeFragment != null) {
-            if (routeFragment.isAdded()) {
-                ft.hide(routeFragment);
-            }
-        }
-        if (conversationFragment != null) {
-            if (conversationFragment.isAdded()) {
-                ft.hide(conversationFragment);
-            }
-        }
+//        if (mainFragment != null) {
+//            if (mainFragment.isAdded()) {
+//                ft.hide(mainFragment);
+//            }
+//        }
+//        if (routeFragment != null) {
+//            if (routeFragment.isAdded()) {
+//                ft.hide(routeFragment);
+//            }
+//        }
+//        if (conversationFragment != null) {
+//            if (conversationFragment.isAdded()) {
+//                ft.hide(conversationFragment);
+//            }
+//        }
+//        if (loopFragment == null) {
+//            loopFragment = new LoopFragment();
+//        }
+//        if (loopFragment.isAdded()) {
+//            ft.show(loopFragment);
+//        } else {
+//            ft.add(R.id.showLayout, loopFragment);
+//        }
         if (loopFragment == null) {
             loopFragment = new LoopFragment();
-        }
-        if (loopFragment.isAdded()) {
-            ft.show(loopFragment);
+            ft.replace(R.id.showLayout, loopFragment);
         } else {
-            ft.add(R.id.showLayout, loopFragment);
+            ft.replace(R.id.showLayout, loopFragment);
         }
         currentIndex = 1;
         ft.commit();
@@ -532,31 +544,36 @@ public class MainActivity extends FragmentActivity {
      */
     private void LoadRouteFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (mainFragment != null) {
-            if (mainFragment.isAdded()) {
-                ft.hide(mainFragment);
-            }
-        }
-        if (loopFragment != null) {
-            if (loopFragment.isAdded()) {
-                ft.hide(loopFragment);
-            }
-        }
-        if (conversationFragment != null) {
-            if (conversationFragment.isAdded()) {
-                ft.hide(conversationFragment);
-            }
-        }
+//        if (mainFragment != null) {
+//            if (mainFragment.isAdded()) {
+//                ft.hide(mainFragment);
+//            }
+//        }
+//        if (loopFragment != null) {
+//            if (loopFragment.isAdded()) {
+//                ft.hide(loopFragment);
+//            }
+//        }
+//        if (conversationFragment != null) {
+//            if (conversationFragment.isAdded()) {
+//                ft.hide(conversationFragment);
+//            }
+//        }
+//        if (routeFragment == null) {
+//            routeFragment = new RouteFragment();
+//        }
+//        if (routeFragment.isAdded()) {
+//            ft.show(routeFragment);
+//        } else {
+//            ft.add(R.id.showLayout, routeFragment);
+//        }
         if (routeFragment == null) {
             routeFragment = new RouteFragment();
-        }
-        if (routeFragment.isAdded()) {
-            ft.show(routeFragment);
+            ft.replace(R.id.showLayout, routeFragment);
         } else {
-            ft.add(R.id.showLayout, routeFragment);
+            ft.replace(R.id.showLayout, routeFragment);
         }
         currentIndex = 2;
-
         ft.commit();
     }
 
@@ -565,27 +582,33 @@ public class MainActivity extends FragmentActivity {
      */
     private void LoadConversationFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (mainFragment != null) {
-            if (mainFragment.isAdded()) {
-                ft.hide(mainFragment);
-            }
-        }
-        if (loopFragment != null) {
-            if (loopFragment.isAdded()) {
-                ft.hide(loopFragment);
-            }
-        }
-        if (routeFragment != null) {
-            if (routeFragment.isAdded()) {
-                ft.hide(routeFragment);
-            }
-        }
-
-        if (conversationFragment.isAdded()) {
-            ft.show(conversationFragment);
+//        if (mainFragment != null) {
+//            if (mainFragment.isAdded()) {
+//                ft.hide(mainFragment);
+//            }
+//        }
+//        if (loopFragment != null) {
+//            if (loopFragment.isAdded()) {
+//                ft.hide(loopFragment);
+//            }
+//        }
+//        if (routeFragment != null) {
+//            if (routeFragment.isAdded()) {
+//                ft.hide(routeFragment);
+//            }
+//        }
+//
+//        if (conversationFragment.isAdded()) {
+//            ft.show(conversationFragment);
+//        } else {
+//            ft.add(R.id.showLayout, conversationFragment);
+//
+//        }
+        if (conversationFragment == null) {
+            conversationFragment = new ChatAllHistoryFragment();
+            ft.replace(R.id.showLayout, conversationFragment);
         } else {
-            ft.add(R.id.showLayout, conversationFragment);
-
+            ft.replace(R.id.showLayout, conversationFragment);
         }
         currentIndex = 3;
         msgCount.setVisibility(View.INVISIBLE);
@@ -596,11 +619,13 @@ public class MainActivity extends FragmentActivity {
      * 加载初始默认页面
      */
     private void LoadDefaultFragment() {
+        FragmentTransaction ft = fm.beginTransaction();
         if (mainFragment == null) {
             mainFragment = new MainFragment();
+            ft.replace(R.id.showLayout, mainFragment);
+        } else {
+            ft.replace(R.id.showLayout, mainFragment);
         }
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.showLayout, mainFragment);
         ft.commit();
     }
 
@@ -709,7 +734,6 @@ public class MainActivity extends FragmentActivity {
 
         nickNameView = (TextView) findViewById(R.id.nickName);
         String strNickName = SuiuuInfo.ReadUserData(this).getNickname();
-        Log.i(TAG, "用户昵称:" + strNickName);
         if (!TextUtils.isEmpty(strNickName)) {
             nickNameView.setText(strNickName);
         } else {
@@ -718,7 +742,6 @@ public class MainActivity extends FragmentActivity {
 
         headImageView = (CircleImageView) findViewById(R.id.headImage);
         String strHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
-        Log.i(TAG, "用户头像URL:" + strHeadImagePath);
         if (!TextUtils.isEmpty(strHeadImagePath)) {
             imageLoader.displayImage(strHeadImagePath, headImageView);
         }
@@ -1197,12 +1220,6 @@ public class MainActivity extends FragmentActivity {
             conflictBuilder = null;
         }
 
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     private long exitTime;
