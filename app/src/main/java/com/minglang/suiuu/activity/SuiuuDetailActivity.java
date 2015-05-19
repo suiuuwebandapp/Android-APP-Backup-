@@ -172,7 +172,8 @@ public class SuiuuDetailActivity extends Activity {
         Log.i("suiuu", "startTime=" + detailInfo.getStartTime() + ",endTime=" + detailInfo.getEndTime());
         tv_service_time.setText("服务时间:     " + detailInfo.getStartTime() + "-" + detailInfo.getEndTime());
         tv_suiuu_travel_time.setText("随游时长:     " + detailInfo.getTravelTime() + "个小时");
-        if ("".equals(detailInfo.getMakeUserCount())) {
+        Log.i("suiuu","detailInfo.getMakeUserCount()="+detailInfo.getMakeUserCount());
+        if (detailInfo.getMakeUserCount() == null ) {
             tv_atmost_people.setText("最多人数:     0 人");
         } else {
             tv_atmost_people.setText("最多人数:     " + detailInfo.getMakeUserCount() + "人");
@@ -208,7 +209,7 @@ public class SuiuuDetailActivity extends Activity {
             public void pagerClick(int postion) {
 //				Intent intent = new Intent(ct,DetaiAct.class);
 //				ct.startActivity(intent);
-//                Toast.makeText(SuiuuDetailActivity.this, "xxxxxx", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SuiuuDetailActivity.this, "xxxxxx", Toast.LENGTH_SHORT).show();
             }
         });
         //设置viewpager的宽高
@@ -232,8 +233,6 @@ public class SuiuuDetailActivity extends Activity {
          */
         top_news_viewpager.removeAllViews();
         top_news_viewpager.addView(mViewPager);
-
-
     }
 
     //访问网络

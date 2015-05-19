@@ -46,7 +46,7 @@ import java.util.Map;
 
 /**
  * 下载显示大图
- * 
+ *
  */
 public class ShowBigImage extends BaseActivity {
 	private ProgressDialog pd;
@@ -142,7 +142,7 @@ public class ShowBigImage extends BaseActivity {
 
         }
 
-	
+
 	/**
 	 * 通过远程URL，确定下本地下载后的localurl
 	 * @param remoteUrl
@@ -158,10 +158,10 @@ public class ShowBigImage extends BaseActivity {
 		}
 		return localPath;
 	}
-	
+
 	/**
 	 * 下载图片
-	 * 
+	 *
 	 * @param remoteFilePath
 	 */
 	private void downloadImage(final String remoteFilePath,final Map<String, String> headers) {
@@ -220,7 +220,7 @@ public class ShowBigImage extends BaseActivity {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						
+
 						pd.setMessage(str2 + progress + "%");
 					}
 				});

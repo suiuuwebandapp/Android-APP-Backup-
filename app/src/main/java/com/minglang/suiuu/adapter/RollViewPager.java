@@ -1,13 +1,13 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap.Config;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.chat.activity.ShowBigImage;
 
 import java.util.List;
 
@@ -36,36 +37,7 @@ public class RollViewPager extends ViewPager {
 	 * = 32/8=4； Config.ARGB_4444 = 16/8=2 Config.RGB_565 =2 Config.ALPHA_8 = 1
 	 */
 
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		switch (ev.getAction()) {
-		case MotionEvent.ACTION_CANCEL:
 
-			break;
-
-		case MotionEvent.ACTION_DOWN:
-			getParent().requestDisallowInterceptTouchEvent(true);
-			downX = ev.getX();
-			downY = ev.getY();
-			break;
-		case MotionEvent.ACTION_UP:
-
-			break;
-		case MotionEvent.ACTION_MOVE:
-			float moveX = ev.getX();
-			float moveY = ev.getY();
-			/**
-			 * 1 当左右滑动的时候，响应viewpager的事件 2 当上下滑动的时候，响应listview的事件
-			 */
-			if (Math.abs(moveX - downX) > Math.abs(moveY - downY)) {
-				getParent().requestDisallowInterceptTouchEvent(true);
-			} else {
-				getParent().requestDisallowInterceptTouchEvent(false);
-			}
-			break;
-		}
-		return super.dispatchTouchEvent(ev);
-	}
 
 	/**
 	 * 初始化有几个点
@@ -87,37 +59,7 @@ public class RollViewPager extends ViewPager {
 		bitmapUtils = new BitmapUtils(ct);
 		bitmapUtils.configDefaultBitmapConfig(Config.ARGB_4444);
 		viewPagerTask = new ViewPagerTask();
-		myOnTouchListener = new MyOnTouchListener();
 		this.pagerClickCallBack = pagerClickCallBack;
-	}
-	private long startTime;
-	public class MyOnTouchListener implements OnTouchListener {
-		private float ACTION_DOWNX;
-		@Override
-		public boolean onTouch(View v, MotionEvent event) {
-			switch (event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-				handler.removeCallbacksAndMessages(null);
-				startTime = System.currentTimeMillis();
-				ACTION_DOWNX = event.getX();
-				break;
-			case MotionEvent.ACTION_UP:
-				long duration = System.currentTimeMillis() - startTime;
-				float ACTION_UPX = event.getX();
-				if(duration < 500 && ACTION_DOWNX == ACTION_UPX){
-					pagerClickCallBack.pagerClick(currentItem);
-				}
-                startRoll();
-				break;
-			case MotionEvent.ACTION_MOVE:
-				handler.removeCallbacks(viewPagerTask);
-				break;
-			case MotionEvent.ACTION_CANCEL:
-				break;
-			}
-			return true;
-		}
-
 	}
 
 	private class ViewPagerTask implements Runnable {
@@ -188,7 +130,7 @@ public class RollViewPager extends ViewPager {
 	private int oldposition = 0;
 
 	private class MyOnPageChangeListener implements OnPageChangeListener {
-
+        boolean isAutoPlay = false;
 		@Override
 		public void onPageSelected(int arg0) {
 			// TODO Auto-generated method stub
@@ -210,6 +152,24 @@ public class RollViewPager extends ViewPager {
 		@Override
 		public void onPageScrollStateChanged(int arg0) {
 			// TODO Auto-generated method stub
+            switch (arg0) {
+                case 1:// 手势滑动，空闲中
+                    isAutoPlay = false;
+                    break;
+                case 2:// 界面切换中
+                    isAutoPlay = true;
+                    break;
+                case 0:// 滑动结束，即切换完毕或者加载完毕
+                    // 当前为最后一张，此时从右向左滑，则切换到第一张
+                    if (RollViewPager.this.getCurrentItem() == RollViewPager.this.getAdapter().getCount() - 1 && !isAutoPlay) {
+                        RollViewPager.this.setCurrentItem(0);
+                    }
+                    // 当前为第一张，此时从左向右滑，则切换到最后一张
+                    else if (RollViewPager.this.getCurrentItem() == 0 && !isAutoPlay) {
+                        RollViewPager.this.setCurrentItem(RollViewPager.this.getAdapter().getCount() - 1);
+                    }
+                    break;
+            }
 
 		}
 
@@ -233,9 +193,6 @@ public class RollViewPager extends ViewPager {
 
 	};
 	private ViewPagerTask viewPagerTask;
-	private float downX;
-	private float downY;
-	private MyOnTouchListener myOnTouchListener;
 
 	
 	
@@ -256,14 +213,21 @@ public class RollViewPager extends ViewPager {
 		}
 
 		@Override
-		public Object instantiateItem(ViewGroup container, int position) {
+		public Object instantiateItem(ViewGroup container, final int position) {
 
 			View view = View.inflate(ct, R.layout.viewpager_item, null);
 			ImageView image = (ImageView) view.findViewById(R.id.image);
 			bitmapUtils.display(image, imageUrlLists.get(position));
-			System.out.println(imageUrlLists.get(position)+"weishemenfdbufdsafd");
-			RollViewPager.this.setOnTouchListener(myOnTouchListener);
 			((ViewPager) container).addView(view);
+            image.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent showPic = new Intent(ct, ShowBigImage.class);
+                    showPic.putExtra("remotepath", imageUrlLists.get(position));
+                    showPic.putExtra("isHuanXin", false);
+                    ct.startActivity(showPic);
+                }
+            });
 			return view;
 		}
 
