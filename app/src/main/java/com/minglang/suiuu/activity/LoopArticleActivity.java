@@ -66,7 +66,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * 具体某个地区/主题下的某个帖子
  * <p/>
@@ -483,6 +482,9 @@ public class LoopArticleActivity extends BaseActivity {
      * 删除文章
      */
     private void deleteArticle() {
+        if (progressDialog != null) {
+            progressDialog.show();
+        }
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter(HttpServicePath.key, Verification);
@@ -750,11 +752,17 @@ public class LoopArticleActivity extends BaseActivity {
                     Toast.makeText(LoopArticleActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
                 }
             }
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
         }
         @Override
         public void onFailure(HttpException error, String msg) {
             Log.i(TAG, msg);
             Toast.makeText(LoopArticleActivity.this, "删除失败，请稍候再试", Toast.LENGTH_SHORT).show();
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
         }
     }
     /**

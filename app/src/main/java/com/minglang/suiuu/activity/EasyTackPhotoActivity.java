@@ -468,40 +468,45 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         popupWindow.setFocusable(true);
     }
 
-    private void updateDate(String path) {
-        String type = path.substring(path.lastIndexOf("/"));
-        String name = type.substring(type.lastIndexOf(".") + 1);
-        OSSFile bigFile = ossService.getOssFile(bucket, "suiuu_content" + type);
-        try {
-            bigFile.setUploadFilePath(path, name);
-            bigFile.ResumableUploadInBackground(new SaveCallback() {
+    private void updateDate(final String path) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String type = path.substring(path.lastIndexOf("/"));
+                String name = type.substring(type.lastIndexOf(".") + 1);
+                OSSFile bigFile = ossService.getOssFile(bucket, "suiuu_content" + type);
+                try {
+                    bigFile.setUploadFilePath(path, name);
+                    bigFile.ResumableUploadInBackground(new SaveCallback() {
 
-                @Override
-                public void onSuccess(String objectKey) {
-                    Log.i(TAG, "success upload");
-                    picSuccessCount += 1;
-                    if (picSuccessCount == picList.size()) {
-                        handler.sendEmptyMessage(getData_Success);
-                    }
+                        @Override
+                        public void onSuccess(String objectKey) {
+                            Log.i(TAG, "success upload");
+                            picSuccessCount += 1;
+                            if (picSuccessCount == picList.size()) {
+                                handler.sendEmptyMessage(getData_Success);
+                            }
 
-                }
+                        }
 
-                @Override
-                public void onProgress(String objectKey, int byteCount, int totalSize) {
-                    Log.i(TAG, "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
-                }
+                        @Override
+                        public void onProgress(String objectKey, int byteCount, int totalSize) {
+                            Log.i(TAG, "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
+                        }
 
-                @Override
-                public void onFailure(String objectKey, OSSException ossException) {
-                    handler.sendEmptyMessage(getData_FAILURE);
-                    Log.i(TAG, "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
-                    ossException.printStackTrace();
+                        @Override
+                        public void onFailure(String objectKey, OSSException ossException) {
+                            handler.sendEmptyMessage(getData_FAILURE);
+                            Log.i(TAG, "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
+                            ossException.printStackTrace();
 //                    ossException.getException().printStackTrace();
+                        }
+                    });
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-            });
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+            }
+        }).start();
     }
 
     /**

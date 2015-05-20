@@ -89,7 +89,7 @@
         <ImageView
             android:id="@+id/personalBack"
             style="@style/backKeyStyle"
-            android:src="@drawable/back2"/>
+            android:src="@drawable/back"/>
 
 
     </RelativeLayout>

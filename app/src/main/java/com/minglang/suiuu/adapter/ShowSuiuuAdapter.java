@@ -32,13 +32,14 @@ public class ShowSuiuuAdapter extends BaseAdapter {
     private List<SuiuuDataList> list;
     private ImageLoader imageLoader;
     private DisplayImageOptions options;
-    public ShowSuiuuAdapter(Context context,List<SuiuuDataList> list) {
+
+    public ShowSuiuuAdapter(Context context, List<SuiuuDataList> list) {
         this.context = context;
         this.list = list;
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
-                .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.loading)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
@@ -78,6 +79,7 @@ public class ShowSuiuuAdapter extends BaseAdapter {
         imageLoader.displayImage(list.get(position).getTitleImg(), holder.picContent, options);
         return view;
     }
+
     static class ViewHolder {
         ImageView picContent;
         TextView title;

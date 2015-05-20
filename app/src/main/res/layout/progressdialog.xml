@@ -18,7 +18,6 @@
         android:layout_height="wrap_content"  
         android:layout_margin="5dp"
         android:textColor="#BDBDBD"
-        android:visibility="gone"
-        android:text="数据加载中……" /> 
+        android:text="数据加载中……" />
 
 </LinearLayout>

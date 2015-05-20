@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/select_city_back"
-            android:src="@drawable/back2"
+            android:src="@drawable/back"
             android:layout_marginLeft="@dimen/layout_5dp"
             android:layout_marginStart="@dimen/layout_5dp"
             android:layout_centerVertical="true"

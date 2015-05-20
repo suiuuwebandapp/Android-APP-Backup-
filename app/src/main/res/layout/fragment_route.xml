@@ -20,7 +20,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/layout_12dp"
-        android:dividerHeight="@dimen/layout_16dp"
+        android:dividerHeight="@dimen/layout_10dp"
         android:background="@color/white"
         android:scrollbars="none"
         android:layout_marginRight="@dimen/layout_12dp"></ListView>

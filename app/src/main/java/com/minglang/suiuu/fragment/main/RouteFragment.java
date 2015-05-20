@@ -7,11 +7,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -62,6 +66,11 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
     private int page = 1;
     private TextView tv_nodata_load;
     private mProgressDialog dialog;
+    /**
+     * 主页面底部导航栏
+     */
+    private LinearLayout tabSelect;
+
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,7 +82,7 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
             rootLayout.setPadding(0, Utils.getStatusHeight1(getActivity()), 0, 0);
         }
         innitView(rootView);
-        loadDate(null, null, null,page);
+        loadDate(null, null, null, page);
         LinearLayout.LayoutParams paramTest = (LinearLayout.LayoutParams) lv_suiuu.getLayoutParams();
         //paramTest.topMargin = ConstantUtil.topHeight;
         paramTest.setMargins(10, ConstantUtil.topHeight + 10, 10, 0);
@@ -83,6 +92,15 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
     }
 
     private void viewAction() {
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        Log.i("suiuu","dm.heightPixels="+dm.heightPixels+"tabSelect.getHeight()="+tabSelect.getHeight());
+        final Animation transAnim = new TranslateAnimation(0,0, dm.heightPixels, dm.heightPixels-tabSelect.getHeight());
+        transAnim.setFillAfter(true);
+        transAnim.setDuration(3500);
+        final Animation transAnimTo = new TranslateAnimation(0,0, dm.heightPixels-tabSelect.getHeight(), dm.heightPixels);
+        transAnim.setFillAfter(true);
+        transAnim.setDuration(3500);
         lv_suiuu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -94,9 +112,41 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
         tv_nodata_load.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                page=1;
-                loadDate(null, null, null,page);
+                page = 1;
+                loadDate(null, null, null, page);
                 tv_nodata_load.setVisibility(View.GONE);
+            }
+        });
+        lv_suiuu.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+
+                switch (scrollState) {
+                    case SCROLL_STATE_IDLE://空闲状态
+                        tabSelect.startAnimation(transAnim);
+                        tabSelect.setVisibility(View.VISIBLE);
+                        break;
+                    case SCROLL_STATE_FLING://滚动状态
+                        tabSelect.startAnimation(transAnim);
+                        tabSelect.setVisibility(View.VISIBLE);
+                        break;
+                    case SCROLL_STATE_TOUCH_SCROLL://触摸后滚动
+
+                        break;
+                }
+            }
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem == 0 || firstVisibleItem == totalItemCount-4) {
+                    tabSelect.startAnimation(transAnim);
+                    tabSelect.setVisibility(View.VISIBLE);
+                }else{
+                    tabSelect.setVisibility(View.GONE);
+                    tabSelect.startAnimation(transAnimTo);
+                }
             }
         });
     }
@@ -112,7 +162,9 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
         mPullToRefreshView.setOnHeaderRefreshListener(this);
         mPullToRefreshView.setOnFooterRefreshListener(this);
         initPopWindow(getActivity());
+        tabSelect = (LinearLayout) getActivity().findViewById(R.id.mainShowLayout).findViewById(R.id.tabSelect);
         dialog = new mProgressDialog(getActivity());
+
 
     }
 
@@ -123,7 +175,7 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
      * @param cityId
      * @param tags
      */
-    private void loadDate(String countryId, String cityId, String tags,int page) {
+    private void loadDate(String countryId, String cityId, String tags, int page) {
         dialog.showDialog();
         String str = SuiuuInfo.ReadVerification(getActivity().getApplicationContext());
         RequestParams params = new RequestParams();
@@ -152,7 +204,7 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
             @Override
             public void run() {
                 //重新加载数据
-                if(!dialog.isShow()) {
+                if (!dialog.isShow()) {
                     page += 1;
                     loadDate(null, null, null, page);
                     mPullToRefreshView.onFooterRefreshComplete();
@@ -168,8 +220,8 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
             @Override
             public void run() {
                 // 设置更新时间
-                page=1;
-                loadDate(null, null, null,page);
+                page = 1;
+                loadDate(null, null, null, page);
                 mPullToRefreshView.onHeaderRefreshComplete("最近更新:" + new Date().toLocaleString());
                 mPullToRefreshView.onHeaderRefreshComplete();
             }
@@ -178,6 +230,7 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
 
     }
 
+
     /**
      * 获取随游列表的回调接口
      */
@@ -185,18 +238,19 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            Log.i("suiuu",stringResponseInfo.result+"what-----------");
+            Log.i("suiuu", stringResponseInfo.result + "what-----------");
             dialog.dismissDialog();
             try {
                 SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, stringResponseInfo.result);
                 if ("1".equals(baseCollection.getStatus())) {
                     mPullToRefreshView.setVisibility(View.VISIBLE);
                     suiuuDataList = baseCollection.getData();
-                    if(suiuuDataList.size()<1) {
+                    if (suiuuDataList.size() < 1) {
                         mPullToRefreshView.setVisibility(View.INVISIBLE);
                         tv_nodata_load.setVisibility(View.VISIBLE);
                     }
                     lv_suiuu.setAdapter(new ShowSuiuuAdapter(getActivity().getApplicationContext(), suiuuDataList));
+                    tabSelect.setVisibility(View.VISIBLE);
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
                 }

@@ -12,16 +12,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.chat.activity.ShowBigImage;
 
 public class mProgressDialog {
 	
 	private static Dialog loadingDialog;
-
+    private TextView tipTextView;
 	/**
 	 * 进度条构造
-	 */
-	public mProgressDialog() {
-		
+     * @param showBigImage
+     * @param s
+     */
+	public mProgressDialog(ShowBigImage showBigImage, String s) {
+        createLoadingDialog(showBigImage, s);
 	}
 	
 	/**
@@ -45,7 +48,7 @@ public class mProgressDialog {
 		LinearLayout layout = (LinearLayout) v.findViewById(R.id.dialog_view);// 加载布局
 		// main.xml中的ImageView
 		ImageView spaceshipImage = (ImageView) v.findViewById(R.id.img);
-		TextView tipTextView = (TextView) v.findViewById(R.id.tipTextView);// 提示文字
+		tipTextView = (TextView) v.findViewById(R.id.tipTextView);// 提示文字
 		// 加载动画
 		Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(
 				context, R.anim.loading_animation);
@@ -88,6 +91,11 @@ public class mProgressDialog {
             return true;
         }else {
             return false;
+        }
+    }
+    public void setMessage(String message) {
+        if(loadingDialog.isShowing()) {
+            tipTextView.setText(message);
         }
     }
 }

@@ -198,6 +198,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/layout_10dp"
+                    android:lineSpacingExtra="@dimen/layout_5dp"
                     android:text="v"
                     android:id="@+id/tv_content" />
             </RelativeLayout>

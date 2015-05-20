@@ -31,7 +31,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/layout_5dp"
             android:layout_marginStart="@dimen/layout_5dp"
-            android:src="@drawable/back2" />
+            android:src="@drawable/back" />
 
         <TextView
             android:id="@+id/select_country_next"
