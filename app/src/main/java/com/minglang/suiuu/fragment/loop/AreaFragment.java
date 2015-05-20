@@ -20,6 +20,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.LoopDetailsActivity;
+import com.minglang.suiuu.activity.TestLoopDetailsActivity;
 import com.minglang.suiuu.adapter.AreaAdapter;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
@@ -132,6 +133,21 @@ public class AreaFragment extends Fragment {
                 intent.putExtra("name", loopName);
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            }
+        });
+
+        areaGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                String circleId = list.get(position).getcId();
+                String loopName = list.get(position).getcName();
+                Intent intent = new Intent(getActivity(), TestLoopDetailsActivity.class);
+                intent.putExtra(CIRCLEID, circleId);
+                intent.putExtra(TYPE, "2");
+                intent.putExtra("name", loopName);
+                startActivity(intent);
+                getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                return false;
             }
         });
     }

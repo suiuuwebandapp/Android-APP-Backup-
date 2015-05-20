@@ -5,7 +5,7 @@
     android:orientation="vertical" >
     
     <com.minglang.suiuu.chat.widgt.ExpandGridView
-        android:id="@+id/gridview"
+        android:id="@+id/grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="7"

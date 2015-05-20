@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
             android:gravity="center"
             android:text="@string/themes"
             android:textColor="@color/slider_line_color"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/area_title"
@@ -47,7 +47,7 @@
             android:gravity="center"
             android:text="@string/areas"
             android:textColor="@color/textColor"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
     </LinearLayout>
 
@@ -70,8 +70,7 @@
         android:id="@+id/loopViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/view2">
+        android:layout_below="@+id/view2"/>
 
-    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

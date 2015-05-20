@@ -1,5 +1,6 @@
 package com.minglang.suiuu.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.OtherUserActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.LoopDetailsDataList;
+import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -24,14 +26,9 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
-/**
- * 圈子详情页数据适配器
- * <p/>
- * Created by Administrator on 2015/4/22.
- */
-public class LoopDetailsAdapter extends BaseAdapter {
+public class TestLoopDetailsAdapter extends BaseAdapter {
 
-    private static final String TAG = LoopDetailsAdapter.class.getSimpleName();
+    private static final String TAG = TestLoopDetailsAdapter.class.getSimpleName();
 
     private Context context;
 
@@ -43,7 +40,7 @@ public class LoopDetailsAdapter extends BaseAdapter {
 
     private int screenWidth, screenHeight;
 
-    public LoopDetailsAdapter(Context context) {
+    public TestLoopDetailsAdapter(Context context) {
         this.context = context;
         loader = ImageLoader.getInstance();
         if (!loader.isInited()) {
@@ -59,11 +56,9 @@ public class LoopDetailsAdapter extends BaseAdapter {
                 .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
-    }
 
-    public void setScreenParams(int screenWidth, int screenHeight) {
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
+        screenWidth = new ScreenUtils((Activity) context).getScreenWidth();
+        screenHeight = new ScreenUtils((Activity) context).getScreenHeight();
     }
 
     public void setDataList(List<LoopDetailsDataList> list) {
@@ -100,19 +95,19 @@ public class LoopDetailsAdapter extends BaseAdapter {
 
         LoopDetailsDataList loopDetailsDataList = list.get(position);
 
-        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_loop_details, position);
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_test_loop_details, position);
         convertView = holder.getConvertView();
 
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(screenWidth / 2, screenHeight / 3);
         convertView.setLayoutParams(params);
 
-        ImageView mainImageView = holder.getView(R.id.item_loop_details_image);
-        CircleImageView headImageView = holder.getView(R.id.item_loop_details_head_image);
+        ImageView mainImageView = holder.getView(R.id.item_test_loop_details_image);
+        CircleImageView headImageView = holder.getView(R.id.item_test_loop_details_head_image);
 
-        TextView userName = holder.getView(R.id.item_loop_details_user_name);
-        TextView title = holder.getView(R.id.item_loop_details_title);
-        TextView praise = holder.getView(R.id.item_loop_details_praise);
-        TextView comments = holder.getView(R.id.item_loop_details_comments);
+        TextView userName = holder.getView(R.id.item_test_loop_details_user_name);
+        TextView title = holder.getView(R.id.item_test_loop_details_title);
+        TextView praise = holder.getView(R.id.item_test_loop_details_praise);
+        TextView comments = holder.getView(R.id.item_test_loop_details_comments);
 
         String imagePath = loopDetailsDataList.getaImg();
         if (!TextUtils.isEmpty(imagePath)) {

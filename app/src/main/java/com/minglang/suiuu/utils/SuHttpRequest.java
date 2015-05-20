@@ -30,22 +30,22 @@ public class SuHttpRequest {
      * <p/>
      * GET、POST等
      */
-    private static HttpRequest.HttpMethod httpMethod;
+    private HttpRequest.HttpMethod httpMethod;
 
     /**
      * 请求参数
      */
-    private static RequestParams params;
+    private RequestParams params;
 
     /**
      * 请求URL地址
      */
-    private static String httpPath;
+    private String httpPath;
 
     /**
      * 网络请求回调接口
      */
-    private static RequestCallBack<String> requestCallBack;
+    private RequestCallBack<String> requestCallBack;
 
     private HttpHandler<String> httpHandler;
 
