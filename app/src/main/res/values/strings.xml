@@ -117,7 +117,7 @@
 
     <string name="DataError">数据获取错误，请稍候再试！</string>
     <string name="NetworkAnomaly">网络异常，请检查后再试！</string>
-    <string name="NoData">暂无数据！</string>
+    <string name="NoData">暂无更多数据！</string>
 
     <string name="all_attention">关注动态</string>
     <string name="thisArticNoComment">该文章暂时没有评论</string>

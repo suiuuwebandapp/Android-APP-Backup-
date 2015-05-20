@@ -55,7 +55,7 @@
 
 
             <com.easemob.chatuidemo.widget.ExpandGridView
-                android:id="@+id/gridview"
+                android:id="@+id/grid_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"

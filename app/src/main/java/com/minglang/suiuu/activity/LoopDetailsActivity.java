@@ -1,11 +1,12 @@
 package com.minglang.suiuu.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.etsy.android.grid.StaggeredGridView;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -21,9 +23,13 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.LoopDetailsAdapter;
+import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.customview.PullToRefreshStaggeredView;
+import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.entity.LoopDetails;
 import com.minglang.suiuu.entity.LoopDetailsData;
 import com.minglang.suiuu.entity.LoopDetailsDataList;
+import com.minglang.suiuu.utils.DrawableUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
 import com.minglang.suiuu.utils.ScreenUtils;
@@ -37,20 +43,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.srain.cube.util.LocalDisplay;
-import in.srain.cube.views.GridViewWithHeaderAndFooter;
-import in.srain.cube.views.loadmore.LoadMoreContainer;
-import in.srain.cube.views.loadmore.LoadMoreGridViewContainer;
-import in.srain.cube.views.loadmore.LoadMoreHandler;
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.header.MaterialHeader;
-
 /**
  * 圈子-详情页页面
  */
-public class LoopDetailsActivity extends Activity {
+public class LoopDetailsActivity extends BaseActivity {
 
     private static final String TAG = LoopDetailsActivity.class.getSimpleName();
 
@@ -89,7 +85,7 @@ public class LoopDetailsActivity extends Activity {
     /**
      * 数据显示控件
      */
-    private GridViewWithHeaderAndFooter loopDetailsGridView;
+    private PullToRefreshStaggeredView loopDetailsGridView;
 
     private List<LoopDetailsDataList> listAll = new ArrayList<>();
 
@@ -101,13 +97,9 @@ public class LoopDetailsActivity extends Activity {
 
     private String attentionId;
 
-    private PtrFrameLayout mPtrFrame;
-
-    private LoadMoreGridViewContainer loadMoreContainer;
-
     private int page = 1;
 
-    private boolean cleanFlag = false;
+    private Context context = LoopDetailsActivity.this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +115,62 @@ public class LoopDetailsActivity extends Activity {
         initView();
         ViewAction();
         getData();
+    }
+
+    /**
+     * 控件动作
+     */
+    private void ViewAction() {
+        title.setText(loopName);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        addAttention.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(attentionId)) {
+                    setAddAttention2Service();
+                } else {
+                    setCancelAttention2Service();
+                }
+            }
+        });
+
+        loopDetailsGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<StaggeredGridView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<StaggeredGridView> refreshView) {
+
+                String label = DateUtils.formatDateTime(getApplicationContext(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+
+                page = 1;
+                getInternetServiceData(page);
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<StaggeredGridView> refreshView) {
+                page = page + 1;
+                getInternetServiceData(page);
+            }
+        });
+
+        loopDetailsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String articleId = listAll.get(position).getArticleId();
+                Intent intent = new Intent(LoopDetailsActivity.this, LoopArticleActivity.class);
+                intent.putExtra(ARTICLEID, articleId);
+                intent.putExtra("TAG", TAG);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void getData() {
@@ -150,65 +198,6 @@ public class LoopDetailsActivity extends Activity {
     }
 
     /**
-     * 控件动作
-     */
-    private void ViewAction() {
-        title.setText(loopName);
-
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        addAttention.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(attentionId)) {
-                    Toast.makeText(LoopDetailsActivity.this, "您已关注该圈子！", Toast.LENGTH_SHORT).show();
-                } else {
-                    setAddAttention2Service();
-                }
-            }
-        });
-
-        mPtrFrame.setPtrHandler(new PtrHandler() {
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View view, View view2) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, loopDetailsGridView, view2);
-            }
-
-            @Override
-            public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
-                cleanFlag = true;
-                getInternetServiceData(1);
-            }
-        });
-
-        loopDetailsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String articleId = listAll.get(position).getArticleId();
-                Intent intent = new Intent(LoopDetailsActivity.this, LoopArticleActivity.class);
-                intent.putExtra(ARTICLEID, articleId);
-                intent.putExtra("TAG", TAG);
-                startActivity(intent);
-            }
-        });
-
-        loadMoreContainer.setLoadMoreHandler(new LoadMoreHandler() {
-            @Override
-            public void onLoadMore(LoadMoreContainer loadMoreContainer) {
-                cleanFlag = false;
-                page = page + 1;
-                getInternetServiceData(page);
-            }
-        });
-
-    }
-
-    /**
      * 添加圈子关注网络请求
      */
     private void setAddAttention2Service() {
@@ -222,8 +211,35 @@ public class LoopDetailsActivity extends Activity {
     }
 
     /**
+     * 取消关注
+     */
+    private void setCancelAttention2Service() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("attentionId", attentionId);
+        params.addBodyParameter(HttpServicePath.key, Verification);
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.getCancelServicePath, new CancelRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
+    }
+
+    /**
+     * 判断是否关注
+     */
+    private void isAttention() {
+        if (TextUtils.isEmpty(attentionId)) {
+            addAttention.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.attention)),
+                    null, null, null);
+        } else {
+            addAttention.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.attention_press)),
+                    null, null, null);
+        }
+    }
+
+    /**
      * 初始化方法
      */
+    @SuppressWarnings("deprecation")
     private void initView() {
         SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
         SystemBarTintManager.SystemBarConfig systemBarConfig = systemBarTintManager.getConfig();
@@ -254,61 +270,23 @@ public class LoopDetailsActivity extends Activity {
         title = (TextView) findViewById(R.id.loop_details_title);
         addAttention = (TextView) findViewById(R.id.loop_details_add_attention);
 
-        mPtrFrame = (PtrFrameLayout) findViewById(R.id.loop_details_frame);
-        loadMoreContainer = (LoadMoreGridViewContainer) findViewById(R.id.loop_details_load_more_container);
-        loadMoreContainer.useDefaultHeader();
-
-        loopDetailsGridView = (GridViewWithHeaderAndFooter) findViewById(R.id.loopDetailsGridView);
+        loopDetailsGridView = (PullToRefreshStaggeredView) findViewById(R.id.loopDetailsGridView);
+        loopDetailsGridView.setMode(PullToRefreshBase.Mode.BOTH);
 
         ScreenUtils screenUtils = new ScreenUtils(this);
         int screenWidth = screenUtils.getScreenWidth();
+        int screenHeight = screenUtils.getScreenHeight();
 
         loopDetailsAdapter = new LoopDetailsAdapter(this);
-        loopDetailsAdapter.setScreenParams(screenWidth);
+        loopDetailsAdapter.setScreenParams(screenWidth, screenHeight);
         loopDetailsGridView.setAdapter(loopDetailsAdapter);
 
-        MaterialHeader header = new MaterialHeader(this);
-        int[] colors = getResources().getIntArray(R.array.google_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
-        header.setPtrFrameLayout(mPtrFrame);
-
-        mPtrFrame.setHeaderView(header);
-        mPtrFrame.addPtrUIHandler(header);
-        mPtrFrame.setPinContent(true);
-
-        // the following are default settings
-        mPtrFrame.setResistance(1.7f);
-        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
-        mPtrFrame.setDurationToClose(200);
-        mPtrFrame.setDurationToCloseHeader(1000);
-        // default is false
-        mPtrFrame.setPullToRefresh(false);
-        // default is true
-        mPtrFrame.setKeepHeaderWhenRefresh(true);
-    }
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 
     /**
      * 得到圈子文章列表的网络请求回调接口
      */
+    @SuppressWarnings("deprecation")
     class LoopDetailsRequestCallBack extends RequestCallBack<String> {
 
         @Override
@@ -317,10 +295,8 @@ public class LoopDetailsActivity extends Activity {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            mPtrFrame.refreshComplete();
-            loadMoreContainer.loadMoreFinish(true, true);
 
-            if (cleanFlag) {
+            if (page == 1) {
                 if (listAll != null && listAll.size() > 0) {
                     listAll.clear();
                 }
@@ -330,30 +306,30 @@ public class LoopDetailsActivity extends Activity {
             try {
                 LoopDetails loopDetails = JsonUtil.getInstance().fromJSON(LoopDetails.class, str);
                 LoopDetailsData loopDetailsData = loopDetails.getData();
-                if (loopDetailsData != null) {
-                    List<LoopDetailsDataList> list = loopDetailsData.getData();
-                    if (list != null && list.size() > 0) {
-                        listAll.addAll(list);
-                        loopDetailsAdapter.setDataList(listAll);
-                    } else {
-                        Toast.makeText(LoopDetailsActivity.this,
-                                getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                List<LoopDetailsDataList> list = loopDetailsData.getData();
+                if (list != null && list.size() > 0) {
+                    listAll.addAll(list);
+                    loopDetailsAdapter.setDataList(listAll);
+                } else {
+                    if (page > 1) {
+                        page = page - 1;
                     }
-                    Log.i(TAG, "相关数据:" + loopDetailsData.getMsg().toString());
-                    attentionId = loopDetailsData.getAttentionId();
-                    if (TextUtils.isEmpty(attentionId)) {
-                        addAttention.setCompoundDrawablesWithIntrinsicBounds(
-                                getResources().getDrawable(R.drawable.attention), null, null, null);
-                    } else {
-                        addAttention.setCompoundDrawablesWithIntrinsicBounds(
-                                getResources().getDrawable(R.drawable.attention_press), null, null, null);
-                    }
+                    Toast.makeText(context, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                 }
+                attentionId = loopDetailsData.getAttentionId();
+                Log.i(TAG, "attentionId:" + attentionId);
+                isAttention();
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG, "数据请求失败:" + e.getMessage());
+
+                if (page > 1) {
+                    page = page - 1;
+                }
+
                 Toast.makeText(LoopDetailsActivity.this,
                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
+            loopDetailsGridView.onRefreshComplete();
         }
 
         @Override
@@ -364,8 +340,12 @@ public class LoopDetailsActivity extends Activity {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            mPtrFrame.refreshComplete();
-            loadMoreContainer.loadMoreError(0, "加载失败，请重试");
+
+            if (page > 1) {
+                page = page - 1;
+            }
+
+            loopDetailsGridView.onRefreshComplete();
 
             Toast.makeText(LoopDetailsActivity.this,
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
@@ -380,11 +360,15 @@ public class LoopDetailsActivity extends Activity {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
+            Log.i(TAG, "关注圈子返回结果:" + str);
             try {
                 JSONObject object = new JSONObject(str);
                 String status = object.getString("status");
                 if (!TextUtils.isEmpty(status)) {
                     if (status.equals("1")) {
+                        addAttention.setCompoundDrawables(DrawableUtils.setBounds(
+                                getResources().getDrawable(R.drawable.attention_press)), null, null, null);
+                        attentionId = object.getString("data");
                         Toast.makeText(LoopDetailsActivity.this,
                                 getResources().getString(R.string.addAttentionSuccess), Toast.LENGTH_SHORT).show();
                     } else {
@@ -408,6 +392,38 @@ public class LoopDetailsActivity extends Activity {
             Log.e(TAG, "添加关注失败:" + s);
             Toast.makeText(LoopDetailsActivity.this,
                     getResources().getString(R.string.addAttentionFail), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 取消关注网络请求回调接口
+     */
+    class CancelRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            String str = stringResponseInfo.result;
+            try {
+                JSONObject object = new JSONObject(str);
+                String status = object.getString("status");
+                if (status.equals("1")) {
+                    addAttention.setCompoundDrawables(DrawableUtils.setBounds(
+                            getResources().getDrawable(R.drawable.attention)), null, null, null);
+                    attentionId = null;
+                    Toast.makeText(context, "取消关注成功！", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "取消关注失败！", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "取消关注失败:" + e.getMessage());
+                Toast.makeText(context, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            Log.e(TAG, "取消关注失败:" + e.getMessage());
+            Toast.makeText(context, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item type="id" name="gridView"/>
+    <item type="id" name="webView"/>
+    <item type="id" name="scrollView"/>
+    <item type="id" name="StaggeredView"/>
+
+</resources>

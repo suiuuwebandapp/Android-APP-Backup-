@@ -285,7 +285,7 @@ public class HttpServicePath {
      * 更新个人信息状态
      * <p/>
      * 请求方式:POST
-     *
+     * <p/>
      * 请求参数:sex 性别、nickname 昵称、birthday 生日、intro 短简介
      * info 详情介绍、countryId、国家id cityI、城市id、lon经度、lat 维度、profession 职业
      */
@@ -293,10 +293,15 @@ public class HttpServicePath {
 
     /**
      * 得到城市列表
-     *
+     * <p/>
      * 请求方式:POST
-     *
+     * <p/>
      * 请求参数:国家ID countryId
      */
-    public static String getCityListPath = RootPath+"/app-travel/get-city";
+    public static String getCityListPath = RootPath + "/app-travel/get-city";
+
+    /**
+     * 取消接口
+     */
+    public static String getCancelServicePath = RootPath + "/attention/delete-attention";
 }

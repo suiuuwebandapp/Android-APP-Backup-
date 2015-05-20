@@ -1183,7 +1183,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	 */
 	private View getGridChildView(int i) {
 		View view = View.inflate(this, R.layout.expression_gridview, null);
-		ExpandGridView gv = (ExpandGridView) view.findViewById(R.id.gridview);
+		ExpandGridView gv = (ExpandGridView) view.findViewById(R.id.grid_view);
 		List<String> list = new ArrayList<String>();
 		if (i == 1) {
 			List<String> list1 = reslist.subList(0, 20);
