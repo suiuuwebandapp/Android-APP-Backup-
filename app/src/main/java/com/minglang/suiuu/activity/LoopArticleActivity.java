@@ -814,11 +814,11 @@ public class LoopArticleActivity extends BaseActivity {
             startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
             super.finish();
         } else if (OtherTAG.equals(EasyTackPhotoActivity.class.getSimpleName())) {
+            startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
             super.finish();
         } else {
             super.finish();
         }
     }
-
 }
 

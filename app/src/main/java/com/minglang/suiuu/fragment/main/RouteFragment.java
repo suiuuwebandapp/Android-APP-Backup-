@@ -71,6 +71,8 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
      */
     private LinearLayout tabSelect;
 
+    private int lastVisibleItemPosition = 0;// 标记上次滑动位置
+
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,12 +98,12 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
         final Animation transAnim = new TranslateAnimation(0, 0, tabSelect.getHeight(), 0);
 //        final Animation transAnim = new TranslateAnimation(0,0, dm.heightPixels, dm.heightPixels-tabSelect.getHeight());
         transAnim.setFillAfter(true);
-        transAnim.setDuration(1200);
+        transAnim.setDuration(500);
 
         final Animation transAnimTo = new TranslateAnimation(0, 0, 0, tabSelect.getHeight());
 //        final Animation transAnimTo = new TranslateAnimation(0,0, dm.heightPixels-tabSelect.getHeight(), dm.heightPixels);
         transAnimTo.setFillAfter(true);
-        transAnimTo.setDuration(600);
+        transAnimTo.setDuration(300);
 
         lv_suiuu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -129,26 +131,29 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
 
                 switch (scrollState) {
                     case SCROLL_STATE_IDLE://空闲状态
-                        tabSelect.startAnimation(transAnim);
+
                         tabSelect.setVisibility(View.VISIBLE);
                         break;
                     case SCROLL_STATE_FLING://滚动状态
-                        tabSelect.startAnimation(transAnimTo);
+                        tabSelect.setVisibility(View.GONE);
                         break;
                     case SCROLL_STATE_TOUCH_SCROLL://触摸后滚动
-                        tabSelect.startAnimation(transAnimTo);
+                        tabSelect.setVisibility(View.GONE);
                         break;
                 }
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem == 0 || firstVisibleItem == totalItemCount - 4) {
+
+                if (firstVisibleItem > lastVisibleItemPosition) {// 上滑
+                    transAnim.cancel();
                     tabSelect.startAnimation(transAnim);
                     tabSelect.setVisibility(View.VISIBLE);
-                } else {
+                } else if (firstVisibleItem < lastVisibleItemPosition) {// 下滑
                     tabSelect.setVisibility(View.GONE);
                 }
+                lastVisibleItemPosition = firstVisibleItem;
             }
         });
     }
