@@ -3,8 +3,6 @@ package com.minglang.suiuu.fragment.remind;
 import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,20 +18,20 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MessageAdapter;
+import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.SuiuuMessage;
 import com.minglang.suiuu.entity.SuiuuMessageData;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
 import java.util.List;
 
-import in.srain.cube.util.LocalDisplay;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.header.MaterialHeader;
 
 /**
  * 新@页面
@@ -41,7 +39,7 @@ import in.srain.cube.views.ptr.header.MaterialHeader;
  * Use the {@link NewAtFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewAtFragment extends Fragment {
+public class NewAtFragment extends BaseFragment {
 
     private static final String TAG = NewAtFragment.class.getSimpleName();
 
@@ -97,14 +95,8 @@ public class NewAtFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_new_at, container, false);
 
         initView(rootView);
-
         ViewAction();
-
-
-        if (dialog != null) {
-            dialog.show();
-        }
-        getNewAt4Service();
+        getData();
 
         return rootView;
     }
@@ -128,9 +120,16 @@ public class NewAtFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SuiuuMessageData data = list.get(position);
                 String relativeId = data.getRelativeId();
-                Log.i(TAG, "relativeId:" + relativeId);
+                DeBugLog.i(TAG, "relativeId:" + relativeId);
             }
         });
+    }
+
+    private void getData(){
+        if (dialog != null) {
+            dialog.show();
+        }
+        getNewAt4Service();
     }
 
     /**
@@ -161,11 +160,6 @@ public class NewAtFragment extends Fragment {
 
         mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.new_at_fragment_head_frame);
 
-        MaterialHeader header = new MaterialHeader(getActivity());
-        int[] colors = getResources().getIntArray(R.array.google_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
         header.setPtrFrameLayout(mPtrFrame);
 
         mPtrFrame.setHeaderView(header);
@@ -196,15 +190,14 @@ public class NewAtFragment extends Fragment {
 
             mPtrFrame.refreshComplete();
             String str = stringResponseInfo.result;
-            Log.i(TAG, "新@数据:" + str);
             try {
-                SuiuuMessage message = JsonUtil.getInstance().fromJSON(SuiuuMessage.class, str);
+                SuiuuMessage message = JsonUtils.getInstance().fromJSON(SuiuuMessage.class, str);
                 list = message.getData().getData();
                 MessageAdapter adapter = new MessageAdapter(getActivity(), list, "1");
                 newAtList.setAdapter(adapter);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "新@数据解析异常:" + e.getMessage());
+                DeBugLog.e(TAG, "新@数据解析异常:" + e.getMessage());
             }
         }
 
@@ -216,7 +209,7 @@ public class NewAtFragment extends Fragment {
             }
 
             mPtrFrame.refreshComplete();
-            Log.e(TAG, "获取新@数据失败:" + s);
+            DeBugLog.e(TAG, "获取新@数据失败:" + s);
             Toast.makeText(getActivity(), "网络异常,请重试！", Toast.LENGTH_SHORT).show();
         }
     }

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,18 +26,16 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.LoopDetailsActivity;
 import com.minglang.suiuu.adapter.LoopFragmentPagerAdapter;
 import com.minglang.suiuu.adapter.LoopScrollPagerAdapter;
+import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.AutoScrollViewPager;
 import com.minglang.suiuu.entity.RecommendLoop;
 import com.minglang.suiuu.entity.RecommendLoopData;
 import com.minglang.suiuu.fragment.loop.AreaFragment;
 import com.minglang.suiuu.fragment.loop.ThemeFragment;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInfo;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.ArrayList;
@@ -47,7 +44,7 @@ import java.util.List;
 /**
  * 圈子页面
  */
-public class LoopFragment extends Fragment {
+public class LoopFragment extends BaseFragment {
 
     private static final String TAG = LoopFragment.class.getSimpleName();
 
@@ -70,8 +67,6 @@ public class LoopFragment extends Fragment {
      */
     private List<ImageView> imageList = new ArrayList<>();
 
-    private ImageLoader imageLoader;
-
     private DisplayImageOptions displayImageOptions;
 
     /**
@@ -85,16 +80,6 @@ public class LoopFragment extends Fragment {
     private ImageView sliderView;
 
     private ViewPager loopViewPager;
-
-    /**
-     * 设备宽度
-     */
-    private int screenWidth;
-
-    /**
-     * 设备高度
-     */
-    private int screenHeight;
 
     private int currIndex = 1;// 当前页卡编号
 
@@ -200,18 +185,9 @@ public class LoopFragment extends Fragment {
      * 初始化获得屏幕宽高等
      */
     private void initScreenOrImageLoad() {
-        DisplayMetrics dm = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 
-        screenWidth = dm.widthPixels;// 获取设备宽度
         tabWidth = screenWidth / 2;
 
-        screenHeight = dm.heightPixels;
-
-        imageLoader = ImageLoader.getInstance();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
-        }
         displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll2)
                 .showImageForEmptyUri(R.drawable.scroll2).showImageOnFail(R.drawable.scroll2)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
@@ -279,9 +255,6 @@ public class LoopFragment extends Fragment {
 
         loopViewPager = (ViewPager) rootView.findViewById(R.id.loopViewPager);
 
-        String userSign = SuiuuInfo.ReadUserSign(getActivity());
-        String verification = SuiuuInfo.ReadVerification(getActivity());
-
         //主题页面
         ThemeFragment themeFragment = ThemeFragment.newInstance(userSign, verification);
         //地区页面
@@ -294,7 +267,6 @@ public class LoopFragment extends Fragment {
         fragments.add(areaFragment);
 
         LoopFragmentPagerAdapter lfpAdapter = new LoopFragmentPagerAdapter(fm, fragments);
-
         loopViewPager.setAdapter(lfpAdapter);
 
         initImageView();
@@ -346,7 +318,7 @@ public class LoopFragment extends Fragment {
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
             try {
-                RecommendLoop recommendLoop = JsonUtil.getInstance().fromJSON(RecommendLoop.class, str);
+                RecommendLoop recommendLoop = JsonUtils.getInstance().fromJSON(RecommendLoop.class, str);
                 recommendLoopImagePathList = recommendLoop.getData().getData();
                 if (recommendLoopImagePathList != null && recommendLoopImagePathList.size() > 0) {
                     //RecommendImageList

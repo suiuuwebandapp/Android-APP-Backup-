@@ -23,7 +23,7 @@ import com.minglang.suiuu.adapter.MessageAdapter;
 import com.minglang.suiuu.entity.SuiuuMessage;
 import com.minglang.suiuu.entity.SuiuuMessageData;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
 import java.util.List;
@@ -197,7 +197,7 @@ public class NewCommentFragment extends Fragment {
             String str = stringResponseInfo.result;
             Log.i(TAG, "新评论数据:" + str);
             try {
-                SuiuuMessage message = JsonUtil.getInstance().fromJSON(SuiuuMessage.class, str);
+                SuiuuMessage message = JsonUtils.getInstance().fromJSON(SuiuuMessage.class, str);
                 list = message.getData().getData();
                 MessageAdapter adapter = new MessageAdapter(getActivity(), list, "2");
                 newCommentList.setAdapter(adapter);

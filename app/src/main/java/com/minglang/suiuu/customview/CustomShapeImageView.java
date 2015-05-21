@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.util.AttributeSet;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.customview.svg.SvgImageView;
 
 public class CustomShapeImageView extends BaseImageView {
 

@@ -1,12 +1,8 @@
 package com.minglang.suiuu.activity;
 
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -19,8 +15,6 @@ import com.minglang.suiuu.adapter.CollectionAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.fragment.collection.CollectionLoopFragment;
 import com.minglang.suiuu.fragment.collection.CollectionSuiuuFragment;
-import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,15 +92,15 @@ public class CollectionActivity extends BaseActivity {
 
         collectionPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int i, float v, int i2) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
             @Override
-            public void onPageSelected(int i) {
+            public void onPageSelected(int position) {
                 collectionSlider.setPadding(0, 0, 0, 0);
 
-                switch (i) {
+                switch (position) {
                     case 0:
                         collectionLoop.setTextColor(getResources().getColor(R.color.slider_line_color));
                         collectionSuiuu.setTextColor(getResources().getColor(R.color.textColor));
@@ -118,15 +112,15 @@ public class CollectionActivity extends BaseActivity {
 
                 }
 
-                Animation anim = new TranslateAnimation(tabWidth * currIndex + offsetX, tabWidth * i + offsetX, 0, 0);
-                currIndex = i;
+                Animation anim = new TranslateAnimation(tabWidth * currIndex + offsetX, tabWidth * position + offsetX, 0, 0);
+                currIndex = position;
                 anim.setFillAfter(true);
                 anim.setDuration(200);
                 collectionSlider.startAnimation(anim);
             }
 
             @Override
-            public void onPageScrollStateChanged(int i) {
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
@@ -136,43 +130,28 @@ public class CollectionActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-
-        /****************设置状态栏颜色*************/
-        SystemBarTintManager mTintManager = new SystemBarTintManager(this);
-        mTintManager.setStatusBarTintEnabled(true);
-        mTintManager.setNavigationBarTintEnabled(false);
-        mTintManager.setTintColor(getResources().getColor(R.color.tr_black));
-
-        int statusHeight = mTintManager.getConfig().getStatusBarHeight();
-
-        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.collectionRootLayout);
         if (isKITKAT) {
-            LinearLayout rootLayout = (LinearLayout) findViewById(R.id.collectionRootLayout);
-            rootLayout.setPadding(0, statusHeight, 0, 0);
+            if (navigationBarHeight <= 0) {
+                rootLayout.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            }
         }
 
         collectionBack = (ImageView) findViewById(R.id.collectionBack);
         collectionSearch = (ImageView) findViewById(R.id.collectionSearch);
-
         collectionLoop = (TextView) findViewById(R.id.collectionLoop);
         collectionSuiuu = (TextView) findViewById(R.id.collectionSuiuu);
-
         collectionSlider = (ImageView) findViewById(R.id.collectionSlider);
-
         collectionPager = (ViewPager) findViewById(R.id.collectionPager);
-
-        List<Fragment> collectionList = new ArrayList<>();
-
-        String userSign = SuiuuInfo.ReadUserSign(this);
-        String verification = SuiuuInfo.ReadVerification(this);
 
         CollectionLoopFragment collectionLoopFragment = CollectionLoopFragment.newInstance(userSign, verification);
         CollectionSuiuuFragment collectionSuiuuFragment = CollectionSuiuuFragment.newInstance(userSign, verification);
 
+        List<Fragment> collectionList = new ArrayList<>();
         collectionList.add(collectionLoopFragment);
         collectionList.add(collectionSuiuuFragment);
-
-        FragmentManager fm = getSupportFragmentManager();
 
         CollectionAdapter collectionAdapter = new CollectionAdapter(fm, collectionList);
         collectionPager.setAdapter(collectionAdapter);
@@ -184,17 +163,13 @@ public class CollectionActivity extends BaseActivity {
      * 初始化相关图片
      */
     private void initImageView() {
-        int sliderViewWidth = BitmapFactory.decodeResource(getResources(), R.drawable.slider).getWidth();
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int screenW = dm.widthPixels;// 获取分辨率宽度
-        tabWidth = screenW / 2;
-        if (sliderViewWidth > tabWidth) {
+        tabWidth = screenWidth / 2;
+        if (sliderImageWidth > tabWidth) {
             collectionSlider.getLayoutParams().width = tabWidth;
-            sliderViewWidth = tabWidth;
+            sliderImageWidth = tabWidth;
         }
 
-        offsetX = (tabWidth - sliderViewWidth) / 2;
+        offsetX = (tabWidth - sliderImageWidth) / 2;
         collectionSlider.setPadding(offsetX, 0, 0, 0);
     }
 

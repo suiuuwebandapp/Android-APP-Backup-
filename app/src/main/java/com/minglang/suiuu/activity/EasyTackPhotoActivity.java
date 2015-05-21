@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,15 +34,15 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.EasyTackPhotoAdapter;
 import com.minglang.suiuu.adapter.MyListAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.BaiduMapActivity;
 import com.minglang.suiuu.customview.mProgressDialog;
 import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
@@ -60,7 +59,7 @@ import java.util.List;
  * <p/>
  * Created by Administrator on 2015/4/24.
  */
-public class EasyTackPhotoActivity extends Activity implements View.OnClickListener {
+public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = EasyTackPhotoActivity.class.getSimpleName();
 
@@ -124,7 +123,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     private String dataNum;
     private LoopArticleData articleDetail;
     private List<String> changePicList;
-    private JsonUtil jsonUtil = JsonUtil.getInstance();
+    private JsonUtils jsonUtil = JsonUtils.getInstance();
     //修改文章进来是否重新选择图片
     private boolean isChangePic = false;
 
@@ -137,9 +136,9 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
                         dialog.dismissDialog();
                         Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
                         //TODO 发布完成后在此跳转
-                        Intent intent = new Intent(EasyTackPhotoActivity.this,LoopArticleActivity.class);
-                        intent.putExtra("articleId",dataNum);
-                        intent.putExtra("TAG",TAG);
+                        Intent intent = new Intent(EasyTackPhotoActivity.this, LoopArticleActivity.class);
+                        intent.putExtra("articleId", dataNum);
+                        intent.putExtra("TAG", TAG);
                         startActivity(intent);
                     } else {
                         dialog.dismissDialog();
@@ -164,15 +163,11 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
 
         picList = this.getIntent().getStringArrayListExtra("pictureMessage");
 //        articleDetail = (LoopArticleData)getIntent().getSerializableExtra("articleDetail");
-        articleDetail = jsonUtil.fromJSON(LoopArticleData.class,getIntent().getStringExtra("articleDetail"));
+        articleDetail = jsonUtil.fromJSON(LoopArticleData.class, getIntent().getStringExtra("articleDetail"));
         initView();
-        if (ConstantUtil.isKITKAT) {
-            LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
-            rootLayout.setPadding(0, Utils.getStatusHeight1(this), 0, 0);
-        }
+
+
         //判断如果文章详情信息不为空就是修改文章的图片反之为新文章图片
-
-
 //        iv_cancel.setVisibility(View.GONE);
         tv_cancel.setVisibility(View.VISIBLE);
 
@@ -206,6 +201,16 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     }
 
     private void initView() {
+
+        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
+        if (isKITKAT) {
+            if (navigationBarHeight <= 0) {
+                rootLayout.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            }
+        }
+
         picDescriptionList = new ArrayList<>();
         iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
         iv_top_back.setVisibility(View.GONE);
@@ -219,9 +224,9 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         sll = (ScrollView) findViewById(R.id.sll);
         sll.smoothScrollTo(0, 0);
 
-        if(articleDetail!=null ) {
+        if (articleDetail != null) {
             changeArticleFullData();
-        }else {
+        } else {
             lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, picList, "0"));
             Utils.setListViewHeightBasedOnChildren(lv_picture_description);
         }
@@ -232,9 +237,11 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         tv_area_choice.setVisibility(View.GONE);
         search_question.setText(articleDetail.getaTitle());
         tv_show_your_location.setText(articleDetail.getaAddr());
-        changePicList = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>(){}.getType(),articleDetail.getaImgList());
-        List<String> changeContentList = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>(){}.getType(),articleDetail.getaContent());
-        lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, changePicList,changeContentList,"1"));
+        changePicList = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>() {
+        }.getType(), articleDetail.getaImgList());
+        List<String> changeContentList = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>() {
+        }.getType(), articleDetail.getaContent());
+        lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, changePicList, changeContentList, "1"));
         Utils.setListViewHeightBasedOnChildren(lv_picture_description);
     }
 
@@ -242,11 +249,11 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == 9) {
-            if(articleDetail != null) {
+            if (articleDetail != null) {
                 isChangePic = true;
             }
             picList = data.getStringArrayListExtra("pictureMessage");
-            lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, picList,"0"));
+            lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, picList, "0"));
             Utils.setListViewHeightBasedOnChildren(lv_picture_description);
         } else if (data != null && requestCode == REQUEST_CODE_MAP) {
             double latitude = data.getDoubleExtra("latitude", 0);
@@ -268,9 +275,9 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         if (mId == R.id.tv_top_cancel) {
             finish();
         } else if (mId == R.id.tv_top_right) {
-            if(articleDetail != null) {
+            if (articleDetail != null) {
                 changeLoadDate();
-            }else {
+            } else {
                 loadDate();
             }
         } else if (mId == R.id.tv_theme_choice) {
@@ -304,7 +311,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         public void onSuccess(ResponseInfo<String> responseInfo) {
             String str = responseInfo.result;
             LoopBase loopBase;
-            loopBase = JsonUtil.getInstance().fromJSON(LoopBase.class, str);
+            loopBase = JsonUtils.getInstance().fromJSON(LoopBase.class, str);
             if (loopBase != null) {
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
                     list = loopBase.getData().getData();
@@ -314,7 +321,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
                     listView.setAdapter(new MyListAdapter(EasyTackPhotoActivity.this, list));
                     themeOrArea = 1;
 
-                    popupWindow.showAsDropDown(tv_theme_choice,10,10);
+                    popupWindow.showAsDropDown(tv_theme_choice, 10, 10);
                 } else {
                     Toast.makeText(EasyTackPhotoActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
                 }
@@ -323,7 +330,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
 
         @Override
         public void onFailure(HttpException error, String msg) {
-            Log.i("suiuu",msg);
+            Log.i("suiuu", msg);
             Toast.makeText(EasyTackPhotoActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -349,7 +356,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
             String str = responseInfo.result;
-            LoopBase loopBase = JsonUtil.getInstance().fromJSON(LoopBase.class, str);
+            LoopBase loopBase = JsonUtils.getInstance().fromJSON(LoopBase.class, str);
             if (loopBase != null) {
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
                     list = loopBase.getData().getData();
@@ -370,7 +377,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
     }
 
     private void loadDate() {
-         judgeData();
+        judgeData();
         if ("".equals(tv_theme_choice.getText().toString().trim())) {
             Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
             return;
@@ -394,7 +401,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         for (String string : picList) {
             updateDate(string);
             String substring = string.substring(string.lastIndexOf("/"));
-            picNameList.add(AppConstant.IMG_FROM_SUIUU+"suiuu_content"+substring);
+            picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
         }
         params.addBodyParameter("imgList", jsonUtil.toJSON(picNameList));
         params.addBodyParameter("img", picNameList.get(0));
@@ -424,25 +431,25 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         judgeData();
         dialog.showDialog();
         params.addBodyParameter(HttpServicePath.key, str);
-        params.addBodyParameter("articleId",articleDetail.getArticleId());
+        params.addBodyParameter("articleId", articleDetail.getArticleId());
         params.addBodyParameter("title", search_question.getText().toString().trim());
         params.addBodyParameter("content", jsonUtil.toJSON(picDescriptionList));
         params.addBodyParameter("addr", tv_show_your_location.getText().toString().trim());
 
         List<String> picNameList = new ArrayList<>();
-        if(isChangePic) {
+        if (isChangePic) {
             for (String string : picList) {
                 updateDate(string);
                 String substring = string.substring(string.lastIndexOf("/"));
-                picNameList.add(AppConstant.IMG_FROM_SUIUU+"suiuu_content"+substring);
+                picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
             }
-            params.addBodyParameter("imgList", JsonUtil.getInstance().toJSON(picNameList));
-            if(picNameList.size()>=1) {
+            params.addBodyParameter("imgList", JsonUtils.getInstance().toJSON(picNameList));
+            if (picNameList.size() >= 1) {
                 params.addBodyParameter("img", picNameList.get(0));
             }
-        }else {
+        } else {
             params.addBodyParameter("imgList", articleDetail.getaImgList());
-            params.addBodyParameter("img",articleDetail.getaImg());
+            params.addBodyParameter("img", articleDetail.getaImg());
         }
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.updateLoop, new UpdateLoopCallBack());
@@ -517,11 +524,11 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String result = stringResponseInfo.result;
-            Log.i("suiuu",result+"--------------");
+            Log.i("suiuu", result + "--------------");
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
-                dataNum = (String)json.get("data");
+                dataNum = (String) json.get("data");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -533,6 +540,7 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
             Log.i(TAG, "请求失败------------------------------------" + s);
         }
     }
+
     /**
      * 修改圈子文章回调接口
      */
@@ -541,19 +549,19 @@ public class EasyTackPhotoActivity extends Activity implements View.OnClickListe
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String result = stringResponseInfo.result;
-            Log.i("suiuu","ask="+result);
+            Log.i("suiuu", "ask=" + result);
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
-                dataNum = (String)json.get("data");
-                Log.i("suiuu",status+"dataNum"+dataNum);
-                if("success".equals(dataNum)) {
+                dataNum = (String) json.get("data");
+                Log.i("suiuu", status + "dataNum" + dataNum);
+                if ("success".equals(dataNum)) {
                     Toast.makeText(EasyTackPhotoActivity.this, R.string.article_update_success, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(EasyTackPhotoActivity.this,LoopArticleActivity.class);
-                    intent.putExtra("articleId",articleDetail.getArticleId());
-                    intent.putExtra("TAG",TAG);
+                    Intent intent = new Intent(EasyTackPhotoActivity.this, LoopArticleActivity.class);
+                    intent.putExtra("articleId", articleDetail.getArticleId());
+                    intent.putExtra("TAG", TAG);
                     startActivity(intent);
-                }else {
+                } else {
                     handler.sendEmptyMessage(getData_FAILURE);
                 }
             } catch (JSONException e) {

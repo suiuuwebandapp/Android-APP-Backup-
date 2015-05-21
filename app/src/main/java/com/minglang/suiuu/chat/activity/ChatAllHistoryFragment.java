@@ -31,13 +31,14 @@ import com.minglang.suiuu.chat.chat.Constant;
 import com.minglang.suiuu.chat.chat.DemoApplication;
 import com.minglang.suiuu.chat.dao.InviteMessgeDao;
 import com.minglang.suiuu.utils.ConstantUtil;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
+
 /**
  * 显示所有会话记录，比较简单的实现，更好的可能是把陌生人存入本地，这样取到的聊天记录是可控的
  */
@@ -66,12 +67,12 @@ public class ChatAllHistoryFragment extends Fragment {
         conversationList.addAll(loadConversationsWithRecentChat());
         listView = (ListView) getView().findViewById(R.id.list);
         if (ConstantUtil.isKITKAT) {
-            LinearLayout rootLayout = (LinearLayout)getView().findViewById(R.id.chat_all_root);
-            rootLayout.setPadding(0, Utils.getStatusHeight1(getActivity()), 0, 0);
+            LinearLayout rootLayout = (LinearLayout) getView().findViewById(R.id.chat_all_root);
+            rootLayout.setPadding(0, new SystemBarTintManager(getActivity()).getConfig().getStatusBarHeight(), 0, 0);
         }
         LinearLayout.LayoutParams paramTest = (LinearLayout.LayoutParams) listView.getLayoutParams();
         //paramTest.topMargin = ConstantUtil.topHeight;
-        paramTest.setMargins(0,ConstantUtil.topHeight,0,0);
+        paramTest.setMargins(0, ConstantUtil.topHeight, 0, 0);
         listView.setLayoutParams(paramTest);
         adapter = new ChatAllHistoryAdapter(getActivity(), 1, conversationList);
         // 设置adapter

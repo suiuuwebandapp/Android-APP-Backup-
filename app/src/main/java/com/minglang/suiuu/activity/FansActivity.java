@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -22,8 +21,9 @@ import com.minglang.suiuu.adapter.FansAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.entity.Fans;
 import com.minglang.suiuu.entity.FansData;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
@@ -179,7 +179,7 @@ public class FansActivity extends BaseActivity {
 
             String str = stringResponseInfo.result;
             try {
-                Fans fans = JsonUtil.getInstance().fromJSON(Fans.class, str);
+                Fans fans = JsonUtils.getInstance().fromJSON(Fans.class, str);
                 fansDataList = fans.getData().getData();
                 if (fansDataList != null && fansDataList.size() > 0) {
                     FansAdapter adapter = new FansAdapter(FansActivity.this, fansDataList);
@@ -188,7 +188,7 @@ public class FansActivity extends BaseActivity {
                     Toast.makeText(FansActivity.this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "粉丝数据解析错误异常信息:" + e.getMessage());
+                DeBugLog.e(TAG, "粉丝数据解析错误异常信息:" + e.getMessage());
                 Toast.makeText(FansActivity.this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
@@ -202,7 +202,7 @@ public class FansActivity extends BaseActivity {
 
             mPtrFrame.refreshComplete();
 
-            Log.e(TAG, "获取粉丝列表请求失败的异常信息:" + s);
+            DeBugLog.e(TAG, "获取粉丝列表请求失败的异常信息:" + s);
             Toast.makeText(FansActivity.this, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }

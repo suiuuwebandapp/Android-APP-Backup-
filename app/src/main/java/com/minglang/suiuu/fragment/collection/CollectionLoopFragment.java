@@ -24,7 +24,7 @@ import com.minglang.suiuu.adapter.CollectionLoopAdapter;
 import com.minglang.suiuu.entity.CollectionLoop;
 import com.minglang.suiuu.entity.CollectionLoopData;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
@@ -258,7 +258,7 @@ public class CollectionLoopFragment extends Fragment {
             String str = stringResponseInfo.result;
             Log.i(TAG, "收藏的圈子数据:" + str);
             try {
-                CollectionLoop collectionLoop = JsonUtil.getInstance().fromJSON(CollectionLoop.class, str);
+                CollectionLoop collectionLoop = JsonUtils.getInstance().fromJSON(CollectionLoop.class, str);
                 if (collectionLoop.getStatus().equals("1")) {
                     List<CollectionLoopData> list = collectionLoop.getData().getData();
                     if (list != null && list.size() > 0) {

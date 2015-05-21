@@ -6,10 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -38,17 +36,14 @@ import com.minglang.suiuu.entity.DeleteArticle;
 import com.minglang.suiuu.entity.LoopArticle;
 import com.minglang.suiuu.entity.LoopArticleCommentList;
 import com.minglang.suiuu.entity.LoopArticleData;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.SystemBarTintManager;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.qq.TencentConstant;
 import com.minglang.suiuu.utils.wechat.WeChatConstant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeConfig;
@@ -66,6 +61,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * 具体某个地区/主题下的某个帖子
  * <p/>
@@ -153,11 +149,6 @@ public class LoopArticleActivity extends BaseActivity {
     private String articleId;
 
     /**
-     * 验证信息
-     */
-    private String Verification;
-
-    /**
      * 文章主题内容数据集合
      */
     private LoopArticleData loopArticleData;
@@ -167,17 +158,11 @@ public class LoopArticleActivity extends BaseActivity {
      */
     private List<LoopArticleCommentList> list;
 
-    /**
-     * 图片加载
-     */
-    private ImageLoader imageLoader;
-
     private DisplayImageOptions options1;
     private DisplayImageOptions options2;
 
     private ProgressDialog progressDialog;
 
-    private String myUserSign;
     private List<String> imageList;
     private RelativeLayout rl_showForAsk;
     private RelativeLayout rl_showForTakePhoto;
@@ -203,11 +188,8 @@ public class LoopArticleActivity extends BaseActivity {
 
         articleId = getIntent().getStringExtra(ARTICLEID);
         OtherTAG = getIntent().getStringExtra("TAG");
-        Verification = SuiuuInfo.ReadVerification(this);
 
         initImageLoader();
-
-        myUserSign = SuiuuInfo.ReadUserSign(this);
 
         initView();
         initShareData();
@@ -219,10 +201,6 @@ public class LoopArticleActivity extends BaseActivity {
      * 初始化图片加载器
      */
     private void initImageLoader() {
-        imageLoader = ImageLoader.getInstance();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(this));
-        }
 
         options1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.user_background)
                 .showImageForEmptyUri(R.drawable.user_background).showImageOnFail(R.drawable.user_background)
@@ -240,23 +218,12 @@ public class LoopArticleActivity extends BaseActivity {
      */
     private void initView() {
 
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setTintColor(getResources().getColor(R.color.tr_black));
-        SystemBarTintManager.SystemBarConfig config = tintManager.getConfig();
-
-        int statusHeight = config.getStatusBarHeight();
-        int navigationBarHeight = config.getNavigationBarHeight();
-
-        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-        boolean isNavigationBar = config.hasNavigtionBar();
-
         RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.loop_article_root_layout);
-
-        if(isKITKAT){
-            if(isNavigationBar){
-                rootLayout.setPadding(0,statusHeight,0,navigationBarHeight);
-            }else{
-                rootLayout.setPadding(0,statusHeight,0,0);
+        if (isKITKAT) {
+            if (navigationBarHeight <= 0) {
+                rootLayout.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
             }
         }
 
@@ -328,14 +295,14 @@ public class LoopArticleActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent;
-                Log.i("suiuu","type="+loopArticleData.getaType());
-                if("1".equals(loopArticleData.getaType())) {
-                    intent = new Intent(LoopArticleActivity.this,EasyTackPhotoActivity.class);
-                }else {
-                    intent = new Intent(LoopArticleActivity.this,AskQuestionActivity.class);
+                DeBugLog.i("suiuu", "type=" + loopArticleData.getaType());
+                if ("1".equals(loopArticleData.getaType())) {
+                    intent = new Intent(LoopArticleActivity.this, EasyTackPhotoActivity.class);
+                } else {
+                    intent = new Intent(LoopArticleActivity.this, AskQuestionActivity.class);
                 }
-                Log.i("suiuu",loopArticleData.toString());
-                intent.putExtra("articleDetail",JsonUtil.getInstance().toJSON(loopArticleData));
+                DeBugLog.i("suiuu", loopArticleData.toString());
+                intent.putExtra("articleDetail", JsonUtils.getInstance().toJSON(loopArticleData));
 //                Bundle mBundle = new Bundle();
 //                mBundle.putSerializable("articleDetail", loopArticleData);
 //                intent.putExtra("articleDetail",mBundle);
@@ -445,7 +412,7 @@ public class LoopArticleActivity extends BaseActivity {
     private void addPraiseRequest() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
-        params.addBodyParameter(HttpServicePath.key, Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.articleAddPraise, new addPraiseRequestCallBack());
         httpRequest.setParams(params);
@@ -458,7 +425,7 @@ public class LoopArticleActivity extends BaseActivity {
     private void collectionArticle() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
-        params.addBodyParameter(HttpServicePath.key, Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionArticlePath, new CollectionArticleRequestCallback());
         httpRequest.setParams(params);
@@ -471,7 +438,7 @@ public class LoopArticleActivity extends BaseActivity {
     private void collectionArticleCancel(String cancelId) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("attentionId", cancelId);
-        params.addBodyParameter(HttpServicePath.key, Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionArticleCancelPath, new CollectionArticleCancelRequestCallback());
         httpRequest.setParams(params);
@@ -487,7 +454,7 @@ public class LoopArticleActivity extends BaseActivity {
         }
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
-        params.addBodyParameter(HttpServicePath.key, Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.DeleteArticlePath, new DeleteArticleRequestCallBack());
         httpRequest.setParams(params);
@@ -503,7 +470,7 @@ public class LoopArticleActivity extends BaseActivity {
         }
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
-        params.addBodyParameter(HttpServicePath.key, Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.LoopArticlePath, new LoopArticleRequestCallBack());
         httpRequest.setParams(params);
@@ -534,7 +501,7 @@ public class LoopArticleActivity extends BaseActivity {
         }
         String imageListPath = loopArticleData.getaImgList();
         if (!TextUtils.isEmpty(imageListPath)) {
-            imageList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
+            imageList = JsonUtils.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
             }.getType(), imageListPath);
             if (imageList != null) {
                 if (imageList.size() >= 1) {
@@ -547,36 +514,36 @@ public class LoopArticleActivity extends BaseActivity {
                         rl_showForTakePhoto.setVisibility(View.VISIBLE);
                         rl_showForAsk.setVisibility(View.GONE);
                         if (!TextUtils.isEmpty(content)) {
-                            List<String> contentList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
+                            List<String> contentList = JsonUtils.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
                             }.getType(), content);
                             if (contentList != null) {
                                 loop_article_listview.setAdapter(new showPicDescriptionAdapter(this, imageList, contentList));
                             } else {
-                                Log.e(TAG, "contentList==null!");
+                                DeBugLog.e(TAG, "contentList==null!");
                             }
                             Utils.setListViewHeightBasedOnChildren(loop_article_listview);
                         } else {
-                            Log.e(TAG, "content==null!***");
+                            DeBugLog.e(TAG, "content==null!***");
                         }
                     } else {
                         if (!TextUtils.isEmpty(content)) {
                             articleContent.setText(content);
                         } else {
                             articleContent.setText("");
-                            Log.e(TAG, "***content==null!");
+                            DeBugLog.e(TAG, "***content==null!");
                         }
                         //图片适配器
                         LoopArticleImageAdapter imageAdapter = new LoopArticleImageAdapter(this, imageList);
                         noScrollBarGridView.setAdapter(imageAdapter);
                     }
                 } else {
-                    Log.e(TAG, "type==null!");
+                    DeBugLog.e(TAG, "type==null!");
                 }
             } else {
-                Log.e(TAG, "imageList==null!");
+                DeBugLog.e(TAG, "imageList==null!");
             }
         } else {
-            Log.e(TAG, "imageListPath==null!");
+            DeBugLog.e(TAG, "imageListPath==null!");
         }
     }
 
@@ -643,9 +610,9 @@ public class LoopArticleActivity extends BaseActivity {
     class addPraiseRequestCallBack extends RequestCallBack<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+        public void onSuccess(ResponseInfo<String> responseInfo) {
             try {
-                JSONObject json = new JSONObject(stringResponseInfo.result);
+                JSONObject json = new JSONObject(responseInfo.result);
                 String status = json.getString("status");
                 String data = json.getString("data");
                 if ("1".equals(status)) {
@@ -655,14 +622,14 @@ public class LoopArticleActivity extends BaseActivity {
                     Toast.makeText(LoopArticleActivity.this, "点赞成功", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                DeBugLog.e(TAG, "点赞数据解析失败:" + e.getMessage());
                 Toast.makeText(LoopArticleActivity.this, "点赞失败，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            Log.i("i", s);
+        public void onFailure(HttpException error, String msg) {
+            DeBugLog.e(TAG, "点赞失败:" + msg);
             Toast.makeText(LoopArticleActivity.this, "点赞失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -674,10 +641,10 @@ public class LoopArticleActivity extends BaseActivity {
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
             String str = responseInfo.result;
-            Log.i(TAG, "文章详情数据:" + str);
+            DeBugLog.i(TAG, "文章详情数据:" + str);
             try {
                 //全部数据
-                LoopArticle loopArticle = JsonUtil.getInstance().fromJSON(LoopArticle.class, str);
+                LoopArticle loopArticle = JsonUtils.getInstance().fromJSON(LoopArticle.class, str);
                 if (loopArticle != null) {
                     String status = loopArticle.getStatus();
                     if (!TextUtils.isEmpty(status)) {
@@ -691,24 +658,24 @@ public class LoopArticleActivity extends BaseActivity {
                                 list = loopArticleData.getCommentList();
                                 String otherUserSign = loopArticleData.getaCreateUserSign();
                                 if (!TextUtils.isEmpty(otherUserSign)) {
-                                    if (!myUserSign.equals(otherUserSign)) {
+                                    if (!userSign.equals(otherUserSign)) {
                                         editor.setVisibility(View.GONE);
                                         delete.setVisibility(View.GONE);
                                     }
                                 } else {
-                                    Log.e(TAG, "otherUserSign==null!");
+                                    DeBugLog.e(TAG, "otherUserSign==null!");
                                 }
                             } else {
-                                Log.e(TAG, "loopArticleData==null!");
+                                DeBugLog.e(TAG, "loopArticleData==null!");
                                 Toast.makeText(LoopArticleActivity.this,
                                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                             }
                         }
                     } else {
-                        Log.e(TAG, "status==null!");
+                        DeBugLog.e(TAG, "status==null!");
                     }
                 } else {
-                    Log.e(TAG, "loopArticle==null!");
+                    DeBugLog.e(TAG, "loopArticle==null!");
                     Toast.makeText(LoopArticleActivity.this,
                             getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
@@ -723,10 +690,9 @@ public class LoopArticleActivity extends BaseActivity {
 
         }
 
-
         @Override
         public void onFailure(HttpException error, String msg) {
-            Log.e(TAG, "网络请求失败:" + msg);
+            DeBugLog.e(TAG, "网络请求失败:" + msg);
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
@@ -743,7 +709,7 @@ public class LoopArticleActivity extends BaseActivity {
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
             String str = responseInfo.result;
-            DeleteArticle deleteArticle = JsonUtil.getInstance().fromJSON(DeleteArticle.class, str);
+            DeleteArticle deleteArticle = JsonUtils.getInstance().fromJSON(DeleteArticle.class, str);
             if (deleteArticle != null) {
                 if (deleteArticle.getStatus().equals("1")) {
                     Toast.makeText(LoopArticleActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
@@ -756,15 +722,17 @@ public class LoopArticleActivity extends BaseActivity {
                 progressDialog.dismiss();
             }
         }
+
         @Override
         public void onFailure(HttpException error, String msg) {
-            Log.i(TAG, msg);
+            DeBugLog.i(TAG, msg);
             Toast.makeText(LoopArticleActivity.this, "删除失败，请稍候再试", Toast.LENGTH_SHORT).show();
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
         }
     }
+
     /**
      * 收藏文章回调接口
      */
@@ -784,14 +752,14 @@ public class LoopArticleActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 Toast.makeText(LoopArticleActivity.this, "收藏失败，请稍候再试！", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, e.getMessage());
+                DeBugLog.e(TAG, e.getMessage());
             }
 
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, s);
+            DeBugLog.e(TAG, "请求失败:" + s);
             Toast.makeText(LoopArticleActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -825,9 +793,10 @@ public class LoopArticleActivity extends BaseActivity {
                 Toast.makeText(LoopArticleActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
             }
         }
+
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, s);
+            DeBugLog.e(TAG, s);
             Toast.makeText(LoopArticleActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
@@ -838,5 +807,18 @@ public class LoopArticleActivity extends BaseActivity {
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         return drawable;
     }
+
+    @Override
+    public void finish() {
+        if (OtherTAG.equals(AskQuestionActivity.class.getSimpleName())) {
+            startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
+            super.finish();
+        } else if (OtherTAG.equals(EasyTackPhotoActivity.class.getSimpleName())) {
+            super.finish();
+        } else {
+            super.finish();
+        }
+    }
+
 }
 

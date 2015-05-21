@@ -24,7 +24,7 @@ import com.minglang.suiuu.adapter.CollectionSuiuuAdapter;
 import com.minglang.suiuu.entity.CollectionSuiuu;
 import com.minglang.suiuu.entity.CollectionSuiuuData;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
@@ -258,7 +258,7 @@ public class CollectionSuiuuFragment extends Fragment {
             String str = stringResponseInfo.result;
             Log.i(TAG, "收藏的随游的数据:" + str);
             try {
-                CollectionSuiuu collectionSuiuu = JsonUtil.getInstance().fromJSON(CollectionSuiuu.class, str);
+                CollectionSuiuu collectionSuiuu = JsonUtils.getInstance().fromJSON(CollectionSuiuu.class, str);
                 if (collectionSuiuu.getStatus().equals("1")) {
                     List<CollectionSuiuuData> list = collectionSuiuu.getData().getData();
                     if (list != null && list.size() > 0) {

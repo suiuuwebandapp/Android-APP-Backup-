@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -21,8 +20,9 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.AllAttentionDynamicAdapter;
 import com.minglang.suiuu.entity.AllAttentionDynamic;
 import com.minglang.suiuu.entity.AllAttentionDynamicData;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
@@ -143,7 +143,7 @@ public class AllAttentionDynamicActivity extends Activity {
             Toast.makeText(this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
         } else {
             try {
-                AllAttentionDynamic dynamic = JsonUtil.getInstance().fromJSON(AllAttentionDynamic.class, str);
+                AllAttentionDynamic dynamic = JsonUtils.getInstance().fromJSON(AllAttentionDynamic.class, str);
                 List<AllAttentionDynamicData> list = dynamic.getData().getData();
                 if (list != null && list.size() > 0) {
                     listAll.addAll(list);
@@ -153,7 +153,7 @@ public class AllAttentionDynamicActivity extends Activity {
                     Toast.makeText(this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "关注详细信息解析错误:" + e.getMessage());
+                DeBugLog.e(TAG, "关注详细信息解析错误:" + e.getMessage());
                 Toast.makeText(this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
@@ -243,7 +243,7 @@ public class AllAttentionDynamicActivity extends Activity {
             }
 
             String str = stringResponseInfo.result;
-            Log.i(TAG, "关注详细信息数据:" + str);
+            DeBugLog.i(TAG, "关注详细信息数据:" + str);
             setData2View(str);
         }
 
@@ -264,7 +264,7 @@ public class AllAttentionDynamicActivity extends Activity {
             String errorMessage = "加载失败，点击加载更多";
             loadMoreContainer.loadMoreError(error, errorMessage);
 
-            Log.e(TAG, "关注动态数据加载失败:" + s);
+            DeBugLog.e(TAG, "关注动态数据加载失败:" + s);
             Toast.makeText(AllAttentionDynamicActivity.this,
                     getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
         }

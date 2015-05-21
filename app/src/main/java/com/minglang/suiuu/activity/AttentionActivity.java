@@ -1,13 +1,8 @@
 package com.minglang.suiuu.activity;
 
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -20,9 +15,7 @@ import com.minglang.suiuu.adapter.AttentionPagerAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.fragment.attention.AttentionLoopFragment;
 import com.minglang.suiuu.fragment.attention.AttentionUserFragment;
-import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.SystemBarTintManager;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.DeBugLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +30,7 @@ public class AttentionActivity extends BaseActivity {
     /**
      * 返回键
      */
-    private ImageView AttentionBack;
+    private ImageView attentionBack;
 
     private ViewPager attentionPager;
 
@@ -63,9 +56,7 @@ public class AttentionActivity extends BaseActivity {
         setContentView(R.layout.activity_attention);
 
         initView();
-
         ViewAction();
-
     }
 
     /**
@@ -73,7 +64,7 @@ public class AttentionActivity extends BaseActivity {
      */
     private void ViewAction() {
 
-        AttentionBack.setOnClickListener(new View.OnClickListener() {
+        attentionBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -83,15 +74,16 @@ public class AttentionActivity extends BaseActivity {
 
         attentionPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int i, float v, int i2) {
-//                Log.i(TAG, "偏移量:" + String.valueOf(v));
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                DeBugLog.i(TAG, "position:" + position + ",positionOffset:" + positionOffset +
+                        ",positionOffsetPixels" + positionOffsetPixels);
             }
 
             @Override
-            public void onPageSelected(int i) {
+            public void onPageSelected(int position) {
                 attentionSliderView.setPadding(0, 0, 0, 0);
 
-                switch (i) {
+                switch (position) {
                     case 0:
                         attentionThemeTitle.setTextColor(getResources().getColor(R.color.slider_line_color));
                         attentionUserTitle.setTextColor(getResources().getColor(R.color.textColor));
@@ -102,18 +94,16 @@ public class AttentionActivity extends BaseActivity {
                         break;
                 }
 
-                Animation anim = new TranslateAnimation(tabWidth * currIndex + offsetX, tabWidth * i + offsetX, 0, 0);
-                currIndex = i;
+                Animation anim = new TranslateAnimation(tabWidth * currIndex + offsetX, tabWidth * position + offsetX, 0, 0);
+                currIndex = position;
                 anim.setFillAfter(true);
                 anim.setDuration(200);
                 attentionSliderView.startAnimation(anim);
-
-//                Log.i(TAG, "offsetX:" + String.valueOf(offsetX));
             }
 
             @Override
-            public void onPageScrollStateChanged(int i) {
-
+            public void onPageScrollStateChanged(int state) {
+                DeBugLog.i(TAG, "state:" + state);
             }
         });
 
@@ -126,80 +116,43 @@ public class AttentionActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-
-        SystemBarTintManager mTintManager = new SystemBarTintManager(this);
-        mTintManager.setStatusBarTintEnabled(true);
-        mTintManager.setNavigationBarTintEnabled(false);
-        mTintManager.setTintColor(getResources().getColor(R.color.tr_black));
-
-        int statusHeight = Utils.newInstance(this).getStatusHeight();
-
-        /**
-         系统版本是否高于4.4
-         */
-        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
+        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.attentionRootLayout);
         if (isKITKAT) {
-            LinearLayout rootLayout = (LinearLayout) findViewById(R.id.attentionRootLayout);
-            rootLayout.setPadding(0, statusHeight, 0, 0);
-            Log.i(TAG, "状态栏高度:" + statusHeight);
+            if (navigationBarHeight <= 0) {
+                rootLayout.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            }
         }
 
-        AttentionBack = (ImageView) findViewById(R.id.AttentionBack);
-
+        attentionBack = (ImageView) findViewById(R.id.attentionBack);
         attentionPager = (ViewPager) findViewById(R.id.attentionPager);
-
         attentionSliderView = (ImageView) findViewById(R.id.attention_sliderView);
-
         attentionThemeTitle = (TextView) findViewById(R.id.attention_theme_title);
         attentionUserTitle = (TextView) findViewById(R.id.attention_user_title);
 
-        String userSign = SuiuuInfo.ReadUserSign(this);
-        String verification = SuiuuInfo.ReadVerification(this);
-
-        List<Fragment> fragmentList = new ArrayList<>();
-
-        FragmentManager fm = getSupportFragmentManager();
-
-        /**
-         关注圈子页面
-         */
-
+        //关注圈子页面
         AttentionLoopFragment attentionLoopFragment = AttentionLoopFragment.newInstance(userSign, verification);
-
-        /**
-         关注用户页面
-         */
+        //关注用户页面
         AttentionUserFragment attentionUserFragment = AttentionUserFragment.newInstance(userSign, verification);
-
+        List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(attentionLoopFragment);
         fragmentList.add(attentionUserFragment);
-
         AttentionPagerAdapter attentionPagerAdapter = new AttentionPagerAdapter(fm, fragmentList);
-
         attentionPager.setAdapter(attentionPagerAdapter);
 
         initImageView();
     }
 
     private void initImageView() {
-        //滑动图片宽度
-        int sliderViewWidth = BitmapFactory.decodeResource(getResources(), R.drawable.slider).getWidth();
-
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-        int screenW = dm.widthPixels;// 获取屏幕宽度
-
-        tabWidth = screenW / 2;
-        if (sliderViewWidth > tabWidth) {
+        tabWidth = screenWidth / 2;
+        if (sliderImageWidth > tabWidth) {
             attentionSliderView.getLayoutParams().width = tabWidth;
-            sliderViewWidth = tabWidth;
+            sliderImageWidth = tabWidth;
         }
 
-        offsetX = (tabWidth - sliderViewWidth) / 2;
+        offsetX = (tabWidth - sliderImageWidth) / 2;
         attentionSliderView.setPadding(offsetX, 0, 0, 0);
-
     }
 
     class AttentionClick implements View.OnClickListener {

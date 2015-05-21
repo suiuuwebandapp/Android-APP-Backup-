@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -26,8 +25,9 @@ import com.minglang.suiuu.chat.activity.ChatActivity;
 import com.minglang.suiuu.entity.OtherUser;
 import com.minglang.suiuu.entity.OtherUserDataArticle;
 import com.minglang.suiuu.entity.OtherUserDataInfo;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -105,22 +105,21 @@ public class OtherUserActivity extends Activity {
         setContentView(R.layout.activity_other_user);
 
         userSign = getIntent().getStringExtra(USERSIGNKEY);
-        Log.i(TAG, "其他页面传递的userSign:" + userSign);
+        DeBugLog.i(TAG, "其他页面传递的userSign:" + userSign);
 
         initView();
-
         ViewAction();
-
-        getUserInfo2Service();
-
+        getData();
     }
 
-    private void getUserInfo2Service() {
-
+    private void getData(){
         if (dialog != null) {
             dialog.show();
         }
+        getUserInfo2Service();
+    }
 
+    private void getUserInfo2Service() {
         String msg = SuiuuInfo.ReadVerification(this);
 
         RequestParams params = new RequestParams();
@@ -132,8 +131,8 @@ public class OtherUserActivity extends Activity {
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
 
-        Log.i(TAG, USERSIGNKEY + ":" + userSign);
-        Log.i(TAG, HttpServicePath.key + ":" + msg);
+        DeBugLog.i(TAG, USERSIGNKEY + ":" + userSign);
+        DeBugLog.i(TAG, HttpServicePath.key + ":" + msg);
     }
 
     /**
@@ -142,9 +141,8 @@ public class OtherUserActivity extends Activity {
     private void AddAttentionRequest4Service() {
         RequestParams params = new RequestParams();
         params.addBodyParameter(USERSIGNKEY, userSign);
-
         params.addBodyParameter(HttpServicePath.key, Verification);
-        Log.i("suiuu",userSign +"verfication="+Verification);
+
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.AddAttentionUserPath, new AddAttentionRequestCallBack());
         httpRequest.setParams(params);
@@ -285,14 +283,14 @@ public class OtherUserActivity extends Activity {
 
             String str = stringResponseInfo.result;
             try {
-                otherUser = JsonUtil.getInstance().fromJSON(OtherUser.class, str);
+                otherUser = JsonUtils.getInstance().fromJSON(OtherUser.class, str);
                 articleList = otherUser.getData().getArticleList();
                 fullData();
                 OtherUserArticleAdapter adapter = new OtherUserArticleAdapter(OtherUserActivity.this,
                         articleList, screenWidth);
                 otherUserLoop.setAdapter(adapter);
             } catch (Exception e) {
-                Log.e(TAG, "用户数据解析失败异常信息:" + e.getMessage());
+                DeBugLog.e(TAG, "用户数据解析失败异常信息:" + e.getMessage());
                 Toast.makeText(OtherUserActivity.this, "网络异常，请稍候再试!", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
@@ -304,8 +302,7 @@ public class OtherUserActivity extends Activity {
                 dialog.dismiss();
             }
 
-            Log.e(TAG, "获取用户数据失败异常信息:" + s);
-
+            DeBugLog.e(TAG, "获取用户数据失败异常信息:" + s);
             Toast.makeText(OtherUserActivity.this, "网络异常，请稍候再试!", Toast.LENGTH_SHORT).show();
         }
 
@@ -338,7 +335,7 @@ public class OtherUserActivity extends Activity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, "添加关注网络异常信息:" + s);
+            DeBugLog.e(TAG, "添加关注网络异常信息:" + s);
             Toast.makeText(OtherUserActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -369,7 +366,7 @@ public class OtherUserActivity extends Activity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, s);
+            DeBugLog.e(TAG, s);
             Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
         }
     }
@@ -387,15 +384,4 @@ public class OtherUserActivity extends Activity {
         getUserInfo2Service();
     }
 
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
 }

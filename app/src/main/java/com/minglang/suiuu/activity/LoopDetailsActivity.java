@@ -3,11 +3,9 @@ package com.minglang.suiuu.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -29,13 +27,13 @@ import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.entity.LoopDetails;
 import com.minglang.suiuu.entity.LoopDetailsData;
 import com.minglang.suiuu.entity.LoopDetailsDataList;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.DrawableUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -241,23 +239,13 @@ public class LoopDetailsActivity extends BaseActivity {
      */
     @SuppressWarnings("deprecation")
     private void initView() {
-        SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
-        SystemBarTintManager.SystemBarConfig systemBarConfig = systemBarTintManager.getConfig();
-        //状态栏高度
-        int statusBarHeight = systemBarConfig.getStatusBarHeight();
-        //虚拟按键高度
-        int navigationBarHeight = systemBarConfig.getNavigationBarHeight();
-
-        /****************设置状态栏颜色*************/
-        systemBarTintManager.setStatusBarTintEnabled(true);
-        systemBarTintManager.setNavigationBarTintEnabled(false);
-        systemBarTintManager.setTintColor(getResources().getColor(R.color.tr_black));
-
-        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
         RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.loop_details_root_layout);
         if (isKITKAT) {
-            rootLayout.setPadding(0, statusBarHeight, 0, 0);
+            if (navigationBarHeight <= 0) {
+                rootLayout.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            }
         }
 
         progressDialog = new ProgressDialog(this);
@@ -280,7 +268,6 @@ public class LoopDetailsActivity extends BaseActivity {
         loopDetailsAdapter = new LoopDetailsAdapter(this);
         loopDetailsAdapter.setScreenParams(screenWidth, screenHeight);
         loopDetailsGridView.setAdapter(loopDetailsAdapter);
-
     }
 
     /**
@@ -304,7 +291,7 @@ public class LoopDetailsActivity extends BaseActivity {
 
             String str = responseInfo.result;
             try {
-                LoopDetails loopDetails = JsonUtil.getInstance().fromJSON(LoopDetails.class, str);
+                LoopDetails loopDetails = JsonUtils.getInstance().fromJSON(LoopDetails.class, str);
                 LoopDetailsData loopDetailsData = loopDetails.getData();
                 List<LoopDetailsDataList> list = loopDetailsData.getData();
                 if (list != null && list.size() > 0) {
@@ -317,10 +304,10 @@ public class LoopDetailsActivity extends BaseActivity {
                     Toast.makeText(context, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                 }
                 attentionId = loopDetailsData.getAttentionId();
-                Log.i(TAG, "attentionId:" + attentionId);
+                DeBugLog.i(TAG, "attentionId:" + attentionId);
                 isAttention();
             } catch (Exception e) {
-                Log.e(TAG, "数据请求失败:" + e.getMessage());
+                DeBugLog.e(TAG, "数据请求失败:" + e.getMessage());
 
                 if (page > 1) {
                     page = page - 1;
@@ -335,7 +322,7 @@ public class LoopDetailsActivity extends BaseActivity {
         @Override
         public void onFailure(HttpException error, String msg) {
 
-            Log.e(TAG, "圈子详细列表请求失败:" + msg);
+            DeBugLog.e(TAG, "圈子详细列表请求失败:" + msg);
 
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
@@ -355,12 +342,13 @@ public class LoopDetailsActivity extends BaseActivity {
     /**
      * 添加圈子关注网络请求
      */
+    @SuppressWarnings("deprecation")
     class AddAttentionRequestCallBack extends RequestCallBack<String> {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
-            Log.i(TAG, "关注圈子返回结果:" + str);
+            DeBugLog.i(TAG, "关注圈子返回结果:" + str);
             try {
                 JSONObject object = new JSONObject(str);
                 String status = object.getString("status");
@@ -381,7 +369,7 @@ public class LoopDetailsActivity extends BaseActivity {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.e(TAG, "添加关注数据解析异常:" + e.getMessage());
+                DeBugLog.e(TAG, "添加关注数据解析异常:" + e.getMessage());
                 Toast.makeText(LoopDetailsActivity.this,
                         getResources().getString(R.string.addAttentionFail), Toast.LENGTH_SHORT).show();
             }
@@ -389,7 +377,7 @@ public class LoopDetailsActivity extends BaseActivity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, "添加关注失败:" + s);
+            DeBugLog.e(TAG, "添加关注失败:" + s);
             Toast.makeText(LoopDetailsActivity.this,
                     getResources().getString(R.string.addAttentionFail), Toast.LENGTH_SHORT).show();
         }
@@ -398,6 +386,7 @@ public class LoopDetailsActivity extends BaseActivity {
     /**
      * 取消关注网络请求回调接口
      */
+    @SuppressWarnings("deprecation")
     class CancelRequestCallBack extends RequestCallBack<String> {
 
         @Override
@@ -415,14 +404,14 @@ public class LoopDetailsActivity extends BaseActivity {
                     Toast.makeText(context, "取消关注失败！", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "取消关注失败:" + e.getMessage());
+                DeBugLog.e(TAG, "取消关注失败:" + e.getMessage());
                 Toast.makeText(context, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, "取消关注失败:" + e.getMessage());
+            DeBugLog.e(TAG, "取消关注失败:" + e.getMessage());
             Toast.makeText(context, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }

@@ -5,12 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,15 +33,14 @@ import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.entity.UserBackData;
 import com.minglang.suiuu.utils.AppConstant;
+import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.DrawableUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.SystemBarTintManager;
 import com.minglang.suiuu.utils.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.io.File;
@@ -112,8 +109,6 @@ public class PersonalSettingActivity extends BaseActivity {
      */
     private ProgressDialog upLoadDialog;
 
-    private ImageLoader imageLoader;
-
     private DisplayImageOptions options;
 
     private UserBackData data;
@@ -131,9 +126,9 @@ public class PersonalSettingActivity extends BaseActivity {
                 case UP_LOAD_SUCCESS:
                     String s = msg.obj.toString();
 
-                    Log.i(TAG, "图片上传成功:" + s);
+                    DeBugLog.i(TAG, "图片上传成功:" + s);
                     netWorkImagePath = AppConstant.IMG_FROM_SUIUU + s;
-                    Log.i(TAG, "NetworkImagePath:" + netWorkImagePath);
+                    DeBugLog.i(TAG, "NetworkImagePath:" + netWorkImagePath);
 
                     SuiuuInfo.WriteNativeHeadImagePath(PersonalSettingActivity.this, nativeImagePath);
                     SuiuuInfo.WriteUserHeadImagePath(PersonalSettingActivity.this, netWorkImagePath);
@@ -170,11 +165,8 @@ public class PersonalSettingActivity extends BaseActivity {
         setContentView(R.layout.activity_person_setting);
 
         initView();
-
         initLoadDefaultData();
-
         ViewAction();
-
     }
 
     /**
@@ -220,10 +212,10 @@ public class PersonalSettingActivity extends BaseActivity {
         sex_man.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sex_man.setCompoundDrawablesWithIntrinsicBounds
-                        (getResources().getDrawable(R.drawable.sex_man), null, null, null);
-                sex_woman.setCompoundDrawablesWithIntrinsicBounds
-                        (getResources().getDrawable(R.drawable.sex_none), null, null, null);
+                sex_man.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_man)),
+                        null, null, null);
+                sex_woman.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_none)),
+                        null, null, null);
                 strGender = "1";
             }
         });
@@ -231,10 +223,10 @@ public class PersonalSettingActivity extends BaseActivity {
         sex_woman.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sex_woman.setCompoundDrawablesWithIntrinsicBounds
-                        (getResources().getDrawable(R.drawable.sex_woman), null, null, null);
-                sex_man.setCompoundDrawablesWithIntrinsicBounds
-                        (getResources().getDrawable(R.drawable.sex_none), null, null, null);
+                sex_woman.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_woman)),
+                        null, null, null);
+                sex_man.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_none)),
+                        null, null, null);
                 strGender = "0";
             }
         });
@@ -269,20 +261,19 @@ public class PersonalSettingActivity extends BaseActivity {
 
                 @Override
                 public void onProgress(String objectKey, int byteCount, int totalSize) {
-                    Log.i(TAG, "图片上传中:" + objectKey + ",byteCount:" + byteCount + ",totalSize:" + totalSize);
+                    DeBugLog.i(TAG, "图片上传中:" + objectKey + ",byteCount:" + byteCount + ",totalSize:" + totalSize);
                     handler.sendEmptyMessage(UP_LOADING);
                 }
 
                 @Override
                 public void onFailure(String s, OSSException e) {
-                    Log.e(TAG, "上传失败:" + s);
-                    Log.e(TAG, "数据更新异常:" + e.getMessage());
+                    DeBugLog.e(TAG, "上传失败:" + s);
+                    DeBugLog.e(TAG, "数据更新异常:" + e.getMessage());
                     handler.sendEmptyMessage(UP_LOAD_FAIL);
                 }
             });
         } catch (Exception e) {
-            e.printStackTrace();
-            Log.e(TAG, "文件未找到:" + e.getMessage());
+            DeBugLog.e(TAG, "文件未找到:" + e.getMessage());
         }
     }
 
@@ -343,11 +334,11 @@ public class PersonalSettingActivity extends BaseActivity {
             if (strGender.equals("1")) {
                 sex_man.setCompoundDrawablesWithIntrinsicBounds
                         (getResources().getDrawable(R.drawable.sex_man), null, null, null);
-                Log.i(TAG, "男");
+                DeBugLog.i(TAG, "男");
             } else if (strGender.equals("0")) {
                 sex_woman.setCompoundDrawablesWithIntrinsicBounds
                         (getResources().getDrawable(R.drawable.sex_woman), null, null, null);
-                Log.i(TAG, "女");
+                DeBugLog.i(TAG, "女");
             }
         }
 
@@ -378,36 +369,22 @@ public class PersonalSettingActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-        /****************设置状态栏颜色*************/
-        SystemBarTintManager mTintManager = new SystemBarTintManager(this);
-        mTintManager.setStatusBarTintEnabled(true);
-        mTintManager.setNavigationBarTintEnabled(false);
-        mTintManager.setTintColor(getResources().getColor(R.color.tr_black));
 
-        SystemBarTintManager.SystemBarConfig systemBarConfig = mTintManager.getConfig();
-
-        int statusBarHeight = systemBarConfig.getStatusBarHeight();
-
-        /**
-         系统版本是否高于4.4
-         */
-        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        RelativeLayout personalRootLayout = (RelativeLayout) findViewById(R.id.personalRootLayout);
         if (isKITKAT) {
-            RelativeLayout personalRootLayout = (RelativeLayout) findViewById(R.id.personalRootLayout);
-            personalRootLayout.setPadding(0, statusBarHeight, 0, 0);
+            if (navigationBarHeight <= 0) {
+                personalRootLayout.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                personalRootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            }
         }
 
         personalSettingBack = (ImageView) findViewById(R.id.personalSettingBack);
-
         save = (TextView) findViewById(R.id.personal_save);
-
         headImageView = (CircleImageView) findViewById(R.id.headImageView);
-
         sex_man = (TextView) findViewById(R.id.personal_setting_man);
         sex_woman = (TextView) findViewById(R.id.personal_setting_woman);
-
         localDetails = (TextView) findViewById(R.id.localDetails);
-
         editNickName = (EditText) findViewById(R.id.editNickName);
         editTrade = (EditText) findViewById(R.id.editTrade);
         editSign = (EditText) findViewById(R.id.editSign);
@@ -420,10 +397,6 @@ public class PersonalSettingActivity extends BaseActivity {
         progressDialog.setMessage("正在更新数据,请稍候...");
         progressDialog.setCanceledOnTouchOutside(false);
 
-        imageLoader = ImageLoader.getInstance();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(this));
-        }
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
                 .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
@@ -435,12 +408,12 @@ public class PersonalSettingActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
-            Log.i(TAG, "select picture cancel");
+            DeBugLog.i(TAG, "select picture cancel");
             return;
         }
 
         if (data == null) {
-            Log.i(TAG, "back data is null!");
+            DeBugLog.i(TAG, "back data is null!");
             return;
         }
 
@@ -448,14 +421,14 @@ public class PersonalSettingActivity extends BaseActivity {
             case AppConstant.KITKAT_LESS:
                 Uri uri = data.getData();
                 nativeImagePath = Utils.getPath(PersonalSettingActivity.this, uri);
-                Log.i(TAG, "uri:" + uri.toString());
+                DeBugLog.i(TAG, "uri:" + uri.toString());
                 Utils.cropPicture(PersonalSettingActivity.this, uri);
                 break;
 
             case AppConstant.KITKAT_ABOVE:
                 Uri uri2 = data.getData();
                 nativeImagePath = Utils.getPath(PersonalSettingActivity.this, uri2);
-                Log.i(TAG, "ImagePath:" + nativeImagePath);
+                DeBugLog.i(TAG, "ImagePath:" + nativeImagePath);
                 Utils.cropPicture(PersonalSettingActivity.this, Uri.fromFile(new File(nativeImagePath)));
                 break;
 
@@ -471,10 +444,8 @@ public class PersonalSettingActivity extends BaseActivity {
                 cityId = data.getStringExtra("cityId");
                 String countryCNname = data.getStringExtra("countryCNname");
                 String cityName = data.getStringExtra("cityName");
-                Log.i(TAG, "countryId:" + countryId);
-                Log.i(TAG, "countryCNname:" + countryCNname);
-                Log.i(TAG, "cityId:" + cityId);
-                Log.i(TAG, "cityName:" + cityName);
+                DeBugLog.i(TAG, "countryId:" + countryId + ",countryCNname:" + countryCNname + ",cityId:"
+                        + cityId + ",cityName:" + cityName);
                 SuiuuInfo.WriteDomicileInfo(this, countryCNname, cityName);
                 localDetails.setText(countryCNname + "," + cityName);
                 break;
@@ -497,9 +468,9 @@ public class PersonalSettingActivity extends BaseActivity {
                 Toast.makeText(PersonalSettingActivity.this,
                         getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
             } else {
-                Log.i(TAG, "更新成功:" + str);
+                DeBugLog.i(TAG, "更新成功:" + str);
                 try {
-                    UserBack userBack = JsonUtil.getInstance().fromJSON(UserBack.class, str);
+                    UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, str);
                     String status = userBack.getStatus();
                     if (!TextUtils.isEmpty(status)) {
                         if (status.equals("1")) {
@@ -516,7 +487,7 @@ public class PersonalSettingActivity extends BaseActivity {
                         }
                     }
                 } catch (Exception e) {
-                    Log.e(TAG, "更新个人资料的返回数据解析失败:" + e.getMessage());
+                    DeBugLog.e(TAG, "更新个人资料的返回数据解析失败:" + e.getMessage());
                     Toast.makeText(PersonalSettingActivity.this,
                             getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
@@ -526,7 +497,7 @@ public class PersonalSettingActivity extends BaseActivity {
         @Override
         public void onFailure(HttpException e, String s) {
 
-            Log.i(TAG, "数据更新异常:" + e.getMessage());
+            DeBugLog.i(TAG, "数据更新异常:" + e.getMessage());
 
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();

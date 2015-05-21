@@ -20,12 +20,12 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.LoopDetailsActivity;
-import com.minglang.suiuu.activity.TestLoopDetailsActivity;
 import com.minglang.suiuu.adapter.AreaAdapter;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
+import com.minglang.suiuu.fragment.main.LoopFragment;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
@@ -136,20 +136,20 @@ public class AreaFragment extends Fragment {
             }
         });
 
-        areaGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                String circleId = list.get(position).getcId();
-                String loopName = list.get(position).getcName();
-                Intent intent = new Intent(getActivity(), TestLoopDetailsActivity.class);
-                intent.putExtra(CIRCLEID, circleId);
-                intent.putExtra(TYPE, "2");
-                intent.putExtra("name", loopName);
-                startActivity(intent);
-                getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-                return false;
-            }
-        });
+//        areaGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                String circleId = list.get(position).getcId();
+//                String loopName = list.get(position).getcName();
+//                Intent intent = new Intent(getActivity(), TestLoopDetailsActivity.class);
+//                intent.putExtra(CIRCLEID, circleId);
+//                intent.putExtra(TYPE, "2");
+//                intent.putExtra("name", loopName);
+//                startActivity(intent);
+//                getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+//                return false;
+//            }
+//        });
     }
 
     /**
@@ -199,13 +199,18 @@ public class AreaFragment extends Fragment {
             }
 
             String str = responseInfo.result;
+            Log.i(LoopFragment.class.getSimpleName(), "地区返回数据:" + str);
             try {
-                LoopBase loopBase = JsonUtil.getInstance().fromJSON(LoopBase.class, str);
+                LoopBase loopBase = JsonUtils.getInstance().fromJSON(LoopBase.class, str);
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
                     list = loopBase.getData().getData();
-                    AreaAdapter areaAdapter = new AreaAdapter(getActivity(), list);
-                    areaAdapter.setScreenParams(screenWidth);
-                    areaGridView.setAdapter(areaAdapter);
+                    if (list != null && list.size() > 0) {
+                        AreaAdapter areaAdapter = new AreaAdapter(getActivity(), list);
+                        areaAdapter.setScreenParams(screenWidth);
+                        areaGridView.setAdapter(areaAdapter);
+                    } else {
+                        Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }

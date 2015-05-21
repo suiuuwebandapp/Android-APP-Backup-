@@ -1,8 +1,6 @@
 package com.minglang.suiuu.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,13 +22,12 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.CommentAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.entity.CommentList;
 import com.minglang.suiuu.entity.LoopArticleCommentList;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +37,7 @@ import java.util.List;
 /**
  * 评论列表
  */
-public class CommentsActivity extends Activity {
+public class CommentsActivity extends BaseActivity {
 
     /**
      * 返回键
@@ -57,11 +54,9 @@ public class CommentsActivity extends Activity {
     private Button bt_send_comment;
     private String articleId;
     private String tripId;
-    private JsonUtil jsonUtil = JsonUtil.getInstance();
+    private JsonUtils jsonUtil = JsonUtils.getInstance();
     private List<LoopArticleCommentList> commentLists;
-    private TextView tv_top_right, tv_top_center;
     private ProgressDialog dialog;
-    private String Verification;
     private String rId;
     private String rTitle;
 
@@ -74,7 +69,7 @@ public class CommentsActivity extends Activity {
         articleId = this.getIntent().getStringExtra("articleId");
         tripId = this.getIntent().getStringExtra("tripId");
 
-        Log.i("suiuu", "articleId = " + articleId+"tripId"+tripId);
+        Log.i("suiuu", "articleId = " + articleId + "tripId" + tripId);
 
         initView();
 
@@ -82,8 +77,9 @@ public class CommentsActivity extends Activity {
         if (!TextUtils.isEmpty(articleId))
             origainDataArticle();
         if (!TextUtils.isEmpty(tripId))
-            origainDataSuiuu(tripId,"1");
+            origainDataSuiuu(tripId, "1");
     }
+
     //根据文章Id请求评论列表
     private void origainDataArticle() {
         dialog.show();
@@ -94,8 +90,9 @@ public class CommentsActivity extends Activity {
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
+
     //根据随UUId请求评论列表
-    private void origainDataSuiuu(String tripId,String pageNumber) {
+    private void origainDataSuiuu(String tripId, String pageNumber) {
         dialog.show();
         RequestParams params = new RequestParams();
         params.addBodyParameter("tripId", tripId);
@@ -115,6 +112,7 @@ public class CommentsActivity extends Activity {
                 finish();
             }
         });
+
         bt_send_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,25 +121,27 @@ public class CommentsActivity extends Activity {
                     Toast.makeText(CommentsActivity.this, "请输入评论内容", Toast.LENGTH_SHORT).show();
                 } else {
                     dialog.show();
-                    if(!TextUtils.isEmpty(articleId)) {
+                    if (!TextUtils.isEmpty(articleId)) {
                         requestArticleCommentSend(commentContent, rId);
-                    }else {
-                        requestSuiuuCommentSend(commentContent,rId,rTitle);
+                    } else {
+                        requestSuiuuCommentSend(commentContent, rId, rTitle);
                     }
                 }
             }
         });
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 LoopArticleCommentList itemComment = commentLists.get(position);
                 et_input_comment.setHint("回复" + itemComment.getNickname());
                 rId = itemComment.getCommentId();
-                rTitle = "@"+itemComment.getNickname();
+                rTitle = "@" + itemComment.getNickname();
 
             }
         });
     }
+
     //文章详情发送评论
     private void requestArticleCommentSend(String commentContent, String rId) {
         RequestParams params = new RequestParams();
@@ -149,22 +149,23 @@ public class CommentsActivity extends Activity {
         params.addBodyParameter("content", commentContent);
         params.addBodyParameter("rId", rId);
         params.addBodyParameter("rTitle", rTitle);
-        params.addBodyParameter(HttpServicePath.key, Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.articleCreateComment, new requestComentSendCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
 
     }
+
     //随游详情发送评论
-    private void requestSuiuuCommentSend(String commentContent, String rId,String rTitle) {
+    private void requestSuiuuCommentSend(String commentContent, String rId, String rTitle) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("tripId", tripId);
-        Log.i("suiuu","请求的tripId="+tripId);
+        Log.i("suiuu", "请求的tripId=" + tripId);
         params.addBodyParameter("content", commentContent);
         params.addBodyParameter("rId", rId);
         params.addBodyParameter("rTitle", rTitle);
-        params.addBodyParameter(HttpServicePath.key, Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.suiuuCreateComment, new requestComentSendCallBack());
         httpRequest.setParams(params);
@@ -178,15 +179,15 @@ public class CommentsActivity extends Activity {
         public void onSuccess(ResponseInfo<String> responseInfo) {
             try {
                 JSONObject json = new JSONObject(responseInfo.result);
-                Log.i("suiuu",responseInfo.result);
+                Log.i("suiuu", responseInfo.result);
                 String status = json.getString("status");
                 String data = json.getString("data");
                 if ("1".equals(status) && "success".equals(data)) {
                     et_input_comment.setText("");
-                    if(TextUtils.isEmpty(tripId)) {
+                    if (TextUtils.isEmpty(tripId)) {
                         origainDataArticle();
-                    }else {
-                        origainDataSuiuu(tripId,"1");
+                    } else {
+                        origainDataSuiuu(tripId, "1");
                     }
                     rId = null;
                     rTitle = null;
@@ -224,7 +225,8 @@ public class CommentsActivity extends Activity {
             CommentList list = jsonUtil.fromJSON(CommentList.class, responseInfo.result);
             if ("1".equals(list.getStatus())) {
                 commentLists = list.getData().getData();
-                mListView.setAdapter(new CommentAdapter(CommentsActivity.this, commentLists));
+                // mListView.setAdapter(new CommentAdapter(CommentsActivity.this, commentLists));
+                adapter.setList(commentLists);
                 dialog.dismiss();
             } else {
                 Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
@@ -244,27 +246,26 @@ public class CommentsActivity extends Activity {
      * 初始化方法
      */
     private void initView() {
-        Verification = SuiuuInfo.ReadVerification(this);
-
-        int statusHeight = Utils.getStatusHeight1(this);
-        /**
-         系统版本是否高于4.4
-         */
-        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         if (isKITKAT) {
             RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.CommentRootLayout);
-            rootLayout.setPadding(0, statusHeight, 0, 0);
+            rootLayout.setPadding(0, statusBarHeight, 0, 0);
         }
+
         back = (ImageView) findViewById(R.id.iv_top_back);
         mListView = (ListView) findViewById(R.id.lv_activity_commentlist);
         et_input_comment = (EditText) findViewById(R.id.et_input_comment);
         bt_send_comment = (Button) findViewById(R.id.bt_send_comment);
+
         adapter = new CommentAdapter(this);
-        tv_top_center = (TextView) findViewById(R.id.tv_top_center);
+        mListView.setAdapter(adapter);
+
+        TextView tv_top_center = (TextView) findViewById(R.id.tv_top_center);
         tv_top_center.setVisibility(View.VISIBLE);
         tv_top_center.setText("评论");
-        tv_top_right = (TextView) findViewById(R.id.tv_top_right);
+
+        TextView tv_top_right = (TextView) findViewById(R.id.tv_top_right);
         tv_top_right.setVisibility(View.GONE);
+
         dialog = new ProgressDialog(this);
         dialog.setMessage(getResources().getString(R.string.load_wait));
         dialog.setCanceledOnTouchOutside(false);

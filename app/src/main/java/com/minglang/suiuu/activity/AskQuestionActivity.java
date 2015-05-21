@@ -1,5 +1,5 @@
 package com.minglang.suiuu.activity;
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +34,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MyListAdapter;
 import com.minglang.suiuu.adapter.ShowGVPictureAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.BaiduMapActivity;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
 import com.minglang.suiuu.customview.mProgressDialog;
@@ -41,12 +42,10 @@ import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +60,7 @@ import java.util.List;
  * 随问和随记的页面
  */
 
-public class AskQuestionActivity extends Activity implements View.OnClickListener {
+public class AskQuestionActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = AskQuestionActivity.class.getSimpleName();
 
@@ -100,19 +99,19 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
     //修改文章进来是否重新选择图片
     private boolean isChangePic = false;
     private List<String> changePicList;
-    private JsonUtil jsonUtil = JsonUtil.getInstance();
+    private JsonUtils jsonUtil = JsonUtils.getInstance();
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case getData_Success:
-                    if (1 == status && picSuccessCount == (articleDetail==null ? listPicture.size():changePicList.size())) {
+                    if (1 == status && picSuccessCount == (articleDetail == null ? listPicture.size() : changePicList.size())) {
                         dialog.dismissDialog();
                         Toast.makeText(AskQuestionActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(AskQuestionActivity.this,LoopArticleActivity.class);
-                        intent.putExtra("articleId",articleDetail==null?dataNum:articleDetail.getArticleId());
-                        intent.putExtra("TAG",TAG);
+                        Intent intent = new Intent(AskQuestionActivity.this, LoopArticleActivity.class);
+                        intent.putExtra("articleId", articleDetail == null ? dataNum : articleDetail.getArticleId());
+                        intent.putExtra("TAG", TAG);
                         startActivity(intent);
                     } else {
                         dialog.dismissDialog();
@@ -136,11 +135,17 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         setContentView(R.layout.activity_ask_question);
         record = getIntent().getIntExtra("record", 0);
 //        articleDetail = (LoopArticleData) getIntent().getSerializableExtra("articleDetail");
-        articleDetail = jsonUtil.fromJSON(LoopArticleData.class,getIntent().getStringExtra("articleDetail"));
-        if (ConstantUtil.isKITKAT) {
-            LinearLayout rootLayout = (LinearLayout)findViewById(R.id.root);
-            rootLayout.setPadding(0, Utils.getStatusHeight1(this), 0, 0);
+        articleDetail = jsonUtil.fromJSON(LoopArticleData.class, getIntent().getStringExtra("articleDetail"));
+
+        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
+        if (isKITKAT) {
+            if (navigationBarHeight <= 0) {
+                rootLayout.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            }
         }
+
         initView();
         ViewAction();
     }
@@ -152,24 +157,26 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         tv_show_your_location.setOnClickListener(this);
         tv_theme_choice.setOnClickListener(this);
         tv_area_choice.setOnClickListener(this);
+
         gv_show_picture.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int picSize = articleDetail != null? changePicList.size() :listPicture.size();
+                int picSize = articleDetail != null ? changePicList.size() : listPicture.size();
                 if (position == picSize) {
-                    if(articleDetail != null) {
+                    if (articleDetail != null) {
                         isChangePic = true;
                     }
                     Intent intent = new Intent(AskQuestionActivity.this, SelectPictureActivity.class);
                     startActivityForResult(intent, 1);
                 } else {
                     Intent showPicture = new Intent(AskQuestionActivity.this, ShowBigImage.class);
-                    showPicture.putExtra("remotepath", articleDetail != null?changePicList.get(position):listPicture.get(position));
+                    showPicture.putExtra("remotepath", articleDetail != null ? changePicList.get(position) : listPicture.get(position));
                     showPicture.putExtra("isHuanXin", false);
                     startActivity(showPicture);
                 }
             }
         });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -179,12 +186,12 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                 } else {
                     tv_area_choice.setText(list.get(position).getcName());
                     areaCid = list.get(position).getcId();
-
                 }
                 popupWindow.dismiss();
             }
         });
     }
+
     //上传图片
     private void updateDate(final String path) {
         new Thread(new Runnable() {
@@ -204,11 +211,13 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                                 handler.sendEmptyMessage(getData_Success);
                             }
                         }
+
                         @Override
                         public void onProgress(String objectKey, int byteCount, int totalSize) {
 
                             Log.i("suiuu", "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
                         }
+
                         @Override
                         public void onFailure(String objectKey, OSSException ossException) {
                             handler.sendEmptyMessage(getData_FAILURE);
@@ -241,13 +250,13 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         tv_show_your_location = (TextView) findViewById(R.id.tv_show_your_location);
         tv_theme_choice = (TextView) findViewById(R.id.tv_theme_choice);
         tv_area_choice = (TextView) findViewById(R.id.tv_area_choice);
-        gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture,"0"));
+        gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture, "0"));
         initPopupWindow();
         if (record == 1) {
             et_search_question.setHint(R.string.image_theme);
             et_question_description.setHint(R.string.activity_description);
         }
-        if(articleDetail!=null ) {
+        if (articleDetail != null) {
             changeArticleFullData();
         }
     }
@@ -260,11 +269,12 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         tv_theme_choice.setVisibility(View.GONE);
         et_search_question.setText(articleDetail.getaTitle());
         et_question_description.setText(articleDetail.getaContent());
-        changePicList = JsonUtil.getInstance().fromJSON(new TypeToken<ArrayList<String>>(){}.getType(),articleDetail.getaImgList());
-        for(String string:changePicList) {
-            Log.i("suiuu","askActivity="+string);
+        changePicList = JsonUtils.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
+        }.getType(), articleDetail.getaImgList());
+        for (String string : changePicList) {
+            Log.i("suiuu", "askActivity=" + string);
         }
-        gv_show_picture.setAdapter(new ShowGVPictureAdapter(this,changePicList,"1" ));
+        gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, changePicList, "1"));
         Log.i("suiuu", "怎么没有设置了");
         tv_show_your_location.setText(articleDetail.getaAddr());
     }
@@ -275,7 +285,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == 9) {
             listPicture = data.getStringArrayListExtra("pictureMessage");
-            gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture,"0"));
+            gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture, "0"));
         } else if (data != null && requestCode == REQUEST_CODE_MAP) {
             double latitude = data.getDoubleExtra("latitude", 0);
             double longitude = data.getDoubleExtra("longitude", 0);
@@ -296,10 +306,10 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         int mId = v.getId();
         //右边完成按钮
         if (mId == R.id.tv_top_right) {
-            if(articleDetail==null) {
+            if (articleDetail == null) {
                 publish();
 
-            }else {
+            } else {
                 //修改文章接口
                 changeArticlePublish();
             }
@@ -316,7 +326,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
 
     //点击发布按钮
     private void publish() {
-        Log.i("suiuu","是发布");
+        Log.i("suiuu", "是发布");
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
         judgeData();
@@ -336,11 +346,11 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         for (String string : listPicture) {
             updateDate(string);
             String substring = string.substring(string.lastIndexOf("/"));
-            picNameList.add(AppConstant.IMG_FROM_SUIUU+"suiuu_content"+substring);
-            Log.i("suiuu","img"+AppConstant.IMG_FROM_SUIUU+"suiuu_content"+substring);
+            picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
+            Log.i("suiuu", "img" + AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
         }
-        params.addBodyParameter("imgList", JsonUtil.getInstance().toJSON(picNameList));
-        if(picNameList.size()>1) {
+        params.addBodyParameter("imgList", JsonUtils.getInstance().toJSON(picNameList));
+        if (picNameList.size() > 1) {
             params.addBodyParameter("img", picNameList.get(0));
         }
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
@@ -349,33 +359,34 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         suHttpRequest.requestNetworkData();
 
     }
+
     //点击发布按钮 修改文章内容
     private void changeArticlePublish() {
-        Log.i("suiuu","是更改发布");
+        Log.i("suiuu", "是更改发布");
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
         judgeData();
         dialog.showDialog();
         params.addBodyParameter(HttpServicePath.key, str);
-        params.addBodyParameter("articleId",articleDetail.getArticleId());
+        params.addBodyParameter("articleId", articleDetail.getArticleId());
         params.addBodyParameter("title", et_search_question.getText().toString().trim());
         params.addBodyParameter("content", et_question_description.getText().toString().trim());
         params.addBodyParameter("addr", tv_show_your_location.getText().toString().trim());
 
         List<String> picNameList = new ArrayList<>();
-        if(isChangePic) {
+        if (isChangePic) {
             for (String string : listPicture) {
                 updateDate(string);
                 String substring = string.substring(string.lastIndexOf("/"));
-                picNameList.add(AppConstant.IMG_FROM_SUIUU+"suiuu_content"+substring);
+                picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
             }
-            params.addBodyParameter("imgList", JsonUtil.getInstance().toJSON(picNameList));
-            if(picNameList.size()>=1) {
+            params.addBodyParameter("imgList", JsonUtils.getInstance().toJSON(picNameList));
+            if (picNameList.size() >= 1) {
                 params.addBodyParameter("img", picNameList.get(0));
             }
-        }else {
+        } else {
             params.addBodyParameter("imgList", articleDetail.getaImgList());
-            params.addBodyParameter("img",articleDetail.getaImg());
+            params.addBodyParameter("img", articleDetail.getaImg());
         }
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.updateLoop, new UpdateLoopCallBack());
@@ -394,7 +405,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                 return;
             }
         }
-        if(articleDetail == null ) {
+        if (articleDetail == null) {
             if ("".equals(tv_theme_choice.getText().toString().trim())) {
                 Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
                 return;
@@ -467,7 +478,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         public void onSuccess(ResponseInfo<String> responseInfo) {
             String str = responseInfo.result;
             LoopBase loopBase;
-            loopBase = JsonUtil.getInstance().fromJSON(LoopBase.class, str);
+            loopBase = JsonUtils.getInstance().fromJSON(LoopBase.class, str);
             if (loopBase != null) {
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
                     list = loopBase.getData().getData();
@@ -499,7 +510,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
             String str = responseInfo.result;
-            LoopBase loopBase = JsonUtil.getInstance().fromJSON(LoopBase.class, str);
+            LoopBase loopBase = JsonUtils.getInstance().fromJSON(LoopBase.class, str);
             if (loopBase != null) {
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
                     list = loopBase.getData().getData();
@@ -529,24 +540,26 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String result = stringResponseInfo.result;
-            Log.i("suiuu","ask="+result);
+            Log.i("suiuu", "ask=" + result);
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
-                dataNum = (String)json.get("data");
-                if(listPicture.size()<1) {
+                dataNum = (String) json.get("data");
+                if (listPicture.size() < 1) {
                     handler.sendEmptyMessage(getData_Success);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+
         @Override
         public void onFailure(HttpException e, String s) {
             handler.sendEmptyMessage(getData_FAILURE);
             Log.e(TAG, "发布文章失败:" + s);
         }
     }
+
     /**
      * 修改圈子文章回调接口
      */
@@ -555,22 +568,22 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String result = stringResponseInfo.result;
-            Log.i("suiuu","ask="+result);
+            Log.i("suiuu", "ask=" + result);
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
-                dataNum = (String)json.get("data");
-                Log.i("suiuu",status+"dataNum"+dataNum);
-               if("success".equals(dataNum)) {
-                   if(!isChangePic) {
-                       Intent intent = new Intent(AskQuestionActivity.this,LoopArticleActivity.class);
-                       intent.putExtra("articleId",articleDetail.getArticleId());
-                       intent.putExtra("TAG",TAG);
-                       startActivity(intent);
-                   }
-               }else {
-                   handler.sendEmptyMessage(getData_FAILURE);
-               }
+                dataNum = (String) json.get("data");
+                Log.i("suiuu", status + "dataNum" + dataNum);
+                if ("success".equals(dataNum)) {
+                    if (!isChangePic) {
+                        Intent intent = new Intent(AskQuestionActivity.this, LoopArticleActivity.class);
+                        intent.putExtra("articleId", articleDetail.getArticleId());
+                        intent.putExtra("TAG", TAG);
+                        startActivity(intent);
+                    }
+                } else {
+                    handler.sendEmptyMessage(getData_FAILURE);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }

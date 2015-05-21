@@ -23,7 +23,7 @@
             android:textSize="18sp"/>
 
         <ImageView
-            android:id="@+id/AttentionBack"
+            android:id="@+id/attentionBack"
             style="@style/backKeyStyle"
             android:src="@drawable/back"/>
     </RelativeLayout>

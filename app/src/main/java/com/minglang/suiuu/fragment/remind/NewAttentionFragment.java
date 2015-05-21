@@ -3,8 +3,6 @@ package com.minglang.suiuu.fragment.remind;
 import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,20 +18,21 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MessageAdapter;
+import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.SuiuuMessage;
 import com.minglang.suiuu.entity.SuiuuMessageData;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import in.srain.cube.util.LocalDisplay;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.header.MaterialHeader;
 
 /**
  * 新关注页面
@@ -41,7 +40,7 @@ import in.srain.cube.views.ptr.header.MaterialHeader;
  * Use the {@link NewAttentionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewAttentionFragment extends Fragment {
+public class NewAttentionFragment extends BaseFragment {
 
     private static final String TAG = NewAttentionFragment.class.getSimpleName();
 
@@ -58,9 +57,13 @@ public class NewAttentionFragment extends Fragment {
 
     private ListView newAttentionList;
 
-    private List<SuiuuMessageData> list;
+    private List<SuiuuMessageData> listAll = new ArrayList<>();
 
     private Dialog dialog;
+
+    private MessageAdapter adapter;
+
+    private int page = 1;
 
     /**
      * Use this factory method to create a new instance of
@@ -89,6 +92,7 @@ public class NewAttentionFragment extends Fragment {
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
@@ -97,14 +101,10 @@ public class NewAttentionFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_new_attention, container, false);
 
         initView(rootView);
-
         ViewAction();
+        getData();
 
-        if (dialog != null) {
-            dialog.show();
-        }
-        getNewAt4Service();
-
+        DeBugLog.i(TAG, "userSign:" + userSign);
         return rootView;
     }
 
@@ -118,27 +118,36 @@ public class NewAttentionFragment extends Fragment {
 
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-                getNewAt4Service();
+                page = 1;
+                getNewAt4Service(page);
             }
         });
 
         newAttentionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SuiuuMessageData data = list.get(position);
+                SuiuuMessageData data = listAll.get(position);
                 String relativeId = data.getRelativeId();
-                Log.i(TAG, "relativeId:" + relativeId);
+                DeBugLog.i(TAG, "relativeId:" + relativeId);
             }
         });
+    }
+
+    private void getData() {
+        if (dialog != null) {
+            dialog.show();
+        }
+        getNewAt4Service(page);
     }
 
     /**
      * 从网络获取数据
      */
-    private void getNewAt4Service() {
+    private void getNewAt4Service(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(TYPE, "2");
         params.addBodyParameter(HttpServicePath.key, verification);
+        params.addBodyParameter("number", String.valueOf(page));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.GetMessageListPath, new NewAttentionRequestCallBack());
@@ -160,11 +169,6 @@ public class NewAttentionFragment extends Fragment {
 
         mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.new_attention_fragment_head_frame);
 
-        MaterialHeader header = new MaterialHeader(getActivity());
-        int[] colors = getResources().getIntArray(R.array.google_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
         header.setPtrFrameLayout(mPtrFrame);
 
         mPtrFrame.setHeaderView(header);
@@ -182,6 +186,8 @@ public class NewAttentionFragment extends Fragment {
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
         newAttentionList = (ListView) rootView.findViewById(R.id.newAttentionList);
+        adapter = new MessageAdapter(getActivity(), "2");
+        newAttentionList.setAdapter(adapter);
     }
 
     private class NewAttentionRequestCallBack extends RequestCallBack<String> {
@@ -194,16 +200,26 @@ public class NewAttentionFragment extends Fragment {
             }
 
             mPtrFrame.refreshComplete();
+
+            if (page == 1) {
+                if (listAll != null && listAll.size() > 0) {
+                    listAll.clear();
+                }
+            }
+
             String str = stringResponseInfo.result;
-            Log.i(TAG, "新关注数据:" + str);
             try {
-                SuiuuMessage message = JsonUtil.getInstance().fromJSON(SuiuuMessage.class, str);
-                list = message.getData().getData();
-                MessageAdapter adapter = new MessageAdapter(getActivity(), list, "2");
-                newAttentionList.setAdapter(adapter);
+                SuiuuMessage message = JsonUtils.getInstance().fromJSON(SuiuuMessage.class, str);
+                List<SuiuuMessageData> list = message.getData().getData();
+                if (list != null && list.size() > 0) {
+                    listAll.addAll(list);
+                    adapter.setList(listAll);
+                } else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                }
             } catch (Exception e) {
-                Toast.makeText(getActivity(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "新关注数据请求失败:" + e.getMessage());
+                DeBugLog.e(TAG, "新关注数据请求失败:" + e.getMessage());
+                Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -215,8 +231,8 @@ public class NewAttentionFragment extends Fragment {
             }
 
             mPtrFrame.refreshComplete();
-            Log.e(TAG, "新关注数据请求失败:" + s);
-            Toast.makeText(getActivity(), "网络异常，请稍后再试！", Toast.LENGTH_SHORT).show();
+            DeBugLog.e(TAG, "新关注数据请求失败:" + s);
+            Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
 }

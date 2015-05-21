@@ -3,7 +3,6 @@ package com.minglang.suiuu.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -26,8 +25,9 @@ import com.minglang.suiuu.entity.CountryData;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.CharacterParser;
 import com.minglang.suiuu.utils.CountryNameComparator;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
@@ -42,7 +42,7 @@ public class SelectCountryActivity extends BaseActivity {
 
     private ImageView back;
 
-    private TextView next;
+//    private TextView next;
 
     private SideBar sideBar;
 
@@ -85,16 +85,16 @@ public class SelectCountryActivity extends BaseActivity {
             }
         });
 
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SelectCountryActivity.this, SelectCityActivity.class);
-                intent.putExtra("countryId", selectCountryId);
-                intent.putExtra("countryCNname", selectCountryCNname);
+//        next.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(SelectCountryActivity.this, SelectCityActivity.class);
+//                intent.putExtra("countryId", selectCountryId);
+//                intent.putExtra("countryCNname", selectCountryCNname);
 //                intent.putExtra("countryName2", selectCountryUSname);
-                startActivityForResult(intent, AppConstant.SELECT_CITY_OK);
-            }
-        });
+//                startActivityForResult(intent, AppConstant.SELECT_CITY_OK);
+//            }
+//        });
 
         sideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override
@@ -113,8 +113,15 @@ public class SelectCountryActivity extends BaseActivity {
                 selectCountryId = data.getId();
                 selectCountryCNname = data.getCname();
                 selectCountryUSname = data.getEname();
+
                 Toast.makeText(SelectCountryActivity.this,
                         "您选择的国家为:" + selectCountryCNname, Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(SelectCountryActivity.this, SelectCityActivity.class);
+                intent.putExtra("countryId", selectCountryId);
+                intent.putExtra("countryCNname", selectCountryCNname);
+                intent.putExtra("countryName2", selectCountryUSname);
+                startActivityForResult(intent, AppConstant.SELECT_CITY_OK);
             }
         });
 
@@ -147,10 +154,10 @@ public class SelectCountryActivity extends BaseActivity {
             String countryCNname = data.getStringExtra("countryCNname");
             String cityId = data.getStringExtra("cityId");
             String cityName = data.getStringExtra("cityName");
-            Log.i(TAG, "countryId:" + countryId);
-            Log.i(TAG,"countryCNname:"+countryCNname);
-            Log.i(TAG, "cityId:" + cityId);
-            Log.i(TAG, "cityName:" + cityName);
+            DeBugLog.i(TAG, "countryId:" + countryId);
+            DeBugLog.i(TAG, "countryCNname:" + countryCNname);
+            DeBugLog.i(TAG, "cityId:" + cityId);
+            DeBugLog.i(TAG, "cityName:" + cityName);
 
             setResult(RESULT_OK, data);
             finish();
@@ -170,7 +177,7 @@ public class SelectCountryActivity extends BaseActivity {
         countryNameComparator = new CountryNameComparator();
 
         back = (ImageView) findViewById(R.id.select_country_back);
-        next = (TextView) findViewById(R.id.select_country_next);
+//        next = (TextView) findViewById(R.id.select_country_next);
         TextView textDialog = (TextView) findViewById(R.id.select_country_dialog);
         sideBar = (SideBar) findViewById(R.id.select_country_index_side_bar);
         sideBar.setTextView(textDialog);
@@ -206,7 +213,7 @@ public class SelectCountryActivity extends BaseActivity {
             }
             String str = stringResponseInfo.result;
             try {
-                Country country = JsonUtil.getInstance().fromJSON(Country.class, str);
+                Country country = JsonUtils.getInstance().fromJSON(Country.class, str);
                 List<CountryData> countryDataList = country.getData();
                 if (countryDataList != null && countryDataList.size() > 0) {
                     list = TransformationData(countryDataList);
@@ -218,7 +225,7 @@ public class SelectCountryActivity extends BaseActivity {
                             getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "解析失败:" + e.getMessage());
+                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
                 Toast.makeText(SelectCountryActivity.this,
                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
@@ -226,7 +233,7 @@ public class SelectCountryActivity extends BaseActivity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, "国家数据请求失败:" + s);
+            DeBugLog.e(TAG, "国家数据请求失败:" + s);
 
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();

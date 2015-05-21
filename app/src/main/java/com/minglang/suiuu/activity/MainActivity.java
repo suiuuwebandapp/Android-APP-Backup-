@@ -9,15 +9,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,10 +55,8 @@ import com.minglang.suiuu.fragment.main.LoopFragment;
 import com.minglang.suiuu.fragment.main.MainFragment;
 import com.minglang.suiuu.fragment.main.RouteFragment;
 import com.minglang.suiuu.utils.ConstantUtil;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.SystemBarTintManager;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -74,7 +68,7 @@ import java.util.List;
  */
 public class MainActivity extends BaseActivity {
     protected NotificationManager notificationManager;
-    private static final int notifiId = 11;
+    private static final int notificationId = 11;
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String[] TITLE = {"收藏", "关注", "消息", "粉丝", "设置", "退出"};
@@ -110,8 +104,6 @@ public class MainActivity extends BaseActivity {
      */
     private ImageView sendMsg;
 
-    private FragmentManager fm;
-
     /**
      * 主页页面
      */
@@ -133,31 +125,6 @@ public class MainActivity extends BaseActivity {
     private ChatAllHistoryFragment conversationFragment;
 
     private ListView mListView;
-
-    /**
-     * 屏幕宽度
-     */
-    private int screenWidth;
-
-    /**
-     * 状态栏控制器
-     */
-    private SystemBarTintManager mTintManager;
-
-    /**
-     * 状态栏高度
-     */
-    private int statusBarHeight;
-
-    /**
-     * 虚拟按键高度
-     */
-    private int navigationBarHeight;
-
-    /**
-     * 系统版本是否高于4.4
-     */
-    private boolean isKITKAT;
 
     /**
      * 是否有虚拟按键
@@ -202,8 +169,6 @@ public class MainActivity extends BaseActivity {
     private ImageView iv_conversation;
     private TextView tv_conversation_text;
     private RelativeLayout titleLayout;
-
-    private ImageLoader imageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -630,48 +595,9 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * 初始化得到各种Bar高度
-     */
-    private void initNumber() {
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        screenWidth = dm.widthPixels;
-
-        //屏幕高度
-        int screenHeight = dm.heightPixels;
-        Log.i(TAG, "屏幕宽度:" + String.valueOf(screenWidth));
-        Log.i(TAG, "屏幕高度:" + String.valueOf(screenHeight));
-
-        mTintManager = new SystemBarTintManager(this);
-        SystemBarTintManager.SystemBarConfig systemBarConfig = mTintManager.getConfig();
-
-        //虚拟按键高度
-        navigationBarHeight = systemBarConfig.getNavigationBarHeight();
-        Log.i(TAG, "虚拟按键高度:" + String.valueOf(navigationBarHeight));
-
-        //虚拟按键宽度(?)
-        int navigationBarWidth = systemBarConfig.getNavigationBarWidth();
-        Log.i(TAG, "NavigationBarWidth:" + String.valueOf(navigationBarWidth));
-
-        //状态栏高度
-        statusBarHeight = systemBarConfig.getStatusBarHeight();
-        Log.i(TAG, "状态栏高度:" + String.valueOf(statusBarHeight));
-
-        isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
-        isNavigationBar = systemBarConfig.hasNavigtionBar();
-
-        imageLoader = ImageLoader.getInstance();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(this));
-        }
-    }
-
-    /**
      * 初始化方法
      */
     private void initView() {
-        initNumber();
         conversationFragment = new ChatAllHistoryFragment();
 
         im_search = (ImageView) findViewById(R.id.mainPagerSearch);
@@ -681,30 +607,27 @@ public class MainActivity extends BaseActivity {
         errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
         msgCount = (TextView) findViewById(R.id.unread_msg_number);
         titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
-        /****************设置状态栏颜色*************/
-        mTintManager.setStatusBarTintEnabled(true);
-        mTintManager.setNavigationBarTintEnabled(false);
-        mTintManager.setTintColor(getResources().getColor(R.color.tr_black));
+
         /***************Activity可控制View设置padding****************/
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mDrawerLayout.setFocusableInTouchMode(true);
-        RelativeLayout mainShowLayout = (RelativeLayout) findViewById(R.id.mainShowLayout);
 
+        RelativeLayout mainShowLayout = (RelativeLayout) findViewById(R.id.mainShowLayout);
         if (isNavigationBar) {
             if (isKITKAT) {
                 mDrawerLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
                 mainShowLayout.setPadding(0, 0, 0, navigationBarHeight);
-                Log.i(TAG, "4.4以上，有虚拟按键");
+                DeBugLog.i(TAG, "4.4以上，有虚拟按键");
             } else {
 //                mDrawerLayout.setPadding(0, 0, 0, navigationBarHeight);
-                Log.i(TAG, "4.4以下，有虚拟按键");
+                DeBugLog.i(TAG, "4.4以下，有虚拟按键");
             }
         } else {
             if (isKITKAT) {
                 mDrawerLayout.setPadding(0, statusBarHeight, 0, 0);
-                Log.i(TAG, "4.4以上，无虚拟按键");
+                DeBugLog.i(TAG, "4.4以上，无虚拟按键");
             } else {
-                Log.i(TAG, "4.4以下，无虚拟按键");
+                DeBugLog.i(TAG, "4.4以下，无虚拟按键");
             }
         }
 
@@ -724,7 +647,6 @@ public class MainActivity extends BaseActivity {
         }
 
         ViewGroup.LayoutParams params = slideLayout.getLayoutParams();
-
         params.width = screenWidth / 4 * 3;
         slideLayout.setLayoutParams(params);
 
@@ -776,9 +698,7 @@ public class MainActivity extends BaseActivity {
         MainSliderAdapter mainSliderAdapter = new MainSliderAdapter(this, stringList);
         mListView.setAdapter(mainSliderAdapter);
 
-        fm = getSupportFragmentManager();
         mainFragment = new MainFragment();
-
         LoadDefaultFragment();
 
         initAnimation();
@@ -882,12 +802,6 @@ public class MainActivity extends BaseActivity {
         public void onAnimationStart(Animation animation) {
 
         }
-    }
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     //账号被移除
@@ -1072,7 +986,7 @@ public class MainActivity extends BaseActivity {
             EMLog.d(TAG, "收到透传消息");
             //获取cmd message对象
             String msgId = intent.getStringExtra("msgid");
-            Log.i(TAG, "msgId:" + msgId);
+            DeBugLog.i(TAG, "msgId:" + msgId);
             EMMessage message = intent.getParcelableExtra("message");
             //获取消息body
             CmdMessageBody cmdMsgBody = (CmdMessageBody) message.getBody();
@@ -1113,12 +1027,12 @@ public class MainActivity extends BaseActivity {
         //必须设置PendingIntent，否则在2.3的机器上会有bug
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, notifiId, intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, notificationId, intent, PendingIntent.FLAG_ONE_SHOT);
         mBuilder.setContentIntent(pendingIntent);
 
         Notification notification = mBuilder.build();
-        notificationManager.notify(notifiId, notification);
-        notificationManager.cancel(notifiId);
+        notificationManager.notify(notificationId, notification);
+        notificationManager.cancel(notificationId);
     }
 
     /**
@@ -1197,17 +1111,17 @@ public class MainActivity extends BaseActivity {
         try {
             unregisterReceiver(msgReceiver);
         } catch (Exception ignored) {
-            Log.e(TAG, ignored.getMessage());
+            DeBugLog.e(TAG, ignored.getMessage());
         }
         try {
             unregisterReceiver(ackMessageReceiver);
         } catch (Exception ignored) {
-            Log.e(TAG, ignored.getMessage());
+            DeBugLog.e(TAG, ignored.getMessage());
         }
         try {
             unregisterReceiver(cmdMessageReceiver);
         } catch (Exception ignored) {
-            Log.e(TAG, ignored.getMessage());
+            DeBugLog.e(TAG, ignored.getMessage());
         }
 
         // try {

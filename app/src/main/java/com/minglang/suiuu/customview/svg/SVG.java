@@ -1,4 +1,4 @@
-package com.minglang.suiuu.utils;
+package com.minglang.suiuu.customview.svg;
 
 import android.graphics.Picture;
 import android.graphics.RectF;

@@ -32,13 +32,19 @@ public class MessageAdapter extends BaseAdapter {
 
     private String type;
 
-    public MessageAdapter(Context context, List<SuiuuMessageData> list, String type) {
+    public MessageAdapter(Context context, String type) {
         this.context = context;
-        this.list = list;
         this.type = type;
 
         imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        if (!imageLoader.isInited()) {
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        }
+    }
+
+    public void setList(List<SuiuuMessageData> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     @Override

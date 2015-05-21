@@ -1,4 +1,4 @@
-package com.minglang.suiuu.utils;
+package com.minglang.suiuu.customview.svg;
 
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -13,6 +13,8 @@ import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.Log;
+
+import com.minglang.suiuu.utils.ParserHelper;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;

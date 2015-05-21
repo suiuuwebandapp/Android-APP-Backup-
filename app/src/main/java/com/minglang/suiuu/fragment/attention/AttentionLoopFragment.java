@@ -23,7 +23,7 @@ import com.minglang.suiuu.adapter.AttentionLoopAdapter;
 import com.minglang.suiuu.entity.AttentionLoop;
 import com.minglang.suiuu.entity.AttentionLoopData;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
@@ -256,7 +256,7 @@ public class AttentionLoopFragment extends Fragment {
             String str = stringResponseInfo.result;
             Log.i(TAG, "关注的圈子的数据:" + str);
             try {
-                AttentionLoop attentionLoop = JsonUtil.getInstance().fromJSON(AttentionLoop.class, str);
+                AttentionLoop attentionLoop = JsonUtils.getInstance().fromJSON(AttentionLoop.class, str);
                 if (attentionLoop.getStatus().equals("1")) {
                     List<AttentionLoopData> list = attentionLoop.getData().getData();
                     if (list != null && list.size() > 0) {

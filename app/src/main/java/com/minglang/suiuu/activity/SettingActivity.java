@@ -2,7 +2,7 @@ package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -20,9 +20,9 @@ import com.minglang.suiuu.adapter.SettingAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.chat.DemoApplication;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,17 +32,13 @@ public class SettingActivity extends BaseActivity {
 
     private static final String[] SETTINGS = {"个人设置", "通用设置", "检查更新", "联系我们", "反馈", "去评分"};
 
-    private List<String> stringList;
-
     private ImageView settingBack;
 
     private ListView settingList;
 
     private Button btn_logout;
 
-    private TextView tv_top_right;
-
-    private TextView tv_top_center;
+//    private TextView tv_top_right;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,20 +78,23 @@ public class SettingActivity extends BaseActivity {
                         break;
 
                     case 3:
-                        Intent intent3 = new Intent(SettingActivity.this, ContactUsActivity.class);
-                        startActivity(intent3);
+                        startActivity(new Intent(SettingActivity.this, ContactUsActivity.class));
                         break;
 
                     case 4:
-                        Intent intent4 = new Intent(SettingActivity.this, FeedbackActivity.class);
-                        startActivity(intent4);
+                        startActivity(new Intent(SettingActivity.this, FeedbackActivity.class));
                         break;
 
                     case 5:
+                        String mAddress = "market://details?id=" + getPackageName();
+                        Intent marketIntent = new Intent("android.intent.action.VIEW");
+                        marketIntent.setData(Uri.parse(mAddress));
+                        startActivity(marketIntent);
                         break;
                 }
             }
         });
+
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,39 +110,33 @@ public class SettingActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-        tv_top_center = (TextView) findViewById(R.id.tv_top_center);
+        TextView tv_top_center = (TextView) findViewById(R.id.tv_top_center);
         tv_top_center.setVisibility(View.VISIBLE);
         tv_top_center.setText(R.string.setting);
-        tv_top_right = (TextView) findViewById(R.id.tv_top_right);
-        tv_top_right.setVisibility(View.INVISIBLE);
+
+//        tv_top_right = (TextView) findViewById(R.id.tv_top_right);
+//        tv_top_right.setVisibility(View.INVISIBLE);
+
         btn_logout = (Button) findViewById(R.id.btn_logout);
         if (!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())) {
             btn_logout.setText(getString(R.string.button_logout));
         }
-        SystemBarTintManager mTintManager = new SystemBarTintManager(this);
-        mTintManager.setStatusBarTintEnabled(true);
-        mTintManager.setNavigationBarTintEnabled(false);
-        mTintManager.setTintColor(getResources().getColor(R.color.tr_black));
 
-        int statusBarHeight = mTintManager.getConfig().getStatusBarHeight();
-
-        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        LinearLayout settingLayout = (LinearLayout) findViewById(R.id.settingRootLayout);
         if (isKITKAT) {
-            LinearLayout settingLayout = (LinearLayout) findViewById(R.id.settingRootLayout);
-            settingLayout.setPadding(0, statusBarHeight, 0, 0);
+            if (navigationBarHeight <= 0) {
+                settingLayout.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                settingLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            }
         }
 
         settingBack = (ImageView) findViewById(R.id.iv_top_back);
         settingList = (ListView) findViewById(R.id.settingList);
 
-        stringList = new ArrayList<>();
-
-        for (String s : SETTINGS) {
-            stringList.add(s);
-        }
-
+        List<String> stringList = new ArrayList<>();
+        Collections.addAll(stringList, SETTINGS);
         SettingAdapter adapter = new SettingAdapter(this, stringList);
-
         settingList.setAdapter(adapter);
 
     }
@@ -178,22 +171,4 @@ public class SettingActivity extends BaseActivity {
             }
         });
     }
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
 }

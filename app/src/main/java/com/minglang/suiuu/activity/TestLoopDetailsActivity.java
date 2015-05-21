@@ -20,7 +20,7 @@ import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.entity.LoopDetails;
 import com.minglang.suiuu.entity.LoopDetailsDataList;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
@@ -128,7 +128,7 @@ public class TestLoopDetailsActivity extends BaseActivity {
 
             String str = stringResponseInfo.result;
             try {
-                LoopDetails loopDetails = JsonUtil.getInstance().fromJSON(LoopDetails.class, str);
+                LoopDetails loopDetails = JsonUtils.getInstance().fromJSON(LoopDetails.class, str);
                 List<LoopDetailsDataList> list = loopDetails.getData().getData();
                 if (list != null && list.size() > 0) {
                     listAll.addAll(list);

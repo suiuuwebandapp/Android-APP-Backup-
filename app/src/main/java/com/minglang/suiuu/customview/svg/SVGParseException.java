@@ -1,4 +1,4 @@
-package com.minglang.suiuu.utils;
+package com.minglang.suiuu.customview.svg;
 
 /**
  * Runtime exception thrown when there is a problem parsing an SVG.

@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,16 +30,17 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuDetailActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
+import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.PullToRefreshView;
 import com.minglang.suiuu.customview.mProgressDialog;
 import com.minglang.suiuu.entity.SuiuuDataList;
 import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.Date;
 import java.util.List;
@@ -49,10 +48,10 @@ import java.util.List;
 /**
  * 随游页面
  */
-public class RouteFragment extends Fragment implements PullToRefreshView.OnHeaderRefreshListener, PullToRefreshView.OnFooterRefreshListener {
+public class RouteFragment extends BaseFragment implements PullToRefreshView.OnHeaderRefreshListener, PullToRefreshView.OnFooterRefreshListener {
     private TextView titleInfo;
     private ListView lv_suiuu;
-    private JsonUtil jsonUtil = JsonUtil.getInstance();
+    private JsonUtils jsonUtil = JsonUtils.getInstance();
     private List<SuiuuDataList> suiuuDataList;
 
     /**
@@ -79,7 +78,7 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
         View rootView = inflater.inflate(R.layout.fragment_route, null);
         if (ConstantUtil.isKITKAT) {
             RelativeLayout rootLayout = (RelativeLayout) rootView.findViewById(R.id.suiuu_root);
-            rootLayout.setPadding(0, Utils.getStatusHeight1(getActivity()), 0, 0);
+            rootLayout.setPadding(0, new SystemBarTintManager(getActivity()).getConfig().getStatusBarHeight(), 0, 0);
         }
         innitView(rootView);
         loadDate(null, null, null, page);
@@ -92,15 +91,15 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
     }
 
     private void viewAction() {
-        DisplayMetrics dm = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        Log.i("suiuu","dm.heightPixels="+dm.heightPixels+"tabSelect.getHeight()="+tabSelect.getHeight());
-        final Animation transAnim = new TranslateAnimation(0,0, dm.heightPixels, dm.heightPixels-tabSelect.getHeight());
+
+        final Animation transAnim = new TranslateAnimation(0, 0, screenHeight, screenHeight - tabSelect.getHeight());
         transAnim.setFillAfter(true);
         transAnim.setDuration(3500);
-        final Animation transAnimTo = new TranslateAnimation(0,0, dm.heightPixels-tabSelect.getHeight(), dm.heightPixels);
+
+        final Animation transAnimTo = new TranslateAnimation(0, 0, screenHeight - tabSelect.getHeight(), screenHeight);
         transAnim.setFillAfter(true);
         transAnim.setDuration(3500);
+
         lv_suiuu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -109,6 +108,7 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
                 startActivity(intent);
             }
         });
+
         tv_nodata_load.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,8 +117,8 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
                 tv_nodata_load.setVisibility(View.GONE);
             }
         });
-        lv_suiuu.setOnScrollListener(new AbsListView.OnScrollListener() {
 
+        lv_suiuu.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -138,12 +138,13 @@ public class RouteFragment extends Fragment implements PullToRefreshView.OnHeade
                         break;
                 }
             }
+
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem == 0 || firstVisibleItem == totalItemCount-4) {
+                if (firstVisibleItem == 0 || firstVisibleItem == totalItemCount - 4) {
                     tabSelect.startAnimation(transAnim);
                     tabSelect.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     tabSelect.setVisibility(View.GONE);
                     tabSelect.startAnimation(transAnimTo);
                 }

@@ -24,7 +24,7 @@ import com.minglang.suiuu.adapter.AttentionUserAdapter;
 import com.minglang.suiuu.entity.AttentionUser;
 import com.minglang.suiuu.entity.AttentionUserData;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
 import java.util.ArrayList;
@@ -247,7 +247,7 @@ public class AttentionUserFragment extends Fragment {
             String str = stringResponseInfo.result;
             Log.i(TAG, "关注用户的数据:" + str);
             try {
-                AttentionUser attentionUser = JsonUtil.getInstance().fromJSON(AttentionUser.class, str);
+                AttentionUser attentionUser = JsonUtils.getInstance().fromJSON(AttentionUser.class, str);
                 if (attentionUser.getStatus().equals("1")) {
                     List<AttentionUserData> list = attentionUser.getData().getData();
                     if (list != null && list.size() > 0) {

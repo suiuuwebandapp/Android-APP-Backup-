@@ -8,12 +8,12 @@ import android.util.DisplayMetrics;
  */
 public class ScreenUtils {
 
-    private Activity activity;
+//    private Activity activity;
 
     private int screenWidth, screenHeight;
 
     public ScreenUtils(Activity activity) {
-        this.activity = activity;
+//        this.activity = activity;
         DisplayMetrics dm = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
         screenWidth = dm.widthPixels;

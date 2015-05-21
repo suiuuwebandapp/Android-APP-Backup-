@@ -4,12 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
@@ -26,8 +24,9 @@ import com.minglang.suiuu.entity.CityAssistData;
 import com.minglang.suiuu.entity.CityData;
 import com.minglang.suiuu.utils.CharacterParser;
 import com.minglang.suiuu.utils.CityNameComparator;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
@@ -42,7 +41,7 @@ public class SelectCityActivity extends BaseActivity {
 
     private ImageView back;
 
-    private TextView complete;
+//    private TextView complete;
 
     private SideBar sideBar;
 
@@ -115,23 +114,23 @@ public class SelectCityActivity extends BaseActivity {
             }
         });
 
-        complete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(selectCityId) && TextUtils.isEmpty(selectCityName)) {
-                    Toast.makeText(SelectCityActivity.this, "请选择城市!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent();
-                    intent.putExtra("countryId", countryId);
-                    intent.putExtra("countryCNname", countryCNname);
+//        complete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (TextUtils.isEmpty(selectCityId) && TextUtils.isEmpty(selectCityName)) {
+//                    Toast.makeText(SelectCityActivity.this, "请选择城市!", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Intent intent = new Intent();
+//                    intent.putExtra("countryId", countryId);
+//                    intent.putExtra("countryCNname", countryCNname);
 //                    intent.putExtra("countryName2", countryUSname);
-                    intent.putExtra("cityId", selectCityId);
-                    intent.putExtra("cityName", selectCityName);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-            }
-        });
+//                    intent.putExtra("cityId", selectCityId);
+//                    intent.putExtra("cityName", selectCityName);
+//                    setResult(RESULT_OK, intent);
+//                    finish();
+//                }
+//            }
+//        });
 
         sideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override
@@ -149,8 +148,23 @@ public class SelectCityActivity extends BaseActivity {
                 CityAssistData data = list.get(position);
                 selectCityName = data.getCname();
                 selectCityId = data.getId();
+
                 Toast.makeText(SelectCityActivity.this,
                         "您选择的城市为:" + selectCityName, Toast.LENGTH_LONG).show();
+
+                if (TextUtils.isEmpty(selectCityId) && TextUtils.isEmpty(selectCityName)) {
+                    Toast.makeText(SelectCityActivity.this, "请选择城市!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent();
+                    intent.putExtra("countryId", countryId);
+                    intent.putExtra("countryCNname", countryCNname);
+//                    intent.putExtra("countryName2", countryUSname);
+                    intent.putExtra("cityId", selectCityId);
+                    intent.putExtra("cityName", selectCityName);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+
             }
         });
     }
@@ -161,7 +175,7 @@ public class SelectCityActivity extends BaseActivity {
     private void initView() {
 
         back = (ImageView) findViewById(R.id.select_city_back);
-        complete = (TextView) findViewById(R.id.select_city_complete);
+//        complete = (TextView) findViewById(R.id.select_city_complete);
         cityListView = (ListView) findViewById(R.id.select_city_list_view);
         sideBar = (SideBar) findViewById(R.id.select_city_sidebar);
 
@@ -203,14 +217,14 @@ public class SelectCityActivity extends BaseActivity {
                 Toast.makeText(SelectCityActivity.this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
             } else {
                 try {
-                    City city = JsonUtil.getInstance().fromJSON(City.class, str);
+                    City city = JsonUtils.getInstance().fromJSON(City.class, str);
                     List<CityData> dataList = city.getData();
                     list = TransformationData(dataList);
                     Collections.sort(list, cityNameComparator);
                     adapter = new SelectCityAdapter(SelectCityActivity.this, list);
                     cityListView.setAdapter(adapter);
                 } catch (Exception e) {
-                    Log.e(TAG, "数据解析错误:" + e.getMessage());
+                    DeBugLog.e(TAG, "数据解析错误:" + e.getMessage());
                     Toast.makeText(SelectCityActivity.this,
                             getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
@@ -223,7 +237,7 @@ public class SelectCityActivity extends BaseActivity {
                 progressDialog.dismiss();
             }
 
-            Log.e(TAG, "请求失败:" + s);
+            DeBugLog.e(TAG, "请求失败:" + s);
             Toast.makeText(SelectCityActivity.this,
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }

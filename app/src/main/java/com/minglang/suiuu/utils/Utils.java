@@ -17,8 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.minglang.suiuu.R;
-
 public class Utils {
 
     private static final String TAG = Utils.class.getSimpleName();
@@ -44,7 +42,7 @@ public class Utils {
      * dp转像素
      *
      * @param dpValue dp数值
-     * @return
+     * @return 对应像素值
      */
     public int dip2px(float dpValue) {
         float scale = context.getResources().getDisplayMetrics().density;
@@ -55,7 +53,7 @@ public class Utils {
      * 像素转dp
      *
      * @param pxValue 像素数值
-     * @return
+     * @return 对应dp值
      */
     public int px2dip(float pxValue) {
         float scale = context.getResources().getDisplayMetrics().density;
@@ -82,20 +80,6 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return statusHeight;
-    }
-
-    /**
-     * 得到状态栏高度另一种方法
-     * @param contexts
-     * @return
-     */
-    public static int getStatusHeight1(Context contexts) {
-        SystemBarTintManager mTintManager = new SystemBarTintManager((Activity) contexts);
-        mTintManager.setStatusBarTintEnabled(true);
-        mTintManager.setNavigationBarTintEnabled(false);
-        mTintManager.setTintColor(contexts.getResources().getColor(R.color.tr_black));
-        int statusHeight = mTintManager.getConfig().getStatusBarHeight();
         return statusHeight;
     }
 
@@ -172,8 +156,6 @@ public class Utils {
                     return Environment.getExternalStorageDirectory() + "/"
                             + split[1];
                 }
-
-                // TODO handle non-primary volumes
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
@@ -185,25 +167,31 @@ public class Utils {
                 return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
-            else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
+            else {
+                if (isMediaDocument(uri)) {
+                    final String docId = DocumentsContract.getDocumentId(uri);
+                    final String[] split = docId.split(":");
+                    final String type = split[0];
 
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                    Uri contentUri = null;
+                    switch (type) {
+                        case "image":
+                            contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                            break;
+                        case "video":
+                            contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                            break;
+                        case "audio":
+                            contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                            break;
+                    }
+
+                    final String selection = "_id=?";
+                    final String[] selectionArgs = new String[]{split[1]};
+
+                    return getDataColumn(context, contentUri, selection,
+                            selectionArgs);
                 }
-
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{split[1]};
-
-                return getDataColumn(context, contentUri, selection,
-                        selectionArgs);
             }
         }
         // MediaStore (and general)
@@ -292,7 +280,8 @@ public class Utils {
 
     /**
      * Scroll 套 listView 重新计算listView高度
-     * @param listView
+     *
+     * @param listView 要计算的ListView
      */
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();

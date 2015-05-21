@@ -7,13 +7,13 @@ import com.google.gson.GsonBuilder;
 
 import java.lang.reflect.Type;
 
-public class JsonUtil {
-	public static final String TAG = JsonUtil.class.getName();
+public class JsonUtils {
+	public static final String TAG = JsonUtils.class.getName();
 	private static Object lock = new Object();
-	private static JsonUtil jsonUtil;
+	private static JsonUtils jsonUtil;
 	private Gson gson;
 
-	private JsonUtil() {
+	private JsonUtils() {
 		GsonBuilder gb = new GsonBuilder();
 		gb.serializeNulls();
 		gb.setExclusionStrategies(new ExclusionStrategy() {
@@ -58,10 +58,10 @@ public class JsonUtil {
 		return gson.fromJson(json, type);
 	}
 
-	public static JsonUtil getInstance() {
+	public static JsonUtils getInstance() {
 		synchronized (lock) {
 			if (jsonUtil == null) {
-				jsonUtil = new JsonUtil();
+				jsonUtil = new JsonUtils();
 			}
 		}
 		return jsonUtil;

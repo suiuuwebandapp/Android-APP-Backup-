@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -28,8 +27,9 @@ import com.minglang.suiuu.entity.OtherUser;
 import com.minglang.suiuu.entity.OtherUserDataArticle;
 import com.minglang.suiuu.entity.OtherUserDataInfo;
 import com.minglang.suiuu.entity.TravelList;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -123,10 +123,10 @@ public class PersonalActivity extends BaseActivity {
      * @param str Json字符串
      */
     private void userData2View(String str) {
-        Log.i(TAG, "个人主页数据:" + str);
+        DeBugLog.i(TAG, "个人主页数据:" + str);
         if (!TextUtils.isEmpty(str)) {
             try {
-                OtherUser user = JsonUtil.getInstance().fromJSON(OtherUser.class, str);
+                OtherUser user = JsonUtils.getInstance().fromJSON(OtherUser.class, str);
                 OtherUserDataInfo info = user.getData().getUser();
 
                 String name = info.getNickname();
@@ -162,7 +162,7 @@ public class PersonalActivity extends BaseActivity {
                     personalPostAdapter.setList(articleList);
                 }
             } catch (Exception e) {
-                Log.e(TAG, "数据解析异常:" + e.getMessage());
+                DeBugLog.e(TAG, "数据解析异常:" + e.getMessage());
                 Toast.makeText(this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
 
@@ -276,8 +276,8 @@ public class PersonalActivity extends BaseActivity {
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
 
-        Log.i(TAG, "userSign:" + userSign);
-        Log.i(TAG, "verification:" + verification);
+        DeBugLog.i(TAG, "userSign:" + userSign);
+        DeBugLog.i(TAG, "verification:" + verification);
 
         suiuuGrid = new GridView(this);
         suiuuGrid.setHorizontalSpacing(10);
@@ -320,7 +320,7 @@ public class PersonalActivity extends BaseActivity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, "数据请求失败:" + s);
+            DeBugLog.e(TAG, "数据请求失败:" + s);
 
             if (dialog.isShowing()) {
                 dialog.dismiss();

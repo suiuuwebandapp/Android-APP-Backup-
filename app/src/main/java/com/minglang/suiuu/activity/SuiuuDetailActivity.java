@@ -1,7 +1,6 @@
 package com.minglang.suiuu.activity;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -25,6 +24,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.RollViewPager;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.mProgressDialog;
 import com.minglang.suiuu.entity.SuiuuDataDetail;
@@ -32,11 +32,9 @@ import com.minglang.suiuu.entity.SuiuuDetailForData;
 import com.minglang.suiuu.entity.SuiuuDetailForInfo;
 import com.minglang.suiuu.entity.SuiuuDetailForPicList;
 import com.minglang.suiuu.entity.SuiuuDetailForPublisherList;
-import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -57,12 +55,12 @@ import java.util.List;
  * 修改时间：2015/5/4 19:13
  * 修改备注：
  */
-public class SuiuuDetailActivity extends Activity {
+public class SuiuuDetailActivity extends BaseActivity {
     private TextView tv_nikename;
     private TextView tv_selfsign;
     private TextView tv_title;
     private TextView tv_content;
-    private JsonUtil jsonUtil = JsonUtil.getInstance();
+    private JsonUtils jsonUtil = JsonUtils.getInstance();
     private SuiuuDetailForInfo detailInfo;
     private SuiuuDetailForPublisherList publisherInfo;
     private CircleImageView suiuu_details_user_head_image;
@@ -84,10 +82,6 @@ public class SuiuuDetailActivity extends Activity {
      */
     private String collectionId;
 
-    /**
-     * 验证信息
-     */
-    private String Verification;
     private mProgressDialog dialog;
     //判断取消的是点赞还是收藏
     private boolean isPraise;
@@ -111,11 +105,7 @@ public class SuiuuDetailActivity extends Activity {
         setContentView(R.layout.suiuu_details_activity);
         tripId = this.getIntent().getStringExtra("tripId");
         Log.i("suiuu", "tripId=" + tripId);
-        Verification = SuiuuInfo.ReadVerification(this);
-        if (ConstantUtil.isKITKAT) {
-            RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.suiuu_detail_root);
-            rootLayout.setPadding(0, Utils.getStatusHeight1(this), 0, 0);
-        }
+
         initView();
         loadDate(tripId);
         viewAction();
@@ -130,6 +120,15 @@ public class SuiuuDetailActivity extends Activity {
     }
 
     private void initView() {
+        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.suiuu_detail_root);
+        if (isKITKAT) {
+            if (navigationBarHeight <= 0) {
+                rootLayout.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            }
+        }
+
         dialog = new mProgressDialog(this);
         tv_nikename = (TextView) findViewById(R.id.tv_nickname);
         tv_selfsign = (TextView) findViewById(R.id.tv_self_sign);
@@ -142,6 +141,7 @@ public class SuiuuDetailActivity extends Activity {
                 .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
+
         tv_service_time = (TextView) findViewById(R.id.tv_service_time);
         tv_suiuu_travel_time = (TextView) findViewById(R.id.tv_suiuu_travel_time);
         tv_atmost_people = (TextView) findViewById(R.id.tv_atmost_people);
@@ -172,8 +172,8 @@ public class SuiuuDetailActivity extends Activity {
         Log.i("suiuu", "startTime=" + detailInfo.getStartTime() + ",endTime=" + detailInfo.getEndTime());
         tv_service_time.setText("服务时间:     " + detailInfo.getStartTime() + "-" + detailInfo.getEndTime());
         tv_suiuu_travel_time.setText("随游时长:     " + detailInfo.getTravelTime() + "个小时");
-        Log.i("suiuu","detailInfo.getMakeUserCount()="+detailInfo.getMakeUserCount());
-        if (detailInfo.getMakeUserCount() == null ) {
+        Log.i("suiuu", "detailInfo.getMakeUserCount()=" + detailInfo.getMakeUserCount());
+        if (detailInfo.getMakeUserCount() == null) {
             tv_atmost_people.setText("最多人数:     0 人");
         } else {
             tv_atmost_people.setText("最多人数:     " + detailInfo.getMakeUserCount() + "人");
@@ -204,7 +204,7 @@ public class SuiuuDetailActivity extends Activity {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void setViewPager() {
         initDot(picList.size());
-        RollViewPager mViewPager = new RollViewPager(this,dotLists, new RollViewPager.PagerClickCallBack() {
+        RollViewPager mViewPager = new RollViewPager(this, dotLists, new RollViewPager.PagerClickCallBack() {
             @Override
             public void pagerClick(int postion) {
 //				Intent intent = new Intent(ct,DetaiAct.class);
@@ -240,8 +240,8 @@ public class SuiuuDetailActivity extends Activity {
         dialog.showDialog();
         RequestParams params = new RequestParams();
         params.addBodyParameter("trId", tripId);
-        params.addBodyParameter(HttpServicePath.key, Verification);
-        Log.i("suiuu", "userSing=" + Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
+        Log.i("suiuu", "userSing=" + verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuItemInfo, new SuiuuItemInfoCallBack());
         httpRequest.setParams(params);
@@ -288,7 +288,7 @@ public class SuiuuDetailActivity extends Activity {
     private void addPraiseRequest() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("travelId", detailInfo.getTripId());
-        params.addBodyParameter(HttpServicePath.key, Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.travelAddPraise, new addPraiseRequestCallBack());
         httpRequest.setParams(params);
@@ -301,7 +301,7 @@ public class SuiuuDetailActivity extends Activity {
     private void addCollection() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("travelId", detailInfo.getTripId());
-        params.addBodyParameter(HttpServicePath.key, Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.travelAddCollection, new addCollectionCallback());
         httpRequest.setParams(params);
@@ -316,7 +316,7 @@ public class SuiuuDetailActivity extends Activity {
     private void collectionArticleCancel(String cancelId) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("attentionId", cancelId);
-        params.addBodyParameter(HttpServicePath.key, Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionArticleCancelPath, new CollectionArticleCancelRequestCallback());
         httpRequest.setParams(params);

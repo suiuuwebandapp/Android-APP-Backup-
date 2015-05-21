@@ -1,4 +1,4 @@
-package com.minglang.suiuu.customview;
+package com.minglang.suiuu.customview.svg;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,8 +10,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.utils.SVG;
-import com.minglang.suiuu.utils.SVGParser;
+import com.minglang.suiuu.customview.BaseImageView;
 
 
 public class SvgImageView extends BaseImageView {

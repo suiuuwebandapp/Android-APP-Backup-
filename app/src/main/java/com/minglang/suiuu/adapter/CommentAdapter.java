@@ -35,7 +35,10 @@ public class CommentAdapter extends BaseAdapter {
         bitMap = new BitmapUtils(context);
     }
 
-
+    public void setList(List<LoopArticleCommentList> list){
+        this.list = list;
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getCount() {

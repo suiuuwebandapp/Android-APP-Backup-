@@ -10,8 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +29,7 @@ import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.entity.ImageFolder;
 import com.minglang.suiuu.entity.ImageItem;
 import com.minglang.suiuu.popupwindow.BasePopupWindowForListView;
-import com.minglang.suiuu.utils.ConstantUtil;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -96,16 +93,12 @@ public class SelectPictureActivity extends BaseActivity {
      */
     private TextView allPicture;
 
-    /**
-     * 屏幕高度
-     */
-    private int mScreenHeight;
-
     private SelectPictureAdapter selectPictureAdapter;
 
     private ListPictureDirPopupWindow listPictureDirPopupWindow;
     private static final int result = 9;
-    private  int state = 0;
+    private int state = 0;
+
     public SelectPictureActivity() {
     }
 
@@ -113,12 +106,9 @@ public class SelectPictureActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_picture);
-        state = this.getIntent().getIntExtra("state",0);
+        state = this.getIntent().getIntExtra("state", 0);
         initView();
-        if (ConstantUtil.isKITKAT) {
-            RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.selectPicture_root);
-            rootLayout.setPadding(0, Utils.getStatusHeight1(this), 0, 0);
-        }
+
         initPopupWindow();
 
         ObtainThumbnail();
@@ -147,20 +137,20 @@ public class SelectPictureActivity extends BaseActivity {
         complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(1 == state) {
-                    if(selectedPicture.size() < 1) {
-                        Toast.makeText(SelectPictureActivity.this,R.string.choice_picture,Toast.LENGTH_SHORT).show();
-                    }else {
+                if (1 == state) {
+                    if (selectedPicture.size() < 1) {
+                        Toast.makeText(SelectPictureActivity.this, R.string.choice_picture, Toast.LENGTH_SHORT).show();
+                    } else {
                         Intent intent = new Intent(SelectPictureActivity.this, EasyTackPhotoActivity.class);
                         intent.putStringArrayListExtra("pictureMessage", selectedPicture);
                         startActivity(intent);
                         finish();
                     }
-                }else {
-                Intent intent = new Intent();
-                intent.putStringArrayListExtra("pictureMessage",selectedPicture);
-                setResult(result,intent);
-                finish();
+                } else {
+                    Intent intent = new Intent();
+                    intent.putStringArrayListExtra("pictureMessage", selectedPicture);
+                    setResult(result, intent);
+                    finish();
                 }
 
             }
@@ -233,7 +223,7 @@ public class SelectPictureActivity extends BaseActivity {
 
             for (int i = 0; i < mDirPaths.size(); i++) {
                 ImageFolder folder = mDirPaths.get(i);
-                Log.d(TAG, i + "-----" + folder.getName() + "---" + folder.images.size());
+                DeBugLog.d(TAG, i + "-----" + folder.getName() + "---" + folder.images.size());
             }
             tmpDir = null;
         }
@@ -266,7 +256,7 @@ public class SelectPictureActivity extends BaseActivity {
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Night");
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d("MyCameraApp", "failed to create directory");
+                DeBugLog.d("MyCameraApp", "failed to create directory");
                 return null;
             }
         }
@@ -292,18 +282,21 @@ public class SelectPictureActivity extends BaseActivity {
         View view = LayoutInflater.from(context).inflate(R.layout.check_img_list_dir, null);
 
         listPictureDirPopupWindow = new ListPictureDirPopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT,
-                mScreenHeight / 10 * 7, true, mDirPaths);
+                screenHeight / 10 * 7, true, mDirPaths);
     }
 
     /**
      * 初始化方法
      */
     private void initView() {
-
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-        mScreenHeight = dm.heightPixels;
+        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.selectPicture_root);
+        if (isKITKAT) {
+            if (navigationBarHeight <= 0) {
+                rootLayout.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            }
+        }
 
         mContentResolver = getContentResolver();
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
@@ -328,8 +321,7 @@ public class SelectPictureActivity extends BaseActivity {
 
         private ListView mListDir;
 
-        public ListPictureDirPopupWindow(View contentView, int width, int height,
-                                         boolean focusable, List<ImageFolder> data) {
+        public ListPictureDirPopupWindow(View contentView, int width, int height,boolean focusable, List<ImageFolder> data) {
             super(contentView, width, height, focusable, data);
         }
 
@@ -385,7 +377,7 @@ public class SelectPictureActivity extends BaseActivity {
         public void dismiss() {
             super.dismiss();
             WindowManager.LayoutParams lp = getWindow().getAttributes();
-            if(lp.alpha!=1f){
+            if (lp.alpha != 1f) {
                 lp.alpha = 1f;
                 getWindow().setAttributes(lp);
             }

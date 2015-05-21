@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +29,7 @@ import com.minglang.suiuu.adapter.AttentionDynamicAdapter;
 import com.minglang.suiuu.adapter.LoopDynamicAdapter;
 import com.minglang.suiuu.adapter.RecommendTravelAdapter;
 import com.minglang.suiuu.adapter.TodayStarAdapter;
+import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.LinearLayoutForListView;
 import com.minglang.suiuu.customview.NoScrollBarGridView;
 import com.minglang.suiuu.entity.MainDynamic;
@@ -40,34 +39,27 @@ import com.minglang.suiuu.entity.MainDynamicDataRecommendTravel;
 import com.minglang.suiuu.entity.MainDynamicDataRecommendUser;
 import com.minglang.suiuu.entity.MainDynamicDataUser;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtil;
-import com.minglang.suiuu.utils.ScreenUtils;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import in.srain.cube.util.LocalDisplay;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.header.MaterialHeader;
 
 
 /**
  * 主页面
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends BaseFragment {
 
     private static final String TAG = MainFragment.class.getSimpleName();
 
     private static final String USERSIGNKEY = "userSign";
     private static final String ARTICLEID = "articleId";
-
-    private int screenWidth, screenHeight;
 
     private PtrClassicFrameLayout mPtrFrame;
 
@@ -142,9 +134,8 @@ public class MainFragment extends Fragment {
      * @param str Json字符串
      */
     private void bindData2View(String str) {
-        Log.i(TAG, "str:" + str);
         try {
-            MainDynamic mainDynamic = JsonUtil.getInstance().fromJSON(MainDynamic.class, str);
+            MainDynamic mainDynamic = JsonUtils.getInstance().fromJSON(MainDynamic.class, str);
             MainDynamicData data = mainDynamic.getData();
 
             //关注动态
@@ -199,10 +190,6 @@ public class MainFragment extends Fragment {
      * 网络请求数据
      */
     private void getMainDynamic4Service() {
-
-        String verification = SuiuuInfo.ReadVerification(getActivity());
-        Log.i(TAG, "verification:" + verification);
-
         RequestParams params = new RequestParams();
         params.addBodyParameter("n", "6");
         params.addBodyParameter(HttpServicePath.key, verification);
@@ -294,33 +281,23 @@ public class MainFragment extends Fragment {
      * 初始化方法
      */
     private void initView(View rootView) {
-
-        ScreenUtils screenUtils = new ScreenUtils(getActivity());
-        screenWidth = screenUtils.getScreenWidth();
-        screenHeight = screenUtils.getScreenHeight();
-
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
         progressDialog.setCanceledOnTouchOutside(false);
 
         mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.main_fragment_head_frame);
 
-        MaterialHeader header = new MaterialHeader(getActivity());
-        int[] colors = getResources().getIntArray(R.array.google_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
-        header.setPtrFrameLayout(mPtrFrame);
-
         scrollView = (ScrollView) rootView.findViewById(R.id.main_fragment_scrollView);
 
-        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         if (isKITKAT) {
-            SystemBarTintManager.SystemBarConfig systemBarConfig = new SystemBarTintManager(getActivity()).getConfig();
-            int statusHeight = systemBarConfig.getStatusBarHeight();
-            scrollView.setPadding(0, statusHeight, 0, 0);
+            if (navigationBarHeight <= 0) {
+                scrollView.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                scrollView.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            }
         }
 
+        header.setPtrFrameLayout(mPtrFrame);
         mPtrFrame.setHeaderView(header);
         mPtrFrame.addPtrUIHandler(header);
         mPtrFrame.setPinContent(true);
@@ -336,13 +313,9 @@ public class MainFragment extends Fragment {
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
         attentionDynamicLayout = (LinearLayoutForListView) rootView.findViewById(R.id.mainAttentionLayout);
-
         recommendDynamicLayout = (LinearLayoutForListView) rootView.findViewById(R.id.mainRecommendationLayout);
-
         todayStarGridView = (NoScrollBarGridView) rootView.findViewById(R.id.mainTodayStarGridView);
-
         loopDynamicGridView = (NoScrollBarGridView) rootView.findViewById(R.id.mainLoopDynamicGridView);
-
         moreButton = (TextView) rootView.findViewById(R.id.main_fragment_more);
 
         RelativeLayout footBlackView = (RelativeLayout) rootView.findViewById(R.id.main_fragment_foot_black_view);
@@ -355,12 +328,6 @@ public class MainFragment extends Fragment {
         RecommendTravelTitleLayout = (RelativeLayout) rootView.findViewById(R.id.RecommendTravelTitleLayout);
         TodayStarTitleLayout = (RelativeLayout) rootView.findViewById(R.id.TodayStarTitleLayout);
         LoopDynamicTitleLayout = (RelativeLayout) rootView.findViewById(R.id.LoopDynamicTitleLayout);
-    }
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     /**
