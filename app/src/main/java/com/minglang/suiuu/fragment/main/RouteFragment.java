@@ -35,6 +35,7 @@ import com.minglang.suiuu.customview.PullToRefreshView;
 import com.minglang.suiuu.customview.mProgressDialog;
 import com.minglang.suiuu.entity.SuiuuDataList;
 import com.minglang.suiuu.entity.SuiuuReturnDate;
+import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -92,13 +93,15 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
 
     private void viewAction() {
 
-        final Animation transAnim = new TranslateAnimation(0, 0, screenHeight, screenHeight - tabSelect.getHeight());
+        final Animation transAnim = new TranslateAnimation(0, 0, tabSelect.getHeight(), 0);
+//        final Animation transAnim = new TranslateAnimation(0,0, dm.heightPixels, dm.heightPixels-tabSelect.getHeight());
         transAnim.setFillAfter(true);
-        transAnim.setDuration(3500);
+        transAnim.setDuration(1200);
 
-        final Animation transAnimTo = new TranslateAnimation(0, 0, screenHeight - tabSelect.getHeight(), screenHeight);
-        transAnim.setFillAfter(true);
-        transAnim.setDuration(3500);
+        final Animation transAnimTo = new TranslateAnimation(0, 0, 0, tabSelect.getHeight());
+//        final Animation transAnimTo = new TranslateAnimation(0,0, dm.heightPixels-tabSelect.getHeight(), dm.heightPixels);
+        transAnimTo.setFillAfter(true);
+        transAnimTo.setDuration(600);
 
         lv_suiuu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -130,11 +133,10 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
                         tabSelect.setVisibility(View.VISIBLE);
                         break;
                     case SCROLL_STATE_FLING://滚动状态
-                        tabSelect.startAnimation(transAnim);
-                        tabSelect.setVisibility(View.VISIBLE);
+                        tabSelect.startAnimation(transAnimTo);
                         break;
                     case SCROLL_STATE_TOUCH_SCROLL://触摸后滚动
-
+                        tabSelect.startAnimation(transAnimTo);
                         break;
                 }
             }
@@ -146,7 +148,6 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
                     tabSelect.setVisibility(View.VISIBLE);
                 } else {
                     tabSelect.setVisibility(View.GONE);
-                    tabSelect.startAnimation(transAnimTo);
                 }
             }
         });
@@ -252,8 +253,12 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
                     }
                     lv_suiuu.setAdapter(new ShowSuiuuAdapter(getActivity().getApplicationContext(), suiuuDataList));
                     tabSelect.setVisibility(View.VISIBLE);
+                } else if ("-3".equals(baseCollection.getStatus())) {
+                    AppUtils.intentLogin(getActivity());
+                    getActivity().finish();
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();

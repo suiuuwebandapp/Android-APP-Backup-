@@ -41,6 +41,7 @@ import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.AppConstant;
+import com.minglang.suiuu.utils.CompressImageUtil;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -377,7 +378,18 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
     }
 
     private void loadDate() {
-        judgeData();
+        ListView list = (ListView) findViewById(R.id.lv_picture_description);//获得listview
+        for (int i = 0; i < list.getChildCount() - 1; i++) {
+            LinearLayout layout = (LinearLayout) list.getChildAt(i);// 获得子item的layout
+            EditText et = (EditText) layout.findViewById(R.id.et_item_description);// 从layout中获得控件,根据其id
+            // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
+            picDescriptionList.add(et.getText().toString());
+        }
+        if (TextUtils.isEmpty(search_question.getText().toString().trim())) {
+            Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if ("".equals(tv_theme_choice.getText().toString().trim())) {
             Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
             return;
@@ -411,7 +423,11 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         suHttpRequest.requestNetworkData();
     }
 
-    private void judgeData() {
+
+
+    private void changeLoadDate() {
+        String str = SuiuuInfo.ReadVerification(this);
+        RequestParams params = new RequestParams();
         ListView list = (ListView) findViewById(R.id.lv_picture_description);//获得listview
         for (int i = 0; i < list.getChildCount() - 1; i++) {
             LinearLayout layout = (LinearLayout) list.getChildAt(i);// 获得子item的layout
@@ -423,12 +439,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
             return;
         }
-    }
-
-    private void changeLoadDate() {
-        String str = SuiuuInfo.ReadVerification(this);
-        RequestParams params = new RequestParams();
-        judgeData();
         dialog.showDialog();
         params.addBodyParameter(HttpServicePath.key, str);
         params.addBodyParameter("articleId", articleDetail.getArticleId());
@@ -481,9 +491,16 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             public void run() {
                 String type = path.substring(path.lastIndexOf("/"));
                 String name = type.substring(type.lastIndexOf(".") + 1);
+                String newPath = null;
+                try {
+                    newPath = CompressImageUtil.compressImage(path, name, 50);
+                    Log.i("suiuu","newPath = " + newPath);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
                 OSSFile bigFile = ossService.getOssFile(bucket, "suiuu_content" + type);
                 try {
-                    bigFile.setUploadFilePath(path, name);
+                    bigFile.setUploadFilePath(newPath, name);
                     bigFile.ResumableUploadInBackground(new SaveCallback() {
 
                         @Override
@@ -576,5 +593,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             Log.e(TAG, "发布文章失败:" + s);
         }
     }
+
 
 }
