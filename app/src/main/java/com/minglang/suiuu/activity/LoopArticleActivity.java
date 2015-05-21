@@ -838,5 +838,6 @@ public class LoopArticleActivity extends BaseActivity {
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         return drawable;
     }
+
 }
 

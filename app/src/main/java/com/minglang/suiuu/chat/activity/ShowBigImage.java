@@ -44,8 +44,6 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import java.io.File;
-import java.math.RoundingMode;
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,12 +101,8 @@ public class ShowBigImage extends BaseActivity {
                 public void onProgressUpdate(String s, View view, int i, int i2) {
 
                     dialog.showDialog();
-                    NumberFormat nf = NumberFormat.getPercentInstance();
-//                    nf.setMinimumFractionDigits(2);//设置保留小数位
-                    nf.setRoundingMode(RoundingMode.HALF_UP); //设置舍入模式
-                    String percent = nf.format(i / (double) i2);
-                   dialog.setMessage(percent);
-                    if("100%".equals(percent)) {
+
+                    if(i==i2) {
                         dialog.dismissDialog();
                     }
 

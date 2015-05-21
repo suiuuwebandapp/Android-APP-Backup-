@@ -41,6 +41,7 @@ import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.AppConstant;
+import com.minglang.suiuu.utils.CompressImageUtil;
 import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtil;
@@ -192,9 +193,16 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
             public void run() {
                 String type = path.substring(path.lastIndexOf("/"));
                 String name = type.substring(type.lastIndexOf(".") + 1);
+                String newPath = null;
+                try {
+                    newPath = CompressImageUtil.compressImage(path, name, 50);
+                    Log.i("suiuu","newPath = " + newPath);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
                 OSSFile bigFile = ossService.getOssFile(bucket, "suiuu_content" + type);
                 try {
-                    bigFile.setUploadFilePath(path, name);
+                    bigFile.setUploadFilePath(newPath, name);
                     bigFile.ResumableUploadInBackground(new SaveCallback() {
 
                         @Override
@@ -213,8 +221,8 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
                         public void onFailure(String objectKey, OSSException ossException) {
                             handler.sendEmptyMessage(getData_FAILURE);
                             Log.e(TAG, "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
-                            ossException.printStackTrace();
-                            ossException.getException().printStackTrace();
+//                            ossException.printStackTrace();
+//                            ossException.getException().printStackTrace();
                         }
                     });
                 } catch (FileNotFoundException e) {
@@ -319,7 +327,34 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         Log.i("suiuu","是发布");
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
-        judgeData();
+        if (TextUtils.isEmpty(et_search_question.getText().toString().trim())) {
+            if (record == 1) {
+                Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                Toast.makeText(this, R.string.your_ask_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        if(articleDetail == null ) {
+            if ("".equals(tv_theme_choice.getText().toString().trim())) {
+                Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if ("".equals(tv_area_choice.getText().toString().trim())) {
+                Toast.makeText(this, R.string.area_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        if (TextUtils.isEmpty(et_question_description.getText().toString().trim())) {
+            if (record == 1) {
+                Toast.makeText(this, R.string.activity_description_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                Toast.makeText(this, R.string.ask_description_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
         dialog.showDialog();
         if (record == 1) {
             params.addBodyParameter("type", String.valueOf(3));
@@ -354,7 +389,34 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
         Log.i("suiuu","是更改发布");
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
-        judgeData();
+        if (TextUtils.isEmpty(et_search_question.getText().toString().trim())) {
+            if (record == 1) {
+                Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                Toast.makeText(this, R.string.your_ask_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        if(articleDetail == null ) {
+            if ("".equals(tv_theme_choice.getText().toString().trim())) {
+                Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if ("".equals(tv_area_choice.getText().toString().trim())) {
+                Toast.makeText(this, R.string.area_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        if (TextUtils.isEmpty(et_question_description.getText().toString().trim())) {
+            if (record == 1) {
+                Toast.makeText(this, R.string.activity_description_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                Toast.makeText(this, R.string.ask_description_is_empty, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
         dialog.showDialog();
         params.addBodyParameter(HttpServicePath.key, str);
         params.addBodyParameter("articleId",articleDetail.getArticleId());
@@ -384,36 +446,7 @@ public class AskQuestionActivity extends Activity implements View.OnClickListene
 
     }
 
-    private void judgeData() {
-        if (TextUtils.isEmpty(et_search_question.getText().toString().trim())) {
-            if (record == 1) {
-                Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
-                return;
-            } else {
-                Toast.makeText(this, R.string.your_ask_is_empty, Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-        if(articleDetail == null ) {
-            if ("".equals(tv_theme_choice.getText().toString().trim())) {
-                Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if ("".equals(tv_area_choice.getText().toString().trim())) {
-                Toast.makeText(this, R.string.area_is_empty, Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-        if (TextUtils.isEmpty(et_question_description.getText().toString().trim())) {
-            if (record == 1) {
-                Toast.makeText(this, R.string.activity_description_is_empty, Toast.LENGTH_SHORT).show();
-                return;
-            } else {
-                Toast.makeText(this, R.string.ask_description_is_empty, Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-    }
+
 
     private void loadAreaDate() {
         String str = SuiuuInfo.ReadVerification(this);
