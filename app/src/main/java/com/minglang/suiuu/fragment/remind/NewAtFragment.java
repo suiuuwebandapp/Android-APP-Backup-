@@ -29,10 +29,12 @@ import com.minglang.suiuu.utils.SuHttpRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.srain.cube.util.LocalDisplay;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
+import in.srain.cube.views.ptr.header.MaterialHeader;
 
 /**
  * 新@页面
@@ -167,6 +169,12 @@ public class NewAtFragment extends BaseFragment {
 
         mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.new_at_fragment_head_frame);
 
+        MaterialHeader header = new MaterialHeader(getActivity());
+        int[] colors = getResources().getIntArray(R.array.google_colors);
+        header.setColorSchemeColors(colors);
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
+        header.setPtrFrameLayout(mPtrFrame);
         header.setPtrFrameLayout(mPtrFrame);
 
         mPtrFrame.setHeaderView(header);

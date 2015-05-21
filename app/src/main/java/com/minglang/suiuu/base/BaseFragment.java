@@ -8,14 +8,11 @@ import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-
-import in.srain.cube.util.LocalDisplay;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.header.MaterialHeader;
 
 public class BaseFragment extends Fragment {
 
@@ -70,28 +67,26 @@ public class BaseFragment extends Fragment {
      */
     public int screenHeight;
 
-    public MaterialHeader header;
-
-    public BaseFragment(){
-        header = new MaterialHeader(getActivity());
-        int[] colors = getResources().getIntArray(R.array.google_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
-    }
+    public BaseFragment(){}
 
     public void setContext(Context context) {
         this.context = context;
 
         initImageLoad();
         initAppInfo();
-
     }
 
     public void setActivity(Activity activity) {
         this.activity = activity;
         initStatusBarControl();
-        initScreen();
+    }
+
+    public void setScreenWidth(int screenWidth) {
+        this.screenWidth = screenWidth;
+    }
+
+    public void setScreenHeight(int screenHeight) {
+        this.screenHeight = screenHeight;
     }
 
     private void initImageLoad() {
@@ -117,16 +112,13 @@ public class BaseFragment extends Fragment {
 
         systemBarTintManager.setStatusBarTintEnabled(true);
         systemBarTintManager.setNavigationBarTintEnabled(false);
-        systemBarTintManager.setTintColor(getResources().getColor(R.color.tr_black));
+        systemBarTintManager.setTintColor(context.getResources().getColor(R.color.tr_black));
 
         isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-    }
 
-    private void initScreen() {
-        dm = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
-        screenWidth = dm.widthPixels;
-        screenHeight = dm.heightPixels;
+        DeBugLog.i(TAG, "虚拟按键高度:" + String.valueOf(navigationBarHeight));
+        DeBugLog.i(TAG, "NavigationBarWidth:" + String.valueOf(navigationBarWidth));
+        DeBugLog.i(TAG, "状态栏高度:" + String.valueOf(statusBarHeight));
     }
 
     @Override

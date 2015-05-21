@@ -32,10 +32,14 @@ import com.minglang.suiuu.entity.RecommendLoop;
 import com.minglang.suiuu.entity.RecommendLoopData;
 import com.minglang.suiuu.fragment.loop.AreaFragment;
 import com.minglang.suiuu.fragment.loop.ThemeFragment;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.ArrayList;
@@ -202,11 +206,16 @@ public class LoopFragment extends BaseFragment {
     @SuppressLint("InflateParams")
     private void initView(View rootView) {
 
+        screenHeight = new ScreenUtils(getActivity()).getScreenHeight();
+        screenWidth = new ScreenUtils(getActivity()).getScreenWidth();
+
         RelativeLayout loopScrollLayout = (RelativeLayout) rootView.findViewById(R.id.LoopScrollLayout);
         ViewGroup.LayoutParams loopLayoutParams = loopScrollLayout.getLayoutParams();
         loopLayoutParams.height = screenHeight / 3;
         loopLayoutParams.width = screenWidth;
         loopScrollLayout.setLayoutParams(loopLayoutParams);
+
+        DeBugLog.i(TAG, "screenHeight:" + screenHeight + ",screenWidth:" + screenWidth);
 
         imageView1 = new ImageView(getActivity());
         imageView1.setTag(IMAGEID1);
@@ -239,7 +248,7 @@ public class LoopFragment extends BaseFragment {
         imageList.add(imageView5);
 
         loopScrollViewPager = (AutoScrollViewPager) rootView.findViewById(R.id.LoopScrollViewPager);
-        loopScrollViewPager.setInterval(2000);
+        loopScrollViewPager.setInterval(5000);
         LoopScrollPagerAdapter loopScrollPagerAdapter = new LoopScrollPagerAdapter(getActivity(), imageList);
         loopScrollViewPager.setAdapter(loopScrollPagerAdapter);
         loopScrollViewPager.startAutoScroll();
@@ -284,6 +293,13 @@ public class LoopFragment extends BaseFragment {
         offsetX = (tabWidth - sliderViewWidth) / 2;
         sliderView.setPadding(offsetX, 0, 0, 0);
 
+        if (imageLoader == null) {
+            imageLoader = ImageLoader.getInstance();
+            if (imageLoader.isInited()) {
+                imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
+            }
+            DeBugLog.i(TAG, "imageLoader is null!");
+        }
     }
 
     @Override

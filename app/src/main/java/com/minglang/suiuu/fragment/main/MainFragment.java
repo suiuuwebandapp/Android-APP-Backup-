@@ -40,15 +40,18 @@ import com.minglang.suiuu.entity.MainDynamicDataRecommendUser;
 import com.minglang.suiuu.entity.MainDynamicDataUser;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import in.srain.cube.util.LocalDisplay;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
+import in.srain.cube.views.ptr.header.MaterialHeader;
 
 
 /**
@@ -281,6 +284,10 @@ public class MainFragment extends BaseFragment {
      * 初始化方法
      */
     private void initView(View rootView) {
+
+        screenHeight = new ScreenUtils(getActivity()).getScreenHeight();
+        screenWidth = new ScreenUtils(getActivity()).getScreenWidth();
+
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
         progressDialog.setCanceledOnTouchOutside(false);
@@ -297,6 +304,11 @@ public class MainFragment extends BaseFragment {
             }
         }
 
+        MaterialHeader header = new MaterialHeader(getActivity());
+        int[] colors = getResources().getIntArray(R.array.google_colors);
+        header.setColorSchemeColors(colors);
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
         header.setPtrFrameLayout(mPtrFrame);
         mPtrFrame.setHeaderView(header);
         mPtrFrame.addPtrUIHandler(header);

@@ -81,6 +81,12 @@ public class BaseActivity extends FragmentActivity {
         BaseFragment baseFragment = new BaseFragment();
         baseFragment.setContext(this);
         baseFragment.setActivity(this);
+        baseFragment.setScreenHeight(screenHeight);
+        baseFragment.setScreenWidth(screenWidth);
+        fm.beginTransaction().attach(baseFragment).commit();
+        if (baseFragment.getActivity() != null) {
+            DeBugLog.i(TAG, "className:" + baseFragment.getActivity().getClass().getSimpleName());
+        }
     }
 
     private void initImageLoad() {
