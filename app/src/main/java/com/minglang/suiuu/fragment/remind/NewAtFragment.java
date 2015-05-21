@@ -26,6 +26,7 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -56,9 +57,13 @@ public class NewAtFragment extends BaseFragment {
 
     private ListView newAtList;
 
-    private List<SuiuuMessageData> list;
+    private List<SuiuuMessageData> listAll = new ArrayList<>();
 
     private Dialog dialog;
+
+    private MessageAdapter adapter;
+
+    private int page = 1;
 
     /**
      * Use this factory method to create a new instance of
@@ -97,7 +102,7 @@ public class NewAtFragment extends BaseFragment {
         initView(rootView);
         ViewAction();
         getData();
-
+        DeBugLog.i(TAG, "userSign:" + userSign);
         return rootView;
     }
 
@@ -111,34 +116,36 @@ public class NewAtFragment extends BaseFragment {
 
             @Override
             public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
-                getNewAt4Service();
+                page = 1;
+                getNewAt4Service(page);
             }
         });
 
         newAtList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SuiuuMessageData data = list.get(position);
+                SuiuuMessageData data = listAll.get(position);
                 String relativeId = data.getRelativeId();
                 DeBugLog.i(TAG, "relativeId:" + relativeId);
             }
         });
     }
 
-    private void getData(){
+    private void getData() {
         if (dialog != null) {
             dialog.show();
         }
-        getNewAt4Service();
+        getNewAt4Service(page);
     }
 
     /**
      * 从网络获取数据
      */
-    private void getNewAt4Service() {
+    private void getNewAt4Service(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(TYPE, "1");
         params.addBodyParameter(HttpServicePath.key, verification);
+        params.addBodyParameter("number", String.valueOf(page));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.GetMessageListPath, new NewAtRequestCallBack());
@@ -177,6 +184,9 @@ public class NewAtFragment extends BaseFragment {
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
         newAtList = (ListView) rootView.findViewById(R.id.newAtList);
+
+        adapter = new MessageAdapter(getActivity(), "1");
+        newAtList.setAdapter(adapter);
     }
 
     private class NewAtRequestCallBack extends RequestCallBack<String> {
@@ -189,15 +199,26 @@ public class NewAtFragment extends BaseFragment {
             }
 
             mPtrFrame.refreshComplete();
+
+            if (page == 1) {
+                if (listAll != null && listAll.size() > 0) {
+                    listAll.clear();
+                }
+            }
+
             String str = stringResponseInfo.result;
             try {
                 SuiuuMessage message = JsonUtils.getInstance().fromJSON(SuiuuMessage.class, str);
-                list = message.getData().getData();
-                MessageAdapter adapter = new MessageAdapter(getActivity(), list, "1");
-                newAtList.setAdapter(adapter);
+                List<SuiuuMessageData> list = message.getData().getData();
+                if (list != null && list.size() > 0) {
+                    listAll.addAll(list);
+                    adapter.setList(listAll);
+                } else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                }
             } catch (Exception e) {
-                Toast.makeText(getActivity(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
                 DeBugLog.e(TAG, "新@数据解析异常:" + e.getMessage());
+                Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -209,8 +230,9 @@ public class NewAtFragment extends BaseFragment {
             }
 
             mPtrFrame.refreshComplete();
+
             DeBugLog.e(TAG, "获取新@数据失败:" + s);
-            Toast.makeText(getActivity(), "网络异常,请重试！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
 
