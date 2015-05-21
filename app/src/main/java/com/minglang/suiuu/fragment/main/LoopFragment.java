@@ -190,6 +190,9 @@ public class LoopFragment extends BaseFragment {
      */
     private void initScreenOrImageLoad() {
 
+        screenHeight = new ScreenUtils(getActivity()).getScreenHeight();
+        screenWidth = new ScreenUtils(getActivity()).getScreenWidth();
+
         tabWidth = screenWidth / 2;
 
         displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll2)
@@ -205,10 +208,6 @@ public class LoopFragment extends BaseFragment {
      */
     @SuppressLint("InflateParams")
     private void initView(View rootView) {
-
-        screenHeight = new ScreenUtils(getActivity()).getScreenHeight();
-        screenWidth = new ScreenUtils(getActivity()).getScreenWidth();
-
         RelativeLayout loopScrollLayout = (RelativeLayout) rootView.findViewById(R.id.LoopScrollLayout);
         ViewGroup.LayoutParams loopLayoutParams = loopScrollLayout.getLayoutParams();
         loopLayoutParams.height = screenHeight / 3;
