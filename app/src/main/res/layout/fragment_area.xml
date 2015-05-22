@@ -6,19 +6,26 @@
     android:padding="5dp"
     tools:context="com.minglang.suiuu.fragment.loop.ThemeFragment">
 
-
-    <GridView
+    <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshGridView
         android:id="@+id/areaGridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:choiceMode="none"
         android:horizontalSpacing="10dp"
         android:numColumns="2"
         android:verticalSpacing="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/refreshData"
+        android:id="@+id/areaNoDataView"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

@@ -23,7 +23,7 @@
         android:dividerHeight="@dimen/layout_10dp"
         android:background="@color/white"
         android:scrollbars="none"
-        android:layout_marginRight="@dimen/layout_12dp"></ListView>
+        android:layout_marginRight="@dimen/layout_12dp"/>
 
     </com.minglang.suiuu.customview.PullToRefreshView>
     <TextView

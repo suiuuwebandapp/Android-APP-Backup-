@@ -28,8 +28,6 @@ import java.util.List;
  */
 public class AreaAdapter extends BaseAdapter {
 
-    private static final String TAG = AreaAdapter.class.getSimpleName();
-
     private Context context;
 
     private List<LoopBaseData> list;
@@ -40,9 +38,8 @@ public class AreaAdapter extends BaseAdapter {
 
     private int screenWidth;
 
-    public AreaAdapter(Context context, List<LoopBaseData> list) {
+    public  AreaAdapter(Context context){
         this.context = context;
-        this.list = list;
 
         imageLoader = ImageLoader.getInstance();
         if (!imageLoader.isInited()) {
@@ -53,6 +50,11 @@ public class AreaAdapter extends BaseAdapter {
                 .showImageForEmptyUri(R.drawable.scroll5).showImageOnFail(R.drawable.scroll5)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
+    }
+
+    public void setList(List<LoopBaseData> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     public void setScreenParams(int screenWidth) {

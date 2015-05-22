@@ -143,6 +143,7 @@
 
     <string name="next">下一步</string>
     <string name="a">A</string>
+    <string name="refreshData">点击重新加载数据</string>
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>

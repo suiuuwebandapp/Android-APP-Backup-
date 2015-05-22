@@ -433,35 +433,35 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadMainFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-//        if (loopFragment != null) {
-//            if (loopFragment.isAdded()) {
-//                ft.hide(loopFragment);
-//            }
-//        }
-//        if (routeFragment != null) {
-//            if (routeFragment.isAdded()) {
-//                ft.hide(routeFragment);
-//            }
-//        }
-//        if (conversationFragment != null) {
-//            if (conversationFragment.isAdded()) {
-//                ft.hide(conversationFragment);
-//            }
-//        }
-//        if (mainFragment == null) {
-//            mainFragment = new MainFragment();
-//        }
-//        if (mainFragment.isAdded()) {
-//            ft.show(mainFragment);
-//        } else {
-//            ft.add(R.id.showLayout, mainFragment);
-//        }
+        if (loopFragment != null) {
+            if (loopFragment.isAdded()) {
+                ft.hide(loopFragment);
+            }
+        }
+        if (routeFragment != null) {
+            if (routeFragment.isAdded()) {
+                ft.hide(routeFragment);
+            }
+        }
+        if (conversationFragment != null) {
+            if (conversationFragment.isAdded()) {
+                ft.hide(conversationFragment);
+            }
+        }
         if (mainFragment == null) {
             mainFragment = new MainFragment();
-            ft.replace(R.id.showLayout, mainFragment);
-        } else {
-            ft.replace(R.id.showLayout, mainFragment);
         }
+        if (mainFragment.isAdded()) {
+            ft.show(mainFragment);
+        } else {
+            ft.add(R.id.showLayout, mainFragment);
+        }
+//        if (mainFragment == null) {
+//            mainFragment = new MainFragment();
+//            ft.replace(R.id.showLayout, mainFragment);
+//        } else {
+//            ft.replace(R.id.showLayout, mainFragment);
+//        }
         currentIndex = 0;
         ft.commit();
     }
@@ -471,35 +471,35 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadLoopFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-//        if (mainFragment != null) {
-//            if (mainFragment.isAdded()) {
-//                ft.hide(mainFragment);
-//            }
-//        }
-//        if (routeFragment != null) {
-//            if (routeFragment.isAdded()) {
-//                ft.hide(routeFragment);
-//            }
-//        }
-//        if (conversationFragment != null) {
-//            if (conversationFragment.isAdded()) {
-//                ft.hide(conversationFragment);
-//            }
-//        }
-//        if (loopFragment == null) {
-//            loopFragment = new LoopFragment();
-//        }
-//        if (loopFragment.isAdded()) {
-//            ft.show(loopFragment);
-//        } else {
-//            ft.add(R.id.showLayout, loopFragment);
-//        }
+        if (mainFragment != null) {
+            if (mainFragment.isAdded()) {
+                ft.hide(mainFragment);
+            }
+        }
+        if (routeFragment != null) {
+            if (routeFragment.isAdded()) {
+                ft.hide(routeFragment);
+            }
+        }
+        if (conversationFragment != null) {
+            if (conversationFragment.isAdded()) {
+                ft.hide(conversationFragment);
+            }
+        }
         if (loopFragment == null) {
             loopFragment = new LoopFragment();
-            ft.replace(R.id.showLayout, loopFragment);
-        } else {
-            ft.replace(R.id.showLayout, loopFragment);
         }
+        if (loopFragment.isAdded()) {
+            ft.show(loopFragment);
+        } else {
+            ft.add(R.id.showLayout, loopFragment);
+        }
+//        if (loopFragment == null) {
+//            loopFragment = new LoopFragment();
+//            ft.replace(R.id.showLayout, loopFragment);
+//        } else {
+//            ft.replace(R.id.showLayout, loopFragment);
+//        }
         currentIndex = 1;
         ft.commit();
     }
@@ -509,35 +509,35 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadRouteFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-//        if (mainFragment != null) {
-//            if (mainFragment.isAdded()) {
-//                ft.hide(mainFragment);
-//            }
-//        }
-//        if (loopFragment != null) {
-//            if (loopFragment.isAdded()) {
-//                ft.hide(loopFragment);
-//            }
-//        }
-//        if (conversationFragment != null) {
-//            if (conversationFragment.isAdded()) {
-//                ft.hide(conversationFragment);
-//            }
-//        }
-//        if (routeFragment == null) {
-//            routeFragment = new RouteFragment();
-//        }
-//        if (routeFragment.isAdded()) {
-//            ft.show(routeFragment);
-//        } else {
-//            ft.add(R.id.showLayout, routeFragment);
-//        }
+        if (mainFragment != null) {
+            if (mainFragment.isAdded()) {
+                ft.hide(mainFragment);
+            }
+        }
+        if (loopFragment != null) {
+            if (loopFragment.isAdded()) {
+                ft.hide(loopFragment);
+            }
+        }
+        if (conversationFragment != null) {
+            if (conversationFragment.isAdded()) {
+                ft.hide(conversationFragment);
+            }
+        }
         if (routeFragment == null) {
             routeFragment = new RouteFragment();
-            ft.replace(R.id.showLayout, routeFragment);
-        } else {
-            ft.replace(R.id.showLayout, routeFragment);
         }
+        if (routeFragment.isAdded()) {
+            ft.show(routeFragment);
+        } else {
+            ft.add(R.id.showLayout, routeFragment);
+        }
+//        if (routeFragment == null) {
+//            routeFragment = new RouteFragment();
+//            ft.replace(R.id.showLayout, routeFragment);
+//        } else {
+//            ft.replace(R.id.showLayout, routeFragment);
+//        }
         currentIndex = 2;
         ft.commit();
     }
@@ -547,34 +547,34 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadConversationFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-//        if (mainFragment != null) {
-//            if (mainFragment.isAdded()) {
-//                ft.hide(mainFragment);
-//            }
-//        }
-//        if (loopFragment != null) {
-//            if (loopFragment.isAdded()) {
-//                ft.hide(loopFragment);
-//            }
-//        }
-//        if (routeFragment != null) {
-//            if (routeFragment.isAdded()) {
-//                ft.hide(routeFragment);
-//            }
-//        }
-//
-//        if (conversationFragment.isAdded()) {
-//            ft.show(conversationFragment);
-//        } else {
-//            ft.add(R.id.showLayout, conversationFragment);
-//
-//        }
-        if (conversationFragment == null) {
-            conversationFragment = new ChatAllHistoryFragment();
-            ft.replace(R.id.showLayout, conversationFragment);
-        } else {
-            ft.replace(R.id.showLayout, conversationFragment);
+        if (mainFragment != null) {
+            if (mainFragment.isAdded()) {
+                ft.hide(mainFragment);
+            }
         }
+        if (loopFragment != null) {
+            if (loopFragment.isAdded()) {
+                ft.hide(loopFragment);
+            }
+        }
+        if (routeFragment != null) {
+            if (routeFragment.isAdded()) {
+                ft.hide(routeFragment);
+            }
+        }
+
+        if (conversationFragment.isAdded()) {
+            ft.show(conversationFragment);
+        } else {
+            ft.add(R.id.showLayout, conversationFragment);
+
+        }
+//        if (conversationFragment == null) {
+//            conversationFragment = new ChatAllHistoryFragment();
+//            ft.replace(R.id.showLayout, conversationFragment);
+//        } else {
+//            ft.replace(R.id.showLayout, conversationFragment);
+//        }
         currentIndex = 3;
         msgCount.setVisibility(View.INVISIBLE);
         ft.commit();
@@ -587,9 +587,9 @@ public class MainActivity extends BaseActivity {
         FragmentTransaction ft = fm.beginTransaction();
         if (mainFragment == null) {
             mainFragment = new MainFragment();
-            ft.replace(R.id.showLayout, mainFragment);
+            ft.add(R.id.showLayout, mainFragment);
         } else {
-            ft.replace(R.id.showLayout, mainFragment);
+            ft.add(R.id.showLayout, mainFragment);
         }
         ft.commit();
     }

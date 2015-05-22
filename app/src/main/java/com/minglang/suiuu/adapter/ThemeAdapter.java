@@ -3,7 +3,6 @@ package com.minglang.suiuu.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -29,8 +28,6 @@ import java.util.List;
  */
 public class ThemeAdapter extends BaseAdapter {
 
-    private static final String TAG = ThemeAdapter.class.getSimpleName();
-
     private Context context;
 
     private List<LoopBaseData> list;
@@ -41,9 +38,8 @@ public class ThemeAdapter extends BaseAdapter {
 
     private int screenWidth;
 
-    public ThemeAdapter(Context context, List<LoopBaseData> list) {
+    public ThemeAdapter(Context context) {
         this.context = context;
-        this.list = list;
 
         imageLoader = ImageLoader.getInstance();
         if (!imageLoader.isInited()) {
@@ -54,8 +50,11 @@ public class ThemeAdapter extends BaseAdapter {
                 .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
+    }
 
-        Log.i(TAG, String.valueOf(list.size()));
+    public void setList(List<LoopBaseData> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     public void setScreenParams(int screenWidth) {

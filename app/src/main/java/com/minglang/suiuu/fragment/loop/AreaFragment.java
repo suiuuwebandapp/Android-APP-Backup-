@@ -5,12 +5,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
@@ -21,14 +21,18 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.LoopDetailsActivity;
 import com.minglang.suiuu.adapter.AreaAdapter;
+import com.minglang.suiuu.customview.mProgressDialog;
+import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
+import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshGridView;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
-import com.minglang.suiuu.fragment.main.LoopFragment;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,12 +49,12 @@ public class AreaFragment extends Fragment {
     private static final String TYPE = "type";
     private static final String CIRCLEID = "circleId";
 
-    private GridView areaGridView;
+    private PullToRefreshGridView areaGridView;
 
     /**
      * 数据集合
      */
-    private List<LoopBaseData> list;
+    private List<LoopBaseData> listAll = new ArrayList<>();
 
     private ProgressDialog progressDialog;
 
@@ -66,10 +70,15 @@ public class AreaFragment extends Fragment {
      */
     private int screenWidth;
 
-    /**
-     * 屏幕高度
-     */
-    private int screenHeight;
+    private int page = 1;
+
+    private TextView refreshDataView;
+
+    private mProgressDialog mProgressDialog;
+
+    private AreaAdapter areaAdapter;
+
+    private boolean refreshDataFlag;
 
     /**
      * Use this factory method to create a new instance of
@@ -109,12 +118,11 @@ public class AreaFragment extends Fragment {
 
         ScreenUtils screenUtils = new ScreenUtils(getActivity());
         screenWidth = screenUtils.getScreenWidth();
-        screenHeight = screenUtils.getScreenHeight();
 
         initView(rootView);
         ViewAction();
-        getInternetServiceData();
-
+        getData();
+        DeBugLog.i(TAG, "userSign:" + userSign);
         return rootView;
     }
 
@@ -122,11 +130,45 @@ public class AreaFragment extends Fragment {
      * 控件动作
      */
     private void ViewAction() {
+
+        refreshDataView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                refreshDataFlag = true;
+
+                refreshDataView.setVisibility(View.INVISIBLE);
+
+                if (mProgressDialog != null) {
+                    mProgressDialog.showDialog();
+                }
+
+                page = 1;
+                getInternetServiceData(page);
+            }
+        });
+
+        areaGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
+                areaGridView.onRefreshComplete();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
+
+                refreshDataFlag = false;
+
+                page = page + 1;
+                getInternetServiceData(page);
+            }
+        });
+
         areaGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String circleId = list.get(position).getcId();
-                String loopName = list.get(position).getcName();
+                String circleId = listAll.get(position).getcId();
+                String loopName = listAll.get(position).getcName();
                 Intent intent = new Intent(getActivity(), LoopDetailsActivity.class);
                 intent.putExtra(CIRCLEID, circleId);
                 intent.putExtra(TYPE, "2");
@@ -136,33 +178,24 @@ public class AreaFragment extends Fragment {
             }
         });
 
-//        areaGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                String circleId = list.get(position).getcId();
-//                String loopName = list.get(position).getcName();
-//                Intent intent = new Intent(getActivity(), TestLoopDetailsActivity.class);
-//                intent.putExtra(CIRCLEID, circleId);
-//                intent.putExtra(TYPE, "2");
-//                intent.putExtra("name", loopName);
-//                startActivity(intent);
-//                getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-//                return false;
-//            }
-//        });
+    }
+
+    private void getData() {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
+        getInternetServiceData(page);
     }
 
     /**
      * 从网络获取数据
      */
-    private void getInternetServiceData() {
-        if (progressDialog != null && !progressDialog.isShowing()) {
-            progressDialog.show();
-        }
-
+    private void getInternetServiceData(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter(TYPE, "2");
+        params.addBodyParameter("page", String.valueOf(page));
+        params.addBodyParameter("number", String.valueOf(10));
 
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.LoopDataPath, new AreaRequestCallback());
@@ -183,7 +216,16 @@ public class AreaFragment extends Fragment {
         progressDialog.setCancelable(true);
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
 
-        areaGridView = (GridView) rootView.findViewById(R.id.areaGridView);
+        mProgressDialog = new mProgressDialog(getActivity());
+        mProgressDialog.setMessage(getResources().getString(R.string.pull_to_refresh_footer_refreshing_label));
+
+        areaGridView = (PullToRefreshGridView) rootView.findViewById(R.id.areaGridView);
+        areaGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        refreshDataView = (TextView) rootView.findViewById(R.id.areaNoDataView);
+
+        areaAdapter = new AreaAdapter(getActivity());
+        areaAdapter.setScreenParams(screenWidth);
+        areaGridView.setAdapter(areaAdapter);
     }
 
     /**
@@ -198,38 +240,86 @@ public class AreaFragment extends Fragment {
                 progressDialog.dismiss();
             }
 
+            if (mProgressDialog.isShow()) {
+                mProgressDialog.dismissDialog();
+            }
+
+            areaGridView.onRefreshComplete();
+
             String str = responseInfo.result;
-            Log.i(LoopFragment.class.getSimpleName(), "地区返回数据:" + str);
             try {
                 LoopBase loopBase = JsonUtils.getInstance().fromJSON(LoopBase.class, str);
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
-                    list = loopBase.getData().getData();
+                    List<LoopBaseData> list = loopBase.getData().getData();
                     if (list != null && list.size() > 0) {
-                        AreaAdapter areaAdapter = new AreaAdapter(getActivity(), list);
-                        areaAdapter.setScreenParams(screenWidth);
-                        areaGridView.setAdapter(areaAdapter);
+                        refreshDataView.setVisibility(View.INVISIBLE);
+                        listAll.addAll(list);
+                        areaAdapter.setList(listAll);
                     } else {
+
+                        if (page > 1) {
+                            page = page - 1;
+                        }
+
+                        if (refreshDataFlag) {
+                            refreshDataView.setVisibility(View.VISIBLE);
+                        }
+
                         Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                     }
                 } else {
+
+                    if (page > 1) {
+                        page = page - 1;
+                    }
+
+                    if (refreshDataFlag) {
+                        refreshDataView.setVisibility(View.VISIBLE);
+                    }
+
                     Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "地区数据解析错误:" + e.getMessage());
+                DeBugLog.e(TAG, "地区数据解析错误:" + e.getMessage());
+
+                if (page > 1) {
+                    page = page - 1;
+                }
+
+                if (refreshDataFlag) {
+                    refreshDataView.setVisibility(View.VISIBLE);
+                }
+
                 Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
+            DeBugLog.i(TAG, "page:" + page);
         }
 
         @Override
         public void onFailure(HttpException error, String msg) {
 
+            DeBugLog.e(TAG, "地区数据请求失败:" + msg);
+
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
 
-            Log.e(TAG, "地区数据请求失败:" + msg);
+            if (mProgressDialog.isShow()) {
+                mProgressDialog.dismissDialog();
+            }
+
+            if (page > 1) {
+                page = page - 1;
+            }
+
+            if (refreshDataFlag) {
+                refreshDataView.setVisibility(View.VISIBLE);
+            }
+
+            areaGridView.onRefreshComplete();
 
             Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            DeBugLog.i(TAG, "page:" + page);
         }
     }
 
