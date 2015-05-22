@@ -112,6 +112,7 @@
             </LinearLayout>
 
 
+            
             <TextView
                 android:id="@+id/tv_price_show"
                 android:layout_below="@+id/radioGroup1"
