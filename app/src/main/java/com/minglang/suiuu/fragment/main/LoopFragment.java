@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +25,11 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.LoopDetailsActivity;
 import com.minglang.suiuu.adapter.LoopFragmentPagerAdapter;
 import com.minglang.suiuu.adapter.LoopScrollPagerAdapter;
+import com.minglang.suiuu.anim.DepthPageTransformer;
+import com.minglang.suiuu.anim.ZoomOutPageTransformer;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.AutoScrollViewPager;
+import com.minglang.suiuu.customview.CirclePageIndicator;
 import com.minglang.suiuu.entity.RecommendLoop;
 import com.minglang.suiuu.entity.RecommendLoopData;
 import com.minglang.suiuu.fragment.loop.AreaFragment;
@@ -100,6 +102,8 @@ public class LoopFragment extends BaseFragment {
 
     private List<String> imagePathList = new ArrayList<>();
 
+    private CirclePageIndicator pageIndicator;
+
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -129,20 +133,36 @@ public class LoopFragment extends BaseFragment {
      * 控件动作
      */
     private void ViewAction() {
+
+        loopScrollViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                pageIndicator.updateIndicator(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
         title0.setOnClickListener(new TitleOnClick(0));
         title1.setOnClickListener(new TitleOnClick(1));
 
         loopViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int i, float v, int i2) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
             @Override
-            public void onPageSelected(int i) {
+            public void onPageSelected(int position) {
                 sliderView.setPadding(0, 0, 0, 0);
 
-                switch (i) {
+                switch (position) {
                     case 0:
                         title0.setTextColor(getResources().getColor(R.color.slider_line_color));
                         title1.setTextColor(getResources().getColor(R.color.textColor));
@@ -152,7 +172,7 @@ public class LoopFragment extends BaseFragment {
                         title1.setTextColor(getResources().getColor(R.color.slider_line_color));
                         break;
                 }
-                currIndex = i;
+                currIndex = position;
                 Animation anim = new TranslateAnimation(currIndex == 1 ? offsetX : tabWidth + offsetX,
                         currIndex == 1 ? tabWidth + offsetX : offsetX, 0, 0);
                 anim.setFillAfter(true);
@@ -161,7 +181,7 @@ public class LoopFragment extends BaseFragment {
             }
 
             @Override
-            public void onPageScrollStateChanged(int i) {
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
@@ -175,7 +195,7 @@ public class LoopFragment extends BaseFragment {
     }
 
     private void LoadRecommendLoopImage() {
-        Log.i(TAG, "轮播图片URL列表:" + imagePathList.toString());
+        DeBugLog.i(TAG, "轮播图片URL列表:" + imagePathList.toString());
         if (imagePathList != null && imagePathList.size() > 0) {
             imageLoader.displayImage(imagePathList.get(0), imageView1, displayImageOptions);
             imageLoader.displayImage(imagePathList.get(1), imageView2, displayImageOptions);
@@ -189,7 +209,6 @@ public class LoopFragment extends BaseFragment {
      * 初始化获得屏幕宽高等
      */
     private void initScreenOrImageLoad() {
-
         screenHeight = new ScreenUtils(getActivity()).getScreenHeight();
         screenWidth = new ScreenUtils(getActivity()).getScreenWidth();
 
@@ -213,8 +232,6 @@ public class LoopFragment extends BaseFragment {
         loopLayoutParams.height = screenHeight / 3;
         loopLayoutParams.width = screenWidth;
         loopScrollLayout.setLayoutParams(loopLayoutParams);
-
-        DeBugLog.i(TAG, "screenHeight:" + screenHeight + ",screenWidth:" + screenWidth);
 
         imageView1 = new ImageView(getActivity());
         imageView1.setTag(IMAGEID1);
@@ -252,6 +269,11 @@ public class LoopFragment extends BaseFragment {
         loopScrollViewPager.setAdapter(loopScrollPagerAdapter);
         loopScrollViewPager.startAutoScroll();
 
+        pageIndicator = (CirclePageIndicator) rootView.findViewById(R.id.loopScrollViewPagerIndicator);
+        pageIndicator.addIndicator(loopScrollPagerAdapter.getCount());
+
+        loopScrollViewPager.setPageTransformer(true, new DepthPageTransformer());
+
         title0 = (TextView) rootView.findViewById(R.id.theme_title);
         title1 = (TextView) rootView.findViewById(R.id.area_title);
 
@@ -262,6 +284,7 @@ public class LoopFragment extends BaseFragment {
         sliderView.setLayoutParams(sliderParams);
 
         loopViewPager = (ViewPager) rootView.findViewById(R.id.loopViewPager);
+        loopViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
 
         //主题页面
         ThemeFragment themeFragment = ThemeFragment.newInstance(userSign, verification);
@@ -342,15 +365,17 @@ public class LoopFragment extends BaseFragment {
                         imagePathList.add(imagePath);
                     }
                     LoadRecommendLoopImage();
+                } else {
+                    DeBugLog.e(TAG, "轮播图片URL获取失败!");
                 }
             } catch (Exception e) {
-                Log.e(TAG, "推荐的圈子解析错误:" + e.getMessage());
+                DeBugLog.e(TAG, "推荐的圈子解析错误:" + e.getMessage());
             }
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, "推荐的圈子请求错误:" + e.getMessage());
+            DeBugLog.e(TAG, "推荐的圈子请求错误:" + e.getMessage());
         }
     }
 

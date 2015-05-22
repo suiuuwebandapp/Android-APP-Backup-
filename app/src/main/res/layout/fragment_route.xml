@@ -23,6 +23,7 @@
             android:scrollbars="none"
             android:layout_marginRight="@dimen/layout_12dp"></ListView>
 
+
     </com.minglang.suiuu.customview.PullToRefreshView>
 
     <TextView

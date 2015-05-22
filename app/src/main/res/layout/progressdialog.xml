@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"  
         android:layout_margin="5dp"
         android:textColor="#BDBDBD"
-        android:text="数据加载中……" />
+        android:text="@string/pull_to_refresh_footer_refreshing_label" />
 
 </LinearLayout>

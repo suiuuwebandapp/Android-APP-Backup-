@@ -146,6 +146,7 @@
     <string name="people_number">人数</string>
     <string name="type">类型</string>
     <string name="price">价格</string>
+    <string name="refreshData">点击重新加载数据</string>
 
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
