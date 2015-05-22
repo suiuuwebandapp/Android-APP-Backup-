@@ -28,16 +28,42 @@
             android:text="@string/title1"
             android:textColor="@color/white"
             android:textSize="18sp"/>
-
+        <RelativeLayout
+            android:id="@+id/rl_top_info"
+            android:layout_width="@dimen/layout_200dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/et_search"
+            android:visibility="gone">
+            <EditText
+                android:id="@+id/et_suiuu"
+                android:layout_width="@dimen/layout_200dp"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/layout_5dp"
+                android:hint="输入你感兴趣的国家,城市"
+                android:textSize="@dimen/layout_15sp"
+                />
+            <ImageButton
+                android:id="@+id/ib_suiuu_search"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/icon_search1"
+                android:layout_marginRight="@dimen/layout_5dp"/>
+        </RelativeLayout>
         <ImageView
-            android:id="@+id/mainPagerSearch"
+            android:id="@+id/iv_suiuu_search_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
-            android:src="@drawable/icon_search"/>
+            android:src="@drawable/iv_suiuu_search_more"
+            />
 
     </RelativeLayout>
 

@@ -143,6 +143,10 @@
 
     <string name="next">下一步</string>
     <string name="a">A</string>
+    <string name="people_number">人数</string>
+    <string name="type">类型</string>
+    <string name="price">价格</string>
+
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>

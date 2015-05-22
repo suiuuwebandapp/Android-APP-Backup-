@@ -1,13 +1,10 @@
 package com.minglang.suiuu.fragment.main;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +12,12 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +33,7 @@ import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.PullToRefreshView;
 import com.minglang.suiuu.customview.mProgressDialog;
+import com.minglang.suiuu.customview.rangebar.RangeBar;
 import com.minglang.suiuu.entity.SuiuuDataList;
 import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.utils.AppUtils;
@@ -50,7 +51,6 @@ import java.util.List;
  * 随游页面
  */
 public class RouteFragment extends BaseFragment implements PullToRefreshView.OnHeaderRefreshListener, PullToRefreshView.OnFooterRefreshListener {
-    private TextView titleInfo;
     private ListView lv_suiuu;
     private JsonUtils jsonUtil = JsonUtils.getInstance();
     private List<SuiuuDataList> suiuuDataList;
@@ -58,10 +58,6 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
     /**
      * @description PopupWindow
      */
-    private PopupWindow popWindow;
-    private TextView tv_country;
-    private TextView tv_city;
-    private TextView tv_type;
     private PullToRefreshView mPullToRefreshView;
     private int page = 1;
     private TextView tv_nodata_load;
@@ -72,6 +68,25 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
     private LinearLayout tabSelect;
 
     private int lastVisibleItemPosition = 0;// 标记上次滑动位置
+    //头部空间
+    private TextView titleInfo;
+    private RelativeLayout rl_top_info;
+    private EditText et_suiuu;
+    private ImageView iv_suiuu_search_more;
+    private ImageButton ib_suiuu_search;
+    private FrameLayout fl_search_more;
+    private ImageButton ib_release;
+    private EditText et_peple_number;
+    private ImageButton ib_plus;
+
+    /**
+     * 参与的人数
+     */
+    private int enjoy_peopleNumber;
+    private RangeBar rangebar;
+    private TextView tv_price_range;
+    private int startTick;
+    private int endTick;
 
     @SuppressLint("InflateParams")
     @Override
@@ -86,9 +101,9 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
         innitView(rootView);
         loadDate(null, null, null, page);
         LinearLayout.LayoutParams paramTest = (LinearLayout.LayoutParams) lv_suiuu.getLayoutParams();
-        //paramTest.topMargin = ConstantUtil.topHeight;
         paramTest.setMargins(10, ConstantUtil.topHeight + 10, 10, 0);
         lv_suiuu.setLayoutParams(paramTest);
+
         viewAction();
         return rootView;
     }
@@ -122,7 +137,7 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
                 tv_nodata_load.setVisibility(View.GONE);
             }
         });
-
+        //滚动监听
         lv_suiuu.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
@@ -156,22 +171,53 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
                 lastVisibleItemPosition = firstVisibleItem;
             }
         });
+        rangebar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
+            @Override
+            public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex,
+                                              int rightPinIndex,
+                                              String leftPinValue, String rightPinValue) {
+                Log.i("suiuu", leftPinIndex + "----------------" + rightPinIndex);
+                startTick = leftPinIndex;
+                endTick = rightPinIndex;
+                tv_price_range.setText(leftPinIndex * 1000 + "--" + rightPinIndex * 1000);
+            }
+        });
     }
 
     private void innitView(View rootView) {
-//        iv_choice = (ImageView) rootView.findViewById(R.id.iv_choice);
-        titleInfo = (TextView) rootView.findViewById(R.id.titleInfo);
-        titleInfo.setVisibility(View.GONE);
         lv_suiuu = (ListView) rootView.findViewById(R.id.lv_suiuu);
         mPullToRefreshView = (PullToRefreshView) rootView.findViewById(R.id.main_pull_refresh_view);
         tv_nodata_load = (TextView) rootView.findViewById(R.id.tv_nodata_load);
         mPullToRefreshView.setVisibility(View.GONE);
         mPullToRefreshView.setOnHeaderRefreshListener(this);
         mPullToRefreshView.setOnFooterRefreshListener(this);
-        initPopWindow(getActivity());
-        tabSelect = (LinearLayout) getActivity().findViewById(R.id.mainShowLayout).findViewById(R.id.tabSelect);
+        View topView = getActivity().findViewById(R.id.mainShowLayout);
+        tabSelect = (LinearLayout) topView.findViewById(R.id.tabSelect);
         dialog = new mProgressDialog(getActivity());
+        //处理头部控件
+        titleInfo = (TextView) topView.findViewById(R.id.titleInfo);
+        titleInfo.setVisibility(View.GONE);
+        rl_top_info = (RelativeLayout) topView.findViewById(R.id.rl_top_info);
+        rl_top_info.setVisibility(View.VISIBLE);
+        et_suiuu = (EditText) topView.findViewById(R.id.et_suiuu);
+        iv_suiuu_search_more = (ImageView) topView.findViewById(R.id.iv_suiuu_search_more);
+        ib_suiuu_search = (ImageButton) topView.findViewById(R.id.ib_suiuu_search);
+        ib_suiuu_search.setOnClickListener(new MyOnclick());
+        iv_suiuu_search_more.setVisibility(View.VISIBLE);
 
+        fl_search_more = (FrameLayout) rootView.findViewById(R.id.fl_search_more);
+        iv_suiuu_search_more.setOnClickListener(new MyOnclick());
+        ib_release = (ImageButton) rootView.findViewById(R.id.ib_release);
+        ib_release.setOnClickListener(new MyOnclick());
+        et_peple_number = (EditText) rootView.findViewById(R.id.et_peple_number);
+        et_peple_number.setOnClickListener(new MyOnclick());
+        ib_plus = (ImageButton) rootView.findViewById(R.id.ib_plus);
+        ib_plus.setOnClickListener(new MyOnclick());
+        rangebar = (RangeBar) rootView.findViewById(R.id.rangebar);
+        rangebar.setTickStart(0);
+        rangebar.setTickEnd(10);
+        rangebar.setTickInterval(1);
+        tv_price_range = (TextView) rootView.findViewById(R.id.tv_price_range);
 
     }
 
@@ -277,30 +323,45 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
         }
     }
 
-    private void initPopWindow(Context context) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View vPopWindow = inflater.inflate(R.layout.popuwindowforchoicesuiuu, null, false);
-        popWindow = new PopupWindow(vPopWindow, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        popWindow.setBackgroundDrawable(new BitmapDrawable());
-        popWindow.setFocusable(true);
-        popWindow.setOutsideTouchable(false);
-        tv_country = (TextView) vPopWindow.findViewById(R.id.tv_country);
-        tv_city = (TextView) vPopWindow.findViewById(R.id.tv_city);
-        tv_type = (TextView) vPopWindow.findViewById(R.id.tv_type);
-        tv_country.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                popWindow.dismiss();
-                lv_suiuu.setClickable(true);
+    public void fragmentShow() {
+        if (fl_search_more.isShown()) {
+            fl_search_more.setVisibility(View.GONE);
 
+        } else {
+
+            fl_search_more.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams paramTest1 = (RelativeLayout.LayoutParams) fl_search_more.getLayoutParams();
+            paramTest1.setMargins(10, ConstantUtil.topHeight + 10, 10, 0);
+            fl_search_more.setLayoutParams(paramTest1);
+        }
+    }
+
+    class MyOnclick implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            enjoy_peopleNumber = Integer.valueOf(String.valueOf(et_peple_number.getText()));
+            switch (v.getId()) {
+                case R.id.iv_suiuu_search_more:
+                    fragmentShow();
+                    break;
+                case R.id.ib_release:
+                    if (enjoy_peopleNumber != 0) {
+                        et_peple_number.setText(String.valueOf(enjoy_peopleNumber - 1));
+                    }
+                    break;
+                case R.id.ib_plus:
+                    et_peple_number.setText(String.valueOf(enjoy_peopleNumber + 1));
+                    break;
+                case R.id.ib_suiuu_search:
+                    Log.i("suiuu", "点击了搜索");
+                    if (fl_search_more.isShown()) {
+                        et_suiuu.getText();
+                        loadDate(null, null, null, page);
+                    }
+                    break;
             }
-        });
+        }
     }
 
-    private void showPopWindow(View parent) {
-        int[] location = new int[2];
-        parent.getLocationOnScreen(location);
-        popWindow.showAtLocation(parent, Gravity.NO_GRAVITY, location[0] + parent.getWidth(), location[1] + parent.getHeight());
-    }
 }

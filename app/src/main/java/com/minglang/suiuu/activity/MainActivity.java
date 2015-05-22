@@ -158,7 +158,6 @@ public class MainActivity extends BaseActivity {
     private RelativeLayout errorItem;
     private TextView errorText;
 
-    private ImageView im_search;
 
     private ImageView iv_theme;
     private TextView tv_theme_text;
@@ -418,14 +417,6 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-        im_search.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-                intent.putExtra("userId", "third");
-                startActivity(intent);
-            }
-        });
     }
 
     /**
@@ -600,8 +591,7 @@ public class MainActivity extends BaseActivity {
     private void initView() {
         conversationFragment = new ChatAllHistoryFragment();
 
-        im_search = (ImageView) findViewById(R.id.mainPagerSearch);
-        im_search.setVisibility(View.INVISIBLE);
+
 
         errorItem = (RelativeLayout) findViewById(R.id.rl_error_item);
         errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
