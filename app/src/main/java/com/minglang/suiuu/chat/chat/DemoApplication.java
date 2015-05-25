@@ -38,7 +38,7 @@ public class DemoApplication extends Application {
 	// login user name
 	public final String PREF_USERNAME = "username";
     /** @description 所有已经启动的activity集合 */
-    private static ArrayList<Activity> activitys = new ArrayList();
+    private static ArrayList<Activity> activitys = new ArrayList<>();
 	/**
 	 * 当前用户nickname,为了苹果推送不是userid而是昵称
 	 */
