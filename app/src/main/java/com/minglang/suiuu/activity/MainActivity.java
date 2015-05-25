@@ -592,7 +592,6 @@ public class MainActivity extends BaseActivity {
         conversationFragment = new ChatAllHistoryFragment();
 
 
-
         errorItem = (RelativeLayout) findViewById(R.id.rl_error_item);
         errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
         msgCount = (TextView) findViewById(R.id.unread_msg_number);
@@ -603,31 +602,27 @@ public class MainActivity extends BaseActivity {
         mDrawerLayout.setFocusableInTouchMode(true);
 
         RelativeLayout mainShowLayout = (RelativeLayout) findViewById(R.id.mainShowLayout);
-        if (isNavigationBar) {
-            if (isKITKAT) {
-                mDrawerLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-                mainShowLayout.setPadding(0, 0, 0, navigationBarHeight);
-                DeBugLog.i(TAG, "4.4以上，有虚拟按键");
+        if (isKITKAT) {
+            if (navigationBarHeight > 0) {
+                mainShowLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
             } else {
-//                mDrawerLayout.setPadding(0, 0, 0, navigationBarHeight);
-                DeBugLog.i(TAG, "4.4以下，有虚拟按键");
+                mainShowLayout.setPadding(0, statusBarHeight, 0, 0);
             }
         } else {
-            if (isKITKAT) {
-                mDrawerLayout.setPadding(0, statusBarHeight, 0, 0);
-                DeBugLog.i(TAG, "4.4以上，无虚拟按键");
+            if (navigationBarHeight > 0) {
+                mainShowLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
             } else {
-                DeBugLog.i(TAG, "4.4以下，无虚拟按键");
+                mainShowLayout.setPadding(0, 0, 0, navigationBarHeight);
             }
         }
 
-        if (isKITKAT) {
-            /**************HeadLayout设置Margins*****************/
-            RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
-            LinearLayout.LayoutParams titleLayoutParams = new LinearLayout.LayoutParams(titleLayout.getLayoutParams());
-            titleLayoutParams.setMargins(0, statusBarHeight, 0, 0);
-            titleLayout.setLayoutParams(titleLayoutParams);
-        }
+//        if (isKITKAT) {
+//            /**************HeadLayout设置Margins*****************/
+//            RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
+//            LinearLayout.LayoutParams titleLayoutParams = new LinearLayout.LayoutParams(titleLayout.getLayoutParams());
+//            titleLayoutParams.setMargins(0, statusBarHeight, 0, 0);
+//            titleLayout.setLayoutParams(titleLayoutParams);
+//        }
 
         /*************设置侧滑菜单Params**********************/
         slideLayout = (RelativeLayout) findViewById(R.id.slideLayout);
@@ -1124,6 +1119,12 @@ public class MainActivity extends BaseActivity {
             conflictBuilder = null;
         }
 
+    }
+
+    @Override
+    public void finish() {
+        imageLoader.clearMemoryCache();
+        super.finish();
     }
 
     private long exitTime;

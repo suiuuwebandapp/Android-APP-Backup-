@@ -68,30 +68,43 @@ public class BaseActivity extends FragmentActivity {
     public String userSign;
     public String verification;
 
+    private long maxMemorySize;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
 
+        maxMemorySize = Runtime.getRuntime().maxMemory() / 1024 / 1024;
+        DeBugLog.i(TAG, "应用程序可用最大内存:" + maxMemorySize);
+
+        initScreen();
         initImageLoad();
         initStatusBarControl();
-        initScreen();
         initSundry();
 
         BaseFragment baseFragment = new BaseFragment();
         baseFragment.setContext(this);
-        baseFragment.setActivity(this);
+
+        baseFragment.setKITKAT(isKITKAT);
+        baseFragment.setNavigationBar(isNavigationBar);
+        baseFragment.setStatusBarHeight(statusBarHeight);
+        baseFragment.setNavigationBarHeight(navigationBarHeight);
+        baseFragment.setNavigationBarWidth(navigationBarWidth);
+
+        baseFragment.setUserSign(userSign);
+        baseFragment.setVerification(verification);
+
         baseFragment.setScreenHeight(screenHeight);
         baseFragment.setScreenWidth(screenWidth);
-        fm.beginTransaction().attach(baseFragment).commit();
-        if (baseFragment.getActivity() != null) {
-            DeBugLog.i(TAG, "className:" + baseFragment.getActivity().getClass().getSimpleName());
-        }
     }
 
     private void initImageLoad() {
+        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(this);
+        builder.memoryCacheSize((int) maxMemorySize / 4);
+        ImageLoaderConfiguration configuration = builder.build();
         if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(BaseActivity.this));
+            imageLoader.init(configuration);
         }
     }
 

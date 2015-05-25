@@ -33,7 +33,6 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,11 +58,6 @@ public class LoopDetailsActivity extends BaseActivity {
      * 圈子ID
      */
     private String circleId;
-
-    /**
-     * 验证信息
-     */
-    private String Verification;
 
     /**
      * 返回键
@@ -107,8 +101,6 @@ public class LoopDetailsActivity extends BaseActivity {
         type = getIntent().getStringExtra(TYPE);
         circleId = getIntent().getStringExtra(CIRCLEID);
         loopName = getIntent().getStringExtra("name");
-
-        Verification = SuiuuInfo.ReadVerification(this);
 
         initView();
         ViewAction();
@@ -183,7 +175,7 @@ public class LoopDetailsActivity extends BaseActivity {
      */
     private void getInternetServiceData(int page) {
         RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter(CIRCLEID, circleId);
         params.addBodyParameter(TYPE, type);
         params.addBodyParameter("number", String.valueOf(10));
@@ -201,7 +193,7 @@ public class LoopDetailsActivity extends BaseActivity {
     private void setAddAttention2Service() {
         RequestParams params = new RequestParams();
         params.addBodyParameter(CID, circleId);
-        params.addBodyParameter(HttpServicePath.key, Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.setAddAttentionPath, new AddAttentionRequestCallBack());
         httpRequest.setParams(params);
@@ -214,7 +206,7 @@ public class LoopDetailsActivity extends BaseActivity {
     private void setCancelAttention2Service() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("attentionId", attentionId);
-        params.addBodyParameter(HttpServicePath.key, Verification);
+        params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getCancelServicePath, new CancelRequestCallBack());
         httpRequest.setParams(params);
@@ -224,6 +216,7 @@ public class LoopDetailsActivity extends BaseActivity {
     /**
      * 判断是否关注
      */
+    @SuppressWarnings("deprecation")
     private void isAttention() {
         if (TextUtils.isEmpty(attentionId)) {
             addAttention.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.attention)),
