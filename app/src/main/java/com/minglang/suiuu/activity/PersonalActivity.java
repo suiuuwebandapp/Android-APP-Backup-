@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +32,7 @@ import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInfo;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.minglang.suiuu.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,10 +78,6 @@ public class PersonalActivity extends BaseActivity {
     private ViewPager personalShowPage;
 
     private GridView suiuuGrid, postGrid;
-
-    private ImageLoader imageLoader;
-
-    private String userSign, verification;
 
     private ProgressDialog dialog;
 
@@ -266,28 +261,27 @@ public class PersonalActivity extends BaseActivity {
         signature = (TextView) findViewById(R.id.personalSignature);
         praise = (TextView) findViewById(R.id.personalCollection);
 
+        RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.personalBackgroundLayout);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(titleLayout.getLayoutParams());
+        params.height = screenHeight / 5 * 2;
+        params.width = screenWidth;
+        titleLayout.setLayoutParams(params);
+
         personalShowPage = (ViewPager) findViewById(R.id.personalShowPage);
 
-        imageLoader = ImageLoader.getInstance();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(this));
-        }
-
-        userSign = SuiuuInfo.ReadUserSign(this);
-        verification = SuiuuInfo.ReadVerification(this);
-
-        DeBugLog.i(TAG, "userSign:" + userSign);
-        DeBugLog.i(TAG, "verification:" + verification);
+        int paddingParams = Utils.newInstance(this).dip2px(5f);
 
         suiuuGrid = new GridView(this);
         suiuuGrid.setHorizontalSpacing(10);
         suiuuGrid.setVerticalSpacing(10);
         suiuuGrid.setNumColumns(2);
+        suiuuGrid.setPadding(paddingParams, paddingParams, paddingParams, paddingParams);
 
         postGrid = new GridView(this);
         postGrid.setHorizontalSpacing(10);
         postGrid.setVerticalSpacing(10);
         postGrid.setNumColumns(2);
+        postGrid.setPadding(paddingParams, paddingParams, paddingParams, paddingParams);
 
         personalSuiuuAdapter = new PersonalSuiuuAdapter(this);
         suiuuGrid.setAdapter(personalSuiuuAdapter);
@@ -305,7 +299,6 @@ public class PersonalActivity extends BaseActivity {
 
     private class PersonalInfoCallBack extends RequestCallBack<String> {
 
-
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
 
@@ -315,7 +308,6 @@ public class PersonalActivity extends BaseActivity {
 
             String str = responseInfo.result;
             userData2View(str);
-
         }
 
         @Override

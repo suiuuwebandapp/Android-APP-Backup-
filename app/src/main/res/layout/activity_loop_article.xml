@@ -120,6 +120,7 @@
                             android:gravity="center"
                             android:text="@string/editor"
                             android:textColor="@drawable/text_color_selector"
+                            android:visibility="invisible"
                             android:textSize="18sp"/>
 
                         <TextView
@@ -136,6 +137,7 @@
                             android:drawableStart="@drawable/icon_delete_selector"
                             android:text="@string/delete"
                             android:textColor="@drawable/text_color_selector"
+                            android:visibility="invisible"
                             android:textSize="18sp"/>
                     </RelativeLayout>
 
@@ -300,8 +302,7 @@
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/loop_article_comments"
             android:layout_toStartOf="@+id/loop_article_comments"
-            android:drawableLeft="@drawable/share_select"
-            android:drawablePadding="5dp"
+            android:drawableLeft="@drawable/icon_share2"
             android:drawableStart="@drawable/share_select"
             android:gravity="center_vertical"
             android:text="@string/share"

@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Xfermode;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
@@ -55,7 +56,7 @@ public abstract class BaseImageView extends ImageView {
 
     @SuppressLint("DrawAllocation")
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         if (!isInEditMode()) {
             int i = canvas.saveLayer(0.0f, 0.0f, getWidth(), getHeight(),
                     null, Canvas.ALL_SAVE_FLAG);
@@ -95,7 +96,6 @@ public abstract class BaseImageView extends ImageView {
                     mPaint.setXfermode(null);
 //                    mPaint.setShader(null);
                     canvas.drawBitmap(bitmap, 0.0f, 0.0f, mPaint);
-                    return;
                 }
             } catch (Exception e) {
                 System.gc();

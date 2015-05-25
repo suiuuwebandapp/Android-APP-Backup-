@@ -9,186 +9,172 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FlowLayout extends ViewGroup
-{
+public class FlowLayout extends ViewGroup {
 
-	public FlowLayout(Context context, AttributeSet attrs, int defStyle)
-	{
-		super(context, attrs, defStyle);
-		//
-	}
+    public FlowLayout(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        //
+    }
 
-	public FlowLayout(Context context, AttributeSet attrs)
-	{
-		this(context, attrs, 0);
-	}
+    public FlowLayout(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
-	public FlowLayout(Context context)
-	{
-		this(context, null);
-	}
+    public FlowLayout(Context context) {
+        this(context, null);
+    }
 
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
-	{
-		int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
-		int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
-		int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
-		int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
+        int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
+        int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
 
 
-		int width = 0;
-		int height = 0;
+        int width = 0;
+        int height = 0;
 
-		int lineWidth = 0;
-		int lineHeight = 0;
-
-
-		int cCount = getChildCount();
-
-		for (int i = 0; i < cCount; i++)
-		{
-			View child = getChildAt(i);
-
-			measureChild(child, widthMeasureSpec, heightMeasureSpec);
-
-			MarginLayoutParams lp = (MarginLayoutParams) child
-					.getLayoutParams();
+        int lineWidth = 0;
+        int lineHeight = 0;
 
 
-			int childWidth = child.getMeasuredWidth() + lp.leftMargin
-					+ lp.rightMargin;
+        int cCount = getChildCount();
 
-			int childHeight = child.getMeasuredHeight() + lp.topMargin
-					+ lp.bottomMargin;
+        for (int i = 0; i < cCount; i++) {
+            View child = getChildAt(i);
 
-			// ����
-			if (lineWidth + childWidth > sizeWidth - getPaddingLeft() - getPaddingRight())
-			{
+            measureChild(child, widthMeasureSpec, heightMeasureSpec);
 
-				width = Math.max(width, lineWidth);
-
-				lineWidth = childWidth;
-
-				height += lineHeight;
-				lineHeight = childHeight;
-			} else
-
-			{
-
-				lineWidth += childWidth;
-
-				lineHeight = Math.max(lineHeight, childHeight);
-			}
-
-			if (i == cCount - 1)
-			{
-				width = Math.max(lineWidth, width);
-				height += lineHeight;
-			}
-		}
-
-		Log.e("TAG", "sizeWidth = " + sizeWidth);
-		Log.e("TAG", "sizeHeight = " + sizeHeight);
-
-		setMeasuredDimension(
-				//
-				modeWidth == MeasureSpec.EXACTLY ? sizeWidth : width + getPaddingLeft() + getPaddingRight(),
-				modeHeight == MeasureSpec.EXACTLY ? sizeHeight : height + getPaddingTop()+ getPaddingBottom()//
-		);
-
-	}
+            MarginLayoutParams lp = (MarginLayoutParams) child
+                    .getLayoutParams();
 
 
-	private List<List<View>> mAllViews = new ArrayList<List<View>>();
+            int childWidth = child.getMeasuredWidth() + lp.leftMargin
+                    + lp.rightMargin;
 
-	private List<Integer> mLineHeight = new ArrayList<Integer>();
+            int childHeight = child.getMeasuredHeight() + lp.topMargin
+                    + lp.bottomMargin;
 
-	@Override
-	protected void onLayout(boolean changed, int l, int t, int r, int b)
-	{
-		mAllViews.clear();
-		mLineHeight.clear();
+            // ����
+            if (lineWidth + childWidth > sizeWidth - getPaddingLeft() - getPaddingRight()) {
 
-		// ��ǰViewGroup�Ŀ��
-		int width = getWidth();
+                width = Math.max(width, lineWidth);
 
-		int lineWidth = 0;
-		int lineHeight = 0;
+                lineWidth = childWidth;
 
-		List<View> lineViews = new ArrayList<View>();
+                height += lineHeight;
+                lineHeight = childHeight;
+            } else
 
-		int cCount = getChildCount();
+            {
 
-		for (int i = 0; i < cCount; i++)
-		{
-			View child = getChildAt(i);
-			MarginLayoutParams lp = (MarginLayoutParams) child
-					.getLayoutParams();
+                lineWidth += childWidth;
 
-			int childWidth = child.getMeasuredWidth();
-			int childHeight = child.getMeasuredHeight();
+                lineHeight = Math.max(lineHeight, childHeight);
+            }
 
-			if (childWidth + lineWidth + lp.leftMargin + lp.rightMargin > width - getPaddingLeft() - getPaddingRight())
-			{
-				mLineHeight.add(lineHeight);
-				mAllViews.add(lineViews);
+            if (i == cCount - 1) {
+                width = Math.max(lineWidth, width);
+                height += lineHeight;
+            }
+        }
 
-				lineWidth = 0;
-				lineHeight = childHeight + lp.topMargin + lp.bottomMargin;
-				lineViews = new ArrayList<View>();
-			}
-			lineWidth += childWidth + lp.leftMargin + lp.rightMargin;
-			lineHeight = Math.max(lineHeight, childHeight + lp.topMargin
-					+ lp.bottomMargin);
-			lineViews.add(child);
+        Log.e("TAG", "sizeWidth = " + sizeWidth);
+        Log.e("TAG", "sizeHeight = " + sizeHeight);
 
-		}// for end
-		mLineHeight.add(lineHeight);
-		mAllViews.add(lineViews);
+        setMeasuredDimension(
+                //
+                modeWidth == MeasureSpec.EXACTLY ? sizeWidth : width + getPaddingLeft() + getPaddingRight(),
+                modeHeight == MeasureSpec.EXACTLY ? sizeHeight : height + getPaddingTop() + getPaddingBottom()//
+        );
+
+    }
 
 
-		int left = getPaddingLeft();
-		int top = getPaddingTop();
+    private List<List<View>> mAllViews = new ArrayList<List<View>>();
 
-		int lineNum = mAllViews.size();
+    private List<Integer> mLineHeight = new ArrayList<Integer>();
 
-		for (int i = 0; i < lineNum; i++)
-		{
-			lineViews = mAllViews.get(i);
-			lineHeight = mLineHeight.get(i);
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        mAllViews.clear();
+        mLineHeight.clear();
 
-			for (int j = 0; j < lineViews.size(); j++)
-			{
-				View child = lineViews.get(j);
-				if (child.getVisibility() == View.GONE)
-				{
-					continue;
-				}
+        // ��ǰViewGroup�Ŀ��
+        int width = getWidth();
 
-				MarginLayoutParams lp = (MarginLayoutParams) child
-						.getLayoutParams();
+        int lineWidth = 0;
+        int lineHeight = 0;
 
-				int lc = left + lp.leftMargin;
-				int tc = top + lp.topMargin;
-				int rc = lc + child.getMeasuredWidth();
-				int bc = tc + child.getMeasuredHeight();
+        List<View> lineViews = new ArrayList<>();
 
-				// Ϊ��View���в���
-				child.layout(lc, tc, rc, bc);
+        int cCount = getChildCount();
 
-				left += child.getMeasuredWidth() + lp.leftMargin
-						+ lp.rightMargin;
-			}
-			left = getPaddingLeft() ; 
-			top += lineHeight ; 
-		}
+        for (int i = 0; i < cCount; i++) {
+            View child = getChildAt(i);
+            MarginLayoutParams lp = (MarginLayoutParams) child
+                    .getLayoutParams();
 
-	}
-	@Override
-	public LayoutParams generateLayoutParams(AttributeSet attrs)
-	{
-		return new MarginLayoutParams(getContext(), attrs);
-	}
-	
+            int childWidth = child.getMeasuredWidth();
+            int childHeight = child.getMeasuredHeight();
+
+            if (childWidth + lineWidth + lp.leftMargin + lp.rightMargin > width - getPaddingLeft() - getPaddingRight()) {
+                mLineHeight.add(lineHeight);
+                mAllViews.add(lineViews);
+
+                lineWidth = 0;
+                lineHeight = childHeight + lp.topMargin + lp.bottomMargin;
+                lineViews = new ArrayList<>();
+            }
+            lineWidth += childWidth + lp.leftMargin + lp.rightMargin;
+            lineHeight = Math.max(lineHeight, childHeight + lp.topMargin
+                    + lp.bottomMargin);
+            lineViews.add(child);
+
+        }// for end
+        mLineHeight.add(lineHeight);
+        mAllViews.add(lineViews);
+
+
+        int left = getPaddingLeft();
+        int top = getPaddingTop();
+
+        int lineNum = mAllViews.size();
+
+        for (int i = 0; i < lineNum; i++) {
+            lineViews = mAllViews.get(i);
+            lineHeight = mLineHeight.get(i);
+
+            for (int j = 0; j < lineViews.size(); j++) {
+                View child = lineViews.get(j);
+                if (child.getVisibility() == View.GONE) {
+                    continue;
+                }
+
+                MarginLayoutParams lp = (MarginLayoutParams) child
+                        .getLayoutParams();
+
+                int lc = left + lp.leftMargin;
+                int tc = top + lp.topMargin;
+                int rc = lc + child.getMeasuredWidth();
+                int bc = tc + child.getMeasuredHeight();
+
+                // Ϊ��View���в���
+                child.layout(lc, tc, rc, bc);
+
+                left += child.getMeasuredWidth() + lp.leftMargin
+                        + lp.rightMargin;
+            }
+            left = getPaddingLeft();
+            top += lineHeight;
+        }
+
+    }
+
+    @Override
+    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new MarginLayoutParams(getContext(), attrs);
+    }
+
 }

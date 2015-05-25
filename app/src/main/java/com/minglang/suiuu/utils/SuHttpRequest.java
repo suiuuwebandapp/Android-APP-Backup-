@@ -1,7 +1,5 @@
 package com.minglang.suiuu.utils;
 
-import android.util.Log;
-
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
@@ -17,8 +15,6 @@ import com.lidroid.xutils.http.client.HttpRequest;
 public class SuHttpRequest {
 
     private static final String TAG = SuHttpRequest.class.getSimpleName();
-
-    private static SuHttpRequest suHttpRequest;
 
     /**
      * 网络请求核心类
@@ -97,10 +93,8 @@ public class SuHttpRequest {
 
         if (params == null) {
             httpHandler = httpUtils.send(httpMethod, httpPath, requestCallBack);
-            Log.i(TAG, "Loading No Params Intent Request");
         } else {
             httpHandler = httpUtils.send(httpMethod, httpPath, params, requestCallBack);
-            Log.i(TAG, "Loading Params Intent Request");
         }
     }
 

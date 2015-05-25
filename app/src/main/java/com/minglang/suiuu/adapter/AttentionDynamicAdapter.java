@@ -7,14 +7,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.OtherUserActivity;
 import com.minglang.suiuu.customview.CircleImageView;
-import com.minglang.suiuu.customview.LinearLayoutBaseAdapter;
 import com.minglang.suiuu.entity.MainDynamicDataUser;
+import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -27,7 +28,7 @@ import java.util.List;
  * <p/>
  * Created by Administrator on 2015/4/30.
  */
-public class AttentionDynamicAdapter extends LinearLayoutBaseAdapter {
+public class AttentionDynamicAdapter extends BaseAdapter {
 
     private Context context;
 
@@ -40,7 +41,6 @@ public class AttentionDynamicAdapter extends LinearLayoutBaseAdapter {
     private int ScreenHeight;
 
     public AttentionDynamicAdapter(Context context, List<MainDynamicDataUser> list) {
-        super(context, list);
         this.context = context;
         this.list = list;
 
@@ -65,16 +65,42 @@ public class AttentionDynamicAdapter extends LinearLayoutBaseAdapter {
     }
 
     @Override
-    public View getView(int position) {
+    public int getCount() {
+        if (list != null && list.size() > 0) {
+            return list.size();
+        } else {
+            return 0;
+        }
+    }
 
+    @Override
+    public Object getItem(int position) {
+        if (list != null && list.size() > 0) {
+            return list.get(position);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
         MainDynamicDataUser user = list.get(position);
 
-        View view = getLayoutInflater().inflate(R.layout.item_attention_dynamic, null);
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_attention_dynamic, position);
+        convertView = holder.getConvertView();
+        int itemHeight = ScreenHeight / 4;
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, itemHeight);
+        convertView.setLayoutParams(params);
 
-        ImageView imageView = (ImageView) view.findViewById(R.id.item_attention_dynamic_image);
-        CircleImageView circleImageView = (CircleImageView) view.findViewById(R.id.item_attention_dynamic_head);
-        TextView title = (TextView) view.findViewById(R.id.item_attention_dynamic_title);
-        TextView content = (TextView) view.findViewById(R.id.item_attention_dynamic_content);
+        ImageView imageView = holder.getView(R.id.item_attention_dynamic_image);
+        CircleImageView circleImageView = holder.getView(R.id.item_attention_dynamic_head);
+        TextView title = holder.getView(R.id.item_attention_dynamic_title);
+        TextView content = holder.getView(R.id.item_attention_dynamic_content);
 
         String imagePath = user.getaImg();
         if (!TextUtils.isEmpty(imagePath)) {
@@ -101,13 +127,7 @@ public class AttentionDynamicAdapter extends LinearLayoutBaseAdapter {
         }
 
         circleImageView.setOnClickListener(new MyClickListener(position));
-
-        int itemHeight = ScreenHeight / 4;
-
-        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, itemHeight);
-        view.setLayoutParams(params);
-
-        return view;
+        return convertView;
     }
 
     private class MyClickListener implements View.OnClickListener {

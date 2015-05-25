@@ -72,7 +72,7 @@
                         android:layout_alignParentEnd="true"/>
                 </RelativeLayout>
 
-                <com.minglang.suiuu.customview.LinearLayoutForListView
+                <com.minglang.suiuu.customview.InnerListView
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
                         android:id="@+id/textView5"/>
                 </RelativeLayout>
 
-                <com.minglang.suiuu.customview.LinearLayoutForListView
+                <com.minglang.suiuu.customview.InnerListView
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

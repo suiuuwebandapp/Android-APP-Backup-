@@ -31,7 +31,6 @@ import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.DrawableUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
 import org.json.JSONException;
@@ -145,6 +144,11 @@ public class LoopDetailsActivity extends BaseActivity {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<StaggeredGridView> refreshView) {
+
+                String label = DateUtils.formatDateTime(getApplicationContext(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+
                 page = page + 1;
                 getInternetServiceData(page);
             }
@@ -253,10 +257,6 @@ public class LoopDetailsActivity extends BaseActivity {
 
         loopDetailsGridView = (PullToRefreshStaggeredView) findViewById(R.id.loopDetailsGridView);
         loopDetailsGridView.setMode(PullToRefreshBase.Mode.BOTH);
-
-        ScreenUtils screenUtils = new ScreenUtils(this);
-        int screenWidth = screenUtils.getScreenWidth();
-        int screenHeight = screenUtils.getScreenHeight();
 
         loopDetailsAdapter = new LoopDetailsAdapter(this);
         loopDetailsAdapter.setScreenParams(screenWidth, screenHeight);

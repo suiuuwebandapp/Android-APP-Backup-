@@ -2,7 +2,6 @@ package com.minglang.suiuu.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -26,11 +25,16 @@ import java.util.List;
 public class OtherUserArticleAdapter extends BaseAdapter {
 
     private Context context;
-
     private List<OtherUserDataArticle> list;
-    BitmapUtils bitmapUtils;
+    private BitmapUtils bitmapUtils;
 
     private int screenWidth;
+
+    public OtherUserArticleAdapter(Context context, int screenWidth) {
+        this.context = context;
+        this.screenWidth = screenWidth;
+        bitmapUtils = new BitmapUtils(context);
+    }
 
     public OtherUserArticleAdapter(Context context, List<OtherUserDataArticle> list, int screenWidth) {
         this.context = context;
@@ -39,6 +43,10 @@ public class OtherUserArticleAdapter extends BaseAdapter {
         bitmapUtils = new BitmapUtils(context);
     }
 
+    public void setList(List<OtherUserDataArticle> list) {
+        this.list = list;
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getCount() {
@@ -76,7 +84,6 @@ public class OtherUserArticleAdapter extends BaseAdapter {
         TextView reply = holder.getView(R.id.item_other_user_reply);
 
         String imagePath = article.getaImg();
-        Log.i("suiuu","imagePath" + imagePath);
         if (!TextUtils.isEmpty(imagePath)) {
             bitmapUtils.display(image, imagePath);
         }

@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,7 @@ import com.minglang.suiuu.adapter.LoopDynamicAdapter;
 import com.minglang.suiuu.adapter.RecommendTravelAdapter;
 import com.minglang.suiuu.adapter.TodayStarAdapter;
 import com.minglang.suiuu.base.BaseFragment;
-import com.minglang.suiuu.customview.LinearLayoutForListView;
+import com.minglang.suiuu.customview.InnerListView;
 import com.minglang.suiuu.customview.NoScrollBarGridView;
 import com.minglang.suiuu.entity.MainDynamic;
 import com.minglang.suiuu.entity.MainDynamicData;
@@ -38,6 +37,7 @@ import com.minglang.suiuu.entity.MainDynamicDataLoop;
 import com.minglang.suiuu.entity.MainDynamicDataRecommendTravel;
 import com.minglang.suiuu.entity.MainDynamicDataRecommendUser;
 import com.minglang.suiuu.entity.MainDynamicDataUser;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
@@ -76,7 +76,7 @@ public class MainFragment extends BaseFragment {
     /**
      * 关注动态Layout
      */
-    private LinearLayoutForListView attentionDynamicLayout;
+    private InnerListView attentionDynamicListView;
 
     /**
      * 热门推荐数据集合
@@ -86,7 +86,7 @@ public class MainFragment extends BaseFragment {
     /**
      * 热门推荐Layout
      */
-    private LinearLayoutForListView recommendDynamicLayout;
+    private InnerListView recommendDynamicListView;
 
     /**
      * 今日之星数据
@@ -114,7 +114,7 @@ public class MainFragment extends BaseFragment {
 
     private ProgressDialog progressDialog;
 
-    private RelativeLayout AttentionDynamicTitleLayout, RecommendTravelTitleLayout, TodayStarTitleLayout, LoopDynamicTitleLayout;
+    private RelativeLayout attentionDynamicTitleLayout, recommendDynamicTitleLayout, todayStarTitleLayout, loopDynamicTitleLayout;
 
     @SuppressLint("InflateParams")
     @Override
@@ -123,10 +123,8 @@ public class MainFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_main, null);
 
         initView(rootView);
-
         ViewAction();
-
-        getMainDynamic4Service();
+        getData();
 
         return rootView;
     }
@@ -147,9 +145,10 @@ public class MainFragment extends BaseFragment {
                 AttentionDynamicAdapter attentionDynamicAdapter = new AttentionDynamicAdapter(getActivity(),
                         mainDynamicDataUserList);
                 attentionDynamicAdapter.setScreenHeight(screenHeight);
-                attentionDynamicLayout.setAdapter(attentionDynamicAdapter);
+                attentionDynamicListView.setAdapter(attentionDynamicAdapter);
             } else {
-                AttentionDynamicTitleLayout.setVisibility(View.GONE);
+                attentionDynamicTitleLayout.setVisibility(View.GONE);
+                attentionDynamicListView.setVisibility(View.GONE);
             }
 
             //热门推荐
@@ -158,9 +157,11 @@ public class MainFragment extends BaseFragment {
                 RecommendTravelAdapter recommendTravelAdapter = new RecommendTravelAdapter(getActivity(),
                         recommendTravelList);
                 recommendTravelAdapter.setScreenHeight(screenHeight);
-                recommendDynamicLayout.setAdapter(recommendTravelAdapter);
+                recommendDynamicListView.setAdapter(recommendTravelAdapter);
+                DeBugLog.i(TAG, "recommendTravelList.size():" + recommendTravelList.size());
             } else {
-                RecommendTravelTitleLayout.setVisibility(View.GONE);
+                recommendDynamicTitleLayout.setVisibility(View.GONE);
+                recommendDynamicListView.setVisibility(View.GONE);
             }
 
             //今日之星
@@ -170,7 +171,7 @@ public class MainFragment extends BaseFragment {
                 todayStarAdapter.setScreenParams(screenWidth);
                 todayStarGridView.setAdapter(todayStarAdapter);
             } else {
-                TodayStarTitleLayout.setVisibility(View.GONE);
+                todayStarTitleLayout.setVisibility(View.GONE);
             }
 
             //圈子动态
@@ -180,13 +181,20 @@ public class MainFragment extends BaseFragment {
                 loopDynamicAdapter.setScreenParams(screenWidth);
                 loopDynamicGridView.setAdapter(loopDynamicAdapter);
             } else {
-                LoopDynamicTitleLayout.setVisibility(View.GONE);
+                loopDynamicTitleLayout.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            Log.e(TAG, "首页数据解析失败:" + e.getMessage());
+            DeBugLog.e(TAG, "首页数据解析失败:" + e.getMessage());
             Toast.makeText(getActivity(),
                     getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void getData() {
+        if (progressDialog != null) {
+            progressDialog.show();
+        }
+        getMainDynamic4Service();
     }
 
     /**
@@ -201,10 +209,6 @@ public class MainFragment extends BaseFragment {
                 HttpServicePath.MainDynamicPath, new MainDynamicRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
-
-        if (progressDialog != null) {
-            progressDialog.show();
-        }
     }
 
     /**
@@ -213,6 +217,7 @@ public class MainFragment extends BaseFragment {
     private void ViewAction() {
         mPtrFrame.setLastUpdateTimeRelateObject(this);
         mPtrFrame.setPtrHandler(new PtrHandler() {
+
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
                 return PtrDefaultHandler.checkContentCanBePulledDown(frame, scrollView, header);
@@ -220,16 +225,13 @@ public class MainFragment extends BaseFragment {
 
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
-
-                SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                        HttpServicePath.MainDynamicPath, new MainDynamicRequestCallBack());
-                httpRequest.requestNetworkData();
+                getMainDynamic4Service();
             }
         });
 
-        attentionDynamicLayout.setOnItemClickListener(new LinearLayoutForListView.OnItemClickListener() {
+        attentionDynamicListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClicked(View v, Object obj, int position) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MainDynamicDataUser user = mainDynamicDataUserList.get(position);
                 String articleId = user.getArticleId();
                 Intent intent = new Intent(getActivity(), LoopArticleActivity.class);
@@ -239,9 +241,9 @@ public class MainFragment extends BaseFragment {
             }
         });
 
-        recommendDynamicLayout.setOnItemClickListener(new LinearLayoutForListView.OnItemClickListener() {
+        recommendDynamicListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClicked(View v, Object obj, int position) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), SuiuuDetailActivity.class);
                 intent.putExtra("tripId", recommendTravelList.get(position).getTripId());
                 startActivity(intent);
@@ -316,7 +318,7 @@ public class MainFragment extends BaseFragment {
 
         // the following are default settings
         mPtrFrame.setResistance(1.7f);
-        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
+        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.5f);
         mPtrFrame.setDurationToClose(200);
         mPtrFrame.setDurationToCloseHeader(1000);
         // default is false
@@ -324,10 +326,17 @@ public class MainFragment extends BaseFragment {
         // default is true
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
-        attentionDynamicLayout = (LinearLayoutForListView) rootView.findViewById(R.id.mainAttentionLayout);
-        recommendDynamicLayout = (LinearLayoutForListView) rootView.findViewById(R.id.mainRecommendationLayout);
+        attentionDynamicListView = (InnerListView) rootView.findViewById(R.id.mainAttentionLayout);
+        attentionDynamicListView.setMaxHeight(screenHeight);
+        attentionDynamicListView.setParentScrollView(scrollView);
+
+        recommendDynamicListView = (InnerListView) rootView.findViewById(R.id.mainRecommendationLayout);
+        recommendDynamicListView.setMaxHeight(screenHeight);
+        recommendDynamicListView.setParentScrollView(scrollView);
+
         todayStarGridView = (NoScrollBarGridView) rootView.findViewById(R.id.mainTodayStarGridView);
         loopDynamicGridView = (NoScrollBarGridView) rootView.findViewById(R.id.mainLoopDynamicGridView);
+
         moreButton = (TextView) rootView.findViewById(R.id.main_fragment_more);
 
         RelativeLayout footBlackView = (RelativeLayout) rootView.findViewById(R.id.main_fragment_foot_black_view);
@@ -336,10 +345,10 @@ public class MainFragment extends BaseFragment {
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         footBlackView.setLayoutParams(params);
 
-        AttentionDynamicTitleLayout = (RelativeLayout) rootView.findViewById(R.id.AttentionDynamicTitleLayout);
-        RecommendTravelTitleLayout = (RelativeLayout) rootView.findViewById(R.id.RecommendTravelTitleLayout);
-        TodayStarTitleLayout = (RelativeLayout) rootView.findViewById(R.id.TodayStarTitleLayout);
-        LoopDynamicTitleLayout = (RelativeLayout) rootView.findViewById(R.id.LoopDynamicTitleLayout);
+        attentionDynamicTitleLayout = (RelativeLayout) rootView.findViewById(R.id.AttentionDynamicTitleLayout);
+        recommendDynamicTitleLayout = (RelativeLayout) rootView.findViewById(R.id.RecommendTravelTitleLayout);
+        todayStarTitleLayout = (RelativeLayout) rootView.findViewById(R.id.TodayStarTitleLayout);
+        loopDynamicTitleLayout = (RelativeLayout) rootView.findViewById(R.id.LoopDynamicTitleLayout);
     }
 
     /**
@@ -354,24 +363,21 @@ public class MainFragment extends BaseFragment {
             }
 
             String str = stringResponseInfo.result;
-
-            attentionDynamicLayout.removeAllViews();
-            recommendDynamicLayout.removeAllViews();
             bindData2View(str);
+
             scrollView.smoothScrollTo(0, 0);
             mPtrFrame.refreshComplete();
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
 
             mPtrFrame.refreshComplete();
 
-            Log.e(TAG, "数据请求失败:" + s);
+            DeBugLog.e(TAG, "数据请求失败:" + s);
             Toast.makeText(getActivity(), "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }

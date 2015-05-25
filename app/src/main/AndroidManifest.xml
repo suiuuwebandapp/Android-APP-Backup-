@@ -275,10 +275,6 @@
             android:name=".base.BaseActivity"
             android:label="@string/title_activity_base" >
         </activity>
-        <activity
-            android:name=".activity.TestLoopDetailsActivity"
-            android:label="@string/title_activity_test_loop_detailsctivity" >
-        </activity>
     </application>
 
 </manifest>

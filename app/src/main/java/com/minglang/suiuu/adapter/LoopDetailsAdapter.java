@@ -14,8 +14,10 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.OtherUserActivity;
+import com.minglang.suiuu.activity.PersonalActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.LoopDetailsDataList;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -43,9 +45,12 @@ public class LoopDetailsAdapter extends BaseAdapter {
 
     private int screenWidth, screenHeight;
 
+    private String MyUserSign;
+
     public LoopDetailsAdapter(Context context) {
         this.context = context;
         loader = ImageLoader.getInstance();
+
         if (!loader.isInited()) {
             loader.init(ImageLoaderConfiguration.createDefault(context));
         }
@@ -59,6 +64,8 @@ public class LoopDetailsAdapter extends BaseAdapter {
                 .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        MyUserSign = SuiuuInfo.ReadUserSign(context);
     }
 
     public void setScreenParams(int screenWidth, int screenHeight) {
@@ -170,9 +177,14 @@ public class LoopDetailsAdapter extends BaseAdapter {
         @Override
         public void onClick(View v) {
             String userSign = list.get(index).getaCreateUserSign();
-            Log.i(TAG, "CreateUserSign:" + userSign);
-            Intent intent = new Intent(context, OtherUserActivity.class);
-            intent.putExtra("userSign", userSign);
+
+            Intent intent = new Intent();
+            if (userSign.equals(MyUserSign)) {
+                intent.setClass(context, PersonalActivity.class);
+            } else {
+                intent.setClass(context, OtherUserActivity.class);
+                intent.putExtra("userSign", userSign);
+            }
             context.startActivity(intent);
         }
     }
