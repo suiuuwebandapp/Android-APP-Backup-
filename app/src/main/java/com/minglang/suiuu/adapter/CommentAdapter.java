@@ -1,6 +1,7 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +9,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.LoopArticleCommentList;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -24,19 +28,33 @@ public class CommentAdapter extends BaseAdapter {
 
     private List<LoopArticleCommentList> list;
 
-    private BitmapUtils bitMap;
+    private ImageLoader imageLoader;
+    private DisplayImageOptions options;
     public CommentAdapter(Context context){
         this.context =context;
+
     }
 
     public CommentAdapter(Context context, List<LoopArticleCommentList> list) {
         this.context = context;
         this.list = list;
-        bitMap = new BitmapUtils(context);
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
+                .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
+
     }
 
     public void setList(List<LoopArticleCommentList> list){
         this.list = list;
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
+                .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
         notifyDataSetChanged();
     }
 
@@ -79,8 +97,9 @@ public class CommentAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
         if(!TextUtils.isEmpty(list.get(position).getHeadImg())) {
-            bitMap.display(holder.headImage, list.get(position).getHeadImg());
+            imageLoader.displayImage(list.get(position).getHeadImg(), holder.headImage, options);
         }
         holder.title.setText(list.get(position).getNickname());
         holder.time.setText(list.get(position).getcTime());

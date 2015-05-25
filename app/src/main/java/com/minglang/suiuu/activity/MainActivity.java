@@ -168,6 +168,8 @@ public class MainActivity extends BaseActivity {
     private ImageView iv_conversation;
     private TextView tv_conversation_text;
     private RelativeLayout titleLayout;
+    private RelativeLayout rl_top_info;
+    private ImageView iv_suiuu_search_more;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -286,6 +288,7 @@ public class MainActivity extends BaseActivity {
                         break;
 
                     case R.id.tab1:
+                        showCommon();
                         titleInfo.setText(getResources().getString(R.string.title1));
                         adjustAnimation();
                         changeTheme(true);
@@ -296,6 +299,7 @@ public class MainActivity extends BaseActivity {
                         break;
 
                     case R.id.tab2:
+                        showCommon();
                         titleInfo.setText(getResources().getString(R.string.title2));
                         adjustAnimation();
                         changeTheme(false);
@@ -306,7 +310,9 @@ public class MainActivity extends BaseActivity {
                         break;
 
                     case R.id.tab3:
-                        titleInfo.setText(getResources().getString(R.string.title3));
+                        titleInfo.setVisibility(View.GONE);
+                        rl_top_info.setVisibility(View.VISIBLE);
+                        iv_suiuu_search_more.setVisibility(View.VISIBLE);
                         adjustAnimation();
                         changeTheme(false);
                         changeLoop(false);
@@ -316,6 +322,7 @@ public class MainActivity extends BaseActivity {
                         break;
 
                     case R.id.tab4:
+                        showCommon();
                         titleInfo.setText(getResources().getString(R.string.title4));
                         adjustAnimation();
                         changeTheme(false);
@@ -418,7 +425,11 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-
+    public void showCommon() {
+        titleInfo.setVisibility(View.VISIBLE);
+        rl_top_info.setVisibility(View.GONE);
+        iv_suiuu_search_more.setVisibility(View.GONE);
+    }
     /**
      * 加载主页页面
      */
@@ -678,6 +689,8 @@ public class MainActivity extends BaseActivity {
         pic = (ImageView) findViewById(R.id.main_pic);
         record = (ImageView) findViewById(R.id.main_record);
 
+        rl_top_info = (RelativeLayout) findViewById(R.id.rl_top_info);
+        iv_suiuu_search_more = (ImageView) findViewById(R.id.iv_suiuu_search_more);
         List<String> stringList = new ArrayList<>();
         Collections.addAll(stringList, TITLE);
         MainSliderAdapter mainSliderAdapter = new MainSliderAdapter(this, stringList);
