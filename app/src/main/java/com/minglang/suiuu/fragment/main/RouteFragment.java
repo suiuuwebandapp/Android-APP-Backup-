@@ -31,6 +31,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuDetailActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.base.BaseFragment;
+import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.PullToRefreshView;
 import com.minglang.suiuu.customview.mProgressDialog;
 import com.minglang.suiuu.customview.rangebar.RangeBar;
@@ -44,6 +45,7 @@ import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,6 +53,10 @@ import java.util.List;
  * 随游页面
  */
 public class RouteFragment extends BaseFragment implements PullToRefreshView.OnHeaderRefreshListener, PullToRefreshView.OnFooterRefreshListener {
+    private List<TextView> list = new ArrayList<TextView>();
+    private List<TextView> listClick = new ArrayList<TextView>();
+    private String[] mVals = new String[]
+            {"家庭","购物","自然","惊险","浪漫","博物馆","猎奇"};
     private ListView lv_suiuu;
     private JsonUtils jsonUtil = JsonUtils.getInstance();
     private List<SuiuuDataList> suiuuDataList;
@@ -69,8 +75,7 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
 
     private int lastVisibleItemPosition = 0;// 标记上次滑动位置
     //头部空间
-    private TextView titleInfo;
-    private RelativeLayout rl_top_info;
+
     private EditText et_suiuu;
     private ImageView iv_suiuu_search_more;
     private ImageButton ib_suiuu_search;
@@ -87,6 +92,7 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
     private TextView tv_price_range;
     private int startTick;
     private int endTick;
+    private FlowLayout id_flowlayout;
 
     @SuppressLint("InflateParams")
     @Override
@@ -195,15 +201,12 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
         tabSelect = (LinearLayout) topView.findViewById(R.id.tabSelect);
         dialog = new mProgressDialog(getActivity());
         //处理头部控件
-        titleInfo = (TextView) topView.findViewById(R.id.titleInfo);
-        titleInfo.setVisibility(View.GONE);
-        rl_top_info = (RelativeLayout) topView.findViewById(R.id.rl_top_info);
-        rl_top_info.setVisibility(View.VISIBLE);
+
         et_suiuu = (EditText) topView.findViewById(R.id.et_suiuu);
         iv_suiuu_search_more = (ImageView) topView.findViewById(R.id.iv_suiuu_search_more);
         ib_suiuu_search = (ImageButton) topView.findViewById(R.id.ib_suiuu_search);
         ib_suiuu_search.setOnClickListener(new MyOnclick());
-        iv_suiuu_search_more.setVisibility(View.VISIBLE);
+
 
         fl_search_more = (FrameLayout) rootView.findViewById(R.id.fl_search_more);
         iv_suiuu_search_more.setOnClickListener(new MyOnclick());
@@ -218,7 +221,19 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
         rangebar.setTickEnd(10);
         rangebar.setTickInterval(1);
         tv_price_range = (TextView) rootView.findViewById(R.id.tv_price_range);
+        id_flowlayout = (FlowLayout) rootView.findViewById(R.id.id_flowlayout);
 
+        LayoutInflater mInflater = LayoutInflater.from(getActivity());
+        for (int i = 0; i < mVals.length; i++) {
+            TextView tv = (TextView) mInflater.inflate(R.layout.tv,
+                    id_flowlayout, false);
+            tv.setText(mVals[i]);
+            tv.setId(i);
+            tv.setOnClickListener(new MyOnclick());
+            list.add(tv);
+            id_flowlayout.addView(tv);
+
+        }
     }
 
     /**
@@ -295,6 +310,8 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
             dialog.dismissDialog();
             try {
                 SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, stringResponseInfo.result);
+                String status = baseCollection.getStatus();
+                Log.i("suiuu",status);
                 if ("1".equals(baseCollection.getStatus())) {
                     mPullToRefreshView.setVisibility(View.VISIBLE);
                     suiuuDataList = baseCollection.getData();
@@ -305,6 +322,7 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
                     lv_suiuu.setAdapter(new ShowSuiuuAdapter(getActivity().getApplicationContext(), suiuuDataList));
                     tabSelect.setVisibility(View.VISIBLE);
                 } else if ("-3".equals(baseCollection.getStatus())) {
+                    Toast.makeText(getActivity().getApplicationContext(), "登录信息过期,请重新登录", Toast.LENGTH_SHORT).show();
                     AppUtils.intentLogin(getActivity());
                     getActivity().finish();
                 } else {
@@ -325,11 +343,15 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
 
     public void fragmentShow() {
         if (fl_search_more.isShown()) {
+            lv_suiuu.setEnabled(true);
             fl_search_more.setVisibility(View.GONE);
-
         } else {
-
+            lv_suiuu.setEnabled(false);
             fl_search_more.setVisibility(View.VISIBLE);
+            for(TextView text : listClick) {
+                text.setBackgroundDrawable(getResources().getDrawable(R.drawable.tv_bg1));
+            }
+            listClick.clear();
             RelativeLayout.LayoutParams paramTest1 = (RelativeLayout.LayoutParams) fl_search_more.getLayoutParams();
             paramTest1.setMargins(10, ConstantUtil.topHeight + 10, 10, 0);
             fl_search_more.setLayoutParams(paramTest1);
@@ -341,27 +363,38 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
         @Override
         public void onClick(View v) {
             enjoy_peopleNumber = Integer.valueOf(String.valueOf(et_peple_number.getText()));
-            switch (v.getId()) {
-                case R.id.iv_suiuu_search_more:
-                    fragmentShow();
-                    break;
-                case R.id.ib_release:
-                    if (enjoy_peopleNumber != 0) {
-                        et_peple_number.setText(String.valueOf(enjoy_peopleNumber - 1));
+            for (int i = 0; i < mVals.length; i++) {
+                if (v.getId() == i) {
+                    if (listClick.contains(list.get(i))) {
+                        list.get(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.tv_bg1));
+                        listClick.remove(list.get(i));
+                    } else {
+                        list.get(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.tv_bg));
+                        listClick.add(list.get(i));
                     }
-                    break;
-                case R.id.ib_plus:
-                    et_peple_number.setText(String.valueOf(enjoy_peopleNumber + 1));
-                    break;
-                case R.id.ib_suiuu_search:
-                    Log.i("suiuu", "点击了搜索");
-                    if (fl_search_more.isShown()) {
-                        et_suiuu.getText();
-                        loadDate(null, null, null, page);
-                    }
-                    break;
+                }
+                switch (v.getId()) {
+                    case R.id.iv_suiuu_search_more:
+                        fragmentShow();
+                        break;
+                    case R.id.ib_release:
+                        if (enjoy_peopleNumber != 0) {
+                            et_peple_number.setText(String.valueOf(enjoy_peopleNumber - 1));
+                        }
+                        break;
+                    case R.id.ib_plus:
+                        et_peple_number.setText(String.valueOf(enjoy_peopleNumber + 1));
+                        break;
+                    case R.id.ib_suiuu_search:
+                        Log.i("suiuu", "点击了搜索");
+                        if (fl_search_more.isShown()) {
+                            et_suiuu.getText();
+                            loadDate(null, null, null, page);
+                        }
+                        break;
+                }
             }
         }
-    }
 
+    }
 }

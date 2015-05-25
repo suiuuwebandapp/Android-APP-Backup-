@@ -63,6 +63,7 @@
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:src="@drawable/iv_suiuu_search_more"
+            android:visibility="gone"
             />
 
     </RelativeLayout>
