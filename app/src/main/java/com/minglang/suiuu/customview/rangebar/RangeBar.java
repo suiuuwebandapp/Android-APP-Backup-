@@ -54,7 +54,6 @@ import java.util.HashMap;
  * https://github.com/edmodo/range-bar.git
  * <p>
  * Clients of the RangeBar can attach a
- * {@link com.appyvet.rangebar.RangeBar.OnRangeBarChangeListener} to be notified when the pins
  * have
  * been moved.
  */
@@ -75,21 +74,21 @@ import java.util.HashMap;
 
     private static final float DEFAULT_PIN_PADDING_DP = 16;
 
-    private static final float DEFAULT_BAR_WEIGHT_PX = 2;
-
-    private static final int DEFAULT_BAR_COLOR = Color.YELLOW;
-
+    private static final float DEFAULT_BAR_WEIGHT_PX = 4;
+    //底部线条颜色
+    private static final int DEFAULT_BAR_COLOR = 0x80FF9900;
+    //字体颜色
     private static final int DEFAULT_TEXT_COLOR = Color.WHITE;
 
     private static final int DEFAULT_TICK_COLOR = 0xffffff;
 
-    // Corresponds to material indigo 500.
-    private static final int DEFAULT_PIN_COLOR = 0xff00FFFF;
+    // Corresponds to material indigo 500.//滑动条颜色
+    private static final int DEFAULT_PIN_COLOR = 0xff00CCFF;
 
-    private static final float DEFAULT_CONNECTING_LINE_WEIGHT_PX = 4;
+    private static final float DEFAULT_CONNECTING_LINE_WEIGHT_PX = 6;
 
     // Corresponds to material indigo 500.
-    private static final int DEFAULT_CONNECTING_LINE_COLOR =0xff00FFFF;
+    private static final int DEFAULT_CONNECTING_LINE_COLOR =0xff00CCFF;
 
     private static final float DEFAULT_EXPANDED_PIN_RADIUS_DP = 14;
 
@@ -1278,7 +1277,6 @@ import java.util.HashMap;
      * Set the value on the thumb pin, either from map or calculated from the tick intervals
      * Integer check to format decimals as whole numbers
      *
-     * @param tickIndex the index to set the value for
      */
     private String getPinValue(int s) {
     	int tickIndex = s*1000;

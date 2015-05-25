@@ -4,7 +4,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/suiuu_root">
+<!--没有搜索结果页面-->
+    <RelativeLayout
+        android:id="@+id/rl_search_no_data"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:id="@+id/iv_icon_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_search"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/iv_icon_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/login_bg_color"
+            android:text="没有数据,请重新获取"
+            android:textSize="@dimen/layout_20sp"
+            />
 
+
+        </RelativeLayout>
 
     <com.minglang.suiuu.customview.PullToRefreshView
         android:id="@+id/main_pull_refresh_view"
@@ -127,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/layout_5dp"
-                android:text="0 - 5000"
+                android:text="0 - 10000"
                 android:layout_marginLeft="@dimen/layout_5dp"
                 android:layout_toRightOf="@+id/tv_price_show"
                 android:textColor="@color/login_bg_color"

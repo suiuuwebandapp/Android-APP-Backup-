@@ -229,6 +229,10 @@ public class HttpServicePath {
      * 得到随游列表
      */
     public static String getSuiuuList = RootPath + "/app-travel/get-travel-list";
+  /**
+     * 得到随游高级搜索中的标签
+     */
+    public static String getSuiuuSearchTag = RootPath + "/app-travel/get-tag-list";
 
     /**
      * 得到随游的详细信息

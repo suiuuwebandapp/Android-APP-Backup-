@@ -177,6 +177,7 @@ public class OtherUserActivity extends Activity {
                 String articleId = articleList.get(position).getArticleId();
                 Intent intent = new Intent(OtherUserActivity.this, LoopArticleActivity.class);
                 intent.putExtra("articleId", articleId);
+                intent.putExtra("TAG", TAG);
                 startActivity(intent);
             }
         });

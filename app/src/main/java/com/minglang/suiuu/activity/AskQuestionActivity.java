@@ -468,6 +468,7 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
         params.addBodyParameter("type", "2");
+        params.addBodyParameter("showAll","true");
 
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.LoopDataPath, new AreaRequestCallback());

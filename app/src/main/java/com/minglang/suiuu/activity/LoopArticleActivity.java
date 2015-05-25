@@ -820,5 +820,11 @@ public class LoopArticleActivity extends BaseActivity {
             super.finish();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }
 
