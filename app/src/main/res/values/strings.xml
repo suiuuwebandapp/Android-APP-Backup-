@@ -149,7 +149,7 @@
     <string name="openAsk">openSuiuuAsk</string>
     <string name="openRemember">openSuiuuRemember</string>
     <string name="openShoot">openSuiuuShoot</string>
-
+    <string name="please_enter_search_content">请输入搜索内容</string>
     <string name="homePage">HomePage</string>
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>

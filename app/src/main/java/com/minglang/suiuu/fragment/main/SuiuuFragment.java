@@ -102,7 +102,7 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
         innitView(rootView);
         loadDate(null,null,null, null, null, page);
         LinearLayout.LayoutParams paramTest = (LinearLayout.LayoutParams) lv_suiuu.getLayoutParams();
-        paramTest.setMargins(10, ConstantUtil.topHeight + 10, 10, 0);
+        paramTest.setMargins(10, ConstantUtil.topHeight+10, 10, 0);
         lv_suiuu.setLayoutParams(paramTest);
 
         viewAction();
@@ -178,8 +178,8 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
                                               int rightPinIndex,
                                               String leftPinValue, String rightPinValue) {
                 Log.i("suiuu", leftPinIndex + "----------------" + rightPinIndex);
-                startTick = leftPinIndex;
-                endTick = rightPinIndex;
+                startTick = leftPinIndex * 1000;
+                endTick = rightPinIndex * 1000;
                 tv_price_range.setText(leftPinIndex * 1000 + "--" + rightPinIndex * 1000);
             }
         });
@@ -231,6 +231,7 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
      * @param page
      */
     private void loadDate(String countryOrCity, String peopelCount, String tags,String startPrice,String endPrice, int page) {
+        Log.i("suiuu","countryOrctity="+countryOrCity+"peoplecount="+peopelCount+"tags="+tags+"startPrice="+startPrice+"endprice="+endPrice+"page="+page);
         dialog.showDialog();
         et_suiuu.setText("");
         String str = SuiuuInfo.ReadVerification(getActivity().getApplicationContext());
@@ -270,7 +271,7 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
                 if (!dialog.isShow()) {
                     page += 1;
                     if(isSearch) {
-                        loadDate(searchText,enjoyPeopleCount,tags, Integer.toBinaryString(startTick), Integer.toString(endTick), page);
+                        loadDate(searchText,"0".equals(enjoyPeopleCount)?"":enjoyPeopleCount,"".equals(tags)?tags:tags.substring(0,tags.length()-1), Integer.toString(startTick), Integer.toString(endTick), page);
                     }else {
 
                         loadDate(null,null,null, null, null, page);
@@ -385,7 +386,6 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
             lv_suiuu.setEnabled(true);
             fl_search_more.setVisibility(View.GONE);
         } else {
-
             lv_suiuu.setEnabled(false);
             fl_search_more.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams paramTest1 = (RelativeLayout.LayoutParams) fl_search_more.getLayoutParams();
@@ -411,9 +411,9 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
 
         }
     }
-    String tags = null;
-    String searchText = null;
-    String enjoyPeopleCount = null;
+    String tags ="";
+    String searchText ;
+    String enjoyPeopleCount ;
     class MyOnclick implements View.OnClickListener {
 
         @Override
@@ -421,13 +421,10 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
             enjoy_peopleNumber = Integer.valueOf(String.valueOf(et_peple_number.getText()));
             for (int i = 0; i < tagList.size() - 1; i++) {
                 if (v.getId() == i) {
-                    Log.i("suiuu","点击了"+i);
                     if (listClick.contains(list.get(i))) {
-                        Log.i("suiuu", "点击了baohanle " + i);
                         list.get(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.tv_bg1));
                         listClick.remove(list.get(i));
                     } else {
-                        Log.i("suiuu","点击了meiyou baohan"+i);
                         list.get(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.tv_bg));
                         listClick.add(list.get(i));
                     }
@@ -450,19 +447,25 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
                     et_peple_number.setText(String.valueOf(enjoy_peopleNumber + 1));
                     break;
                 case R.id.ib_suiuu_search:
-                    isSearch = true;
+                    page=1;
                     lv_suiuu.setEnabled(true);
-                    fl_search_more.setVisibility(View.GONE);
                     searchText = String.valueOf(et_suiuu.getText());
+                    if("".equals(searchText) && !fl_search_more.isShown()) {
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.please_enter_search_content, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    isSearch = true;
                     if(fl_search_more.isShown()) {
-                        enjoyPeopleCount = String.valueOf(et_peple_number.getText());
+                        enjoyPeopleCount = et_peple_number.getText().toString().trim();
                         for(TextView textV : listClick ) {
-                            tags = tags + textV.getText()+",";
+                            tags +=  textV.getText()+",";
                         }
-                        loadDate(searchText,enjoyPeopleCount,tags, Integer.toBinaryString(startTick), Integer.toString(endTick), page);
+                        loadDate(searchText,"0".equals(enjoyPeopleCount)?"":enjoyPeopleCount,"".equals(tags)?tags:tags.substring(0,tags.length()-1), Integer.toString(startTick), Integer.toString(endTick), page);
+                        fl_search_more.setVisibility(View.GONE);
                     }else {
                         loadDate(searchText,null,null, null, null, page);
                     }
+                    tags = "";
                     break;
             }
         }
