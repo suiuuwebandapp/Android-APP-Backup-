@@ -194,16 +194,6 @@ public class MainActivity extends BaseActivity {
 
         setContentView(R.layout.activity_main);
         initView();
-
-        if (isNavigationBar) {
-            if (isKITKAT) {
-                ConstantUtil.topHeight = titleLayout.getLayoutParams().height + statusBarHeight;
-
-            }
-        } else {
-            ConstantUtil.topHeight = titleLayout.getLayoutParams().height;
-        }
-
         initRegisterAllBroadcastReceiver();
     }
 
@@ -627,13 +617,8 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-//        if (isKITKAT) {
-//            /**************HeadLayout设置Margins*****************/
-//            RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
-//            LinearLayout.LayoutParams titleLayoutParams = new LinearLayout.LayoutParams(titleLayout.getLayoutParams());
-//            titleLayoutParams.setMargins(0, statusBarHeight, 0, 0);
-//            titleLayout.setLayoutParams(titleLayoutParams);
-//        }
+        ConstantUtil.topHeight = titleLayout.getLayoutParams().height;
+
 
         /*************设置侧滑菜单Params**********************/
         slideLayout = (RelativeLayout) findViewById(R.id.slideLayout);

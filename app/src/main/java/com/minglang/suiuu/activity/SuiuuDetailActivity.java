@@ -172,11 +172,11 @@ public class SuiuuDetailActivity extends BaseActivity {
         Log.i("suiuu", "startTime=" + detailInfo.getStartTime() + ",endTime=" + detailInfo.getEndTime());
         tv_service_time.setText("服务时间:     " + detailInfo.getStartTime() + "-" + detailInfo.getEndTime());
         tv_suiuu_travel_time.setText("随游时长:     " + detailInfo.getTravelTime() + "个小时");
-        Log.i("suiuu", "detailInfo.getMakeUserCount()=" + detailInfo.getMakeUserCount());
-        if (detailInfo.getMakeUserCount() == null) {
+        Log.i("suiuu", "detailInfo.getMakeUserCount()=" + detailInfo.getMaxUserCount());
+        if (detailInfo.getMaxUserCount() == null) {
             tv_atmost_people.setText("最多人数:     0 人");
         } else {
-            tv_atmost_people.setText("最多人数:     " + detailInfo.getMakeUserCount() + "人");
+            tv_atmost_people.setText("最多人数:     " + detailInfo.getMaxUserCount() + "人");
         }
         tv_price.setText("￥:  " + detailInfo.getBasePrice());
         //判断是否显示点赞

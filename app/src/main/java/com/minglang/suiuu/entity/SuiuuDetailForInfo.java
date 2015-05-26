@@ -20,7 +20,7 @@ public class SuiuuDetailForInfo {
     private String lon;
     private String lat;
     private String basePrice;
-    private String makeUserCount;
+    private String maxUserCount;
     private String isAirplane;
     private String isHotel;
     private String score;
@@ -32,6 +32,14 @@ public class SuiuuDetailForInfo {
     private String info;
     private String tags;
     private String status;
+
+    public String getMaxUserCount() {
+        return maxUserCount;
+    }
+
+    public void setMaxUserCount(String maxUserCount) {
+        this.maxUserCount = maxUserCount;
+    }
 
     @Override
     public String toString() {
@@ -46,7 +54,7 @@ public class SuiuuDetailForInfo {
                 ", lon='" + lon + '\'' +
                 ", lat='" + lat + '\'' +
                 ", basePrice='" + basePrice + '\'' +
-                ", makeUserCount='" + makeUserCount + '\'' +
+                ", makeUserCount='" + '\'' +
                 ", isAirplane='" + isAirplane + '\'' +
                 ", isHotel='" + isHotel + '\'' +
                 ", score='" + score + '\'' +
@@ -141,13 +149,6 @@ public class SuiuuDetailForInfo {
         this.basePrice = basePrice;
     }
 
-    public String getMakeUserCount() {
-        return makeUserCount;
-    }
-
-    public void setMakeUserCount(String makeUserCount) {
-        this.makeUserCount = makeUserCount;
-    }
 
     public String getIsAirplane() {
         return isAirplane;
