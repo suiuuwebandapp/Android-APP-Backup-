@@ -18,7 +18,8 @@ import com.easemob.chat.EMChatManager;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.SettingAdapter;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.chat.chat.DemoApplication;
+import com.minglang.suiuu.application.SuiuuApplication;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ import java.util.List;
  */
 public class SettingActivity extends BaseActivity {
 
+    private static final String TAG = SettingActivity.class.getSimpleName();
+
     private static final String[] SETTINGS = {"个人设置", "通用设置", "检查更新", "联系我们", "反馈", "去评分"};
 
     private ImageView settingBack;
@@ -38,17 +41,13 @@ public class SettingActivity extends BaseActivity {
 
     private Button btn_logout;
 
-//    private TextView tv_top_right;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
         initView();
-
         ViewAction();
-
     }
 
     private void ViewAction() {
@@ -66,8 +65,7 @@ public class SettingActivity extends BaseActivity {
                 switch (position) {
 
                     case 0:
-                        Intent intent0 = new Intent(SettingActivity.this, PersonalSettingActivity.class);
-                        startActivity(intent0);
+                        startActivity( new Intent(SettingActivity.this, PersonalSettingActivity.class));
                         break;
 
                     case 1:
@@ -114,8 +112,8 @@ public class SettingActivity extends BaseActivity {
         tv_top_center.setVisibility(View.VISIBLE);
         tv_top_center.setText(R.string.setting);
 
-//        tv_top_right = (TextView) findViewById(R.id.tv_top_right);
-//        tv_top_right.setVisibility(View.INVISIBLE);
+        TextView tv_top_right = (TextView) findViewById(R.id.tv_top_right);
+        tv_top_right.setVisibility(View.INVISIBLE);
 
         btn_logout = (Button) findViewById(R.id.btn_logout);
         if (!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())) {
@@ -129,6 +127,12 @@ public class SettingActivity extends BaseActivity {
             } else {
                 settingLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
             }
+        } else {
+            if (navigationBarHeight > 0) {
+                settingLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            } else {
+                settingLayout.setPadding(0, 0, 0, navigationBarHeight);
+            }
         }
 
         settingBack = (ImageView) findViewById(R.id.iv_top_back);
@@ -138,7 +142,6 @@ public class SettingActivity extends BaseActivity {
         Collections.addAll(stringList, SETTINGS);
         SettingAdapter adapter = new SettingAdapter(this, stringList);
         settingList.setAdapter(adapter);
-
     }
 
     public void logout() {
@@ -147,27 +150,31 @@ public class SettingActivity extends BaseActivity {
         pd.setMessage(st);
         pd.setCanceledOnTouchOutside(false);
         pd.show();
-        DemoApplication.getInstance().logout(new EMCallBack() {
+        SuiuuApplication.getInstance().logout(new EMCallBack() {
 
             @Override
             public void onSuccess() {
                 SettingActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
                         pd.dismiss();
-                        // 重新显示登陆页面
-                        (SettingActivity.this).finish();
+                        SuiuuInfo.ClearSuiuuInfo(SettingActivity.this);
+                        SuiuuInfo.ClearSuiuuThird(SettingActivity.this);
+                        SettingActivity.this.finish(); // 重新显示登陆页面
                         startActivity(new Intent(SettingActivity.this, LoginActivity.class));
-
                     }
                 });
             }
 
             @Override
             public void onProgress(int progress, String status) {
+                DeBugLog.i(TAG, "progress:" + String.valueOf(progress));
+                DeBugLog.i(TAG, "status:" + status);
             }
 
             @Override
             public void onError(int code, String message) {
+                DeBugLog.e(TAG, "code:" + String.valueOf(code));
+                DeBugLog.e(TAG, "message:" + message);
             }
         });
     }

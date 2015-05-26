@@ -28,7 +28,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.MainActivity;
 import com.minglang.suiuu.chat.adapter.ChatAllHistoryAdapter;
 import com.minglang.suiuu.chat.chat.Constant;
-import com.minglang.suiuu.chat.chat.DemoApplication;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.dao.InviteMessgeDao;
 import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.SystemBarTintManager;
@@ -84,7 +84,7 @@ public class ChatAllHistoryFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EMConversation conversation = adapter.getItem(position);
                 String username = conversation.getUserName();
-                if (username.equals(DemoApplication.getInstance().getUserName()))
+                if (username.equals(SuiuuApplication.getInstance().getUserName()))
                     Toast.makeText(getActivity(), st2, Toast.LENGTH_SHORT).show();
                 else {
                     // 进入聊天页面

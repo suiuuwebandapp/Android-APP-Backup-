@@ -38,7 +38,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.chat.bean.User;
 import com.minglang.suiuu.chat.chat.Constant;
-import com.minglang.suiuu.chat.chat.DemoApplication;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.dao.UserDao;
 import com.minglang.suiuu.chat.utils.CommonUtils;
 import com.minglang.suiuu.entity.AreaCode;
@@ -243,7 +243,7 @@ public class LoginActivity extends Activity {
 //            startActivity(new Intent(LoginActivity.this, MainActivity.class));
 //            finish();
 //        }
-        DemoApplication.addActivity(this);
+        SuiuuApplication.addActivity(this);
         setContentView(R.layout.activity_login);
 
         initView();
@@ -636,8 +636,8 @@ public class LoginActivity extends Activity {
                 return;
             }
             // 登陆成功，保存用户名密码
-            DemoApplication.getInstance().setUserName(huanXinUsername);
-            DemoApplication.getInstance().setPassword(HUANXINPASSWORD);
+            SuiuuApplication.getInstance().setUserName(huanXinUsername);
+            SuiuuApplication.getInstance().setPassword(HUANXINPASSWORD);
             runOnUiThread(new Runnable() {
                 public void run() {
                     pd.setMessage(getResources().getString(R.string.list_is_for));
@@ -659,7 +659,7 @@ public class LoginActivity extends Activity {
                 runOnUiThread(new Runnable() {
                     public void run() {
                         pd.dismiss();
-                        DemoApplication.getInstance().logout(null);
+                        SuiuuApplication.getInstance().logout(null);
                         Toast.makeText(getApplicationContext(),
                                 getResources().getString(R.string.login_failure_failed), Toast.LENGTH_LONG).show();
                     }
@@ -667,7 +667,7 @@ public class LoginActivity extends Activity {
                 return;
             }
             //更新当前用户的nickname 此方法的作用是在ios离线推送时能够显示用户nick
-            boolean upDateNick = EMChatManager.getInstance().updateCurrentUserNick(DemoApplication.currentUserNick.trim());
+            boolean upDateNick = EMChatManager.getInstance().updateCurrentUserNick(SuiuuApplication.currentUserNick.trim());
             if (!upDateNick) {
             }
             if (!LoginActivity.this.isFinishing()) {
@@ -732,7 +732,7 @@ public class LoginActivity extends Activity {
         userlist.put(Constant.GROUP_USERNAME, groupUser);
 
         // 存入内存
-        DemoApplication.getInstance().setContactList(userlist);
+        SuiuuApplication.getInstance().setContactList(userlist);
         System.out.println("----------------" + userlist.values().toString());
         // 存入db
         UserDao dao = new UserDao(LoginActivity.this);
@@ -979,7 +979,6 @@ public class LoginActivity extends Activity {
         @Override
         public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
             DeBugLog.i(TAG, "QQ授权完成");
-            DeBugLog.i(TAG, "QQ授权信息:" + bundle.toString());
             if (bundle != null) {
                 qq_open_id = bundle.getString("openid");
             }
@@ -1079,9 +1078,6 @@ public class LoginActivity extends Activity {
         }
         params.addBodyParameter("sign", sign);
 
-        DeBugLog.i(TAG, "openID:" + qq_open_id + ",nickName:" + qq_nick_Name + ",sex:" + qq_gender +
-                ",headImage:" + qq_head_image_path + ",type:" + type + ",sign:" + sign);
-
         http.setParams(params);
         http.requestNetworkData();
     }
@@ -1099,7 +1095,6 @@ public class LoginActivity extends Activity {
             }
 
             String str = responseInfo.result;
-            DeBugLog.i(TAG, "QQ登陆返回的信息:" + str);
             try {
                 UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, str);
                 if (userBack.status.equals("1")) {
@@ -1116,7 +1111,6 @@ public class LoginActivity extends Activity {
 
                     SuiuuInfo.WriteUserSign(LoginActivity.this, userBack.getData().getIntro());
                     SuiuuInfo.WriteUserData(LoginActivity.this, userBack.getData());
-                    DeBugLog.i(TAG,"用户头像URL:"+userBack.getData().getHeadImg());
 
                     huanXinUsername = userBack.getData().getUserSign();
                     huanXinLogin();
@@ -1167,7 +1161,6 @@ public class LoginActivity extends Activity {
         @Override
         public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
             DeBugLog.i(TAG, "微信授权完成");
-            DeBugLog.i(TAG, "微信授权数据:" + bundle.toString());
             mController.getPlatformInfo(LoginActivity.this, SHARE_MEDIA.WEIXIN, new WeChat4UMDataListener());
         }
 
@@ -1209,7 +1202,6 @@ public class LoginActivity extends Activity {
             }
 
             if (status == 200 && info != null) {
-                DeBugLog.i(TAG, "微信数据:" + info.toString());
                 weChatUnionId = info.get("unionid").toString();
                 weChatNickName = info.get("nickname").toString();
                 String sex = info.get("sex").toString();
@@ -1251,9 +1243,6 @@ public class LoginActivity extends Activity {
             e.printStackTrace();
         }
         params.addBodyParameter("sign", sign);
-
-        DeBugLog.i(TAG, "发送微信数据:[openId:" + weChatUnionId + ",nickname:" + weChatNickName
-                + ",sex:" + weChatGender + ",headImg:" + weChatHeadImagePath + ",type:" + type + ",sign:" + sign + "]");
 
         SuHttpRequest http = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.ThirdPartyPath, new WXRequestCallBack());

@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.chat.bean.User;
-import com.minglang.suiuu.chat.chat.DemoApplication;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.squareup.picasso.Picasso;
 
 
@@ -16,7 +16,7 @@ public class UserUtils {
      * @return
      */
     public static User getUserInfo(String username){
-        User user = DemoApplication.getInstance().getContactList().get(username);
+        User user = SuiuuApplication.getInstance().getContactList().get(username);
         if(user == null){
             user = new User(username);
         }

@@ -43,7 +43,6 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +51,7 @@ import java.util.List;
 /**
  * 随游页面
  */
-public class RouteFragment extends BaseFragment implements PullToRefreshView.OnHeaderRefreshListener, PullToRefreshView.OnFooterRefreshListener {
+public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnHeaderRefreshListener, PullToRefreshView.OnFooterRefreshListener {
     private List<TextView> list = new ArrayList<TextView>();
     private List<TextView> listClick = new ArrayList<TextView>();
     private List<String> tagList;
@@ -100,10 +99,6 @@ public class RouteFragment extends BaseFragment implements PullToRefreshView.OnH
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_route, null);
-        if (ConstantUtil.isKITKAT) {
-            RelativeLayout rootLayout = (RelativeLayout) rootView.findViewById(R.id.suiuu_root);
-            rootLayout.setPadding(0, new SystemBarTintManager(getActivity()).getConfig().getStatusBarHeight(), 0, 0);
-        }
         innitView(rootView);
         loadDate(null,null,null, null, null, page);
         LinearLayout.LayoutParams paramTest = (LinearLayout.LayoutParams) lv_suiuu.getLayoutParams();

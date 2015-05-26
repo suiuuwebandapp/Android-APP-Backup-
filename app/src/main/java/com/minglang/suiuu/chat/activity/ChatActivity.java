@@ -82,7 +82,7 @@ import com.minglang.suiuu.chat.adapter.ExpressionAdapter;
 import com.minglang.suiuu.chat.adapter.ExpressionPagerAdapter;
 import com.minglang.suiuu.chat.adapter.MessageAdapter;
 import com.minglang.suiuu.chat.adapter.VoicePlayClickListener;
-import com.minglang.suiuu.chat.chat.DemoApplication;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.utils.CommonUtils;
 import com.minglang.suiuu.chat.utils.ImageUtils;
 import com.minglang.suiuu.chat.utils.SmileUtils;
@@ -605,7 +605,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 			return;
 		}
 
-		cameraFile = new File(PathUtil.getInstance().getImagePath(), DemoApplication.getInstance().getUserName()
+		cameraFile = new File(PathUtil.getInstance().getImagePath(), SuiuuApplication.getInstance().getUserName()
 				+ System.currentTimeMillis() + ".jpg");
 		cameraFile.getParentFile().mkdirs();
 		startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile)),

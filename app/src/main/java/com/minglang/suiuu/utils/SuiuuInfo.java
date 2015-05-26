@@ -67,13 +67,23 @@ public class SuiuuInfo implements Serializable {
      */
     private static final String DomicileCity = "domicileCity";
 
+    public static void WriteAnyInfo(Context context, String key, String value) {
+        if (context == null) {
+            return;
+        }
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+
     /**
      * 读取居住地城市信息
      *
      * @param context 上下文对象
      * @return 居住度城市信息
      */
-    public static String ReadDomicilCity(Context context) {
+    public static String ReadDomicileCity(Context context) {
         return context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).getString(DomicileCity, "");
     }
 

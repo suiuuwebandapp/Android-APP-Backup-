@@ -25,7 +25,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.chat.adapter.ContactAdapter;
 import com.minglang.suiuu.chat.bean.User;
 import com.minglang.suiuu.chat.chat.Constant;
-import com.minglang.suiuu.chat.chat.DemoApplication;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.widgt.Sidebar;
 
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class PickContactNoCheckboxActivity extends BaseActivity {
 	private void getContactList() {
         Map<String,User> users;
 		contactList.clear();
-		users = DemoApplication.getInstance().getContactList();
+		users = SuiuuApplication.getInstance().getContactList();
 		Iterator<Entry<String, User>> iterator = users.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, User> entry = iterator.next();

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="openAsk">打开随问</string>
+    <string name="openRemember">打开随记</string>
+    <string name="openShoot">打开随拍</string>
+    <string name="please_input_confirm_password">请输入确认密码</string>
+    <string name="please_input_email_or_phone_number">请输入邮箱或手机号</string>
+    <string name="please_input_number">请输入手机号</string>
+    <string name="please_check">key 验证出错! 请在 AndroidManifest.xml 文件中检查 key 设置</string>
+    <string name="UMUpdateCheck">2.6.0.1.20150312</string>
+    <string name="UnknownArea">UnknownArea</string>
+    <string name="UnknownName">匿名</string>
+    <string name="app_name">随游</string>
+    <string name="homePage">首页</string>
+</resources>

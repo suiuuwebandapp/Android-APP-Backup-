@@ -332,18 +332,18 @@ public class PersonalSettingActivity extends BaseActivity {
         String strGender = data.getSex();
         if (!TextUtils.isEmpty(strGender)) {
             if (strGender.equals("1")) {
-                sex_man.setCompoundDrawablesWithIntrinsicBounds
-                        (getResources().getDrawable(R.drawable.sex_man), null, null, null);
+                sex_man.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_man)),
+                        null, null, null);
                 DeBugLog.i(TAG, "男");
             } else if (strGender.equals("0")) {
-                sex_woman.setCompoundDrawablesWithIntrinsicBounds
-                        (getResources().getDrawable(R.drawable.sex_woman), null, null, null);
+                sex_woman.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_woman)),
+                        null, null, null);
                 DeBugLog.i(TAG, "女");
             }
         }
 
         String countryName = SuiuuInfo.ReadDomicileCountry(this);
-        String cityName = SuiuuInfo.ReadDomicilCity(this);
+        String cityName = SuiuuInfo.ReadDomicileCity(this);
         if (!TextUtils.isEmpty(countryName) && !TextUtils.isEmpty(cityName)) {
             localDetails.setText(countryName + "," + cityName);
         } else if (TextUtils.isEmpty(countryName) && !TextUtils.isEmpty(cityName)) {

@@ -31,7 +31,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.chat.adapter.ContactAdapter;
 import com.minglang.suiuu.chat.bean.User;
 import com.minglang.suiuu.chat.chat.Constant;
-import com.minglang.suiuu.chat.chat.DemoApplication;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.widgt.Sidebar;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,7 +66,7 @@ public class GroupPickContactsActivity extends BaseActivity {
 			exitingMembers = new ArrayList<String>();
 		// 获取好友列表
 		final List<User> alluserList = new ArrayList<User>();
-		for (User user : DemoApplication.getInstance().getContactList().values()) {
+		for (User user : SuiuuApplication.getInstance().getContactList().values()) {
 			if (!user.getUsername().equals(Constant.NEW_FRIENDS_USERNAME) & !user.getUsername().equals(Constant.GROUP_USERNAME))
 				alluserList.add(user);
 		}

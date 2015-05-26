@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.minglang.suiuu.chat.chat;
+package com.minglang.suiuu.application;
 
 import android.app.Activity;
 import android.app.Application;
@@ -26,54 +26,69 @@ import com.alibaba.sdk.android.oss.model.TokenGenerator;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.easemob.EMCallBack;
 import com.minglang.suiuu.chat.bean.User;
+import com.minglang.suiuu.chat.chat.DemoHXSDKHelper;
+import com.minglang.suiuu.crash.GlobalCrashHandler;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 
-public class DemoApplication extends Application {
+public class SuiuuApplication extends Application {
 
-	public static Context applicationContext;
-	private static DemoApplication instance;
-	// login user name
-	public final String PREF_USERNAME = "username";
-    /** @description 所有已经启动的activity集合 */
-    private static ArrayList<Activity> activitys = new ArrayList<>();
-	/**
-	 * 当前用户nickname,为了苹果推送不是userid而是昵称
-	 */
-	public static String currentUserNick = "";
-	public static DemoHXSDKHelper hxSDKHelper = new DemoHXSDKHelper();
+    private static final String TAG = SuiuuApplication.class.getSimpleName();
+
+    public static Context applicationContext;
+    private static SuiuuApplication instance;
+    // login user name
+    public final String PREF_USERNAME = "username";
+
+    /**
+     * @description 所有已经启动的activity集合
+     */
+    private static ArrayList<Activity> activityList = new ArrayList<>();
+
+    /**
+     * 当前用户nickname,为了苹果推送不是userid而是昵称
+     */
+    public static String currentUserNick = "";
+    public static DemoHXSDKHelper hxSDKHelper = new DemoHXSDKHelper();
     public static OSSService ossService = OSSServiceProvider.getService();
     static final String accessKey = "LaKLZHyL2Dmy8Qqq"; // 测试代码没有考虑AK/SK的安全性
     static final String screctKey = "c7xPteQRqjV8nNB8xGFIZoFijzjDLX";
-	@Override
-	public void onCreate() {
-		super.onCreate();
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @Override
+    public void onCreate() {
+        super.onCreate();
         applicationContext = this;
         instance = this;
 
         /**
          * this function will initialize the HuanXin SDK
-         * 
+         *
          * @return boolean true if caller can continue to call HuanXin related APIs after calling onInit, otherwise false.
-         * 
+         *
          * 环信初始化SDK帮助函数
          * 返回true如果正确初始化，否则false，如果返回为false，请在后续的调用中不要调用任何和环信相关的代码
-         * 
-         * for example:
-         * 例子：
-         * 
-         * public class DemoHXSDKHelper extends HXSDKHelper
-         * 
-         * HXHelper = new DemoHXSDKHelper();
-         * if(HXHelper.onInit(context)){
-         *     // do HuanXin related work
-         * }
+         *
          */
         hxSDKHelper.onInit(applicationContext);
         buildAboatOSS();
-	}
+
+//        String StoragePath = SDCardUtils.getExternalSdCardPath();
+//        DeBugLog.i(TAG, "StoragePath:" + StoragePath);
+//        File file = new File(StoragePath + "/Suiuu");
+//        if (!file.exists()) {
+//            boolean flag = file.mkdir();
+//            if (flag) {
+//                DeBugLog.i(TAG, "Success!");
+//            } else {
+//                DeBugLog.i(TAG, "Failure!");
+//            }
+//        }
+        GlobalCrashHandler globalCrashHandler = GlobalCrashHandler.getInstance();
+        globalCrashHandler.init(this);
+    }
 
     /**
      * 初始化阿里OSS上传图片相关
@@ -95,6 +110,7 @@ public class DemoApplication extends Application {
                 return OSSToolKit.generateToken(accessKey, screctKey, content);
             }
         });
+
         ossService.setGlobalDefaultHostId("oss-cn-hongkong.aliyuncs.com");
         ossService.setCustomStandardTimeWithEpochSec(System.currentTimeMillis() / 1000);
         ossService.setGlobalDefaultACL(AccessControlList.PRIVATE); // 默认为private
@@ -106,79 +122,79 @@ public class DemoApplication extends Application {
         ossService.setClientConfiguration(conf);
     }
 
-	public static DemoApplication getInstance() {
-		return instance;
-	}
- 
-	/**
-	 * 获取内存中好友user list
-	 *
-	 * @return
-	 */
-	public Map<String, User> getContactList() {
-	    return hxSDKHelper.getContactList();
-	}
+    public static SuiuuApplication getInstance() {
+        return instance;
+    }
 
-	/**
-	 * 设置好友user list到内存中
-	 *
-	 * @param contactList
-	 */
-	public void setContactList(Map<String, User> contactList) {
-	    hxSDKHelper.setContactList(contactList);
-	}
+    /**
+     * 获取内存中好友user list
+     *
+     * @return 好友user list
+     */
+    public Map<String, User> getContactList() {
+        return hxSDKHelper.getContactList();
+    }
 
-	/**
-	 * 获取当前登陆用户名
-	 *
-	 * @return
-	 */
-	public String getUserName() {
-	    return hxSDKHelper.getHXId();
-	}
+    /**
+     * 设置好友user list到内存中
+     *
+     * @param contactList 好友user list
+     */
+    public void setContactList(Map<String, User> contactList) {
+        hxSDKHelper.setContactList(contactList);
+    }
 
-	/**
-	 * 获取密码
-	 *
-	 * @return
-	 */
-	public String getPassword() {
-		return hxSDKHelper.getPassword();
-	}
+    /**
+     * 获取当前登陆用户名
+     *
+     * @return 当前登陆用户名
+     */
+    public String getUserName() {
+        return hxSDKHelper.getHXId();
+    }
 
-	/**
-	 * 设置用户名
-	 *
-	 *
-	 */
-	public void setUserName(String username) {
-	    hxSDKHelper.setHXId(username);
-	}
+    /**
+     * 获取密码
+     *
+     * @return 密码
+     */
+    public String getPassword() {
+        return hxSDKHelper.getPassword();
+    }
 
-	/**
-	 * 设置密码 下面的实例代码 只是demo，实际的应用中需要加password 加密后存入 preference 环信sdk
-	 * 内部的自动登录需要的密码，已经加密存储了
-	 *
-	 * @param pwd
-	 */
-	public void setPassword(String pwd) {
-	    hxSDKHelper.setPassword(pwd);
-	}
+    /**
+     * 设置用户名
+     */
+    public void setUserName(String username) {
+        hxSDKHelper.setHXId(username);
+    }
 
-	/**
-	 * 退出登录,清空数据
-	 */
-	public void logout(final EMCallBack emCallBack) {
-		// 先调用sdk logout，在清理app中自己的数据
-	    hxSDKHelper.logout(emCallBack);
-	}
+    /**
+     * 设置密码 下面的实例代码 只是demo，实际的应用中需要加password 加密后存入 preference 环信sdk
+     * 内部的自动登录需要的密码，已经加密存储了
+     *
+     * @param pwd 密码
+     */
+    public void setPassword(String pwd) {
+        hxSDKHelper.setPassword(pwd);
+    }
+
+    /**
+     * 退出登录,清空数据
+     */
+    public void logout(final EMCallBack emCallBack) {
+        // 先调用sdk logout，在清理app中自己的数据
+        hxSDKHelper.logout(emCallBack);
+    }
+
     public void exit() {
-        for (Activity act : activitys) {
+        for (Activity act : activityList) {
             act.finish();
         }
         android.os.Process.killProcess(android.os.Process.myPid());
     }
+
     public static void addActivity(Activity act) {
-        activitys.add(act);
+        activityList.add(act);
     }
 }

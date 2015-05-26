@@ -97,11 +97,13 @@ public class BaseActivity extends FragmentActivity {
 
         baseFragment.setScreenHeight(screenHeight);
         baseFragment.setScreenWidth(screenWidth);
+
+        imageLoader.clearMemoryCache();
     }
 
     private void initImageLoad() {
         ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(this);
-        builder.memoryCacheSize((int) maxMemorySize / 4);
+        builder.memoryCacheSize((int) maxMemorySize / 2);
         ImageLoaderConfiguration configuration = builder.build();
         if (!imageLoader.isInited()) {
             imageLoader.init(configuration);
@@ -124,9 +126,9 @@ public class BaseActivity extends FragmentActivity {
 
         isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
-        DeBugLog.i(TAG, "虚拟按键高度:" + String.valueOf(navigationBarHeight));
-        DeBugLog.i(TAG, "NavigationBarWidth:" + String.valueOf(navigationBarWidth));
-        DeBugLog.i(TAG, "状态栏高度:" + String.valueOf(statusBarHeight));
+//        DeBugLog.i(TAG, "虚拟按键高度:" + String.valueOf(navigationBarHeight));
+//        DeBugLog.i(TAG, "NavigationBarWidth:" + String.valueOf(navigationBarWidth));
+//        DeBugLog.i(TAG, "状态栏高度:" + String.valueOf(statusBarHeight));
     }
 
     private void initScreen() {
@@ -135,8 +137,8 @@ public class BaseActivity extends FragmentActivity {
         screenWidth = dm.widthPixels;
         screenHeight = dm.heightPixels;
 
-        DeBugLog.i(TAG, "屏幕宽度:" + String.valueOf(screenWidth));
-        DeBugLog.i(TAG, "屏幕高度:" + String.valueOf(screenHeight));
+//        DeBugLog.i(TAG, "屏幕宽度:" + String.valueOf(screenWidth));
+//        DeBugLog.i(TAG, "屏幕高度:" + String.valueOf(screenHeight));
     }
 
     private void initSundry() {
@@ -145,8 +147,8 @@ public class BaseActivity extends FragmentActivity {
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
 
-        DeBugLog.i(TAG, "userSign:" + userSign);
-        DeBugLog.i(TAG, "verification:" + verification);
+//        DeBugLog.i(TAG, "userSign:" + userSign);
+//        DeBugLog.i(TAG, "verification:" + verification);
     }
 
     @Override

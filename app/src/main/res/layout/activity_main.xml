@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/mainShowLayout"
@@ -48,6 +47,7 @@
             android:layout_toLeftOf="@+id/main_record"
             android:layout_toStartOf="@+id/main_record"
             android:src="@drawable/icon_main_pic"
+            android:contentDescription="@string/openShoot"
             android:visibility="invisible"/>
 
         <ImageView
@@ -58,6 +58,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
             android:src="@drawable/icon_main_record"
+            android:contentDescription="@string/openRemember"
             android:visibility="invisible"/>
 
         <ImageView
@@ -71,6 +72,7 @@
             android:layout_toEndOf="@+id/main_record"
             android:layout_toRightOf="@+id/main_record"
             android:src="@drawable/icon_main_ask"
+            android:contentDescription="@string/openAsk"
             android:visibility="invisible"/>
 
         <LinearLayout
@@ -81,7 +83,6 @@
             android:background="@drawable/main_guide_line"
             android:orientation="horizontal">
 
-
             <LinearLayout
                 android:id="@+id/tab1"
                 style="@style/tabLayout">
@@ -89,6 +90,7 @@
                 <ImageView
                     android:id="@+id/img1"
                     style="@style/titleImage"
+                    android:contentDescription="@string/homePage"
                     android:src="@drawable/icon_main2"/>
 
                 <TextView
@@ -99,9 +101,7 @@
 
             <LinearLayout
                 android:id="@+id/tab2"
-                style="@style/tabLayout"
-                android:paddingLeft="20dp"
-                android:paddingStart="20dp">
+                style="@style/tabLayout">
 
                 <ImageView
                     android:id="@+id/img2"
@@ -116,7 +116,7 @@
 
             <ImageView
                 android:id="@+id/sendNewMessage"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_weight="0.2"
@@ -125,8 +125,7 @@
 
             <LinearLayout
                 android:id="@+id/tab3"
-                style="@style/tabLayout"
-                android:paddingRight="20dp">
+                style="@style/tabLayout">
 
                 <ImageView
                     android:id="@+id/img3"

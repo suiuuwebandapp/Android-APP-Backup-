@@ -26,7 +26,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 
 import com.easemob.chat.EMVideoCallHelper;
-import com.minglang.suiuu.chat.chat.DemoApplication;
+import com.minglang.suiuu.application.SuiuuApplication;
 
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD) @SuppressLint("NewApi") public class CameraHelper implements PreviewCallback {
@@ -231,6 +231,6 @@ import com.minglang.suiuu.chat.chat.DemoApplication;
     }
 
     boolean isScreenOriatationPortrait() {
-        return DemoApplication.applicationContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        return SuiuuApplication.applicationContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 }

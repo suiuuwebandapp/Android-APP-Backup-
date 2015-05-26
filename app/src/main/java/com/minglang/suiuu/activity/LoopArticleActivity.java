@@ -188,6 +188,7 @@ public class LoopArticleActivity extends BaseActivity {
 
         articleId = getIntent().getStringExtra(ARTICLEID);
         OtherTAG = getIntent().getStringExtra("TAG");
+        DeBugLog.i(TAG, "TAG:" + OtherTAG);
 
         initImageLoader();
 

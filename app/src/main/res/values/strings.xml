@@ -1,6 +1,5 @@
 <resources>
 
-    <string name="app_name">随游</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -98,21 +97,21 @@
     <string name="article_publish_failure">文章发布失败</string>
     <string name="article_update_success">文章更新成功</string>
 
-    <string name="UnknownArea">未知地区</string>
+    <string name="UnknownArea">UnknownArea</string>
     <string name="title">标题</string>
     <string name="attentionDynamic">关注动态</string>
     <string name="more">更多</string>
     <string name="today_star">今日之星</string>
     <string name="loopDynamic">圈子动态</string>
-    <string name="UnknownName">未知</string>
+    <string name="UnknownName">UnknownName</string>
     <string name="noInformation">暂无信息</string>
     <string name="popularRecommendation">热门推荐</string>
 
-    <string name="please_input_email_or_phone_number">请输入邮箱或手机号</string>
+    <string name="please_input_email_or_phone_number">Please enter a Email or phone number</string>
     <string name="please_input_password">请输入密码</string>
     <string name="obtain_captcha">获取验证码</string>
-    <string name="please_input_number">请输入手机号</string>
-    <string name="please_input_confirm_password">请输入确认密码</string>
+    <string name="please_input_number">Please enter a phone number</string>
+    <string name="please_input_confirm_password">Please enter a confirmation password</string>
     <string name="please_input_obtain_captcha">请输入验证码</string>
 
     <string name="DataError">数据获取错误，请稍候再试！</string>
@@ -147,7 +146,11 @@
     <string name="type">类型</string>
     <string name="price">价格</string>
     <string name="refreshData">点击重新加载数据</string>
+    <string name="openAsk">openSuiuuAsk</string>
+    <string name="openRemember">openSuiuuRemember</string>
+    <string name="openShoot">openSuiuuShoot</string>
 
+    <string name="homePage">HomePage</string>
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>
@@ -404,7 +407,6 @@
     <string name="title_activity_attention">AttentionActivity</string>
     <string name="title_activity_collection">CollectionActivity</string>
     <string name="title_activity_fans">FansActivity</string>
-    <string name="title_activity_send_post_activity__one">SendPostActivity_One</string>
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_person_setting">PersonSettingActivity</string>
     <string name="title_activity_login">LoginActivity</string>
@@ -426,6 +428,6 @@
     <string name="title_activity_wxentry">WXEntryActivity</string>
     <string name="title_activity_select_country">SelectCountryActivity</string>
     <string name="title_activity_select_city">SelectCityActivity</string>
-    <string name="title_activity_test_loop_detailsctivity">TestLoopDetailsctivity</string>
+    <string name="app_name">Suiuu</string>
 
 </resources>

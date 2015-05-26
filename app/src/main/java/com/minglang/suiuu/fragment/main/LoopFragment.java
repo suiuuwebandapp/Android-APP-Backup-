@@ -214,8 +214,8 @@ public class LoopFragment extends BaseFragment {
 
         tabWidth = screenWidth / 2;
 
-        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll2)
-                .showImageForEmptyUri(R.drawable.scroll2).showImageOnFail(R.drawable.scroll2)
+        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }

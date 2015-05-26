@@ -48,16 +48,17 @@ import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.ChatActivity;
 import com.minglang.suiuu.chat.activity.ChatAllHistoryFragment;
 import com.minglang.suiuu.chat.chat.Constant;
-import com.minglang.suiuu.chat.chat.DemoApplication;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.utils.CommonUtils;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.fragment.main.LoopFragment;
 import com.minglang.suiuu.fragment.main.MainFragment;
-import com.minglang.suiuu.fragment.main.RouteFragment;
+import com.minglang.suiuu.fragment.main.SuiuuFragment;
 import com.minglang.suiuu.utils.ConstantUtil;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.update.UmengUpdateAgent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -117,7 +118,7 @@ public class MainActivity extends BaseActivity {
     /**
      * 路线页面
      */
-    private RouteFragment routeFragment;
+    private SuiuuFragment suiuuFragment;
 
     /**
      * 会话页面
@@ -125,11 +126,6 @@ public class MainActivity extends BaseActivity {
     private ChatAllHistoryFragment conversationFragment;
 
     private ListView mListView;
-
-    /**
-     * 是否有虚拟按键
-     */
-    private boolean isNavigationBar;
 
     /**
      * 随问Button
@@ -167,7 +163,6 @@ public class MainActivity extends BaseActivity {
     private TextView tv_suiuu_text;
     private ImageView iv_conversation;
     private TextView tv_conversation_text;
-    private RelativeLayout titleLayout;
     private RelativeLayout rl_top_info;
     private ImageView iv_suiuu_search_more;
 
@@ -175,35 +170,45 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
-        if (savedInstanceState != null && savedInstanceState.getBoolean(Constant.ACCOUNT_REMOVED, false)) {
+
+        boolean saveFlag = savedInstanceState != null;
+
+        if (saveFlag && savedInstanceState.getBoolean(Constant.ACCOUNT_REMOVED, false)) {
             // 防止被移除后，没点确定按钮然后按了home键，长期在后台又进app导致的crash
             // 三个fragment里加的判断同理
-            DemoApplication.getInstance().logout(null);
-            finish();
+            SuiuuApplication.getInstance().logout(null);
             startActivity(new Intent(this, LoginActivity.class));
+            finish();
             return;
-        } else if (savedInstanceState != null && savedInstanceState.getBoolean("isConflict", false)) {
+        } else if (saveFlag && savedInstanceState.getBoolean("isConflict", false)) {
             // 防止被T后，没点确定按钮然后按了home键，长期在后台又进app导致的crash
             // 三个fragment里加的判断同理
-            finish();
             startActivity(new Intent(this, LoginActivity.class));
+            finish();
             return;
+        }
+
+        if (saveFlag && savedInstanceState.getString("save").equals("saveState")) {
+            if (savedInstanceState.getBoolean("main", false)) {
+                LoadMainFragment();
+            } else if (savedInstanceState.getBoolean("loop", false)) {
+                LoadLoopFragment();
+            } else if (savedInstanceState.getBoolean("suiuu", false)) {
+                LoadSuiuuFragment();
+            } else if (savedInstanceState.getBoolean("chat", false)) {
+                LoadConversationFragment();
+            } else {
+                LoadDefaultFragment();
+            }
         }
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         setContentView(R.layout.activity_main);
+
+        UmengUpdateAgent.update(this);
+
         initView();
-
-        if (isNavigationBar) {
-            if (isKITKAT) {
-                ConstantUtil.topHeight = titleLayout.getLayoutParams().height + statusBarHeight;
-
-            }
-        } else {
-            ConstantUtil.topHeight = titleLayout.getLayoutParams().height;
-        }
-
         initRegisterAllBroadcastReceiver();
     }
 
@@ -318,7 +323,7 @@ public class MainActivity extends BaseActivity {
                         changeLoop(false);
                         changeSuiuu(true);
                         changeConversation(false);
-                        LoadRouteFragment();
+                        LoadSuiuuFragment();
                         break;
 
                     case R.id.tab4:
@@ -425,11 +430,13 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
     public void showCommon() {
         titleInfo.setVisibility(View.VISIBLE);
         rl_top_info.setVisibility(View.GONE);
         iv_suiuu_search_more.setVisibility(View.GONE);
     }
+
     /**
      * 加载主页页面
      */
@@ -440,9 +447,9 @@ public class MainActivity extends BaseActivity {
                 ft.hide(loopFragment);
             }
         }
-        if (routeFragment != null) {
-            if (routeFragment.isAdded()) {
-                ft.hide(routeFragment);
+        if (suiuuFragment != null) {
+            if (suiuuFragment.isAdded()) {
+                ft.hide(suiuuFragment);
             }
         }
         if (conversationFragment != null) {
@@ -466,6 +473,7 @@ public class MainActivity extends BaseActivity {
 //        }
         currentIndex = 0;
         ft.commit();
+        DeBugLog.i(TAG, "MainFragment:" + Boolean.toString(mainFragment != null && !mainFragment.isInLayout()));
     }
 
     /**
@@ -478,9 +486,9 @@ public class MainActivity extends BaseActivity {
                 ft.hide(mainFragment);
             }
         }
-        if (routeFragment != null) {
-            if (routeFragment.isAdded()) {
-                ft.hide(routeFragment);
+        if (suiuuFragment != null) {
+            if (suiuuFragment.isAdded()) {
+                ft.hide(suiuuFragment);
             }
         }
         if (conversationFragment != null) {
@@ -504,12 +512,13 @@ public class MainActivity extends BaseActivity {
 //        }
         currentIndex = 1;
         ft.commit();
+        DeBugLog.i(TAG, "LoopFragment:" + Boolean.toString(loopFragment != null && !loopFragment.isInLayout()));
     }
 
     /**
      * 加载路线页面
      */
-    private void LoadRouteFragment() {
+    private void LoadSuiuuFragment() {
         FragmentTransaction ft = fm.beginTransaction();
         if (mainFragment != null) {
             if (mainFragment.isAdded()) {
@@ -526,22 +535,23 @@ public class MainActivity extends BaseActivity {
                 ft.hide(conversationFragment);
             }
         }
-        if (routeFragment == null) {
-            routeFragment = new RouteFragment();
+        if (suiuuFragment == null) {
+            suiuuFragment = new SuiuuFragment();
         }
-        if (routeFragment.isAdded()) {
-            ft.show(routeFragment);
+        if (suiuuFragment.isAdded()) {
+            ft.show(suiuuFragment);
         } else {
-            ft.add(R.id.showLayout, routeFragment);
+            ft.add(R.id.showLayout, suiuuFragment);
         }
-//        if (routeFragment == null) {
-//            routeFragment = new RouteFragment();
-//            ft.replace(R.id.showLayout, routeFragment);
+//        if (suiuuFragment == null) {
+//            suiuuFragment = new RouteFragment();
+//            ft.replace(R.id.showLayout, suiuuFragment);
 //        } else {
-//            ft.replace(R.id.showLayout, routeFragment);
+//            ft.replace(R.id.showLayout, suiuuFragment);
 //        }
         currentIndex = 2;
         ft.commit();
+        DeBugLog.i(TAG, "SuiuuFragment:" + Boolean.toString(suiuuFragment != null && !suiuuFragment.isInLayout()));
     }
 
     /**
@@ -559,9 +569,9 @@ public class MainActivity extends BaseActivity {
                 ft.hide(loopFragment);
             }
         }
-        if (routeFragment != null) {
-            if (routeFragment.isAdded()) {
-                ft.hide(routeFragment);
+        if (suiuuFragment != null) {
+            if (suiuuFragment.isAdded()) {
+                ft.hide(suiuuFragment);
             }
         }
 
@@ -580,6 +590,8 @@ public class MainActivity extends BaseActivity {
         currentIndex = 3;
         msgCount.setVisibility(View.INVISIBLE);
         ft.commit();
+        DeBugLog.i(TAG, "ConversationFragment:" +
+                Boolean.toString(conversationFragment != null && !conversationFragment.isInLayout()));
     }
 
     /**
@@ -600,13 +612,13 @@ public class MainActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-        conversationFragment = new ChatAllHistoryFragment();
 
+        DeBugLog.i(TAG, "MainActivity执行初始化");
 
         errorItem = (RelativeLayout) findViewById(R.id.rl_error_item);
         errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
         msgCount = (TextView) findViewById(R.id.unread_msg_number);
-        titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
+        RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
 
         /***************Activity可控制View设置padding****************/
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -627,13 +639,7 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-//        if (isKITKAT) {
-//            /**************HeadLayout设置Margins*****************/
-//            RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
-//            LinearLayout.LayoutParams titleLayoutParams = new LinearLayout.LayoutParams(titleLayout.getLayoutParams());
-//            titleLayoutParams.setMargins(0, statusBarHeight, 0, 0);
-//            titleLayout.setLayoutParams(titleLayoutParams);
-//        }
+        ConstantUtil.topHeight = titleLayout.getLayoutParams().height;
 
         /*************设置侧滑菜单Params**********************/
         slideLayout = (RelativeLayout) findViewById(R.id.slideLayout);
@@ -697,10 +703,10 @@ public class MainActivity extends BaseActivity {
         mListView.setAdapter(mainSliderAdapter);
 
         mainFragment = new MainFragment();
+        conversationFragment = new ChatAllHistoryFragment();
         LoadDefaultFragment();
 
         initAnimation();
-
     }
 
     //判断主题
@@ -821,7 +827,7 @@ public class MainActivity extends BaseActivity {
      */
     private void showAccountRemovedDialog() {
         isAccountRemovedDialogShow = true;
-        DemoApplication.getInstance().logout(null);
+        SuiuuApplication.getInstance().logout(null);
         String st5 = getResources().getString(R.string.Remove_the_notification);
         if (!MainActivity.this.isFinishing()) {
             // clear up global variables
@@ -856,7 +862,7 @@ public class MainActivity extends BaseActivity {
      */
     private void showConflictDialog() {
         isConflictDialogShow = true;
-        DemoApplication.getInstance().logout(null);
+        SuiuuApplication.getInstance().logout(null);
         String st = getResources().getString(R.string.Logoff_notification);
         if (!MainActivity.this.isFinishing()) {
             // clear up global variables
@@ -894,6 +900,27 @@ public class MainActivity extends BaseActivity {
         } else if (getIntent().getBooleanExtra(Constant.ACCOUNT_REMOVED, false) && !isAccountRemovedDialogShow) {
             showAccountRemovedDialog();
         }
+        DeBugLog.i(TAG, "重新进入该Activity");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        boolean mainFragmentFlag, loopFragmentFlag, suiuuFragmentFlag, chatFragmentFlag;
+
+        mainFragmentFlag = mainFragment != null && !mainFragment.isInLayout();
+        loopFragmentFlag = loopFragment != null && !loopFragment.isInLayout();
+        suiuuFragmentFlag = suiuuFragment != null && !suiuuFragment.isInLayout();
+        chatFragmentFlag = conversationFragment != null && !conversationFragment.isInLayout();
+
+        String str = "saveState";
+
+        outState.putString("save", str);
+        outState.putBoolean("main", mainFragmentFlag);
+        outState.putBoolean("loop", loopFragmentFlag);
+        outState.putBoolean("suiuu", suiuuFragmentFlag);
+        outState.putBoolean("chat", chatFragmentFlag);
     }
 
     /**
