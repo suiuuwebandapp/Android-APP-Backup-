@@ -43,6 +43,7 @@
                 android:background="@color/transparent"
                 android:layout_centerVertical="true"
                 android:padding="@dimen/layout_5dp"
+                android:singleLine="true"
                 android:hint="输入你感兴趣的国家,城市"
                 android:textSize="@dimen/layout_15sp"
                 />
