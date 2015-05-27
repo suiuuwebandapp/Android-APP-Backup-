@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,9 +37,9 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.bean.User;
 import com.minglang.suiuu.chat.chat.Constant;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.dao.UserDao;
 import com.minglang.suiuu.chat.utils.CommonUtils;
 import com.minglang.suiuu.entity.AreaCode;
@@ -1065,6 +1066,7 @@ public class LoginActivity extends Activity {
 
         RequestParams params = new RequestParams();
         params.addBodyParameter("openId", qq_open_id);
+        Log.i("suiuu", "openId=" + qq_open_id);
         params.addBodyParameter("nickname", qq_nick_Name);
         params.addBodyParameter("sex", qq_gender);
         params.addBodyParameter("headImg", qq_head_image_path);

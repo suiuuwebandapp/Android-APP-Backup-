@@ -20,7 +20,7 @@ public class HttpServicePath {
      * http://test.suiuu.com
      * http://192.168.11.122
      */
-    public static String RootPath = "http://test.suiuu.com";
+    public static String RootPath = "http://www.suiuu.com";
 
     public static String SharePath = "/circle/web-info?infoId=";
 
