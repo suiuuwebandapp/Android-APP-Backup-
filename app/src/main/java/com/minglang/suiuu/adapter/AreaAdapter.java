@@ -46,10 +46,10 @@ public class AreaAdapter extends BaseAdapter {
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
 
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll5)
-                .showImageForEmptyUri(R.drawable.scroll5).showImageOnFail(R.drawable.scroll5)
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     public void setList(List<LoopBaseData> list) {

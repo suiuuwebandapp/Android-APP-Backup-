@@ -2,6 +2,7 @@ package com.minglang.suiuu.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,9 @@ import com.minglang.suiuu.entity.OtherUserDataArticle;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -35,15 +37,17 @@ public class PersonalPostAdapter extends BaseAdapter {
 
     private int screenWidth;
 
+    private DisplayImageOptions displayImageOptions;
+
     public PersonalPostAdapter(Context context) {
         this.context = context;
 
         imageLoader = ImageLoader.getInstance();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        }
-
         screenWidth = new ScreenUtils((Activity) context).getScreenWidth();
+        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     public void setList(List<OtherUserDataArticle> list) {
@@ -85,7 +89,7 @@ public class PersonalPostAdapter extends BaseAdapter {
 
         String strImagePath = list.get(position).getaImg();
         if (!TextUtils.isEmpty(strImagePath)) {
-            imageLoader.displayImage(strImagePath, mainImageView);
+            imageLoader.displayImage(strImagePath, mainImageView, displayImageOptions);
         }
 
         String strContent = list.get(position).getaTitle();
@@ -110,7 +114,7 @@ public class PersonalPostAdapter extends BaseAdapter {
         }
 
         convertView = holder.getConvertView();
-        int itemWidth = screenWidth / 2- Utils.newInstance(context).dip2px(10);
+        int itemWidth = screenWidth / 2 - Utils.newInstance(context).dip2px(10);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemWidth, itemWidth);
         convertView.setLayoutParams(params);
 

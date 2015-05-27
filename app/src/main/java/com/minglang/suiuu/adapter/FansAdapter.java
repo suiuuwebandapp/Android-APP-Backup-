@@ -2,7 +2,6 @@ package com.minglang.suiuu.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,7 +12,6 @@ import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.FansData;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.List;
 
@@ -37,9 +35,6 @@ public class FansAdapter extends BaseAdapter {
         this.context = context;
         this.list = list;
         imageLoader = ImageLoader.getInstance();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        }
     }
 
     @Override
@@ -80,7 +75,6 @@ public class FansAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(headImagePath)) {
             imageLoader.displayImage(headImagePath, headImageView);
         }
-        Log.i(TAG,"头像图片地址:"+headImagePath);
 
         String strName = data.getNickname();
         if (!TextUtils.isEmpty(strName)) {

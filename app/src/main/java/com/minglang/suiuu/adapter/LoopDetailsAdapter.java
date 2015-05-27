@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -21,7 +20,6 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
@@ -39,7 +37,7 @@ public class LoopDetailsAdapter extends BaseAdapter {
 
     private List<LoopDetailsDataList> list;
 
-    private ImageLoader loader;
+    private ImageLoader imageLoader;
 
     private DisplayImageOptions displayImageOptions1, displayImageOptions2;
 
@@ -49,14 +47,10 @@ public class LoopDetailsAdapter extends BaseAdapter {
 
     public LoopDetailsAdapter(Context context) {
         this.context = context;
-        loader = ImageLoader.getInstance();
+        imageLoader = ImageLoader.getInstance();
 
-        if (!loader.isInited()) {
-            loader.init(ImageLoaderConfiguration.createDefault(context));
-        }
-
-        displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.user_background)
-                .showImageForEmptyUri(R.drawable.user_background).showImageOnFail(R.drawable.user_background)
+        displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
@@ -123,12 +117,12 @@ public class LoopDetailsAdapter extends BaseAdapter {
 
         String imagePath = loopDetailsDataList.getaImg();
         if (!TextUtils.isEmpty(imagePath)) {
-            loader.displayImage(imagePath, mainImageView, displayImageOptions1);
+            imageLoader.displayImage(imagePath, mainImageView, displayImageOptions1);
         }
 
         String headImagePath = loopDetailsDataList.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            loader.displayImage(headImagePath, headImageView, displayImageOptions2);
+            imageLoader.displayImage(headImagePath, headImageView, displayImageOptions2);
         }
 
         String str_userName = loopDetailsDataList.getNickname();
@@ -142,7 +136,6 @@ public class LoopDetailsAdapter extends BaseAdapter {
         if (TextUtils.isEmpty(str_title)) {
             title.setText("暂无标题");
         } else {
-            Log.i(TAG, "标题:" + str_title);
             title.setText(str_title);
         }
 

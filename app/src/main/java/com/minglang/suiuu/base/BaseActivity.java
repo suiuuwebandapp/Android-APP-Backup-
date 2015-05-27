@@ -13,7 +13,8 @@ import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
+import java.util.Locale;
 
 public class BaseActivity extends FragmentActivity {
 
@@ -61,6 +62,18 @@ public class BaseActivity extends FragmentActivity {
      */
     public int screenHeight;
 
+    /**
+     * 屏幕密度
+     * (像素比例：0.75, 1.0, 1.5, 2.0)
+     */
+    public float density;
+
+    /**
+     * 屏幕密度
+     * (每寸像素：120, 160, 240, 320)
+     */
+    public int densityDPI;
+
     public FragmentManager fm;
 
     public int sliderImageWidth;
@@ -69,6 +82,8 @@ public class BaseActivity extends FragmentActivity {
     public String verification;
 
     private long maxMemorySize;
+
+    public boolean isZhCnLanguage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +94,10 @@ public class BaseActivity extends FragmentActivity {
         DeBugLog.i(TAG, "应用程序可用最大内存:" + maxMemorySize);
 
         initScreen();
-        initImageLoad();
         initStatusBarControl();
         initSundry();
+
+        isZhCnLanguage = isCNLanguage();
 
         BaseFragment baseFragment = new BaseFragment();
         baseFragment.setContext(this);
@@ -98,16 +114,8 @@ public class BaseActivity extends FragmentActivity {
         baseFragment.setScreenHeight(screenHeight);
         baseFragment.setScreenWidth(screenWidth);
 
+        imageLoader.getMemoryCache().clear();
         imageLoader.clearMemoryCache();
-    }
-
-    private void initImageLoad() {
-        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(this);
-        builder.memoryCacheSize((int) maxMemorySize / 2);
-        ImageLoaderConfiguration configuration = builder.build();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(configuration);
-        }
     }
 
     private void initStatusBarControl() {
@@ -125,10 +133,6 @@ public class BaseActivity extends FragmentActivity {
         systemBarTintManager.setTintColor(getResources().getColor(R.color.tr_black));
 
         isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
-//        DeBugLog.i(TAG, "虚拟按键高度:" + String.valueOf(navigationBarHeight));
-//        DeBugLog.i(TAG, "NavigationBarWidth:" + String.valueOf(navigationBarWidth));
-//        DeBugLog.i(TAG, "状态栏高度:" + String.valueOf(statusBarHeight));
     }
 
     private void initScreen() {
@@ -136,9 +140,8 @@ public class BaseActivity extends FragmentActivity {
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         screenWidth = dm.widthPixels;
         screenHeight = dm.heightPixels;
-
-//        DeBugLog.i(TAG, "屏幕宽度:" + String.valueOf(screenWidth));
-//        DeBugLog.i(TAG, "屏幕高度:" + String.valueOf(screenHeight));
+        density = dm.density;
+        densityDPI = dm.densityDpi;
     }
 
     private void initSundry() {
@@ -146,9 +149,12 @@ public class BaseActivity extends FragmentActivity {
         sliderImageWidth = BitmapFactory.decodeResource(getResources(), R.drawable.slider).getWidth();
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
+    }
 
-//        DeBugLog.i(TAG, "userSign:" + userSign);
-//        DeBugLog.i(TAG, "verification:" + verification);
+    public boolean isCNLanguage() {
+        Locale locale = getResources().getConfiguration().locale;
+        String language = locale.getLanguage();
+        return language.endsWith("zh");
     }
 
     @Override

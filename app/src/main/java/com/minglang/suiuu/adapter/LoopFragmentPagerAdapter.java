@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.List;
 
 /**
+ * LoopFragment中嵌套的ViewPager+Fragment的适配器
+ * <p/>
  * Created by LZY on 2015/3/18 0018.
  */
 public class LoopFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -20,7 +22,7 @@ public class LoopFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        if (list != null && list.size() >0) {
+        if (list != null && list.size() > 0) {
             return list.size();
         } else {
             return 0;

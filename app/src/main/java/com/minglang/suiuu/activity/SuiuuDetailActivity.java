@@ -23,10 +23,10 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.RollViewPager;
+import com.minglang.suiuu.customview.RollViewPager;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.CircleImageView;
-import com.minglang.suiuu.customview.mProgressDialog;
+import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.SuiuuDataDetail;
 import com.minglang.suiuu.entity.SuiuuDetailForData;
 import com.minglang.suiuu.entity.SuiuuDetailForInfo;
@@ -82,7 +82,7 @@ public class SuiuuDetailActivity extends BaseActivity {
      */
     private String collectionId;
 
-    private mProgressDialog dialog;
+    private TextProgressDialog dialog;
     //判断取消的是点赞还是收藏
     private boolean isPraise;
     private TextView suiuu_details_comments;
@@ -129,7 +129,7 @@ public class SuiuuDetailActivity extends BaseActivity {
             }
         }
 
-        dialog = new mProgressDialog(this);
+        dialog = new TextProgressDialog(this);
         tv_nikename = (TextView) findViewById(R.id.tv_nickname);
         tv_selfsign = (TextView) findViewById(R.id.tv_self_sign);
         tv_title = (TextView) findViewById(R.id.tv_title);

@@ -12,9 +12,6 @@ import com.minglang.suiuu.entity.Contact;
 
 import java.util.List;
 
-/**
- * Created by Administrator on 2015/4/3.
- */
 public class ContactUsAdapter extends BaseAdapter {
 
     private Context context;

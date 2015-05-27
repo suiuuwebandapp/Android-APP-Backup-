@@ -153,11 +153,6 @@ public class LoopArticleActivity extends BaseActivity {
      */
     private LoopArticleData loopArticleData;
 
-    /**
-     * 评论列表数据集合
-     */
-    private List<LoopArticleCommentList> list;
-
     private DisplayImageOptions options1;
     private DisplayImageOptions options2;
 
@@ -343,6 +338,7 @@ public class LoopArticleActivity extends BaseActivity {
                 startActivity(showPic);
             }
         });
+
         //显示评论列表
         showComments.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -353,7 +349,7 @@ public class LoopArticleActivity extends BaseActivity {
                     isClickComment = false;
                 } else {
                     List<LoopArticleCommentList> commentList = loopArticleData.getCommentList();
-                    if (commentList.size() > 0) {
+                    if (commentList != null && commentList.size() > 0) {
                         commentListView.setVisibility(View.VISIBLE);
                         commentListView.setAdapter(new ArticleCommentAdapter(LoopArticleActivity.this, commentList));
                         loop_article_scrollView.smoothScrollBy(0, 100);
@@ -390,6 +386,7 @@ public class LoopArticleActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
         loop_article_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -642,7 +639,6 @@ public class LoopArticleActivity extends BaseActivity {
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
             String str = responseInfo.result;
-            DeBugLog.i(TAG, "文章详情数据:" + str);
             try {
                 //全部数据
                 LoopArticle loopArticle = JsonUtils.getInstance().fromJSON(LoopArticle.class, str);
@@ -656,7 +652,6 @@ public class LoopArticleActivity extends BaseActivity {
                             loopArticleData = loopArticle.getData();
                             if (loopArticleData != null) {
                                 setForArticleContent();
-                                list = loopArticleData.getCommentList();
                                 String otherUserSign = loopArticleData.getaCreateUserSign();
                                 if (!TextUtils.isEmpty(otherUserSign)) {
                                     if (!userSign.equals(otherUserSign)) {
@@ -811,13 +806,19 @@ public class LoopArticleActivity extends BaseActivity {
 
     @Override
     public void finish() {
-        if (OtherTAG.equals(AskQuestionActivity.class.getSimpleName())) {
+        String AskQuestionActivityTAG = AskQuestionActivity.class.getSimpleName();
+        String EasyTackPhotoActivityTAG = EasyTackPhotoActivity.class.getSimpleName();
+
+        if (OtherTAG.equals(AskQuestionActivityTAG)) {
+            DeBugLog.i(TAG, "AskQuestionActivityTAG:" + AskQuestionActivityTAG + ",Executive this judge");
             startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
             super.finish();
-        } else if (OtherTAG.equals(EasyTackPhotoActivity.class.getSimpleName())) {
+        } else if (OtherTAG.equals(EasyTackPhotoActivityTAG)) {
+            DeBugLog.i(TAG, "EasyTackPhotoActivityTAG:" + EasyTackPhotoActivityTAG + ",Executive this judge");
             startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
             super.finish();
         } else {
+            DeBugLog.i(TAG, "OtherTAG:" + OtherTAG + ",Executive this judge");
             super.finish();
         }
     }

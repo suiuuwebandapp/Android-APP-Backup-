@@ -36,7 +36,7 @@ import com.minglang.suiuu.adapter.EasyTackPhotoAdapter;
 import com.minglang.suiuu.adapter.MyListAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.BaiduMapActivity;
-import com.minglang.suiuu.customview.mProgressDialog;
+import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
@@ -118,7 +118,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
     protected static final int getData_Success = 0;
     protected static final int getData_FAILURE = 1;
     int status = 0;
-    private mProgressDialog dialog;
+    private TextProgressDialog dialog;
     private ImageView iv_top_back;
     private ScrollView sll;
     private String dataNum;
@@ -470,7 +470,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
 
     //初始化popupWindow
     public void initPopupWindow() {
-        dialog = new mProgressDialog(this);
+        dialog = new TextProgressDialog(this);
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.pop_select_list, null);
         listView = (ListView) view.findViewById(R.id.pictureSelectList);

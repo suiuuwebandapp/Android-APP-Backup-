@@ -21,7 +21,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.LoopDetailsActivity;
 import com.minglang.suiuu.adapter.AreaAdapter;
-import com.minglang.suiuu.customview.mProgressDialog;
+import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshGridView;
 import com.minglang.suiuu.entity.LoopBase;
@@ -74,7 +74,7 @@ public class AreaFragment extends Fragment {
 
     private TextView refreshDataView;
 
-    private mProgressDialog mProgressDialog;
+    private TextProgressDialog mProgressDialog;
 
     private AreaAdapter areaAdapter;
 
@@ -216,7 +216,7 @@ public class AreaFragment extends Fragment {
         progressDialog.setCancelable(true);
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
 
-        mProgressDialog = new mProgressDialog(getActivity());
+        mProgressDialog = new TextProgressDialog(getActivity());
         mProgressDialog.setMessage(getResources().getString(R.string.pull_to_refresh_footer_refreshing_label));
 
         areaGridView = (PullToRefreshGridView) rootView.findViewById(R.id.areaGridView);

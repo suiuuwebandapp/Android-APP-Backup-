@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SDCardUtils;
@@ -76,15 +74,6 @@ public class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
         if (ex == null) {
             return false;
         }
-        //使用Toast来显示异常信息
-        new Thread() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                Toast.makeText(context, "很抱歉,程序出现异常,即将退出.", Toast.LENGTH_LONG).show();
-                Looper.loop();
-            }
-        }.start();
 
         //收集设备参数信息
         collectDeviceInfo(context);
@@ -194,15 +183,13 @@ public class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
             //如果用户没有处理则让系统默认的异常处理器来处理
             mDefaultHandler.uncaughtException(thread, ex);
         } else {
-//            context.startActivity(new Intent(context, SplashActivity.class));
             DeBugLog.i(TAG, "应用发生异常，退出!");
+            DeBugLog.e(TAG, "Throwable1:" + ex.getMessage());
+            DeBugLog.e(TAG, "Throwable2:" + ex.toString());
+            DeBugLog.e(TAG, "Throwable3:" + ex.getLocalizedMessage());
+
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(1);
-//            ImageLoader imageLoader = ImageLoader.getInstance();
-//            imageLoader.clearMemoryCache();
-//
-//            DeBugLog.e(TAG, "Throwable1:" + ex.getMessage());
-//            DeBugLog.e(TAG, "Throwable2:" + ex.toString());
         }
     }
 }

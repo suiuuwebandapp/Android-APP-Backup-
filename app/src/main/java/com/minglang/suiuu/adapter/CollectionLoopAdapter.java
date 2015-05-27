@@ -18,7 +18,6 @@ import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
@@ -46,26 +45,11 @@ public class CollectionLoopAdapter extends BaseAdapter {
         this.context = context;
 
         loader = ImageLoader.getInstance();
-        loader.init(ImageLoaderConfiguration.createDefault(context));
 
-        displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.user_background)
-                .showImageForEmptyUri(R.drawable.user_background).showImageOnFail(R.drawable.user_background)
+        displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
-    }
-
-    public CollectionLoopAdapter(Context context, List<CollectionLoopData> list) {
-        this.context = context;
-        this.list = list;
-
-        loader = ImageLoader.getInstance();
-        loader.init(ImageLoaderConfiguration.createDefault(context));
-
-        displayImageOptions1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.scroll1)
-                .showImageForEmptyUri(R.drawable.scroll1).showImageOnFail(R.drawable.scroll1)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
-
     }
 
     public void setScreenParams(int screenWidth) {

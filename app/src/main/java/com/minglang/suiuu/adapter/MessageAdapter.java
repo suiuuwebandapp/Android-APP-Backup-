@@ -1,6 +1,7 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,9 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.SuiuuMessageData;
 import com.minglang.suiuu.utils.ViewHolder;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -32,14 +34,18 @@ public class MessageAdapter extends BaseAdapter {
 
     private String type;
 
+    private DisplayImageOptions displayImageOptions;
+
     public MessageAdapter(Context context, String type) {
         this.context = context;
         this.type = type;
 
         imageLoader = ImageLoader.getInstance();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        }
+
+        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     public void setList(List<SuiuuMessageData> list) {
@@ -81,7 +87,7 @@ public class MessageAdapter extends BaseAdapter {
 
         String strHeadImage = data.getHeadImg();
         if (!TextUtils.isEmpty(strHeadImage)) {
-            imageLoader.displayImage(strHeadImage, headImage);
+            imageLoader.displayImage(strHeadImage, headImage, displayImageOptions);
         }
 
         String strInfo = data.getNickname();

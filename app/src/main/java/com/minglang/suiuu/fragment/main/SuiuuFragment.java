@@ -32,7 +32,7 @@ import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.PullToRefreshView;
-import com.minglang.suiuu.customview.mProgressDialog;
+import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.customview.rangebar.RangeBar;
 import com.minglang.suiuu.entity.SuiuuDataList;
 import com.minglang.suiuu.entity.SuiuuReturnDate;
@@ -65,7 +65,7 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
     private PullToRefreshView mPullToRefreshView;
     private int page = 1;
     private TextView tv_nodata_load;
-    private mProgressDialog dialog;
+    private TextProgressDialog dialog;
     /**
      * 主页面底部导航栏
      */
@@ -195,7 +195,7 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
         mPullToRefreshView.setOnFooterRefreshListener(this);
         View topView = getActivity().findViewById(R.id.mainShowLayout);
         tabSelect = (LinearLayout) topView.findViewById(R.id.tabSelect);
-        dialog = new mProgressDialog(getActivity());
+        dialog = new TextProgressDialog(getActivity());
         //处理头部控件
 
         et_suiuu = (EditText) topView.findViewById(R.id.et_suiuu);

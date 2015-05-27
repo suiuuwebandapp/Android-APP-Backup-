@@ -47,10 +47,10 @@ public class AttentionLoopAdapter extends BaseAdapter {
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
 
-        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.user_background)
-                .showImageForEmptyUri(R.drawable.user_background).showImageOnFail(R.drawable.user_background)
+        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     public void setScreenParams(int screenWidth) {

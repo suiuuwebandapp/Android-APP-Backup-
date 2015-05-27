@@ -92,6 +92,7 @@ public class MainFragment extends BaseFragment {
      * 今日之星数据
      */
     private List<MainDynamicDataRecommendUser> recommendUserList;
+
     /**
      * 今日之星数据加载View
      */

@@ -52,8 +52,8 @@ public class CollectionSuiuuAdapter extends BaseAdapter {
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
 
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.user_background)
-                .showImageForEmptyUri(R.drawable.user_background).showImageOnFail(R.drawable.user_background)
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
     }

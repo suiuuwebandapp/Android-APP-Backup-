@@ -35,7 +35,7 @@ import com.minglang.suiuu.chat.photoview.PhotoView;
 import com.minglang.suiuu.chat.photoview.PhotoViewAttacher;
 import com.minglang.suiuu.chat.task.LoadLocalBigImgTask;
 import com.minglang.suiuu.chat.utils.ImageCache;
-import com.minglang.suiuu.customview.mProgressDialog;
+import com.minglang.suiuu.customview.TextProgressDialog;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -96,7 +96,7 @@ public class ShowBigImage extends BaseActivity {
                     .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                     .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
             imageLoader.displayImage(remotepath, image, options, new SimpleImageLoadingListener(), new ImageLoadingProgressListener() {
-                mProgressDialog dialog = new mProgressDialog(ShowBigImage.this,"");
+                TextProgressDialog dialog = new TextProgressDialog(ShowBigImage.this,"");
                 @Override
                 public void onProgressUpdate(String s, View view, int i, int i2) {
 

@@ -51,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/item_personal_post_image"
-        android:src="@drawable/scroll5"
+        android:src="@drawable/loading"
         android:scaleType="fitXY"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

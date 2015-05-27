@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.List;
 
 /**
+ * 消息页面的ViewPager适配器
+ * <p/>
  * Created by LZY on 2015/3/24 0024.
  */
 public class NewRemindAdapter extends FragmentPagerAdapter {

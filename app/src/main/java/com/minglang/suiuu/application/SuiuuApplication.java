@@ -17,6 +17,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.OSSServiceProvider;
@@ -28,6 +30,11 @@ import com.easemob.EMCallBack;
 import com.minglang.suiuu.chat.bean.User;
 import com.minglang.suiuu.chat.chat.DemoHXSDKHelper;
 import com.minglang.suiuu.crash.GlobalCrashHandler;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -56,73 +63,12 @@ public class SuiuuApplication extends Application {
     static final String accessKey = "LaKLZHyL2Dmy8Qqq"; // 测试代码没有考虑AK/SK的安全性
     static final String screctKey = "c7xPteQRqjV8nNB8xGFIZoFijzjDLX";
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        applicationContext = this;
-        instance = this;
-
-        /**
-         * this function will initialize the HuanXin SDK
-         *
-         * @return boolean true if caller can continue to call HuanXin related APIs after calling onInit, otherwise false.
-         *
-         * 环信初始化SDK帮助函数
-         * 返回true如果正确初始化，否则false，如果返回为false，请在后续的调用中不要调用任何和环信相关的代码
-         *
-         */
-        hxSDKHelper.onInit(applicationContext);
-        buildAboatOSS();
-
-//        String StoragePath = SDCardUtils.getExternalSdCardPath();
-//        DeBugLog.i(TAG, "StoragePath:" + StoragePath);
-//        File file = new File(StoragePath + "/Suiuu");
-//        if (!file.exists()) {
-//            boolean flag = file.mkdir();
-//            if (flag) {
-//                DeBugLog.i(TAG, "Success!");
-//            } else {
-//                DeBugLog.i(TAG, "Failure!");
-//            }
-//        }
-        GlobalCrashHandler globalCrashHandler = GlobalCrashHandler.getInstance();
-        globalCrashHandler.init(this);
-    }
-
-    /**
-     * 初始化阿里OSS上传图片相关
-     */
-    public void buildAboatOSS() {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        // 初始化设置
-        ossService.setApplicationContext(this.getApplicationContext());
-        ossService.setGlobalDefaultTokenGenerator(new TokenGenerator() { // 设置全局默认加签器
-            @Override
-            public String generateToken(String httpMethod, String md5, String type, String date,
-                                        String ossHeaders, String resource) {
-
-                String content = httpMethod + "\n" + md5 + "\n" + type + "\n" + date + "\n" + ossHeaders
-                        + resource;
-
-                return OSSToolKit.generateToken(accessKey, screctKey, content);
-            }
-        });
-
-        ossService.setGlobalDefaultHostId("oss-cn-hongkong.aliyuncs.com");
-        ossService.setCustomStandardTimeWithEpochSec(System.currentTimeMillis() / 1000);
-        ossService.setGlobalDefaultACL(AccessControlList.PRIVATE); // 默认为private
-
-        ClientConfiguration conf = new ClientConfiguration();
-        conf.setConnectTimeout(15 * 1000); // 设置全局网络连接超时时间，默认30s
-        conf.setSocketTimeout(15 * 1000); // 设置全局socket超时时间，默认30s
-        conf.setMaxConnections(50); // 设置全局最大并发网络链接数, 默认50
-        ossService.setClientConfiguration(conf);
-    }
+    private long maxMemorySize;
 
     public static SuiuuApplication getInstance() {
+        if (instance == null) {
+            instance = new SuiuuApplication();
+        }
         return instance;
     }
 
@@ -177,6 +123,88 @@ public class SuiuuApplication extends Application {
      */
     public void setPassword(String pwd) {
         hxSDKHelper.setPassword(pwd);
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        applicationContext = this;
+        instance = this;
+
+        maxMemorySize = Runtime.getRuntime().maxMemory() / 1024 / 1024;
+
+        // 环信初始化SDK帮助函数 返回true如果正确初始化，否则false，如果返回为false，请在后续的调用中不要调用任何和环信相关的代码
+        hxSDKHelper.onInit(applicationContext);
+        buildAboatOSS();
+
+        GlobalCrashHandler globalCrashHandler = GlobalCrashHandler.getInstance();
+        globalCrashHandler.init(getApplicationContext());
+
+        initImageLoad();
+    }
+
+    /**
+     * 初始化阿里OSS上传图片相关
+     */
+    public void buildAboatOSS() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        // 初始化设置
+        ossService.setApplicationContext(this.getApplicationContext());
+        ossService.setGlobalDefaultTokenGenerator(new TokenGenerator() { // 设置全局默认加签器
+            @Override
+            public String generateToken(String httpMethod, String md5, String type, String date,
+                                        String ossHeaders, String resource) {
+
+                String content = httpMethod + "\n" + md5 + "\n" + type + "\n" + date + "\n" + ossHeaders
+                        + resource;
+
+                return OSSToolKit.generateToken(accessKey, screctKey, content);
+            }
+        });
+
+        ossService.setGlobalDefaultHostId("oss-cn-hongkong.aliyuncs.com");
+        ossService.setCustomStandardTimeWithEpochSec(System.currentTimeMillis() / 1000);
+        ossService.setGlobalDefaultACL(AccessControlList.PRIVATE); // 默认为private
+
+        ClientConfiguration conf = new ClientConfiguration();
+        conf.setConnectTimeout(15 * 1000); // 设置全局网络连接超时时间，默认30s
+        conf.setSocketTimeout(15 * 1000); // 设置全局socket超时时间，默认30s
+        conf.setMaxConnections(50); // 设置全局最大并发网络链接数, 默认50
+        ossService.setClientConfiguration(conf);
+    }
+
+    private void initImageLoad() {
+
+        WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics dm = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(dm);
+        int screenWidth = dm.widthPixels;
+        int screenHeight = dm.heightPixels;
+
+
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(getApplicationContext());
+
+        config.threadPoolSize(4);
+        config.threadPriority(Thread.NORM_PRIORITY - 2);
+
+        config.denyCacheImageMultipleSizesInMemory();
+
+        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+        config.diskCacheSize(Long.bitCount(maxMemorySize / 2));
+
+        config.memoryCache(new WeakMemoryCache());
+        config.memoryCacheSize(Long.bitCount(maxMemorySize / 2));
+
+        config.tasksProcessingOrder(QueueProcessingType.LIFO);
+        config.memoryCacheExtraOptions(screenWidth / 2, screenHeight / 2);
+
+        config.writeDebugLogs();
+
+        imageLoader.init(config.build());
     }
 
     /**

@@ -37,7 +37,7 @@ import com.minglang.suiuu.adapter.ShowGVPictureAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.BaiduMapActivity;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
-import com.minglang.suiuu.customview.mProgressDialog;
+import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
@@ -78,7 +78,7 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
     private TextView tv_top_right;
     private static OSSService ossService = OSSServiceProvider.getService();
     private static OSSBucket bucket = ossService.getOssBucket("suiuu");
-    private mProgressDialog dialog;
+    private TextProgressDialog dialog;
     private PopupWindow popupWindow;
     private ListView listView;
     private int record = 0;
@@ -247,7 +247,7 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
      */
     public void initView() {
 
-        dialog = new mProgressDialog(this);
+        dialog = new TextProgressDialog(this);
         listPicture = new ArrayList<>();
 
         tv_top_right = (TextView) findViewById(R.id.tv_top_right);
