@@ -59,4 +59,16 @@
         android:layout_margin="@dimen/layout_5dp"
         android:layout_below="@+id/loop_details_title_layout"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/refreshData"
+        android:id="@+id/loopDetailsReload"
+        android:gravity="center_vertical"
+        android:drawableTop="@drawable/icon_reload"
+        android:drawablePadding="@dimen/layout_5dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

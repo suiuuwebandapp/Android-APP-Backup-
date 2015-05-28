@@ -17,6 +17,7 @@ import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class LoopDynamicAdapter extends BaseAdapter {
 
     private int screenWidth;
 
+    private ImageLoadingListener imageLoadingListener;
+
     public LoopDynamicAdapter(Context context, List<MainDynamicDataLoop> list) {
         this.context = context;
         this.list = list;
@@ -51,6 +54,10 @@ public class LoopDynamicAdapter extends BaseAdapter {
 
     public void setScreenParams(int screenWidth) {
         this.screenWidth = screenWidth;
+    }
+
+    public void setImageLoadingListener(ImageLoadingListener imageLoadingListener) {
+        this.imageLoadingListener = imageLoadingListener;
     }
 
     @Override
@@ -86,7 +93,7 @@ public class LoopDynamicAdapter extends BaseAdapter {
 
         String imagePath = list.get(position).getaImg();
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, imageView, displayImageOptions);
+            imageLoader.displayImage(imagePath, imageView, displayImageOptions, imageLoadingListener);
         }
 
         String strName = list.get(position).getcName();

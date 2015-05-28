@@ -2,8 +2,7 @@
     android:id="@+id/drawerLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/mainShowLayout"
@@ -11,7 +10,6 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true">
-
 
         <FrameLayout
             android:id="@+id/showLayout"
@@ -221,4 +219,5 @@
         </ListView>
 
     </RelativeLayout>
+
 </android.support.v4.widget.DrawerLayout>

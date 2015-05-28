@@ -19,6 +19,7 @@ import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.List;
 
@@ -39,6 +40,8 @@ public class AttentionDynamicAdapter extends BaseAdapter {
 
     private int ScreenHeight;
 
+    private ImageLoadingListener imageLoadingListener;
+
     public AttentionDynamicAdapter(Context context, List<MainDynamicDataUser> list) {
         this.context = context;
         this.list = list;
@@ -58,6 +61,10 @@ public class AttentionDynamicAdapter extends BaseAdapter {
 
     public void setScreenHeight(int ScreenHeight) {
         this.ScreenHeight = ScreenHeight;
+    }
+
+    public void setImageLoadingListener(ImageLoadingListener imageLoadingListener) {
+        this.imageLoadingListener = imageLoadingListener;
     }
 
     @Override
@@ -100,7 +107,7 @@ public class AttentionDynamicAdapter extends BaseAdapter {
 
         String imagePath = user.getaImg();
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, imageView, options1);
+            imageLoader.displayImage(imagePath, imageView, options1,imageLoadingListener);
         }
 
         String headPath = user.getHeadImg();

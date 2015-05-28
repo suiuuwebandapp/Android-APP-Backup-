@@ -39,10 +39,12 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,12 +123,119 @@ public class LoopFragment extends BaseFragment {
     }
 
     /**
-     * 得到推荐的圈子的图片
+     * 初始化方法
+     *
+     * @param rootView Fragment根View
      */
-    private void getRecommendLoopData4Service() {
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.GetRecommendLoopPath, new RecommendLoopRequestCallBack());
-        httpRequest.requestNetworkData();
+    @SuppressLint("InflateParams")
+    private void initView(View rootView) {
+        RelativeLayout loopScrollLayout = (RelativeLayout) rootView.findViewById(R.id.LoopScrollLayout);
+        ViewGroup.LayoutParams loopLayoutParams = loopScrollLayout.getLayoutParams();
+        loopLayoutParams.height = screenHeight / 3;
+        loopLayoutParams.width = screenWidth;
+        loopScrollLayout.setLayoutParams(loopLayoutParams);
+
+        imageView1 = new ImageView(getActivity());
+        imageView1.setTag(IMAGEID1);
+        imageView1.setScaleType(ImageView.ScaleType.FIT_XY);
+        imageView2 = new ImageView(getActivity());
+        imageView2.setTag(IMAGEID2);
+        imageView2.setScaleType(ImageView.ScaleType.FIT_XY);
+        imageView3 = new ImageView(getActivity());
+        imageView3.setTag(IMAGEID3);
+        imageView3.setScaleType(ImageView.ScaleType.FIT_XY);
+        imageView4 = new ImageView(getActivity());
+        imageView4.setTag(IMAGEID4);
+        imageView4.setScaleType(ImageView.ScaleType.FIT_XY);
+        imageView5 = new ImageView(getActivity());
+        imageView5.setTag(IMAGEID5);
+        imageView5.setScaleType(ImageView.ScaleType.FIT_XY);
+
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        imageView1.setLayoutParams(params);
+        imageView2.setLayoutParams(params);
+        imageView3.setLayoutParams(params);
+        imageView4.setLayoutParams(params);
+        imageView5.setLayoutParams(params);
+
+        imageList.add(imageView1);
+        imageList.add(imageView2);
+        imageList.add(imageView3);
+        imageList.add(imageView4);
+        imageList.add(imageView5);
+
+        loopScrollViewPager = (AutoScrollViewPager) rootView.findViewById(R.id.LoopScrollViewPager);
+        loopScrollViewPager.setInterval(5000);
+        LoopScrollPagerAdapter loopScrollPagerAdapter = new LoopScrollPagerAdapter(getActivity(), imageList);
+        loopScrollViewPager.setAdapter(loopScrollPagerAdapter);
+        loopScrollViewPager.startAutoScroll();
+
+        pageIndicator = (CirclePageIndicator) rootView.findViewById(R.id.loopScrollViewPagerIndicator);
+        pageIndicator.addIndicator(loopScrollPagerAdapter.getCount());
+
+        loopScrollViewPager.setPageTransformer(true, new DepthPageTransformer());
+
+        title0 = (TextView) rootView.findViewById(R.id.theme_title);
+        title1 = (TextView) rootView.findViewById(R.id.area_title);
+
+        sliderView = (ImageView) rootView.findViewById(R.id.sliderView);
+
+        ViewGroup.LayoutParams sliderParams = sliderView.getLayoutParams();
+        sliderParams.width = tabWidth;
+        sliderView.setLayoutParams(sliderParams);
+
+        loopViewPager = (ViewPager) rootView.findViewById(R.id.loopViewPager);
+        loopViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+
+        userSign = SuiuuInfo.ReadUserSign(getActivity());
+        verification = SuiuuInfo.ReadVerification(getActivity());
+        ThemeFragment themeFragment = ThemeFragment.newInstance(userSign, verification);
+        AreaFragment areaFragment = AreaFragment.newInstance(userSign, verification);
+
+        FragmentManager fm = getFragmentManager();
+
+        List<Fragment> fragments = new ArrayList<>();
+        fragments.add(themeFragment);
+        fragments.add(areaFragment);
+
+        LoopFragmentPagerAdapter lfpAdapter = new LoopFragmentPagerAdapter(fm, fragments);
+        loopViewPager.setAdapter(lfpAdapter);
+
+        initImageView();
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+    }
+
+    /**
+     * 初始化获得屏幕宽高等
+     */
+    private void initScreenOrImageLoad() {
+        screenHeight = new ScreenUtils(getActivity()).getScreenHeight();
+        screenWidth = new ScreenUtils(getActivity()).getScreenWidth();
+
+        tabWidth = screenWidth / 2;
+
+        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
+    }
+
+    private void initImageView() {
+
+        int sliderViewWidth = BitmapFactory.decodeResource(getResources(), R.drawable.slider).getWidth();
+
+        if (sliderViewWidth > tabWidth) {
+            sliderView.getLayoutParams().width = tabWidth;
+            sliderViewWidth = tabWidth;
+        }
+
+        offsetX = (tabWidth - sliderViewWidth) / 2;
+        sliderView.setPadding(offsetX, 0, 0, 0);
+
+        if (imageLoader == null) {
+            imageLoader = ImageLoader.getInstance();
+        }
     }
 
     /**
@@ -194,133 +303,26 @@ public class LoopFragment extends BaseFragment {
 
     }
 
+    /**
+     * 得到推荐的圈子的图片
+     */
+    private void getRecommendLoopData4Service() {
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.GetRecommendLoopPath, new RecommendLoopRequestCallBack());
+        httpRequest.requestNetworkData();
+    }
+
     private void LoadRecommendLoopImage() {
         DeBugLog.i(TAG, "轮播图片URL列表:" + imagePathList.toString());
+
+        LoopImageLoadingListener loopImageLoadingListener = new LoopImageLoadingListener();
+
         if (imagePathList != null && imagePathList.size() > 0) {
-            imageLoader.displayImage(imagePathList.get(0), imageView1, displayImageOptions);
-            imageLoader.displayImage(imagePathList.get(1), imageView2, displayImageOptions);
-            imageLoader.displayImage(imagePathList.get(2), imageView3, displayImageOptions);
-            imageLoader.displayImage(imagePathList.get(3), imageView4, displayImageOptions);
-            imageLoader.displayImage(imagePathList.get(4), imageView5, displayImageOptions);
-        }
-    }
-
-    /**
-     * 初始化获得屏幕宽高等
-     */
-    private void initScreenOrImageLoad() {
-        screenHeight = new ScreenUtils(getActivity()).getScreenHeight();
-        screenWidth = new ScreenUtils(getActivity()).getScreenWidth();
-
-        tabWidth = screenWidth / 2;
-
-        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
-                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
-    }
-
-    /**
-     * 初始化方法
-     *
-     * @param rootView Fragment根View
-     */
-    @SuppressLint("InflateParams")
-    private void initView(View rootView) {
-        RelativeLayout loopScrollLayout = (RelativeLayout) rootView.findViewById(R.id.LoopScrollLayout);
-        ViewGroup.LayoutParams loopLayoutParams = loopScrollLayout.getLayoutParams();
-        loopLayoutParams.height = screenHeight / 3;
-        loopLayoutParams.width = screenWidth;
-        loopScrollLayout.setLayoutParams(loopLayoutParams);
-
-        imageView1 = new ImageView(getActivity());
-        imageView1.setTag(IMAGEID1);
-        imageView1.setScaleType(ImageView.ScaleType.FIT_XY);
-        imageView2 = new ImageView(getActivity());
-        imageView2.setTag(IMAGEID2);
-        imageView2.setScaleType(ImageView.ScaleType.FIT_XY);
-        imageView3 = new ImageView(getActivity());
-        imageView3.setTag(IMAGEID3);
-        imageView3.setScaleType(ImageView.ScaleType.FIT_XY);
-        imageView4 = new ImageView(getActivity());
-        imageView4.setTag(IMAGEID4);
-        imageView4.setScaleType(ImageView.ScaleType.FIT_XY);
-        imageView5 = new ImageView(getActivity());
-        imageView5.setTag(IMAGEID5);
-        imageView5.setScaleType(ImageView.ScaleType.FIT_XY);
-
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
-        imageView1.setLayoutParams(params);
-        imageView2.setLayoutParams(params);
-        imageView3.setLayoutParams(params);
-        imageView4.setLayoutParams(params);
-        imageView5.setLayoutParams(params);
-
-        imageList.add(imageView1);
-        imageList.add(imageView2);
-        imageList.add(imageView3);
-        imageList.add(imageView4);
-        imageList.add(imageView5);
-
-        loopScrollViewPager = (AutoScrollViewPager) rootView.findViewById(R.id.LoopScrollViewPager);
-        loopScrollViewPager.setInterval(5000);
-        LoopScrollPagerAdapter loopScrollPagerAdapter = new LoopScrollPagerAdapter(getActivity(), imageList);
-        loopScrollViewPager.setAdapter(loopScrollPagerAdapter);
-        loopScrollViewPager.startAutoScroll();
-
-        pageIndicator = (CirclePageIndicator) rootView.findViewById(R.id.loopScrollViewPagerIndicator);
-        pageIndicator.addIndicator(loopScrollPagerAdapter.getCount());
-
-        loopScrollViewPager.setPageTransformer(true, new DepthPageTransformer());
-
-        title0 = (TextView) rootView.findViewById(R.id.theme_title);
-        title1 = (TextView) rootView.findViewById(R.id.area_title);
-
-        sliderView = (ImageView) rootView.findViewById(R.id.sliderView);
-
-        ViewGroup.LayoutParams sliderParams = sliderView.getLayoutParams();
-        sliderParams.width = tabWidth;
-        sliderView.setLayoutParams(sliderParams);
-
-        loopViewPager = (ViewPager) rootView.findViewById(R.id.loopViewPager);
-        loopViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
-
-        //主题页面
-        ThemeFragment themeFragment = ThemeFragment.newInstance(userSign, verification);
-        //地区页面
-        AreaFragment areaFragment = AreaFragment.newInstance(userSign, verification);
-
-        FragmentManager fm = getFragmentManager();
-
-        List<Fragment> fragments = new ArrayList<>();
-        fragments.add(themeFragment);
-        fragments.add(areaFragment);
-
-        LoopFragmentPagerAdapter lfpAdapter = new LoopFragmentPagerAdapter(fm, fragments);
-        loopViewPager.setAdapter(lfpAdapter);
-
-        initImageView();
-    }
-
-    private void initImageView() {
-
-        int sliderViewWidth = BitmapFactory.decodeResource(getResources(), R.drawable.slider).getWidth();
-
-        if (sliderViewWidth > tabWidth) {
-            sliderView.getLayoutParams().width = tabWidth;
-            sliderViewWidth = tabWidth;
-        }
-
-        offsetX = (tabWidth - sliderViewWidth) / 2;
-        sliderView.setPadding(offsetX, 0, 0, 0);
-
-        if (imageLoader == null) {
-            imageLoader = ImageLoader.getInstance();
-            if (imageLoader.isInited()) {
-                imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
-            }
-            DeBugLog.i(TAG, "imageLoader is null!");
+            imageLoader.displayImage(imagePathList.get(0), imageView1, displayImageOptions, loopImageLoadingListener);
+            imageLoader.displayImage(imagePathList.get(1), imageView2, displayImageOptions, loopImageLoadingListener);
+            imageLoader.displayImage(imagePathList.get(2), imageView3, displayImageOptions, loopImageLoadingListener);
+            imageLoader.displayImage(imagePathList.get(3), imageView4, displayImageOptions, loopImageLoadingListener);
+            imageLoader.displayImage(imagePathList.get(4), imageView5, displayImageOptions, loopImageLoadingListener);
         }
     }
 
@@ -458,4 +460,52 @@ public class LoopFragment extends BaseFragment {
         }
     }
 
+    class LoopImageLoadingListener implements ImageLoadingListener {
+
+        @Override
+        public void onLoadingStarted(String imageUri, View view) {
+            DeBugLog.i(TAG, "onLoadingStarted():" + imageUri);
+            DeBugLog.i(TAG, "onLoadingStarted():view.getTag():" + view.getTag());
+        }
+
+        @Override
+        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+            DeBugLog.i(TAG, "onLoadingFailed():" + imageUri);
+            DeBugLog.i(TAG, "onLoadingFailed():view.getTag():" + view.getTag());
+
+            switch (failReason.getType()) {
+                case IO_ERROR:
+                    DeBugLog.e(TAG, "ImageLoader is appear IO_ERROR!");
+
+                case DECODING_ERROR:
+                    DeBugLog.e(TAG, "ImageLoader is not DECODING_ERROR!");
+
+                case NETWORK_DENIED:
+                    DeBugLog.e(TAG, "ImageLoader is request failure!");
+                    imageLoader.displayImage(imageUri, (ImageView) view, displayImageOptions, new LoopImageLoadingListener());
+                    break;
+
+                case OUT_OF_MEMORY:
+                    DeBugLog.e(TAG, "ImageLoader is appear OUT_OF_MEMORY!");
+                    imageLoader.clearMemoryCache();
+                    break;
+
+                default:
+                    DeBugLog.e(TAG, "ImageLoader is appear UNKNOWN ERROR!");
+                    break;
+            }
+        }
+
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+            DeBugLog.i(TAG, "onLoadingComplete():" + imageUri);
+            DeBugLog.i(TAG, "onLoadingComplete():view.getTag():" + view.getTag());
+        }
+
+        @Override
+        public void onLoadingCancelled(String imageUri, View view) {
+            DeBugLog.i(TAG, "onLoadingCancelled():" + imageUri);
+            DeBugLog.i(TAG, "onLoadingCancelled():view.getTag():" + view.getTag());
+        }
+    }
 }

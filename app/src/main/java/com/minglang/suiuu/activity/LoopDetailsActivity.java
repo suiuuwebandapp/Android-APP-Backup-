@@ -23,6 +23,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.LoopDetailsAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.PullToRefreshStaggeredView;
+import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.entity.LoopDetails;
 import com.minglang.suiuu.entity.LoopDetailsData;
@@ -92,6 +93,10 @@ public class LoopDetailsActivity extends BaseActivity {
 
     private Context context = LoopDetailsActivity.this;
 
+    private TextView reload;
+
+    private TextProgressDialog textProgressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +132,19 @@ public class LoopDetailsActivity extends BaseActivity {
                 } else {
                     setCancelAttention2Service();
                 }
+            }
+        });
+
+        reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (textProgressDialog.isShow()) {
+                    textProgressDialog.showDialog();
+                }
+
+                page = 1;
+                getInternetServiceData(page);
             }
         });
 
@@ -261,6 +279,38 @@ public class LoopDetailsActivity extends BaseActivity {
         loopDetailsAdapter = new LoopDetailsAdapter(this);
         loopDetailsAdapter.setScreenParams(screenWidth, screenHeight);
         loopDetailsGridView.setAdapter(loopDetailsAdapter);
+
+        reload = (TextView) findViewById(R.id.loopDetailsReload);
+        textProgressDialog = new TextProgressDialog(context);
+        textProgressDialog.setMessage(getResources().getString(R.string.pull_to_refresh_footer_refreshing_label));
+    }
+
+    /**
+     * 隐藏Dialog
+     */
+    private void showOrHideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+
+        if (textProgressDialog != null && textProgressDialog.isShow()) {
+            textProgressDialog.dismissDialog();
+        }
+        loopDetailsGridView.onRefreshComplete();
+    }
+
+    private void isClearListAll() {
+        if (page == 1) {
+            if (listAll != null && listAll.size() > 0) {
+                listAll.clear();
+            }
+        }
+    }
+
+    private void failureComputePage() {
+        if (page > 1) {
+            page = page - 1;
+        }
     }
 
     /**
@@ -272,15 +322,8 @@ public class LoopDetailsActivity extends BaseActivity {
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
 
-            if (progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
-            if (page == 1) {
-                if (listAll != null && listAll.size() > 0) {
-                    listAll.clear();
-                }
-            }
+            showOrHideDialog();
+            isClearListAll();
 
             String str = responseInfo.result;
             try {
@@ -291,44 +334,25 @@ public class LoopDetailsActivity extends BaseActivity {
                     listAll.addAll(list);
                     loopDetailsAdapter.setDataList(listAll);
                 } else {
-                    if (page > 1) {
-                        page = page - 1;
-                    }
+                    failureComputePage();
                     Toast.makeText(context, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                 }
                 attentionId = loopDetailsData.getAttentionId();
-                DeBugLog.i(TAG, "attentionId:" + attentionId);
                 isAttention();
             } catch (Exception e) {
-                DeBugLog.e(TAG, "数据请求失败:" + e.getMessage());
-
-                if (page > 1) {
-                    page = page - 1;
-                }
-
+                failureComputePage();
                 Toast.makeText(LoopDetailsActivity.this,
                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                DeBugLog.e(TAG, "数据请求失败:" + e.getMessage());
             }
-            loopDetailsGridView.onRefreshComplete();
         }
 
         @Override
         public void onFailure(HttpException error, String msg) {
-
+            showOrHideDialog();
+            failureComputePage();
+            Toast.makeText(LoopDetailsActivity.this, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
             DeBugLog.e(TAG, "圈子详细列表请求失败:" + msg);
-
-            if (progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
-            if (page > 1) {
-                page = page - 1;
-            }
-
-            loopDetailsGridView.onRefreshComplete();
-
-            Toast.makeText(LoopDetailsActivity.this,
-                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
 

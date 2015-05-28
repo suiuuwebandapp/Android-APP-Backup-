@@ -33,8 +33,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@color/backgroundColor"/>
+                    android:layout_height="50dp"/>
 
                 <RelativeLayout
                     android:id="@+id/AttentionDynamicTitleLayout"
@@ -166,8 +165,7 @@
                 <RelativeLayout
                     android:id="@+id/main_fragment_foot_black_view"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@color/backgroundColor"/>
+                    android:layout_height="50dp"/>
             </LinearLayout>
         </ScrollView>
 

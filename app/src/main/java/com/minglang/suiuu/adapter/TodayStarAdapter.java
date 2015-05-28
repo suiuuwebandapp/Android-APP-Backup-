@@ -20,6 +20,7 @@ import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.List;
 
@@ -34,11 +35,13 @@ public class TodayStarAdapter extends BaseAdapter {
 
     private List<MainDynamicDataRecommendUser> list;
 
-    private int screenWidth;
-
     private ImageLoader imageLoader;
 
     private DisplayImageOptions options1, options2;
+
+    private int screenWidth;
+
+    private ImageLoadingListener imageLoadingListener;
 
     public TodayStarAdapter(Context context, List<MainDynamicDataRecommendUser> list) {
         this.context = context;
@@ -59,6 +62,10 @@ public class TodayStarAdapter extends BaseAdapter {
 
     public void setScreenParams(int screenWidth) {
         this.screenWidth = screenWidth;
+    }
+
+    public void setImageLoadingListener(ImageLoadingListener imageLoadingListener) {
+        this.imageLoadingListener = imageLoadingListener;
     }
 
     @Override
@@ -95,7 +102,7 @@ public class TodayStarAdapter extends BaseAdapter {
 
         String imagePath = list.get(position).getrImg();
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, imageView, options1);
+            imageLoader.displayImage(imagePath, imageView, options1, imageLoadingListener);
         }
 
         String headImagePath = list.get(position).getHeadImg();

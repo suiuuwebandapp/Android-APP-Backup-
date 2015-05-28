@@ -171,6 +171,19 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 
+        initReadSavedInstanceState(savedInstanceState);
+
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        setContentView(R.layout.activity_main);
+
+        UmengUpdateAgent.update(this);
+
+        initView();
+        initRegisterAllBroadcastReceiver();
+    }
+
+    private void initReadSavedInstanceState(Bundle savedInstanceState) {
         boolean saveFlag = savedInstanceState != null;
 
         if (saveFlag && savedInstanceState.getBoolean(Constant.ACCOUNT_REMOVED, false)) {
@@ -201,15 +214,107 @@ public class MainActivity extends BaseActivity {
                 LoadDefaultFragment();
             }
         }
+    }
 
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    /**
+     * 初始化方法
+     */
+    private void initView() {
 
-        setContentView(R.layout.activity_main);
+        DeBugLog.i(TAG, "MainActivity执行初始化");
 
-        UmengUpdateAgent.update(this);
+        errorItem = (RelativeLayout) findViewById(R.id.rl_error_item);
+        errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
+        msgCount = (TextView) findViewById(R.id.unread_msg_number);
+        RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
 
-        initView();
-        initRegisterAllBroadcastReceiver();
+        /***************Activity可控制View设置padding****************/
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        mDrawerLayout.setFocusableInTouchMode(true);
+
+        RelativeLayout mainShowLayout = (RelativeLayout) findViewById(R.id.mainShowLayout);
+        if (isKITKAT) {
+            if (navigationBarHeight > 0) {
+                mainShowLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            } else {
+                mainShowLayout.setPadding(0, statusBarHeight, 0, 0);
+            }
+        } else {
+            if (navigationBarHeight > 0) {
+                mainShowLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            } else {
+                mainShowLayout.setPadding(0, 0, 0, navigationBarHeight);
+            }
+        }
+
+        ConstantUtil.topHeight = titleLayout.getLayoutParams().height;
+
+        /*************设置侧滑菜单Params**********************/
+        slideLayout = (RelativeLayout) findViewById(R.id.slideLayout);
+        //版本高于4.4，设置侧滑菜单的padding
+        if (isKITKAT) {
+            slideLayout.setPadding(0, statusBarHeight, 0, 0);
+        }
+
+        ViewGroup.LayoutParams params = slideLayout.getLayoutParams();
+        params.width = screenWidth / 4 * 3;
+        slideLayout.setLayoutParams(params);
+
+        titleInfo = (TextView) findViewById(R.id.titleInfo);
+
+        drawerSwitch = (ImageView) findViewById(R.id.drawerSwitch);
+
+        nickNameView = (TextView) findViewById(R.id.nickName);
+        String strNickName = SuiuuInfo.ReadUserData(this).getNickname();
+        if (!TextUtils.isEmpty(strNickName)) {
+            nickNameView.setText(strNickName);
+        } else {
+            nickNameView.setText("");
+        }
+
+        headImageView = (CircleImageView) findViewById(R.id.headImage);
+        String strHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
+        if (!TextUtils.isEmpty(strHeadImagePath)) {
+            imageLoader.displayImage(strHeadImagePath, headImageView);
+        }
+
+        tab1 = (LinearLayout) findViewById(R.id.tab1);
+        tab2 = (LinearLayout) findViewById(R.id.tab2);
+        tab3 = (LinearLayout) findViewById(R.id.tab3);
+        tab4 = (LinearLayout) findViewById(R.id.tab4);
+
+        //初始化底部控件
+        iv_theme = (ImageView) findViewById(R.id.img1);
+        tv_theme_text = (TextView) findViewById(R.id.title1);
+        iv_loop = (ImageView) findViewById(R.id.img2);
+        tv_loop_text = (TextView) findViewById(R.id.title2);
+        iv_suiuu = (ImageView) findViewById(R.id.img3);
+        tv_suiuu_text = (TextView) findViewById(R.id.title3);
+        iv_conversation = (ImageView) findViewById(R.id.img4);
+        tv_conversation_text = (TextView) findViewById(R.id.title4);
+
+        changeTheme(true);
+
+        sendMsg = (ImageView) findViewById(R.id.sendNewMessage);
+
+        mListView = (ListView) findViewById(R.id.drawerList);
+
+        ask = (ImageView) findViewById(R.id.main_ask);
+        pic = (ImageView) findViewById(R.id.main_pic);
+        record = (ImageView) findViewById(R.id.main_record);
+
+        rl_top_info = (RelativeLayout) findViewById(R.id.rl_top_info);
+        iv_suiuu_search_more = (ImageView) findViewById(R.id.iv_suiuu_search_more);
+        List<String> stringList = new ArrayList<>();
+        Collections.addAll(stringList, TITLE);
+        MainSliderAdapter mainSliderAdapter = new MainSliderAdapter(this, stringList);
+        mListView.setAdapter(mainSliderAdapter);
+
+        mainFragment = new MainFragment();
+        conversationFragment = new ChatAllHistoryFragment();
+        LoadDefaultFragment();
+
+        initAnimation();
     }
 
     private void initRegisterAllBroadcastReceiver() {
@@ -606,107 +711,6 @@ public class MainActivity extends BaseActivity {
             ft.add(R.id.showLayout, mainFragment);
         }
         ft.commit();
-    }
-
-    /**
-     * 初始化方法
-     */
-    private void initView() {
-
-        DeBugLog.i(TAG, "MainActivity执行初始化");
-
-        errorItem = (RelativeLayout) findViewById(R.id.rl_error_item);
-        errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
-        msgCount = (TextView) findViewById(R.id.unread_msg_number);
-        RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
-
-        /***************Activity可控制View设置padding****************/
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        mDrawerLayout.setFocusableInTouchMode(true);
-
-        RelativeLayout mainShowLayout = (RelativeLayout) findViewById(R.id.mainShowLayout);
-        if (isKITKAT) {
-            if (navigationBarHeight > 0) {
-                mainShowLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            } else {
-                mainShowLayout.setPadding(0, statusBarHeight, 0, 0);
-            }
-        } else {
-            if (navigationBarHeight > 0) {
-                mainShowLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            } else {
-                mainShowLayout.setPadding(0, 0, 0, navigationBarHeight);
-            }
-        }
-
-        ConstantUtil.topHeight = titleLayout.getLayoutParams().height;
-
-        /*************设置侧滑菜单Params**********************/
-        slideLayout = (RelativeLayout) findViewById(R.id.slideLayout);
-        //版本高于4.4，设置侧滑菜单的padding
-        if (isKITKAT) {
-            slideLayout.setPadding(0, statusBarHeight, 0, 0);
-        }
-
-        ViewGroup.LayoutParams params = slideLayout.getLayoutParams();
-        params.width = screenWidth / 4 * 3;
-        slideLayout.setLayoutParams(params);
-
-        titleInfo = (TextView) findViewById(R.id.titleInfo);
-
-        drawerSwitch = (ImageView) findViewById(R.id.drawerSwitch);
-
-        nickNameView = (TextView) findViewById(R.id.nickName);
-        String strNickName = SuiuuInfo.ReadUserData(this).getNickname();
-        if (!TextUtils.isEmpty(strNickName)) {
-            nickNameView.setText(strNickName);
-        } else {
-            nickNameView.setText("");
-        }
-
-        headImageView = (CircleImageView) findViewById(R.id.headImage);
-        String strHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
-        if (!TextUtils.isEmpty(strHeadImagePath)) {
-            imageLoader.displayImage(strHeadImagePath, headImageView);
-        }
-
-        tab1 = (LinearLayout) findViewById(R.id.tab1);
-        tab2 = (LinearLayout) findViewById(R.id.tab2);
-        tab3 = (LinearLayout) findViewById(R.id.tab3);
-        tab4 = (LinearLayout) findViewById(R.id.tab4);
-
-        //初始化底部控件
-        iv_theme = (ImageView) findViewById(R.id.img1);
-        tv_theme_text = (TextView) findViewById(R.id.title1);
-        iv_loop = (ImageView) findViewById(R.id.img2);
-        tv_loop_text = (TextView) findViewById(R.id.title2);
-        iv_suiuu = (ImageView) findViewById(R.id.img3);
-        tv_suiuu_text = (TextView) findViewById(R.id.title3);
-        iv_conversation = (ImageView) findViewById(R.id.img4);
-        tv_conversation_text = (TextView) findViewById(R.id.title4);
-
-        changeTheme(true);
-
-        sendMsg = (ImageView) findViewById(R.id.sendNewMessage);
-
-        mListView = (ListView) findViewById(R.id.drawerList);
-
-        ask = (ImageView) findViewById(R.id.main_ask);
-        pic = (ImageView) findViewById(R.id.main_pic);
-        record = (ImageView) findViewById(R.id.main_record);
-
-        rl_top_info = (RelativeLayout) findViewById(R.id.rl_top_info);
-        iv_suiuu_search_more = (ImageView) findViewById(R.id.iv_suiuu_search_more);
-        List<String> stringList = new ArrayList<>();
-        Collections.addAll(stringList, TITLE);
-        MainSliderAdapter mainSliderAdapter = new MainSliderAdapter(this, stringList);
-        mListView.setAdapter(mainSliderAdapter);
-
-        mainFragment = new MainFragment();
-        conversationFragment = new ChatAllHistoryFragment();
-        LoadDefaultFragment();
-
-        initAnimation();
     }
 
     //判断主题

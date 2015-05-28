@@ -3,6 +3,7 @@ package com.minglang.suiuu.fragment.loop;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +33,11 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +85,9 @@ public class ThemeFragment extends Fragment {
 
     private ThemeAdapter themeAdapter;
 
-    private boolean refreshDataFlag;
+    private ImageLoader imageLoader;
+
+    private DisplayImageOptions displayImageOptions;
 
     /**
      * Use this factory method to create a new instance of
@@ -127,6 +136,38 @@ public class ThemeFragment extends Fragment {
     }
 
     /**
+     * 初始化方法
+     *
+     * @param rootView Fragment根view
+     */
+    private void initView(View rootView) {
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(true);
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+
+        mProgressDialog = new TextProgressDialog(getActivity());
+        mProgressDialog.setMessage(getResources().getString(R.string.pull_to_refresh_footer_refreshing_label));
+
+        themeGridView = (PullToRefreshGridView) rootView.findViewById(R.id.themeGridView);
+        themeGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        refreshDataView = (TextView) rootView.findViewById(R.id.themeNoDataView);
+
+        themeAdapter = new ThemeAdapter(getActivity());
+        themeAdapter.setScreenParams(screenWidth);
+        themeAdapter.setImageLoadingListener(new ThemeImageLoadingListener());
+        themeGridView.setAdapter(themeAdapter);
+
+        imageLoader = ImageLoader.getInstance();
+        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
+    }
+
+    /**
      * 控件动作
      */
     private void ViewAction() {
@@ -134,8 +175,6 @@ public class ThemeFragment extends Fragment {
         refreshDataView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                refreshDataFlag = true;
 
                 refreshDataView.setVisibility(View.INVISIBLE);
 
@@ -156,9 +195,6 @@ public class ThemeFragment extends Fragment {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
-
-                refreshDataFlag = false;
-
                 page = page + 1;
                 getInternetServiceData(page);
             }
@@ -180,6 +216,9 @@ public class ThemeFragment extends Fragment {
 
     }
 
+    /**
+     * 启动网络请求
+     */
     private void getData() {
         if (progressDialog != null && !progressDialog.isShowing()) {
             progressDialog.show();
@@ -203,29 +242,30 @@ public class ThemeFragment extends Fragment {
         suHttpRequest.requestNetworkData();
     }
 
-    /**
-     * 初始化方法
-     *
-     * @param rootView Fragment根view
-     */
-    private void initView(View rootView) {
+    private void showOrHideDialog() {
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
 
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(true);
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        if (mProgressDialog.isShow()) {
+            mProgressDialog.dismissDialog();
+        }
 
-        mProgressDialog = new TextProgressDialog(getActivity());
-        mProgressDialog.setMessage(getResources().getString(R.string.pull_to_refresh_footer_refreshing_label));
+        themeGridView.onRefreshComplete();
+    }
 
-        themeGridView = (PullToRefreshGridView) rootView.findViewById(R.id.themeGridView);
-        themeGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-        refreshDataView = (TextView) rootView.findViewById(R.id.themeNoDataView);
+    private void failureComputePage() {
+        if (page > 1) {
+            page = page - 1;
+        }
+    }
 
-        themeAdapter = new ThemeAdapter(getActivity());
-        themeAdapter.setScreenParams(screenWidth);
-        themeGridView.setAdapter(themeAdapter);
+    private void noDataShowReload(){
+        if(listAll!=null&&listAll.size()>0){
+            refreshDataView.setVisibility(View.INVISIBLE);
+        }else{
+            refreshDataView.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -235,16 +275,7 @@ public class ThemeFragment extends Fragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
-            if (mProgressDialog.isShow()) {
-                mProgressDialog.dismissDialog();
-            }
-
-            themeGridView.onRefreshComplete();
+            showOrHideDialog();
 
             String str = responseInfo.result;
             try {
@@ -252,75 +283,83 @@ public class ThemeFragment extends Fragment {
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
                     List<LoopBaseData> list = loopBase.getData().getData();
                     if (list != null && list.size() > 0) {
-                        refreshDataView.setVisibility(View.INVISIBLE);
                         listAll.addAll(list);
+                        noDataShowReload();
                         themeAdapter.setList(listAll);
                     } else {
-
-                        if (page > 1) {
-                            page = page - 1;
-                        }
-
-                        if (refreshDataFlag) {
-                            refreshDataView.setVisibility(View.VISIBLE);
-                        }
-
+                        failureComputePage();
+                        noDataShowReload();
                         Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-
-                    if (page > 1) {
-                        page = page - 1;
-                    }
-
-                    if (refreshDataFlag) {
-                        refreshDataView.setVisibility(View.VISIBLE);
-                    }
-
+                    failureComputePage();
+                    noDataShowReload();
                     Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "主题地区数据解析失败:" + e.getMessage());
-
-                if (page > 1) {
-                    page = page - 1;
-                }
-
-                if (refreshDataFlag) {
-                    refreshDataView.setVisibility(View.VISIBLE);
-                }
-
+                failureComputePage();
+                noDataShowReload();
                 Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                DeBugLog.e(TAG, "主题地区数据解析失败:" + e.getMessage());
             }
-            DeBugLog.i(TAG, "page:" + page);
         }
 
         @Override
         public void onFailure(HttpException error, String msg) {
-
-            DeBugLog.e(TAG, "主题数据请求失败:" + msg);
-
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
-            if (mProgressDialog.isShow()) {
-                mProgressDialog.dismissDialog();
-            }
-
-            if (page > 1) {
-                page = page - 1;
-            }
-
-            if (refreshDataFlag) {
-                refreshDataView.setVisibility(View.VISIBLE);
-            }
-
-            themeGridView.onRefreshComplete();
-
+            showOrHideDialog();
+            failureComputePage();
+            noDataShowReload();
             Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
-            DeBugLog.i(TAG, "page:" + page);
+            DeBugLog.e(TAG, "主题数据请求失败:" + msg);
         }
     }
 
+    class ThemeImageLoadingListener implements ImageLoadingListener {
+
+        @Override
+        public void onLoadingStarted(String imageUri, View view) {
+            DeBugLog.i(TAG, "onLoadingStarted():" + imageUri);
+            DeBugLog.i(TAG, "onLoadingStarted():view.getId():" + view.getId());
+        }
+
+        @Override
+        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+            DeBugLog.i(TAG, "onLoadingStarted():" + imageUri);
+            DeBugLog.i(TAG, "onLoadingStarted():view.getId():" + view.getId());
+
+            switch (failReason.getType()) {
+                case IO_ERROR:
+                    DeBugLog.e(TAG, "ImageLoader is appear IO_ERROR!");
+
+                case DECODING_ERROR:
+                    DeBugLog.e(TAG, "ImageLoader is not DECODING_ERROR!");
+
+                case NETWORK_DENIED:
+                    DeBugLog.e(TAG, "ImageLoader is request failure!");
+                    imageLoader.displayImage(imageUri, (ImageView) view, displayImageOptions, new ThemeImageLoadingListener());
+                    break;
+
+                case OUT_OF_MEMORY:
+                    DeBugLog.e(TAG, "ImageLoader is appear OUT_OF_MEMORY!");
+                    imageLoader.clearMemoryCache();
+                    break;
+
+                default:
+                    DeBugLog.e(TAG, "ImageLoader is appear UNKNOWN ERROR!");
+                    break;
+            }
+        }
+
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+            DeBugLog.i(TAG, "onLoadingComplete():" + imageUri);
+            DeBugLog.i(TAG, "onLoadingComplete():view.getId():" + view.getId());
+        }
+
+        @Override
+        public void onLoadingCancelled(String imageUri, View view) {
+            DeBugLog.i(TAG, "onLoadingCancelled():" + imageUri);
+            DeBugLog.i(TAG, "onLoadingCancelled():view.getId():" + view.getId());
+        }
+    }
 }

@@ -16,8 +16,8 @@ import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.List;
 
@@ -38,13 +38,12 @@ public class AreaAdapter extends BaseAdapter {
 
     private int screenWidth;
 
-    public  AreaAdapter(Context context){
+    private ImageLoadingListener imageLoadingListener;
+
+    public AreaAdapter(Context context) {
         this.context = context;
 
         imageLoader = ImageLoader.getInstance();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        }
 
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
                 .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
@@ -59,6 +58,10 @@ public class AreaAdapter extends BaseAdapter {
 
     public void setScreenParams(int screenWidth) {
         this.screenWidth = screenWidth;
+    }
+
+    public void setImageLoadingListener(ImageLoadingListener imageLoadingListener) {
+        this.imageLoadingListener = imageLoadingListener;
     }
 
     @Override
@@ -94,7 +97,7 @@ public class AreaAdapter extends BaseAdapter {
 
         String imagePath = loopBaseData.getCpic();
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, imageView, options);
+            imageLoader.displayImage(imagePath, imageView, options, imageLoadingListener);
         }
 
         String name = loopBaseData.getcName();

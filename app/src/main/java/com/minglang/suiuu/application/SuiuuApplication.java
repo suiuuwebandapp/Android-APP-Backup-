@@ -30,8 +30,6 @@ import com.easemob.EMCallBack;
 import com.minglang.suiuu.chat.bean.User;
 import com.minglang.suiuu.chat.chat.DemoHXSDKHelper;
 import com.minglang.suiuu.crash.GlobalCrashHandler;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
@@ -193,11 +191,11 @@ public class SuiuuApplication extends Application {
 
         config.denyCacheImageMultipleSizesInMemory();
 
-        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+//        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
         config.diskCacheSize(Long.bitCount(maxMemorySize / 2));
 
-        config.memoryCache(new WeakMemoryCache());
-        config.memoryCacheSize(Long.bitCount(maxMemorySize / 2));
+//        config.memoryCache(new WeakMemoryCache());
+        config.memoryCacheSize(50 * 1024 * 1024);
 
         config.tasksProcessingOrder(QueueProcessingType.LIFO);
         config.memoryCacheExtraOptions(screenWidth / 2, screenHeight / 2);

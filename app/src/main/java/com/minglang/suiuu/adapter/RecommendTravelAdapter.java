@@ -20,6 +20,7 @@ import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.List;
 
@@ -39,6 +40,8 @@ public class RecommendTravelAdapter extends BaseAdapter {
     private DisplayImageOptions options1, options2;
 
     private int ScreenHeight;
+
+    private ImageLoadingListener imageLoadingListener;
 
     public RecommendTravelAdapter(Context context, List<MainDynamicDataRecommendTravel> list) {
         this.context = context;
@@ -60,6 +63,10 @@ public class RecommendTravelAdapter extends BaseAdapter {
 
     public void setScreenHeight(int ScreenHeight) {
         this.ScreenHeight = ScreenHeight;
+    }
+
+    public void setImageLoadingListener(ImageLoadingListener imageLoadingListener) {
+        this.imageLoadingListener = imageLoadingListener;
     }
 
     @Override
@@ -103,7 +110,7 @@ public class RecommendTravelAdapter extends BaseAdapter {
 
         String imagePath = recommendTravel.getTitleImg();
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, imageView, options1);
+            imageLoader.displayImage(imagePath, imageView, options1, imageLoadingListener);
         }
 
         String headPath = recommendTravel.getHeadImg();

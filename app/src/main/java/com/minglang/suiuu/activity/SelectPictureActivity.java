@@ -256,7 +256,7 @@ public class SelectPictureActivity extends BaseActivity {
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Night");
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                DeBugLog.d("MyCameraApp", "failed to create directory");
+                DeBugLog.d(TAG, "failed to create directory");
                 return null;
             }
         }
