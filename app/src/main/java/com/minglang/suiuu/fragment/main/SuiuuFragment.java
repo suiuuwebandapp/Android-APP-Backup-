@@ -105,7 +105,6 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
         LinearLayout.LayoutParams paramTest = (LinearLayout.LayoutParams) lv_suiuu.getLayoutParams();
         paramTest.setMargins(10, ConstantUtil.topHeight + 10, 10, 0);
         lv_suiuu.setLayoutParams(paramTest);
-
         viewAction();
         return rootView;
     }

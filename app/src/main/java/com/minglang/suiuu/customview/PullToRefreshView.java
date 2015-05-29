@@ -129,6 +129,7 @@ public class PullToRefreshView extends LinearLayout {
 	 */
 	private String mLastUpdateTime;
 
+
 	public PullToRefreshView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init();
@@ -167,7 +168,6 @@ public class PullToRefreshView extends LinearLayout {
 	private void addHeaderView() {
 		// header view
 		mHeaderView = mInflater.inflate(R.layout.refresh_header, this, false);
-
 		mHeaderImageView = (ImageView) mHeaderView
 				.findViewById(R.id.pull_to_refresh_image);
 		mHeaderTextView = (TextView) mHeaderView
