@@ -4,14 +4,12 @@
     android:id="@+id/personalRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.minglang.suiuu.activity.PersonalActivity">
-
 
     <RelativeLayout
         android:id="@+id/personalBackgroundLayout"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="250dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
 
@@ -21,7 +19,6 @@
             android:src="@drawable/user_background"
             android:id="@+id/personalHeadLayoutImage"
             android:scaleType="fitXY"/>
-
 
         <TextView
             android:layout_width="wrap_content"
@@ -91,13 +88,29 @@
             style="@style/backKeyStyle"
             android:src="@drawable/back"/>
 
-
     </RelativeLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/personalShowPage"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/personalBackgroundLayout"/>
+        android:layout_below="@+id/personalBackgroundLayout">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/personalShowPage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:drawableTop="@drawable/icon_reload"
+            android:drawablePadding="@dimen/layout_5dp"
+            android:text="@string/refreshData"
+            android:id="@+id/personal_reload"
+            android:visibility="invisible"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
 
 </RelativeLayout>

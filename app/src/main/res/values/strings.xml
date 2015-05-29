@@ -153,6 +153,25 @@
     <string name="homePage">HomePage</string>
     <string name="china">china</string>
     <string name="chinaCode">+86</string>
+    <string name="internationalCodeFailure">The code for international telephone access failed, please click Logo to retry</string>
+
+    <string name="WeiboAuthorizedStart">Weibo began to authorize&#8230;</string>
+    <string name="WeiboAuthorizedComplete">Weibo authorization to complete</string>
+    <string name="WeiboAuthorizedFailure">Weibo authorization to failure</string>
+    <string name="WeiboAuthorizedError">Weibo authorization to error</string>
+    <string name="WeiboAuthorizedCancel">Weibo authorization to cancel</string>
+
+    <string name="WeChatAuthorizedStart">WeChat began to authorize&#8230;</string>
+    <string name="WeChatAuthorizedComplete">WeChat authorization to complete</string>
+    <string name="WeChatAuthorizedFailure">WeChat authorization to failure</string>
+    <string name="WeChatAuthorizedError">WeChat authorization to error</string>
+    <string name="WeChatAuthorizedCancel">WeChat authorization to cancel</string>
+
+    <string name="QQAuthorizedStart">QQ began to authorize&#8230;</string>
+    <string name="QQAuthorizedComplete">QQ authorization to complete</string>
+    <string name="QQAuthorizedFailure">QQ authorization to failure</string>
+    <string name="QQAuthorizedError">QQ authorization to error</string>
+    <string name="QQAuthorizedCancel">QQ authorization to cancel</string>
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>

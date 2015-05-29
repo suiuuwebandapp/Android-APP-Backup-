@@ -220,9 +220,6 @@ public class MainActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-
-        DeBugLog.i(TAG, "MainActivity执行初始化");
-
         errorItem = (RelativeLayout) findViewById(R.id.rl_error_item);
         errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
         msgCount = (TextView) findViewById(R.id.unread_msg_number);
@@ -251,7 +248,6 @@ public class MainActivity extends BaseActivity {
 
         /*************设置侧滑菜单Params**********************/
         slideLayout = (RelativeLayout) findViewById(R.id.slideLayout);
-        //版本高于4.4，设置侧滑菜单的padding
         if (isKITKAT) {
             slideLayout.setPadding(0, statusBarHeight, 0, 0);
         }

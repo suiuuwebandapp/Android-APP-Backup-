@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,11 +34,9 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-
 import com.minglang.suiuu.adapter.AreaCodeAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.bean.User;
 import com.minglang.suiuu.chat.chat.Constant;
 import com.minglang.suiuu.chat.dao.UserDao;
@@ -238,6 +235,8 @@ public class LoginActivity extends BaseActivity {
 
     private ProgressDialog tencentLoginDialog;
 
+    private ImageView loginMainLogo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -256,6 +255,8 @@ public class LoginActivity extends BaseActivity {
     private void initView() {
         initDialog();
         initThirdParty();
+
+        loginMainLogo = (ImageView) findViewById(R.id.login_main_logo);
 
         loginBtn = (Button) findViewById(R.id.loginBtn);
         registerBtn = (Button) findViewById(R.id.registerBtn);
@@ -364,6 +365,15 @@ public class LoginActivity extends BaseActivity {
      * 控件事件
      */
     private void ViewAction() {
+
+        loginMainLogo.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (areaCodeDataList == null || areaCodeDataList.size() <= 0) {
+                    getInternationalAreaCode();
+                }
+            }
+        });
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -518,22 +528,27 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
-            DeBugLog.i(TAG, "国际电话数据接口:" + str);
             try {
                 AreaCode areaCode = JsonUtils.getInstance().fromJSON(AreaCode.class, str);
                 areaCodeDataList = areaCode.getData();
-                areaCodeAdapter.setList(areaCodeDataList);
+                if (areaCodeDataList != null && areaCodeDataList.size() > 0) {
+                    areaCodeAdapter.setList(areaCodeDataList);
+                } else {
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.internationalCodeFailure),
+                            Toast.LENGTH_SHORT).show();
+                }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "国际电话区号数据解析异常:" + e.getMessage());
+                Toast.makeText(LoginActivity.this, getResources().getString(R.string.internationalCodeFailure),
+                        Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
+        public void onFailure(HttpException httpException, String s) {
             DeBugLog.e(TAG, "国际电话区号数据请求失败1:" + s);
-            DeBugLog.e(TAG, "国际电话区号数据请求失败2:" + e.getMessage());
-            DeBugLog.e(TAG, "国际电话区号数据请求失败3:" + e.getExceptionCode());
-            DeBugLog.e(TAG, "国际电话区号数据请求失败4:" + e.toString());
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.internationalCodeFailure),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -923,11 +938,16 @@ public class LoginActivity extends BaseActivity {
         public void onStart(SHARE_MEDIA share_media) {
             DeBugLog.i(TAG, "QQ授权开始");
             tencentLoginDialog.show();
+
         }
 
         @Override
         public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
             DeBugLog.i(TAG, "QQ授权完成");
+
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.QQAuthorizedComplete),
+                    Toast.LENGTH_SHORT).show();
+
             if (bundle != null) {
                 qq_open_id = bundle.getString("openid");
             }
@@ -944,7 +964,8 @@ public class LoginActivity extends BaseActivity {
                 tencentLoginDialog.dismiss();
             }
 
-            Toast.makeText(LoginActivity.this, "授权失败！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.QQAuthorizedError),
+                    Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -955,7 +976,8 @@ public class LoginActivity extends BaseActivity {
                 tencentLoginDialog.dismiss();
             }
 
-            Toast.makeText(LoginActivity.this, "您已取消授权！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.QQAuthorizedCancel),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1112,6 +1134,8 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
             DeBugLog.i(TAG, "微信授权完成");
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.WeChatAuthorizedComplete),
+                    Toast.LENGTH_SHORT).show();
             mController.getPlatformInfo(LoginActivity.this, SHARE_MEDIA.WEIXIN, new WeChat4UMDataListener());
         }
 
@@ -1124,13 +1148,15 @@ public class LoginActivity extends BaseActivity {
                 weChatLoadDialog.dismiss();
             }
 
-            Toast.makeText(LoginActivity.this, "授权失败！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.WeChatAuthorizedError),
+                    Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
             DeBugLog.i(TAG, "微信授权取消");
-            Toast.makeText(LoginActivity.this, "您已取消授权！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.WeChatAuthorizedCancel),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1277,6 +1303,8 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onStart(SHARE_MEDIA share_media) {
             DeBugLog.i(TAG, "新浪微博授权开始！");
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.WeiboAuthorizedStart),
+                    Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -1285,22 +1313,31 @@ public class LoginActivity extends BaseActivity {
             if (bundle != null && !TextUtils.isEmpty(bundle.getString("uid"))) {
                 DeBugLog.i(TAG, "新浪微博授权成功！");
                 DeBugLog.i(TAG, "新浪微博授权信息:" + bundle.toString());
+                Toast.makeText(LoginActivity.this, getResources().getString(R.string.WeiboAuthorizedComplete),
+                        Toast.LENGTH_SHORT).show();
                 mController.getPlatformInfo(LoginActivity.this,
                         SHARE_MEDIA.SINA, new MicroBlog4UMDataListener());
             } else {
                 DeBugLog.i(TAG, "新浪微博授权失败！");
+                Toast.makeText(LoginActivity.this, getResources().getString(R.string.WeiboAuthorizedFailure),
+                        Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onError(SocializeException e, SHARE_MEDIA share_media) {
             DeBugLog.e(TAG, "新浪微博授权错误！" + e.getMessage());
-            DeBugLog.e(TAG, "新浪微博错误代码:" + e.getErrorCode());
+            DeBugLog.e(TAG, "新浪微博错误代码1:" + e.getErrorCode());
+            DeBugLog.e(TAG, "新浪微博错误代码2::" + String.valueOf(share_media.getReqCode()));
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.WeiboAuthorizedError),
+                    Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
             DeBugLog.i(TAG, "新浪微博授权取消！");
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.WeiboAuthorizedCancel),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 

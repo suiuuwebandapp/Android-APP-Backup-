@@ -19,4 +19,23 @@
     <string name="register">注册</string>
     <string name="login">登录</string>
     <string name="obtain_captcha">获取验证码</string>
+    <string name="internationalCodeFailure">国际电话区号获取失败，请点击Logo重试</string>
+
+    <string name="WeiboAuthorizedStart">微博开始授权&#8230;</string>
+    <string name="WeiboAuthorizedComplete">微博授权完成！</string>
+    <string name="WeiboAuthorizedCancel">微博授权已取消！</string>
+    <string name="WeiboAuthorizedError">微博授权错误！</string>
+    <string name="WeiboAuthorizedFailure">微博授权失败！</string>
+
+    <string name="WeChatAuthorizedCancel">微信授权已取消！</string>
+    <string name="WeChatAuthorizedComplete">微信授权完成！</string>
+    <string name="WeChatAuthorizedError">微信授权错误！</string>
+    <string name="WeChatAuthorizedFailure">微信授权失败！</string>
+    <string name="WeChatAuthorizedStart">微信开始授权&#8230;</string>
+
+    <string name="QQAuthorizedCancel">QQ授权取消！</string>
+    <string name="QQAuthorizedComplete">QQ授权完成！</string>
+    <string name="QQAuthorizedError">QQ授权错误！</string>
+    <string name="QQAuthorizedFailure">QQ授权失败！</string>
+    <string name="QQAuthorizedStart">QQ正在授权&#8230;</string>
 </resources>

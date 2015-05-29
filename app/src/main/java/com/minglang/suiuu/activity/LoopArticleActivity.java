@@ -198,13 +198,13 @@ public class LoopArticleActivity extends BaseActivity {
      */
     private void initImageLoader() {
 
-        options1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.user_background)
-                .showImageForEmptyUri(R.drawable.user_background).showImageOnFail(R.drawable.user_background)
+        options1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
-        options2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
-                .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
+        options2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
@@ -291,17 +291,12 @@ public class LoopArticleActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent;
-                DeBugLog.i("suiuu", "type=" + loopArticleData.getaType());
                 if ("1".equals(loopArticleData.getaType())) {
                     intent = new Intent(LoopArticleActivity.this, EasyTackPhotoActivity.class);
                 } else {
                     intent = new Intent(LoopArticleActivity.this, AskQuestionActivity.class);
                 }
-                DeBugLog.i("suiuu", loopArticleData.toString());
                 intent.putExtra("articleDetail", JsonUtils.getInstance().toJSON(loopArticleData));
-//                Bundle mBundle = new Bundle();
-//                mBundle.putSerializable("articleDetail", loopArticleData);
-//                intent.putExtra("articleDetail",mBundle);
                 startActivity(intent);
             }
         });
@@ -485,18 +480,21 @@ public class LoopArticleActivity extends BaseActivity {
         locationName.setText(loopArticleData.getaTitle());
         imageLoader.displayImage(loopArticleData.getHeadImg(), headImage, options2);
         userName.setText(loopArticleData.getNickname());
+
         String address = loopArticleData.getaAddr();
         if (!TextUtils.isEmpty(address)) {
             userLocation.setText(address);
         } else {
             userLocation.setText("");
         }
+
         attentionId = loopArticleData.getAttentionId();
         if (!TextUtils.isEmpty(attentionId)) {
             collection.setTextColor(getResources().getColor(R.color.text_select_true));
             collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_yellow), null, null, null);
 
         }
+
         String imageListPath = loopArticleData.getaImgList();
         if (!TextUtils.isEmpty(imageListPath)) {
             imageList = JsonUtils.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
@@ -505,6 +503,7 @@ public class LoopArticleActivity extends BaseActivity {
                 if (imageList.size() >= 1) {
                     imageLoader.displayImage(imageList.get(0), coverImage, options1);
                 }
+
                 String content = loopArticleData.getaContent();
                 String type = loopArticleData.getaType();
                 if (!TextUtils.isEmpty(type)) {

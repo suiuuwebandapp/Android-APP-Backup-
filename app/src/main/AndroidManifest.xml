@@ -92,11 +92,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/FullBleedTheme"/>
         <activity
-            android:name=".activity.MyAttentionActivity"
-            android:label="@string/title_activity_my_attention"
-            android:screenOrientation="portrait"
-            android:theme="@style/FullBleedTheme"/>
-        <activity
             android:name=".activity.OtherUserActivity"
             android:label="@string/title_activity_other_user"
             android:launchMode="singleTop"

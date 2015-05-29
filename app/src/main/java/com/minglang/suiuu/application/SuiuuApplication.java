@@ -17,8 +17,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
-import android.util.DisplayMetrics;
-import android.view.WindowManager;
 
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.OSSServiceProvider;
@@ -30,6 +28,7 @@ import com.easemob.EMCallBack;
 import com.minglang.suiuu.chat.bean.User;
 import com.minglang.suiuu.chat.chat.DemoHXSDKHelper;
 import com.minglang.suiuu.crash.GlobalCrashHandler;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
@@ -175,14 +174,6 @@ public class SuiuuApplication extends Application {
     }
 
     private void initImageLoad() {
-
-        WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics dm = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(dm);
-        int screenWidth = dm.widthPixels;
-        int screenHeight = dm.heightPixels;
-
-
         ImageLoader imageLoader = ImageLoader.getInstance();
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(getApplicationContext());
 
@@ -191,14 +182,11 @@ public class SuiuuApplication extends Application {
 
         config.denyCacheImageMultipleSizesInMemory();
 
-//        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
         config.diskCacheSize(Long.bitCount(maxMemorySize / 2));
 
-//        config.memoryCache(new WeakMemoryCache());
         config.memoryCacheSize(50 * 1024 * 1024);
-
         config.tasksProcessingOrder(QueueProcessingType.LIFO);
-        config.memoryCacheExtraOptions(screenWidth / 2, screenHeight / 2);
 
         config.writeDebugLogs();
 

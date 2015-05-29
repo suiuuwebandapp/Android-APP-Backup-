@@ -22,6 +22,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.PersonalPostAdapter;
 import com.minglang.suiuu.adapter.PersonalShowPageAdapter;
 import com.minglang.suiuu.adapter.PersonalSuiuuAdapter;
+import com.minglang.suiuu.anim.ZoomOutPageTransformer;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.OtherUser;
@@ -84,11 +85,11 @@ public class PersonalActivity extends BaseActivity {
     /**
      * 用户随游数据适配器
      */
-    private PersonalSuiuuAdapter personalSuiuuAdapter;
+    private PersonalSuiuuAdapter suiuuAdapter;
     /**
      * 用户帖子数据适配器
      */
-    private PersonalPostAdapter personalPostAdapter;
+    private PersonalPostAdapter postAdapter;
 
     /**
      * 用户随游列表
@@ -100,16 +101,71 @@ public class PersonalActivity extends BaseActivity {
      */
     private List<OtherUserDataArticle> articleList;
 
+    private TextView reloadData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal);
 
         initView();
-
         ViewAction();
-
         getData();
+    }
+
+    /**
+     * 初始化方法
+     */
+    private void initView() {
+
+        dialog = new ProgressDialog(this);
+        dialog.setMessage(getResources().getString(R.string.load_wait));
+        dialog.setCanceledOnTouchOutside(false);
+
+        back = (ImageView) findViewById(R.id.personalBack);
+        headLayoutBackground = (ImageView) findViewById(R.id.personalHeadLayoutImage);
+        headImageView = (CircleImageView) findViewById(R.id.personalHeadImage);
+        userName = (TextView) findViewById(R.id.personalName);
+        location = (TextView) findViewById(R.id.personalLocation);
+        signature = (TextView) findViewById(R.id.personalSignature);
+        praise = (TextView) findViewById(R.id.personalCollection);
+        reloadData = (TextView) findViewById(R.id.personal_reload);
+
+        RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.personalBackgroundLayout);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(titleLayout.getLayoutParams());
+        params.height = screenHeight / 5 * 2;
+        params.width = screenWidth;
+        titleLayout.setLayoutParams(params);
+
+        personalShowPage = (ViewPager) findViewById(R.id.personalShowPage);
+        personalShowPage.setPageTransformer(true, new ZoomOutPageTransformer());
+
+        int paddingParams = Utils.newInstance(this).dip2px(5f);
+
+        suiuuGrid = new GridView(this);
+        suiuuGrid.setHorizontalSpacing(10);
+        suiuuGrid.setVerticalSpacing(10);
+        suiuuGrid.setNumColumns(2);
+        suiuuGrid.setPadding(paddingParams, paddingParams, paddingParams, paddingParams);
+
+        postGrid = new GridView(this);
+        postGrid.setHorizontalSpacing(10);
+        postGrid.setVerticalSpacing(10);
+        postGrid.setNumColumns(2);
+        postGrid.setPadding(paddingParams, paddingParams, paddingParams, paddingParams);
+
+        suiuuAdapter = new PersonalSuiuuAdapter(this);
+        suiuuGrid.setAdapter(suiuuAdapter);
+
+        postAdapter = new PersonalPostAdapter(this);
+        postGrid.setAdapter(postAdapter);
+
+        List<View> viewList = new ArrayList<>();
+        viewList.add(suiuuGrid);
+        viewList.add(postGrid);
+
+        PersonalShowPageAdapter showPageAdapter = new PersonalShowPageAdapter(this, viewList);
+        personalShowPage.setAdapter(showPageAdapter);
     }
 
     /**
@@ -118,7 +174,6 @@ public class PersonalActivity extends BaseActivity {
      * @param str Json字符串
      */
     private void userData2View(String str) {
-        DeBugLog.i(TAG, "个人主页数据:" + str);
         if (!TextUtils.isEmpty(str)) {
             try {
                 OtherUser user = JsonUtils.getInstance().fromJSON(OtherUser.class, str);
@@ -149,19 +204,32 @@ public class PersonalActivity extends BaseActivity {
                 //随游列表
                 travelList = user.getData().getTravelList();
                 if (travelList != null && travelList.size() > 0) {
-                    personalSuiuuAdapter.setList(travelList);
+                    if (reloadData.getVisibility() == View.INVISIBLE) {
+                        reloadData.setVisibility(View.VISIBLE);
+                    }
+                    suiuuAdapter.setList(travelList);
+                } else {
+                    reloadData.setVisibility(View.VISIBLE);
                 }
+
                 //贴子列表
                 articleList = user.getData().getArticleList();
                 if (articleList != null && articleList.size() > 0) {
-                    personalPostAdapter.setList(articleList);
+                    if (reloadData.getVisibility() == View.INVISIBLE) {
+                        reloadData.setVisibility(View.VISIBLE);
+                    }
+                    postAdapter.setList(articleList);
+                } else {
+                    reloadData.setVisibility(View.VISIBLE);
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "数据解析异常:" + e.getMessage());
+                postAdapter.setList(articleList);
                 Toast.makeText(this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
 
         } else {
+            postAdapter.setList(articleList);
             Toast.makeText(this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
         }
 
@@ -203,6 +271,7 @@ public class PersonalActivity extends BaseActivity {
         });
 
         personalShowPage.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -210,12 +279,33 @@ public class PersonalActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
+                DeBugLog.i(TAG, "position:" + position);
+                switch (position) {
+                    case 0:
+                        if (travelList == null || travelList.size() <= 0) {
+                            reloadData.setVisibility(View.VISIBLE);
+                        }
+                        break;
 
+                    case 1:
+                        if (articleList == null || articleList.size() <= 0) {
+                            reloadData.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
 
+            }
+        });
+
+        reloadData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reloadData.setVisibility(View.INVISIBLE);
+                getData();
             }
         });
 
@@ -242,59 +332,6 @@ public class PersonalActivity extends BaseActivity {
             }
         });
 
-    }
-
-    /**
-     * 初始化方法
-     */
-    private void initView() {
-
-        dialog = new ProgressDialog(this);
-        dialog.setMessage(getResources().getString(R.string.load_wait));
-        dialog.setCanceledOnTouchOutside(false);
-
-        back = (ImageView) findViewById(R.id.personalBack);
-        headLayoutBackground = (ImageView) findViewById(R.id.personalHeadLayoutImage);
-        headImageView = (CircleImageView) findViewById(R.id.personalHeadImage);
-        userName = (TextView) findViewById(R.id.personalName);
-        location = (TextView) findViewById(R.id.personalLocation);
-        signature = (TextView) findViewById(R.id.personalSignature);
-        praise = (TextView) findViewById(R.id.personalCollection);
-
-        RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.personalBackgroundLayout);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(titleLayout.getLayoutParams());
-        params.height = screenHeight / 5 * 2;
-        params.width = screenWidth;
-        titleLayout.setLayoutParams(params);
-
-        personalShowPage = (ViewPager) findViewById(R.id.personalShowPage);
-
-        int paddingParams = Utils.newInstance(this).dip2px(5f);
-
-        suiuuGrid = new GridView(this);
-        suiuuGrid.setHorizontalSpacing(10);
-        suiuuGrid.setVerticalSpacing(10);
-        suiuuGrid.setNumColumns(2);
-        suiuuGrid.setPadding(paddingParams, paddingParams, paddingParams, paddingParams);
-
-        postGrid = new GridView(this);
-        postGrid.setHorizontalSpacing(10);
-        postGrid.setVerticalSpacing(10);
-        postGrid.setNumColumns(2);
-        postGrid.setPadding(paddingParams, paddingParams, paddingParams, paddingParams);
-
-        personalSuiuuAdapter = new PersonalSuiuuAdapter(this);
-        suiuuGrid.setAdapter(personalSuiuuAdapter);
-
-        personalPostAdapter = new PersonalPostAdapter(this);
-        postGrid.setAdapter(personalPostAdapter);
-
-        List<View> viewList = new ArrayList<>();
-        viewList.add(suiuuGrid);
-        viewList.add(postGrid);
-
-        PersonalShowPageAdapter showPageAdapter = new PersonalShowPageAdapter(this, viewList);
-        personalShowPage.setAdapter(showPageAdapter);
     }
 
     private class PersonalInfoCallBack extends RequestCallBack<String> {
