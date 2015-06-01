@@ -3,7 +3,6 @@ package com.minglang.suiuu.activity;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.TracePagerAdapter;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.fragment.trace.TracePostFragment;
 import com.minglang.suiuu.fragment.trace.TraceRouteFragment;
 
@@ -25,7 +25,7 @@ import java.util.List;
  * 查看其他用户发的帖子和路线
  */
 
-public class OtherUserTraceActivity extends FragmentActivity {
+public class OtherUserTraceActivity extends BaseActivity {
 
     private TextView userNameView;
 

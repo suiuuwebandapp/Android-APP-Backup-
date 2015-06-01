@@ -403,8 +403,7 @@ public class MainFragment extends BaseFragment {
 
         @Override
         public void onLoadingStarted(String imageUri, View view) {
-            DeBugLog.i(TAG, "onLoadingStarted():" + imageUri);
-            DeBugLog.i(TAG, "onLoadingStarted():view.getId():" + view.getId());
+
         }
 
         @Override
@@ -437,14 +436,14 @@ public class MainFragment extends BaseFragment {
 
         @Override
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-            DeBugLog.i(TAG, "onLoadingComplete():" + imageUri);
-            DeBugLog.i(TAG, "onLoadingComplete():view.getId():" + view.getId());
+
         }
 
         @Override
         public void onLoadingCancelled(String imageUri, View view) {
-            DeBugLog.i(TAG, "onLoadingCancelled():" + imageUri);
-            DeBugLog.i(TAG, "onLoadingCancelled():view.getId():" + view.getId());
+
         }
+
     }
+
 }
