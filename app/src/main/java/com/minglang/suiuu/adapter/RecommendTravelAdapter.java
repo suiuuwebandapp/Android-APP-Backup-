@@ -15,7 +15,6 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.OtherUserActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.MainDynamicDataRecommendTravel;
-import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -99,7 +98,7 @@ public class RecommendTravelAdapter extends BaseAdapter {
 
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_recommend_reavel, position);
         convertView = holder.getConvertView();
-        int itemHeight = ScreenHeight / 4 - Utils.newInstance(context).dip2px(10);
+        int itemHeight = ScreenHeight / 4;
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, itemHeight);
         convertView.setLayoutParams(params);
 

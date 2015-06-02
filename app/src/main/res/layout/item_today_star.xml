@@ -11,7 +11,7 @@
         android:scaleType="centerCrop"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/default_background_image"/>
+        android:src="@drawable/user_background"/>
 
     <com.minglang.suiuu.customview.CircleImageView
         android:layout_width="@dimen/layout_60dp"

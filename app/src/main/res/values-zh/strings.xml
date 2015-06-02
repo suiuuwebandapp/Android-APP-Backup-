@@ -38,4 +38,7 @@
     <string name="QQAuthorizedError">QQ授权错误！</string>
     <string name="QQAuthorizedFailure">QQ授权失败！</string>
     <string name="QQAuthorizedStart">QQ正在授权&#8230;</string>
+    <string name="all_attention_dynamic_content">内容</string>
+    <string name="all_attention_dynamic_title">标题</string>
+    <string name="all_attention_dynamic_contentDescription">主要图片</string>
 </resources>

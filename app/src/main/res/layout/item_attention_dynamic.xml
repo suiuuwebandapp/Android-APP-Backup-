@@ -12,7 +12,7 @@
         android:id="@+id/item_attention_dynamic_image"
         android:layout_alignParentTop="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/default_background_image"
+        android:src="@drawable/user_background"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"

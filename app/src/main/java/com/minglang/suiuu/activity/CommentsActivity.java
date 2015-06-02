@@ -3,7 +3,6 @@ package com.minglang.suiuu.activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -63,23 +62,52 @@ public class CommentsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         articleId = this.getIntent().getStringExtra("articleId");
         tripId = this.getIntent().getStringExtra("tripId");
-
-        Log.i("suiuu", "articleId = " + articleId + "tripId" + tripId);
 
         initView();
 
         ViewAction();
+
         if (!TextUtils.isEmpty(articleId))
-            origainDataArticle();
+            requestDataArticle();
         if (!TextUtils.isEmpty(tripId))
-            origainDataSuiuu(tripId, "1");
+            requestDataSuiuu(tripId, "1");
+    }
+
+    /**
+     * 初始化方法
+     */
+    private void initView() {
+        if (isKITKAT) {
+            RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.CommentRootLayout);
+            rootLayout.setPadding(0, statusBarHeight, 0, 0);
+        }
+
+        back = (ImageView) findViewById(R.id.iv_top_back);
+        mListView = (ListView) findViewById(R.id.lv_activity_commentlist);
+        et_input_comment = (EditText) findViewById(R.id.et_input_comment);
+        bt_send_comment = (Button) findViewById(R.id.bt_send_comment);
+
+        adapter = new CommentAdapter(this);
+        mListView.setAdapter(adapter);
+
+        TextView tv_top_center = (TextView) findViewById(R.id.tv_top_center);
+        tv_top_center.setVisibility(View.VISIBLE);
+        tv_top_center.setText("评论");
+
+        TextView tv_top_right = (TextView) findViewById(R.id.tv_top_right);
+        tv_top_right.setVisibility(View.GONE);
+
+        dialog = new ProgressDialog(this);
+        dialog.setMessage(getResources().getString(R.string.load_wait));
+        dialog.setCanceledOnTouchOutside(false);
+
     }
 
     //根据文章Id请求评论列表
-    private void origainDataArticle() {
+    private void requestDataArticle() {
         dialog.show();
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
@@ -90,7 +118,7 @@ public class CommentsActivity extends BaseActivity {
     }
 
     //根据随UUId请求评论列表
-    private void origainDataSuiuu(String tripId, String pageNumber) {
+    private void requestDataSuiuu(String tripId, String pageNumber) {
         dialog.show();
         RequestParams params = new RequestParams();
         params.addBodyParameter("tripId", tripId);
@@ -149,7 +177,7 @@ public class CommentsActivity extends BaseActivity {
         params.addBodyParameter("rTitle", rTitle);
         params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.articleCreateComment, new requestComentSendCallBack());
+                HttpServicePath.articleCreateComment, new requestCommentSendCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
 
@@ -159,67 +187,74 @@ public class CommentsActivity extends BaseActivity {
     private void requestSuiuuCommentSend(String commentContent, String rId, String rTitle) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("tripId", tripId);
-        Log.i("suiuu", "请求的tripId=" + tripId);
         params.addBodyParameter("content", commentContent);
         params.addBodyParameter("rId", rId);
         params.addBodyParameter("rTitle", rTitle);
         params.addBodyParameter(HttpServicePath.key, verification);
+
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.suiuuCreateComment, new requestComentSendCallBack());
+                HttpServicePath.suiuuCreateComment, new requestCommentSendCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
 
     }
 
-    class requestComentSendCallBack extends RequestCallBack<String> {
+    class requestCommentSendCallBack extends RequestCallBack<String> {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
             try {
                 JSONObject json = new JSONObject(responseInfo.result);
-                Log.i("suiuu", responseInfo.result);
                 String status = json.getString("status");
                 String data = json.getString("data");
+
                 if ("1".equals(status) && "success".equals(data)) {
                     et_input_comment.setText("");
                     if (TextUtils.isEmpty(tripId)) {
-                        origainDataArticle();
+                        requestDataArticle();
                     } else {
-                        origainDataSuiuu(tripId, "1");
+                        requestDataSuiuu(tripId, "1");
                     }
+
                     rId = null;
                     rTitle = null;
                     et_input_comment.setText("");
                     et_input_comment.setHint("");
                     Toast.makeText(CommentsActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
                 }
             } catch (JSONException e) {
-
                 e.printStackTrace();
                 Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
                 rId = null;
                 rTitle = null;
                 et_input_comment.setText("");
             }
-            Log.i("suiuu", "success=" + responseInfo.result);
         }
-
         @Override
         public void onFailure(HttpException error, String msg) {
-            Log.e("suiuu", "网络请求失败:" + msg);
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
             rId = null;
             rTitle = null;
             et_input_comment.setText("");
             Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     class getCommentListCallBack extends RequestCallBack<String> {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            Log.i("suiuu", "getList+" + responseInfo.result);
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
             CommentList list = jsonUtil.fromJSON(CommentList.class, responseInfo.result);
             if ("1".equals(list.getStatus())) {
                 commentLists = list.getData().getData();
@@ -229,46 +264,15 @@ public class CommentsActivity extends BaseActivity {
             } else {
                 Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
-            dialog.dismiss();
         }
-
         @Override
         public void onFailure(HttpException error, String msg) {
-            Log.e("suiuu", "网络请求失败:" + msg);
-            dialog.dismiss();
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
             Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    /**
-     * 初始化方法
-     */
-    private void initView() {
-        if (isKITKAT) {
-            RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.CommentRootLayout);
-            rootLayout.setPadding(0, statusBarHeight, 0, 0);
-        }
-
-        back = (ImageView) findViewById(R.id.iv_top_back);
-        mListView = (ListView) findViewById(R.id.lv_activity_commentlist);
-        et_input_comment = (EditText) findViewById(R.id.et_input_comment);
-        bt_send_comment = (Button) findViewById(R.id.bt_send_comment);
-
-        adapter = new CommentAdapter(this);
-        mListView.setAdapter(adapter);
-
-        TextView tv_top_center = (TextView) findViewById(R.id.tv_top_center);
-        tv_top_center.setVisibility(View.VISIBLE);
-        tv_top_center.setText("评论");
-
-        TextView tv_top_right = (TextView) findViewById(R.id.tv_top_right);
-        tv_top_right.setVisibility(View.GONE);
-
-        dialog = new ProgressDialog(this);
-        dialog.setMessage(getResources().getString(R.string.load_wait));
-        dialog.setCanceledOnTouchOutside(false);
 
     }
-
 
 }

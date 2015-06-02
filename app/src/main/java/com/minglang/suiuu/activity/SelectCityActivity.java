@@ -41,8 +41,6 @@ public class SelectCityActivity extends BaseActivity {
 
     private ImageView back;
 
-//    private TextView complete;
-
     private SideBar sideBar;
 
     private ListView cityListView;
@@ -60,8 +58,6 @@ public class SelectCityActivity extends BaseActivity {
     private String countryId;
 
     private String countryCNname;
-//
-//    private String countryUSname;
 
     private String selectCityName;
 
@@ -76,12 +72,9 @@ public class SelectCityActivity extends BaseActivity {
 
         countryId = intent.getStringExtra("countryId");
         countryCNname = intent.getStringExtra("countryCNname");
-//        countryUSname = intent.getStringExtra("countryName2");
 
         initView();
-
         getData();
-
         ViewAction();
     }
 
@@ -114,24 +107,6 @@ public class SelectCityActivity extends BaseActivity {
             }
         });
 
-//        complete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (TextUtils.isEmpty(selectCityId) && TextUtils.isEmpty(selectCityName)) {
-//                    Toast.makeText(SelectCityActivity.this, "请选择城市!", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Intent intent = new Intent();
-//                    intent.putExtra("countryId", countryId);
-//                    intent.putExtra("countryCNname", countryCNname);
-//                    intent.putExtra("countryName2", countryUSname);
-//                    intent.putExtra("cityId", selectCityId);
-//                    intent.putExtra("cityName", selectCityName);
-//                    setResult(RESULT_OK, intent);
-//                    finish();
-//                }
-//            }
-//        });
-
         sideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override
             public void onTouchingLetterChanged(String s) {
@@ -158,7 +133,6 @@ public class SelectCityActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.putExtra("countryId", countryId);
                     intent.putExtra("countryCNname", countryCNname);
-//                    intent.putExtra("countryName2", countryUSname);
                     intent.putExtra("cityId", selectCityId);
                     intent.putExtra("cityName", selectCityName);
                     setResult(RESULT_OK, intent);
@@ -173,9 +147,7 @@ public class SelectCityActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-
         back = (ImageView) findViewById(R.id.select_city_back);
-//        complete = (TextView) findViewById(R.id.select_city_complete);
         cityListView = (ListView) findViewById(R.id.select_city_list_view);
         sideBar = (SideBar) findViewById(R.id.select_city_sidebar);
 

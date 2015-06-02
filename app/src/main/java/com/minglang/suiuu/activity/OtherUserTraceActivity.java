@@ -3,9 +3,7 @@ package com.minglang.suiuu.activity;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -39,21 +37,9 @@ public class OtherUserTraceActivity extends BaseActivity {
 
     private int currIndex = 1;// 当前页卡编号
 
-    private int sliderViewWidth;//图片宽度
-
     private int tabWidth;// 每个tab头的宽度
 
     private int offsetX;//偏移量
-
-    private List<Fragment> fragmentList;
-
-    private FragmentManager fm;
-
-    private TracePostFragment tracePostFragment;
-
-    private TraceRouteFragment traceRouteFragment;
-
-    private TracePagerAdapter tracePagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,17 +106,17 @@ public class OtherUserTraceActivity extends BaseActivity {
 
         tracePager = (ViewPager) findViewById(R.id.otherUserTracePager);
 
-        tracePostFragment = TracePostFragment.newInstance("a", "b");
-        traceRouteFragment = TraceRouteFragment.newInstance("c", "d");
+        TracePostFragment tracePostFragment = TracePostFragment.newInstance("a", "b");
+        TraceRouteFragment traceRouteFragment = TraceRouteFragment.newInstance("c", "d");
 
         fm = getSupportFragmentManager();
 
-        fragmentList = new ArrayList<>();
+        List<Fragment> fragmentList = new ArrayList<>();
 
         fragmentList.add(tracePostFragment);
         fragmentList.add(traceRouteFragment);
 
-        tracePagerAdapter = new TracePagerAdapter(fm, fragmentList);
+        TracePagerAdapter tracePagerAdapter = new TracePagerAdapter(fm, fragmentList);
         
         tracePager.setAdapter(tracePagerAdapter);
 
@@ -138,16 +124,12 @@ public class OtherUserTraceActivity extends BaseActivity {
     }
 
     private void initImage() {
-        sliderViewWidth = BitmapFactory.decodeResource(getResources(), R.drawable.slider).getWidth();
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int screenW = dm.widthPixels;// 获取分辨率宽度
-        tabWidth = screenW / 2;
+        int sliderViewWidth = BitmapFactory.decodeResource(getResources(), R.drawable.slider).getWidth();
+        tabWidth = screenWidth / 2;
         if (sliderViewWidth > tabWidth) {
             traceSlider.getLayoutParams().width = tabWidth;
             sliderViewWidth = tabWidth;
         }
-
         offsetX = (tabWidth - sliderViewWidth) / 2;
     }
 

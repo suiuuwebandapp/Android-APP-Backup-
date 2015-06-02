@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.remind;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.OtherUserActivity;
+import com.minglang.suiuu.activity.PersonalActivity;
 import com.minglang.suiuu.adapter.MessageAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.SuiuuMessage;
@@ -104,55 +107,7 @@ public class NewReplyFragment extends BaseFragment {
         initView(rootView);
         ViewAction();
         getData();
-        DeBugLog.i(TAG, "userSign:" + userSign);
         return rootView;
-    }
-
-    private void ViewAction() {
-
-        mPtrFrame.setPtrHandler(new PtrHandler() {
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, newReplyList, header);
-            }
-
-            @Override
-            public void onRefreshBegin(PtrFrameLayout frame) {
-                page = 1;
-                getNewAt4Service(page);
-            }
-        });
-
-        newReplyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SuiuuMessageData data = listAll.get(position);
-                String remindId = data.getRemindId();
-                DeBugLog.i(TAG, "remind:" + remindId);
-            }
-        });
-    }
-
-    private void getData() {
-        if (dialog != null) {
-            dialog.show();
-        }
-        getNewAt4Service(page);
-    }
-
-    /**
-     * 从网络获取数据
-     */
-    private void getNewAt4Service(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(TYPE, "2");
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter("number", String.valueOf(page));
-
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.GetMessageListPath, new NewReplyRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
     }
 
     /**
@@ -161,7 +116,6 @@ public class NewReplyFragment extends BaseFragment {
      * @param rootView Fragment根View
      */
     private void initView(View rootView) {
-
         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progress_bar);
@@ -195,6 +149,60 @@ public class NewReplyFragment extends BaseFragment {
 
         adapter = new MessageAdapter(getActivity(), "4");
         newReplyList.setAdapter(adapter);
+    }
+
+    private void ViewAction() {
+
+        mPtrFrame.setPtrHandler(new PtrHandler() {
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, newReplyList, header);
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                page = 1;
+                getNewAt4Service(page);
+            }
+        });
+
+        newReplyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String OtherUserSign = listAll.get(position).getCreateUserSign();
+                Intent intent;
+                if (OtherUserSign.equals(userSign)) {
+                    intent = new Intent(getActivity(), PersonalActivity.class);
+                } else {
+                    intent = new Intent(getActivity(), OtherUserActivity.class);
+                    intent.putExtra("userSign", OtherUserSign);
+                }
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void getData() {
+        if (dialog != null) {
+            dialog.show();
+        }
+        getNewAt4Service(page);
+    }
+
+    /**
+     * 从网络获取数据
+     */
+    private void getNewAt4Service(int page) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter(TYPE, "2");
+        params.addBodyParameter(HttpServicePath.key, verification);
+        params.addBodyParameter("number", String.valueOf(10));
+        params.addBodyParameter("page", String.valueOf(page));
+
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.GetMessageListPath, new NewReplyRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
     }
 
     private class NewReplyRequestCallBack extends RequestCallBack<String> {

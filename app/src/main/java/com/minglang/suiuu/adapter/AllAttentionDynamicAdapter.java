@@ -19,7 +19,6 @@ import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
@@ -45,32 +44,13 @@ public class AllAttentionDynamicAdapter extends BaseAdapter {
         this.context = context;
 
         imageLoader = ImageLoader.getInstance();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        }
 
-        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_background_image)
-                .showImageForEmptyUri(R.drawable.default_background_image).showImageOnFail(R.drawable.default_background_image)
+        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
 
         screenHeight = new ScreenUtils((Activity) context).getScreenHeight();
-    }
-
-    public AllAttentionDynamicAdapter(Context context, List<AllAttentionDynamicData> list) {
-        this.context = context;
-        this.list = list;
-
-        imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-
-        displayImageOptions = new DisplayImageOptions.Builder().
-                showImageOnLoading(R.drawable.default_background_image)
-                .showImageForEmptyUri(R.drawable.default_background_image)
-                .showImageOnFail(R.drawable.default_background_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     @Override
@@ -106,7 +86,12 @@ public class AllAttentionDynamicAdapter extends BaseAdapter {
         AllAttentionDynamicData data = list.get(position);
 
         ViewHolder holder = ViewHolder.get(context, convertView, parent,
-                R.layout.item_all_attention_dtnamic, position);
+                R.layout.item_all_attention_dynamic, position);
+
+        convertView = holder.getConvertView();
+        AbsListView.LayoutParams params = new AbsListView
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, screenHeight / 4);
+        convertView.setLayoutParams(params);
 
         ImageView mainImage = holder.getView(R.id.item_all_attention_dynamic_image);
         CircleImageView headImage = holder.getView(R.id.item_all_attention_dynamic_head);
@@ -138,10 +123,6 @@ public class AllAttentionDynamicAdapter extends BaseAdapter {
             content.setText("");
         }
 
-        convertView = holder.getConvertView();
-        AbsListView.LayoutParams params = new AbsListView
-                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, screenHeight / 4);
-        convertView.setLayoutParams(params);
         return convertView;
     }
 }

@@ -1,8 +1,5 @@
 package com.minglang.suiuu.entity;
 
-/**
- * Created by Administrator on 2015/5/3.
- */
 public class SuiuuMessageData {
 
     public String relativeId;
@@ -15,9 +12,13 @@ public class SuiuuMessageData {
 
     public String nickname;
 
+    public String createUserSign;
+
     public String getRelativeId() {
         return relativeId;
     }
+
+    public String rType;
 
     public String getRelativeType() {
         return relativeType;
@@ -35,6 +36,14 @@ public class SuiuuMessageData {
         return nickname;
     }
 
+    public String getCreateUserSign() {
+        return createUserSign;
+    }
+
+    public String getRtype() {
+        return rType;
+    }
+
     @Override
     public String toString() {
         return "SuiuuMessageData{" +
@@ -43,6 +52,8 @@ public class SuiuuMessageData {
                 ", remindId='" + remindId + '\'' +
                 ", headImg='" + headImg + '\'' +
                 ", nickname='" + nickname + '\'' +
+                ", createUserSign='" + createUserSign + '\'' +
+                ", rType='" + rType + '\'' +
                 '}';
     }
 }

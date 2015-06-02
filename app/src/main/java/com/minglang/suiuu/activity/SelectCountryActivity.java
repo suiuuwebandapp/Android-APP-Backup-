@@ -42,8 +42,6 @@ public class SelectCountryActivity extends BaseActivity {
 
     private ImageView back;
 
-//    private TextView next;
-
     private SideBar sideBar;
 
     private ListView countryListView;
@@ -70,9 +68,7 @@ public class SelectCountryActivity extends BaseActivity {
         setContentView(R.layout.activity_select_country);
 
         initView();
-
         ViewAction();
-
         getData();
     }
 
@@ -84,17 +80,6 @@ public class SelectCountryActivity extends BaseActivity {
                 finish();
             }
         });
-
-//        next.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(SelectCountryActivity.this, SelectCityActivity.class);
-//                intent.putExtra("countryId", selectCountryId);
-//                intent.putExtra("countryCNname", selectCountryCNname);
-//                intent.putExtra("countryName2", selectCountryUSname);
-//                startActivityForResult(intent, AppConstant.SELECT_CITY_OK);
-//            }
-//        });
 
         sideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
             @Override
@@ -177,7 +162,6 @@ public class SelectCountryActivity extends BaseActivity {
         countryNameComparator = new CountryNameComparator();
 
         back = (ImageView) findViewById(R.id.select_country_back);
-//        next = (TextView) findViewById(R.id.select_country_next);
         TextView textDialog = (TextView) findViewById(R.id.select_country_dialog);
         sideBar = (SideBar) findViewById(R.id.select_country_index_side_bar);
         sideBar.setTextView(textDialog);
@@ -211,6 +195,7 @@ public class SelectCountryActivity extends BaseActivity {
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
+
             String str = stringResponseInfo.result;
             try {
                 Country country = JsonUtils.getInstance().fromJSON(Country.class, str);

@@ -9,8 +9,7 @@
         android:id="@+id/item_attention_dynamic_image"
         android:layout_alignParentTop="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/default_background_image"
-        />
+        android:src="@drawable/user_background"/>
 
     <RelativeLayout
         android:id="@+id/item_recommend_travel_content_layout"

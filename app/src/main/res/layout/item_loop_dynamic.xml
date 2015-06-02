@@ -15,7 +15,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/default_background_image"/>
+        android:src="@drawable/user_background"/>
 
     <TextView
         android:layout_width="wrap_content"

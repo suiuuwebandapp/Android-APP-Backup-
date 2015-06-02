@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.List;
 
 /**
+ * 关注页面Fragment适配器
+ * <p/>
  * Created by LZY on 2015/3/18 0018.
  */
 public class AttentionPagerAdapter extends FragmentPagerAdapter {

@@ -10,10 +10,11 @@
         android:id="@+id/item_all_attention_dynamic_image"
         android:layout_alignParentTop="true"
         android:scaleType="fitXY"
-        android:src="@drawable/default_background_image"
+        android:src="@drawable/user_background"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
+        android:contentDescription="@string/all_attention_dynamic_contentDescription"
         android:layout_alignParentEnd="true"/>
 
     <RelativeLayout
@@ -28,7 +29,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="New Text"
+            android:text="@string/all_attention_dynamic_title"
             android:id="@+id/item_all_attention_dynamic_title"
             android:singleLine="true"
             android:textColor="@color/white"
@@ -42,7 +43,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="New Text"
+            android:text="@string/all_attention_dynamic_content"
             android:id="@+id/item_all_attention_dynamic_content"
             android:singleLine="true"
             android:textColor="@color/white"

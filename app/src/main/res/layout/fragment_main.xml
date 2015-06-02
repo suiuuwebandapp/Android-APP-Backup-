@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -24,7 +25,6 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true">
 
-
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -32,6 +32,7 @@
                 android:padding="5dp">
 
                 <RelativeLayout
+                    android:id="@+id/blankTitleLayout"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"/>
 
@@ -68,7 +69,8 @@
                         android:gravity="center_vertical"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"/>
+                        android:layout_alignParentEnd="true"
+                        tools:ignore="RelativeOverlap"/>
                 </RelativeLayout>
 
                 <com.minglang.suiuu.customview.InnerListView
@@ -94,6 +96,7 @@
                         android:drawablePadding="3dp"
                         android:textSize="18sp"
                         android:id="@+id/textView5"/>
+
                 </RelativeLayout>
 
                 <com.minglang.suiuu.customview.InnerListView
@@ -119,6 +122,7 @@
                         android:drawablePadding="3dp"
                         android:textSize="18sp"
                         android:id="@+id/textView4"/>
+
                 </RelativeLayout>
 
                 <com.minglang.suiuu.customview.NoScrollBarGridView
@@ -149,6 +153,7 @@
                         android:drawablePadding="3dp"
                         android:textSize="18sp"
                         android:id="@+id/textView6"/>
+
                 </RelativeLayout>
 
                 <com.minglang.suiuu.customview.NoScrollBarGridView
@@ -166,10 +171,11 @@
                     android:id="@+id/main_fragment_foot_black_view"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"/>
+
             </LinearLayout>
+
         </ScrollView>
 
     </in.srain.cube.views.ptr.PtrClassicFrameLayout>
-
 
 </RelativeLayout>

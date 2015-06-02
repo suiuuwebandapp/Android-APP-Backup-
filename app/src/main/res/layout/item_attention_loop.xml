@@ -11,7 +11,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/scroll2"/>
+        android:src="@drawable/user_background"/>
 
     <TextView
         android:id="@+id/item_attention_loop_title"

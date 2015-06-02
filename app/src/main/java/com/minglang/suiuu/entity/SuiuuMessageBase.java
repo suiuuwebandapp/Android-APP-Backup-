@@ -2,9 +2,6 @@ package com.minglang.suiuu.entity;
 
 import java.util.List;
 
-/**
- * Created by Administrator on 2015/5/7.
- */
 public class SuiuuMessageBase {
 
     public List<SuiuuMessageData> data;
