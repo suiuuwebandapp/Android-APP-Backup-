@@ -172,6 +172,7 @@
     <string name="QQAuthorizedFailure">QQ authorization to failure</string>
     <string name="QQAuthorizedError">QQ authorization to error</string>
     <string name="QQAuthorizedCancel">QQ authorization to cancel</string>
+    <string name="noChatHistory">当前没有聊天信息</string>
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>

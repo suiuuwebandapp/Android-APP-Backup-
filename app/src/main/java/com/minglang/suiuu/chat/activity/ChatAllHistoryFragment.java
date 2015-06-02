@@ -73,10 +73,15 @@ public class ChatAllHistoryFragment extends Fragment {
         LinearLayout.LayoutParams paramTest = (LinearLayout.LayoutParams) listView.getLayoutParams();
         //paramTest.topMargin = ConstantUtil.topHeight;
         paramTest.setMargins(0, ConstantUtil.topHeight, 0, 0);
-        listView.setLayoutParams(paramTest);
-        adapter = new ChatAllHistoryAdapter(getActivity(), 1, conversationList);
-        // 设置adapter
-        listView.setAdapter(adapter);
+        if(conversationList.size()>=1) {
+            listView.setLayoutParams(paramTest);
+            adapter = new ChatAllHistoryAdapter(getActivity(), 1, conversationList);
+            // 设置adapter
+            listView.setAdapter(adapter);
+        }else {
+            listView.setVisibility(View.GONE);
+            getView().findViewById(R.id.tv_nochat_history).setVisibility(View.VISIBLE);
+        }
         final String st2 = getResources().getString(R.string.Cant_chat_with_yourself);
         listView.setOnItemClickListener(new OnItemClickListener() {
 

@@ -142,7 +142,6 @@ public class MainActivity extends BaseActivity {
      */
     private ImageView record;
 
-    private boolean isMainIcon = false;
 
     private AnimationSet animationSetHide, animationSetShow;
     // 账号在别处登录
@@ -356,7 +355,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void adjustAnimation() {
-        if (isMainIcon) {
+        if (ConstantUtil.isShowArticleAnim) {
             ask.startAnimation(animationSetHide);
             pic.startAnimation(animationSetHide);
             record.startAnimation(animationSetHide);
@@ -439,7 +438,7 @@ public class MainActivity extends BaseActivity {
                         break;
 
                     case R.id.sendNewMessage:
-                        if (isMainIcon) {
+                        if (ConstantUtil.isShowArticleAnim) {
                             ask.startAnimation(animationSetHide);
                             pic.startAnimation(animationSetHide);
                             record.startAnimation(animationSetHide);
@@ -789,16 +788,16 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            if (isMainIcon) {
+            if (ConstantUtil.isShowArticleAnim) {
                 ask.setVisibility(View.INVISIBLE);
                 pic.setVisibility(View.INVISIBLE);
                 record.setVisibility(View.INVISIBLE);
-                isMainIcon = false;
+                ConstantUtil.isShowArticleAnim = false;
             } else {
                 ask.setVisibility(View.VISIBLE);
                 pic.setVisibility(View.VISIBLE);
                 record.setVisibility(View.VISIBLE);
-                isMainIcon = true;
+                ConstantUtil.isShowArticleAnim = true;
             }
         }
 
