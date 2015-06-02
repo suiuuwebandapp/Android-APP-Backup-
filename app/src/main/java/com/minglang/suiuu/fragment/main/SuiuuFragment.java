@@ -93,6 +93,12 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
     private FlowLayout id_flowlayout;
     private boolean isSearch;
     private RelativeLayout rl_search_no_data;
+    private ImageView main_suiuu_pic;
+    private ImageView main_suiuu_record;
+    private ImageView main_suiuu_ask;
+
+
+
 
     @SuppressLint("InflateParams")
     @Override
@@ -147,7 +153,6 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
 
                 switch (scrollState) {
                     case SCROLL_STATE_IDLE://空闲状态
-
                         tabSelect.setVisibility(View.VISIBLE);
                         break;
                     case SCROLL_STATE_FLING://滚动状态
@@ -161,7 +166,7 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+                hideWhenScroll();
                 if (firstVisibleItem > lastVisibleItemPosition) {// 上滑
                     transAnim.cancel();
                     tabSelect.startAnimation(transAnim);
@@ -197,11 +202,13 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
         tabSelect = (LinearLayout) topView.findViewById(R.id.tabSelect);
         dialog = new TextProgressDialog(getActivity());
         //处理头部控件
-
         et_suiuu = (EditText) topView.findViewById(R.id.et_suiuu);
         iv_suiuu_search_more = (ImageView) topView.findViewById(R.id.iv_suiuu_search_more);
         ib_suiuu_search = (ImageButton) topView.findViewById(R.id.ib_suiuu_search);
         ib_suiuu_search.setOnClickListener(new MyOnclick());
+        main_suiuu_pic = (ImageView) topView.findViewById(R.id.main_pic);
+        main_suiuu_record = (ImageView) topView.findViewById(R.id.main_record);
+        main_suiuu_ask = (ImageView) topView.findViewById(R.id.main_ask);
 
 
         fl_search_more = (FrameLayout) rootView.findViewById(R.id.fl_search_more);
@@ -219,6 +226,14 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
         id_flowlayout = (FlowLayout) rootView.findViewById(R.id.id_flowlayout);
         rl_search_no_data = (RelativeLayout) rootView.findViewById(R.id.rl_search_no_data);
         rl_search_no_data.setOnClickListener(new MyOnclick());
+    }
+    public void hideWhenScroll() {
+        if(ConstantUtil.isShowArticleAnim) {
+            main_suiuu_record.setVisibility(View.INVISIBLE);
+            main_suiuu_pic.setVisibility(View.INVISIBLE);
+            main_suiuu_ask.setVisibility(View.INVISIBLE);
+            ConstantUtil.isShowArticleAnim = false;
+        }
     }
 
 

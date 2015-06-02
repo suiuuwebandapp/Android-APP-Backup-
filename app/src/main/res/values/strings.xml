@@ -176,6 +176,7 @@
     <string name="all_attention_dynamic_title">title</string>
     <string name="all_attention_dynamic_content">content</string>
     <string name="all_attention_dynamic_contentDescription">main show image</string>
+    <string name="noChatHistory">当前没有聊天信息</string>
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>

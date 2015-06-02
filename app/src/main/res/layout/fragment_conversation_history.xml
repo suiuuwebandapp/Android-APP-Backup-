@@ -13,4 +13,14 @@
         android:background="@android:color/transparent"
         android:divider="@null"
         />
+    <TextView
+        android:id="@+id/tv_nochat_history"
+        android:textSize="@dimen/layout_20sp"
+        android:textColor="@color/text_select_true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/noChatHistory"
+        android:gravity="center"
+        android:visibility="gone"
+        />
 </LinearLayout>
