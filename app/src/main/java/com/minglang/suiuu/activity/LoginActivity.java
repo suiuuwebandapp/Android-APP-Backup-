@@ -472,9 +472,9 @@ public class LoginActivity extends BaseActivity {
         weiBoLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                type = "3";
-
-                mController.doOauthVerify(LoginActivity.this, SHARE_MEDIA.SINA, new MicroBlog4UMAuthListener());
+//                type = "3";
+//                mController.doOauthVerify(LoginActivity.this, SHARE_MEDIA.SINA, new MicroBlog4UMAuthListener());
+                Toast.makeText(LoginActivity.this, "微博暂未接通", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1353,6 +1353,7 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onComplete(int status, Map<String, Object> info) {
+            DeBugLog.i(TAG, "status:" + status);
             if (status == 200 && info != null) {
                 DeBugLog.i(TAG, "微博返回数据为:" + info.toString());
             } else {

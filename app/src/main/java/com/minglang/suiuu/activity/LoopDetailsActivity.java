@@ -112,6 +112,42 @@ public class LoopDetailsActivity extends BaseActivity {
     }
 
     /**
+     * 初始化方法
+     */
+    @SuppressWarnings("deprecation")
+    private void initView() {
+        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.loop_details_root_layout);
+        if (isKITKAT) {
+            if (navigationBarHeight <= 0) {
+                rootLayout.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            }
+        }
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(true);
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+
+        back = (ImageView) findViewById(R.id.loop_details_back);
+        title = (TextView) findViewById(R.id.loop_details_title);
+        addAttention = (TextView) findViewById(R.id.loop_details_add_attention);
+
+        loopDetailsGridView = (PullToRefreshStaggeredView) findViewById(R.id.loopDetailsGridView);
+        loopDetailsGridView.setMode(PullToRefreshBase.Mode.BOTH);
+
+        loopDetailsAdapter = new LoopDetailsAdapter(this);
+        loopDetailsAdapter.setScreenParams(screenWidth, screenHeight);
+        loopDetailsGridView.setAdapter(loopDetailsAdapter);
+
+        reload = (TextView) findViewById(R.id.loopDetailsReload);
+        textProgressDialog = new TextProgressDialog(context);
+        textProgressDialog.setMessage(getResources().getString(R.string.pull_to_refresh_footer_refreshing_label));
+    }
+
+    /**
      * 控件动作
      */
     private void ViewAction() {
@@ -144,7 +180,7 @@ public class LoopDetailsActivity extends BaseActivity {
                 }
 
                 page = 1;
-                getInternetServiceData(page);
+                getData();
             }
         });
 
@@ -250,42 +286,6 @@ public class LoopDetailsActivity extends BaseActivity {
     }
 
     /**
-     * 初始化方法
-     */
-    @SuppressWarnings("deprecation")
-    private void initView() {
-        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.loop_details_root_layout);
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                rootLayout.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        }
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(true);
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
-
-        back = (ImageView) findViewById(R.id.loop_details_back);
-        title = (TextView) findViewById(R.id.loop_details_title);
-        addAttention = (TextView) findViewById(R.id.loop_details_add_attention);
-
-        loopDetailsGridView = (PullToRefreshStaggeredView) findViewById(R.id.loopDetailsGridView);
-        loopDetailsGridView.setMode(PullToRefreshBase.Mode.BOTH);
-
-        loopDetailsAdapter = new LoopDetailsAdapter(this);
-        loopDetailsAdapter.setScreenParams(screenWidth, screenHeight);
-        loopDetailsGridView.setAdapter(loopDetailsAdapter);
-
-        reload = (TextView) findViewById(R.id.loopDetailsReload);
-        textProgressDialog = new TextProgressDialog(context);
-        textProgressDialog.setMessage(getResources().getString(R.string.pull_to_refresh_footer_refreshing_label));
-    }
-
-    /**
      * 隐藏Dialog
      */
     private void showOrHideDialog() {
@@ -331,16 +331,19 @@ public class LoopDetailsActivity extends BaseActivity {
                 LoopDetailsData loopDetailsData = loopDetails.getData();
                 List<LoopDetailsDataList> list = loopDetailsData.getData();
                 if (list != null && list.size() > 0) {
+                    reload.setVisibility(View.INVISIBLE);
                     listAll.addAll(list);
                     loopDetailsAdapter.setDataList(listAll);
                 } else {
                     failureComputePage();
+                    reload.setVisibility(View.VISIBLE);
                     Toast.makeText(context, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                 }
                 attentionId = loopDetailsData.getAttentionId();
                 isAttention();
             } catch (Exception e) {
                 failureComputePage();
+                reload.setVisibility(View.VISIBLE);
                 Toast.makeText(LoopDetailsActivity.this,
                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 DeBugLog.e(TAG, "数据请求失败:" + e.getMessage());
@@ -351,6 +354,7 @@ public class LoopDetailsActivity extends BaseActivity {
         public void onFailure(HttpException error, String msg) {
             showOrHideDialog();
             failureComputePage();
+            reload.setVisibility(View.VISIBLE);
             Toast.makeText(LoopDetailsActivity.this, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
             DeBugLog.e(TAG, "圈子详细列表请求失败:" + msg);
         }

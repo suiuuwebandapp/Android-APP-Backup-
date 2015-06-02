@@ -1,111 +1,111 @@
 <resources>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="hello_world" translatable="false">Hello world!</string>
+    <string name="action_settings" translatable="false">Settings</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
     <string name="login">Login</string>
     <string name="register">Register</string>
 
-    <string name="title1">主页</string>
-    <string name="title2">圈子</string>
-    <string name="title3">随游</string>
-    <string name="title4">会话</string>
-    <string name="sendMsg">M</string>
-    <string name="nickname">昵称</string>
-    <string name="sendNewPost">发布新帖子</string>
+    <string name="title1" translatable="false">主页</string>
+    <string name="title2" translatable="false">圈子</string>
+    <string name="title3" translatable="false">随游</string>
+    <string name="title4" translatable="false">会话</string>
+    <string name="sendMsg" translatable="false">M</string>
+    <string name="nickname" translatable="false">昵称</string>
+    <string name="sendNewPost" translatable="false">发布新帖子</string>
 
-    <string name="collection">收藏</string>
+    <string name="collection" translatable="false">收藏</string>
 
-    <string name="themes">主题</string>
-    <string name="areas">地区</string>
+    <string name="themes" translatable="false">主题</string>
+    <string name="areas" translatable="false">地区</string>
 
-    <string name="blankNickName">暂无称呼</string>
-    <string name="blankArea">暂无地区</string>
-    <string name="signature">个性签名</string>
-    <string name="blankSignature">暂无个性签名</string>
-    <string name="blankContent">暂无详细信息</string>
-    <string name="footprint">我的足迹</string>
-    <string name="route">路线</string>
+    <string name="blankNickName" translatable="false">暂无称呼</string>
+    <string name="blankArea" translatable="false">暂无地区</string>
+    <string name="signature" translatable="false">个性签名</string>
+    <string name="blankSignature" translatable="false">暂无个性签名</string>
+    <string name="blankContent" translatable="false">暂无详细信息</string>
+    <string name="footprint" translatable="false">我的足迹</string>
+    <string name="route" translatable="false">路线</string>
 
-    <string name="attention">关注</string>
-    <string name="MyAttention">我的关注</string>
-    <string name="fans">粉丝</string>
-    <string name="thirdParty">绑定的第三方账号</string>
-    <string name="setting">设置</string>
-    <string name="personalSetting">个人设置</string>
-    <string name="normalSetting">通用设置</string>
-    <string name="clickHead">点击修改头像</string>
-    <string name="personalInfo">个人信息</string>
+    <string name="attention" translatable="false">关注</string>
+    <string name="MyAttention">My Attention</string>
+    <string name="fans" translatable="false">粉丝</string>
+    <string name="thirdParty" translatable="false">绑定的第三方账号</string>
+    <string name="setting" translatable="false">设置</string>
+    <string name="personalSetting" translatable="false">个人设置</string>
+    <string name="normalSetting" translatable="false">通用设置</string>
+    <string name="clickHead" translatable="false">点击修改头像</string>
+    <string name="personalInfo" translatable="false">个人信息</string>
 
-    <string name="nickname_hint">昵称</string>
-    <string name="Location_hint">所在地</string>
-    <string name="trade_hint">职业</string>
-    <string name="Signature_hint">个性签名</string>
+    <string name="nickname_hint" translatable="false">昵称</string>
+    <string name="Location_hint">The location</string>
+    <string name="trade_hint" translatable="false">职业</string>
+    <string name="Signature_hint">Signature hint</string>
 
-    <string name="NewRemind">新提醒</string>
-    <string name="newAt">新@我的</string>
-    <string name="newComment">新评论</string>
-    <string name="newReply">新回复</string>
-    <string name="newAttention">新关注</string>
-    <string name="post">帖子</string>
-    <string name="back">返回</string>
-    <string name="confirm">确认</string>
-    <string name="AllPicture">所有图片</string>
-    <string name="gender">性别</string>
-    <string name="location">所在地</string>
-    <string name="signature2">签名</string>
-    <string name="feedback">反馈</string>
-    <string name="send">发送</string>
-    <string name="feedback_hint">请输入要反馈的内容</string>
-    <string name="contactUs">联系我们</string>
-    <string name="save">保存</string>
-    <string name="footprint0">足迹 0</string>
-    <string name="attention_other">关注TA</string>
-    <string name="TwentyThree">23</string>
-    <string name="clickPraise">点赞</string>
-    <string name="comment">评论</string>
+    <string name="NewRemind">New Remind</string>
+    <string name="newAt" translatable="false">新@我的</string>
+    <string name="newComment" translatable="false">新评论</string>
+    <string name="newReply" translatable="false">新回复</string>
+    <string name="newAttention" translatable="false">新关注</string>
+    <string name="post" translatable="false">帖子</string>
+    <string name="back" translatable="false">返回</string>
+    <string name="confirm" translatable="false">确认</string>
+    <string name="AllPicture">All pictures</string>
+    <string name="gender" translatable="false">性别</string>
+    <string name="location" translatable="false">所在地</string>
+    <string name="signature2" translatable="false">签名</string>
+    <string name="feedback" translatable="false">反馈</string>
+    <string name="send" translatable="false">发送</string>
+    <string name="feedback_hint" translatable="false">请输入要反馈的内容</string>
+    <string name="contactUs" translatable="false">联系我们</string>
+    <string name="save" translatable="false">保存</string>
+    <string name="footprint0" translatable="false">足迹 0</string>
+    <string name="attention_other" translatable="false">关注TA</string>
+    <string name="TwentyThree" translatable="false">23</string>
+    <string name="clickPraise" translatable="false">点赞</string>
+    <string name="comment" translatable="false">评论</string>
 
-    <string name="user">用户</string>
+    <string name="user" translatable="false">用户</string>
 
-    <string name="complete">完成</string>
-    <string name="Singapore_n">新加坡新加坡新加坡新加坡新加坡新加坡</string>
-    <string name="Jeju_Island">济州岛</string>
-    <string name="editor">修改</string>
-    <string name="search_question">写下你的问题</string>
-    <string name="question_description">问题的描述</string>
-    <string name="show_location">显示你的位置</string>
-    <string name="image_theme">想个标题吧</string>
-    <string name="activity_description">活动描述</string>
-    <string name="picture_description">图片描述</string>
-    <string name="choice_picture">请至少选择一张图片</string>
-    <string name="sure_delete">确认删除</string>
+    <string name="complete" translatable="false">完成</string>
+    <string name="Singapore_n">aaaaaaaaaaaaaaaaaaa</string>
+    <string name="Jeju_Island">Jeju Island</string>
+    <string name="editor" translatable="false">修改</string>
+    <string name="search_question" translatable="false">写下你的问题</string>
+    <string name="question_description" translatable="false">问题的描述</string>
+    <string name="show_location" translatable="false">显示你的位置</string>
+    <string name="image_theme" translatable="false">想个标题吧</string>
+    <string name="activity_description" translatable="false">活动描述</string>
+    <string name="picture_description" translatable="false">图片描述</string>
+    <string name="choice_picture" translatable="false">请至少选择一张图片</string>
+    <string name="sure_delete" translatable="false">确认删除</string>
 
-    <string name="load_wait">正在加载，请稍候&#8230;</string>
-    <string name="login_wait">正在登陆，请稍候&#8230;</string>
-    <string name="register_wait">正在注册，请稍候&#8230;</string>
-    <string name="choice_area">请选择地区</string>
-    <string name="choice_theme">请选择主题</string>
-    <string name="theme_is_empty">主题不能为空</string>
-    <string name="area_is_empty">地区不能为空</string>
-    <string name="ask_description_is_empty">问题描述不能为空</string>
-    <string name="activity_description_is_empty">活动描述不能为空</string>
-    <string name="your_ask_is_empty">你的问题不能为空</string>
-    <string name="title_is_empty">你的标题不能为空</string>
-    <string name="article_publish_success">文章发布成功</string>
-    <string name="article_publish_failure">文章发布失败</string>
-    <string name="article_update_success">文章更新成功</string>
+    <string name="load_wait" translatable="false">正在加载，请稍候&#8230;</string>
+    <string name="login_wait" translatable="false">正在登陆，请稍候&#8230;</string>
+    <string name="register_wait" translatable="false">正在注册，请稍候&#8230;</string>
+    <string name="choice_area" translatable="false">请选择地区</string>
+    <string name="choice_theme" translatable="false">请选择主题</string>
+    <string name="theme_is_empty" translatable="false">主题不能为空</string>
+    <string name="area_is_empty" translatable="false">地区不能为空</string>
+    <string name="ask_description_is_empty" translatable="false">问题描述不能为空</string>
+    <string name="activity_description_is_empty" translatable="false">活动描述不能为空</string>
+    <string name="your_ask_is_empty" translatable="false">你的问题不能为空</string>
+    <string name="title_is_empty" translatable="false">你的标题不能为空</string>
+    <string name="article_publish_success" translatable="false">文章发布成功</string>
+    <string name="article_publish_failure" translatable="false">文章发布失败</string>
+    <string name="article_update_success" translatable="false">文章更新成功</string>
 
     <string name="UnknownArea">UnknownArea</string>
-    <string name="title">标题</string>
-    <string name="attentionDynamic">关注动态</string>
-    <string name="more">更多</string>
-    <string name="today_star">今日之星</string>
-    <string name="loopDynamic">圈子动态</string>
+    <string name="title" translatable="false">标题</string>
+    <string name="attentionDynamic" translatable="false">关注动态</string>
+    <string name="more" translatable="false">更多</string>
+    <string name="today_star" translatable="false">今日之星</string>
+    <string name="loopDynamic" translatable="false">圈子动态</string>
     <string name="UnknownName">UnknownName</string>
-    <string name="noInformation">暂无信息</string>
-    <string name="popularRecommendation">热门推荐</string>
+    <string name="noInformation" translatable="false">暂无信息</string>
+    <string name="popularRecommendation" translatable="false">热门推荐</string>
 
     <string name="please_input_email_or_phone_number">Please enter a Email or phone number</string>
     <string name="please_input_password">Please enter a password</string>
@@ -114,42 +114,42 @@
     <string name="please_input_confirm_password">Please enter a confirmation password</string>
     <string name="please_input_obtain_captcha">Please enter the verification code</string>
 
-    <string name="DataError">数据获取错误，请稍候再试！</string>
-    <string name="NetworkAnomaly">网络异常，请检查后再试！</string>
-    <string name="NoData">暂无更多数据！</string>
+    <string name="DataError">Data acquisition error, please try again later!</string>
+    <string name="NetworkAnomaly">Network exception, please check and try again!</string>
+    <string name="NoData">No more data!</string>
 
-    <string name="all_attention">关注动态</string>
-    <string name="thisArticNoComment">该文章暂时没有评论</string>
+    <string name="all_attention" translatable="false">关注动态</string>
+    <string name="thisArticNoComment" translatable="false">该文章暂时没有评论</string>
 
-    <string name="addAttentionSuccess">添加关注成功!</string>
-    <string name="addAttentionFail">添加关注失败！</string>
-    <string name="pull_to_refresh_pull_label">下拉刷新</string>
-    <string name="pull_to_refresh_release_label">松开后刷新</string>
-    <string name="pull_to_refresh_refreshing_label">刷新\u2026</string>
-    <string name="pull_to_refresh_footer_release_label">松开后加载</string>
-    <string name="pull_to_refresh_footer_pull_label">上拉加载更多</string>
-    <string name="pull_to_refresh_footer_refreshing_label">加载中\u2026</string>
-    <string name="loadDataComplete">数据加载完毕,点击刷新</string>
+    <string name="addAttentionSuccess" translatable="false">添加关注成功!</string>
+    <string name="addAttentionFail" translatable="false">添加关注失败！</string>
+    <string name="pull_to_refresh_pull_label">Drop down refresh</string>
+    <string name="pull_to_refresh_release_label">Release rear refresh</string>
+    <string name="pull_to_refresh_refreshing_label">refresh\u2026</string>
+    <string name="pull_to_refresh_footer_release_label">Release rear loading</string>
+    <string name="pull_to_refresh_footer_pull_label">Pull on more</string>
+    <string name="pull_to_refresh_footer_refreshing_label">loading\u2026</string>
+    <string name="loadDataComplete" translatable="false">Data load, click refresh</string>
 
-    <string name="man">男</string>
-    <string name="woman">女</string>
+    <string name="man" translatable="false">男</string>
+    <string name="woman" translatable="false">女</string>
 
-    <string name="country">国家</string>
-    <string name="city">城市</string>
-    <string name="local">请选择所在地</string>
-    <string name="countryDetails">请选择国家</string>
-    <string name="cityDetails">请选择城市</string>
+    <string name="country" translatable="false">国家</string>
+    <string name="city" translatable="false">城市</string>
+    <string name="local" translatable="false">请选择所在地</string>
+    <string name="countryDetails" translatable="false">请选择国家</string>
+    <string name="cityDetails" translatable="false">请选择城市</string>
 
-    <string name="next">下一步</string>
-    <string name="a">A</string>
-    <string name="people_number">人数</string>
-    <string name="type">类型</string>
-    <string name="price">价格</string>
-    <string name="refreshData">点击重新加载数据</string>
+    <string name="next" translatable="false">下一步</string>
+    <string name="a" translatable="false">A</string>
+    <string name="people_number" translatable="false">人数</string>
+    <string name="type" translatable="false">类型</string>
+    <string name="price" translatable="false">价格</string>
+    <string name="refreshData" translatable="false">点击重新加载数据</string>
     <string name="openAsk">openSuiuuAsk</string>
     <string name="openRemember">openSuiuuRemember</string>
     <string name="openShoot">openSuiuuShoot</string>
-    <string name="please_enter_search_content">请输入搜索内容</string>
+    <string name="please_enter_search_content" translatable="false">请输入搜索内容</string>
     <string name="homePage">HomePage</string>
     <string name="china">china</string>
     <string name="chinaCode">+86</string>
@@ -176,7 +176,7 @@
     <string name="all_attention_dynamic_title">title</string>
     <string name="all_attention_dynamic_content">content</string>
     <string name="all_attention_dynamic_contentDescription">main show image</string>
-    <string name="noChatHistory">当前没有聊天信息</string>
+    <string name="noChatHistory" translatable="false">当前没有聊天信息</string>
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>
@@ -250,210 +250,210 @@
     <string name="session">会话</string>
     <string name="address_book">通讯录</string>
     <string name="now_refresh_list">正在刷新联系人</string>
-    <string name="Application_and_notify">申请与通知</string>
-    <string name="group_chat">群聊</string>
-    <string name="add_friend">添加好友</string>
-    <string name="search">搜索</string>
-    <string name="black_item">黑名单</string>
-    <string name="diagnose">诊断</string>
-    <string name="Current_version">当前版本</string>
-    <string name="Not_Set">未设置</string>
-    <string name="Upload_the_log">上传日志中</string>
-    <string name="The_new_group_chat">新建群组</string>
-    <string name="group_name">群聊名称</string>
-    <string name="Group_chat_profile">群聊简介</string>
-    <string name="Whether_the_public">是否公开</string>
-    <string name="Open_group_members_invited">开放群成员邀请</string>
-    <string name="Open_group_chat">公开的群聊</string>
-    <string name="blacklist">黑名单列表</string>
-    <string name="Empty_the_chat_record">清空聊天记录</string>
-    <string name="Shielding_of_the_message">屏蔽群消息</string>
-    <string name="The_dissolution_of_chatting">解散群聊</string>
-    <string name="Select_the_contact">选择联系人</string>
-    <string name="Group_chat_information">群聊资料</string>
-    <string name="Group_of_Lord">群主</string>
-    <string name="Introduction">简介</string>
-    <string name="To_join_the_chat">加入群聊</string>
-    <string name="user_name">用户名</string>
-    <string name="password">密码</string>
-    <string name="confirmpassword">确认密码</string>
-    <string name="downwaiting">正在下载文件请稍后</string>
-    <string name="mute">静音</string>
-    <string name="Hands_free">免提</string>
-    <string name="hang_up">挂断</string>
-    <string name="answer">接听</string>
-    <string name="unable_to_connect">不能连接到服务器</string>
-    <string name="newchat">新建聊天</string>
-    <string name="agree">同意</string>
-    <string name="Group_chat">群聊:</string>
-    <string name="not_download">未下载:</string>
-    <string name="Please_enter_a_username">请输入用户名</string>
-    <string name="is_down_please_wait">正在下载视频请稍候</string>
-    <string name="Exit_the_group_chat">退出群聊</string>
-    <string name="not_add_myself">不能添加自己</string>
-    <string name="This_user_is_already_your_friend">此用户已是你的好友</string>
-    <string name="Add_a_friend">加个好友呗</string>
-    <string name="send_successful">发送请求成功,等待对方验证</string>
-    <string name="Request_add_buddy_failure">请求添加好友失败:</string>
-    <string name="Network_error">网络出错</string>
-    <string name="Making_sure_your_location">正在确定你的位置&#8230;</string>
+    <string name="Application_and_notify">Application and notification</string>
+    <string name="group_chat" translatable="false">群聊</string>
+    <string name="add_friend" translatable="false">添加好友</string>
+    <string name="search" translatable="false">搜索</string>
+    <string name="black_item" translatable="false">黑名单</string>
+    <string name="diagnose" translatable="false">诊断</string>
+    <string name="Current_version">Current version</string>
+    <string name="Not_Set">No set</string>
+    <string name="Upload_the_log" translatable="false">上传日志中</string>
+    <string name="The_new_group_chat">The new create group</string>
+    <string name="group_name" translatable="false">群聊名称</string>
+    <string name="Group_chat_profile">Group chat introduction</string>
+    <string name="Whether_the_public" translatable="false">是否公开</string>
+    <string name="Open_group_members_invited">Open group members invited</string>
+    <string name="Open_group_chat">Open group chat</string>
+    <string name="blacklist" translatable="false">黑名单列表</string>
+    <string name="Empty_the_chat_record">Clear chats history</string>
+    <string name="Shielding_of_the_message">Shielding of the group message</string>
+    <string name="The_dissolution_of_chatting">The dissolution of chatting</string>
+    <string name="Select_the_contact">Select the contact</string>
+    <string name="Group_chat_information">Group chat data</string>
+    <string name="Group_of_Lord">group of load</string>
+    <string name="Introduction">Introduction</string>
+    <string name="To_join_the_chat" translatable="false">加入群聊</string>
+    <string name="user_name" translatable="false">用户名</string>
+    <string name="password" translatable="false">密码</string>
+    <string name="confirmpassword" translatable="false">确认密码</string>
+    <string name="downwaiting" translatable="false">正在下载文件请稍后</string>
+    <string name="mute" translatable="false">静音</string>
+    <string name="Hands_free">hands free</string>
+    <string name="hang_up" translatable="false">挂断</string>
+    <string name="answer" translatable="false">接听</string>
+    <string name="unable_to_connect" translatable="false">不能连接到服务器</string>
+    <string name="newchat" translatable="false">新建聊天</string>
+    <string name="agree" translatable="false">同意</string>
+    <string name="Group_chat">Group chat:</string>
+    <string name="not_download" translatable="false">未下载:</string>
+    <string name="Please_enter_a_username">Please enter a user name</string>
+    <string name="is_down_please_wait" translatable="false">正在下载视频请稍候</string>
+    <string name="Exit_the_group_chat">Exit group chat</string>
+    <string name="not_add_myself" translatable="false">不能添加自己</string>
+    <string name="This_user_is_already_your_friend" translatable="false">此用户已是你的好友</string>
+    <string name="Add_a_friend">make friend</string>
+    <string name="send_successful" translatable="false">发送请求成功,等待对方验证</string>
+    <string name="Request_add_buddy_failure">Request to add friends failed:</string>
+    <string name="Network_error">Network error!</string>
+    <string name="Making_sure_your_location">making sure your location&#8230;</string>
     <string name="please_check">key 验证出错! 请在 AndroidManifest.xml 文件中检查 key 设置</string>
-    <string name="expression">[表情]</string>
-    <string name="Removed_from_the_failure">移出失败</string>
-    <string name="be_removing">正在移出&#8230;</string>
-    <string name="call_duration">通话时长</string>
+    <string name="expression" translatable="false">[表情]</string>
+    <string name="Removed_from_the_failure">Move out of failure</string>
+    <string name="be_removing" translatable="false">正在移出&#8230;</string>
+    <string name="call_duration" translatable="false">通话时长</string>
     <string name="Refused">已拒绝</string>
-    <string name="The_other_party_has_refused_to">对方已拒绝</string>
-    <string name="The_other_is_not_online">对方不在线</string>
-    <string name="The_other_is_on_the_phone">对方正在通话中</string>
-    <string name="The_other_party_did_not_answer">对方未接听</string>
-    <string name="did_not_answer">未接听</string>
-    <string name="Has_been_cancelled">已取消</string>
-    <string name="unable_to_get_location">无法获取到您的位置信息!</string>
-    <string name="not_connect_to_server">尚未连接至服务器，请稍后重试</string>
-    <string name="sd_card_does_not_exist">SD卡不存在，不能拍照</string>
-    <string name="cant_find_pictures">找不到图片</string>
-    <string name="File_does_not_exist">文件不存在</string>
-    <string name="The_file_is_not_greater_than_10_m">文件不能大于10M</string>
-    <string name="Whether_to_empty_all_chats">是否清空所有聊天记录</string>
-    <string name="Send_voice_need_sdcard_support">发送语音需要sdcard支持</string>
-    <string name="Recording_without_permission">无录音权限</string>
-    <string name="The_recording_time_is_too_short">录音时间太短</string>
-    <string name="send_failure_please">发送失败，请检测服务器是否连接</string>
-    <string name="Move_into_blacklist_success">移入黑名单成功</string>
-    <string name="Move_into_blacklist_failure">移入黑名单失败</string>
-    <string name="you_are_group">你被群创建者从此群中移除</string>
-    <string name="the_current_group">当前群聊已被群创建者解散</string>
-    <string name="Cant_chat_with_yourself">不能和自己聊天</string>
-    <string name="deleting">正在删除&#8230;</string>
-    <string name="Delete_failed">删除失败:</string>
-    <string name="Is_moved_into_blacklist">正在移入黑名单&#8230;</string>
-    <string name="Log_uploaded_successfully">日志上传成功</string>
-    <string name="Log_Upload_failed">log上传失败</string>
-    <string name="get_failed_please_check">获取失败,请检查网络或稍后再试</string>
-    <string name="people">人)</string>
-    <string name="being_added">正在添加&#8230;</string>
-    <string name="is_quit_the_group_chat">正在退出群聊&#8230;</string>
-    <string name="chatting_is_dissolution">正在解散群聊&#8230;</string>
-    <string name="are_empty_group_of_news">正在清空群消息&#8230;</string>
-    <string name="is_modify_the_group_name">正在修改群名称&#8230;</string>
-    <string name="Modify_the_group_name_successful">修改群名称成功</string>
-    <string name="change_the_group_name_failed_please">改变群名称失败，请检查网络或稍后重试</string>
-    <string name="Are_moving_to_blacklist">正在移入至黑名单</string>
-    <string name="failed_to_move_into">移入黑名单失败,请检查网络或稍后重试</string>
-    <string name="Exit_the_group_chat_failure">退出群聊失败:</string>
-    <string name="Dissolve_group_chat_tofail">解散群聊失败:</string>
-    <string name="Add_group_members_fail">添加群成员失败:</string>
-    <string name="Is_unblock">正在解除屏蔽&#8230;</string>
-    <string name="remove_group_of">解除群屏蔽失败，请检查网络或稍后重试</string>
-    <string name="group_is_blocked">正在屏蔽群组&#8230;</string>
-    <string name="group_of_shielding">群屏蔽失败，请检查网络或稍后重试</string>
-    <string name="sure_to_empty_this">确定清空此群的聊天记录吗？</string>
-    <string name="The_delete_button_is_clicked">删除按钮被点击</string>
-    <string name="Add_a_button_was_clicked">添加按钮被点击</string>
-    <string name="not_delete_myself">不能删除自己</string>
-    <string name="Are_removed">正在移除&#8230;</string>
-    <string name="confirm_the_members">确认将此成员加入至此群黑名单?</string>
-    <string name="Failed_to_get_group_chat_information">获取群聊信息失败:</string>
-    <string name="Is_sending_a_request">正在发送请求&#8230;</string>
-    <string name="Request_to_join">请求加入</string>
-    <string name="send_the_request_is">发送请求成功，等待群主同意</string>
-    <string name="Join_the_group_chat">加入群聊成功</string>
-    <string name="Failed_to_join_the_group_chat">加入群聊失败:</string>
-    <string name="temporary_does_not">暂不支持大于10M的视频！</string>
-    <string name="Video_footage">拍摄录像</string>
-    <string name="User_name_cannot_be_empty">用户名不能为空！</string>
-    <string name="Password_cannot_be_empty">密码不能为空！</string>
-    <string name="please_set_the_current">请设置当前用户的昵称\n为了ios离线推送不是userid而是nick，详情见注释</string>
-    <string name="Is_landing">正在登陆&#8230;</string>
-    <string name="list_is_for">正在获取好友和群聊列表&#8230;</string>
-    <string name="login_failure_failed">登录失败: 获取好友或群聊失败</string>
-    <string name="Login_failed">登录失败:</string>
-    <string name="receive_the_passthrough">收到透传：action：</string>
-    <string name="have_you_removed">已把你从他好友列表里移除</string>
-    <string name="Less_than_chat_server_connection">连接不到聊天服务器</string>
-    <string name="the_current_network">当前网络不可用，请检查网络设置</string>
-    <string name="Invite_you_to_join_a_group_chat">邀请你加入了群聊</string>
-    <string name="Agreed_to_your_group_chat_application">同意了你的群聊申请</string>
-    <string name="Logoff_notification">下线通知</string>
-    <string name="Remove_the_notification">移除通知</string>
-    <string name="Group_name_cannot_be_empty">群组名称不能为空</string>
-    <string name="Is_to_create_a_group_chat">正在创建群聊&#8230;</string>
-    <string name="Failed_to_create_groups">创建群组失败:</string>
-    <string name="The_video_to_start">录像开始</string>
-    <string name="Whether_to_send">是否发送？</string>
-    <string name="Open_the_equipment_failure">打开设备失败!</string>
-    <string name="Confirm_password_cannot_be_empty">确认密码不能为空!</string>
-    <string name="Two_input_password">两次输入的密码不一致，请重新输入!</string>
-    <string name="Is_the_registered">正在注册&#8230;</string>
-    <string name="Registered_successfully">注册成功</string>
-    <string name="network_anomalies">网络异常，请检查网络！</string>
-    <string name="User_already_exists">用户已存在！</string>
-    <string name="registration_failed_without_permission">注册失败，无权限！</string>
-    <string name="Registration_failed">注册失败:</string>
-    <string name="Are_logged_out">正在退出登录..</string>
-    <string name="Download_the_pictures">下载图片: 0%</string>
-    <string name="Download_the_pictures_new">下载图片:</string>
-    <string name="Failed_to_download_file">下载文件失败:</string>
-    <string name="Version_number_is_wrong">版本号错误</string>
-    <string name="Are_connected_to_each_other">正在连接对方&#8230;</string>
-    <string name="Is_not_yet_connected_to_the_server">尚未连接至服务器</string>
-    <string name="have_connected_with">已经和对方建立连接，等待对方接受&#8230;</string>
-    <string name="In_the_call">通话中&#8230;</string>
-    <string name="The_other_party_refused_to_accept">对方拒绝接受！&#8230;</string>
-    <string name="Connection_failure">连接建立失败！&#8230;</string>
-    <string name="The_other_party_is_not_online">对方不在线，请稍后再拨&#8230;</string>
-    <string name="The_other_is_on_the_phone_please">对方正在通话中，请稍后再拨</string>
-    <string name="The_other_is_hang_up">对方已经挂断</string>
-    <string name="The_other_party_did_not_answer_new">对方未接听</string>
-    <string name="Into_the_blacklist">移入到黑名单？</string>
-    <string name="Have_downloaded">已下载</string>
-    <string name="Did_not_download">未下载</string>
-    <string name="Has_agreed_to_your_friend_request">已同意你的好友请求</string>
-    <string name="Request_to_add_you_as_a_friend">请求加你为好友</string>
-    <string name="Apply_to_the_group_of">申请加入群：</string>
-    <string name="Has_agreed_to">已同意</string>
-    <string name="Has_refused_to">已拒绝</string>
-    <string name="Are_agree_with">正在同意&#8230;</string>
-    <string name="Agree_with_failure">同意失败:</string>
-    <string name="Is_download_voice_click_later">正在下载语音，稍后点击</string>
-    <string name="Send_the_following_pictures">发送以下图片？</string>
-    <string name="search_new">搜</string>
+    <string name="The_other_party_has_refused_to" translatable="false">对方已拒绝</string>
+    <string name="The_other_is_not_online">The other is bot online</string>
+    <string name="The_other_is_on_the_phone" translatable="false">对方正在通话中</string>
+    <string name="The_other_party_did_not_answer" translatable="false">对方未接听</string>
+    <string name="did_not_answer" translatable="false">未接听</string>
+    <string name="Has_been_cancelled">Cancelled</string>
+    <string name="unable_to_get_location" translatable="false">无法获取到您的位置信息!</string>
+    <string name="not_connect_to_server" translatable="false">尚未连接至服务器，请稍后重试</string>
+    <string name="sd_card_does_not_exist" translatable="false">SD卡不存在，不能拍照</string>
+    <string name="cant_find_pictures" translatable="false">找不到图片</string>
+    <string name="File_does_not_exist">The file does not exist</string>
+    <string name="The_file_is_not_greater_than_10_m">The file is not greater than 10M </string>
+    <string name="Whether_to_empty_all_chats" translatable="false">是否清空所有聊天记录</string>
+    <string name="Send_voice_need_sdcard_support">Send voice need sdcard support</string>
+    <string name="Recording_without_permission">No recording authority</string>
+    <string name="The_recording_time_is_too_short" translatable="false">录音时间太短</string>
+    <string name="send_failure_please" translatable="false">发送失败，请检测服务器是否连接</string>
+    <string name="Move_into_blacklist_success">Move into blacklist success</string>
+    <string name="Move_into_blacklist_failure">Move into blacklist failure</string>
+    <string name="you_are_group" translatable="false">你被群创建者从此群中移除</string>
+    <string name="the_current_group" translatable="false">当前群聊已被群创建者解散</string>
+    <string name="Cant_chat_with_yourself">Can\'t chat with myself</string>
+    <string name="deleting" translatable="false">正在删除&#8230;</string>
+    <string name="Delete_failed">Delete failure:</string>
+    <string name="Is_moved_into_blacklist">Is moving into the blacklist &#8230;</string>
+    <string name="Log_uploaded_successfully">log upload success</string>
+    <string name="Log_Upload_failed">log upload failed</string>
+    <string name="get_failed_please_check" translatable="false">获取失败,请检查网络或稍后再试</string>
+    <string name="people" translatable="false">人)</string>
+    <string name="being_added" translatable="false">正在添加&#8230;</string>
+    <string name="is_quit_the_group_chat" translatable="false">正在退出群聊&#8230;</string>
+    <string name="chatting_is_dissolution" translatable="false">正在解散群聊&#8230;</string>
+    <string name="are_empty_group_of_news" translatable="false">正在清空群消息&#8230;</string>
+    <string name="is_modify_the_group_name" translatable="false">正在修改群名称&#8230;</string>
+    <string name="Modify_the_group_name_successful">Modify the group name successful</string>
+    <string name="change_the_group_name_failed_please" translatable="false">改变群名称失败，请检查网络或稍后重试</string>
+    <string name="Are_moving_to_blacklist">Is moving to the blacklist</string>
+    <string name="failed_to_move_into" translatable="false">移入黑名单失败,请检查网络或稍后重试</string>
+    <string name="Exit_the_group_chat_failure">Exit group chat failure:</string>
+    <string name="Dissolve_group_chat_tofail">Dissolution group chat failure:</string>
+    <string name="Add_group_members_fail">Failed to add group members:</string>
+    <string name="Is_unblock">Is being lifted &#8230;</string>
+    <string name="remove_group_of" translatable="false">解除群屏蔽失败，请检查网络或稍后重试</string>
+    <string name="group_is_blocked" translatable="false">正在屏蔽群组&#8230;</string>
+    <string name="group_of_shielding" translatable="false">群屏蔽失败，请检查网络或稍后重试</string>
+    <string name="sure_to_empty_this" translatable="false">确定清空此群的聊天记录吗？</string>
+    <string name="The_delete_button_is_clicked">The delete button is clicked</string>
+    <string name="Add_a_button_was_clicked">Add buttons to be clicked</string>
+    <string name="not_delete_myself" translatable="false">不能删除自己</string>
+    <string name="Are_removed">Removing &#8230;</string>
+    <string name="confirm_the_members" translatable="false">确认将此成员加入至此群黑名单?</string>
+    <string name="Failed_to_get_group_chat_information">Get group chat failure:</string>
+    <string name="Is_sending_a_request">Is sending a request for &#8230;</string>
+    <string name="Request_to_join">Request to join</string>
+    <string name="send_the_request_is" translatable="false">发送请求成功，等待群主同意</string>
+    <string name="Join_the_group_chat">Join group chat successfully</string>
+    <string name="Failed_to_join_the_group_chat">Join group chat failure:</string>
+    <string name="temporary_does_not" translatable="false">暂不支持大于10M的视频！</string>
+    <string name="Video_footage" translatable="false">拍摄录像</string>
+    <string name="User_name_cannot_be_empty" translatable="false">用户名不能为空！</string>
+    <string name="Password_cannot_be_empty">Password can not be empty!</string>
+    <string name="please_set_the_current" translatable="false">请设置当前用户的昵称\n为了ios离线推送不是userid而是nick，详情见注释</string>
+    <string name="Is_landing">is login&#8230;</string>
+    <string name="list_is_for" translatable="false">正在获取好友和群聊列表&#8230;</string>
+    <string name="login_failure_failed" translatable="false">登录失败: 获取好友或群聊失败</string>
+    <string name="Login_failed">login failed</string>
+    <string name="receive_the_passthrough" translatable="false">收到透传：action：</string>
+    <string name="have_you_removed" translatable="false">已把你从他好友列表里移除</string>
+    <string name="Less_than_chat_server_connection">Connect to chat server</string>
+    <string name="the_current_network" translatable="false">当前网络不可用，请检查网络设置</string>
+    <string name="Invite_you_to_join_a_group_chat">Invite you to a group chat</string>
+    <string name="Agreed_to_your_group_chat_application">Agreed to your group chat application</string>
+    <string name="Logoff_notification">logoff notification</string>
+    <string name="Remove_the_notification">Remove notification</string>
+    <string name="Group_name_cannot_be_empty">Group name cannot be empty</string>
+    <string name="Is_to_create_a_group_chat">Creating group chat &#8230;</string>
+    <string name="Failed_to_create_groups">Create group failure:</string>
+    <string name="The_video_to_start" translatable="false">录像开始</string>
+    <string name="Whether_to_send" translatable="false">是否发送？</string>
+    <string name="Open_the_equipment_failure">Open the equipment failure</string>
+    <string name="Confirm_password_cannot_be_empty">Confirm password can not be empty!</string>
+    <string name="Two_input_password" translatable="false">两次输入的密码不一致，请重新输入!</string>
+    <string name="Is_the_registered">Is registering &#8230;</string>
+    <string name="Registered_successfully">Registered success</string>
+    <string name="network_anomalies" translatable="false">网络异常，请检查网络！</string>
+    <string name="User_already_exists" translatable="false">用户已存在！</string>
+    <string name="registration_failed_without_permission" translatable="false">注册失败，无权限！</string>
+    <string name="Registration_failed">Registration failure:</string>
+    <string name="Are_logged_out">Is exiting from the login..</string>
+    <string name="Download_the_pictures">Download pictures: 0%</string>
+    <string name="Download_the_pictures_new">Download pictures:</string>
+    <string name="Failed_to_download_file">Download file failed:</string>
+    <string name="Version_number_is_wrong" translatable="false">版本号错误</string>
+    <string name="Are_connected_to_each_other">Is connecting each other &#8230;</string>
+    <string name="Is_not_yet_connected_to_the_server">Not connected to the server</string>
+    <string name="have_connected_with" translatable="false">已经和对方建立连接，等待对方接受&#8230;</string>
+    <string name="In_the_call">Talking&#8230;</string>
+    <string name="The_other_party_refused_to_accept" translatable="false">对方拒绝接受！&#8230;</string>
+    <string name="Connection_failure">Connection establishment failure!</string>
+    <string name="The_other_party_is_not_online" translatable="false">对方不在线，请稍后再拨&#8230;</string>
+    <string name="The_other_is_on_the_phone_please" translatable="false">对方正在通话中，请稍后再拨</string>
+    <string name="The_other_is_hang_up">The other is hang up</string>
+    <string name="The_other_party_did_not_answer_new" translatable="false">对方未接听</string>
+    <string name="Into_the_blacklist">Move to the blacklist?</string>
+    <string name="Have_downloaded">Download</string>
+    <string name="Did_not_download">Did not download</string>
+    <string name="Has_agreed_to_your_friend_request">Has agreed to your friend request</string>
+    <string name="Request_to_add_you_as_a_friend">Request to add you as a friend</string>
+    <string name="Apply_to_the_group_of">Application for joining group:</string>
+    <string name="Has_agreed_to">Agreed</string>
+    <string name="Has_refused_to">Rejected</string>
+    <string name="Are_agree_with">Is in agreement with &#8230;</string>
+    <string name="Agree_with_failure">Agree to failure:</string>
+    <string name="Is_download_voice_click_later">Is downloading voice, later Click</string>
+    <string name="Send_the_following_pictures">Send the following pictures</string>
+    <string name="search_new" translatable="false">搜</string>
 
-    <string name="Delete_the_contact">删除联系人</string>
-    <string name="Move_into_the_blacklist_new">移入到黑名单</string>
-    <string name="Change_the_group_name">改变群名称</string>
-    <string name="The_dissolution_of_chatting_new">解散群聊</string>
+    <string name="Delete_the_contact">Delete contact</string>
+    <string name="Move_into_the_blacklist_new">Move into the blacklist</string>
+    <string name="Change_the_group_name">Change group name</string>
+    <string name="The_dissolution_of_chatting_new">The dissolution of chatting</string>
 
-    <string name="group_not_found">找不到这个群组</string>
+    <string name="group_not_found" translatable="false">找不到这个群组</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_personal">PersonalActivity</string>
-    <string name="title_activity_attention">AttentionActivity</string>
-    <string name="title_activity_collection">CollectionActivity</string>
-    <string name="title_activity_fans">FansActivity</string>
-    <string name="title_activity_setting">SettingActivity</string>
-    <string name="title_activity_person_setting">PersonSettingActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_my_attention">MyAttentionActivity</string>
-    <string name="title_activity_other_user">OtherUserActivity</string>
-    <string name="title_activity_new_remind">NewRemindActivity</string>
-    <string name="title_activity_other_user_trace">OtherUserTraceActivity</string>
-    <string name="title_activity_picture_select">PictureSelectActivity</string>
-    <string name="title_activity_feedback">FeedbackActivity</string>
-    <string name="title_activity_contact_us">ContactUsActivity</string>
-    <string name="title_activity_base">BaseActivity</string>
-    <string name="title_activity_suiuu_details">SuiuuDetailsActivity</string>
-    <string name="title_activity_comments">CommentsActivity</string>
-    <string name="title_activity_select_image">SelectImageActivity</string>
-    <string name="title_activity_select_picture">SelectPictureActivity</string>
-    <string name="title_activity_loop_details">LoopDetailsActivity</string>
-    <string name="title_activity_loop_article">LoopArticleActivity</string>
-    <string name="title_activity_all_attention_dynamic">AllAttentionDynamicActivity</string>
-    <string name="title_activity_wxentry">WXEntryActivity</string>
-    <string name="title_activity_select_country">SelectCountryActivity</string>
-    <string name="title_activity_select_city">SelectCityActivity</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="title_activity_personal" translatable="false">PersonalActivity</string>
+    <string name="title_activity_attention" translatable="false">AttentionActivity</string>
+    <string name="title_activity_collection" translatable="false">CollectionActivity</string>
+    <string name="title_activity_fans" translatable="false">FansActivity</string>
+    <string name="title_activity_setting" translatable="false">SettingActivity</string>
+    <string name="title_activity_person_setting" translatable="false">PersonSettingActivity</string>
+    <string name="title_activity_login" translatable="false">LoginActivity</string>
+    <string name="title_activity_my_attention" translatable="false">MyAttentionActivity</string>
+    <string name="title_activity_other_user" translatable="false">OtherUserActivity</string>
+    <string name="title_activity_new_remind" translatable="false">NewRemindActivity</string>
+    <string name="title_activity_other_user_trace" translatable="false">OtherUserTraceActivity</string>
+    <string name="title_activity_picture_select" translatable="false">PictureSelectActivity</string>
+    <string name="title_activity_feedback" translatable="false">FeedbackActivity</string>
+    <string name="title_activity_contact_us" translatable="false">ContactUsActivity</string>
+    <string name="title_activity_base" translatable="false">BaseActivity</string>
+    <string name="title_activity_suiuu_details" translatable="false">SuiuuDetailsActivity</string>
+    <string name="title_activity_comments" translatable="false">CommentsActivity</string>
+    <string name="title_activity_select_image" translatable="false">SelectImageActivity</string>
+    <string name="title_activity_select_picture" translatable="false">SelectPictureActivity</string>
+    <string name="title_activity_loop_details" translatable="false">LoopDetailsActivity</string>
+    <string name="title_activity_loop_article" translatable="false">LoopArticleActivity</string>
+    <string name="title_activity_all_attention_dynamic" translatable="false">AllAttentionDynamicActivity</string>
+    <string name="title_activity_wxentry" translatable="false">WXEntryActivity</string>
+    <string name="title_activity_select_country" translatable="false">SelectCountryActivity</string>
+    <string name="title_activity_select_city" translatable="false">SelectCityActivity</string>
     <string name="app_name">Suiuu</string>
 
 </resources>
