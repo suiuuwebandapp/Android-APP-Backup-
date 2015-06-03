@@ -391,14 +391,11 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             return;
         }
 
-        if ("".equals(tv_theme_choice.getText().toString().trim())) {
-            Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
+        if ("".equals(tv_theme_choice.getText().toString().trim()) && "".equals(tv_area_choice.getText().toString().trim())) {
+            Toast.makeText(this, R.string.theme_or_area_is_empty, Toast.LENGTH_SHORT).show();
             return;
         }
-        if ("".equals(tv_area_choice.getText().toString().trim())) {
-            Toast.makeText(this, R.string.area_is_empty, Toast.LENGTH_SHORT).show();
-            return;
-        }
+
         //访问网络相关
         dialog.showDialog();
         String str = SuiuuInfo.ReadVerification(this);

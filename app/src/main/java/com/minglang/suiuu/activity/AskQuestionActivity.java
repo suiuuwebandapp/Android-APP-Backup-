@@ -347,12 +347,8 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
         }
 
         if(articleDetail == null ) {
-            if ("".equals(tv_theme_choice.getText().toString().trim())) {
-                Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if ("".equals(tv_area_choice.getText().toString().trim())) {
-                Toast.makeText(this, R.string.area_is_empty, Toast.LENGTH_SHORT).show();
+            if ("".equals(tv_theme_choice.getText().toString().trim()) && "".equals(tv_area_choice.getText().toString().trim())) {
+                Toast.makeText(this, R.string.theme_or_area_is_empty, Toast.LENGTH_SHORT).show();
                 return;
             }
         }
@@ -415,12 +411,8 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
             }
         }
         if(articleDetail == null ) {
-            if ("".equals(tv_theme_choice.getText().toString().trim())) {
-                Toast.makeText(this, R.string.theme_is_empty, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if ("".equals(tv_area_choice.getText().toString().trim())) {
-                Toast.makeText(this, R.string.area_is_empty, Toast.LENGTH_SHORT).show();
+            if ("".equals(tv_theme_choice.getText().toString().trim()) && "".equals(tv_area_choice.getText().toString().trim())) {
+                Toast.makeText(this, R.string.theme_or_area_is_empty, Toast.LENGTH_SHORT).show();
                 return;
             }
         }

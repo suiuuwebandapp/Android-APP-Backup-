@@ -87,8 +87,7 @@
     <string name="register_wait" translatable="false">正在注册，请稍候&#8230;</string>
     <string name="choice_area" translatable="false">请选择地区</string>
     <string name="choice_theme" translatable="false">请选择主题</string>
-    <string name="theme_is_empty" translatable="false">主题不能为空</string>
-    <string name="area_is_empty" translatable="false">地区不能为空</string>
+    <string name="theme_or_area_is_empty" translatable="false">请选择主题或者地区</string>
     <string name="ask_description_is_empty" translatable="false">问题描述不能为空</string>
     <string name="activity_description_is_empty" translatable="false">活动描述不能为空</string>
     <string name="your_ask_is_empty" translatable="false">你的问题不能为空</string>
