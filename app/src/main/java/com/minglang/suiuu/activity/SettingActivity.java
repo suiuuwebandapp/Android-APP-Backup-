@@ -50,6 +50,46 @@ public class SettingActivity extends BaseActivity {
         ViewAction();
     }
 
+    /**
+     * 初始化方法
+     */
+    private void initView() {
+        TextView tv_top_center = (TextView) findViewById(R.id.tv_top_center);
+        tv_top_center.setVisibility(View.VISIBLE);
+        tv_top_center.setText(R.string.setting);
+
+        TextView tv_top_right = (TextView) findViewById(R.id.tv_top_right);
+        tv_top_right.setVisibility(View.INVISIBLE);
+
+        btn_logout = (Button) findViewById(R.id.btn_logout);
+        if (!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())) {
+            btn_logout.setText(getString(R.string.button_logout));
+        }
+
+        LinearLayout settingLayout = (LinearLayout) findViewById(R.id.settingRootLayout);
+        if (isKITKAT) {
+            if (navigationBarHeight <= 0) {
+                settingLayout.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                settingLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            }
+        } else {
+            if (navigationBarHeight > 0) {
+                settingLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            } else {
+                settingLayout.setPadding(0, 0, 0, navigationBarHeight);
+            }
+        }
+
+        settingBack = (ImageView) findViewById(R.id.iv_top_back);
+        settingList = (ListView) findViewById(R.id.settingList);
+
+        List<String> stringList = new ArrayList<>();
+        Collections.addAll(stringList, SETTINGS);
+        SettingAdapter adapter = new SettingAdapter(this, stringList);
+        settingList.setAdapter(adapter);
+    }
+
     private void ViewAction() {
 
         settingBack.setOnClickListener(new View.OnClickListener() {
@@ -96,52 +136,10 @@ public class SettingActivity extends BaseActivity {
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SuiuuInfo.ClearSuiuuInfo(SettingActivity.this);
-                SuiuuInfo.ClearSuiuuThird(SettingActivity.this);
                 logout();
             }
         });
 
-    }
-
-    /**
-     * 初始化方法
-     */
-    private void initView() {
-        TextView tv_top_center = (TextView) findViewById(R.id.tv_top_center);
-        tv_top_center.setVisibility(View.VISIBLE);
-        tv_top_center.setText(R.string.setting);
-
-        TextView tv_top_right = (TextView) findViewById(R.id.tv_top_right);
-        tv_top_right.setVisibility(View.INVISIBLE);
-
-        btn_logout = (Button) findViewById(R.id.btn_logout);
-        if (!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())) {
-            btn_logout.setText(getString(R.string.button_logout));
-        }
-
-        LinearLayout settingLayout = (LinearLayout) findViewById(R.id.settingRootLayout);
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                settingLayout.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                settingLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        } else {
-            if (navigationBarHeight > 0) {
-                settingLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            } else {
-                settingLayout.setPadding(0, 0, 0, navigationBarHeight);
-            }
-        }
-
-        settingBack = (ImageView) findViewById(R.id.iv_top_back);
-        settingList = (ListView) findViewById(R.id.settingList);
-
-        List<String> stringList = new ArrayList<>();
-        Collections.addAll(stringList, SETTINGS);
-        SettingAdapter adapter = new SettingAdapter(this, stringList);
-        settingList.setAdapter(adapter);
     }
 
     public void logout() {
@@ -159,6 +157,11 @@ public class SettingActivity extends BaseActivity {
                         pd.dismiss();
                         SuiuuInfo.ClearSuiuuInfo(SettingActivity.this);
                         SuiuuInfo.ClearSuiuuThird(SettingActivity.this);
+
+                        Intent intent = new Intent();
+                        intent.setAction(TAG);
+                        sendBroadcast(intent);
+
                         SettingActivity.this.finish(); // 重新显示登陆页面
                         startActivity(new Intent(SettingActivity.this, LoginActivity.class));
                     }
@@ -178,4 +181,5 @@ public class SettingActivity extends BaseActivity {
             }
         });
     }
+
 }

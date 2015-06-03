@@ -165,6 +165,8 @@ public class MainActivity extends BaseActivity {
     private RelativeLayout rl_top_info;
     private ImageView iv_suiuu_search_more;
 
+    private ExitBroadcastReceiver exitBroadcastReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,6 +179,11 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         UmengUpdateAgent.update(this);
+
+        exitBroadcastReceiver = new ExitBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SettingActivity.class.getSimpleName());
+        this.registerReceiver(exitBroadcastReceiver, intentFilter);
 
         initView();
         initRegisterAllBroadcastReceiver();
@@ -1037,6 +1044,18 @@ public class MainActivity extends BaseActivity {
         }
     };
 
+    private class ExitBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            DeBugLog.i(TAG, "action:" + action);
+            if (action.equals(SettingActivity.class.getSimpleName())) {
+                MainActivity.this.finish();
+            }
+        }
+    }
+
     /**
      * 当应用在前台时，如果当前消息不是属于当前会话，在状态栏提示一下
      * 如果不需要，注释掉即可
@@ -1144,28 +1163,36 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         // 注销广播接收者
         try {
             unregisterReceiver(msgReceiver);
         } catch (Exception ignored) {
-            DeBugLog.e(TAG, ignored.getMessage());
+            DeBugLog.e(TAG, "msgReceiver:" + ignored.getMessage());
         }
+
         try {
             unregisterReceiver(ackMessageReceiver);
         } catch (Exception ignored) {
-            DeBugLog.e(TAG, ignored.getMessage());
+            DeBugLog.e(TAG, "ackMessageReceiver:" + ignored.getMessage());
         }
+
         try {
             unregisterReceiver(cmdMessageReceiver);
         } catch (Exception ignored) {
-            DeBugLog.e(TAG, ignored.getMessage());
+            DeBugLog.e(TAG, "cmdMessageReceiver:" + ignored.getMessage());
+        }
+
+        try {
+            unregisterReceiver(exitBroadcastReceiver);
+        } catch (Exception e) {
+            DeBugLog.e(TAG, "反注册ExitBroadcastReceiver失败:" + e.getMessage());
         }
 
         // try {
         // unregisterReceiver(offlineMessageReceiver);
         // } catch (Exception e) {
         // }
-
         if (conflictBuilder != null) {
             conflictBuilder.create().dismiss();
             conflictBuilder = null;
