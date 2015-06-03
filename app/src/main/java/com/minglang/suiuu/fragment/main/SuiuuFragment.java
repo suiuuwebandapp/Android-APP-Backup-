@@ -44,6 +44,8 @@ import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -326,12 +328,14 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
             Log.i("suiuu", stringResponseInfo.result + "what-----------");
             dialog.dismissDialog();
             try {
-                SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, stringResponseInfo.result);
-                String status = baseCollection.getStatus();
-                Log.i("suiuu", status);
-                if ("1".equals(baseCollection.getStatus())) {
+                JSONObject json = new JSONObject(stringResponseInfo.result);
+                String status = json.getString("status");
+                Log.i("suiuu", "status="+status);
+                if ("1".equals(status)) {
+                    SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, stringResponseInfo.result);
                     mPullToRefreshView.setVisibility(View.VISIBLE);
                     suiuuDataList = baseCollection.getData();
+
                     if (suiuuDataList.size() < 1) {
                         if (isSearch) {
                             rl_search_no_data.setVisibility(View.VISIBLE);
@@ -344,7 +348,7 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
                     }
                     lv_suiuu.setAdapter(new ShowSuiuuAdapter(getActivity().getApplicationContext(), suiuuDataList));
                     tabSelect.setVisibility(View.VISIBLE);
-                } else if ("-3".equals(baseCollection.getStatus())) {
+                } else if ("-3".equals(status) ){
                     Toast.makeText(getActivity().getApplicationContext(), "登录信息过期,请重新登录", Toast.LENGTH_SHORT).show();
                     AppUtils.intentLogin(getActivity());
                     getActivity().finish();
@@ -354,6 +358,7 @@ public class SuiuuFragment extends BaseFragment implements PullToRefreshView.OnH
 
                 }
             } catch (Exception e) {
+
                 e.printStackTrace();
             }
         }
