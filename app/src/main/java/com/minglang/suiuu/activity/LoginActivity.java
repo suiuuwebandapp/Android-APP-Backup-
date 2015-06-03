@@ -577,14 +577,11 @@ public class LoginActivity extends BaseActivity {
             try {
                 JSONObject object = new JSONObject(str);
                 String status = object.getString("status");
-                JSONObject data = object.getJSONObject("data");
-                String dataInfo = data.getString("0");
-                if (status.equals("1")) {
+                if ("1".equals(status.trim())) {
                     popupWindowRegister1.dismiss();
                     popupWindowRegister2.showAtLocation(popupRegisterView2, Gravity.CENTER_HORIZONTAL, 0, 0);
                     Toast.makeText(LoginActivity.this, "发送成功！", Toast.LENGTH_SHORT).show();
                 } else {
-                    DeBugLog.e(TAG, "发送失败:" + dataInfo);
                     Toast.makeText(LoginActivity.this, "发送失败，请检查手机号码是否填写正确！", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
@@ -746,8 +743,6 @@ public class LoginActivity extends BaseActivity {
         });
         pd.setMessage(getResources().getString(R.string.Is_landing));
         pd.show();
-
-        DeBugLog.i(TAG, "环信用户名:" + huanXinUsername);
 
         final long start = System.currentTimeMillis();
         // 调用sdk登陆方法登陆聊天服务器
