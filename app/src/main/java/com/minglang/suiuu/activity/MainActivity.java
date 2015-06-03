@@ -182,6 +182,20 @@ public class MainActivity extends BaseActivity {
         initRegisterAllBroadcastReceiver();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String network_headImage_path = SuiuuInfo.ReadUserData(this).getHeadImg();
+        if (!TextUtils.isEmpty(network_headImage_path)) {
+            imageLoader.displayImage(network_headImage_path, headImageView);
+        }
+        String user_name = SuiuuInfo.ReadUserData(this).getNickname();
+        if (!TextUtils.isEmpty(user_name)) {
+            nickNameView.setText(user_name);
+        }
+
+    }
+
     private void initReadSavedInstanceState(Bundle savedInstanceState) {
         boolean saveFlag = savedInstanceState != null;
 
@@ -1007,7 +1021,6 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             abortBroadcast();
-            EMLog.d(TAG, "收到透传消息");
             //获取cmd message对象
             String msgId = intent.getStringExtra("msgid");
             DeBugLog.i(TAG, "msgId:" + msgId);

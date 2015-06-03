@@ -464,6 +464,8 @@ public class LoginActivity extends BaseActivity {
                 } else if (TextUtils.isEmpty(registerPassword2)) {
                     Toast.makeText(LoginActivity.this, "确认密码密码不能为空！", Toast.LENGTH_SHORT).show();
                 } else {
+                    SuiuuInfo.ClearSuiuuInfo(LoginActivity.this);
+                    SuiuuInfo.ClearSuiuuThird(LoginActivity.this);
                     register4Suiuu();
                 }
             }

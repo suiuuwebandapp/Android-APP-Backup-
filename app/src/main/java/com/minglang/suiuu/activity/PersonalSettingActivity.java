@@ -506,4 +506,5 @@ public class PersonalSettingActivity extends BaseActivity {
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
+
 }
