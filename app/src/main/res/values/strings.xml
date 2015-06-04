@@ -179,7 +179,7 @@
 
     <string name="noData_AgainLoad">No Data,please again obtain</string>
     <string name="zero" translatable="false">0</string>
-    <string name="zeroForTenKilo">0 &#8211; 10000</string>
+    <string name="zeroForTenKilo" translatable="false">0 &#8211; 10000</string>
 
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
