@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import com.minglang.suiuu.activity.OtherUserActivity;
 import com.minglang.suiuu.adapter.AttentionUserAdapter;
 import com.minglang.suiuu.entity.AttentionUser;
 import com.minglang.suiuu.entity.AttentionUserData;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -164,7 +164,7 @@ public class AttentionUserFragment extends Fragment {
                 HttpServicePath.AttentionUserPath, new AttentionUserRequestCallback());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
-        Log.i(TAG, "verification:" + verification);
+        DeBugLog.i(TAG, "verification:" + verification);
     }
 
     /**
@@ -245,7 +245,6 @@ public class AttentionUserFragment extends Fragment {
             }
 
             String str = stringResponseInfo.result;
-            Log.i(TAG, "关注用户的数据:" + str);
             try {
                 AttentionUser attentionUser = JsonUtils.getInstance().fromJSON(AttentionUser.class, str);
                 if (attentionUser.getStatus().equals("1")) {
@@ -262,7 +261,7 @@ public class AttentionUserFragment extends Fragment {
                             getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "关注的用户的数据解析失败:" + e.getMessage());
+                DeBugLog.e(TAG, "关注的用户的数据解析失败:" + e.getMessage());
                 Toast.makeText(getActivity(),
                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
@@ -270,7 +269,7 @@ public class AttentionUserFragment extends Fragment {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, "关注的用户数据请求失败:" + s);
+            DeBugLog.e(TAG, "关注的用户数据请求失败:" + s);
 
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();

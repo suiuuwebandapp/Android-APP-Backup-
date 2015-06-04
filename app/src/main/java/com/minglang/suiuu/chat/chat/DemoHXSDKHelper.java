@@ -1,6 +1,5 @@
 package com.minglang.suiuu.chat.chat;
 
-
 import android.content.Intent;
 import android.content.IntentFilter;
 
@@ -23,8 +22,8 @@ import java.util.Map;
 
 /**
  * Demo UI HX SDK helper class which subclass HXSDKHelper
- * @author easemob
  *
+ * @author easemob
  */
 public class DemoHXSDKHelper extends HXSDKHelper {
 
@@ -35,14 +34,14 @@ public class DemoHXSDKHelper extends HXSDKHelper {
     private CallReceiver callReceiver;
 
     @Override
-    protected void initHXOptions(){
+    protected void initHXOptions() {
         super.initHXOptions();
         // you can also get EMChatOptions to set related SDK options
         // EMChatOptions options = EMChatManager.getInstance().getChatOptions();
     }
 
     @Override
-    protected OnMessageNotifyListener getMessageNotifyListener(){
+    protected OnMessageNotifyListener getMessageNotifyListener() {
         // 取消注释，app在后台，有新消息来时，状态栏的消息提示换成自己写的
         return new OnMessageNotifyListener() {
 
@@ -50,8 +49,9 @@ public class DemoHXSDKHelper extends HXSDKHelper {
             public String onNewMessageNotify(EMMessage message) {
                 // 设置状态栏的消息提示，可以根据message的类型做相应提示
                 String ticker = CommonUtils.getMessageDigest(message, appContext);
-                if(message.getType() == Type.TXT)
+                if (message.getType() == Type.TXT) {
                     ticker = ticker.replaceAll("\\[.{2,3}\\]", "[表情]");
+                }
                 return message.getFrom() + ": " + ticker;
             }
 
@@ -76,7 +76,7 @@ public class DemoHXSDKHelper extends HXSDKHelper {
     }
 
     @Override
-    protected OnNotificationClickListener getNotificationClickListener(){
+    protected OnNotificationClickListener getNotificationClickListener() {
         return new OnNotificationClickListener() {
 
             @Override
@@ -97,7 +97,7 @@ public class DemoHXSDKHelper extends HXSDKHelper {
     }
 
     @Override
-    protected void onConnectionConflict(){
+    protected void onConnectionConflict() {
         Intent intent = new Intent(appContext, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("conflict", true);
@@ -105,19 +105,18 @@ public class DemoHXSDKHelper extends HXSDKHelper {
     }
 
     @Override
-    protected void onCurrentAccountRemoved(){
+    protected void onCurrentAccountRemoved() {
         Intent intent = new Intent(appContext, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Constant.ACCOUNT_REMOVED, true);
         appContext.startActivity(intent);
     }
 
-
     @Override
-    protected void initListener(){
+    protected void initListener() {
         super.initListener();
         IntentFilter callFilter = new IntentFilter(EMChatManager.getInstance().getIncomingCallBroadcastAction());
-        if(callReceiver == null)
+        if (callReceiver == null)
             callReceiver = new CallReceiver();
         appContext.registerReceiver(callReceiver, callFilter);
     }
@@ -130,19 +129,16 @@ public class DemoHXSDKHelper extends HXSDKHelper {
     /**
      * get demo HX SDK Model
      */
-    public DemoHXSDKModel getModel(){
-
+    public DemoHXSDKModel getModel() {
         return (DemoHXSDKModel) hxModel;
     }
 
     /**
      * 获取内存中好友user list
-     *
-     * @return
      */
     public Map<String, User> getContactList() {
         if (getHXId() != null && contactList == null) {
-            contactList = ((DemoHXSDKModel) getModel()).getContactList();
+            contactList = (getModel()).getContactList();
         }
 
         return contactList;
@@ -150,38 +146,33 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 
     /**
      * 设置好友user list到内存中
-     *
-     * @param contactList
      */
     public void setContactList(Map<String, User> contactList) {
         this.contactList = contactList;
     }
 
     @Override
-    public void logout(final EMCallBack callback){
+    public void logout(final EMCallBack callback) {
         endCall();
-        super.logout(new EMCallBack(){
+        super.logout(new EMCallBack() {
 
             @Override
             public void onSuccess() {
-                // TODO Auto-generated method stub
                 setContactList(null);
                 getModel().closeDB();
-                if(callback != null){
+                if (callback != null) {
                     callback.onSuccess();
                 }
             }
 
             @Override
             public void onError(int code, String message) {
-                // TODO Auto-generated method stub
 
             }
 
             @Override
             public void onProgress(int progress, String status) {
-                // TODO Auto-generated method stub
-                if(callback != null){
+                if (callback != null) {
                     callback.onProgress(progress, status);
                 }
             }
@@ -189,7 +180,7 @@ public class DemoHXSDKHelper extends HXSDKHelper {
         });
     }
 
-    void endCall(){
+    void endCall() {
         try {
             EMChatManager.getInstance().endCall();
         } catch (Exception e) {

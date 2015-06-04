@@ -72,7 +72,7 @@ public class AttentionActivity extends BaseActivity {
             }
         });
 
-        attentionPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        attentionPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 DeBugLog.i(TAG, "position:" + position + ",positionOffset:" + positionOffset +

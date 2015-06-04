@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +41,7 @@ import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.CompressImageUtil;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -260,7 +260,11 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             double latitude = data.getDoubleExtra("latitude", 0);
             double longitude = data.getDoubleExtra("longitude", 0);
             String locationAddress = data.getStringExtra("address");
-            Log.i(TAG, locationAddress + "logcation");
+
+            DeBugLog.i(TAG, "locationAddress:" + locationAddress);
+            DeBugLog.i(TAG, "latitude:" + latitude);
+            DeBugLog.i(TAG, "longitude:" + longitude);
+
             if (locationAddress != null && !locationAddress.equals("")) {
                 tv_show_your_location.setText(locationAddress);
             } else {
@@ -317,7 +321,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
                     list = loopBase.getData().getData();
                     for (LoopBaseData date : list) {
-                        Log.i(TAG, date.toString());
+                        DeBugLog.i(TAG, date.toString());
                     }
                     listView.setAdapter(new MyListAdapter(EasyTackPhotoActivity.this, list));
                     themeOrArea = 1;
@@ -331,7 +335,8 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
 
         @Override
         public void onFailure(HttpException error, String msg) {
-            Log.i("suiuu", msg);
+            DeBugLog.e(TAG, "error:" + error.getMessage());
+            DeBugLog.e(TAG, "msg:" + msg);
             Toast.makeText(EasyTackPhotoActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -342,7 +347,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
         params.addBodyParameter("type", "2");
-        params.addBodyParameter("showAll","true");
+        params.addBodyParameter("showAll", "true");
 
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.LoopDataPath, new AreaRequestCallback());
@@ -422,7 +427,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
     }
 
 
-
     private void changeLoadDate() {
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
@@ -492,7 +496,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
                 String newPath = null;
                 try {
                     newPath = CompressImageUtil.compressImage(path, name, 50);
-                    Log.i("suiuu","newPath = " + newPath);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -503,7 +506,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
 
                         @Override
                         public void onSuccess(String objectKey) {
-                            Log.i(TAG, "success upload");
                             picSuccessCount += 1;
                             if (picSuccessCount == picList.size()) {
                                 handler.sendEmptyMessage(getData_Success);
@@ -513,13 +515,13 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
 
                         @Override
                         public void onProgress(String objectKey, int byteCount, int totalSize) {
-                            Log.i(TAG, "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
+                            DeBugLog.i(TAG, "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
                         }
 
                         @Override
                         public void onFailure(String objectKey, OSSException ossException) {
                             handler.sendEmptyMessage(getData_FAILURE);
-                            Log.i(TAG, "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
+                            DeBugLog.i(TAG, "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
                             ossException.printStackTrace();
 //                    ossException.getException().printStackTrace();
                         }
@@ -539,7 +541,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String result = stringResponseInfo.result;
-            Log.i("suiuu", result + "--------------");
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
@@ -552,7 +553,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onFailure(HttpException e, String s) {
             handler.sendEmptyMessage(getData_FAILURE);
-            Log.i(TAG, "请求失败------------------------------------" + s);
+            DeBugLog.i(TAG, "请求失败------------------------------------" + s);
         }
     }
 
@@ -564,12 +565,10 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String result = stringResponseInfo.result;
-            Log.i("suiuu", "ask=" + result);
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
                 dataNum = (String) json.get("data");
-                Log.i("suiuu", status + "dataNum" + dataNum);
                 if ("success".equals(dataNum)) {
                     Toast.makeText(EasyTackPhotoActivity.this, R.string.article_update_success, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(EasyTackPhotoActivity.this, LoopArticleActivity.class);
@@ -588,7 +587,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onFailure(HttpException e, String s) {
             handler.sendEmptyMessage(getData_FAILURE);
-            Log.e(TAG, "发布文章失败:" + s);
+            DeBugLog.e(TAG, "发布文章失败:" + s);
         }
     }
 

@@ -106,8 +106,6 @@ public class NewAtFragment extends BaseFragment {
         initView(rootView);
         ViewAction();
         getData();
-        DeBugLog.i(TAG, "verification:" + verification);
-        DeBugLog.i(TAG, "userSign:" + userSign);
         return rootView;
     }
 
@@ -206,6 +204,10 @@ public class NewAtFragment extends BaseFragment {
                 HttpServicePath.GetMessageListPath, new NewAtRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
+    }
+
+    public String getUserSign() {
+        return userSign;
     }
 
     private class NewAtRequestCallBack extends RequestCallBack<String> {

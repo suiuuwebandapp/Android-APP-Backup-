@@ -63,9 +63,7 @@ public class CollectionActivity extends BaseActivity {
         setContentView(R.layout.activity_collection);
 
         initView();
-
         ViewAction();
-
     }
 
     /**
@@ -90,7 +88,7 @@ public class CollectionActivity extends BaseActivity {
         collectionLoop.setOnClickListener(new CollectionClick(0));
         collectionSuiuu.setOnClickListener(new CollectionClick(1));
 
-        collectionPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        collectionPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 

@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -74,9 +73,6 @@ public class Utils {
             int height = Integer.parseInt(clazz.getField("status_bar_height")
                     .get(object).toString());
             statusHeight = context.getResources().getDimensionPixelSize(height);
-
-            Log.i(TAG, "statusHeight:" + String.valueOf(statusHeight));
-
         } catch (Exception e) {
             e.printStackTrace();
         }

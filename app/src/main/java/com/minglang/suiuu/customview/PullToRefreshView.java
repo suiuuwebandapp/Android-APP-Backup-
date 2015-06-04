@@ -2,7 +2,6 @@ package com.minglang.suiuu.customview;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.utils.DeBugLog;
 
 
 public class PullToRefreshView extends LinearLayout {
@@ -306,12 +306,12 @@ public class PullToRefreshView extends LinearLayout {
 			int deltaY = y - mLastMotionY;
 			if (mPullState == PULL_DOWN_STATE) {
 				// PullToRefreshView执行下拉
-				Log.i(TAG, " pull down!parent view move!");
+				DeBugLog.i(TAG, " pull down!parent view move!");
 				headerPrepareToRefresh(deltaY);
 				// setHeaderPadding(-mHeaderViewHeight);
 			} else if (mPullState == PULL_UP_STATE) {
 				// PullToRefreshView执行上拉
-				Log.i(TAG, "pull up!parent view move!");
+				DeBugLog.i(TAG, "pull up!parent view move!");
 				footerPrepareToRefresh(deltaY);
 			}
 			mLastMotionY = y;

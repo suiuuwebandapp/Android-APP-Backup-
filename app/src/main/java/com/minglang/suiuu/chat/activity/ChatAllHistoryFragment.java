@@ -30,7 +30,7 @@ import com.minglang.suiuu.chat.adapter.ChatAllHistoryAdapter;
 import com.minglang.suiuu.chat.chat.Constant;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.dao.InviteMessgeDao;
-import com.minglang.suiuu.utils.ConstantUtil;
+import com.minglang.suiuu.utils.ConstantUtils;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.ArrayList;
@@ -66,13 +66,13 @@ public class ChatAllHistoryFragment extends Fragment {
 
         conversationList.addAll(loadConversationsWithRecentChat());
         listView = (ListView) getView().findViewById(R.id.list);
-        if (ConstantUtil.isKITKAT) {
+        if (ConstantUtils.isKITKAT) {
             LinearLayout rootLayout = (LinearLayout) getView().findViewById(R.id.chat_all_root);
             rootLayout.setPadding(0, new SystemBarTintManager(getActivity()).getConfig().getStatusBarHeight(), 0, 0);
         }
         LinearLayout.LayoutParams paramTest = (LinearLayout.LayoutParams) listView.getLayoutParams();
         //paramTest.topMargin = ConstantUtil.topHeight;
-        paramTest.setMargins(0, ConstantUtil.topHeight, 0, 0);
+        paramTest.setMargins(0, ConstantUtils.topHeight, 0, 0);
         if(conversationList.size()>=1) {
             listView.setLayoutParams(paramTest);
             adapter = new ChatAllHistoryAdapter(getActivity(), 1, conversationList);

@@ -1,10 +1,10 @@
 /**
  * Copyright (C) 2013-2014 EaseMob Technologies. All rights reserved.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,9 +25,12 @@ import com.alibaba.sdk.android.oss.model.ClientConfiguration;
 import com.alibaba.sdk.android.oss.model.TokenGenerator;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.easemob.EMCallBack;
+import com.easemob.chat.EMChat;
 import com.minglang.suiuu.chat.bean.User;
 import com.minglang.suiuu.chat.chat.DemoHXSDKHelper;
+import com.minglang.suiuu.chat.model.DefaultHXSDKModel;
 import com.minglang.suiuu.crash.GlobalCrashHandler;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -130,13 +133,19 @@ public class SuiuuApplication extends Application {
         instance = this;
 
         maxMemorySize = Runtime.getRuntime().maxMemory() / 1024 / 1024;
+        DeBugLog.i(TAG, "最大可用内存为:" + String.valueOf(maxMemorySize));
 
         // 环信初始化SDK帮助函数 返回true如果正确初始化，否则false，如果返回为false，请在后续的调用中不要调用任何和环信相关的代码
-        hxSDKHelper.onInit(applicationContext);
+        hxSDKHelper.onInit(this);
+        DefaultHXSDKModel defaultHXSDKModel = new DefaultHXSDKModel(this);
+        if (defaultHXSDKModel.isDebugMode()) {
+            EMChat.getInstance().setDebugMode(false);
+        }
+
         buildAboatOSS();
 
         GlobalCrashHandler globalCrashHandler = GlobalCrashHandler.getInstance();
-        globalCrashHandler.init(getApplicationContext());
+        globalCrashHandler.init(this);
 
         initImageLoad();
     }
@@ -149,15 +158,13 @@ public class SuiuuApplication extends Application {
         StrictMode.setThreadPolicy(policy);
 
         // 初始化设置
-        ossService.setApplicationContext(this.getApplicationContext());
+        ossService.setApplicationContext(this);
         ossService.setGlobalDefaultTokenGenerator(new TokenGenerator() { // 设置全局默认加签器
             @Override
             public String generateToken(String httpMethod, String md5, String type, String date,
                                         String ossHeaders, String resource) {
-
                 String content = httpMethod + "\n" + md5 + "\n" + type + "\n" + date + "\n" + ossHeaders
                         + resource;
-
                 return OSSToolKit.generateToken(accessKey, screctKey, content);
             }
         });
@@ -175,7 +182,7 @@ public class SuiuuApplication extends Application {
 
     private void initImageLoad() {
         ImageLoader imageLoader = ImageLoader.getInstance();
-        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(getApplicationContext());
+        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
 
         config.threadPoolSize(4);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
@@ -187,8 +194,6 @@ public class SuiuuApplication extends Application {
 
         config.memoryCacheSize(50 * 1024 * 1024);
         config.tasksProcessingOrder(QueueProcessingType.LIFO);
-
-        config.writeDebugLogs();
 
         imageLoader.init(config.build());
     }

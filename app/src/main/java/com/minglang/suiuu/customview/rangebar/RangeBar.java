@@ -36,10 +36,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.minglang.suiuu.utils.DeBugLog;
 
 import java.util.HashMap;
 
@@ -468,7 +469,7 @@ import java.util.HashMap;
             createBar();
             createPins();
         } else {
-            Log.e(TAG, "tickCount less than 2; invalid tickCount.");
+            DeBugLog.e(TAG, "tickCount less than 2; invalid tickCount.");
             throw new IllegalArgumentException("tickCount less than 2; invalid tickCount.");
         }
     }
@@ -508,7 +509,7 @@ import java.util.HashMap;
             createBar();
             createPins();
         } else {
-            Log.e(TAG, "tickCount less than 2; invalid tickCount.");
+            DeBugLog.e(TAG, "tickCount less than 2; invalid tickCount.");
             throw new IllegalArgumentException("tickCount less than 2; invalid tickCount.");
         }
     }
@@ -548,7 +549,7 @@ import java.util.HashMap;
             createBar();
             createPins();
         } else {
-            Log.e(TAG, "tickCount less than 2; invalid tickCount.");
+            DeBugLog.e(TAG, "tickCount less than 2; invalid tickCount.");
             throw new IllegalArgumentException("tickCount less than 2; invalid tickCount.");
         }
     }
@@ -707,21 +708,22 @@ import java.util.HashMap;
      */
     public void setRangePinsByIndices(int leftPinIndex, int rightPinIndex) {
         if (indexOutOfRange(leftPinIndex, rightPinIndex)) {
-            Log.e(TAG,
+            DeBugLog.e(TAG,
                     "Pin index left " + leftPinIndex + ", or right "+rightPinIndex
                             + " is out of bounds. Check that it is greater than the minimum ("
                             + mTickStart + ") and less than the maximum value ("
                             + mTickEnd + ")");
+
             throw new IllegalArgumentException(
                     "Pin index left " + leftPinIndex + ", or right "+rightPinIndex
                             + " is out of bounds. Check that it is greater than the minimum ("
                             + mTickStart + ") and less than the maximum value ("
                             + mTickEnd + ")");
         } else {
-
             if (mFirstSetTickCount) {
                 mFirstSetTickCount = false;
             }
+
             mLeftIndex = leftPinIndex;
             mRightIndex = rightPinIndex;
             createPins();
@@ -744,7 +746,7 @@ import java.util.HashMap;
      */
     public void setSeekPinByIndex(int pinIndex) {
         if (pinIndex < 0 || pinIndex > mTickCount) {
-            Log.e(TAG,
+            DeBugLog.e(TAG,
                     "Pin index " + pinIndex
                             + " is out of bounds. Check that it is greater than the minimum ("
                             + 0 + ") and less than the maximum value ("
@@ -780,7 +782,7 @@ import java.util.HashMap;
      */
     public void setRangePinsByValue(float leftPinValue, float rightPinValue) {
         if (valueOutOfRange(leftPinValue, rightPinValue)) {
-            Log.e(TAG,
+            DeBugLog.e(TAG,
                     "Pin value left " + leftPinValue + ", or right "+rightPinValue
                             + " is out of bounds. Check that it is greater than the minimum ("
                             + mTickStart + ") and less than the maximum value ("
@@ -815,7 +817,7 @@ import java.util.HashMap;
      */
     public void setSeekPinByValue(float pinValue) {
         if (pinValue > mTickEnd || pinValue < mTickStart) {
-            Log.e(TAG,
+            DeBugLog.e(TAG,
                     "Pin value " + pinValue
                             + " is out of bounds. Check that it is greater than the minimum ("
                             + mTickStart + ") and less than the maximum value ("
@@ -945,8 +947,7 @@ import java.util.HashMap;
                 }
 
             } else {
-
-                Log.e(TAG, "tickCount less than 2; invalid tickCount. XML input ignored.");
+                DeBugLog.e(TAG, "tickCount less than 2; invalid tickCount. XML input ignored.");
             }
 
             mTickHeightDP = ta

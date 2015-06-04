@@ -69,6 +69,7 @@
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
+
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -184,48 +185,57 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustResize"/>
+
         <!-- 自定义的AlertDialog -->
         <activity
             android:name=".chat.activity.AlertDialog"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle"/>
+
         <!-- 地图 -->
         <activity
             android:name=".chat.activity.BaiduMapActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"/>
+
         <!-- choose video -->
         <activity
             android:name=".chat.activity.ImageGridActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+
         <!-- 语音通话 -->
         <activity
             android:name=".chat.activity.VoiceCallActivity"
             android:screenOrientation="portrait"
             android:theme="@style/nornal_style"/>
+
         <!-- 视频通话 -->
         <activity
             android:name=".chat.activity.VideoCallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"/>
+
         <!-- 下载文件 -->
         <activity
             android:name=".chat.activity.ShowNormalFileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"/>
+
         <!-- 显示下载大图页面 -->
         <activity
             android:name=".chat.activity.ShowBigImage"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"/>
+
         <!-- 自定义的contextMenu -->
         <activity
             android:name=".chat.activity.ContextMenu"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle"/>
+
         <!-- 转发消息用户列表页面 -->
         <activity
             android:name=".chat.activity.ForwardMessageActivity"
@@ -237,6 +247,7 @@
             android:name="EASEMOB_APPKEY"
             android:value="suiuu#suiuu"/>
         <!-- <meta-data android:name="EASEMOB_APPKEY"  android:value="easemob-demo#chatdemoui" /> -->
+
         <!-- 声明sdk所需的service SDK核心功能 -->
         <service android:name="com.easemob.chat.EMChatService"/>
         <!-- 百度地图所需的service -->

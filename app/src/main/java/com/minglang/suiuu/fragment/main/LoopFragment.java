@@ -65,11 +65,11 @@ public class LoopFragment extends BaseFragment {
     private static final String TYPE = "type";
     private static final String CIRCLEID = "circleId";
 
-
     /**
      * 轮播ViewPager
      */
     private AutoScrollViewPager loopScrollViewPager;
+
     /**
      * 轮播图片View列表
      */
@@ -167,6 +167,7 @@ public class LoopFragment extends BaseFragment {
 
         loopScrollViewPager = (AutoScrollViewPager) rootView.findViewById(R.id.LoopScrollViewPager);
         loopScrollViewPager.setInterval(5000);
+
         LoopScrollPagerAdapter loopScrollPagerAdapter = new LoopScrollPagerAdapter(getActivity(), imageList);
         loopScrollViewPager.setAdapter(loopScrollPagerAdapter);
         loopScrollViewPager.startAutoScroll();
@@ -190,6 +191,7 @@ public class LoopFragment extends BaseFragment {
 
         userSign = SuiuuInfo.ReadUserSign(getActivity());
         verification = SuiuuInfo.ReadVerification(getActivity());
+
         ThemeFragment themeFragment = ThemeFragment.newInstance(userSign, verification);
         AreaFragment areaFragment = AreaFragment.newInstance(userSign, verification);
 
@@ -203,7 +205,6 @@ public class LoopFragment extends BaseFragment {
         loopViewPager.setAdapter(lfpAdapter);
 
         initImageView();
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
     }
 
     /**
@@ -243,7 +244,7 @@ public class LoopFragment extends BaseFragment {
      */
     private void ViewAction() {
 
-        loopScrollViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        loopScrollViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -261,7 +262,7 @@ public class LoopFragment extends BaseFragment {
         title0.setOnClickListener(new TitleOnClick(0));
         title1.setOnClickListener(new TitleOnClick(1));
 
-        loopViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        loopViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -508,4 +509,5 @@ public class LoopFragment extends BaseFragment {
             DeBugLog.i(TAG, "onLoadingCancelled():view.getTag():" + view.getTag());
         }
     }
+
 }

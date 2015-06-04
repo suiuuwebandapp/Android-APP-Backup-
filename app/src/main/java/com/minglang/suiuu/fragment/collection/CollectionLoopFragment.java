@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import com.minglang.suiuu.activity.LoopArticleActivity;
 import com.minglang.suiuu.adapter.CollectionLoopAdapter;
 import com.minglang.suiuu.entity.CollectionLoop;
 import com.minglang.suiuu.entity.CollectionLoopData;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
@@ -225,7 +225,7 @@ public class CollectionLoopFragment extends Fragment {
         collectionLoopAdapter.setScreenParams(screenWidth);
         gridView.setAdapter(collectionLoopAdapter);
 
-        Log.i(TAG, "userSign:" + userSign);
+        DeBugLog.i(TAG, "userSign:" + userSign);
     }
 
     @Override
@@ -256,7 +256,6 @@ public class CollectionLoopFragment extends Fragment {
             }
 
             String str = stringResponseInfo.result;
-            Log.i(TAG, "收藏的圈子数据:" + str);
             try {
                 CollectionLoop collectionLoop = JsonUtils.getInstance().fromJSON(CollectionLoop.class, str);
                 if (collectionLoop.getStatus().equals("1")) {
@@ -273,7 +272,7 @@ public class CollectionLoopFragment extends Fragment {
                             getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "收藏的圈子的数据解析异常:" + e.getMessage());
+                DeBugLog.e(TAG, "收藏的圈子的数据解析异常:" + e.getMessage());
                 Toast.makeText(getActivity(),
                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
@@ -293,7 +292,7 @@ public class CollectionLoopFragment extends Fragment {
             mPtrFrame.refreshComplete();
             ptrLoadMore.loadMoreError(0, "加载失败，请重试");
 
-            Log.e(TAG, "收藏的圈子数据请求失败:" + s);
+            DeBugLog.e(TAG, "收藏的圈子数据请求失败:" + s);
             Toast.makeText(getActivity(),
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }

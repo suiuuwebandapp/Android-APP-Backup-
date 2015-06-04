@@ -3,7 +3,6 @@ package com.minglang.suiuu.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +17,11 @@ import com.minglang.suiuu.entity.ImageFolder;
 import com.minglang.suiuu.entity.ImageItem;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
-/**
- * Created by LZY on 2015/4/13 0013.
- */
 public class SelectPictureAdapter extends BaseAdapter {
-
-    private static final String TAG = SelectPictureAdapter.class.getSimpleName();
 
     private static int MAX_NUM = 9;
 
@@ -59,9 +52,6 @@ public class SelectPictureAdapter extends BaseAdapter {
                 .showImageForEmptyUri(R.drawable.ic_launcher).showImageOnFail(R.drawable.ic_launcher)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
-        loader.init(ImageLoaderConfiguration.createDefault(context));
-
-        Log.i(TAG, currentImageFolder.toString());
     }
 
     public void setImageFolder(ImageFolder currentImageFolder) {
@@ -105,9 +95,11 @@ public class SelectPictureAdapter extends BaseAdapter {
         } else {
             position = position - 1;
             holder.checkBox.setVisibility(View.VISIBLE);
+
             final ImageItem item = currentImageFolder.images.get(position);
             loader.displayImage("file://" + item.path, holder.iv, options);
             boolean isSelected = selectedPicture.contains(item.path);
+
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -124,6 +116,7 @@ public class SelectPictureAdapter extends BaseAdapter {
                     v.setSelected(selectedPicture.contains(item.path));
                 }
             });
+
             holder.checkBox.setSelected(isSelected);
         }
 

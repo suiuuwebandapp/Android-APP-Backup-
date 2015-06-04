@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +42,7 @@ import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.CompressImageUtil;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -203,7 +203,6 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
                 String newPath = null;
                 try {
                     newPath = CompressImageUtil.compressImage(path, name, 50);
-                    Log.i("suiuu","newPath = " + newPath);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -222,14 +221,14 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
 
                         @Override
                         public void onProgress(String objectKey, int byteCount, int totalSize) {
-
-                            Log.i("suiuu", "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
+                            DeBugLog.i("suiuu", "[onProgress] - current upload " + objectKey + " bytes: " + byteCount +
+                                    " in total: " + totalSize);
                         }
 
                         @Override
                         public void onFailure(String objectKey, OSSException ossException) {
                             handler.sendEmptyMessage(getData_FAILURE);
-                            Log.e(TAG, "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
+                            DeBugLog.e(TAG, "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
 //                            ossException.printStackTrace();
 //                            ossException.getException().printStackTrace();
                         }
@@ -280,10 +279,9 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
         changePicList = JsonUtils.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
         }.getType(), articleDetail.getaImgList());
         for (String string : changePicList) {
-            Log.i("suiuu", "askActivity=" + string);
+            DeBugLog.i("suiuu", "askActivity=" + string);
         }
         gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, changePicList, "1"));
-        Log.i("suiuu", "怎么没有设置了");
         tv_show_your_location.setText(articleDetail.getaAddr());
     }
 
@@ -298,7 +296,6 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
             double latitude = data.getDoubleExtra("latitude", 0);
             double longitude = data.getDoubleExtra("longitude", 0);
             String locationAddress = data.getStringExtra("address");
-            Log.i("suiuu", locationAddress + "logcation");
             if (locationAddress != null && !locationAddress.equals("")) {
                 tv_show_your_location.setText(locationAddress);
             } else {
@@ -334,8 +331,6 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
 
     //点击发布按钮
     private void publish() {
-        Log.i("suiuu", "是发布");
-
         if (TextUtils.isEmpty(et_search_question.getText().toString().trim())) {
             if (record == 1) {
                 Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
@@ -383,7 +378,7 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
             updateDate(string);
             String substring = string.substring(string.lastIndexOf("/"));
             picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
-            Log.i("suiuu", "img" + AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
+            DeBugLog.i("suiuu", "img" + AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
         }
         params.addBodyParameter("imgList", JsonUtils.getInstance().toJSON(picNameList));
         if (picNameList.size() > 1) {
@@ -398,7 +393,6 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
 
     //点击发布按钮 修改文章内容
     private void changeArticlePublish() {
-        Log.i("suiuu", "是更改发布");
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
         if (TextUtils.isEmpty(et_search_question.getText().toString().trim())) {
@@ -512,7 +506,7 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
                 if (Integer.parseInt(loopBase.getStatus()) == 1) {
                     list = loopBase.getData().getData();
                     for (LoopBaseData date : list) {
-                        Log.i(TAG, date.toString());
+                        DeBugLog.i(TAG, date.toString());
                     }
                     MyListAdapter adapter = new MyListAdapter(AskQuestionActivity.this, list);
                     listView.setAdapter(adapter);
@@ -526,7 +520,7 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
 
         @Override
         public void onFailure(HttpException error, String msg) {
-            Log.e(TAG, "主题数据请求失败:" + msg);
+            DeBugLog.e(TAG, "主题数据请求失败:" + msg);
             Toast.makeText(AskQuestionActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -555,7 +549,7 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
 
         @Override
         public void onFailure(HttpException error, String msg) {
-            Log.e(TAG, "地区数据请求失败:" + msg);
+            DeBugLog.e(TAG, "地区数据请求失败:" + msg);
             Toast.makeText(AskQuestionActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -569,7 +563,6 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String result = stringResponseInfo.result;
-            Log.i("suiuu", "ask=" + result);
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
@@ -585,7 +578,7 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
         @Override
         public void onFailure(HttpException e, String s) {
             handler.sendEmptyMessage(getData_FAILURE);
-            Log.e(TAG, "发布文章失败:" + s);
+            DeBugLog.e(TAG, "发布文章失败:" + s);
         }
     }
 
@@ -597,12 +590,10 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String result = stringResponseInfo.result;
-            Log.i("suiuu", "ask=" + result);
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
                 dataNum = (String) json.get("data");
-                Log.i("suiuu", status + "dataNum" + dataNum);
                 if ("success".equals(dataNum)) {
                     if (!isChangePic) {
                         Intent intent = new Intent(AskQuestionActivity.this, LoopArticleActivity.class);
@@ -621,7 +612,7 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
         @Override
         public void onFailure(HttpException e, String s) {
             handler.sendEmptyMessage(getData_FAILURE);
-            Log.e(TAG, "发布文章失败:" + s);
+            DeBugLog.e(TAG, "发布文章失败:" + s);
         }
     }
 }

@@ -3,7 +3,6 @@ package com.minglang.suiuu.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -129,13 +128,11 @@ public class CollectionSuiuuAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(imagePath)) {
             imageLoader.displayImage(imagePath.trim(), mainImage, options);
         }
-        Log.i(TAG, "收藏随游图片地址:" + imagePath);
 
         String headImagePath = data.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
             imageLoader.displayImage(headImagePath.trim(), headImage);
         }
-        Log.i(TAG, "收藏随游用户头像地址:" + headImagePath);
 
         String strUserName = data.getNickname();
         if (!TextUtils.isEmpty(strUserName)) {

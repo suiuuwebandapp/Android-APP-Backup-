@@ -107,8 +107,6 @@ public class NewAttentionFragment extends BaseFragment {
         initView(rootView);
         ViewAction();
         getData();
-
-        DeBugLog.i(TAG, "userSign:" + userSign);
         return rootView;
     }
 
@@ -207,6 +205,10 @@ public class NewAttentionFragment extends BaseFragment {
                 HttpServicePath.GetMessageListPath, new NewAttentionRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
+    }
+
+    public String getUserSign() {
+        return userSign;
     }
 
     private class NewAttentionRequestCallBack extends RequestCallBack<String> {

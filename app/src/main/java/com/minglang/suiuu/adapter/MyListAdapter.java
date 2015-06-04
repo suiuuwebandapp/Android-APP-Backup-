@@ -2,7 +2,6 @@ package com.minglang.suiuu.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -55,7 +54,6 @@ public class MyListAdapter extends BaseAdapter {
         View view = View.inflate(context, R.layout.adapter_simple_string, null);
         TextView tv_theme = (TextView) view.findViewById(R.id.tv_theme);
         tv_theme.setText(list.get(position).getcName());
-        Log.i(TAG, list.get(position).getcName() + "----------");
         return view;
     }
 

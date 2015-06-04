@@ -11,8 +11,9 @@ import android.graphics.Xfermode;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ImageView;
+
+import com.minglang.suiuu.utils.DeBugLog;
 
 import java.lang.ref.WeakReference;
 
@@ -99,8 +100,7 @@ public abstract class BaseImageView extends ImageView {
                 }
             } catch (Exception e) {
                 System.gc();
-
-                Log.e(TAG, String.format("Failed to draw, Id :: %s. Error occurred :: %s", getId(), e.toString()));
+                DeBugLog.e(TAG, String.format("Failed to draw, Id :: %s. Error occurred :: %s", getId(), e.toString()));
             } finally {
                 canvas.restoreToCount(i);
             }

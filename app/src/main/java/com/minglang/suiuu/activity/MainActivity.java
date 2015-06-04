@@ -44,17 +44,17 @@ import com.easemob.util.EasyUtils;
 import com.easemob.util.NetUtils;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MainSliderAdapter;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.ChatActivity;
 import com.minglang.suiuu.chat.activity.ChatAllHistoryFragment;
 import com.minglang.suiuu.chat.chat.Constant;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.utils.CommonUtils;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.fragment.main.LoopFragment;
 import com.minglang.suiuu.fragment.main.MainFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
-import com.minglang.suiuu.utils.ConstantUtil;
+import com.minglang.suiuu.utils.ConstantUtils;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.umeng.analytics.MobclickAgent;
@@ -152,7 +152,6 @@ public class MainActivity extends BaseActivity {
     private TextView msgCount;
     private RelativeLayout errorItem;
     private TextView errorText;
-
 
     private ImageView iv_theme;
     private TextView tv_theme_text;
@@ -264,7 +263,7 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        ConstantUtil.topHeight = titleLayout.getLayoutParams().height;
+        ConstantUtils.topHeight = titleLayout.getLayoutParams().height;
 
         /*************设置侧滑菜单Params**********************/
         slideLayout = (RelativeLayout) findViewById(R.id.slideLayout);
@@ -376,7 +375,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void adjustAnimation() {
-        if (ConstantUtil.isShowArticleAnim) {
+        if (ConstantUtils.isShowArticleAnim) {
             ask.startAnimation(animationSetHide);
             pic.startAnimation(animationSetHide);
             record.startAnimation(animationSetHide);
@@ -459,7 +458,7 @@ public class MainActivity extends BaseActivity {
                         break;
 
                     case R.id.sendNewMessage:
-                        if (ConstantUtil.isShowArticleAnim) {
+                        if (ConstantUtils.isShowArticleAnim) {
                             ask.startAnimation(animationSetHide);
                             pic.startAnimation(animationSetHide);
                             record.startAnimation(animationSetHide);
@@ -594,7 +593,6 @@ public class MainActivity extends BaseActivity {
 //        }
         currentIndex = 0;
         ft.commit();
-        DeBugLog.i(TAG, "MainFragment:" + Boolean.toString(mainFragment != null && !mainFragment.isInLayout()));
     }
 
     /**
@@ -633,7 +631,6 @@ public class MainActivity extends BaseActivity {
 //        }
         currentIndex = 1;
         ft.commit();
-        DeBugLog.i(TAG, "LoopFragment:" + Boolean.toString(loopFragment != null && !loopFragment.isInLayout()));
     }
 
     /**
@@ -672,7 +669,6 @@ public class MainActivity extends BaseActivity {
 //        }
         currentIndex = 2;
         ft.commit();
-        DeBugLog.i(TAG, "SuiuuFragment:" + Boolean.toString(suiuuFragment != null && !suiuuFragment.isInLayout()));
     }
 
     /**
@@ -711,8 +707,6 @@ public class MainActivity extends BaseActivity {
         currentIndex = 3;
         msgCount.setVisibility(View.INVISIBLE);
         ft.commit();
-        DeBugLog.i(TAG, "ConversationFragment:" +
-                Boolean.toString(conversationFragment != null && !conversationFragment.isInLayout()));
     }
 
     /**
@@ -809,16 +803,16 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            if (ConstantUtil.isShowArticleAnim) {
+            if (ConstantUtils.isShowArticleAnim) {
                 ask.setVisibility(View.INVISIBLE);
                 pic.setVisibility(View.INVISIBLE);
                 record.setVisibility(View.INVISIBLE);
-                ConstantUtil.isShowArticleAnim = false;
+                ConstantUtils.isShowArticleAnim = false;
             } else {
                 ask.setVisibility(View.VISIBLE);
                 pic.setVisibility(View.VISIBLE);
                 record.setVisibility(View.VISIBLE);
-                ConstantUtil.isShowArticleAnim = true;
+                ConstantUtils.isShowArticleAnim = true;
             }
         }
 
@@ -1020,6 +1014,7 @@ public class MainActivity extends BaseActivity {
             }
         }
     };
+
     /**
      * 透传消息BroadcastReceiver
      */
@@ -1226,4 +1221,5 @@ public class MainActivity extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
 }

@@ -3,7 +3,6 @@ package com.minglang.suiuu.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -108,13 +107,11 @@ public class CollectionLoopAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(mainImagePath)) {
             loader.displayImage(mainImagePath.trim().trim(), imageView, displayImageOptions1);
         }
-        Log.i(TAG, "收藏的圈子的图片地址:" + mainImagePath);
 
         String headImagePath = collectionLoopData.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
             loader.displayImage(headImagePath.trim(), headImageView);
         }
-        Log.i(TAG, "收藏的圈子的用户的头像地址:" + headImagePath);
 
         String strNickName = collectionLoopData.getNickname();
         if (!TextUtils.isEmpty(strNickName)) {

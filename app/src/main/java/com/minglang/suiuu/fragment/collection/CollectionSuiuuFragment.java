@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import com.minglang.suiuu.activity.SuiuuDetailActivity;
 import com.minglang.suiuu.adapter.CollectionSuiuuAdapter;
 import com.minglang.suiuu.entity.CollectionSuiuu;
 import com.minglang.suiuu.entity.CollectionSuiuuData;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
@@ -256,7 +256,6 @@ public class CollectionSuiuuFragment extends Fragment {
             }
 
             String str = stringResponseInfo.result;
-            Log.i(TAG, "收藏的随游的数据:" + str);
             try {
                 CollectionSuiuu collectionSuiuu = JsonUtils.getInstance().fromJSON(CollectionSuiuu.class, str);
                 if (collectionSuiuu.getStatus().equals("1")) {
@@ -273,7 +272,7 @@ public class CollectionSuiuuFragment extends Fragment {
                             getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "收藏的随游数据解析失败" + e.getMessage());
+                DeBugLog.e(TAG, "收藏的随游数据解析失败" + e.getMessage());
                 Toast.makeText(getActivity(),
                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
@@ -294,7 +293,7 @@ public class CollectionSuiuuFragment extends Fragment {
             mPtrFrame.refreshComplete();
             ptrLoadMore.loadMoreError(0, "加载失败，请重试");
 
-            Log.e(TAG, "收藏的随游数据请求失败:" + s);
+            DeBugLog.e(TAG, "收藏的随游数据请求失败:" + s);
             Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }

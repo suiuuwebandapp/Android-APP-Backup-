@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import com.minglang.suiuu.activity.LoopDetailsActivity;
 import com.minglang.suiuu.adapter.AttentionLoopAdapter;
 import com.minglang.suiuu.entity.AttentionLoop;
 import com.minglang.suiuu.entity.AttentionLoopData;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
@@ -213,7 +213,7 @@ public class AttentionLoopFragment extends Fragment {
         attentionLoopAdapter.setScreenParams(screenWidth);
         attentionThemeGridView.setAdapter(attentionLoopAdapter);
 
-        Log.i(TAG, "userSign:" + userSign);
+        DeBugLog.i(TAG, "userSign:" + userSign);
     }
 
     @Override
@@ -254,7 +254,6 @@ public class AttentionLoopFragment extends Fragment {
             }
 
             String str = stringResponseInfo.result;
-            Log.i(TAG, "关注的圈子的数据:" + str);
             try {
                 AttentionLoop attentionLoop = JsonUtils.getInstance().fromJSON(AttentionLoop.class, str);
                 if (attentionLoop.getStatus().equals("1")) {
@@ -271,7 +270,7 @@ public class AttentionLoopFragment extends Fragment {
                             getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e(TAG, "关注的圈子数据解析异常:" + e.getMessage());
+                DeBugLog.e(TAG, "关注的圈子数据解析异常:" + e.getMessage());
                 Toast.makeText(getActivity(),
                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
@@ -279,7 +278,7 @@ public class AttentionLoopFragment extends Fragment {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.e(TAG, "关注的圈子数据请求失败:" + s);
+            DeBugLog.e(TAG, "关注的圈子数据请求失败:" + s);
 
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();

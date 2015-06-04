@@ -1,7 +1,6 @@
 package com.minglang.suiuu.activity;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -12,10 +11,11 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.utils.DrawableUtils;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 
+@SuppressWarnings("deprecation")
 public class SuDetailsActivity extends Activity {
 
     /**
@@ -32,11 +32,6 @@ public class SuDetailsActivity extends Activity {
      * 收藏按钮
      */
     private TextView collection;
-
-    /**
-     * 滑动页面布局
-     */
-    private RelativeLayout slideLayout;
 
     /**
      * 图片滑动
@@ -98,15 +93,13 @@ public class SuDetailsActivity extends Activity {
             public void onClick(View v) {
 
                 if (isPraise) {
-                    Drawable white = getResources().getDrawable(R.drawable.icon_praise_white);
-                    white.setBounds(0, 0, white.getMinimumWidth(), white.getMinimumHeight());
-                    praise.setCompoundDrawables(white, null, null, null);
+                    praise.setCompoundDrawables(DrawableUtils.setBounds(getResources()
+                            .getDrawable(R.drawable.icon_praise_white)), null, null, null);
                     praise.setTextColor(getResources().getColor(R.color.white));
                     isPraise = false;
                 } else {
-                    Drawable red = getResources().getDrawable(R.drawable.icon_praise_red);
-                    red.setBounds(0, 0, red.getMinimumWidth(), red.getMinimumHeight());
-                    praise.setCompoundDrawables(red, null, null, null);
+                    praise.setCompoundDrawables(DrawableUtils.setBounds(getResources()
+                            .getDrawable(R.drawable.icon_praise_red)), null, null, null);
                     praise.setTextColor(getResources().getColor(R.color.click_red));
                     isPraise = true;
                 }
@@ -119,15 +112,13 @@ public class SuDetailsActivity extends Activity {
             public void onClick(View v) {
 
                 if (isCollection) {
-                    Drawable white = getResources().getDrawable(R.drawable.icon_collection_white);
-                    white.setBounds(0, 0, white.getMinimumWidth(), white.getMinimumHeight());
-                    collection.setCompoundDrawables(white, null, null, null);
+                    collection.setCompoundDrawables(DrawableUtils.setBounds(getResources()
+                            .getDrawable(R.drawable.icon_collection_white)), null, null, null);
                     collection.setTextColor(getResources().getColor(R.color.white));
                     isCollection = false;
                 } else {
-                    Drawable yellow = getResources().getDrawable(R.drawable.icon_collection_yellow);
-                    yellow.setBounds(0, 0, yellow.getMinimumWidth(), yellow.getMinimumHeight());
-                    collection.setCompoundDrawables(yellow, null, null, null);
+                    collection.setCompoundDrawables(DrawableUtils.setBounds(getResources()
+                            .getDrawable(R.drawable.icon_collection_yellow)), null, null, null);
                     collection.setTextColor(getResources().getColor(R.color.click_yellow));
                     isCollection = true;
                 }
@@ -194,7 +185,8 @@ public class SuDetailsActivity extends Activity {
 
         collection = (TextView) findViewById(R.id.loop_article_collection);
 
-        slideLayout = (RelativeLayout) findViewById(R.id.SuDetailsSlideLayout);
+        //滑动页面布局
+        RelativeLayout slideLayout = (RelativeLayout) findViewById(R.id.SuDetailsSlideLayout);
 
         viewPager = (ViewPager) findViewById(R.id.SuDetailsPager);
 

@@ -7,12 +7,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,15 +21,16 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.customview.RollViewPager;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.CircleImageView;
+import com.minglang.suiuu.customview.RollViewPager;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.SuiuuDataDetail;
 import com.minglang.suiuu.entity.SuiuuDetailForData;
 import com.minglang.suiuu.entity.SuiuuDetailForInfo;
 import com.minglang.suiuu.entity.SuiuuDetailForPicList;
-import com.minglang.suiuu.entity.SuiuuDetailForPublisherList;
+import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.DrawableUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -55,20 +54,21 @@ import java.util.List;
  * 修改时间：2015/5/4 19:13
  * 修改备注：
  */
+@SuppressWarnings("deprecation")
 public class SuiuuDetailActivity extends BaseActivity {
-    private TextView tv_nikename;
-    private TextView tv_selfsign;
+
+    private static final String TAG = SuiuuDetailActivity.class.getSimpleName();
+
+    private TextView tv_nickName;
+    private TextView tv_selfSign;
     private TextView tv_title;
     private TextView tv_content;
     private JsonUtils jsonUtil = JsonUtils.getInstance();
     private SuiuuDetailForInfo detailInfo;
-    private SuiuuDetailForPublisherList publisherInfo;
     private CircleImageView suiuu_details_user_head_image;
     private TextView tv_service_time;
     private TextView tv_suiuu_travel_time;
-    private TextView tv_atmost_people;
-    private RatingBar rb_user_star;
-    private RatingBar rb_suiuu_star;
+    private TextView tv_atMost_people;
     private TextView tv_price;
     private TextView suiuu_details_praise;
     private SuiuuDetailForData suiuuDetailData;
@@ -87,15 +87,11 @@ public class SuiuuDetailActivity extends BaseActivity {
     private boolean isPraise;
     private TextView suiuu_details_comments;
     private String tripId;
-    private ImageLoader imageLoader;
     private DisplayImageOptions options;
     private List<SuiuuDetailForPicList> picList;
     private LinearLayout dots_ll;
-    private TextView top_news_title;
     private LinearLayout top_news_viewpager;
     private List<View> dotLists;
-    private List<String> titleLists;
-    private List<String> imageUrlLists;
     private TextView tv_choice;
     private ImageView suiuu_details_back;
 
@@ -104,7 +100,6 @@ public class SuiuuDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suiuu_details_activity);
         tripId = this.getIntent().getStringExtra("tripId");
-        Log.i("suiuu", "tripId=" + tripId);
 
         initView();
         loadDate(tripId);
@@ -130,8 +125,8 @@ public class SuiuuDetailActivity extends BaseActivity {
         }
 
         dialog = new TextProgressDialog(this);
-        tv_nikename = (TextView) findViewById(R.id.tv_nickname);
-        tv_selfsign = (TextView) findViewById(R.id.tv_self_sign);
+        tv_nickName = (TextView) findViewById(R.id.tv_nickname);
+        tv_selfSign = (TextView) findViewById(R.id.tv_self_sign);
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_content = (TextView) findViewById(R.id.tv_content);
 
@@ -144,9 +139,7 @@ public class SuiuuDetailActivity extends BaseActivity {
 
         tv_service_time = (TextView) findViewById(R.id.tv_service_time);
         tv_suiuu_travel_time = (TextView) findViewById(R.id.tv_suiuu_travel_time);
-        tv_atmost_people = (TextView) findViewById(R.id.tv_atmost_people);
-        rb_user_star = (RatingBar) findViewById(R.id.rb_user_star);
-        rb_suiuu_star = (RatingBar) findViewById(R.id.rb_suiuu_star);
+        tv_atMost_people = (TextView) findViewById(R.id.tv_atmost_people);
         tv_price = (TextView) findViewById(R.id.tv_price);
         suiuu_details_praise = (TextView) findViewById(R.id.suiuu_details_praise);
         suiuu_details_collection = (TextView) findViewById(R.id.suiuu_details_collection);
@@ -162,42 +155,53 @@ public class SuiuuDetailActivity extends BaseActivity {
         tv_choice.setText(detailInfo.getTravelTime() + "人选择过");
         tv_title.setText(detailInfo.getTitle());
         tv_content.setText(detailInfo.getInfo());
-        tv_nikename.setText(suiuuDetailData.getUserInfo().getNickname());
+        tv_nickName.setText(suiuuDetailData.getUserInfo().getNickname());
+
         if (TextUtils.isEmpty(suiuuDetailData.getUserInfo().getIntro())) {
-            tv_selfsign.setText("该用户没有个性签名");
+            tv_selfSign.setText("该用户没有个性签名");
         } else {
-            tv_selfsign.setText(suiuuDetailData.getUserInfo().getIntro());
+            tv_selfSign.setText(suiuuDetailData.getUserInfo().getIntro());
         }
+
         ImageLoader.getInstance().displayImage(suiuuDetailData.getUserInfo().getHeadImg(), suiuu_details_user_head_image, options);
-        Log.i("suiuu", "startTime=" + detailInfo.getStartTime() + ",endTime=" + detailInfo.getEndTime());
         tv_service_time.setText("服务时间:     " + detailInfo.getStartTime() + "-" + detailInfo.getEndTime());
         tv_suiuu_travel_time.setText("随游时长:     " + detailInfo.getTravelTime() + "个小时");
-        Log.i("suiuu", "detailInfo.getMakeUserCount()=" + detailInfo.getMaxUserCount());
+
         if (detailInfo.getMaxUserCount() == null) {
-            tv_atmost_people.setText("最多人数:     0 人");
+            tv_atMost_people.setText("最多人数:     0 人");
         } else {
-            tv_atmost_people.setText("最多人数:     " + detailInfo.getMaxUserCount() + "人");
+            tv_atMost_people.setText("最多人数:     " + detailInfo.getMaxUserCount() + "人");
         }
+
         tv_price.setText("￥:  " + detailInfo.getBasePrice());
+
         //判断是否显示点赞
         if (suiuuDetailData.getPraise().size() >= 1) {
             attentionId = suiuuDetailData.getPraise().get(0).getAttentionId();
         }
+
         if (!TextUtils.isEmpty(attentionId)) {
             suiuu_details_praise.setTextColor(getResources().getColor(R.color.text_select_true));
-            suiuu_details_praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_red), null, null, null);
+            suiuu_details_praise.setCompoundDrawables(DrawableUtils.setBounds(getResources()
+                    .getDrawable(R.drawable.icon_praise_red)), null, null, null);
         }
+
         if (suiuuDetailData.getAttention().size() >= 1) {
             collectionId = suiuuDetailData.getAttention().get(0).getAttentionId();
         }
+
         if (!TextUtils.isEmpty(collectionId)) {
             suiuu_details_collection.setTextColor(getResources().getColor(R.color.text_select_true));
-            suiuu_details_collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_yellow), null, null, null);
+            suiuu_details_collection.setCompoundDrawables(DrawableUtils.setBounds(getResources()
+                    .getDrawable(R.drawable.icon_collection_yellow)), null, null, null);
         }
+
         picList = suiuuDetailData.getPicList();
+
         if (picList.size() >= 1) {
             setViewPager();
         }
+
         dialog.dismissDialog();
     }
 
@@ -212,15 +216,16 @@ public class SuiuuDetailActivity extends BaseActivity {
                 Toast.makeText(SuiuuDetailActivity.this, "xxxxxx", Toast.LENGTH_SHORT).show();
             }
         });
+
         //设置viewpager的宽高
-        LinearLayout.LayoutParams layoutParams = new LayoutParams(
-                new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                        LayoutParams.WRAP_CONTENT));
-        titleLists = new ArrayList<>();
-        imageUrlLists = new ArrayList<>();
+//        LinearLayout.LayoutParams layoutParams = new LayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+//                LayoutParams.WRAP_CONTENT));
+
+        List<String> imageUrlLists = new ArrayList<>();
         for (SuiuuDetailForPicList picDetail : picList) {
             imageUrlLists.add(picDetail.getUrl());
         }
+
         // 把图片的url地址传进去
         mViewPager.setimageUrlList(imageUrlLists);
         // 把title的url地址传进去
@@ -241,7 +246,6 @@ public class SuiuuDetailActivity extends BaseActivity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("trId", tripId);
         params.addBodyParameter(HttpServicePath.key, verification);
-        Log.i("suiuu", "userSing=" + verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuItemInfo, new SuiuuItemInfoCallBack());
         httpRequest.setParams(params);
@@ -255,13 +259,12 @@ public class SuiuuDetailActivity extends BaseActivity {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            Log.i("suiuu", responseInfo.result);
             try {
                 SuiuuDataDetail detail = jsonUtil.fromJSON(SuiuuDataDetail.class, responseInfo.result);
                 if ("1".equals(detail.getStatus())) {
                     suiuuDetailData = detail.getData();
                     detailInfo = detail.getData().getInfo();
-                    publisherInfo = detail.getData().getCreatePublisherInfo();
+//                    SuiuuDetailForPublisherList publisherInfo = detail.getData().getCreatePublisherInfo();
                     fullOfData();
                 } else {
                     dialog.dismissDialog();
@@ -271,7 +274,6 @@ public class SuiuuDetailActivity extends BaseActivity {
                 dialog.dismissDialog();
                 Toast.makeText(SuiuuDetailActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
-            } finally {
             }
         }
 
@@ -337,7 +339,8 @@ public class SuiuuDetailActivity extends BaseActivity {
                 if ("1".equals(status)) {
                     attentionId = data;
                     suiuu_details_praise.setTextColor(getResources().getColor(R.color.text_select_true));
-                    suiuu_details_praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_red), null, null, null);
+                    suiuu_details_praise.setCompoundDrawables(DrawableUtils.setBounds(getResources()
+                            .getDrawable(R.drawable.icon_praise_red)), null, null, null);
                     Toast.makeText(SuiuuDetailActivity.this, "点赞成功", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
@@ -348,7 +351,7 @@ public class SuiuuDetailActivity extends BaseActivity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.i("i", s);
+            DeBugLog.e(TAG,"点赞失败:"+e.getMessage());
             Toast.makeText(SuiuuDetailActivity.this, "点赞失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -399,7 +402,6 @@ public class SuiuuDetailActivity extends BaseActivity {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            Log.i("suiuu", stringResponseInfo.result);
             try {
                 JSONObject json = new JSONObject(stringResponseInfo.result);
                 String status = json.getString("status");
@@ -418,7 +420,7 @@ public class SuiuuDetailActivity extends BaseActivity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            Log.i("suiuu", s);
+            DeBugLog.i("suiuu", s);
             Toast.makeText(SuiuuDetailActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -426,7 +428,9 @@ public class SuiuuDetailActivity extends BaseActivity {
     public Drawable setImgDrawTextPosition(int img) {
         Drawable drawable = this.getResources().getDrawable(img);
         // 调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        if (drawable != null) {
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        }
         return drawable;
     }
 
@@ -477,8 +481,6 @@ public class SuiuuDetailActivity extends BaseActivity {
 
     /**
      * 动态初始化点
-     *
-     * @param size
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void initDot(int size) {

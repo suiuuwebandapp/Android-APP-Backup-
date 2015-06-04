@@ -18,7 +18,7 @@ import java.util.Locale;
 
 public class BaseActivity extends FragmentActivity {
 
-    private static final String TAG = "BaseActivity";
+    private static final String TAG = BaseActivity.class.getSimpleName();
 
     public ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -81,8 +81,6 @@ public class BaseActivity extends FragmentActivity {
     public String userSign;
     public String verification;
 
-    private long maxMemorySize;
-
     public boolean isZhCnLanguage;
 
     @Override
@@ -90,7 +88,7 @@ public class BaseActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
 
-        maxMemorySize = Runtime.getRuntime().maxMemory() / 1024 / 1024;
+        long maxMemorySize = Runtime.getRuntime().maxMemory() / 1024 / 1024;
         DeBugLog.i(TAG, "应用程序可用最大内存:" + maxMemorySize);
 
         initScreen();

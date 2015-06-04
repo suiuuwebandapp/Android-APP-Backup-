@@ -6,11 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.SuiuuDataList;
+import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -59,28 +59,19 @@ public class ShowSuiuuAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final ViewHolder holder;
-        View view;
-        if (convertView != null && convertView instanceof RelativeLayout) {
-            view = convertView;
-            holder = (ViewHolder) view.getTag();
-        } else {
-            holder = new ViewHolder();
-            view = View.inflate(context, R.layout.adapter_suiuu, null);
-            holder.picContent = (ImageView) view.findViewById(R.id.item_attention_dynamic_image);
-            holder.title = (TextView) view.findViewById(R.id.item_attention_dynamic_title);
-            holder.description = (TextView) view.findViewById(R.id.item_attention_dynamic_content);
-            view.setTag(holder);
-        }
-        holder.title.setText(list.get(position).getTitle());
-        holder.description.setText(list.get(position).getIntro());
-        imageLoader.displayImage(list.get(position).getTitleImg(), holder.picContent, options);
-        return view;
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.adapter_suiuu, position);
+        convertView = holder.getConvertView();
+
+        ImageView picContent = holder.getView(R.id.item_attention_dynamic_image);
+        TextView title = holder.getView(R.id.item_attention_dynamic_title);
+        TextView description = holder.getView(R.id.item_attention_dynamic_content);
+
+        title.setText(list.get(position).getTitle());
+        description.setText(list.get(position).getIntro());
+        imageLoader.displayImage(list.get(position).getTitleImg(), picContent, options);
+
+        return convertView;
     }
 
-    static class ViewHolder {
-        ImageView picContent;
-        TextView title;
-        TextView description;
-    }
+
 }

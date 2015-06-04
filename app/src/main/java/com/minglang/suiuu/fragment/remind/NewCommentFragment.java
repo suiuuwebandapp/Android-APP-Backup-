@@ -106,7 +106,6 @@ public class NewCommentFragment extends BaseFragment {
         initView(rootView);
         ViewAction();
         getData();
-        DeBugLog.i(TAG, "userSign:" + userSign);
         return rootView;
     }
 
@@ -206,6 +205,10 @@ public class NewCommentFragment extends BaseFragment {
                 HttpServicePath.GetMessageListPath, new NewCommentRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
+    }
+
+    public String getUserSign() {
+        return userSign;
     }
 
     private class NewCommentRequestCallBack extends RequestCallBack<String> {

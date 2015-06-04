@@ -474,9 +474,9 @@ public class LoginActivity extends BaseActivity {
         weiBoLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-//                type = "3";
-//                mController.doOauthVerify(LoginActivity.this, SHARE_MEDIA.SINA, new MicroBlog4UMAuthListener());
-                Toast.makeText(LoginActivity.this, "微博暂未接通", Toast.LENGTH_SHORT).show();
+                type = "3";
+                mController.doOauthVerify(LoginActivity.this, SHARE_MEDIA.SINA, new MicroBlog4UMAuthListener());
+//                Toast.makeText(LoginActivity.this, "微博暂未接通", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -1,83 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    android:id="@+id/suiuu_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/suiuu_root">
-<!--没有搜索结果页面-->
+    android:orientation="vertical">
+
+    <!--没有搜索结果页面-->
     <RelativeLayout
         android:id="@+id/rl_search_no_data"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        >
+        android:layout_centerVertical="true"
+        android:visibility="gone">
+
         <ImageView
             android:id="@+id/iv_icon_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_search"
-            android:layout_centerHorizontal="true"/>
-        <TextView
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/iv_icon_search"
+            android:background="@drawable/icon_search"/>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_icon_search"
+            android:layout_centerHorizontal="true"
+            android:text="@string/noData_AgainLoad"
             android:textColor="@color/login_bg_color"
-            android:text="没有数据,请重新获取"
-            android:textSize="@dimen/layout_20sp"
-            />
+            android:textSize="@dimen/layout_20sp"/>
 
-
-        </RelativeLayout>
+    </RelativeLayout>
 
     <com.minglang.suiuu.customview.PullToRefreshView
         android:id="@+id/main_pull_refresh_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <ListView
             android:id="@+id/lv_suiuu"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/layout_12dp"
-            android:dividerHeight="@dimen/layout_10dp"
+            android:layout_marginRight="@dimen/layout_12dp"
             android:background="@color/white"
-            android:scrollbars="none"
-            android:layout_marginRight="@dimen/layout_12dp"></ListView>
-
+            android:dividerHeight="@dimen/layout_10dp"
+            android:scrollbars="none"/>
 
     </com.minglang.suiuu.customview.PullToRefreshView>
 
     <TextView
-        android:id="@+id/tv_nodata_load"
+        android:id="@+id/tv_noDataLoad"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:text="@string/loadDataComplete"
         android:gravity="center"
+        android:padding="@dimen/layout_5dp"
+        android:text="@string/loadDataComplete"
         android:textColor="@color/text_select_true"
         android:textSize="@dimen/layout_20sp"
-        android:padding="@dimen/layout_5dp"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <FrameLayout
         android:id="@+id/fl_search_more"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/suiuu_framlayout_bg"
         android:layout_marginLeft="@dimen/layout_5dp"
         android:layout_marginRight="@dimen/layout_5dp"
+        android:background="@drawable/suiuu_framlayout_bg"
         android:visibility="gone">
 
         <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/tv_people_number"
@@ -86,88 +84,96 @@
                 android:padding="@dimen/layout_5dp"
                 android:text="@string/people_number"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/layout_15sp" />
+                android:textSize="@dimen/layout_15sp"/>
 
             <ImageButton
                 android:id="@+id/ib_release"
-                android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_below="@+id/tv_people_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_release" />
+                android:layout_below="@+id/tv_people_number"
+                android:layout_marginLeft="@dimen/layout_5dp"
+                android:layout_marginStart="@dimen/layout_5dp"
+                android:background="@drawable/btn_release"/>
 
             <EditText
-                android:id="@+id/et_peple_number"
-                android:layout_below="@+id/tv_people_number"
-                android:layout_toRightOf="@+id/ib_release"
-                android:layout_marginLeft="@dimen/layout_5dp"
+                android:id="@+id/et_people_number"
                 android:layout_width="@dimen/layout_50dp"
                 android:layout_height="@dimen/layout_25dp"
+                android:layout_below="@+id/tv_people_number"
+                android:layout_marginLeft="@dimen/layout_5dp"
+                android:layout_marginStart="@dimen/layout_5dp"
+                android:layout_toEndOf="@+id/ib_release"
+                android:layout_toRightOf="@+id/ib_release"
                 android:background="@color/white"
-                android:text="0"
                 android:gravity="center"
-                android:editable="false"
-                android:textColor="@color/black" />
+                android:inputType="number"
+                android:text="@string/zero"
+                android:textColor="@color/black"/>
 
             <ImageButton
                 android:id="@+id/ib_plus"
-                android:layout_toRightOf="@+id/et_peple_number"
-                android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_below="@+id/tv_people_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_plus" />
+                android:layout_below="@+id/tv_people_number"
+                android:layout_marginLeft="@dimen/layout_5dp"
+                android:layout_marginStart="@dimen/layout_5dp"
+                android:layout_toEndOf="@+id/et_people_number"
+                android:layout_toRightOf="@+id/et_people_number"
+                android:background="@drawable/btn_plus"/>
 
             <TextView
                 android:id="@+id/tv_type"
-                android:layout_below="@+id/ib_release"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/ib_release"
+                android:layout_marginTop="@dimen/layout_8dp"
                 android:padding="@dimen/layout_5dp"
                 android:text="@string/type"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/layout_15sp"
-                android:layout_marginTop="@dimen/layout_8dp" />
+                android:textSize="@dimen/layout_15sp"/>
 
             <com.minglang.suiuu.customview.FlowLayout
-                android:layout_below="@+id/tv_type"
-                android:layout_height="wrap_content"
+                android:id="@+id/id_flowLayout"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_type"
                 android:background="@color/transparent"
-                android:id="@+id/id_flowlayout"
-                android:padding="5dp"></com.minglang.suiuu.customview.FlowLayout>
-
+                android:padding="5dp"/>
 
             <TextView
                 android:id="@+id/tv_price_show"
-                android:layout_below="@+id/id_flowlayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/id_flowLayout"
                 android:padding="@dimen/layout_5dp"
                 android:text="@string/price"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/layout_15sp" />
+                android:textSize="@dimen/layout_15sp"/>
 
             <TextView
                 android:id="@+id/tv_price_range"
-                android:layout_below="@+id/id_flowlayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/layout_5dp"
-                android:text="0 - 10000"
+                android:layout_below="@+id/id_flowLayout"
                 android:layout_marginLeft="@dimen/layout_5dp"
+                android:layout_marginStart="@dimen/layout_5dp"
+                android:layout_toEndOf="@+id/tv_price_show"
                 android:layout_toRightOf="@+id/tv_price_show"
+                android:padding="@dimen/layout_5dp"
+                android:text="@string/zeroForTenKilo"
                 android:textColor="@color/login_bg_color"
-                android:textSize="@dimen/layout_15sp" />
+                android:textSize="@dimen/layout_15sp"/>
 
             <com.minglang.suiuu.customview.rangebar.RangeBar
-                android:id="@+id/rangebar"
+                android:id="@+id/rangeBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_price_show"
                 android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_marginRight="@dimen/layout_5dp"
-                android:layout_below="@+id/tv_price_show" />
+                android:layout_marginRight="@dimen/layout_5dp"/>
+
         </RelativeLayout>
+
     </FrameLayout>
 
 </RelativeLayout>

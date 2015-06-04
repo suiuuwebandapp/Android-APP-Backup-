@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -30,8 +29,6 @@ import java.util.ArrayList;
 
 public class FeedbackActivity extends BaseActivity {
 
-    private static final String TAG = FeedbackActivity.class.getSimpleName();
-
     private ImageView back;
 
     private TextView sendText;
@@ -48,7 +45,6 @@ public class FeedbackActivity extends BaseActivity {
         setContentView(R.layout.activity_feedback);
 
         initView();
-
         ViewAction();
     }
 
@@ -78,13 +74,6 @@ public class FeedbackActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                String str = s.toString();
-
-                Log.i(TAG, "Text:" + str);
-                Log.i(TAG, "start:" + String.valueOf(start));
-                Log.i(TAG, "before:" + String.valueOf(before));
-                Log.i(TAG, "count:" + String.valueOf(count));
 
                 if (!TextUtils.isEmpty(s)) {
                     sendText.setTextColor(getResources().getColor(R.color.remindColor));
@@ -141,13 +130,9 @@ public class FeedbackActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == 9) {
             listPicture = data.getStringArrayListExtra("pictureMessage");
-            for (String string : listPicture) {
-                Log.i("suiuu", string);
-            }
             gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture,"0"));
         }
     }

@@ -131,7 +131,6 @@ public class AreaFragment extends Fragment {
         initView(rootView);
         ViewAction();
         getData();
-        DeBugLog.i(TAG, "userSign:" + userSign);
         return rootView;
     }
 
@@ -266,6 +265,10 @@ public class AreaFragment extends Fragment {
         }else{
             refreshDataView.setVisibility(View.VISIBLE);
         }
+    }
+
+    public String getUserSign() {
+        return userSign;
     }
 
     /**

@@ -27,7 +27,6 @@ import java.util.Map;
 public class DemoHXSDKModel extends DefaultHXSDKModel {
 
     public DemoHXSDKModel(Context ctx) {
-
         super(ctx);
     }
 

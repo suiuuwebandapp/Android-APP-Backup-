@@ -30,12 +30,7 @@ import com.minglang.suiuu.utils.SuiuuInfo;
  * 修改备注：
  */
 public class ChoiceCountryActivity extends Activity {
-    private TextView tv_top_right;
-    private TextView tv_top_center;
-    private ListView listView;
-    private Sidebar sidebar;
     private Dialog dialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +41,18 @@ public class ChoiceCountryActivity extends Activity {
     }
 
     private void initView() {
-        tv_top_right = (TextView) findViewById(R.id.tv_top_right);
+        TextView tv_top_right = (TextView) findViewById(R.id.tv_top_right);
         tv_top_right.setVisibility(View.GONE);
-        tv_top_center = (TextView) findViewById(R.id.tv_top_center);
+
+        TextView tv_top_center = (TextView) findViewById(R.id.tv_top_center);
         tv_top_center.setVisibility(View.VISIBLE);
         tv_top_center.setText("国家");
-        listView = (ListView) findViewById(R.id.listView);
-        sidebar = (Sidebar) findViewById(R.id.sidebar);
+
+        ListView listView = (ListView) findViewById(R.id.listView);
+
+        Sidebar sidebar = (Sidebar) findViewById(R.id.sidebar);
         sidebar.setListView(listView);
+
         dialog = new Dialog(this);
         dialog.setContentView(R.layout.progress_bar);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
