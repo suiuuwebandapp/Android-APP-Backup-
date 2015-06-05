@@ -23,6 +23,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.LoopDetailsActivity;
 import com.minglang.suiuu.adapter.AreaAdapter;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshGridView;
@@ -38,6 +39,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -269,6 +271,13 @@ public class AreaFragment extends Fragment {
 
     public String getUserSign() {
         return userSign;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = SuiuuApplication.getRefWatcher();
+        refWatcher.watch(this);
     }
 
     /**

@@ -27,6 +27,7 @@ import com.minglang.suiuu.adapter.LoopFragmentPagerAdapter;
 import com.minglang.suiuu.adapter.LoopScrollPagerAdapter;
 import com.minglang.suiuu.anim.DepthPageTransformer;
 import com.minglang.suiuu.anim.ZoomOutPageTransformer;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.AutoScrollViewPager;
 import com.minglang.suiuu.customview.CirclePageIndicator;
@@ -45,6 +46,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -337,6 +339,13 @@ public class LoopFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         loopScrollViewPager.stopAutoScroll();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = SuiuuApplication.getRefWatcher();
+        refWatcher.watch(this);
     }
 
     class TitleOnClick implements View.OnClickListener {

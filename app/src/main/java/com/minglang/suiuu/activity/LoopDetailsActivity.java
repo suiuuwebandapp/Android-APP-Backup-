@@ -21,6 +21,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.LoopDetailsAdapter;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.PullToRefreshStaggeredView;
 import com.minglang.suiuu.customview.TextProgressDialog;
@@ -33,6 +34,7 @@ import com.minglang.suiuu.utils.DrawableUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
+import com.squareup.leakcanary.RefWatcher;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -311,6 +313,13 @@ public class LoopDetailsActivity extends BaseActivity {
         if (page > 1) {
             page = page - 1;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = SuiuuApplication.getRefWatcher();
+        refWatcher.watch(this);
     }
 
     /**

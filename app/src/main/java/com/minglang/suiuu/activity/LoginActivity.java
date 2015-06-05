@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -1353,72 +1354,86 @@ public class LoginActivity extends BaseActivity {
             DeBugLog.i(TAG, "status:" + status);
             if (status == 200 && info != null) {
                 DeBugLog.i(TAG, "微博返回数据为:" + info.toString());
+
+                try {
+                    String openid = info.get("openid").toString();
+                    Log.i(TAG, "openid:" + openid);
+                } catch (Exception e) {
+                    Log.e(TAG, "获取openid失败:" + e.getMessage());
+                }
+
+                try {
+                    String screenName = info.get("screen_name").toString();
+                    Log.i(TAG, "获取screenName失败:" + screenName);
+                } catch (Exception e) {
+                    Log.e(TAG, "获取screenName失败:" + e.getMessage());
+                }
+
+                try {
+                    String gender = info.get("gender").toString();
+                    Log.i(TAG, "gender:" + gender);
+                } catch (Exception e) {
+                    Log.e(TAG, "获取gender失败:" + e.getMessage());
+                }
+
+                try {
+                    String image_url = info.get("profile_image_url").toString();
+                    Log.i(TAG, "image_url:" + image_url);
+                } catch (Exception e) {
+                    Log.e(TAG, "获取image_url失败:" + e.getMessage());
+                }
             } else {
                 DeBugLog.e(TAG, "发生错误，未接收到数据！");
             }
         }
+
     }
 
     /**
      * 发送微博相关数据到服务器
-     *
-     * @param user 相关数据实体类
      */
-    private void setWeiBoData2Service(com.sina.weibo.sdk.openapi.models.User user) {
-        if (user != null) {
-            if (loginDialog != null) {
-                loginDialog.show();
-            }
-
-            //微博用户UID
-            String weiBoUserID = user.id;
-            //微博用户名
-            String weiBoUserName = user.screen_name;
-            //微博头像地址
-            String weiBoImagePath = user.avatar_large;
-            //性别
-            String weiBoGender = user.gender;
-
-            SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                    HttpServicePath.ThirdPartyPath, new WeiBoRequestCallBack());
-
-            String code;
-
-            switch (weiBoGender) {
-                case "男":
-                    code = "1";
-                    break;
-                case "女":
-                    code = "0";
-                    break;
-                default:
-                    code = "2";
-                    break;
-            }
-
-            RequestParams params = new RequestParams();
-            params.addBodyParameter("openId", weiBoUserID);
-            params.addBodyParameter("nickname", weiBoUserName);
-            params.addBodyParameter("sex", code);
-            params.addBodyParameter("headImg", weiBoImagePath);
-            params.addBodyParameter("type", type);
-
-            String sign = null;
-            try {
-                sign = MD5Utils.getMD5(weiBoUserID + type + HttpServicePath.ConfusedCode);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
-            params.addBodyParameter("sign", sign);
-
-            SuiuuInfo.WriteInformation(LoginActivity.this, new RequestData(weiBoUserID, weiBoUserName,
-                    code, weiBoImagePath, type));
-
-            httpRequest.setParams(params);
-            httpRequest.requestNetworkData();
-        } else {
-            Toast.makeText(LoginActivity.this, "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+    private void setWeiBoData2Service(String openid, String screenName, String gender, String headImagePath) {
+        if (loginDialog != null) {
+            loginDialog.show();
         }
+
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.ThirdPartyPath, new WeiBoRequestCallBack());
+
+        String code;
+
+        switch (gender) {
+            case "男":
+                code = "1";
+                break;
+            case "女":
+                code = "0";
+                break;
+            default:
+                code = "2";
+                break;
+        }
+
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("openId", openid);
+        params.addBodyParameter("nickname", screenName);
+        params.addBodyParameter("sex", code);
+        params.addBodyParameter("headImg", headImagePath);
+        params.addBodyParameter("type", type);
+
+        String sign = null;
+        try {
+            sign = MD5Utils.getMD5(openid + type + HttpServicePath.ConfusedCode);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        params.addBodyParameter("sign", sign);
+
+        SuiuuInfo.WriteInformation(LoginActivity.this, new RequestData(openid, screenName,
+                code, headImagePath, type));
+
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
     }
 
     /**

@@ -27,6 +27,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.ArticleCommentAdapter;
 import com.minglang.suiuu.adapter.LoopArticleImageAdapter;
 import com.minglang.suiuu.adapter.showPicDescriptionAdapter;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
 import com.minglang.suiuu.customview.CircleImageView;
@@ -45,6 +46,7 @@ import com.minglang.suiuu.utils.qq.TencentConstant;
 import com.minglang.suiuu.utils.wechat.WeChatConstant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.squareup.leakcanary.RefWatcher;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeConfig;
 import com.umeng.socialize.bean.SocializeEntity;
@@ -599,6 +601,13 @@ public class LoopArticleActivity extends BaseActivity {
 //        qqShareContent.setShareImage(mUMImgBitmap);//设置分享图片
         qqShareContent.setTargetUrl(HttpServicePath.RootPath + HttpServicePath.SharePath + articleId);//设置分享内容跳转URL
         mController.setShareMedia(qqShareContent);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = SuiuuApplication.getRefWatcher();
+        refWatcher.watch(this);
     }
 
     /**

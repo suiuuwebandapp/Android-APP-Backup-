@@ -30,6 +30,7 @@ import com.minglang.suiuu.adapter.AttentionDynamicAdapter;
 import com.minglang.suiuu.adapter.LoopDynamicAdapter;
 import com.minglang.suiuu.adapter.RecommendTravelAdapter;
 import com.minglang.suiuu.adapter.TodayStarAdapter;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.InnerListView;
 import com.minglang.suiuu.customview.NoScrollBarGridView;
@@ -48,6 +49,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -366,6 +368,13 @@ public class MainFragment extends BaseFragment {
             Toast.makeText(getActivity(),
                     getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = SuiuuApplication.getRefWatcher();
+        refWatcher.watch(this);
     }
 
     /**

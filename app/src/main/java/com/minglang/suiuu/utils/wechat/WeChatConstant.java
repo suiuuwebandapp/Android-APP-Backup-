@@ -1,8 +1,5 @@
 package com.minglang.suiuu.utils.wechat;
 
-/**
- * Created by Administrator on 2015/5/7.
- */
 public class WeChatConstant {
 
     public static final String APP_ID = "wx4caea36c40ded889";

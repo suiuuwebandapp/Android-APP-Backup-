@@ -28,6 +28,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuDetailActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.PullToRefreshView;
@@ -42,6 +43,7 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.squareup.leakcanary.RefWatcher;
 
 import org.json.JSONObject;
 
@@ -286,6 +288,37 @@ public class SuiuuFragment extends BaseFragment
         suHttpRequest.requestNetworkData();
     }
 
+    public void fragmentShow() {
+        if (fl_search_more.isShown()) {
+            suiuuListView.setEnabled(true);
+            fl_search_more.setVisibility(View.GONE);
+        } else {
+            suiuuListView.setEnabled(false);
+            fl_search_more.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams paramTest1 = (RelativeLayout.LayoutParams) fl_search_more.getLayoutParams();
+            paramTest1.setMargins(10, ConstantUtils.topHeight + 10, 10, 0);
+            fl_search_more.setLayoutParams(paramTest1);
+            if (tagList.size() < 1) {
+                getSuiuuSearchTag();
+            }
+        }
+    }
+
+    public void setViewGroup() {
+        flowLayout.removeAllViews();
+        LayoutInflater mInflater = LayoutInflater.from(getActivity());
+        for (int i = 0; i < tagList.size() - 1; i++) {
+            TextView tv = (TextView) mInflater.inflate(R.layout.tv,
+                    flowLayout, false);
+            tv.setText(tagList.get(i));
+            tv.setId(i);
+            tv.setOnClickListener(new MyOnclick());
+            list.add(tv);
+            flowLayout.addView(tv);
+
+        }
+    }
+
     @Override
     public void onFooterRefresh(PullToRefreshView view) {
         mPullToRefreshView.postDelayed(new Runnable() {
@@ -323,6 +356,13 @@ public class SuiuuFragment extends BaseFragment
             }
         }, 1000);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = SuiuuApplication.getRefWatcher();
+        refWatcher.watch(this);
     }
 
     /**
@@ -402,37 +442,6 @@ public class SuiuuFragment extends BaseFragment
         public void onFailure(HttpException e, String s) {
             dialog.dismissDialog();
             Toast.makeText(getActivity().getApplicationContext(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void fragmentShow() {
-        if (fl_search_more.isShown()) {
-            suiuuListView.setEnabled(true);
-            fl_search_more.setVisibility(View.GONE);
-        } else {
-            suiuuListView.setEnabled(false);
-            fl_search_more.setVisibility(View.VISIBLE);
-            RelativeLayout.LayoutParams paramTest1 = (RelativeLayout.LayoutParams) fl_search_more.getLayoutParams();
-            paramTest1.setMargins(10, ConstantUtils.topHeight + 10, 10, 0);
-            fl_search_more.setLayoutParams(paramTest1);
-            if (tagList.size() < 1) {
-                getSuiuuSearchTag();
-            }
-        }
-    }
-
-    public void setViewGroup() {
-        flowLayout.removeAllViews();
-        LayoutInflater mInflater = LayoutInflater.from(getActivity());
-        for (int i = 0; i < tagList.size() - 1; i++) {
-            TextView tv = (TextView) mInflater.inflate(R.layout.tv,
-                    flowLayout, false);
-            tv.setText(tagList.get(i));
-            tv.setId(i);
-            tv.setOnClickListener(new MyOnclick());
-            list.add(tv);
-            flowLayout.addView(tv);
-
         }
     }
 

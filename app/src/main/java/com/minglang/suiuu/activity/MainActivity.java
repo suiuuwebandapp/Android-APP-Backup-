@@ -147,6 +147,7 @@ public class MainActivity extends BaseActivity {
     // 账号在别处登录
     public boolean isConflict = false;
     private NewMessageBroadcastReceiver msgReceiver;
+
     //当前为fragment的第几页
     private int currentIndex = 0;
     private TextView msgCount;
@@ -585,12 +586,6 @@ public class MainActivity extends BaseActivity {
         } else {
             ft.add(R.id.showLayout, mainFragment);
         }
-//        if (mainFragment == null) {
-//            mainFragment = new MainFragment();
-//            ft.replace(R.id.showLayout, mainFragment);
-//        } else {
-//            ft.replace(R.id.showLayout, mainFragment);
-//        }
         currentIndex = 0;
         ft.commit();
     }
@@ -623,12 +618,6 @@ public class MainActivity extends BaseActivity {
         } else {
             ft.add(R.id.showLayout, loopFragment);
         }
-//        if (loopFragment == null) {
-//            loopFragment = new LoopFragment();
-//            ft.replace(R.id.showLayout, loopFragment);
-//        } else {
-//            ft.replace(R.id.showLayout, loopFragment);
-//        }
         currentIndex = 1;
         ft.commit();
     }
@@ -661,12 +650,6 @@ public class MainActivity extends BaseActivity {
         } else {
             ft.add(R.id.showLayout, suiuuFragment);
         }
-//        if (suiuuFragment == null) {
-//            suiuuFragment = new RouteFragment();
-//            ft.replace(R.id.showLayout, suiuuFragment);
-//        } else {
-//            ft.replace(R.id.showLayout, suiuuFragment);
-//        }
         currentIndex = 2;
         ft.commit();
     }
@@ -698,12 +681,6 @@ public class MainActivity extends BaseActivity {
             ft.add(R.id.showLayout, conversationFragment);
 
         }
-//        if (conversationFragment == null) {
-//            conversationFragment = new ChatAllHistoryFragment();
-//            ft.replace(R.id.showLayout, conversationFragment);
-//        } else {
-//            ft.replace(R.id.showLayout, conversationFragment);
-//        }
         currentIndex = 3;
         msgCount.setVisibility(View.INVISIBLE);
         ft.commit();
@@ -999,10 +976,8 @@ public class MainActivity extends BaseActivity {
 
             EMConversation conversation = EMChatManager.getInstance().getConversation(from);
             if (conversation != null) {
-                // 把message设为已读
-                EMMessage msg = conversation.getMessage(msgId);
+                EMMessage msg = conversation.getMessage(msgId);// 把message设为已读
                 if (msg != null) {
-                    // 2014-11-5 修复在某些机器上，在聊天页面对方发送已读回执时不立即显示已读的bug
                     if (ChatActivity.activityInstance != null) {
                         if (msg.getChatType() == ChatType.Chat) {
                             if (from.equals(ChatActivity.activityInstance.getToChatUsername()))
@@ -1023,17 +998,12 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             abortBroadcast();
-            //获取cmd message对象
-            String msgId = intent.getStringExtra("msgid");
+            String msgId = intent.getStringExtra("msgid"); //获取cmd message对象
             DeBugLog.i(TAG, "msgId:" + msgId);
             EMMessage message = intent.getParcelableExtra("message");
-            //获取消息body
-            CmdMessageBody cmdMsgBody = (CmdMessageBody) message.getBody();
+            CmdMessageBody cmdMsgBody = (CmdMessageBody) message.getBody(); //获取消息body
             String action = cmdMsgBody.action;//获取自定义action
-
-            //获取扩展属性 此处省略
-//			message.getStringAttribute("");
-            EMLog.d(TAG, String.format("透传消息：action:%s,message:%s", action, message.toString()));
+            DeBugLog.d(TAG, String.format("透传消息：action:%s,message:%s", action, message.toString()));
             String st9 = getResources().getString(R.string.receive_the_passthrough);
             Toast.makeText(MainActivity.this, st9 + action, Toast.LENGTH_SHORT).show();
         }
