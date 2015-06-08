@@ -61,7 +61,9 @@
         android:allowBackup="true"
         android:icon="@drawable/main_icon"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:exported="false"
+        android:theme="@style/AppTheme"
+        >
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="554c2a0567e58e074f00054e"/>

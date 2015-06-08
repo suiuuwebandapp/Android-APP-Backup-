@@ -29,6 +29,7 @@ import com.minglang.suiuu.entity.SuiuuDataDetail;
 import com.minglang.suiuu.entity.SuiuuDetailForData;
 import com.minglang.suiuu.entity.SuiuuDetailForInfo;
 import com.minglang.suiuu.entity.SuiuuDetailForPicList;
+import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.DrawableUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
@@ -260,13 +261,18 @@ public class SuiuuDetailActivity extends BaseActivity {
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
             try {
-                SuiuuDataDetail detail = jsonUtil.fromJSON(SuiuuDataDetail.class, responseInfo.result);
-                if ("1".equals(detail.getStatus())) {
+                JSONObject json = new JSONObject(responseInfo.result);
+                String status = json.getString("status");
+                if ("1".equals(status )){
+                    SuiuuDataDetail detail = jsonUtil.fromJSON(SuiuuDataDetail.class, responseInfo.result);
                     suiuuDetailData = detail.getData();
                     detailInfo = detail.getData().getInfo();
-//                    SuiuuDetailForPublisherList publisherInfo = detail.getData().getCreatePublisherInfo();
                     fullOfData();
-                } else {
+                } else if ("-3".equals(status)) {
+                    Toast.makeText(getApplicationContext(), "登录信息过期,请重新登录", Toast.LENGTH_SHORT).show();
+                    AppUtils.intentLogin(getApplicationContext());
+                    SuiuuDetailActivity.this.finish();
+                }else {
                     dialog.dismissDialog();
                     Toast.makeText(SuiuuDetailActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }
