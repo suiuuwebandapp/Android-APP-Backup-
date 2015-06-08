@@ -140,7 +140,7 @@ public class PersonalActivity extends BaseActivity {
         personalShowPage = (ViewPager) findViewById(R.id.personalShowPage);
         personalShowPage.setPageTransformer(true, new ZoomOutPageTransformer());
 
-        int paddingParams = Utils.newInstance(this).dip2px(5f);
+        int paddingParams = Utils.newInstance().dip2px(5f, this);
 
         suiuuGrid = new GridView(this);
         suiuuGrid.setHorizontalSpacing(10);

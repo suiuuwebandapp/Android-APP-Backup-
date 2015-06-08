@@ -18,23 +18,13 @@ import android.widget.ListView;
 
 public class Utils {
 
-    private static final String TAG = Utils.class.getSimpleName();
-
     private static Utils utils;
 
-    private Context context;
-
-    public Utils(Context context) {
-        this.context = context;
-    }
-
-    public static Utils newInstance(Context context) {
+    public static Utils newInstance() {
         if (utils == null) {
-            utils = new Utils(context);
-            return utils;
-        } else {
-            return utils;
+            utils = new Utils();
         }
+        return utils;
     }
 
     /**
@@ -43,7 +33,7 @@ public class Utils {
      * @param dpValue dp数值
      * @return 对应像素值
      */
-    public int dip2px(float dpValue) {
+    public int dip2px(float dpValue, Context context) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
@@ -54,29 +44,9 @@ public class Utils {
      * @param pxValue 像素数值
      * @return 对应dp值
      */
-    public int px2dip(float pxValue) {
+    public int px2dip(float pxValue, Context context) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
-    }
-
-    /**
-     * 得到状态栏高度
-     *
-     * @return
-     */
-    public int getStatusHeight() {
-
-        int statusHeight = -1;
-        try {
-            Class<?> clazz = Class.forName("com.android.internal.R$dimen");
-            Object object = clazz.newInstance();
-            int height = Integer.parseInt(clazz.getField("status_bar_height")
-                    .get(object).toString());
-            statusHeight = context.getResources().getDimensionPixelSize(height);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return statusHeight;
     }
 
     /**

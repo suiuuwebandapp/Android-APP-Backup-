@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -38,6 +37,7 @@ import com.minglang.suiuu.entity.LoopArticle;
 import com.minglang.suiuu.entity.LoopArticleCommentList;
 import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.DrawableUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -168,11 +168,13 @@ public class LoopArticleActivity extends BaseActivity {
     private ImageView loop_article_back;
     private boolean isClickComment;
     private String attentionId;
+
     /**
      * 点赞Id
      */
     private String praiseId;
     private ScrollView loop_article_scrollView;
+
     //判断取消的是点赞还是收藏
     private boolean isPraise;
 
@@ -493,7 +495,8 @@ public class LoopArticleActivity extends BaseActivity {
         attentionId = loopArticleData.getAttentionId();
         if (!TextUtils.isEmpty(attentionId)) {
             collection.setTextColor(getResources().getColor(R.color.text_select_true));
-            collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_yellow), null, null, null);
+            collection.setCompoundDrawables(DrawableUtils.setBounds(getResources().
+                    getDrawable(R.drawable.icon_collection_yellow)), null, null, null);
 
         }
 
@@ -624,7 +627,8 @@ public class LoopArticleActivity extends BaseActivity {
                 if ("1".equals(status)) {
                     praiseId = data;
                     praise.setTextColor(getResources().getColor(R.color.text_select_true));
-                    praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_red), null, null, null);
+                    praise.setCompoundDrawables(DrawableUtils.setBounds(getResources().
+                            getDrawable(R.drawable.icon_praise_red)), null, null, null);
                     Toast.makeText(LoopArticleActivity.this, "点赞成功", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
@@ -751,7 +755,8 @@ public class LoopArticleActivity extends BaseActivity {
                 if ("1".equals(status)) {
                     attentionId = data;
                     collection.setTextColor(getResources().getColor(R.color.text_select_true));
-                    collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_yellow), null, null, null);
+                    collection.setCompoundDrawables(DrawableUtils.setBounds(getResources().
+                            getDrawable(R.drawable.icon_collection_yellow)), null, null, null);
                     Toast.makeText(LoopArticleActivity.this, "收藏文章成功", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
@@ -782,12 +787,14 @@ public class LoopArticleActivity extends BaseActivity {
                     if (isPraise) {
                         praiseId = null;
                         praise.setTextColor(getResources().getColor(R.color.white));
-                        praise.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_praise_white), null, null, null);
+                        praise.setCompoundDrawables(DrawableUtils.setBounds(getResources().
+                                getDrawable(R.drawable.icon_praise_white)), null, null, null);
                         Toast.makeText(LoopArticleActivity.this, "取消点赞成功", Toast.LENGTH_SHORT).show();
                     } else {
                         attentionId = null;
                         collection.setTextColor(getResources().getColor(R.color.white));
-                        collection.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_collection_white), null, null, null);
+                        collection.setCompoundDrawables(DrawableUtils.setBounds(getResources().
+                                getDrawable(R.drawable.icon_collection_white)), null, null, null);
                         Toast.makeText(LoopArticleActivity.this, "取消收藏成功", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -803,13 +810,6 @@ public class LoopArticleActivity extends BaseActivity {
             DeBugLog.e(TAG, s);
             Toast.makeText(LoopArticleActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public Drawable setImgDrawTextPosition(int img) {
-        Drawable drawable = this.getResources().getDrawable(img);
-        // 调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        return drawable;
     }
 
     @Override

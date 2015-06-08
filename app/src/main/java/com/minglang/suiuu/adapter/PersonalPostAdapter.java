@@ -114,7 +114,7 @@ public class PersonalPostAdapter extends BaseAdapter {
         }
 
         convertView = holder.getConvertView();
-        int itemWidth = screenWidth / 2 - Utils.newInstance(context).dip2px(10);
+        int itemWidth = screenWidth / 2 - Utils.newInstance().dip2px(10,context);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemWidth, itemWidth);
         convertView.setLayoutParams(params);
 

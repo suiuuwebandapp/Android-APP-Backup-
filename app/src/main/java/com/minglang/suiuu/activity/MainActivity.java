@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -167,6 +166,8 @@ public class MainActivity extends BaseActivity {
 
     private ExitBroadcastReceiver exitBroadcastReceiver;
 
+    private EMChatManager chatManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,6 +188,7 @@ public class MainActivity extends BaseActivity {
 
         initView();
         initRegisterAllBroadcastReceiver();
+        ViewAction();
     }
 
     @Override
@@ -334,27 +336,31 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initRegisterAllBroadcastReceiver() {
+        chatManager = EMChatManager.getInstance();
+
         MobclickAgent.updateOnlineConfig(this);
         if (getIntent().getBooleanExtra("conflict", false) && !isConflictDialogShow) {
             showConflictDialog();
         } else if (getIntent().getBooleanExtra(Constant.ACCOUNT_REMOVED, false) && !isAccountRemovedDialogShow) {
             showAccountRemovedDialog();
         }
+
         MobclickAgent.updateOnlineConfig(this);
-        ViewAction();
+
+
         // 注册一个接收消息的BroadcastReceiver
         msgReceiver = new NewMessageBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter(EMChatManager.getInstance().getNewMessageBroadcastAction());
+        IntentFilter intentFilter = new IntentFilter(chatManager.getNewMessageBroadcastAction());
         intentFilter.setPriority(3);
         registerReceiver(msgReceiver, intentFilter);
 
         // 注册一个ack回执消息的BroadcastReceiver
-        IntentFilter ackMessageIntentFilter = new IntentFilter(EMChatManager.getInstance().getAckMessageBroadcastAction());
+        IntentFilter ackMessageIntentFilter = new IntentFilter(chatManager.getAckMessageBroadcastAction());
         ackMessageIntentFilter.setPriority(3);
         registerReceiver(ackMessageReceiver, ackMessageIntentFilter);
 
         //注册一个透传消息的BroadcastReceiver
-        IntentFilter cmdMessageIntentFilter = new IntentFilter(EMChatManager.getInstance().getCmdMessageBroadcastAction());
+        IntentFilter cmdMessageIntentFilter = new IntentFilter(chatManager.getCmdMessageBroadcastAction());
         cmdMessageIntentFilter.setPriority(3);
         registerReceiver(cmdMessageReceiver, cmdMessageIntentFilter);
 
@@ -368,7 +374,7 @@ public class MainActivity extends BaseActivity {
 //        setContactListener监听联系人的变化等
 //        EMContactManager.getInstance().setContactListener(new MyContactListener());
         // 注册一个监听连接状态的listener
-        EMChatManager.getInstance().addConnectionListener(new MyConnectionListener());
+        chatManager.addConnectionListener(new MyConnectionListener());
         // 注册群聊相关的listener
 //		EMGroupManager.getInstance().addGroupChangeListener(new MyGroupChangeListener());
         // 通知sdk，UI 已经初始化完毕，注册了相应的receiver和listener, 可以接受broadcast了
@@ -891,7 +897,6 @@ public class MainActivity extends BaseActivity {
         } else if (getIntent().getBooleanExtra(Constant.ACCOUNT_REMOVED, false) && !isAccountRemovedDialogShow) {
             showAccountRemovedDialog();
         }
-        DeBugLog.i(TAG, "重新进入该Activity");
     }
 
     @Override
@@ -925,7 +930,7 @@ public class MainActivity extends BaseActivity {
             String from = intent.getStringExtra("from");
             // 消息id
             String msgId = intent.getStringExtra("msgid");
-            EMMessage message = EMChatManager.getInstance().getMessage(msgId);
+            EMMessage message = chatManager.getMessage(msgId);
 
             // fix: logout crash， 如果正在接收大量消息
             // 因为此时已经logout，消息队列已经被清空， broadcast延时收到，所以会出现message为空的情况
@@ -974,7 +979,7 @@ public class MainActivity extends BaseActivity {
             String msgId = intent.getStringExtra("msgid");
             String from = intent.getStringExtra("from");
 
-            EMConversation conversation = EMChatManager.getInstance().getConversation(from);
+            EMConversation conversation = chatManager.getConversation(from);
             if (conversation != null) {
                 EMMessage msg = conversation.getMessage(msgId);// 把message设为已读
                 if (msg != null) {
@@ -1121,7 +1126,7 @@ public class MainActivity extends BaseActivity {
      */
     public int getUnreadMsgCountTotal() {
         int unreadMsgCountTotal;
-        unreadMsgCountTotal = EMChatManager.getInstance().getUnreadMsgsCount();
+        unreadMsgCountTotal = chatManager.getUnreadMsgsCount();
         return unreadMsgCountTotal;
     }
 

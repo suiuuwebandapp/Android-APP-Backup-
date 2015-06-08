@@ -211,7 +211,7 @@ public class SuiuuDetailActivity extends BaseActivity {
         initDot(picList.size());
         RollViewPager mViewPager = new RollViewPager(this, dotLists, new RollViewPager.PagerClickCallBack() {
             @Override
-            public void pagerClick(int postion) {
+            public void pagerClick(int position) {
 //				Intent intent = new Intent(ct,DetaiAct.class);
 //				ct.startActivity(intent);
                 Toast.makeText(SuiuuDetailActivity.this, "xxxxxx", Toast.LENGTH_SHORT).show();
@@ -228,7 +228,7 @@ public class SuiuuDetailActivity extends BaseActivity {
         }
 
         // 把图片的url地址传进去
-        mViewPager.setimageUrlList(imageUrlLists);
+        mViewPager.setImageUrlList(imageUrlLists);
         // 把title的url地址传进去
 //        mViewPager.setTitleList(top_news_title, titleLists);
         // 定义一个viewpage可以跳动的方法
@@ -357,7 +357,7 @@ public class SuiuuDetailActivity extends BaseActivity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG,"点赞失败:"+e.getMessage());
+            DeBugLog.e(TAG, "点赞失败:" + e.getMessage());
             Toast.makeText(SuiuuDetailActivity.this, "点赞失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -490,14 +490,14 @@ public class SuiuuDetailActivity extends BaseActivity {
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void initDot(int size) {
-        Utils util = new Utils(this);
+        Utils util = Utils.newInstance();
         dotLists = new ArrayList<>();
         dots_ll.removeAllViews();
         LayoutParams params;
         for (int i = 0; i < size; i++) {
             View pointView = new View(this);
-            params = new LayoutParams(util.dip2px(15), util.dip2px(15));
-            params.leftMargin = util.dip2px(10);
+            params = new LayoutParams(util.dip2px(15, this), util.dip2px(15, this));
+            params.leftMargin = util.dip2px(10, this);
             pointView.setLayoutParams(params);
             pointView.setEnabled(false);
             pointView.setBackgroundResource(R.drawable.ic_launcher);
@@ -511,15 +511,4 @@ public class SuiuuDetailActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
 }

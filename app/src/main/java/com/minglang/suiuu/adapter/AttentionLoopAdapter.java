@@ -101,7 +101,7 @@ public class AttentionLoopAdapter extends BaseAdapter {
 
         convertView = holder.getConvertView();
 
-        int itemParams = screenWidth / 3 - Utils.newInstance(context).dip2px(10);
+        int itemParams = screenWidth / 3 - Utils.newInstance().dip2px(10, context);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemParams, itemParams);
         convertView.setLayoutParams(params);
 

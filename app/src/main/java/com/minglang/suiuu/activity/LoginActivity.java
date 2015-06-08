@@ -241,8 +241,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        SuiuuApplication.addActivity(this);
         setContentView(R.layout.activity_login);
 
         initView();
@@ -486,8 +484,7 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View v) {
                 type = "1";
 
-                UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(LoginActivity.this,
-                        TencentConstant.APP_ID, TencentConstant.APP_KEY);
+                UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(LoginActivity.this, TencentConstant.APP_ID, TencentConstant.APP_KEY);
                 qqSsoHandler.addToSocialSDK();
 
                 mController.doOauthVerify(LoginActivity.this, SHARE_MEDIA.QQ, new QQLogin4UMAuthListener());
@@ -504,8 +501,7 @@ public class LoginActivity extends BaseActivity {
                     return;
                 }
 
-                UMWXHandler wxHandler = new UMWXHandler(LoginActivity.this,
-                        WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
+                UMWXHandler wxHandler = new UMWXHandler(LoginActivity.this, WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
                 wxHandler.addToSocialSDK();
 
                 mController.doOauthVerify(LoginActivity.this, SHARE_MEDIA.WEIXIN, new WeChat4UMAuthListener());

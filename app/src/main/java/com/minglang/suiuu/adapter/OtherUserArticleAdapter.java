@@ -104,7 +104,7 @@ public class OtherUserArticleAdapter extends BaseAdapter {
 
         convertView = holder.getConvertView();
 
-        int itemParams = screenWidth / 2 - Utils.newInstance(context).dip2px(10);
+        int itemParams = screenWidth / 2 - Utils.newInstance().dip2px(10,context);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemParams, itemParams);
         convertView.setLayoutParams(params);
 

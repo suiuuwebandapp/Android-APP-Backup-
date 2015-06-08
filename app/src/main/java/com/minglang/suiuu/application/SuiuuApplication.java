@@ -13,7 +13,6 @@
  */
 package com.minglang.suiuu.application;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
@@ -38,7 +37,6 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -50,11 +48,6 @@ public class SuiuuApplication extends Application {
     private static SuiuuApplication instance;
     // login user name
     public final String PREF_USERNAME = "username";
-
-    /**
-     * @description 所有已经启动的activity集合
-     */
-    private static ArrayList<Activity> activityList = new ArrayList<>();
 
     /**
      * 当前用户nickname,为了苹果推送不是userid而是昵称
@@ -222,16 +215,5 @@ public class SuiuuApplication extends Application {
     public void logout(final EMCallBack emCallBack) {
         // 先调用sdk logout，在清理app中自己的数据
         hxSDKHelper.logout(emCallBack);
-    }
-
-    public void exit() {
-        for (Activity act : activityList) {
-            act.finish();
-        }
-        android.os.Process.killProcess(android.os.Process.myPid());
-    }
-
-    public static void addActivity(Activity act) {
-        activityList.add(act);
     }
 }

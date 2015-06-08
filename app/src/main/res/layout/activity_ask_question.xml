@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/root"
-    >
+    android:id="@+id/root">
 
     <include
         layout="@layout/common_top2_layout"/>
@@ -73,8 +72,7 @@
                 android:background="@color/white"
                 android:layout_marginTop="@dimen/layout_10dp"
                 android:layout_marginLeft="@dimen/layout_16dp"
-                android:layout_marginRight="@dimen/layout_16dp"
-                >
+                android:layout_marginRight="@dimen/layout_16dp">
 
                 <EditText
                     android:id="@+id/et_question_description"
@@ -85,8 +83,7 @@
                     android:gravity="start"
                     android:textColor="@color/textColor"
                     android:hint="@string/question_description"
-                    android:textSize="@dimen/layout_15sp"
-                    />
+                    android:textSize="@dimen/layout_15sp"/>
             </RelativeLayout>
 
             <com.minglang.suiuu.customview.MyGridView
@@ -118,8 +115,7 @@
                 android:padding="@dimen/layout_8dp"
                 android:background="@color/white"
                 android:textSize="@dimen/layout_15sp"
-                android:gravity="center_vertical"
-                />
+                android:gravity="center_vertical"/>
         </LinearLayout>
     </ScrollView>
 
