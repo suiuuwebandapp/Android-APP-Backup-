@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.RectF;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Property;
 import android.view.View;
@@ -55,7 +56,7 @@ public class CircularProgress extends View {
 
         float density = context.getResources().getDisplayMetrics().density;
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircularProgress, defStyleAttr, 0);
-        mBorderWidth = a.getDimension(R.styleable.CircularProgress_borderWidth,
+        mBorderWidth = a.getDimension(R.styleable.CircularProgress_borderWidth_,
                 DEFAULT_BORDER_WIDTH * density);
         a.recycle();
         mColors = new int[4];
@@ -101,7 +102,7 @@ public class CircularProgress extends View {
     }
 
     @Override
-    protected void onVisibilityChanged(View changedView, int visibility) {
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
         if (visibility == VISIBLE) {
             start();
@@ -131,7 +132,7 @@ public class CircularProgress extends View {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         super.draw(canvas);
         float startAngle = mCurrentGlobalAngle - mCurrentGlobalAngleOffset;
         float sweepAngle = mCurrentSweepAngle;

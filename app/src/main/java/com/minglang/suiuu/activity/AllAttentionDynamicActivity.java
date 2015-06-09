@@ -87,6 +87,45 @@ public class AllAttentionDynamicActivity extends Activity {
     }
 
     /**
+     * 初始化方法
+     */
+    private void initView() {
+        dialog = new ProgressDialog(this);
+        dialog.setMessage(getResources().getString(R.string.load_wait));
+        dialog.setCanceledOnTouchOutside(false);
+
+        back = (ImageView) findViewById(R.id.AllAttentionBack);
+        mPtrFrame = (PtrClassicFrameLayout) findViewById(R.id.all_attention_dynamic_frame);
+        listView = (ListView) findViewById(R.id.all_attention_dynamic_list_view);
+        loadMoreContainer = (LoadMoreListViewContainer) findViewById(R.id.all_attention_dynamic_load_more_container);
+
+        MaterialHeader header = new MaterialHeader(this);
+        int[] colors = getResources().getIntArray(R.array.google_colors);
+        header.setColorSchemeColors(colors);
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
+        header.setPtrFrameLayout(mPtrFrame);
+
+        mPtrFrame.setHeaderView(header);
+        mPtrFrame.addPtrUIHandler(header);
+        mPtrFrame.setPinContent(true);
+
+        // the following are default settings
+        mPtrFrame.setResistance(1.7f);
+        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
+        mPtrFrame.setDurationToClose(200);
+        mPtrFrame.setDurationToCloseHeader(1000);
+        // default is false
+        mPtrFrame.setPullToRefresh(false);
+        // default is true
+        mPtrFrame.setKeepHeaderWhenRefresh(true);
+
+        adapter = new AllAttentionDynamicAdapter(this);
+        listView.setAdapter(adapter);
+
+    }
+
+    /**
      * 控件动作
      */
     private void ViewAction() {
@@ -133,32 +172,6 @@ public class AllAttentionDynamicActivity extends Activity {
         });
     }
 
-    /**
-     * 绑定数据到View
-     *
-     * @param str Json字符串
-     */
-    private void setData2View(String str) {
-        if (TextUtils.isEmpty(str)) {
-            Toast.makeText(this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                AllAttentionDynamic dynamic = JsonUtils.getInstance().fromJSON(AllAttentionDynamic.class, str);
-                List<AllAttentionDynamicData> list = dynamic.getData().getData();
-                if (list != null && list.size() > 0) {
-                    listAll.addAll(list);
-                    adapter.setList(listAll);
-                    adapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                DeBugLog.e(TAG, "关注详细信息解析错误:" + e.getMessage());
-                Toast.makeText(this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
     private void getData() {
 
         if (dialog != null) {
@@ -184,43 +197,29 @@ public class AllAttentionDynamicActivity extends Activity {
     }
 
     /**
-     * 初始化方法
+     * 绑定数据到View
+     *
+     * @param str Json字符串
      */
-    private void initView() {
-
-        dialog = new ProgressDialog(this);
-        dialog.setMessage(getResources().getString(R.string.load_wait));
-        dialog.setCanceledOnTouchOutside(false);
-
-        back = (ImageView) findViewById(R.id.AllAttentionBack);
-        mPtrFrame = (PtrClassicFrameLayout) findViewById(R.id.all_attention_dynamic_frame);
-        listView = (ListView) findViewById(R.id.all_attention_dynamic_list_view);
-        loadMoreContainer = (LoadMoreListViewContainer) findViewById(R.id.all_attention_dynamic_load_more_container);
-
-        MaterialHeader header = new MaterialHeader(this);
-        int[] colors = getResources().getIntArray(R.array.google_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
-        header.setPtrFrameLayout(mPtrFrame);
-
-        mPtrFrame.setHeaderView(header);
-        mPtrFrame.addPtrUIHandler(header);
-        mPtrFrame.setPinContent(true);
-
-        // the following are default settings
-        mPtrFrame.setResistance(1.7f);
-        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
-        mPtrFrame.setDurationToClose(200);
-        mPtrFrame.setDurationToCloseHeader(1000);
-        // default is false
-        mPtrFrame.setPullToRefresh(false);
-        // default is true
-        mPtrFrame.setKeepHeaderWhenRefresh(true);
-
-        adapter = new AllAttentionDynamicAdapter(this);
-        listView.setAdapter(adapter);
-
+    private void setData2View(String str) {
+        if (TextUtils.isEmpty(str)) {
+            Toast.makeText(this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                AllAttentionDynamic dynamic = JsonUtils.getInstance().fromJSON(AllAttentionDynamic.class, str);
+                List<AllAttentionDynamicData> list = dynamic.getData().getData();
+                if (list != null && list.size() > 0) {
+                    listAll.addAll(list);
+                    adapter.setList(listAll);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "关注详细信息解析错误:" + e.getMessage());
+                Toast.makeText(this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     /**

@@ -20,6 +20,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuDetailActivity;
 import com.minglang.suiuu.adapter.CollectionSuiuuAdapter;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.entity.CollectionSuiuu;
 import com.minglang.suiuu.entity.CollectionSuiuuData;
 import com.minglang.suiuu.utils.DeBugLog;
@@ -119,67 +120,6 @@ public class CollectionSuiuuFragment extends Fragment {
         return rootView;
     }
 
-    private void getData() {
-
-        if (dialog != null) {
-            dialog.show();
-        }
-
-        getCollectionSuiuu4Service(1);
-    }
-
-    /**
-     * 网络请求
-     */
-    private void getCollectionSuiuu4Service(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("page", String.valueOf(page));
-        params.addBodyParameter(HttpServicePath.key, verification);
-
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.GetCollectionSuiuuPath, new CollectionSuiuuRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
-    }
-
-    /**
-     * 控件动作
-     */
-    private void ViewAction() {
-
-        mPtrFrame.setPtrHandler(new PtrHandler() {
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, gridView, header);
-            }
-
-            @Override
-            public void onRefreshBegin(PtrFrameLayout frame) {
-                clearFlag = true;
-                getCollectionSuiuu4Service(1);
-            }
-        });
-
-        ptrLoadMore.setLoadMoreHandler(new LoadMoreHandler() {
-            @Override
-            public void onLoadMore(LoadMoreContainer loadMoreContainer) {
-                clearFlag = false;
-                page = page + 1;
-                getCollectionSuiuu4Service(page);
-            }
-        });
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String tripId = listAll.get(position).getTripId();
-                Intent intent = new Intent(getActivity(), SuiuuDetailActivity.class);
-                intent.putExtra("tripId", tripId);
-                startActivity(intent);
-            }
-        });
-    }
-
     /**
      * 初始化方法
      *
@@ -228,10 +168,65 @@ public class CollectionSuiuuFragment extends Fragment {
         gridView.setAdapter(collectionSuiuuAdapter);
     }
 
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    /**
+     * 控件动作
+     */
+    private void ViewAction() {
+
+        mPtrFrame.setPtrHandler(new PtrHandler() {
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, gridView, header);
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                clearFlag = true;
+                getCollectionSuiuu4Service(1);
+            }
+        });
+
+        ptrLoadMore.setLoadMoreHandler(new LoadMoreHandler() {
+            @Override
+            public void onLoadMore(LoadMoreContainer loadMoreContainer) {
+                clearFlag = false;
+                page = page + 1;
+                getCollectionSuiuu4Service(page);
+            }
+        });
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String tripId = listAll.get(position).getTripId();
+                Intent intent = new Intent(getActivity(), SuiuuDetailActivity.class);
+                intent.putExtra("tripId", tripId);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void getData() {
+
+        if (dialog != null) {
+            dialog.show();
+        }
+
+        getCollectionSuiuu4Service(1);
+    }
+
+    /**
+     * 网络请求
+     */
+    private void getCollectionSuiuu4Service(int page) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("page", String.valueOf(page));
+        params.addBodyParameter(HttpServicePath.key, verification);
+
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.GetCollectionSuiuuPath, new CollectionSuiuuRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
     }
 
     /**
@@ -264,16 +259,16 @@ public class CollectionSuiuuFragment extends Fragment {
                         listAll.addAll(list);
                         collectionSuiuuAdapter.setListData(listAll);
                     } else {
-                        Toast.makeText(getActivity(),"随游收藏"+
+                        Toast.makeText(SuiuuApplication.applicationContext,"随游收藏"+
                                 getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getActivity(),
+                    Toast.makeText(SuiuuApplication.applicationContext,
                             getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "收藏的随游数据解析失败" + e.getMessage());
-                Toast.makeText(getActivity(),
+                Toast.makeText(SuiuuApplication.applicationContext,
                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
 
@@ -294,8 +289,9 @@ public class CollectionSuiuuFragment extends Fragment {
             ptrLoadMore.loadMoreError(0, "加载失败，请重试");
 
             DeBugLog.e(TAG, "收藏的随游数据请求失败:" + s);
-            Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            Toast.makeText(SuiuuApplication.applicationContext, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
+
     }
 
 }

@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,8 +16,8 @@ import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.SettingAdapter;
-import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.application.SuiuuApplication;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
@@ -66,20 +65,20 @@ public class SettingActivity extends BaseActivity {
             btn_logout.setText(getString(R.string.button_logout));
         }
 
-        LinearLayout settingLayout = (LinearLayout) findViewById(R.id.settingRootLayout);
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                settingLayout.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                settingLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        } else {
-            if (navigationBarHeight > 0) {
-                settingLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            } else {
-                settingLayout.setPadding(0, 0, 0, navigationBarHeight);
-            }
-        }
+//        LinearLayout settingLayout = (LinearLayout) findViewById(R.id.settingRootLayout);
+//        if (isKITKAT) {
+//            if (navigationBarHeight <= 0) {
+//                settingLayout.setPadding(0, statusBarHeight, 0, 0);
+//            } else {
+//                settingLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+//            }
+//        } else {
+//            if (navigationBarHeight > 0) {
+//                settingLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+//            } else {
+//                settingLayout.setPadding(0, 0, 0, navigationBarHeight);
+//            }
+//        }
 
         settingBack = (ImageView) findViewById(R.id.iv_top_back);
         settingList = (ListView) findViewById(R.id.settingList);

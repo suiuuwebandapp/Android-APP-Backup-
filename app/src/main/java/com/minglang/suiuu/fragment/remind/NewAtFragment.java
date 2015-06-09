@@ -20,6 +20,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.CommentsActivity;
 import com.minglang.suiuu.adapter.MessageAdapter;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.SuiuuMessage;
 import com.minglang.suiuu.entity.SuiuuMessageData;
@@ -228,7 +229,6 @@ public class NewAtFragment extends BaseFragment {
             }
 
             String str = stringResponseInfo.result;
-            DeBugLog.i(TAG, "消息数据:" + str);
             try {
                 SuiuuMessage message = JsonUtils.getInstance().fromJSON(SuiuuMessage.class, str);
                 List<SuiuuMessageData> list = message.getData().getData();
@@ -236,11 +236,11 @@ public class NewAtFragment extends BaseFragment {
                     listAll.addAll(list);
                     adapter.setList(listAll);
                 } else {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SuiuuApplication.applicationContext, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "新@数据解析异常:" + e.getMessage());
-                Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SuiuuApplication.applicationContext, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -254,8 +254,9 @@ public class NewAtFragment extends BaseFragment {
             mPtrFrame.refreshComplete();
 
             DeBugLog.e(TAG, "获取新@数据失败:" + s);
-            Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            Toast.makeText(SuiuuApplication.applicationContext, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
+
     }
 
 }

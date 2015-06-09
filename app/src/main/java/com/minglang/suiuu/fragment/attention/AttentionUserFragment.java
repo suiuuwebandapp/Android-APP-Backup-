@@ -1,10 +1,8 @@
 package com.minglang.suiuu.fragment.attention;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +18,8 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.OtherUserActivity;
 import com.minglang.suiuu.adapter.AttentionUserAdapter;
+import com.minglang.suiuu.application.SuiuuApplication;
+import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.AttentionUser;
 import com.minglang.suiuu.entity.AttentionUserData;
 import com.minglang.suiuu.utils.DeBugLog;
@@ -43,7 +43,7 @@ import in.srain.cube.views.ptr.header.MaterialHeader;
 /**
  * 关注用户
  */
-public class AttentionUserFragment extends Fragment {
+public class AttentionUserFragment extends BaseFragment {
 
     private static final String TAG = AttentionUserFragment.class.getSimpleName();
 
@@ -109,6 +109,47 @@ public class AttentionUserFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * 初始化方法
+     *
+     * @param rootView Fragment根View
+     */
+    private void initView(View rootView) {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.attention_user_grid_view_frame);
+        ptrLoadMore = (LoadMoreListViewContainer) rootView.findViewById(R.id.attention_user_load_more_container);
+        listView = (ListView) rootView.findViewById(R.id.attention_user_ListView);
+
+        MaterialHeader header = new MaterialHeader(getActivity());
+        int[] colors = getResources().getIntArray(R.array.google_colors);
+        header.setColorSchemeColors(colors);
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
+        header.setPtrFrameLayout(mPtrFrame);
+
+        mPtrFrame.setHeaderView(header);
+        mPtrFrame.addPtrUIHandler(header);
+        mPtrFrame.setPinContent(true);
+
+        // the following are default settings
+        mPtrFrame.setResistance(1.7f);
+        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
+        mPtrFrame.setDurationToClose(200);
+        mPtrFrame.setDurationToCloseHeader(1000);
+        // default is false
+        mPtrFrame.setPullToRefresh(false);
+        // default is true
+        mPtrFrame.setKeepHeaderWhenRefresh(true);
+
+        attentionUserAdapter = new AttentionUserAdapter(getActivity());
+        listView.setAdapter(attentionUserAdapter);
+
+        DeBugLog.i(TAG, "userSign:" + userSign);
+    }
+
     private void ViewAction() {
 
         mPtrFrame.setPtrHandler(new PtrHandler() {
@@ -168,63 +209,6 @@ public class AttentionUserFragment extends Fragment {
     }
 
     /**
-     * 初始化方法
-     *
-     * @param rootView Fragment根View
-     */
-    private void initView(View rootView) {
-
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
-        progressDialog.setCanceledOnTouchOutside(false);
-
-        mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.attention_user_grid_view_frame);
-        ptrLoadMore = (LoadMoreListViewContainer) rootView.findViewById(R.id.attention_user_load_more_container);
-        listView = (ListView) rootView.findViewById(R.id.attention_user_ListView);
-
-        MaterialHeader header = new MaterialHeader(getActivity());
-        int[] colors = getResources().getIntArray(R.array.google_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
-        header.setPtrFrameLayout(mPtrFrame);
-
-        mPtrFrame.setHeaderView(header);
-        mPtrFrame.addPtrUIHandler(header);
-        mPtrFrame.setPinContent(true);
-
-        // the following are default settings
-        mPtrFrame.setResistance(1.7f);
-        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
-        mPtrFrame.setDurationToClose(200);
-        mPtrFrame.setDurationToCloseHeader(1000);
-        // default is false
-        mPtrFrame.setPullToRefresh(false);
-        // default is true
-        mPtrFrame.setKeepHeaderWhenRefresh(true);
-
-        attentionUserAdapter = new AttentionUserAdapter(getActivity());
-        listView.setAdapter(attentionUserAdapter);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    /**
      * 网络请求回调接口
      */
     private class AttentionUserRequestCallback extends RequestCallBack<String> {
@@ -253,16 +237,16 @@ public class AttentionUserFragment extends Fragment {
                         listAll.addAll(list);
                         attentionUserAdapter.setList(listAll);
                     } else {
-                        Toast.makeText(getActivity(), "关注用户" +
+                        Toast.makeText(SuiuuApplication.applicationContext, "关注用户" +
                                 getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getActivity(),
+                    Toast.makeText(SuiuuApplication.applicationContext,
                             getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "关注的用户的数据解析失败:" + e.getMessage());
-                Toast.makeText(getActivity(),
+                Toast.makeText(SuiuuApplication.applicationContext,
                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
@@ -277,7 +261,7 @@ public class AttentionUserFragment extends Fragment {
             mPtrFrame.refreshComplete();
             ptrLoadMore.loadMoreError(0, "加载失败，请重试");
 
-            Toast.makeText(getActivity(),
+            Toast.makeText(SuiuuApplication.applicationContext,
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }

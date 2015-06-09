@@ -1,15 +1,17 @@
 <android.support.v4.widget.DrawerLayout
     android:id="@+id/drawerLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--主要显示区域-->
     <RelativeLayout
         android:id="@+id/mainShowLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true">
 
         <FrameLayout
             android:id="@+id/showLayout"
@@ -40,12 +42,12 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/tabSelect"
             android:layout_marginBottom="-20dp"
-            android:layout_marginRight="15dp"
             android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
             android:layout_toLeftOf="@+id/main_record"
             android:layout_toStartOf="@+id/main_record"
-            android:src="@drawable/icon_main_pic"
             android:contentDescription="@string/openShoot"
+            android:src="@drawable/icon_main_pic"
             android:visibility="invisible"/>
 
         <ImageView
@@ -55,8 +57,8 @@
             android:layout_above="@+id/tabSelect"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
-            android:src="@drawable/icon_main_record"
             android:contentDescription="@string/openRemember"
+            android:src="@drawable/icon_main_record"
             android:visibility="invisible"/>
 
         <ImageView
@@ -69,8 +71,8 @@
             android:layout_marginStart="15dp"
             android:layout_toEndOf="@+id/main_record"
             android:layout_toRightOf="@+id/main_record"
-            android:src="@drawable/icon_main_ask"
             android:contentDescription="@string/openAsk"
+            android:src="@drawable/icon_main_ask"
             android:visibility="invisible"/>
 
         <LinearLayout
@@ -177,47 +179,13 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/slideLayout"
+    <!--侧滑内容显示区域-->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/sliderNavigationView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/tr_write2">
-
-        <LinearLayout
-            android:id="@+id/headLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:orientation="horizontal">
-
-            <com.minglang.suiuu.customview.CircleImageView
-                android:id="@+id/headImage"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_margin="5dp"
-                android:src="@drawable/default_head_image"/>
-
-            <TextView
-                android:id="@+id/nickName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:text="@string/nickname"
-                android:textSize="20sp"/>
-
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/drawerList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/headLayout">
-
-        </ListView>
-
-    </RelativeLayout>
+        app:headerLayout="@layout/layout_header"
+        app:menu="@menu/main"/>
 
 </android.support.v4.widget.DrawerLayout>

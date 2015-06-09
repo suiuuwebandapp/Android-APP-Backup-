@@ -21,6 +21,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.OtherUserActivity;
 import com.minglang.suiuu.activity.PersonalActivity;
 import com.minglang.suiuu.adapter.MessageAdapter;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.SuiuuMessage;
 import com.minglang.suiuu.entity.SuiuuMessageData;
@@ -230,11 +231,11 @@ public class NewReplyFragment extends BaseFragment {
                     listAll.addAll(list);
                     adapter.setList(list);
                 } else {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SuiuuApplication.applicationContext, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "新回复数据请求失败:" + e.getMessage());
-                Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SuiuuApplication.applicationContext, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -248,7 +249,7 @@ public class NewReplyFragment extends BaseFragment {
             mPtrFrame.refreshComplete();
 
             DeBugLog.e(TAG, "新回复数据请求失败:" + s);
-            Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            Toast.makeText(SuiuuApplication.applicationContext, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
 

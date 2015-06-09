@@ -13,7 +13,7 @@
     </declare-styleable>
 
     <declare-styleable name="CircularProgress">
-        <attr name="borderWidth" format="dimension" />
+        <attr name="borderWidth_" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="PullToRefresh">

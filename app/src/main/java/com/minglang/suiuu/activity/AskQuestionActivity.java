@@ -1,5 +1,6 @@
 package com.minglang.suiuu.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -86,10 +86,12 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
     protected static final int getData_Success = 0;
     protected static final int getData_FAILURE = 1;
     protected static final int getData_UPDATE = 2;
+
     /**
      * 主题数据集合
      */
     private List<LoopBaseData> list;
+
     //判断是主题下拉框还是地区下拉框
     private int themeOrArea = 1;
     private String themeCid;
@@ -97,6 +99,7 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
     private int status = 0;
     private String dataNum;
     private LoopArticleData articleDetail;
+
     //修改文章进来是否重新选择图片
     private boolean isChangePic = false;
     private List<String> changePicList;
@@ -119,10 +122,12 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
                         Toast.makeText(AskQuestionActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
                     }
                     break;
+
                 case getData_FAILURE:
                     dialog.dismissDialog();
                     Toast.makeText(AskQuestionActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
                     break;
+
                 default:
                     break;
             }
@@ -135,24 +140,13 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ask_question);
         record = getIntent().getIntExtra("record", 0);
-//        articleDetail = (LoopArticleData) getIntent().getSerializableExtra("articleDetail");
         articleDetail = jsonUtil.fromJSON(LoopArticleData.class, getIntent().getStringExtra("articleDetail"));
-
-        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                rootLayout.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        }
 
         initView();
         ViewAction();
     }
 
     private void ViewAction() {
-
         tv_top_right.setOnClickListener(this);
         iv_top_back.setOnClickListener(this);
         tv_show_your_location.setOnClickListener(this);
@@ -287,7 +281,6 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == 9) {
             listPicture = data.getStringArrayListExtra("pictureMessage");
@@ -466,10 +459,11 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
      * 初始化popupWindow
      */
     public void initPopupWindow() {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.pop_select_list, null);
+        @SuppressLint("InflateParams")
+        View view = LayoutInflater.from(this).inflate(R.layout.pop_select_list, null);
         listView = (ListView) view.findViewById(R.id.pictureSelectList);
 //        listView.setBackgroundResource(R.drawable.listview_background);
+
         //自适配长、框设置
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -554,7 +548,6 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-
     /**
      * 发布圈子文章回调接口
      */
@@ -615,6 +608,7 @@ public class AskQuestionActivity extends BaseActivity implements View.OnClickLis
             DeBugLog.e(TAG, "发布文章失败:" + s);
         }
     }
+
 }
 
 

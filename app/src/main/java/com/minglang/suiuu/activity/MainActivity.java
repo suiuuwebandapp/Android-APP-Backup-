@@ -1,5 +1,6 @@
 package com.minglang.suiuu.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,11 +10,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -21,10 +25,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +44,6 @@ import com.easemob.util.EMLog;
 import com.easemob.util.EasyUtils;
 import com.easemob.util.NetUtils;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.MainSliderAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.ChatActivity;
@@ -59,27 +60,20 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * 应用程序主界面
  */
 public class MainActivity extends BaseActivity {
+
     protected NotificationManager notificationManager;
     private static final int notificationId = 11;
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private static final String[] TITLE = {"收藏", "关注", "消息", "粉丝", "设置", "退出"};
-
     private DrawerLayout mDrawerLayout;
 
-    private RelativeLayout slideLayout;
+    private NavigationView sliderNavigationView;
 
-    /**
-     * 标题
-     */
+    //标题
     private TextView titleInfo;
 
     private ImageView drawerSwitch;
@@ -123,8 +117,6 @@ public class MainActivity extends BaseActivity {
      * 会话页面
      */
     private ChatAllHistoryFragment conversationFragment;
-
-    private ListView mListView;
 
     /**
      * 随问Button
@@ -171,12 +163,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
-
         initReadSavedInstanceState(savedInstanceState);
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         setContentView(R.layout.activity_main);
 
         UmengUpdateAgent.update(this);
@@ -245,44 +234,25 @@ public class MainActivity extends BaseActivity {
         errorItem = (RelativeLayout) findViewById(R.id.rl_error_item);
         errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
         msgCount = (TextView) findViewById(R.id.unread_msg_number);
-        RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
 
-        /***************Activity可控制View设置padding****************/
+        sliderNavigationView = (NavigationView) findViewById(R.id.sliderNavigationView);
+        ViewGroup.LayoutParams sliderNavigationViewParams = sliderNavigationView.getLayoutParams();
+        sliderNavigationViewParams.width = screenWidth / 4 * 3;
+        sliderNavigationViewParams.height = screenHeight;
+        sliderNavigationView.setLayoutParams(sliderNavigationViewParams);
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mDrawerLayout.setFocusableInTouchMode(true);
 
-        RelativeLayout mainShowLayout = (RelativeLayout) findViewById(R.id.mainShowLayout);
-        if (isKITKAT) {
-            if (navigationBarHeight > 0) {
-                mainShowLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            } else {
-                mainShowLayout.setPadding(0, statusBarHeight, 0, 0);
-            }
-        } else {
-            if (navigationBarHeight > 0) {
-                mainShowLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            } else {
-                mainShowLayout.setPadding(0, 0, 0, navigationBarHeight);
-            }
-        }
-
+        RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
         ConstantUtils.topHeight = titleLayout.getLayoutParams().height;
 
-        /*************设置侧滑菜单Params**********************/
-        slideLayout = (RelativeLayout) findViewById(R.id.slideLayout);
-        if (isKITKAT) {
-            slideLayout.setPadding(0, statusBarHeight, 0, 0);
-        }
-
-        ViewGroup.LayoutParams params = slideLayout.getLayoutParams();
-        params.width = screenWidth / 4 * 3;
-        slideLayout.setLayoutParams(params);
-
         titleInfo = (TextView) findViewById(R.id.titleInfo);
-
         drawerSwitch = (ImageView) findViewById(R.id.drawerSwitch);
 
-        nickNameView = (TextView) findViewById(R.id.nickName);
+        @SuppressLint("InflateParams")
+        View headView = LayoutInflater.from(this).inflate(R.layout.layout_header, null);
+        nickNameView = (TextView) headView.findViewById(R.id.nickName);
         String strNickName = SuiuuInfo.ReadUserData(this).getNickname();
         if (!TextUtils.isEmpty(strNickName)) {
             nickNameView.setText(strNickName);
@@ -290,7 +260,7 @@ public class MainActivity extends BaseActivity {
             nickNameView.setText("");
         }
 
-        headImageView = (CircleImageView) findViewById(R.id.headImage);
+        headImageView = (CircleImageView) headView.findViewById(R.id.headImage);
         String strHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
         if (!TextUtils.isEmpty(strHeadImagePath)) {
             imageLoader.displayImage(strHeadImagePath, headImageView);
@@ -315,18 +285,12 @@ public class MainActivity extends BaseActivity {
 
         sendMsg = (ImageView) findViewById(R.id.sendNewMessage);
 
-        mListView = (ListView) findViewById(R.id.drawerList);
-
         ask = (ImageView) findViewById(R.id.main_ask);
         pic = (ImageView) findViewById(R.id.main_pic);
         record = (ImageView) findViewById(R.id.main_record);
 
         rl_top_info = (RelativeLayout) findViewById(R.id.rl_top_info);
         iv_suiuu_search_more = (ImageView) findViewById(R.id.iv_suiuu_search_more);
-        List<String> stringList = new ArrayList<>();
-        Collections.addAll(stringList, TITLE);
-        MainSliderAdapter mainSliderAdapter = new MainSliderAdapter(this, stringList);
-        mListView.setAdapter(mainSliderAdapter);
 
         mainFragment = new MainFragment();
         conversationFragment = new ChatAllHistoryFragment();
@@ -393,91 +357,7 @@ public class MainActivity extends BaseActivity {
      * 控件行为
      */
     private void ViewAction() {
-        OnClickListener onClickListener = new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-
-                    case R.id.drawerSwitch:
-                        if (mDrawerLayout.isDrawerVisible(slideLayout)) {
-                            mDrawerLayout.closeDrawer(slideLayout);
-                        } else {
-                            mDrawerLayout.openDrawer(slideLayout);
-                        }
-                        break;
-
-                    case R.id.headImage:
-                        Intent headIntent = new Intent(MainActivity.this, PersonalActivity.class);
-                        startActivity(headIntent);
-                        mDrawerLayout.closeDrawer(slideLayout);
-                        break;
-
-                    case R.id.nickName:
-                        Intent nickIntent = new Intent(MainActivity.this, PersonalActivity.class);
-                        startActivity(nickIntent);
-                        mDrawerLayout.closeDrawer(slideLayout);
-                        break;
-
-                    case R.id.tab1:
-                        showCommon();
-                        titleInfo.setText(getResources().getString(R.string.title1));
-                        adjustAnimation();
-                        changeTheme(true);
-                        changeLoop(false);
-                        changeSuiuu(false);
-                        changeConversation(false);
-                        LoadMainFragment();
-                        break;
-
-                    case R.id.tab2:
-                        showCommon();
-                        titleInfo.setText(getResources().getString(R.string.title2));
-                        adjustAnimation();
-                        changeTheme(false);
-                        changeLoop(true);
-                        changeSuiuu(false);
-                        changeConversation(false);
-                        LoadLoopFragment();
-                        break;
-
-                    case R.id.tab3:
-                        titleInfo.setVisibility(View.GONE);
-                        rl_top_info.setVisibility(View.VISIBLE);
-                        iv_suiuu_search_more.setVisibility(View.VISIBLE);
-                        adjustAnimation();
-                        changeTheme(false);
-                        changeLoop(false);
-                        changeSuiuu(true);
-                        changeConversation(false);
-                        LoadSuiuuFragment();
-                        break;
-
-                    case R.id.tab4:
-                        showCommon();
-                        titleInfo.setText(getResources().getString(R.string.title4));
-                        adjustAnimation();
-                        changeTheme(false);
-                        changeLoop(false);
-                        changeSuiuu(false);
-                        changeConversation(true);
-                        LoadConversationFragment();
-                        break;
-
-                    case R.id.sendNewMessage:
-                        if (ConstantUtils.isShowArticleAnim) {
-                            ask.startAnimation(animationSetHide);
-                            pic.startAnimation(animationSetHide);
-                            record.startAnimation(animationSetHide);
-                        } else {
-                            ask.startAnimation(animationSetShow);
-                            pic.startAnimation(animationSetShow);
-                            record.startAnimation(animationSetShow);
-                        }
-                        break;
-                }
-            }
-        };
+        MyOnClickListener onClickListener = new MyOnClickListener();
 
         drawerSwitch.setOnClickListener(onClickListener);
 
@@ -492,42 +372,30 @@ public class MainActivity extends BaseActivity {
 
         sendMsg.setOnClickListener(onClickListener);
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        sliderNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mDrawerLayout.closeDrawer(slideLayout);
-                switch (position) {
-                    //收藏
-                    case 0:
-                        Intent intent0 = new Intent(MainActivity.this, CollectionActivity.class);
-                        startActivity(intent0);
-                        break;
-                    //关注
-                    case 1:
-                        Intent intent1 = new Intent(MainActivity.this, AttentionActivity.class);
-                        startActivity(intent1);
-                        break;
-                    //新提醒
-                    case 2:
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.item_message:
                         Intent intent2 = new Intent(MainActivity.this, NewRemindActivity.class);
                         startActivity(intent2);
                         break;
-                    //粉丝
-                    case 3:
-                        Intent intent3 = new Intent(MainActivity.this, FansActivity.class);
-                        startActivity(intent3);
-                        break;
-                    //设置
-                    case 4:
-                        Intent intent4 = new Intent(MainActivity.this, SettingActivity.class);
-                        startActivity(intent4);
-                        break;
-                    //退出
-                    case 5:
-                        finish();
+
+                    case R.id.item_my_suiuu:
+                        Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
                         break;
 
+                    case R.id.item_order_manager:
+                        Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case R.id.item_account_manager:
+                        Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+                        break;
                 }
+
+                mDrawerLayout.closeDrawers();
+                return true;
             }
         });
 
@@ -1106,6 +974,92 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private class MyOnClickListener implements OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+
+                case R.id.drawerSwitch:
+                    if (mDrawerLayout.isDrawerVisible(sliderNavigationView)) {
+                        mDrawerLayout.closeDrawer(sliderNavigationView);
+                    } else {
+                        mDrawerLayout.openDrawer(sliderNavigationView);
+                    }
+                    break;
+
+                case R.id.headImage:
+                    Intent headIntent = new Intent(MainActivity.this, PersonalActivity.class);
+                    startActivity(headIntent);
+                    mDrawerLayout.closeDrawer(sliderNavigationView);
+                    break;
+
+                case R.id.nickName:
+                    Intent nickIntent = new Intent(MainActivity.this, PersonalActivity.class);
+                    startActivity(nickIntent);
+                    mDrawerLayout.closeDrawer(sliderNavigationView);
+                    break;
+
+                case R.id.tab1:
+                    showCommon();
+                    titleInfo.setText(getResources().getString(R.string.title1));
+                    adjustAnimation();
+                    changeTheme(true);
+                    changeLoop(false);
+                    changeSuiuu(false);
+                    changeConversation(false);
+                    LoadMainFragment();
+                    break;
+
+                case R.id.tab2:
+                    showCommon();
+                    titleInfo.setText(getResources().getString(R.string.title2));
+                    adjustAnimation();
+                    changeTheme(false);
+                    changeLoop(true);
+                    changeSuiuu(false);
+                    changeConversation(false);
+                    LoadLoopFragment();
+                    break;
+
+                case R.id.tab3:
+                    titleInfo.setVisibility(View.GONE);
+                    rl_top_info.setVisibility(View.VISIBLE);
+                    iv_suiuu_search_more.setVisibility(View.VISIBLE);
+                    adjustAnimation();
+                    changeTheme(false);
+                    changeLoop(false);
+                    changeSuiuu(true);
+                    changeConversation(false);
+                    LoadSuiuuFragment();
+                    break;
+
+                case R.id.tab4:
+                    showCommon();
+                    titleInfo.setText(getResources().getString(R.string.title4));
+                    adjustAnimation();
+                    changeTheme(false);
+                    changeLoop(false);
+                    changeSuiuu(false);
+                    changeConversation(true);
+                    LoadConversationFragment();
+                    break;
+
+                case R.id.sendNewMessage:
+                    if (ConstantUtils.isShowArticleAnim) {
+                        ask.startAnimation(animationSetHide);
+                        pic.startAnimation(animationSetHide);
+                        record.startAnimation(animationSetHide);
+                    } else {
+                        ask.startAnimation(animationSetShow);
+                        pic.startAnimation(animationSetShow);
+                        record.startAnimation(animationSetShow);
+                    }
+                    break;
+            }
+        }
+    }
+
     /**
      * 刷新未读消息数
      */
@@ -1181,8 +1135,8 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (mDrawerLayout.isDrawerVisible(slideLayout)) {
-                mDrawerLayout.closeDrawer(slideLayout);
+            if (mDrawerLayout.isDrawerVisible(sliderNavigationView)) {
+                mDrawerLayout.closeDrawer(sliderNavigationView);
             } else {
                 if ((System.currentTimeMillis() - exitTime) > 2000) {
                     Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();

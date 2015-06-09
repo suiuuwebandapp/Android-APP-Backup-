@@ -459,5 +459,9 @@
     <string name="title_activity_select_country" translatable="false">SelectCountryActivity</string>
     <string name="title_activity_select_city" translatable="false">SelectCityActivity</string>
     <string name="app_name">Suiuu</string>
+    <string name="message">Message</string>
+    <string name="my_suiuu">My Suiuu</string>
+    <string name="orderManager">Order Management</string>
+    <string name="accountManager">Account Management</string>
 
 </resources>

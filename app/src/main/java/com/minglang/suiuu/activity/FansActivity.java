@@ -2,13 +2,11 @@ package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
@@ -25,8 +23,6 @@ import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.List;
 
@@ -61,23 +57,42 @@ public class FansActivity extends BaseActivity {
 
         initView();
         ViewAction();
-
-        dialog.show();
-        getFansData2Service();
-
+        getData();
     }
 
-    private void getFansData2Service() {
+    /**
+     * 初始化
+     */
+    private void initView() {
+        dialog = new ProgressDialog(this);
+        dialog.setMessage(getResources().getString(R.string.load_wait));
+        dialog.setCanceledOnTouchOutside(false);
 
-        String msg = SuiuuInfo.ReadVerification(this);
+        mPtrFrame = (PtrClassicFrameLayout) findViewById(R.id.fans_head_frame);
 
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, msg);
+        fansBack = (ImageView) findViewById(R.id.fansBack);
+        fansList = (ListView) findViewById(R.id.fansList);
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.FansInformationPath, new FansRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        MaterialHeader header = new MaterialHeader(this);
+        int[] colors = getResources().getIntArray(R.array.google_colors);
+        header.setColorSchemeColors(colors);
+        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
+        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
+        header.setPtrFrameLayout(mPtrFrame);
+
+        mPtrFrame.setHeaderView(header);
+        mPtrFrame.addPtrUIHandler(header);
+        mPtrFrame.setPinContent(true);
+
+        // the following are default settings
+        mPtrFrame.setResistance(1.7f);
+        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
+        mPtrFrame.setDurationToClose(200);
+        mPtrFrame.setDurationToCloseHeader(1000);
+        // default is false
+        mPtrFrame.setPullToRefresh(false);
+        // default is true
+        mPtrFrame.setKeepHeaderWhenRefresh(true);
     }
 
     /**
@@ -117,53 +132,22 @@ public class FansActivity extends BaseActivity {
 
     }
 
+    private void getData() {
+        dialog.show();
+        getFansData2Service();
+    }
+
     /**
-     * 初始化
+     * 数据请求
      */
-    private void initView() {
+    private void getFansData2Service() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter(HttpServicePath.key, verification);
 
-        SystemBarTintManager mTintManager = new SystemBarTintManager(this);
-        mTintManager.setStatusBarTintEnabled(true);
-        mTintManager.setNavigationBarTintEnabled(false);
-        mTintManager.setTintColor(getResources().getColor(R.color.tr_black));
-
-        int statusHeight = mTintManager.getConfig().getStatusBarHeight();
-
-        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-        if (isKITKAT) {
-            RelativeLayout fansRootLayout = (RelativeLayout) findViewById(R.id.fansRootLayout);
-            fansRootLayout.setPadding(0, statusHeight, 0, 0);
-        }
-
-        dialog = new ProgressDialog(this);
-        dialog.setMessage(getResources().getString(R.string.load_wait));
-        dialog.setCanceledOnTouchOutside(false);
-
-        mPtrFrame = (PtrClassicFrameLayout) findViewById(R.id.fans_head_frame);
-
-        fansBack = (ImageView) findViewById(R.id.fansBack);
-        fansList = (ListView) findViewById(R.id.fansList);
-
-        MaterialHeader header = new MaterialHeader(this);
-        int[] colors = getResources().getIntArray(R.array.google_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
-        header.setPtrFrameLayout(mPtrFrame);
-
-        mPtrFrame.setHeaderView(header);
-        mPtrFrame.addPtrUIHandler(header);
-        mPtrFrame.setPinContent(true);
-
-        // the following are default settings
-        mPtrFrame.setResistance(1.7f);
-        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
-        mPtrFrame.setDurationToClose(200);
-        mPtrFrame.setDurationToCloseHeader(1000);
-        // default is false
-        mPtrFrame.setPullToRefresh(false);
-        // default is true
-        mPtrFrame.setKeepHeaderWhenRefresh(true);
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.FansInformationPath, new FansRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
     }
 
     private class FansRequestCallBack extends RequestCallBack<String> {

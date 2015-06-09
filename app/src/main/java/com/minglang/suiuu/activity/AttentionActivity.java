@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
@@ -57,6 +56,40 @@ public class AttentionActivity extends BaseActivity {
 
         initView();
         ViewAction();
+    }
+
+    /**
+     * 初始化方法
+     */
+    private void initView() {
+        attentionBack = (ImageView) findViewById(R.id.attentionBack);
+        attentionPager = (ViewPager) findViewById(R.id.attentionPager);
+        attentionSliderView = (ImageView) findViewById(R.id.attention_sliderView);
+        attentionThemeTitle = (TextView) findViewById(R.id.attention_theme_title);
+        attentionUserTitle = (TextView) findViewById(R.id.attention_user_title);
+
+        //关注圈子页面
+        AttentionLoopFragment attentionLoopFragment = AttentionLoopFragment.newInstance(userSign, verification);
+        //关注用户页面
+        AttentionUserFragment attentionUserFragment = AttentionUserFragment.newInstance(userSign, verification);
+        List<Fragment> fragmentList = new ArrayList<>();
+        fragmentList.add(attentionLoopFragment);
+        fragmentList.add(attentionUserFragment);
+        AttentionPagerAdapter attentionPagerAdapter = new AttentionPagerAdapter(fm, fragmentList);
+        attentionPager.setAdapter(attentionPagerAdapter);
+
+        initImageView();
+    }
+
+    private void initImageView() {
+        tabWidth = screenWidth / 2;
+        if (sliderImageWidth > tabWidth) {
+            attentionSliderView.getLayoutParams().width = tabWidth;
+            sliderImageWidth = tabWidth;
+        }
+
+        offsetX = (tabWidth - sliderImageWidth) / 2;
+        attentionSliderView.setPadding(offsetX, 0, 0, 0);
     }
 
     /**
@@ -110,49 +143,6 @@ public class AttentionActivity extends BaseActivity {
         attentionThemeTitle.setOnClickListener(new AttentionClick(0));
         attentionUserTitle.setOnClickListener(new AttentionClick(1));
 
-    }
-
-    /**
-     * 初始化方法
-     */
-    private void initView() {
-        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.attentionRootLayout);
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                rootLayout.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        }
-
-        attentionBack = (ImageView) findViewById(R.id.attentionBack);
-        attentionPager = (ViewPager) findViewById(R.id.attentionPager);
-        attentionSliderView = (ImageView) findViewById(R.id.attention_sliderView);
-        attentionThemeTitle = (TextView) findViewById(R.id.attention_theme_title);
-        attentionUserTitle = (TextView) findViewById(R.id.attention_user_title);
-
-        //关注圈子页面
-        AttentionLoopFragment attentionLoopFragment = AttentionLoopFragment.newInstance(userSign, verification);
-        //关注用户页面
-        AttentionUserFragment attentionUserFragment = AttentionUserFragment.newInstance(userSign, verification);
-        List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(attentionLoopFragment);
-        fragmentList.add(attentionUserFragment);
-        AttentionPagerAdapter attentionPagerAdapter = new AttentionPagerAdapter(fm, fragmentList);
-        attentionPager.setAdapter(attentionPagerAdapter);
-
-        initImageView();
-    }
-
-    private void initImageView() {
-        tabWidth = screenWidth / 2;
-        if (sliderImageWidth > tabWidth) {
-            attentionSliderView.getLayoutParams().width = tabWidth;
-            sliderImageWidth = tabWidth;
-        }
-
-        offsetX = (tabWidth - sliderImageWidth) / 2;
-        attentionSliderView.setPadding(offsetX, 0, 0, 0);
     }
 
     class AttentionClick implements View.OnClickListener {

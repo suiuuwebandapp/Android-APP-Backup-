@@ -64,7 +64,6 @@ public class NewRemindActivity extends BaseActivity {
      */
     private NewAttentionFragment newAttentionFragment;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +71,44 @@ public class NewRemindActivity extends BaseActivity {
 
         initView();
         ViewAction();
+    }
+
+    /**
+     * 初始化方法
+     */
+    private void initView() {
+        RelativeLayout newRemindRootLayout = (RelativeLayout) findViewById(R.id.newRemindRootLayout);
+        if (isKITKAT) {
+            if (navigationBarHeight <= 0) {
+                newRemindRootLayout.setPadding(0, statusBarHeight, 0, 0);
+            } else {
+                newRemindRootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+            }
+        }
+
+        newRemindBack = (ImageView) findViewById(R.id.newRemindBack);
+
+        newAt = (TextView) findViewById(R.id.newAt);
+        newComment = (TextView) findViewById(R.id.newComment);
+        newReply = (TextView) findViewById(R.id.newReply);
+        newAttention = (TextView) findViewById(R.id.newAttention);
+
+        newRemindSlider = (ImageView) findViewById(R.id.newRemindSlider);
+
+        newRemindPager = (ViewPager) findViewById(R.id.newRemindPager);
+        newRemindPager.setOffscreenPageLimit(4);
+
+        initImageView();
+        CreateFragment();
+
+        List<Fragment> fragmentList = new ArrayList<>();
+        fragmentList.add(newAtFragment);
+        fragmentList.add(newCommentFragment);
+        fragmentList.add(newReplyFragment);
+        fragmentList.add(newAttentionFragment);
+
+        NewRemindAdapter newRemindAdapter = new NewRemindAdapter(fm, fragmentList);
+        newRemindPager.setAdapter(newRemindAdapter);
     }
 
     /**
@@ -85,7 +122,7 @@ public class NewRemindActivity extends BaseActivity {
         newReply.setOnClickListener(new NewRemindClick(2));
         newAttention.setOnClickListener(new NewRemindClick(3));
 
-        newRemindPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        newRemindPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -137,44 +174,6 @@ public class NewRemindActivity extends BaseActivity {
 
             }
         });
-    }
-
-    /**
-     * 初始化方法
-     */
-    private void initView() {
-        RelativeLayout newRemindRootLayout = (RelativeLayout) findViewById(R.id.newRemindRootLayout);
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                newRemindRootLayout.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                newRemindRootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        }
-
-        newRemindBack = (ImageView) findViewById(R.id.newRemindBack);
-
-        newAt = (TextView) findViewById(R.id.newAt);
-        newComment = (TextView) findViewById(R.id.newComment);
-        newReply = (TextView) findViewById(R.id.newReply);
-        newAttention = (TextView) findViewById(R.id.newAttention);
-
-        newRemindSlider = (ImageView) findViewById(R.id.newRemindSlider);
-
-        newRemindPager = (ViewPager) findViewById(R.id.newRemindPager);
-        newRemindPager.setOffscreenPageLimit(4);
-
-        initImageView();
-        CreateFragment();
-
-        List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(newAtFragment);
-        fragmentList.add(newCommentFragment);
-        fragmentList.add(newReplyFragment);
-        fragmentList.add(newAttentionFragment);
-
-        NewRemindAdapter newRemindAdapter = new NewRemindAdapter(fm, fragmentList);
-        newRemindPager.setAdapter(newRemindAdapter);
     }
 
     private void initImageView() {

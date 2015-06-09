@@ -53,12 +53,13 @@ import java.util.HashMap;
  * RangeBar thumb will snap to the nearest tick mark.
  * This version is forked from edmodo range bar
  * https://github.com/edmodo/range-bar.git
- * <p>
+ * <p/>
  * Clients of the RangeBar can attach a
  * have
  * been moved.
  */
-@SuppressLint("NewApi") public class RangeBar extends View {
+@SuppressLint("NewApi")
+public class RangeBar extends View {
 
     // Member Variables ////////////////////////////////////////////////////////
 
@@ -89,7 +90,7 @@ import java.util.HashMap;
     private static final float DEFAULT_CONNECTING_LINE_WEIGHT_PX = 6;
 
     // Corresponds to material indigo 500.
-    private static final int DEFAULT_CONNECTING_LINE_COLOR =0xff00CCFF;
+    private static final int DEFAULT_CONNECTING_LINE_COLOR = 0xff00CCFF;
 
     private static final float DEFAULT_EXPANDED_PIN_RADIUS_DP = 14;
 
@@ -191,6 +192,11 @@ import java.util.HashMap;
 
     public RangeBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        rangeBarInit(context, attrs);
+    }
+
+    public RangeBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
         rangeBarInit(context, attrs);
     }
 
@@ -301,7 +307,9 @@ import java.util.HashMap;
         setMeasuredDimension(width, height);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB) @SuppressLint("NewApi") @Override
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @SuppressLint("NewApi")
+    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 
         super.onSizeChanged(w, h, oldw, oldh);
@@ -596,6 +604,7 @@ import java.util.HashMap;
         mPinColor = pinColor;
         createPins();
     }
+
     /**
      * Set the color of the text within the pin.
      *
@@ -709,13 +718,13 @@ import java.util.HashMap;
     public void setRangePinsByIndices(int leftPinIndex, int rightPinIndex) {
         if (indexOutOfRange(leftPinIndex, rightPinIndex)) {
             DeBugLog.e(TAG,
-                    "Pin index left " + leftPinIndex + ", or right "+rightPinIndex
+                    "Pin index left " + leftPinIndex + ", or right " + rightPinIndex
                             + " is out of bounds. Check that it is greater than the minimum ("
                             + mTickStart + ") and less than the maximum value ("
                             + mTickEnd + ")");
 
             throw new IllegalArgumentException(
-                    "Pin index left " + leftPinIndex + ", or right "+rightPinIndex
+                    "Pin index left " + leftPinIndex + ", or right " + rightPinIndex
                             + " is out of bounds. Check that it is greater than the minimum ("
                             + mTickStart + ") and less than the maximum value ("
                             + mTickEnd + ")");
@@ -783,15 +792,15 @@ import java.util.HashMap;
     public void setRangePinsByValue(float leftPinValue, float rightPinValue) {
         if (valueOutOfRange(leftPinValue, rightPinValue)) {
             DeBugLog.e(TAG,
-                    "Pin value left " + leftPinValue + ", or right "+rightPinValue
+                    "Pin value left " + leftPinValue + ", or right " + rightPinValue
                             + " is out of bounds. Check that it is greater than the minimum ("
                             + mTickStart + ") and less than the maximum value ("
                             + mTickEnd + ")");
             throw new IllegalArgumentException(
-                            "Pin value left " + leftPinValue + ", or right "+rightPinValue
-                                    + " is out of bounds. Check that it is greater than the minimum ("
-                                    + mTickStart + ") and less than the maximum value ("
-                                    + mTickEnd + ")");
+                    "Pin value left " + leftPinValue + ", or right " + rightPinValue
+                            + " is out of bounds. Check that it is greater than the minimum ("
+                            + mTickStart + ") and less than the maximum value ("
+                            + mTickEnd + ")");
         } else {
             if (mFirstSetTickCount) {
                 mFirstSetTickCount = false;
@@ -881,14 +890,13 @@ import java.util.HashMap;
     }
 
     @Override
-    public void setEnabled(boolean enabled){
-        if(!enabled) {
+    public void setEnabled(boolean enabled) {
+        if (!enabled) {
             mBarColor = DEFAULT_BAR_COLOR;
             mConnectingLineColor = DEFAULT_BAR_COLOR;
             mCircleColor = DEFAULT_BAR_COLOR;
             mTickColor = DEFAULT_BAR_COLOR;
-        }
-        else{
+        } else {
             mBarColor = mActiveBarColor;
             mConnectingLineColor = mActiveConnectingLineColor;
             mCircleColor = mActiveCircleColor;
@@ -1252,7 +1260,8 @@ import java.util.HashMap;
      *
      * @param thumb the thumb to release
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB) private void releasePin(final PinView thumb) {
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void releasePin(final PinView thumb) {
 
         final float nearestTickX = mBar.getNearestTickCoordinate(thumb);
         thumb.setX(nearestTickX);
@@ -1277,13 +1286,12 @@ import java.util.HashMap;
     /**
      * Set the value on the thumb pin, either from map or calculated from the tick intervals
      * Integer check to format decimals as whole numbers
-     *
      */
     private String getPinValue(int s) {
-    	int tickIndex = s*1000;
+        int tickIndex = s * 1000;
         float tickValue = (tickIndex == (mTickCount - 1))
-                            ? mTickEnd
-                            : (tickIndex * mTickInterval) + mTickStart;
+                ? mTickEnd
+                : (tickIndex * mTickInterval) + mTickStart;
         String xValue = mTickMap.get(tickValue);
         if (xValue == null) {
             if (tickValue == Math.ceil(tickValue)) {
@@ -1325,11 +1333,12 @@ import java.util.HashMap;
         public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex,
                                           int rightPinIndex, String leftPinValue, String rightPinValue);
     }
+
     public static final int[] RangeBar = {
-        0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
-        0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007,
-        0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b,
-        0x7f01000c, 0x7f01000d, 0x7f01000e, 0x7f01000f,
-        0x7f010010
+            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
+            0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007,
+            0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b,
+            0x7f01000c, 0x7f01000d, 0x7f01000e, 0x7f01000f,
+            0x7f010010
     };
 }

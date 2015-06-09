@@ -187,7 +187,6 @@ public class LoopArticleActivity extends BaseActivity {
 
         articleId = getIntent().getStringExtra(ARTICLEID);
         OtherTAG = getIntent().getStringExtra("TAG");
-        DeBugLog.i(TAG, "TAG:" + OtherTAG);
 
         initImageLoader();
 
@@ -198,34 +197,17 @@ public class LoopArticleActivity extends BaseActivity {
     }
 
     /**
-     * 初始化图片加载器
-     */
-    private void initImageLoader() {
-
-        options1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
-                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
-
-        options2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
-    }
-
-    /**
      * 初始化方法
      */
     private void initView() {
-
-        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.loop_article_root_layout);
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                rootLayout.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        }
+//        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.loop_article_root_layout);
+//        if (isKITKAT) {
+//            if (navigationBarHeight <= 0) {
+//                rootLayout.setPadding(0, statusBarHeight, 0, 0);
+//            } else {
+//                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+//            }
+//        }
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -259,6 +241,21 @@ public class LoopArticleActivity extends BaseActivity {
         commentListView = (LinearLayoutForListView) findViewById(R.id.loop_article_comment_list);
         loop_article_scrollView = (ScrollView) findViewById(R.id.loop_article_scrollView);
 
+    }
+
+    /**
+     * 初始化图片加载器
+     */
+    private void initImageLoader() {
+        options1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        options2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     /**

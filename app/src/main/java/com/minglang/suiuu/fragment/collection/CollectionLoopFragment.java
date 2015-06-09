@@ -20,6 +20,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.LoopArticleActivity;
 import com.minglang.suiuu.adapter.CollectionLoopAdapter;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.entity.CollectionLoop;
 import com.minglang.suiuu.entity.CollectionLoopData;
 import com.minglang.suiuu.utils.DeBugLog;
@@ -110,74 +111,9 @@ public class CollectionLoopFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_collection_loop, container, false);
 
         initView(rootView);
-
         ViewAction();
-
         getData();
-
         return rootView;
-    }
-
-    private void getData() {
-
-        if (dialog != null) {
-            dialog.show();
-        }
-
-        getCollectionLoop4Service(1);
-    }
-
-    /**
-     * 从网络获取收藏的圈子数据
-     */
-    private void getCollectionLoop4Service(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("page", String.valueOf(page));
-        params.addBodyParameter(HttpServicePath.key, verification);
-
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.CollectionLoopPath, new CollectionLoopRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
-    }
-
-    /**
-     * 控件动作
-     */
-    private void ViewAction() {
-
-        mPtrFrame.setPtrHandler(new PtrHandler() {
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, gridView, header);
-            }
-
-            @Override
-            public void onRefreshBegin(PtrFrameLayout frame) {
-                clearFlag = true;
-                getCollectionLoop4Service(1);
-            }
-        });
-
-        ptrLoadMore.setLoadMoreHandler(new LoadMoreHandler() {
-            @Override
-            public void onLoadMore(LoadMoreContainer loadMoreContainer) {
-                clearFlag = false;
-                page = page + 1;
-                getCollectionLoop4Service(page);
-            }
-        });
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String articleId = listAll.get(position).getArticleId();
-                Intent intent = new Intent(getActivity(), LoopArticleActivity.class);
-                intent.putExtra("articleId", articleId);
-                intent.putExtra("TAG", TAG);
-                startActivity(intent);
-            }
-        });
     }
 
     /**
@@ -228,10 +164,64 @@ public class CollectionLoopFragment extends Fragment {
         DeBugLog.i(TAG, "userSign:" + userSign);
     }
 
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    /**
+     * 控件动作
+     */
+    private void ViewAction() {
+
+        mPtrFrame.setPtrHandler(new PtrHandler() {
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, gridView, header);
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                clearFlag = true;
+                getCollectionLoop4Service(1);
+            }
+        });
+
+        ptrLoadMore.setLoadMoreHandler(new LoadMoreHandler() {
+            @Override
+            public void onLoadMore(LoadMoreContainer loadMoreContainer) {
+                clearFlag = false;
+                page = page + 1;
+                getCollectionLoop4Service(page);
+            }
+        });
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String articleId = listAll.get(position).getArticleId();
+                Intent intent = new Intent(getActivity(), LoopArticleActivity.class);
+                intent.putExtra("articleId", articleId);
+                intent.putExtra("TAG", TAG);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void getData() {
+        if (dialog != null) {
+            dialog.show();
+        }
+        getCollectionLoop4Service(1);
+    }
+
+    /**
+     * 从网络获取收藏的圈子数据
+     */
+    private void getCollectionLoop4Service(int page) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("page", String.valueOf(page));
+        params.addBodyParameter(HttpServicePath.key, verification);
+
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.CollectionLoopPath, new CollectionLoopRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
     }
 
     /**
@@ -264,16 +254,16 @@ public class CollectionLoopFragment extends Fragment {
                         listAll.addAll(list);
                         collectionLoopAdapter.setListData(listAll);
                     } else {
-                        Toast.makeText(getActivity(), "圈子收藏" +
+                        Toast.makeText(SuiuuApplication.applicationContext, "圈子收藏" +
                                 getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getActivity(),
+                    Toast.makeText(SuiuuApplication.applicationContext,
                             getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "收藏的圈子的数据解析异常:" + e.getMessage());
-                Toast.makeText(getActivity(),
+                Toast.makeText(SuiuuApplication.applicationContext,
                         getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
@@ -293,9 +283,10 @@ public class CollectionLoopFragment extends Fragment {
             ptrLoadMore.loadMoreError(0, "加载失败，请重试");
 
             DeBugLog.e(TAG, "收藏的圈子数据请求失败:" + s);
-            Toast.makeText(getActivity(),
+            Toast.makeText(SuiuuApplication.applicationContext,
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
+
     }
 
 }

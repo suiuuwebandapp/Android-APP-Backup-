@@ -1,7 +1,6 @@
 package com.minglang.suiuu.activity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -11,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +17,6 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.ShowGVPictureAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
-import com.minglang.suiuu.utils.SystemBarTintManager;
 
 import java.util.ArrayList;
 
@@ -48,13 +45,25 @@ public class FeedbackActivity extends BaseActivity {
         ViewAction();
     }
 
-    private void ViewAction() {
+    /**
+     * 初始化方法
+     */
+    private void initView() {
+        listPicture = new ArrayList<>();
+        back = (ImageView) findViewById(R.id.iv_top_back);
+        sendText = (TextView) findViewById(R.id.tv_top_right);
+        feedbackText = (EditText) findViewById(R.id.et_question_description);
+        gv_show_picture = (GridView) findViewById(R.id.gv_show_picture);
+    }
 
+    /**
+     * 控件动作
+     */
+    private void ViewAction() {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 
@@ -87,7 +96,7 @@ public class FeedbackActivity extends BaseActivity {
 
             }
         });
-        gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture,"0"));
+        gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture, "0"));
         gv_show_picture.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -104,36 +113,12 @@ public class FeedbackActivity extends BaseActivity {
         });
     }
 
-    private void initView() {
-        listPicture = new ArrayList<>();
-        SystemBarTintManager mTintManager = new SystemBarTintManager(this);
-        mTintManager.setStatusBarTintEnabled(true);
-        mTintManager.setNavigationBarTintEnabled(false);
-        mTintManager.setTintColor(getResources().getColor(R.color.tr_black));
-
-        int statusHeight = mTintManager.getConfig().getStatusBarHeight();
-
-        boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
-        if (isKITKAT) {
-            RelativeLayout feedbackRootLayout = (RelativeLayout) findViewById(R.id.feedbackRootLayout);
-            feedbackRootLayout.setPadding(0, statusHeight, 0, 0);
-        }
-        back = (ImageView) findViewById(R.id.iv_top_back);
-
-        sendText = (TextView) findViewById(R.id.tv_top_right);
-
-        feedbackText = (EditText) findViewById(R.id.et_question_description);
-
-        gv_show_picture = (GridView) findViewById(R.id.gv_show_picture);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == 9) {
             listPicture = data.getStringArrayListExtra("pictureMessage");
-            gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture,"0"));
+            gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture, "0"));
         }
     }
 }

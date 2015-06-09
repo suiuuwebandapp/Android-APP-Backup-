@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
@@ -67,10 +66,33 @@ public class CollectionActivity extends BaseActivity {
     }
 
     /**
+     * 初始化方法
+     */
+    private void initView() {
+        collectionBack = (ImageView) findViewById(R.id.collectionBack);
+        collectionSearch = (ImageView) findViewById(R.id.collectionSearch);
+        collectionLoop = (TextView) findViewById(R.id.collectionLoop);
+        collectionSuiuu = (TextView) findViewById(R.id.collectionSuiuu);
+        collectionSlider = (ImageView) findViewById(R.id.collectionSlider);
+        collectionPager = (ViewPager) findViewById(R.id.collectionPager);
+
+        CollectionLoopFragment collectionLoopFragment = CollectionLoopFragment.newInstance(userSign, verification);
+        CollectionSuiuuFragment collectionSuiuuFragment = CollectionSuiuuFragment.newInstance(userSign, verification);
+
+        List<Fragment> collectionList = new ArrayList<>();
+        collectionList.add(collectionLoopFragment);
+        collectionList.add(collectionSuiuuFragment);
+
+        CollectionAdapter collectionAdapter = new CollectionAdapter(fm, collectionList);
+        collectionPager.setAdapter(collectionAdapter);
+
+        initImageView();
+    }
+
+    /**
      * 控件动作
      */
     private void ViewAction() {
-
         collectionBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,39 +147,6 @@ public class CollectionActivity extends BaseActivity {
     }
 
     /**
-     * 初始化方法
-     */
-    private void initView() {
-        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.collectionRootLayout);
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                rootLayout.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        }
-
-        collectionBack = (ImageView) findViewById(R.id.collectionBack);
-        collectionSearch = (ImageView) findViewById(R.id.collectionSearch);
-        collectionLoop = (TextView) findViewById(R.id.collectionLoop);
-        collectionSuiuu = (TextView) findViewById(R.id.collectionSuiuu);
-        collectionSlider = (ImageView) findViewById(R.id.collectionSlider);
-        collectionPager = (ViewPager) findViewById(R.id.collectionPager);
-
-        CollectionLoopFragment collectionLoopFragment = CollectionLoopFragment.newInstance(userSign, verification);
-        CollectionSuiuuFragment collectionSuiuuFragment = CollectionSuiuuFragment.newInstance(userSign, verification);
-
-        List<Fragment> collectionList = new ArrayList<>();
-        collectionList.add(collectionLoopFragment);
-        collectionList.add(collectionSuiuuFragment);
-
-        CollectionAdapter collectionAdapter = new CollectionAdapter(fm, collectionList);
-        collectionPager.setAdapter(collectionAdapter);
-
-        initImageView();
-    }
-
-    /**
      * 初始化相关图片
      */
     private void initImageView() {
@@ -184,4 +173,5 @@ public class CollectionActivity extends BaseActivity {
             collectionPager.setCurrentItem(index);
         }
     }
+
 }

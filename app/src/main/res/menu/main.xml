@@ -1,11 +1,19 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.minglang.suiuu.MainActivity" >
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/item_message"
+            android:title="@string/message"/>
+        <item
+            android:id="@+id/item_my_suiuu"
+            android:title="@string/my_suiuu"/>
+        <item
+            android:id="@+id/item_order_manager"
+            android:title="@string/orderManager"/>
+        <item
+            android:id="@+id/item_account_manager"
+            android:title="@string/accountManager"/>
+    </group>
 
 </menu>

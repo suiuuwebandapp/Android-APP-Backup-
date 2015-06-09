@@ -2,13 +2,9 @@ package com.minglang.suiuu.customview;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 public class CustomShapeSquareImageView extends CustomShapeImageView {
 
-    public CustomShapeSquareImageView(Context context, int resourceId, int shape, int svgRawResourceId) {
-        super(context, resourceId, shape, svgRawResourceId);
-    }
     public CustomShapeSquareImageView(Context context) {
         super(context);
     }
@@ -21,9 +17,14 @@ public class CustomShapeSquareImageView extends CustomShapeImageView {
         super(context, attrs, defStyle);
     }
 
+    public CustomShapeSquareImageView(Context context, int resourceId, int shape, int svgRawResourceId) {
+        super(context, resourceId, shape, svgRawResourceId);
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(getMeasuredWidth(), getMeasuredWidth());
     }
+
 }
