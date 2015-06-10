@@ -43,4 +43,12 @@
         <item>@color/yellow</item>
         <item>@color/green</item>
     </integer-array>
+
+    <string-array name="sideList">
+        <item>消息</item>
+        <item>我的随游</item>
+        <item>订单管理</item>
+        <item>账户管理</item>
+    </string-array>
+
 </resources>

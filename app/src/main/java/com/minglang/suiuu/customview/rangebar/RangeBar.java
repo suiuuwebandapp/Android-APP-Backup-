@@ -35,6 +35,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -66,9 +67,9 @@ public class RangeBar extends View {
     private static final String TAG = "RangeBar";
 
     // Default values for variables
-    private static final float DEFAULT_TICK_START = 0;
+    private static final float DEFAULT_START = 0;
 
-    private static final float DEFAULT_TICK_END = 5;
+    private static final float DEFAULT_END = 5;
 
     private static final float DEFAULT_TICK_INTERVAL = 1;
 
@@ -102,9 +103,9 @@ public class RangeBar extends View {
 
     private float mTickHeightDP = DEFAULT_TICK_HEIGHT_DP;
 
-    private float mTickStart = DEFAULT_TICK_START;
+    private float mTickStart = DEFAULT_START;
 
-    private float mTickEnd = DEFAULT_TICK_END;
+    private float mTickEnd = DEFAULT_END;
 
     private float mTickInterval = DEFAULT_TICK_INTERVAL;
 
@@ -190,9 +191,9 @@ public class RangeBar extends View {
         rangeBarInit(context, attrs);
     }
 
-    public RangeBar(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        rangeBarInit(context, attrs);
+    public RangeBar(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        rangeBarInit(context, attrs, defStyleAttr);
     }
 
     public RangeBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -379,7 +380,7 @@ public class RangeBar extends View {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
 
         // If this View is not enabled, don't allow for touch interactions.
         if (!isEnabled()) {
@@ -912,6 +913,14 @@ public class RangeBar extends View {
 
     // Private Methods /////////////////////////////////////////////////////////
 
+    private void rangeBarInit(Context context, AttributeSet attrs) {
+        rangeBarInit(context, attrs, 0, 0);
+    }
+
+    private void rangeBarInit(Context context, AttributeSet attrs, int defStyleAttr) {
+        rangeBarInit(context, attrs, defStyleAttr, 0);
+    }
+
     /**
      * Does all the functions of the constructor for RangeBar. Called by both
      * RangeBar constructors in lieu of copying the code for each constructor.
@@ -919,28 +928,22 @@ public class RangeBar extends View {
      * @param context Context from the constructor.
      * @param attrs   AttributeSet from the constructor.
      */
-    private void rangeBarInit(Context context, AttributeSet attrs) {
-        //TODO tick value map
+    private void rangeBarInit(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         if (mTickMap == null) {
-            mTickMap = new HashMap<Float, String>();
+            mTickMap = new HashMap<>();
         }
-        TypedArray ta = context.obtainStyledAttributes(attrs, RangeBar, 0, 0);
+
+        TypedArray ta = context.obtainStyledAttributes(attrs, RangeBar, defStyleAttr, defStyleRes);
 
         try {
-
-            // Sets the values of the user-defined attributes based on the XML
-            // attributes.
-            final float tickStart = ta
-                    .getFloat(0, DEFAULT_TICK_START);
-            final float tickEnd = ta
-                    .getFloat(10, DEFAULT_TICK_END);
-            final float tickInterval = ta
-                    .getFloat(2, DEFAULT_TICK_INTERVAL);
+            // Sets the values of the user-defined attributes based on the XML attributes.
+            final float tickStart = ta.getFloat(0, DEFAULT_START);
+            final float tickEnd = ta.getFloat(10, DEFAULT_END);
+            final float tickInterval = ta.getFloat(2, DEFAULT_TICK_INTERVAL);
             int tickCount = (int) ((tickEnd - tickStart) / tickInterval) + 1;
-            if (isValidTickCount(tickCount)) {
 
-                // Similar functions performed above in setTickCount; make sure
-                // you know how they interact
+            if (isValidTickCount(tickCount)) {
+                // Similar functions performed above in setTickCount; make sure you know how they interact
                 mTickCount = tickCount;
                 mTickStart = tickStart;
                 mTickEnd = tickEnd;
@@ -958,37 +961,39 @@ public class RangeBar extends View {
                 DeBugLog.e(TAG, "tickCount less than 2; invalid tickCount. XML input ignored.");
             }
 
-            mTickHeightDP = ta
-                    .getDimension(3, DEFAULT_TICK_HEIGHT_DP);
+            mTickHeightDP = ta.getDimension(3, DEFAULT_TICK_HEIGHT_DP);
             mBarWeight = ta.getDimension(5, DEFAULT_BAR_WEIGHT_PX);
             mBarColor = ta.getColor(6, DEFAULT_BAR_COLOR);
             mTextColor = ta.getColor(7, DEFAULT_TEXT_COLOR);
             mPinColor = ta.getColor(8, DEFAULT_PIN_COLOR);
             mActiveBarColor = mBarColor;
-            mCircleSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    ta.getDimension(9, DEFAULT_CIRCLE_SIZE_DP),
+
+            mCircleSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ta.getDimension(9, DEFAULT_CIRCLE_SIZE_DP),
                     getResources().getDisplayMetrics());
-            mCircleColor = ta.getColor(12,
-                    DEFAULT_CONNECTING_LINE_COLOR);
+
+            mCircleColor = ta.getColor(12, DEFAULT_CONNECTING_LINE_COLOR);
             mActiveCircleColor = mCircleColor;
+
             mTickColor = ta.getColor(4, DEFAULT_TICK_COLOR);
             mActiveTickColor = mTickColor;
-            mConnectingLineWeight = ta.getDimension(14,
-                    DEFAULT_CONNECTING_LINE_WEIGHT_PX);
-            mConnectingLineColor = ta.getColor(15,
-                    DEFAULT_CONNECTING_LINE_COLOR);
+
+            mConnectingLineWeight = ta.getDimension(14, DEFAULT_CONNECTING_LINE_WEIGHT_PX);
+            mConnectingLineColor = ta.getColor(15, DEFAULT_CONNECTING_LINE_COLOR);
+
             mActiveConnectingLineColor = mConnectingLineColor;
             mExpandedPinRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                     ta.getDimension(16,
                             DEFAULT_EXPANDED_PIN_RADIUS_DP), getResources().getDisplayMetrics());
+
             mPinPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                     ta.getDimension(8,
                             DEFAULT_PIN_PADDING_DP), getResources().getDisplayMetrics());
+
             mBarPaddingBottom = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                     ta.getDimension(10,
                             DEFAULT_BAR_PADDING_BOTTOM_DP), getResources().getDisplayMetrics());
-            mIsRangeBar = ta.getBoolean(13, true);
 
+            mIsRangeBar = ta.getBoolean(13, true);
         } finally {
             ta.recycle();
         }

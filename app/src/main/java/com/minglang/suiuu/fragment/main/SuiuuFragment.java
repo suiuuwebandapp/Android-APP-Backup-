@@ -1,8 +1,10 @@
 package com.minglang.suiuu.fragment.main;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,6 +108,9 @@ public class SuiuuFragment extends BaseFragment
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Light_NoTitleBar);
+        inflater.cloneInContext(contextThemeWrapper);
 
         View rootView = inflater.inflate(R.layout.fragment_route, null);
         initView(rootView);

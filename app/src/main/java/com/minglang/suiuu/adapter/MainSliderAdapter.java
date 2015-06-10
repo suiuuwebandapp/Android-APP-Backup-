@@ -1,20 +1,16 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.List;
 
-/**
- * Created by LZY on 2015/3/30 0030.
- */
 public class MainSliderAdapter extends BaseAdapter {
 
     private Context context;
@@ -50,64 +46,13 @@ public class MainSliderAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView,ViewGroup parent) {
-
+    public View getView(int position, View convertView, ViewGroup parent) {
         String str = list.get(position);
-
-        ViewHolder holder;
-
-        if (convertView == null) {
-
-            holder = new ViewHolder();
-
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_slider, null);
-
-            holder.icon = (ImageView) convertView.findViewById(R.id.itemSliderIcon);
-            holder.text = (TextView) convertView.findViewById(R.id.itemSliderText);
-
-            convertView.setTag(holder);
-
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        switch (str) {
-
-            case "收藏":
-                holder.icon.setImageResource(R.drawable.item_icon_star2);
-                break;
-
-            case "关注":
-                holder.icon.setImageResource(R.drawable.item_icon_attention2);
-                break;
-
-            case "消息":
-                holder.icon.setImageResource(R.drawable.item_icon_infomation2);
-                break;
-
-            case "粉丝":
-                holder.icon.setImageResource(R.drawable.item_icon_fans2);
-                break;
-
-            case "设置":
-                holder.icon.setImageResource(R.drawable.item_icon_setting2);
-                break;
-
-            case "退出":
-                holder.icon.setImageResource(R.drawable.item_icon_exit2);
-                break;
-        }
-
-        holder.text.setText(str);
-
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_slider, position);
+        convertView = holder.getConvertView();
+        TextView textView = holder.getView(R.id.itemSliderText);
+        textView.setText(str);
         return convertView;
-    }
-
-    class ViewHolder {
-
-        ImageView icon;
-        TextView text;
-
     }
 
 }

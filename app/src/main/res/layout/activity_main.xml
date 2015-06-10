@@ -1,7 +1,6 @@
 <android.support.v4.widget.DrawerLayout
     android:id="@+id/drawerLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -180,12 +179,32 @@
     </RelativeLayout>
 
     <!--侧滑内容显示区域-->
-    <android.support.design.widget.NavigationView
-        android:id="@+id/sliderNavigationView"
+    <RelativeLayout
+        android:id="@+id/sliderLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/layout_header"
-        app:menu="@menu/main"/>
+        android:background="@color/tr_write2">
+
+        <include
+            android:id="@+id/include"
+            layout="@layout/layout_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/include"
+            android:layout_centerHorizontal="true">
+
+            <ListView
+                android:id="@+id/sideListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
+
+    </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>

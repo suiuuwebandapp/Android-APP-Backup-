@@ -89,7 +89,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/FullBleedTheme"/>
+            android:theme="@android:style/Theme.Light.NoTitleBar"/>
         <activity
             android:name=".activity.PersonalActivity"
             android:label="@string/title_activity_personal"

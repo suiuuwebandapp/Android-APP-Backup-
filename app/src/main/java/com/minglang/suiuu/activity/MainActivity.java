@@ -10,14 +10,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -25,8 +23,10 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +44,7 @@ import com.easemob.util.EMLog;
 import com.easemob.util.EasyUtils;
 import com.easemob.util.NetUtils;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.MainSliderAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.ChatActivity;
@@ -60,6 +61,10 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * 应用程序主界面
  */
@@ -71,12 +76,8 @@ public class MainActivity extends BaseActivity {
 
     private DrawerLayout mDrawerLayout;
 
-    private NavigationView sliderNavigationView;
-
-    //标题
-    private TextView titleInfo;
-
-    private ImageView drawerSwitch;
+    //侧滑布局
+    private RelativeLayout sliderView;
 
     /**
      * 点击修改昵称
@@ -87,6 +88,13 @@ public class MainActivity extends BaseActivity {
      * 点击修改头像
      */
     private CircleImageView headImageView;
+
+    private ListView sideListView;
+
+    //标题
+    private TextView titleInfo;
+
+    private ImageView drawerSwitch;
 
     /**
      * 各个Tab页
@@ -132,7 +140,6 @@ public class MainActivity extends BaseActivity {
      * 随记Button
      */
     private ImageView record;
-
 
     private AnimationSet animationSetHide, animationSetShow;
     // 账号在别处登录
@@ -235,11 +242,11 @@ public class MainActivity extends BaseActivity {
         errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
         msgCount = (TextView) findViewById(R.id.unread_msg_number);
 
-        sliderNavigationView = (NavigationView) findViewById(R.id.sliderNavigationView);
-        ViewGroup.LayoutParams sliderNavigationViewParams = sliderNavigationView.getLayoutParams();
+        sliderView = (RelativeLayout) findViewById(R.id.sliderLayout);
+        ViewGroup.LayoutParams sliderNavigationViewParams = sliderView.getLayoutParams();
         sliderNavigationViewParams.width = screenWidth / 4 * 3;
         sliderNavigationViewParams.height = screenHeight;
-        sliderNavigationView.setLayoutParams(sliderNavigationViewParams);
+        sliderView.setLayoutParams(sliderNavigationViewParams);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mDrawerLayout.setFocusableInTouchMode(true);
@@ -265,6 +272,12 @@ public class MainActivity extends BaseActivity {
         if (!TextUtils.isEmpty(strHeadImagePath)) {
             imageLoader.displayImage(strHeadImagePath, headImageView);
         }
+
+        sideListView = (ListView) findViewById(R.id.sideListView);
+        List<String> strList = new ArrayList<>();
+        Collections.addAll(strList, getResources().getStringArray(R.array.sideList));
+        MainSliderAdapter adapter = new MainSliderAdapter(this, strList);
+        sideListView.setAdapter(adapter);
 
         tab1 = (LinearLayout) findViewById(R.id.tab1);
         tab2 = (LinearLayout) findViewById(R.id.tab2);
@@ -365,39 +378,23 @@ public class MainActivity extends BaseActivity {
 
         headImageView.setOnClickListener(onClickListener);
 
+        sideListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mDrawerLayout.closeDrawer(sliderView);
+                switch (position) {
+                    case 0:
+                        break;
+                }
+            }
+        });
+
         tab1.setOnClickListener(onClickListener);
         tab2.setOnClickListener(onClickListener);
         tab3.setOnClickListener(onClickListener);
         tab4.setOnClickListener(onClickListener);
 
         sendMsg.setOnClickListener(onClickListener);
-
-        sliderNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.item_message:
-                        Intent intent2 = new Intent(MainActivity.this, NewRemindActivity.class);
-                        startActivity(intent2);
-                        break;
-
-                    case R.id.item_my_suiuu:
-                        Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
-                        break;
-
-                    case R.id.item_order_manager:
-                        Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
-                        break;
-
-                    case R.id.item_account_manager:
-                        Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
-                        break;
-                }
-
-                mDrawerLayout.closeDrawers();
-                return true;
-            }
-        });
 
         ask.setOnClickListener(new OnClickListener() {
             @Override
@@ -981,23 +978,23 @@ public class MainActivity extends BaseActivity {
             switch (v.getId()) {
 
                 case R.id.drawerSwitch:
-                    if (mDrawerLayout.isDrawerVisible(sliderNavigationView)) {
-                        mDrawerLayout.closeDrawer(sliderNavigationView);
+                    if (mDrawerLayout.isDrawerVisible(sliderView)) {
+                        mDrawerLayout.closeDrawer(sliderView);
                     } else {
-                        mDrawerLayout.openDrawer(sliderNavigationView);
+                        mDrawerLayout.openDrawer(sliderView);
                     }
                     break;
 
                 case R.id.headImage:
                     Intent headIntent = new Intent(MainActivity.this, PersonalActivity.class);
                     startActivity(headIntent);
-                    mDrawerLayout.closeDrawer(sliderNavigationView);
+                    mDrawerLayout.closeDrawer(sliderView);
                     break;
 
                 case R.id.nickName:
                     Intent nickIntent = new Intent(MainActivity.this, PersonalActivity.class);
                     startActivity(nickIntent);
-                    mDrawerLayout.closeDrawer(sliderNavigationView);
+                    mDrawerLayout.closeDrawer(sliderView);
                     break;
 
                 case R.id.tab1:
@@ -1135,8 +1132,8 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (mDrawerLayout.isDrawerVisible(sliderNavigationView)) {
-                mDrawerLayout.closeDrawer(sliderNavigationView);
+            if (mDrawerLayout.isDrawerVisible(sliderView)) {
+                mDrawerLayout.closeDrawer(sliderView);
             } else {
                 if ((System.currentTimeMillis() - exitTime) > 2000) {
                     Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();

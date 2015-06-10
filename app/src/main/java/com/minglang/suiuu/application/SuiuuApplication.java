@@ -28,7 +28,6 @@ import com.easemob.chat.EMChat;
 import com.minglang.suiuu.chat.bean.User;
 import com.minglang.suiuu.chat.chat.DemoHXSDKHelper;
 import com.minglang.suiuu.chat.model.DefaultHXSDKModel;
-import com.minglang.suiuu.crash.GlobalCrashHandler;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -81,7 +80,7 @@ public class SuiuuApplication extends Application {
         initHuanXin();
         initAboatOSS();
         initImageLoad();
-        GlobalCrashHandler.getInstance().init(this);
+        //GlobalCrashHandler.getInstance().init(this);
     }
 
     @Override
