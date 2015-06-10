@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +20,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.RollViewPager;
@@ -74,18 +74,22 @@ public class SuiuuDetailActivity extends BaseActivity {
     private TextView suiuu_details_praise;
     private SuiuuDetailForData suiuuDetailData;
     private TextView suiuu_details_collection;
+
     /**
      * 点赞Id
      */
     private String attentionId;
+
     /**
      * 收藏ID
      */
     private String collectionId;
 
     private TextProgressDialog dialog;
+
     //判断取消的是点赞还是收藏
     private boolean isPraise;
+
     private TextView suiuu_details_comments;
     private String tripId;
     private DisplayImageOptions options;
@@ -116,16 +120,8 @@ public class SuiuuDetailActivity extends BaseActivity {
     }
 
     private void initView() {
-        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.suiuu_detail_root);
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                rootLayout.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        }
+        dialog = new TextProgressDialog(SuiuuApplication.applicationContext);
 
-        dialog = new TextProgressDialog(this);
         tv_nickName = (TextView) findViewById(R.id.tv_nickname);
         tv_selfSign = (TextView) findViewById(R.id.tv_self_sign);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -136,7 +132,7 @@ public class SuiuuDetailActivity extends BaseActivity {
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
                 .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
         tv_service_time = (TextView) findViewById(R.id.tv_service_time);
         tv_suiuu_travel_time = (TextView) findViewById(R.id.tv_suiuu_travel_time);
@@ -263,7 +259,7 @@ public class SuiuuDetailActivity extends BaseActivity {
             try {
                 JSONObject json = new JSONObject(responseInfo.result);
                 String status = json.getString("status");
-                if ("1".equals(status )){
+                if ("1".equals(status)) {
                     SuiuuDataDetail detail = jsonUtil.fromJSON(SuiuuDataDetail.class, responseInfo.result);
                     suiuuDetailData = detail.getData();
                     detailInfo = detail.getData().getInfo();
@@ -272,7 +268,7 @@ public class SuiuuDetailActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), "登录信息过期,请重新登录", Toast.LENGTH_SHORT).show();
                     AppUtils.intentLogin(getApplicationContext());
                     SuiuuDetailActivity.this.finish();
-                }else {
+                } else {
                     dialog.dismissDialog();
                     Toast.makeText(SuiuuDetailActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }

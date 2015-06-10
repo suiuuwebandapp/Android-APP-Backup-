@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -18,6 +19,8 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.AllAttentionDynamicAdapter;
+import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
+import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
 import com.minglang.suiuu.entity.AllAttentionDynamic;
 import com.minglang.suiuu.entity.AllAttentionDynamicData;
 import com.minglang.suiuu.utils.DeBugLog;
@@ -29,15 +32,7 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.srain.cube.util.LocalDisplay;
-import in.srain.cube.views.loadmore.LoadMoreContainer;
-import in.srain.cube.views.loadmore.LoadMoreHandler;
-import in.srain.cube.views.loadmore.LoadMoreListViewContainer;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.header.MaterialHeader;
 
 /**
  * 查看更多关注页面
@@ -50,17 +45,7 @@ public class AllAttentionDynamicActivity extends Activity {
 
     private static final String ARTICLEID = "articleId";
 
-    /**
-     * 下拉刷新组件
-     */
-    private PtrClassicFrameLayout mPtrFrame;
-
-    /**
-     * 上拉加载组件
-     */
-    private LoadMoreListViewContainer loadMoreContainer;
-
-    private ListView listView;
+    private PullToRefreshListView listView;
 
     private int page = 1;
 
@@ -82,7 +67,6 @@ public class AllAttentionDynamicActivity extends Activity {
         initView();
 
         ViewAction();
-
         getData();
     }
 
@@ -95,34 +79,10 @@ public class AllAttentionDynamicActivity extends Activity {
         dialog.setCanceledOnTouchOutside(false);
 
         back = (ImageView) findViewById(R.id.AllAttentionBack);
-        mPtrFrame = (PtrClassicFrameLayout) findViewById(R.id.all_attention_dynamic_frame);
-        listView = (ListView) findViewById(R.id.all_attention_dynamic_list_view);
-        loadMoreContainer = (LoadMoreListViewContainer) findViewById(R.id.all_attention_dynamic_load_more_container);
-
-        MaterialHeader header = new MaterialHeader(this);
-        int[] colors = getResources().getIntArray(R.array.google_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
-        header.setPtrFrameLayout(mPtrFrame);
-
-        mPtrFrame.setHeaderView(header);
-        mPtrFrame.addPtrUIHandler(header);
-        mPtrFrame.setPinContent(true);
-
-        // the following are default settings
-        mPtrFrame.setResistance(1.7f);
-        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
-        mPtrFrame.setDurationToClose(200);
-        mPtrFrame.setDurationToCloseHeader(1000);
-        // default is false
-        mPtrFrame.setPullToRefresh(false);
-        // default is true
-        mPtrFrame.setKeepHeaderWhenRefresh(true);
-
+        listView = (PullToRefreshListView) findViewById(R.id.all_attention_dynamic_list_view);
+        listView.setMode(PullToRefreshBase.Mode.BOTH);
         adapter = new AllAttentionDynamicAdapter(this);
         listView.setAdapter(adapter);
-
     }
 
     /**
@@ -137,29 +97,6 @@ public class AllAttentionDynamicActivity extends Activity {
             }
         });
 
-        mPtrFrame.setLastUpdateTimeRelateObject(this);
-        mPtrFrame.setPtrHandler(new PtrHandler() {
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, listView, header);
-            }
-
-            @Override
-            public void onRefreshBegin(PtrFrameLayout frame) {
-                isRefresh = true;
-                getDynamicData4Service(1);
-            }
-        });
-
-        loadMoreContainer.setLoadMoreHandler(new LoadMoreHandler() {
-            @Override
-            public void onLoadMore(LoadMoreContainer loadMoreContainer) {
-                isRefresh = false;
-                page = page + 1;
-                getDynamicData4Service(page);
-            }
-        });
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -168,6 +105,28 @@ public class AllAttentionDynamicActivity extends Activity {
                 intent.putExtra("TAG", TAG);
                 intent.putExtra(ARTICLEID, articleId);
                 startActivity(intent);
+            }
+        });
+
+        listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                String label = DateUtils.formatDateTime(getApplicationContext(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+
+                page = 1;
+                getDynamicData4Service(page);
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                String label = DateUtils.formatDateTime(getApplicationContext(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+
+                page = page + 1;
+                getDynamicData4Service(page);
             }
         });
     }
@@ -185,9 +144,9 @@ public class AllAttentionDynamicActivity extends Activity {
      * 从网络获取数据
      */
     private void getDynamicData4Service(int page) {
-
         RequestParams params = new RequestParams();
         params.addBodyParameter(PAGE, String.valueOf(page));
+        params.addBodyParameter("number", String.valueOf(10));
         params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
@@ -203,6 +162,7 @@ public class AllAttentionDynamicActivity extends Activity {
      */
     private void setData2View(String str) {
         if (TextUtils.isEmpty(str)) {
+            failureComputePage();
             Toast.makeText(this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
         } else {
             try {
@@ -213,12 +173,20 @@ public class AllAttentionDynamicActivity extends Activity {
                     adapter.setList(listAll);
                     adapter.notifyDataSetChanged();
                 } else {
+                    failureComputePage();
                     Toast.makeText(this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
+                failureComputePage();
                 DeBugLog.e(TAG, "关注详细信息解析错误:" + e.getMessage());
                 Toast.makeText(this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private void failureComputePage() {
+        if (page > 1) {
+            page = page - 1;
         }
     }
 
@@ -234,15 +202,13 @@ public class AllAttentionDynamicActivity extends Activity {
                 dialog.dismiss();
             }
 
-            mPtrFrame.refreshComplete();
-            loadMoreContainer.loadMoreFinish(true, true);
-
             if (isRefresh) {
                 listAll.clear();
             }
 
+            listView.onRefreshComplete();
+
             String str = stringResponseInfo.result;
-            DeBugLog.i(TAG, "关注详细信息数据:" + str);
             setData2View(str);
         }
 
@@ -253,15 +219,9 @@ public class AllAttentionDynamicActivity extends Activity {
                 dialog.dismiss();
             }
 
-            mPtrFrame.refreshComplete();
+            failureComputePage();
 
-            if (page > 1) {
-                page = page - 1;
-            }
-
-            int error = 0;
-            String errorMessage = "加载失败，点击加载更多";
-            loadMoreContainer.loadMoreError(error, errorMessage);
+            listView.onRefreshComplete();
 
             DeBugLog.e(TAG, "关注动态数据加载失败:" + s);
             Toast.makeText(AllAttentionDynamicActivity.this,

@@ -1,12 +1,14 @@
 package com.minglang.suiuu.fragment.attention;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
@@ -15,10 +17,11 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.LoopDetailsActivity;
 import com.minglang.suiuu.adapter.AttentionLoopAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
+import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
+import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshGridView;
 import com.minglang.suiuu.entity.AttentionLoop;
 import com.minglang.suiuu.entity.AttentionLoopData;
 import com.minglang.suiuu.utils.DeBugLog;
@@ -30,17 +33,6 @@ import com.minglang.suiuu.utils.SuHttpRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.srain.cube.util.LocalDisplay;
-import in.srain.cube.views.GridViewWithHeaderAndFooter;
-import in.srain.cube.views.loadmore.LoadMoreContainer;
-import in.srain.cube.views.loadmore.LoadMoreGridViewContainer;
-import in.srain.cube.views.loadmore.LoadMoreHandler;
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.header.MaterialHeader;
-
 /**
  * 关注主题
  */
@@ -48,24 +40,19 @@ public class AttentionLoopFragment extends BaseFragment {
 
     private static final String TAG = AttentionLoopFragment.class.getSimpleName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private String userSign;
     private String verification;
 
-    private PtrClassicFrameLayout mPtrFrame;
-    private LoadMoreGridViewContainer ptrLoadMore;
-    private GridViewWithHeaderAndFooter attentionThemeGridView;
+    private PullToRefreshGridView pullToRefreshGridView;
 
     private int page = 1;
 
     private List<AttentionLoopData> listAll = new ArrayList<>();
 
     private ProgressDialog progressDialog;
-
-    private boolean clearFlag;
 
     private AttentionLoopAdapter attentionLoopAdapter;
 
@@ -123,34 +110,14 @@ public class AttentionLoopFragment extends BaseFragment {
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
         progressDialog.setCanceledOnTouchOutside(false);
 
-        mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.attention_loop_grid_view_frame);
-        ptrLoadMore = (LoadMoreGridViewContainer) rootView.findViewById(R.id.attention_loop_load_more_container);
-        attentionThemeGridView = (GridViewWithHeaderAndFooter) rootView.findViewById(R.id.attentionThemeGridView);
-
-        MaterialHeader header = new MaterialHeader(getActivity());
-        int[] colors = getResources().getIntArray(R.array.google_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
-        header.setPtrFrameLayout(mPtrFrame);
-
-        mPtrFrame.setHeaderView(header);
-        mPtrFrame.addPtrUIHandler(header);
-        mPtrFrame.setPinContent(true);
-
-        // the following are default settings
-        mPtrFrame.setResistance(1.7f);
-        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
-        mPtrFrame.setDurationToClose(200);
-        mPtrFrame.setDurationToCloseHeader(1000);
-        // default is false
-        mPtrFrame.setPullToRefresh(false);
-        // default is true
-        mPtrFrame.setKeepHeaderWhenRefresh(true);
+        pullToRefreshGridView = (PullToRefreshGridView) rootView.findViewById(R.id.attentionThemeGridView);
+        pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
+        GridView mGridView = pullToRefreshGridView.getRefreshableView();
+        mGridView.setNumColumns(2);
 
         attentionLoopAdapter = new AttentionLoopAdapter(getActivity());
         attentionLoopAdapter.setScreenParams(screenWidth);
-        attentionThemeGridView.setAdapter(attentionLoopAdapter);
+        mGridView.setAdapter(attentionLoopAdapter);
 
         DeBugLog.i(TAG, "userSign:" + userSign);
     }
@@ -159,41 +126,33 @@ public class AttentionLoopFragment extends BaseFragment {
      * 控件动作
      */
     private void ViewAction() {
-
-        mPtrFrame.setPtrHandler(new PtrHandler() {
+        pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, attentionThemeGridView, header);
+            public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
+                String label = DateUtils.formatDateTime(SuiuuApplication.applicationContext, System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+
+                page = 1;
+                getAttentionData4Service(page);
             }
 
             @Override
-            public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
-                clearFlag = true;
-                getAttentionData4Service(1);
-            }
-        });
+            public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
+                String label = DateUtils.formatDateTime(SuiuuApplication.applicationContext, System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-        ptrLoadMore.setLoadMoreHandler(new LoadMoreHandler() {
-            @Override
-            public void onLoadMore(LoadMoreContainer loadMoreContainer) {
-                clearFlag = false;
                 page = page + 1;
                 getAttentionData4Service(page);
             }
+
         });
 
-        attentionThemeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        pullToRefreshGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String cID = listAll.get(position).getcId();
-                String type = listAll.get(position).getcType();
-                String loopName = listAll.get(position).getcName();
 
-                Intent intent = new Intent(getActivity(), LoopDetailsActivity.class);
-                intent.putExtra("type", type);
-                intent.putExtra("circleId", cID);
-                intent.putExtra("name", loopName);
-                startActivity(intent);
             }
         });
     }
@@ -212,11 +171,80 @@ public class AttentionLoopFragment extends BaseFragment {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter("page", String.valueOf(page));
+        params.addBodyParameter("number", String.valueOf(10));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.AttentionLoopPath, new AttentionLoopRequestCallback());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
+    }
+
+    /**
+     * 将数据绑定到View
+     *
+     * @param str 网络请求返回的Json字符串
+     */
+    private void bindData2View(String str) {
+        if (TextUtils.isEmpty(str)) {
+            failureComputePage();
+            Toast.makeText(SuiuuApplication.applicationContext, "关注圈子" +
+                    getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                AttentionLoop attentionLoop = JsonUtils.getInstance().fromJSON(AttentionLoop.class, str);
+                if (attentionLoop.getStatus().equals("1")) {
+                    List<AttentionLoopData> list = attentionLoop.getData().getData();
+                    if (list != null && list.size() > 0) {
+                        clearDataList();
+                        listAll.addAll(list);
+                        attentionLoopAdapter.setList(listAll);
+                    } else {
+                        failureComputePage();
+                        Toast.makeText(SuiuuApplication.applicationContext, "关注圈子" +
+                                getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    failureComputePage();
+                    Toast.makeText(SuiuuApplication.applicationContext,
+                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                failureComputePage();
+                DeBugLog.e(TAG, "关注的圈子数据解析异常:" + e.getMessage());
+                Toast.makeText(SuiuuApplication.applicationContext,
+                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * 隐藏Dialog与刷新View
+     */
+    private void hideDialogAndRefreshView() {
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        pullToRefreshGridView.onRefreshComplete();
+    }
+
+    /**
+     * 请求失败or无数据，请求页数减1
+     */
+    private void failureComputePage() {
+        if (page > 1) {
+            page = page - 1;
+        }
+    }
+
+    /**
+     * 请求页码为第一页，且有数据缓存，清除后重新添加
+     */
+    private void clearDataList() {
+        if (page == 1) {
+            if (listAll != null && listAll.size() > 0) {
+                listAll.clear();
+            }
+        }
     }
 
     /**
@@ -226,55 +254,21 @@ public class AttentionLoopFragment extends BaseFragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-            mPtrFrame.refreshComplete();
-            ptrLoadMore.loadMoreFinish(true, true);
-
-            if (clearFlag) {
-                if (listAll != null && listAll.size() > 0) {
-                    listAll.clear();
-                }
-            }
-
-            String str = stringResponseInfo.result;
-            try {
-                AttentionLoop attentionLoop = JsonUtils.getInstance().fromJSON(AttentionLoop.class, str);
-                if (attentionLoop.getStatus().equals("1")) {
-                    List<AttentionLoopData> list = attentionLoop.getData().getData();
-                    if (list != null && list.size() > 0) {
-                        listAll.addAll(list);
-                        attentionLoopAdapter.setList(listAll);
-                    } else {
-                        Toast.makeText(SuiuuApplication.applicationContext, "关注圈子" +
-                                getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(SuiuuApplication.applicationContext,
-                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                DeBugLog.e(TAG, "关注的圈子数据解析异常:" + e.getMessage());
-                Toast.makeText(SuiuuApplication.applicationContext,
-                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-            }
+            hideDialogAndRefreshView();
+            bindData2View(stringResponseInfo.result);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, "关注的圈子数据请求失败:" + s);
 
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-            mPtrFrame.refreshComplete();
-            ptrLoadMore.loadMoreError(0, "加载失败，请重试");
+            hideDialogAndRefreshView();
+            failureComputePage();
 
             Toast.makeText(getActivity(),
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
+
     }
 
 }

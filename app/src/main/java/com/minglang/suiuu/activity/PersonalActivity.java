@@ -270,7 +270,7 @@ public class PersonalActivity extends BaseActivity {
             }
         });
 
-        personalShowPage.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        personalShowPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,7 +14,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -257,18 +255,18 @@ public class MainActivity extends BaseActivity {
         titleInfo = (TextView) findViewById(R.id.titleInfo);
         drawerSwitch = (ImageView) findViewById(R.id.drawerSwitch);
 
-        @SuppressLint("InflateParams")
-        View headView = LayoutInflater.from(this).inflate(R.layout.layout_header, null);
-        nickNameView = (TextView) headView.findViewById(R.id.nickName);
+        nickNameView = (TextView) findViewById(R.id.nickName);
         String strNickName = SuiuuInfo.ReadUserData(this).getNickname();
+        DeBugLog.i(TAG, "NickName:" + strNickName);
         if (!TextUtils.isEmpty(strNickName)) {
             nickNameView.setText(strNickName);
         } else {
             nickNameView.setText("");
         }
 
-        headImageView = (CircleImageView) headView.findViewById(R.id.headImage);
+        headImageView = (CircleImageView) findViewById(R.id.headImage);
         String strHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
+        DeBugLog.i(TAG, "HeadImagePath:" + strHeadImagePath);
         if (!TextUtils.isEmpty(strHeadImagePath)) {
             imageLoader.displayImage(strHeadImagePath, headImageView);
         }
@@ -277,6 +275,7 @@ public class MainActivity extends BaseActivity {
         List<String> strList = new ArrayList<>();
         Collections.addAll(strList, getResources().getStringArray(R.array.sideList));
         MainSliderAdapter adapter = new MainSliderAdapter(this, strList);
+        adapter.setScreenHeight(screenHeight);
         sideListView.setAdapter(adapter);
 
         tab1 = (LinearLayout) findViewById(R.id.tab1);
@@ -384,6 +383,17 @@ public class MainActivity extends BaseActivity {
                 mDrawerLayout.closeDrawer(sliderView);
                 switch (position) {
                     case 0:
+                        Intent intent0 = new Intent(MainActivity.this, NewRemindActivity.class);
+                        startActivity(intent0);
+                        break;
+
+                    case 1:
+                        break;
+
+                    case 2:
+                        break;
+
+                    case 3:
                         break;
                 }
             }
