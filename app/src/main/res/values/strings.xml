@@ -181,6 +181,9 @@
     <string name="zero" translatable="false">0</string>
     <string name="zeroForTenKilo" translatable="false">0 &#8211; 10000</string>
 
+    <string name="MySuiuu">My Suiuu</string>
+    <string name="MyReleaseSuiuu">My Release Suiuu</string>
+
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>
@@ -464,5 +467,6 @@
     <string name="orderManager">Order Management</string>
     <string name="accountManager">Account Management</string>
     <string name="title_activity_my_suiuu">MySuiuuActivity</string>
+    <string name="title_activity_my_suiuu_details">MySuiuuDetailsActivity</string>
 
 </resources>

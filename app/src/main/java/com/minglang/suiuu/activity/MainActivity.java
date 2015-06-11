@@ -388,6 +388,8 @@ public class MainActivity extends BaseActivity {
                         break;
 
                     case 1:
+                        Intent intent1 = new Intent(MainActivity.this, MySuiuuReleaseActivity.class);
+                        startActivity(intent1);
                         break;
 
                     case 2:
@@ -1065,6 +1067,7 @@ public class MainActivity extends BaseActivity {
                     break;
             }
         }
+
     }
 
     /**

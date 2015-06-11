@@ -228,4 +228,6 @@
     <string name="my_suiuu">我的随游</string>
     <string name="orderManager">订单管理</string>
     <string name="accountManager">账号管理</string>
+    <string name="MySuiuu">我的随游</string>
+    <string name="MyReleaseSuiuu">我发布的随游</string>
 </resources>

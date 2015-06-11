@@ -23,6 +23,13 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="Base.Theme.Suiuu" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/tr_black</item>
+    </style>
+
+    <style name="Base.Theme.Suiuu.Release" parent="Base.Theme.Suiuu">
+    </style>
+
     <!-- 主页面Tab页TextView控件样式 -->
     <style name="titleText">
         <item name="android:textSize">16sp</item>
