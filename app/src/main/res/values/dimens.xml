@@ -45,6 +45,8 @@
     <dimen name="layout_120dp">120dp</dimen>
     <dimen name="layout_170dp">170dp</dimen>
     <dimen name="layout_220dp">220dp</dimen>
+    <dimen name="layout_160dp">160dp</dimen>
+    <dimen name="layout_180dp">180dp</dimen>
 
     <dimen name="layout_200sp">200sp</dimen>
     <dimen name="layout_10sp">10sp</dimen>

@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -22,6 +24,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.chat.activity.ChatActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.RollViewPager;
 import com.minglang.suiuu.customview.TextProgressDialog;
@@ -99,6 +102,8 @@ public class SuiuuDetailActivity extends BaseActivity {
     private List<View> dotLists;
     private TextView tv_choice;
     private ImageView suiuu_details_back;
+    private BootstrapButton bb_consult;
+    private BootstrapButton bb_schedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +122,8 @@ public class SuiuuDetailActivity extends BaseActivity {
         suiuu_details_comments.setOnClickListener(new MyOnclick());
         suiuu_details_user_head_image.setOnClickListener(new MyOnclick());
         suiuu_details_back.setOnClickListener(new MyOnclick());
+        bb_consult.setOnClickListener(new MyOnclick());
+        bb_schedule.setOnClickListener(new MyOnclick());
     }
 
     private void initView() {
@@ -145,6 +152,9 @@ public class SuiuuDetailActivity extends BaseActivity {
         top_news_viewpager = (LinearLayout) findViewById(R.id.top_news_viewpager);
         tv_choice = (TextView) findViewById(R.id.tv_choiced);
         suiuu_details_back = (ImageView) findViewById(R.id.suiuu_details_back);
+
+        bb_consult = (BootstrapButton) findViewById(R.id.bb_consult);
+        bb_schedule = (BootstrapButton) findViewById(R.id.bb_schedule);
     }
 
     //填充数据
@@ -243,6 +253,7 @@ public class SuiuuDetailActivity extends BaseActivity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("trId", tripId);
         params.addBodyParameter(HttpServicePath.key, verification);
+        Log.i("suiuu", "vertification=" + verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuItemInfo, new SuiuuItemInfoCallBack());
         httpRequest.setParams(params);
@@ -473,6 +484,18 @@ public class SuiuuDetailActivity extends BaseActivity {
                     break;
                 case R.id.suiuu_details_back:
                     finish();
+                    break;
+                //点击咨询按钮
+                case R.id.bb_consult:
+                    Intent intentConsult = new Intent(SuiuuDetailActivity.this, ChatActivity.class);
+                    intentConsult.putExtra("userId", suiuuDetailData.getUserInfo().getUserId());
+                    intentConsult.putExtra("nikeName", suiuuDetailData.getUserInfo().getNickname());
+                    startActivity(intentConsult);
+                    break;
+                case R.id.bb_schedule:
+                    Intent intentSchedule = new Intent(SuiuuDetailActivity.this, SuiuuOrderActivity.class);
+                    startActivity(intentSchedule);
+
                     break;
 
                 default:

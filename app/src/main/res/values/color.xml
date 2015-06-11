@@ -33,6 +33,7 @@
     <color name="text_bg_color">#1d272b</color>
     <color name="bg">#203037</color>
     <color name="mask">#40000000</color>
+    <color name="slow_blue">#7088FF</color>
 
     <!--分割线-->
 

@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/suiuu_detail_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
-    android:id="@+id/suiuu_detail_root">
+    android:background="@color/backgroundColor">
 
     <RelativeLayout
         android:id="@+id/viewPager"
         android:layout_width="fill_parent"
-        android:layout_height="185dp">
+        android:layout_height="165dp">
 
         <LinearLayout
             android:id="@+id/top_news_viewpager"
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/layout_200dp"
+            android:layout_height="@dimen/layout_180dp"
             android:orientation="horizontal" />
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="30dp"
             android:layout_alignParentBottom="true"
-            android:background="#00000000"
-            >
+            android:background="#00000000">
+
             <LinearLayout
                 android:id="@+id/dots_ll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-               android:layout_centerInParent="true"
+                android:layout_centerInParent="true"
                 android:orientation="horizontal" />
         </RelativeLayout>
     </RelativeLayout>
@@ -77,14 +78,14 @@
     </RelativeLayout>
 
     <ScrollView
-        android:scrollbars="none"
-        android:layout_below="@+id/viewPager"
         android:id="@+id/sll"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/suiuu_details_bottom_layout"
+        android:layout_below="@+id/viewPager"
         android:layout_centerVertical="true"
         android:layout_marginBottom="@dimen/layout_8dp"
-        android:layout_above="@+id/suiuu_details_bottom_layout">
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -101,58 +102,58 @@
                     android:id="@+id/suiuu_details_user_head_image"
                     android:layout_width="@dimen/layout_60dp"
                     android:layout_height="@dimen/layout_60dp"
-                    android:background="@drawable/user_head_image_bg"
+                    android:layout_alignBottom="@+id/tv_choiced"
                     android:layout_marginLeft="@dimen/layout_10dp"
                     android:layout_marginTop="@dimen/layout_10dp"
-                    android:layout_alignBottom="@+id/tv_choiced" />
+                    android:background="@drawable/user_head_image_bg" />
 
                 <TextView
-                    android:singleLine="true"
-                    android:layout_toRightOf="@+id/suiuu_details_user_head_image"
+                    android:id="@+id/tv_nickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray"
-                    android:text="nikeName"
                     android:layout_marginLeft="@dimen/layout_2dp"
                     android:layout_marginTop="@dimen/layout_8dp"
-                    android:textSize="@dimen/layout_15sp"
-                    android:id="@+id/tv_nickname" />
+                    android:layout_toRightOf="@+id/suiuu_details_user_head_image"
+                    android:singleLine="true"
+                    android:text="nikeName"
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/layout_15sp" />
 
                 <TextView
-                    android:layout_toRightOf="@+id/suiuu_details_user_head_image"
+                    android:id="@+id/tv_self_sign"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_nickname"
+                    android:layout_marginLeft="@dimen/layout_5dp"
+                    android:layout_toRightOf="@+id/suiuu_details_user_head_image"
                     android:text="selfyour"
                     android:textColor="@color/gray"
-                    android:textSize="@dimen/layout_15sp"
-                    android:layout_below="@+id/tv_nickname"
-                    android:id="@+id/tv_self_sign"
-                    android:layout_marginLeft="@dimen/layout_5dp" />
+                    android:textSize="@dimen/layout_15sp" />
 
                 <RatingBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/rb_user_star"
                     style="?android:attr/ratingBarStyleSmall"
-                    android:numStars="5"
-                    android:rating="2"
-                    android:isIndicator="true"
-                    android:progressDrawable="@drawable/food_rating_bar_full"
-                    android:layout_below="@+id/tv_self_sign"
-                    android:layout_toRightOf="@+id/suiuu_details_user_head_image"
-                    android:layout_toEndOf="@+id/suiuu_details_user_head_image"
-                    android:layout_alignBottom="@+id/suiuu_details_user_head_image" />
-
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/suiuu_details_user_head_image"
+                    android:layout_below="@+id/tv_self_sign"
+                    android:layout_toEndOf="@+id/suiuu_details_user_head_image"
+                    android:layout_toRightOf="@+id/suiuu_details_user_head_image"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:progressDrawable="@drawable/food_rating_bar_full"
+                    android:rating="2" />
+
+                <TextView
+                    android:id="@+id/tv_choiced"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_margin="@dimen/layout_8dp"
                     android:textColor="@color/gray"
-                    android:textSize="@dimen/layout_15sp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:id="@+id/tv_choiced" />
+                    android:textSize="@dimen/layout_15sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -164,43 +165,43 @@
                     android:id="@+id/tv_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="$700"
                     android:padding="@dimen/layout_10dp"
-                    android:textSize="@dimen/layout_20sp"
-                    android:textColor="@color/text_select_true" />
+                    android:text="$700"
+                    android:textColor="@color/text_select_true"
+                    android:textSize="@dimen/layout_20sp" />
 
                 <RatingBar
-                    android:layout_marginTop="@dimen/layout_10dp"
-                    android:layout_toRightOf="@+id/tv_price"
+                    android:id="@+id/rb_suiuu_star"
+                    style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_above="@+id/tv_title"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="@dimen/layout_10dp"
+                    android:layout_toRightOf="@+id/tv_price"
                     android:isIndicator="true"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:rating="2"
                     android:numStars="5"
                     android:progressDrawable="@drawable/food_rating_bar_full"
-                    android:id="@+id/rb_suiuu_star"
-                    android:layout_above="@+id/tv_title"
-                    android:layout_alignParentTop="true" />
+                    android:rating="2" />
 
                 <TextView
-                    android:layout_below="@+id/tv_price"
                     android:id="@+id/tv_title"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_price"
+                    android:gravity="center"
                     android:padding="@dimen/layout_5dp"
                     android:text="标题"
-                    android:textSize="@dimen/layout_25sp"
-                    android:gravity="center" />
+                    android:textSize="@dimen/layout_25sp" />
 
                 <TextView
-                    android:layout_below="@+id/tv_title"
+                    android:id="@+id/tv_content"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/layout_10dp"
+                    android:layout_below="@+id/tv_title"
                     android:lineSpacingExtra="@dimen/layout_5dp"
-                    android:text="v"
-                    android:id="@+id/tv_content" />
+                    android:padding="@dimen/layout_10dp"
+                    android:text="v" />
             </RelativeLayout>
 
             <LinearLayout
@@ -214,8 +215,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/layout_8dp"
-                    android:textSize="@dimen/layout_15sp"
-                    android:textColor="@color/gray" />
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/layout_15sp" />
 
                 <include layout="@layout/view_line" />
 
@@ -224,8 +225,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/layout_8dp"
-                    android:textSize="@dimen/layout_15sp"
-                    android:textColor="@color/gray" />
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/layout_15sp" />
 
                 <include layout="@layout/view_line" />
 
@@ -234,63 +235,109 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/layout_8dp"
-                    android:textSize="@dimen/layout_15sp"
-                    android:textColor="@color/gray" />
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/layout_15sp" />
 
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_description"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                style="@style/comment_suiuu_detail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_other_service"
+                    android:padding="@dimen/layout_5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="附加服务"
+                    android:textSize="@dimen/layout_15sp"
+                    android:gravity="center_vertical"/>
+                <TextView
+                    android:id="@+id/tv_other_service_value"
+                    android:layout_toRightOf="@id/tv_other_service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_select_true"
+                    android:text="无"
+                    android:padding="@dimen/layout_5dp"
+                    android:gravity="center_vertical"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/layout_8dp"
-                android:textSize="@dimen/layout_12sp"
-                android:text="随游预定服务暂未开放请登录www.suiuu.com进行预定"
-                android:layout_above="@+id/suiuu_details_bottom_layout" />
+                android:layout_marginBottom="@dimen/layout_10dp"
+                android:layout_marginTop="@dimen/layout_5dp">
+
+                <TextView
+                    android:id="@+id/suiuu_details_comments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:drawableLeft="@drawable/comments_select"
+                    android:drawablePadding="5dp"
+                    android:drawableStart="@drawable/comments_select"
+                    android:gravity="center_vertical"
+                    android:text="@string/comment"
+                    android:textColor="@drawable/text_select_color"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/suiuu_details_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/suiuu_details_comments"
+                    android:layout_toStartOf="@+id/suiuu_details_comments"
+                    android:drawableLeft="@drawable/share_select"
+                    android:drawablePadding="5dp"
+                    android:drawableStart="@drawable/share_select"
+                    android:gravity="center_vertical"
+                    android:text="@string/share"
+                    android:textColor="@drawable/text_select_color"
+                    android:textSize="20sp" />
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
 
     <RelativeLayout
+
         android:id="@+id/suiuu_details_bottom_layout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/layout_50dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/white">
+        android:background="@color/white"
 
-        <TextView
-            android:id="@+id/suiuu_details_comments"
-            android:layout_width="wrap_content"
+        >
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:layout_width="@dimen/layout_100dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/layout_60dp"
+            android:text="咨询"
+            bootstrapbutton:bb_roundedCorners="true"
+            bootstrapbutton:bb_size="small"
+            bootstrapbutton:bb_type="info"
+            android:id="@+id/bb_consult"
+            />
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:layout_width="@dimen/layout_100dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:drawableLeft="@drawable/comments_select"
-            android:drawablePadding="5dp"
-            android:drawableStart="@drawable/comments_select"
-            android:gravity="center_vertical"
-            android:text="@string/comment"
-            android:textColor="@drawable/text_select_color"
-            android:textSize="20sp" />
+            android:layout_marginRight="@dimen/layout_60dp"
+            android:text="预定"
+            bootstrapbutton:bb_roundedCorners="true"
+            bootstrapbutton:bb_size="small"
+            bootstrapbutton:bb_type="warning"
+            android:id="@+id/bb_schedule"
+            />
 
-        <TextView
-            android:id="@+id/suiuu_details_share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/suiuu_details_comments"
-            android:layout_toStartOf="@+id/suiuu_details_comments"
-            android:drawableLeft="@drawable/share_select"
-            android:drawablePadding="5dp"
-            android:drawableStart="@drawable/share_select"
-            android:gravity="center_vertical"
-            android:text="@string/share"
-            android:textColor="@drawable/text_select_color"
-            android:textSize="20sp"
-            android:visibility="gone"/>
     </RelativeLayout>
 </RelativeLayout>

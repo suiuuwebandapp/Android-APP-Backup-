@@ -32,6 +32,7 @@ dependencies {
     compile 'com.android.support:design:22.2.0'
     compile 'com.android.support:cardview-v7:22.2.0'
     compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.beardedhen:androidbootstrap:1.1.1'
     compile files('libs/baidumapapi_v3_2_0.jar')
     compile files('libs/easemobchat_2.1.7.jar')
     compile files('libs/locSDK_3.3.jar')
@@ -52,4 +53,5 @@ dependencies {
     compile files('libs/SocialSDK_QQZone_2.jar')
     compile files('libs/SocialSDK_QQZone_3.jar')
     compile files('libs/umeng-update-v2.6.0.1.jar')
+
 }
