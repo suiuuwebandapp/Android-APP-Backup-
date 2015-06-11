@@ -22,6 +22,7 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -52,7 +53,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
 	static final boolean USE_HW_LAYERS = false;
 
-	static final String LOG_TAG = "PullToRefresh";
+	static final String LOG_TAG = "PullToRefreshBase";
 
 	static final float FRICTION = 2.0f;
 
@@ -129,7 +130,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	}
 
 	@Override
-	public void addView(View child, int index, ViewGroup.LayoutParams params) {
+	public void addView(@NonNull View child, int index, ViewGroup.LayoutParams params) {
 		if (DEBUG) {
 			Log.d(LOG_TAG, "addView: " + child.getClass().getSimpleName());
 		}

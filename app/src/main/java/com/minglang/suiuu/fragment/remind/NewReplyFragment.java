@@ -29,11 +29,11 @@ import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import in.srain.cube.util.LocalDisplay;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -128,7 +128,7 @@ public class NewReplyFragment extends BaseFragment {
         int[] colors = getResources().getIntArray(R.array.google_colors);
         header.setColorSchemeColors(colors);
         header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
+        header.setPadding(0, Utils.newInstance().dip2px(15, getActivity()), 0, Utils.newInstance().dip2px(15, getActivity()));
         header.setPtrFrameLayout(mPtrFrame);
         header.setPtrFrameLayout(mPtrFrame);
 

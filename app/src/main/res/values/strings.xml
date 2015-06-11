@@ -465,5 +465,6 @@
     <string name="my_suiuu">My Suiuu</string>
     <string name="orderManager">Order Management</string>
     <string name="accountManager">Account Management</string>
+    <string name="title_activity_my_suiuu">MySuiuuActivity</string>
 
 </resources>

@@ -3,32 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/layout_5dp"
     android:background="@color/white"
+    android:padding="@dimen/layout_5dp"
     tools:context="com.minglang.suiuu.fragment.collection.CollectionLoopFragment">
 
-    <in.srain.cube.views.ptr.PtrClassicFrameLayout
-        android:id="@+id/collection_loop_grid_view_frame"
+    <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshGridView
+        android:id="@+id/collection_loop_grid_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <in.srain.cube.views.loadmore.LoadMoreGridViewContainer
-            android:id="@+id/collection_loop_load_more_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/cube_mints_white">
-
-            <in.srain.cube.views.GridViewWithHeaderAndFooter
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/collection_loop_grid_view"
-                android:numColumns="2"
-                android:horizontalSpacing="@dimen/layout_10dp"
-                android:verticalSpacing="@dimen/layout_10dp"
-                android:choiceMode="none"/>
-
-        </in.srain.cube.views.loadmore.LoadMoreGridViewContainer>
-
-    </in.srain.cube.views.ptr.PtrClassicFrameLayout>
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

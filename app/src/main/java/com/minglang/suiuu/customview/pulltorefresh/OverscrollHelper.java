@@ -23,11 +23,11 @@ import android.view.View;
 @TargetApi(9)
 public final class OverscrollHelper {
 
-	static final String LOG_TAG = "OverscrollHelper";
+	static final String LOG_TAG = "OverScrollHelper";
 	static final float DEFAULT_OVERSCROLL_SCALE = 1f;
 
 	/**
-	 * Helper method for Overscrolling that encapsulates all of the necessary
+	 * Helper method for OverScrolling that encapsulates all of the necessary
 	 * function.
 	 * <p/>
 	 * This should only be used on AdapterView's such as ListView as it just
@@ -76,7 +76,7 @@ public final class OverscrollHelper {
 	}
 
 	/**
-	 * Helper method for Overscrolling that encapsulates all of the necessary
+	 * Helper method for OverScrolling that encapsulates all of the necessary
 	 * function. This is the advanced version of the call.
 	 * 
 	 * @param view - PullToRefreshView that is calling this.
@@ -93,7 +93,7 @@ public final class OverscrollHelper {
 	 * @param fuzzyThreshold - Threshold for which the values how fuzzy we
 	 *            should treat the other values. Needed for WebView as it
 	 *            doesn't always scroll back to it's edge. 0 = no fuzziness.
-	 * @param scaleFactor - Scale Factor for overscroll amount
+	 * @param scaleFactor - Scale Factor for OverScroll amount
 	 * @param isTouchEvent - true if this scroll operation is the result of a
 	 *            touch event, passed through from from overScrollBy call
 	 */

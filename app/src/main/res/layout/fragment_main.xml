@@ -10,7 +10,7 @@
         xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/cube_mints_f1f1f1"
+        android:background="@color/backgroundColor"
         cube_ptr:ptr_duration_to_close="200"
         cube_ptr:ptr_duration_to_close_header="1000"
         cube_ptr:ptr_keep_header_when_refresh="true"
@@ -19,16 +19,17 @@
         cube_ptr:ptr_resistance="1.7">
 
         <ScrollView
+            android:id="@+id/main_fragment_scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/main_fragment_scrollView"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:scrollbars="none">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:padding="5dp">
 
                 <RelativeLayout
@@ -43,41 +44,42 @@
                     android:layout_marginBottom="3dp">
 
                     <TextView
+                        android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/attentionDynamic"
-                        android:id="@+id/textView2"
-                        android:textColor="@color/slider_line_color"
-                        android:textSize="18sp"
-                        android:drawableLeft="@drawable/icon_line"
-                        android:drawableStart="@drawable/icon_line"
-                        android:drawablePadding="3dp"
-                        android:layout_centerVertical="true"
                         android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"/>
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:drawableLeft="@drawable/icon_line"
+                        android:drawablePadding="3dp"
+                        android:drawableStart="@drawable/icon_line"
+                        android:text="@string/attentionDynamic"
+                        android:textColor="@color/slider_line_color"
+                        android:textSize="18sp"/>
 
                     <TextView
+                        android:id="@+id/main_fragment_more"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:drawableLeft="@drawable/icon_more"
+                        android:drawablePadding="3dp"
+                        android:drawableStart="@drawable/icon_more"
+                        android:gravity="center_vertical"
                         android:text="@string/more"
-                        android:id="@+id/main_fragment_more"
                         android:textColor="@color/slider_line_color"
                         android:textSize="18sp"
-                        android:drawableLeft="@drawable/icon_more"
-                        android:drawableStart="@drawable/icon_more"
-                        android:drawablePadding="3dp"
-                        android:gravity="center_vertical"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
                         tools:ignore="RelativeOverlap"/>
                 </RelativeLayout>
 
                 <com.minglang.suiuu.customview.InnerListView
-                    android:orientation="vertical"
+                    android:id="@+id/mainAttentionLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/mainAttentionLayout"/>
+                    android:orientation="vertical"
+                    android:scrollbars="none"/>
 
                 <RelativeLayout
                     android:id="@+id/RecommendTravelTitleLayout"
@@ -87,23 +89,24 @@
                     android:layout_marginTop="5dp">
 
                     <TextView
+                        android:id="@+id/textView5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/icon_line"
+                        android:drawablePadding="3dp"
+                        android:drawableStart="@drawable/icon_line"
                         android:text="@string/popularRecommendation"
                         android:textColor="@color/slider_line_color"
-                        android:drawableLeft="@drawable/icon_line"
-                        android:drawableStart="@drawable/icon_line"
-                        android:drawablePadding="3dp"
-                        android:textSize="18sp"
-                        android:id="@+id/textView5"/>
+                        android:textSize="18sp"/>
 
                 </RelativeLayout>
 
                 <com.minglang.suiuu.customview.InnerListView
-                    android:orientation="vertical"
+                    android:id="@+id/mainRecommendationLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/mainRecommendationLayout"/>
+                    android:orientation="vertical"
+                    android:scrollbars="none"/>
 
                 <RelativeLayout
                     android:id="@+id/TodayStarTitleLayout"
@@ -113,26 +116,26 @@
                     android:layout_marginTop="5dp">
 
                     <TextView
+                        android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/icon_line"
+                        android:drawablePadding="3dp"
+                        android:drawableStart="@drawable/icon_line"
                         android:text="@string/today_star"
                         android:textColor="@color/slider_line_color"
-                        android:drawableLeft="@drawable/icon_line"
-                        android:drawableStart="@drawable/icon_line"
-                        android:drawablePadding="3dp"
-                        android:textSize="18sp"
-                        android:id="@+id/textView4"/>
+                        android:textSize="18sp"/>
 
                 </RelativeLayout>
 
                 <com.minglang.suiuu.customview.NoScrollBarGridView
                     android:id="@+id/mainTodayStarGridView"
-                    android:horizontalSpacing="10dp"
-                    android:verticalSpacing="10dp"
-                    android:numColumns="2"
-                    android:focusable="false"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:horizontalSpacing="10dp"
+                    android:numColumns="2"
+                    android:verticalSpacing="10dp">
 
                 </com.minglang.suiuu.customview.NoScrollBarGridView>
 
@@ -144,26 +147,26 @@
                     android:layout_marginTop="5dp">
 
                     <TextView
+                        android:id="@+id/textView6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/icon_line"
+                        android:drawablePadding="3dp"
+                        android:drawableStart="@drawable/icon_line"
                         android:text="@string/loopDynamic"
                         android:textColor="@color/slider_line_color"
-                        android:drawableLeft="@drawable/icon_line"
-                        android:drawableStart="@drawable/icon_line"
-                        android:drawablePadding="3dp"
-                        android:textSize="18sp"
-                        android:id="@+id/textView6"/>
+                        android:textSize="18sp"/>
 
                 </RelativeLayout>
 
                 <com.minglang.suiuu.customview.NoScrollBarGridView
                     android:id="@+id/mainLoopDynamicGridView"
-                    android:horizontalSpacing="10dp"
-                    android:verticalSpacing="10dp"
-                    android:numColumns="2"
-                    android:focusable="false"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:horizontalSpacing="10dp"
+                    android:numColumns="2"
+                    android:verticalSpacing="10dp">
 
                 </com.minglang.suiuu.customview.NoScrollBarGridView>
 

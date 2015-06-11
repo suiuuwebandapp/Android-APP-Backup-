@@ -1,15 +1,18 @@
 package com.minglang.suiuu.fragment.collection;
 
-import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
@@ -21,6 +24,8 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.LoopArticleActivity;
 import com.minglang.suiuu.adapter.CollectionLoopAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
+import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
+import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshGridView;
 import com.minglang.suiuu.entity.CollectionLoop;
 import com.minglang.suiuu.entity.CollectionLoopData;
 import com.minglang.suiuu.utils.DeBugLog;
@@ -32,17 +37,6 @@ import com.minglang.suiuu.utils.SuHttpRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.srain.cube.util.LocalDisplay;
-import in.srain.cube.views.GridViewWithHeaderAndFooter;
-import in.srain.cube.views.loadmore.LoadMoreContainer;
-import in.srain.cube.views.loadmore.LoadMoreGridViewContainer;
-import in.srain.cube.views.loadmore.LoadMoreHandler;
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.header.MaterialHeader;
-
 /**
  * 收藏的圈子
  * <p/>
@@ -53,28 +47,21 @@ public class CollectionLoopFragment extends Fragment {
 
     private static final String TAG = CollectionLoopFragment.class.getSimpleName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private String userSign;
     private String verification;
 
-    private PtrClassicFrameLayout mPtrFrame;
-
-    private LoadMoreGridViewContainer ptrLoadMore;
-
-    private GridViewWithHeaderAndFooter gridView;
+    private PullToRefreshGridView pullToRefreshGridView;
 
     private int page = 1;
 
     private List<CollectionLoopData> listAll = new ArrayList<>();
 
-    private Dialog dialog;
+    private ProgressDialog progressDialog;
 
     private CollectionLoopAdapter collectionLoopAdapter;
-
-    private boolean clearFlag;
 
     /**
      * Use this factory method to create a new instance of
@@ -122,37 +109,15 @@ public class CollectionLoopFragment extends Fragment {
      * @param rootView Fragment的根View
      */
     private void initView(View rootView) {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
-        dialog = new Dialog(getActivity());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progress_bar);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-
-        mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.collection_loop_grid_view_frame);
-        ptrLoadMore = (LoadMoreGridViewContainer) rootView.findViewById(R.id.collection_loop_load_more_container);
-
-        MaterialHeader header = new MaterialHeader(getActivity());
-        int[] colors = getResources().getIntArray(R.array.google_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, LocalDisplay.dp2px(15), 0, LocalDisplay.dp2px(10));
-        header.setPtrFrameLayout(mPtrFrame);
-
-        mPtrFrame.setHeaderView(header);
-        mPtrFrame.addPtrUIHandler(header);
-        mPtrFrame.setPinContent(true);
-
-        // the following are default settings
-        mPtrFrame.setResistance(1.7f);
-        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
-        mPtrFrame.setDurationToClose(200);
-        mPtrFrame.setDurationToCloseHeader(1000);
-        // default is false
-        mPtrFrame.setPullToRefresh(false);
-        // default is true
-        mPtrFrame.setKeepHeaderWhenRefresh(true);
-
-        gridView = (GridViewWithHeaderAndFooter) rootView.findViewById(R.id.collection_loop_grid_view);
+        pullToRefreshGridView = (PullToRefreshGridView) rootView.findViewById(R.id.collection_loop_grid_view);
+        pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
+        GridView gridView = pullToRefreshGridView.getRefreshableView();
+        gridView.setNumColumns(2);
 
         ScreenUtils utils = new ScreenUtils(getActivity());
         int screenWidth = utils.getScreenWidth();
@@ -169,29 +134,29 @@ public class CollectionLoopFragment extends Fragment {
      */
     private void ViewAction() {
 
-        mPtrFrame.setPtrHandler(new PtrHandler() {
+        pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, gridView, header);
+            public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
+                String label = DateUtils.formatDateTime(SuiuuApplication.applicationContext, System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+
+                page = 1;
+                getCollectionLoop4Service(page);
             }
 
             @Override
-            public void onRefreshBegin(PtrFrameLayout frame) {
-                clearFlag = true;
-                getCollectionLoop4Service(1);
-            }
-        });
+            public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
+                String label = DateUtils.formatDateTime(SuiuuApplication.applicationContext, System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-        ptrLoadMore.setLoadMoreHandler(new LoadMoreHandler() {
-            @Override
-            public void onLoadMore(LoadMoreContainer loadMoreContainer) {
-                clearFlag = false;
                 page = page + 1;
                 getCollectionLoop4Service(page);
             }
         });
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        pullToRefreshGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String articleId = listAll.get(position).getArticleId();
@@ -204,8 +169,8 @@ public class CollectionLoopFragment extends Fragment {
     }
 
     private void getData() {
-        if (dialog != null) {
-            dialog.show();
+        if (progressDialog != null) {
+            progressDialog.show();
         }
         getCollectionLoop4Service(1);
     }
@@ -225,6 +190,73 @@ public class CollectionLoopFragment extends Fragment {
     }
 
     /**
+     * 将数据绑定到View
+     *
+     * @param str 网络请求返回的Json字符串
+     */
+    private void bindData2View(String str) {
+        if (TextUtils.isEmpty(str)) {
+            Toast.makeText(SuiuuApplication.applicationContext, "圈子收藏" +
+                    getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                CollectionLoop collectionLoop = JsonUtils.getInstance().fromJSON(CollectionLoop.class, str);
+                if (collectionLoop.getStatus().equals("1")) {
+                    List<CollectionLoopData> list = collectionLoop.getData().getData();
+                    if (list != null && list.size() > 0) {
+                        clearDataList();
+                        listAll.addAll(list);
+                        collectionLoopAdapter.setListData(listAll);
+                    } else {
+                        failureComputePage();
+                        Toast.makeText(SuiuuApplication.applicationContext, "圈子收藏" +
+                                getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    failureComputePage();
+                    Toast.makeText(SuiuuApplication.applicationContext,
+                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                failureComputePage();
+                DeBugLog.e(TAG, "收藏的圈子的数据解析异常:" + e.getMessage());
+                Toast.makeText(SuiuuApplication.applicationContext,
+                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * 隐藏Dialog与刷新View
+     */
+    private void hideDialogAndRefreshView() {
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        pullToRefreshGridView.onRefreshComplete();
+    }
+
+    /**
+     * 请求失败or无数据，请求页数减1
+     */
+    private void failureComputePage() {
+        if (page > 1) {
+            page = page - 1;
+        }
+    }
+
+    /**
+     * 请求页码为第一页，且有数据缓存，清除后重新添加
+     */
+    private void clearDataList() {
+        if (page == 1) {
+            if (listAll != null && listAll.size() > 0) {
+                listAll.clear();
+            }
+        }
+    }
+
+    /**
      * 获取收藏的圈子网络请求回调接口
      */
     private class CollectionLoopRequestCallBack extends RequestCallBack<String> {
@@ -232,57 +264,17 @@ public class CollectionLoopFragment extends Fragment {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
 
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-
-            mPtrFrame.refreshComplete();
-            ptrLoadMore.loadMoreFinish(true, true);
-
-            if (clearFlag) {
-                if (listAll != null && listAll.size() > 0) {
-                    listAll.clear();
-                }
-            }
-
-            String str = stringResponseInfo.result;
-            try {
-                CollectionLoop collectionLoop = JsonUtils.getInstance().fromJSON(CollectionLoop.class, str);
-                if (collectionLoop.getStatus().equals("1")) {
-                    List<CollectionLoopData> list = collectionLoop.getData().getData();
-                    if (list != null && list.size() > 0) {
-                        listAll.addAll(list);
-                        collectionLoopAdapter.setListData(listAll);
-                    } else {
-                        Toast.makeText(SuiuuApplication.applicationContext, "圈子收藏" +
-                                getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(SuiuuApplication.applicationContext,
-                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                DeBugLog.e(TAG, "收藏的圈子的数据解析异常:" + e.getMessage());
-                Toast.makeText(SuiuuApplication.applicationContext,
-                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-            }
+            hideDialogAndRefreshView();
+            bindData2View(stringResponseInfo.result);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-
-            if (page > 1) {
-                page = page - 1;
-            }
-
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-
-            mPtrFrame.refreshComplete();
-            ptrLoadMore.loadMoreError(0, "加载失败，请重试");
-
             DeBugLog.e(TAG, "收藏的圈子数据请求失败:" + s);
+
+            failureComputePage();
+            hideDialogAndRefreshView();
+
             Toast.makeText(SuiuuApplication.applicationContext,
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }

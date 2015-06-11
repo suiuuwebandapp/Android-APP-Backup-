@@ -117,14 +117,6 @@ public class LoopDetailsActivity extends BaseActivity {
      */
     @SuppressWarnings("deprecation")
     private void initView() {
-//        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.loop_details_root_layout);
-//        if (isKITKAT) {
-//            if (navigationBarHeight <= 0) {
-//                rootLayout.setPadding(0, statusBarHeight, 0, 0);
-//            } else {
-//                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-//            }
-//        }
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
