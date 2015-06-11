@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_suiuu_order_titlePic"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_170dp"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/user_background" />
+
+    <RelativeLayout
+        android:id="@+id/rl_suiuu_order_titlePic_description"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignBottom="@+id/iv_suiuu_order_titlePic"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/tr_black">
+
+        <TextView
+            android:id="@+id/tv_suiuu_order_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:singleLine="true"
+            android:text="New Text"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_suiuu_order_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="38dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="38dp"
+            android:layout_marginStart="5dp"
+            android:singleLine="true"
+            android:text="New Text"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/suiuu_details_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tr_black">
+
+        <ImageView
+            android:id="@+id/suiuu_details_back"
+            style="@style/backKeyStyle"
+            android:contentDescription="@string/back"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/suiuu_details_collection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/suiuu_order_sure"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_suiuu_order_titlePic"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_5dp"
+            android:text="出行人数"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/layout_15sp" />
+
+        <LinearLayout
+            style="@style/comment_suiuu_detail"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_5dp"
+                android:layout_weight="0"
+                android:background="@drawable/bt_release" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="20"
+                android:gravity="center"
+                android:text="2"
+                android:textColor="@color/text_select_true"
+                android:textSize="@dimen/layout_20sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_5dp"
+                android:layout_weight="0"
+                android:background="@drawable/bt_plus" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_8dp"
+            android:text="出行日期,时间"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/layout_15sp" />
+
+        <TextView
+            android:id="@+id/tv_travel_time"
+            android:gravity="center"
+            style="@style/comment_suiuu_detail"
+            android:layout_width="fill_parent"
+            android:drawableRight="@drawable/arrow"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:textColor="@color/slider_line_color"
+            android:textSize="@dimen/layout_20sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_5dp"
+            android:text="单项服务"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/layout_15sp"
+            android:visibility="gone"
+            />
+        <LinearLayout
+            style="@style/comment_suiuu_detail"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="总价 : 4000"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/layout_20dp"
+            android:textSize="@dimen/layout_20sp"
+            android:textColor="@color/text_select_true"/>
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="支付"
+            android:layout_alignParentRight="true"
+            bootstrapbutton:bb_roundedCorners="true"
+            bootstrapbutton:bb_size="small"
+            bootstrapbutton:bb_type="warning"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="60dp"
+
+            />
+
+
+
+    </RelativeLayout>
+</RelativeLayout>

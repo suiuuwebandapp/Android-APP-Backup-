@@ -180,6 +180,7 @@
     <string name="noData_AgainLoad">No Data,please again obtain</string>
     <string name="zero" translatable="false">0</string>
     <string name="zeroForTenKilo" translatable="false">0 &#8211; 10000</string>
+    <string name="suiuu_order_sure">订单确认</string>
 
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
@@ -458,6 +459,7 @@
     <string name="title_activity_wxentry" translatable="false">WXEntryActivity</string>
     <string name="title_activity_select_country" translatable="false">SelectCountryActivity</string>
     <string name="title_activity_select_city" translatable="false">SelectCityActivity</string>
+    <string name="title_activity_suiuu_order" translatable="false">SuiuuOrderActivity</string>
     <string name="app_name">Suiuu</string>
     <string name="message">Message</string>
     <string name="my_suiuu">My Suiuu</string>
