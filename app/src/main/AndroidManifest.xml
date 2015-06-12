@@ -317,6 +317,10 @@
             android:label="@string/title_activity_suiuu_order"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
         <activity
+            android:name=".activity.SuiuuPayActivity"
+            android:label="@string/title_activity_suiuu_pay"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+        <activity
             android:name=".base.BaseActivity"
             android:label="@string/title_activity_base">
         </activity>

@@ -53,12 +53,12 @@
     <dimen name="layout_10sp">10sp</dimen>
     <dimen name="layout_12sp">12sp</dimen>
     <dimen name="layout_15sp">15sp</dimen>
+	<dimen name="layout_16sp">16sp</dimen>
     <dimen name="layout_18sp">18sp</dimen>
     <dimen name="layout_20sp">20sp</dimen>
     <dimen name="layout_25sp">25sp</dimen>
     <dimen name="layout_50sp">50sp</dimen>
     <dimen name="layout_200sp">200sp</dimen>
-
 
     <!--关于chat-->
 
@@ -76,6 +76,5 @@
     <dimen name="image_thumbnail_size">100dp</dimen>
     <dimen name="image_thumbnail_spacing">1dp</dimen>
     <dimen name="size22">22dp</dimen>
-
 
 </resources>

@@ -25,6 +25,7 @@ import com.alibaba.sdk.android.oss.model.TokenGenerator;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.easemob.EMCallBack;
 import com.easemob.chat.EMChat;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.minglang.suiuu.chat.bean.User;
 import com.minglang.suiuu.chat.chat.DemoHXSDKHelper;
 import com.minglang.suiuu.chat.model.DefaultHXSDKModel;
@@ -80,6 +81,7 @@ public class SuiuuApplication extends Application {
         initHuanXin();
         initAboatOSS();
         initImageLoad();
+        Fresco.initialize(this);
         //GlobalCrashHandler.getInstance().init(this);
     }
 
