@@ -22,7 +22,6 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.ChatActivity;
 import com.minglang.suiuu.customview.CircleImageView;
@@ -127,7 +126,7 @@ public class SuiuuDetailActivity extends BaseActivity {
     }
 
     private void initView() {
-        dialog = new TextProgressDialog(SuiuuApplication.applicationContext);
+        dialog = new TextProgressDialog(this);
 
         tv_nickName = (TextView) findViewById(R.id.tv_nickname);
         tv_selfSign = (TextView) findViewById(R.id.tv_self_sign);
@@ -209,7 +208,7 @@ public class SuiuuDetailActivity extends BaseActivity {
             setViewPager();
         }
 
-        dialog.dismissDialog();
+
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -271,6 +270,7 @@ public class SuiuuDetailActivity extends BaseActivity {
                 JSONObject json = new JSONObject(responseInfo.result);
                 String status = json.getString("status");
                 if ("1".equals(status)) {
+                    dialog.dismissDialog();
                     SuiuuDataDetail detail = jsonUtil.fromJSON(SuiuuDataDetail.class, responseInfo.result);
                     suiuuDetailData = detail.getData();
                     detailInfo = detail.getData().getInfo();
