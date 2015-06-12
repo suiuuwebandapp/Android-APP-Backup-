@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+<include
+    layout="@layout/common_top2_layout"
+    android:id="@+id/suiuu_order_top"/>
+    <TextView
+        android:id="@+id/tv_suiuu_pay_detail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        style="@style/comment_suiuu_detail"
+        android:padding="@dimen/layout_8dp"
+        android:layout_below="@id/suiuu_order_top"
+        android:text="订单详情"
+        android:textSize="@dimen/layout_16sp"/>
+    <RelativeLayout
+        android:layout_below="@+id/tv_suiuu_pay_detail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        style="@style/comment_suiuu_detail">
+        <TextView
+            android:id="@+id/tv_pay_choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="请选择支付方式"
+            android:padding="@dimen/layout_5dp"
+            android:textSize="@dimen/layout_15sp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_pay_choice"
+            android:background="@drawable/wechat"
+            android:layout_marginLeft="@dimen/layout_100dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_pay_choice"
+            android:background="@drawable/pay"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/layout_100dp"/>
+
+    </RelativeLayout>
+</RelativeLayout>

@@ -494,6 +494,8 @@ public class SuiuuDetailActivity extends BaseActivity {
                     break;
                 case R.id.bb_schedule:
                     Intent intentSchedule = new Intent(SuiuuDetailActivity.this, SuiuuOrderActivity.class);
+                    intentSchedule.putExtra("titleInfo",detailInfo.getTitle());
+                    intentSchedule.putExtra("titleImg",detailInfo.getTitleImg());
                     startActivity(intentSchedule);
 
                     break;
