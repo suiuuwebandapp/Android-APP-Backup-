@@ -230,4 +230,7 @@
     <string name="accountManager">账号管理</string>
     <string name="MySuiuu">我的随游</string>
     <string name="MyReleaseSuiuu">我发布的随游</string>
+    <string name="Remove">移除</string>
+    <string name="Agree">同意</string>
+    <string name="Ignore">忽略</string>
 </resources>

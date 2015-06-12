@@ -185,6 +185,9 @@
     <string name="MySuiuu">My Suiuu</string>
     <string name="MyReleaseSuiuu">My Release Suiuu</string>
 
+    <string name="Remove">Remove</string>
+    <string name="Ignore">Ignore</string>
+
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>
@@ -292,7 +295,7 @@
     <string name="answer" translatable="false">接听</string>
     <string name="unable_to_connect" translatable="false">不能连接到服务器</string>
     <string name="newchat" translatable="false">新建聊天</string>
-    <string name="agree" translatable="false">同意</string>
+    <string name="Agree">Agree</string>
     <string name="Group_chat">Group chat:</string>
     <string name="not_download" translatable="false">未下载:</string>
     <string name="Please_enter_a_username">Please enter a user name</string>

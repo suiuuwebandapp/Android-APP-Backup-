@@ -10,21 +10,21 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.JoinAdapter;
+import com.minglang.suiuu.adapter.NewApplyForAdapter;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
-import com.minglang.suiuu.entity.JoinEntity;
+import com.minglang.suiuu.entity.NewApplyForEntity;
 import com.minglang.suiuu.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link android.support.v4.app.Fragment} subclass.
  * Use the {@link JoinFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class JoinFragment extends Fragment {
+public class NewApplyForFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -33,7 +33,7 @@ public class JoinFragment extends Fragment {
 
     private PullToRefreshListView pullToRefreshListView;
 
-    private List<JoinEntity> joinEntityList;
+    private List<NewApplyForEntity> newApplyForEntityList;
 
     /**
      * Use this factory method to create a new instance of
@@ -41,10 +41,10 @@ public class JoinFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment JoinFragment.
+     * @return A new instance of fragment NewApplyForFragment.
      */
-    public static JoinFragment newInstance(String param1, String param2) {
-        JoinFragment fragment = new JoinFragment();
+    public static NewApplyForFragment newInstance(String param1, String param2) {
+        NewApplyForFragment fragment = new NewApplyForFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -52,7 +52,7 @@ public class JoinFragment extends Fragment {
         return fragment;
     }
 
-    public JoinFragment() {
+    public NewApplyForFragment() {
         // Required empty public constructor
     }
 
@@ -68,7 +68,7 @@ public class JoinFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_join, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_new_apply_for, container, false);
 
         initView(rootView);
         ViewAction();
@@ -78,32 +78,29 @@ public class JoinFragment extends Fragment {
     /**
      * 初始化方法
      *
-     * @param rootView Fragment根View
+     * @param view Fragment的根View
      */
-    private void initView(View rootView) {
+    private void initView(View view) {
         ScreenUtils screenUtils = new ScreenUtils(getActivity());
         int screenWidth = screenUtils.getScreenWidth();
         int screenHeight = screenUtils.getScreenHeight();
 
-        pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.JoinListView);
+        pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.ApplyForListView);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
 
         ListView listView = pullToRefreshListView.getRefreshableView();
 
-        joinEntityList = new ArrayList<>();
+        newApplyForEntityList = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            JoinEntity entity = new JoinEntity();
-            entity.setImagePath("http://q.qlogo.cn/qqapp/1104557000/C7A47D7E23F617EA5E0CF13B14A036FA/100");
-            entity.setUserName("佚名" + i);
-            entity.setUserLocation("北京");
-            entity.setRemoveFlag(true);
-            joinEntityList.add(entity);
+            NewApplyForEntity newApplyForEntity = new NewApplyForEntity();
+            newApplyForEntity.setUserName("佚名" + i);
+            newApplyForEntity.setImagePath("http://q.qlogo.cn/qqapp/1104557000/C7A47D7E23F617EA5E0CF13B14A036FA/100");
+            newApplyForEntityList.add(newApplyForEntity);
         }
-
-        JoinAdapter adapter = new JoinAdapter(getActivity());
-        adapter.setList(joinEntityList);
-        adapter.setScreenParams(screenWidth, screenHeight);
-        listView.setAdapter(adapter);
+        NewApplyForAdapter applyForAdapter = new NewApplyForAdapter(getActivity());
+        applyForAdapter.setList(newApplyForEntityList);
+        applyForAdapter.setScreenParams(screenWidth, screenHeight);
+        listView.setAdapter(applyForAdapter);
     }
 
     private void ViewAction() {
@@ -111,7 +108,7 @@ public class JoinFragment extends Fragment {
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), joinEntityList.get(position).getUserName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), newApplyForEntityList.get(position).getUserName(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -121,7 +118,6 @@ public class JoinFragment extends Fragment {
                 Toast.makeText(getActivity(), "已到达底部", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
 }

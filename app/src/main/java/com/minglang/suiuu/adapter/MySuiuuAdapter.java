@@ -15,7 +15,9 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
-
+/**
+ * 我的随游数据适配器
+ */
 public class MySuiuuAdapter extends BaseAdapter {
 
     private Context context;
