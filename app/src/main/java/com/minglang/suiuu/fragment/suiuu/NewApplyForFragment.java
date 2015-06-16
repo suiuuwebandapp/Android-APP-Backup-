@@ -14,7 +14,6 @@ import com.minglang.suiuu.adapter.NewApplyForAdapter;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
 import com.minglang.suiuu.entity.NewApplyForEntity;
-import com.minglang.suiuu.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,10 +80,6 @@ public class NewApplyForFragment extends Fragment {
      * @param view Fragment的根View
      */
     private void initView(View view) {
-        ScreenUtils screenUtils = new ScreenUtils(getActivity());
-        int screenWidth = screenUtils.getScreenWidth();
-        int screenHeight = screenUtils.getScreenHeight();
-
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.ApplyForListView);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
 
@@ -99,7 +94,6 @@ public class NewApplyForFragment extends Fragment {
         }
         NewApplyForAdapter applyForAdapter = new NewApplyForAdapter(getActivity());
         applyForAdapter.setList(newApplyForEntityList);
-        applyForAdapter.setScreenParams(screenWidth, screenHeight);
         listView.setAdapter(applyForAdapter);
     }
 

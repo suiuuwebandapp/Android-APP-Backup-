@@ -140,6 +140,7 @@ public class MainActivity extends BaseActivity {
     private ImageView record;
 
     private AnimationSet animationSetHide, animationSetShow;
+
     // 账号在别处登录
     public boolean isConflict = false;
     private NewMessageBroadcastReceiver msgReceiver;
@@ -257,7 +258,6 @@ public class MainActivity extends BaseActivity {
 
         nickNameView = (TextView) findViewById(R.id.nickName);
         String strNickName = SuiuuInfo.ReadUserData(this).getNickname();
-        DeBugLog.i(TAG, "NickName:" + strNickName);
         if (!TextUtils.isEmpty(strNickName)) {
             nickNameView.setText(strNickName);
         } else {
@@ -266,7 +266,6 @@ public class MainActivity extends BaseActivity {
 
         headImageView = (CircleImageView) findViewById(R.id.headImage);
         String strHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
-        DeBugLog.i(TAG, "HeadImagePath:" + strHeadImagePath);
         if (!TextUtils.isEmpty(strHeadImagePath)) {
             imageLoader.displayImage(strHeadImagePath, headImageView);
         }

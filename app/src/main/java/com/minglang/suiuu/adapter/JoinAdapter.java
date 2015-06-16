@@ -34,8 +34,6 @@ public class JoinAdapter extends BaseAdapter {
 
     private DisplayImageOptions options;
 
-    private int screenWidth, screenHeight;
-
     public JoinAdapter(Context context) {
         this.context = context;
 
@@ -49,11 +47,6 @@ public class JoinAdapter extends BaseAdapter {
     public void setList(List<JoinEntity> list) {
         this.list = list;
         notifyDataSetChanged();
-    }
-
-    public void setScreenParams(int screenWidth, int screenHeight) {
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
     }
 
     @Override
@@ -95,12 +88,6 @@ public class JoinAdapter extends BaseAdapter {
         imageLoader.displayImage(entity.getImagePath(), headImageView, options);
         nameView.setText(entity.getUserName());
         locationView.setText(entity.getUserLocation());
-
-        int btnWidth = screenWidth / 16;
-        int btnHeight = screenHeight / 16;
-
-//        removeBtn.setWidth(btnWidth);
-//        removeBtn.setHeight(btnHeight);
 
         if (entity.isRemoveFlag()) {
             removeBtn.setTag(position);

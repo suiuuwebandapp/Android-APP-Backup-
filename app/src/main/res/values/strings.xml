@@ -180,13 +180,19 @@
     <string name="noData_AgainLoad">No Data,please again obtain</string>
     <string name="zero" translatable="false">0</string>
     <string name="zeroForTenKilo" translatable="false">0 &#8211; 10000</string>
-    <string name="suiuu_order_sure">订单确认</string>
+    <string name="suiuu_order_sure" translatable="false">订单确认</string>
 
     <string name="MySuiuu">My Suiuu</string>
     <string name="MyReleaseSuiuu">My Release Suiuu</string>
 
     <string name="Remove">Remove</string>
     <string name="Ignore">Ignore</string>
+
+    <string name="showReleaseSuiuuInfo">Show</string>
+    <string name="hideReleaseSuiuuInfo">Hide</string>
+
+    <string name="editSuiuuInfo">Edit Suiuu Info</string>
+    <string name="hintEditSuiuuInfo">Please Input Suiuu Info</string>
 
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
@@ -472,7 +478,8 @@
     <string name="my_suiuu">My Suiuu</string>
     <string name="orderManager">Order Management</string>
     <string name="accountManager">Account Management</string>
-    <string name="title_activity_my_suiuu">MySuiuuActivity</string>
-    <string name="title_activity_my_suiuu_details">MySuiuuDetailsActivity</string>
+    <string name="title_activity_my_suiuu" translatable="false">MySuiuuActivity</string>
+    <string name="title_activity_my_suiuu_details" translatable="false">MySuiuuDetailsActivity</string>
+    <string name="title_activity_edit_suiuu_info">EditSuiuuInfoActivity</string>
 
 </resources>

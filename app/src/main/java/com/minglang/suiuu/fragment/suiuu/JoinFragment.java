@@ -14,7 +14,6 @@ import com.minglang.suiuu.adapter.JoinAdapter;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
 import com.minglang.suiuu.entity.JoinEntity;
-import com.minglang.suiuu.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,10 +80,6 @@ public class JoinFragment extends Fragment {
      * @param rootView Fragment根View
      */
     private void initView(View rootView) {
-        ScreenUtils screenUtils = new ScreenUtils(getActivity());
-        int screenWidth = screenUtils.getScreenWidth();
-        int screenHeight = screenUtils.getScreenHeight();
-
         pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.JoinListView);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
 
@@ -102,7 +97,6 @@ public class JoinFragment extends Fragment {
 
         JoinAdapter adapter = new JoinAdapter(getActivity());
         adapter.setList(joinEntityList);
-        adapter.setScreenParams(screenWidth, screenHeight);
         listView.setAdapter(adapter);
     }
 

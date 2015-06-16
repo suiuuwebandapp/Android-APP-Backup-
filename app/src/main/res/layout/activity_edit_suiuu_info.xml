@@ -1,0 +1,62 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.minglang.suiuu.activity.EditSuiuuInfoActivity">
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/tr_black">
+
+
+        <ImageView
+            android:id="@+id/edit_suiuu_info_back"
+            style="@style/backKeyStyle"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/back"/>
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/editSuiuuInfo"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/edit_suiuu_info_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/layout_8dp"
+            android:layout_marginRight="@dimen/layout_8dp"
+            android:text="@android:string/ok"
+            android:textColor="@color/white"
+            android:textSize="@dimen/layout_18sp"/>
+
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/edit_suiuu_info_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_200dp"
+        android:layout_below="@+id/relativeLayout3"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/layout_8dp"
+        android:background="@color/backgroundColor"
+        android:gravity="top|start"
+        android:hint="@string/hintEditSuiuuInfo"
+        android:textColor="@color/white"
+        android:textColorHint="@color/tr_black"/>
+
+</RelativeLayout>

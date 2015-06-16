@@ -233,4 +233,8 @@
     <string name="Remove">移除</string>
     <string name="Agree">同意</string>
     <string name="Ignore">忽略</string>
+    <string name="hideReleaseSuiuuInfo">隐藏</string>
+    <string name="showReleaseSuiuuInfo">显示</string>
+    <string name="editSuiuuInfo">编辑随游信息</string>
+    <string name="hintEditSuiuuInfo">请输入随游信息</string>
 </resources>

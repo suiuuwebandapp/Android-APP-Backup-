@@ -34,8 +34,6 @@ public class NewApplyForAdapter extends BaseAdapter {
 
     private DisplayImageOptions options;
 
-    private int screenWidth, screenHeight;
-
     public NewApplyForAdapter(Context context) {
         this.context = context;
 
@@ -49,11 +47,6 @@ public class NewApplyForAdapter extends BaseAdapter {
     public void setList(List<NewApplyForEntity> list) {
         this.list = list;
         notifyDataSetChanged();
-    }
-
-    public void setScreenParams(int screenWidth, int screenHeight) {
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
     }
 
     @Override
@@ -94,17 +87,8 @@ public class NewApplyForAdapter extends BaseAdapter {
         imageLoader.displayImage(newApplyForEntity.getImagePath(), headImageView, options);
         userNameView.setText(newApplyForEntity.getUserName());
 
-        int btnWidth = screenWidth / 16;
-        int btnHeight = screenHeight / 16;
-
-//        ignoreBtn.setWidth(btnWidth);
-//        ignoreBtn.setHeight(btnHeight);
-
         ignoreBtn.setTag(position);
         ignoreBtn.setOnClickListener(new IgnoreClickListener(position));
-
-//        agreeBtn.setWidth(btnWidth);
-//        agreeBtn.setHeight(btnHeight);
 
         agreeBtn.setTag(position);
         agreeBtn.setOnClickListener(new AgreeClickListener(position));
