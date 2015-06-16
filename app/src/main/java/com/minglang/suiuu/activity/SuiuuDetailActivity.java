@@ -496,6 +496,7 @@ public class SuiuuDetailActivity extends BaseActivity {
                     Intent intentSchedule = new Intent(SuiuuDetailActivity.this, SuiuuOrderActivity.class);
                     intentSchedule.putExtra("titleInfo",detailInfo.getTitle());
                     intentSchedule.putExtra("titleImg",detailInfo.getTitleImg());
+                    intentSchedule.putExtra("price",detailInfo.getBasePrice());
                     startActivity(intentSchedule);
 
                     break;

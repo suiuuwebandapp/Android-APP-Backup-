@@ -38,6 +38,8 @@ public class SuiuuOrderActivity extends BaseActivity {
     private TextView tv_suiuu_order_title;
     private ImageView suiuu_order_back;
     private BootstrapButton bb_suiuu_order_pay;
+    private Float price;
+    private TextView tv_order_price;
 
 
     @Override
@@ -46,6 +48,7 @@ public class SuiuuOrderActivity extends BaseActivity {
         setContentView(R.layout.activity_suiuu_order);
         titleInfo = this.getIntent().getStringExtra("titleInfo");
         titleImg = this.getIntent().getStringExtra("titleImg");
+        price = Float.valueOf(this.getIntent().getStringExtra("price"));
         initView();
         viewAction();
     }
@@ -61,6 +64,7 @@ public class SuiuuOrderActivity extends BaseActivity {
         tv_suiuu_order_title = (TextView) findViewById(R.id.tv_suiuu_order_title);
         suiuu_order_back = (ImageView) findViewById(R.id.suiuu_order_back);
         bb_suiuu_order_pay = (BootstrapButton) findViewById(R.id.bb_suiuu_order_pay);
+        tv_order_price = (TextView) findViewById(R.id.tv_order_price);
 
     }
 
@@ -73,7 +77,7 @@ public class SuiuuOrderActivity extends BaseActivity {
         iv_plus.setOnClickListener(new MyClick());
         suiuu_order_back.setOnClickListener(new MyClick());
         bb_suiuu_order_pay.setOnClickListener(new MyClick());
-
+        tv_order_price.setText(Float.toString(price));
 
     }
 
@@ -94,16 +98,24 @@ public class SuiuuOrderActivity extends BaseActivity {
                 case R.id.iv_release:
                     if (enjoy_peopleNumber != 1) {
                         tv_enjoy_number.setText(String.valueOf(enjoy_peopleNumber - 1));
+                        tv_order_price.setText(Float.toString(price * (enjoy_peopleNumber - 1)));
+
                     }
                     break;
                 case R.id.iv_plus:
                     tv_enjoy_number.setText(String.valueOf(enjoy_peopleNumber + 1));
+                    tv_order_price.setText(Float.toString(price*(enjoy_peopleNumber + 1)));
+
                     break;
                 case R.id.suiuu_order_back:
                     finish();
                     break;
                 case R.id.bb_suiuu_order_pay:
                     Intent intent = new Intent(SuiuuOrderActivity.this,SuiuuPayActivity.class);
+                    intent.putExtra("peopleNumber",Integer.toString(enjoy_peopleNumber));
+                    intent.putExtra("time",tv_travel_time.getText());
+                    intent.putExtra("total_price",tv_order_price.getText());
+                    intent.putExtra("destinnation",titleInfo);
                     startActivity(intent);
 
                     break;
