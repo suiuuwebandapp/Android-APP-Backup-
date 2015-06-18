@@ -333,4 +333,12 @@ public class HttpServicePath {
      */
     public static String MyParticipateSuiuuPath = RootPath + "/app-travel/my-join-trip-list";
 
+    /**
+     * 生成订单号
+     */
+    public static String createOrderNumber = RootPath + "/app-travel/add-order";
+    /**
+     * 获得charge
+     */
+    public static String getCharge = RootPath + "/app-main/pay";
 }

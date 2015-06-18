@@ -3,6 +3,7 @@ package com.minglang.suiuu.customview;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap.Config;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
@@ -10,9 +11,9 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
@@ -201,8 +202,9 @@ public class RollViewPager extends ViewPager {
         public Object instantiateItem(ViewGroup container, final int position) {
 
             View view = View.inflate(ct, R.layout.viewpager_item, null);
-            ImageView image = (ImageView) view.findViewById(R.id.image);
-            bitmapUtils.display(image, imageUrlLists.get(position));
+            SimpleDraweeView image = (SimpleDraweeView) view.findViewById(R.id.image);
+            Uri uri = Uri.parse(imageUrlLists.get(position));
+            image.setImageURI(uri);
             (container).addView(view);
             image.setOnClickListener(new OnClickListener() {
                 @Override

@@ -3,15 +3,26 @@ package com.minglang.suiuu.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.utils.DateTimePickDialogUtil;
+import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.SuHttpRequest;
+
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,9 +37,12 @@ import java.util.Date;
  * 修改备注：
  */
 public class SuiuuOrderActivity extends BaseActivity {
+
+    private TextView tv_travel_date;
     private TextView tv_travel_time;
     private String initTime; // 初始化结束时间
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+    private String[] split;
     private ImageView iv_release;
     private TextView tv_enjoy_number;
     private ImageView iv_plus;
@@ -40,6 +54,10 @@ public class SuiuuOrderActivity extends BaseActivity {
     private BootstrapButton bb_suiuu_order_pay;
     private Float price;
     private TextView tv_order_price;
+    private String tripId;
+
+    private String orderNumber;
+    private int enjoy_peopleNumber;
 
 
     @Override
@@ -48,6 +66,7 @@ public class SuiuuOrderActivity extends BaseActivity {
         setContentView(R.layout.activity_suiuu_order);
         titleInfo = this.getIntent().getStringExtra("titleInfo");
         titleImg = this.getIntent().getStringExtra("titleImg");
+        tripId = this.getIntent().getStringExtra("tripId");
         price = Float.valueOf(this.getIntent().getStringExtra("price"));
         initView();
         viewAction();
@@ -55,8 +74,11 @@ public class SuiuuOrderActivity extends BaseActivity {
 
     private void initView() {
         initTime = sdf.format(new Date());
+        split = initTime.split(" ");
+        tv_travel_date = (TextView) findViewById(R.id.tv_travel_date);
         tv_travel_time = (TextView) findViewById(R.id.tv_travel_time);
-        tv_travel_time.setText(initTime);
+        tv_travel_date.setText(split[0].replace("年","-").replace("月","-").replace("日",""));
+        tv_travel_time.setText(split[1]);
         iv_release = (ImageView) findViewById(R.id.iv_release);
         tv_enjoy_number = (TextView) findViewById(R.id.tv_enjoy_number);
         iv_plus = (ImageView) findViewById(R.id.iv_plus);
@@ -72,14 +94,69 @@ public class SuiuuOrderActivity extends BaseActivity {
         Uri uri = Uri.parse(titleImg);
         iv_suiuu_order_titlePic.setImageURI(uri);
         tv_suiuu_order_title.setText(titleInfo);
+        tv_travel_date.setOnClickListener(new MyClick());
         tv_travel_time.setOnClickListener(new MyClick());
         iv_release.setOnClickListener(new MyClick());
         iv_plus.setOnClickListener(new MyClick());
         suiuu_order_back.setOnClickListener(new MyClick());
         bb_suiuu_order_pay.setOnClickListener(new MyClick());
-        tv_order_price.setText(Float.toString(price));
+        tv_order_price.setText("总价: " + Float.toString(price));
 
     }
+
+    //获取订单的接口
+    private void createOrderNumber() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("tripId", tripId);
+        params.addBodyParameter("peopleCount", Integer.toString(enjoy_peopleNumber));
+        params.addBodyParameter("beginDate", tv_travel_date.getText().toString());
+        params.addBodyParameter("startTime", tv_travel_time.getText().toString());
+        params.addBodyParameter(HttpServicePath.key, verification);
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.createOrderNumber, new createOrderCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
+    }
+
+
+    /**
+     * 生成订单回调接口
+     */
+    class createOrderCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            Log.i("suiuu", "order=" + stringResponseInfo.result);
+            try {
+                JSONObject message = new JSONObject(stringResponseInfo.result);
+
+                String status = message.getString("status");
+                if ("1".equals(status)) {
+                    orderNumber = message.getString("data");
+                    Intent intent = new Intent(SuiuuOrderActivity.this, SuiuuPayActivity.class);
+                    intent.putExtra("peopleNumber", Integer.toString(enjoy_peopleNumber));
+                    intent.putExtra("time", tv_travel_date.getText());
+                    intent.putExtra("total_price", tv_order_price.getText());
+                    intent.putExtra("destinnation", titleInfo);
+                    intent.putExtra("orderNumber", orderNumber);
+                    startActivity(intent);
+                    Log.i("suiuu", "orderNumber" + orderNumber);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(SuiuuOrderActivity.this, "点赞失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            Toast.makeText(SuiuuOrderActivity.this, "访问失败，请稍候再试！" + s, Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+
+
 
     class MyClick implements View.OnClickListener {
 
@@ -88,35 +165,38 @@ public class SuiuuOrderActivity extends BaseActivity {
          */
         @Override
         public void onClick(View v) {
-            int enjoy_peopleNumber = Integer.valueOf(String.valueOf(tv_enjoy_number.getText()));
+            enjoy_peopleNumber = Integer.valueOf(String.valueOf(tv_enjoy_number.getText()));
             switch (v.getId()) {
-                case R.id.tv_travel_time:
+                case R.id.tv_travel_date:
                     DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
-                            SuiuuOrderActivity.this, initTime);
-                    dateTimePicKDialog.dateTimePicKDialog(tv_travel_time);
+                            SuiuuOrderActivity.this, initTime,null);
+                    dateTimePicKDialog.dateTimePicKDialog(1,tv_travel_date);
+                    break;
+                case R.id.tv_travel_time:
+                    DateTimePickDialogUtil dateTimePicKDialog1 = new DateTimePickDialogUtil(
+                            SuiuuOrderActivity.this, initTime,tv_travel_date.getText().toString());
+                    dateTimePicKDialog1.dateTimePicKDialog(2, tv_travel_time);
                     break;
                 case R.id.iv_release:
                     if (enjoy_peopleNumber != 1) {
                         tv_enjoy_number.setText(String.valueOf(enjoy_peopleNumber - 1));
-                        tv_order_price.setText(Float.toString(price * (enjoy_peopleNumber - 1)));
+                        tv_order_price.setText("总价: " + Float.toString(price * (enjoy_peopleNumber - 1)));
 
                     }
                     break;
                 case R.id.iv_plus:
                     tv_enjoy_number.setText(String.valueOf(enjoy_peopleNumber + 1));
-                    tv_order_price.setText(Float.toString(price*(enjoy_peopleNumber + 1)));
+                    tv_order_price.setText("总价: " + Float.toString(price * (enjoy_peopleNumber + 1)));
 
                     break;
                 case R.id.suiuu_order_back:
                     finish();
                     break;
                 case R.id.bb_suiuu_order_pay:
-                    Intent intent = new Intent(SuiuuOrderActivity.this,SuiuuPayActivity.class);
-                    intent.putExtra("peopleNumber",Integer.toString(enjoy_peopleNumber));
-                    intent.putExtra("time",tv_travel_time.getText());
-                    intent.putExtra("total_price",tv_order_price.getText());
-                    intent.putExtra("destinnation",titleInfo);
-                    startActivity(intent);
+                    createOrderNumber();
+
+
+
 
                     break;
                 default:
@@ -124,4 +204,6 @@ public class SuiuuOrderActivity extends BaseActivity {
             }
         }
     }
+
+
 }
