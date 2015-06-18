@@ -40,6 +40,7 @@ import com.minglang.suiuu.entity.MainDynamicDataLoop;
 import com.minglang.suiuu.entity.MainDynamicDataRecommendTravel;
 import com.minglang.suiuu.entity.MainDynamicDataRecommendUser;
 import com.minglang.suiuu.entity.MainDynamicDataUser;
+import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -314,54 +315,63 @@ public class MainFragment extends BaseFragment {
         MainImageLoadingListener mainImageLoadingListener = new MainImageLoadingListener();
         try {
             MainDynamic mainDynamic = JsonUtils.getInstance().fromJSON(MainDynamic.class, str);
-            MainDynamicData data = mainDynamic.getData();
+            if (mainDynamic.getStatus().equals("1")) {
+                MainDynamicData data = mainDynamic.getData();
 
-            //关注动态
-            mainDynamicDataUserList = data.getUserDynamic().getData();
-            if (recommendUserList != null && recommendUserList.size() > 0) {
-                AttentionDynamicAdapter attentionDynamicAdapter = new AttentionDynamicAdapter(getActivity(),
-                        mainDynamicDataUserList);
-                attentionDynamicAdapter.setScreenHeight(screenHeight);
-                attentionDynamicAdapter.setImageLoadingListener(mainImageLoadingListener);
-                attentionDynamicListView.setAdapter(attentionDynamicAdapter);
-            } else {
-                attentionDynamicTitleLayout.setVisibility(View.GONE);
-                attentionDynamicListView.setVisibility(View.GONE);
-            }
+                //关注动态
+                mainDynamicDataUserList = data.getUserDynamic().getData();
+                if (recommendUserList != null && recommendUserList.size() > 0) {
+                    AttentionDynamicAdapter attentionDynamicAdapter = new AttentionDynamicAdapter(getActivity(),
+                            mainDynamicDataUserList);
+                    attentionDynamicAdapter.setScreenHeight(screenHeight);
+                    attentionDynamicAdapter.setImageLoadingListener(mainImageLoadingListener);
+                    attentionDynamicListView.setAdapter(attentionDynamicAdapter);
+                } else {
+                    attentionDynamicTitleLayout.setVisibility(View.GONE);
+                    attentionDynamicListView.setVisibility(View.GONE);
+                }
 
-            //热门推荐
-            recommendTravelList = data.getRecommendTravel().getData();
-            if (recommendTravelList != null && recommendTravelList.size() > 0) {
-                RecommendTravelAdapter recommendTravelAdapter = new RecommendTravelAdapter(getActivity(),
-                        recommendTravelList);
-                recommendTravelAdapter.setScreenHeight(screenHeight);
-                recommendTravelAdapter.setImageLoadingListener(mainImageLoadingListener);
-                recommendDynamicListView.setAdapter(recommendTravelAdapter);
-            } else {
-                recommendDynamicTitleLayout.setVisibility(View.GONE);
-                recommendDynamicListView.setVisibility(View.GONE);
-            }
+                //热门推荐
+                recommendTravelList = data.getRecommendTravel().getData();
+                if (recommendTravelList != null && recommendTravelList.size() > 0) {
+                    RecommendTravelAdapter recommendTravelAdapter = new RecommendTravelAdapter(getActivity(),
+                            recommendTravelList);
+                    recommendTravelAdapter.setScreenHeight(screenHeight);
+                    recommendTravelAdapter.setImageLoadingListener(mainImageLoadingListener);
+                    recommendDynamicListView.setAdapter(recommendTravelAdapter);
+                } else {
+                    recommendDynamicTitleLayout.setVisibility(View.GONE);
+                    recommendDynamicListView.setVisibility(View.GONE);
+                }
 
-            //今日之星
-            recommendUserList = data.getRecommendUser().getData();
-            if (recommendUserList != null && recommendUserList.size() > 0) {
-                TodayStarAdapter todayStarAdapter = new TodayStarAdapter(getActivity(), recommendUserList);
-                todayStarAdapter.setScreenParams(screenWidth);
-                todayStarAdapter.setImageLoadingListener(mainImageLoadingListener);
-                todayStarGridView.setAdapter(todayStarAdapter);
-            } else {
-                todayStarTitleLayout.setVisibility(View.GONE);
-            }
+                //今日之星
+                recommendUserList = data.getRecommendUser().getData();
+                if (recommendUserList != null && recommendUserList.size() > 0) {
+                    TodayStarAdapter todayStarAdapter = new TodayStarAdapter(getActivity(), recommendUserList);
+                    todayStarAdapter.setScreenParams(screenWidth);
+                    todayStarAdapter.setImageLoadingListener(mainImageLoadingListener);
+                    todayStarGridView.setAdapter(todayStarAdapter);
+                } else {
+                    todayStarTitleLayout.setVisibility(View.GONE);
+                }
 
-            //圈子动态
-            loopDynamicList = data.getCircleDynamic();
-            if (loopDynamicList != null && loopDynamicList.size() > 0) {
-                LoopDynamicAdapter loopDynamicAdapter = new LoopDynamicAdapter(getActivity(), loopDynamicList);
-                loopDynamicAdapter.setScreenParams(screenWidth);
-                loopDynamicAdapter.setImageLoadingListener(mainImageLoadingListener);
-                loopDynamicGridView.setAdapter(loopDynamicAdapter);
+                //圈子动态
+                loopDynamicList = data.getCircleDynamic();
+                if (loopDynamicList != null && loopDynamicList.size() > 0) {
+                    LoopDynamicAdapter loopDynamicAdapter = new LoopDynamicAdapter(getActivity(), loopDynamicList);
+                    loopDynamicAdapter.setScreenParams(screenWidth);
+                    loopDynamicAdapter.setImageLoadingListener(mainImageLoadingListener);
+                    loopDynamicGridView.setAdapter(loopDynamicAdapter);
+                } else {
+                    loopDynamicTitleLayout.setVisibility(View.GONE);
+                }
+            } else if (mainDynamic.getStatus().equals("-3")) {
+                Toast.makeText(getActivity().getApplicationContext(), "登录信息过期,请重新登录", Toast.LENGTH_SHORT).show();
+                AppUtils.intentLogin(getActivity());
+                getActivity().finish();
             } else {
-                loopDynamicTitleLayout.setVisibility(View.GONE);
+                Toast.makeText(getActivity(),
+                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             DeBugLog.e(TAG, "首页数据解析失败:" + e.getMessage());
@@ -406,6 +416,7 @@ public class MainFragment extends BaseFragment {
             DeBugLog.e(TAG, "数据请求失败:" + s);
             Toast.makeText(getActivity(), "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private class MainImageLoadingListener implements ImageLoadingListener {

@@ -408,7 +408,6 @@ public class SuiuuFragment extends BaseFragment
 
                 }
             } catch (Exception e) {
-
                 e.printStackTrace();
             }
         }

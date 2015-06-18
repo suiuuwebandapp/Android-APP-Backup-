@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
+    android:layout_height="match_parent">
+
     <com.facebook.drawee.view.SimpleDraweeView
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_170dp"
@@ -29,12 +29,7 @@
             android:id="@+id/item_attention_dynamic_title"
             android:singleLine="true"
             android:textColor="@color/white"
-            android:textSize="20sp"
-            android:layout_alignLeft="@+id/item_recommend_travel_content"
-            android:layout_alignStart="@+id/item_recommend_travel_content"
-            android:layout_above="@+id/item_recommend_travel_content"
-            android:layout_alignRight="@+id/item_recommend_travel_content"
-            android:layout_alignEnd="@+id/item_recommend_travel_content"/>
+            android:textSize="20sp"/>
 
         <TextView
             android:layout_width="match_parent"

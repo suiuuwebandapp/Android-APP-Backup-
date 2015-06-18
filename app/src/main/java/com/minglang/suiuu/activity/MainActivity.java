@@ -218,17 +218,19 @@ public class MainActivity extends BaseActivity {
             return;
         }
 
-        if (saveFlag && savedInstanceState.getString("save").equals("saveState")) {
-            if (savedInstanceState.getBoolean("main", false)) {
-                LoadMainFragment();
-            } else if (savedInstanceState.getBoolean("loop", false)) {
-                LoadLoopFragment();
-            } else if (savedInstanceState.getBoolean("suiuu", false)) {
-                LoadSuiuuFragment();
-            } else if (savedInstanceState.getBoolean("chat", false)) {
-                LoadConversationFragment();
-            } else {
-                LoadDefaultFragment();
+        if (saveFlag) {
+            if ("saveState".equals(savedInstanceState.getString("save"))) {
+                if (savedInstanceState.getBoolean("main", false)) {
+                    LoadMainFragment();
+                } else if (savedInstanceState.getBoolean("loop", false)) {
+                    LoadLoopFragment();
+                } else if (savedInstanceState.getBoolean("suiuu", false)) {
+                    LoadSuiuuFragment();
+                } else if (savedInstanceState.getBoolean("chat", false)) {
+                    LoadConversationFragment();
+                } else {
+                    LoadDefaultFragment();
+                }
             }
         }
     }
@@ -387,11 +389,13 @@ public class MainActivity extends BaseActivity {
                         break;
 
                     case 1:
-                        Intent intent1 = new Intent(MainActivity.this, MySuiuuReleaseActivity.class);
+                        Intent intent1 = new Intent(MainActivity.this, MySuiuuInfoActivity.class);
                         startActivity(intent1);
                         break;
 
                     case 2:
+                        Intent intent2 = new Intent(MainActivity.this, OrderManageActivity.class);
+                        startActivity(intent2);
                         break;
 
                     case 3:

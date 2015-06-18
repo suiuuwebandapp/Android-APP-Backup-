@@ -36,4 +36,8 @@ public class AppConstant {
      */
     public static final int EDIT_SUIUU_PRICE = 11;
 
+    public static final int EDIT_SUIUU_INFO_TEXT_BACK = 101;
+
+    public static final int EDIT_SUIUU_PRICE_BACK = 110;
+
 }

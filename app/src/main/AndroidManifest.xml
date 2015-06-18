@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="com.minglang.suiuu"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="com.minglang.suiuu"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- 内置SD卡的写入权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -78,7 +77,7 @@
             </intent-filter>
         </activity>
 
-        <!--登陆页面-->
+        <!-- 登陆页面 -->
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/app_name"
@@ -86,90 +85,75 @@
             android:screenOrientation="portrait"
             android:theme="@style/FullBleedTheme"/>
 
-        <!--应用主页面-->
+        <!-- 应用主页面 -->
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"/>
-
         <activity
             android:name=".activity.PersonalActivity"
             android:label="@string/title_activity_personal"
             android:screenOrientation="portrait"
             android:theme="@style/FullBleedTheme"/>
-
         <activity
             android:name=".activity.AttentionActivity"
             android:label="@string/title_activity_attention"
             android:screenOrientation="portrait"
             android:theme="@style/FullBleedTheme"/>
-
         <activity
             android:name=".activity.CollectionActivity"
             android:label="@string/title_activity_collection"
             android:screenOrientation="portrait"
             android:theme="@style/FullBleedTheme"/>
-
         <activity
             android:name=".activity.FansActivity"
             android:label="@string/title_activity_fans"
             android:screenOrientation="portrait"
             android:theme="@style/FullBleedTheme"/>
-
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/title_activity_setting"
             android:screenOrientation="portrait"
             android:theme="@style/FullBleedTheme"/>
-
         <activity
             android:name=".activity.PersonalSettingActivity"
             android:label="@string/title_activity_person_setting"
             android:screenOrientation="portrait"
             android:theme="@style/FullBleedTheme"/>
-
         <activity
             android:name=".activity.OtherUserActivity"
             android:label="@string/title_activity_other_user"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
-
         <activity
             android:name=".activity.NewRemindActivity"
             android:label="@string/title_activity_new_remind"
             android:screenOrientation="portrait"
             android:theme="@style/FullBleedTheme"/>
-
         <activity
             android:name=".activity.OtherUserTraceActivity"
             android:label="@string/title_activity_other_user_trace"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.FeedbackActivity"
             android:label="@string/title_activity_feedback"
             android:theme="@style/FullBleedTheme"/>
-
-
         <activity
             android:name=".activity.ContactUsActivity"
             android:label="@string/title_activity_contact_us"
             android:theme="@style/FullBleedTheme"/>
-
         <activity
             android:name=".activity.SuDetailsActivity"
             android:label="@string/title_activity_suiuu_details"
             android:theme="@style/FullBleedTheme"/>
-
         <activity
             android:name=".activity.CommentsActivity"
             android:label="@string/title_activity_comments"
             android:theme="@style/FullBleedTheme"
             android:windowSoftInputMode="adjustResize"/>
-
         <activity
             android:name=".activity.SelectPictureActivity"
             android:label="@string/title_activity_select_picture"
@@ -299,7 +283,6 @@
                 <data android:scheme="tencent1104557000"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -311,43 +294,35 @@
             android:name=".activity.LoopDetailsActivity"
             android:label="@string/title_activity_loop_details"
             android:theme="@style/FullBleedTheme"/>
-
         <activity
             android:name=".activity.LoopArticleActivity"
             android:label="@string/title_activity_loop_article"
             android:theme="@style/FullBleedTheme"/>
-
         <activity
             android:name=".activity.AllAttentionDynamicActivity"
             android:label="@string/title_activity_all_attention_dynamic"
             android:theme="@style/FullBleedTheme"/>
-
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
             android:label="@string/title_activity_wxentry"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
-
         <activity
             android:name=".activity.SelectCountryActivity"
             android:label="@string/title_activity_select_country"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
-
         <activity
             android:name=".activity.SelectCityActivity"
             android:label="@string/title_activity_select_city"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
-
         <activity
             android:name=".activity.SuiuuOrderActivity"
             android:label="@string/title_activity_suiuu_order"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
-
         <activity
             android:name=".activity.SuiuuPayActivity"
             android:label="@string/title_activity_suiuu_pay"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
-
         <activity
             android:name=".base.BaseActivity"
             android:label="@string/title_activity_base"/>
@@ -363,7 +338,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <activity
-            android:name=".activity.MySuiuuActivity"
+            android:name=".activity.MySuiuuInfoActivity"
             android:label="@string/title_activity_my_suiuu"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
@@ -376,6 +351,17 @@
             android:name=".activity.EditSuiuuInfoActivity"
             android:label="@string/title_activity_edit_suiuu_info"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
+        <activity
+            android:name=".activity.EditSuiuuPriceActivity"
+            android:label="@string/title_activity_edit_suiuu_price"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".activity.OrderManageActivity"
+            android:label="@string/title_activity_order_manage"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
     </application>
 

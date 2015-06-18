@@ -237,4 +237,6 @@
     <string name="showReleaseSuiuuInfo">显示</string>
     <string name="editSuiuuInfo">编辑随游信息</string>
     <string name="hintEditSuiuuInfo">请输入随游信息</string>
+    <string name="editSuiuuPrice">编辑随游价格</string>
+    <string name="OrderManage">订单管理</string>
 </resources>

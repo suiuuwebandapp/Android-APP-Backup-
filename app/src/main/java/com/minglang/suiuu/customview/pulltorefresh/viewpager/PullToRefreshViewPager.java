@@ -42,7 +42,7 @@ public class PullToRefreshViewPager extends PullToRefreshBase<ViewPager> {
 	@Override
 	protected ViewPager createRefreshableView(Context context, AttributeSet attrs) {
 		ViewPager viewPager = new ViewPager(context, attrs);
-		viewPager.setId(R.id.viewpager);
+		viewPager.setId(R.id.orderManageViewPager);
 		return viewPager;
 	}
 

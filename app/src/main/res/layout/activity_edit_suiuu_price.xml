@@ -1,0 +1,147 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.minglang.suiuu.activity.EditSuiuuPriceActivity">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/tr_black">
+
+        <ImageView
+            android:id="@+id/edit_suiuu_price_back"
+            style="@style/backKeyStyle"
+            android:background="@drawable/back"/>
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/editSuiuuPrice"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/edit_suiuu_price_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/layout_8dp"
+            android:layout_marginRight="@dimen/layout_8dp"
+            android:layout_toEndOf="@+id/textView13"
+            android:layout_toRightOf="@+id/textView13"
+            android:gravity="end"
+            android:text="@android:string/ok"
+            android:textColor="@color/white"
+            android:textSize="@dimen/layout_18sp"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/layout_10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/backgroundColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/layout_8dp"
+                android:layout_marginLeft="@dimen/layout_8dp"
+                android:layout_marginRight="@dimen/layout_8dp"
+                android:layout_marginStart="@dimen/layout_8dp"
+                android:text="@string/BasicPrice"
+                android:textSize="@dimen/layout_16sp"/>
+
+            <EditText
+                android:id="@+id/edit_suiuu_basic_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textSize="@dimen/layout_16sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/layout_10dp"
+            android:layout_marginTop="@dimen/layout_10dp"
+            android:background="@color/backgroundColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/layout_8dp"
+                android:layout_marginLeft="@dimen/layout_8dp"
+                android:layout_marginRight="@dimen/layout_8dp"
+                android:layout_marginStart="@dimen/layout_8dp"
+                android:text="@string/AdditionalPrice"
+                android:textSize="@dimen/layout_16sp"/>
+
+            <EditText
+                android:id="@+id/edit_suiuu_additional_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textSize="@dimen/layout_16sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/backgroundColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/layout_8dp"
+                android:layout_marginLeft="@dimen/layout_8dp"
+                android:layout_marginRight="@dimen/layout_8dp"
+                android:layout_marginStart="@dimen/layout_8dp"
+                android:text="@string/OtherPrice"
+                android:textSize="@dimen/layout_16sp"/>
+
+            <EditText
+                android:id="@+id/edit_suiuu_other_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textSize="@dimen/layout_16sp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

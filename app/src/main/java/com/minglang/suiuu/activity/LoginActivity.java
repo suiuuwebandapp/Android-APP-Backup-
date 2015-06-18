@@ -1094,7 +1094,7 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onFailure(HttpException error, String msg) {
-            DeBugLog.i(TAG, msg);
+            DeBugLog.e(TAG, msg);
 
             if (loginDialog != null && loginDialog.isShowing()) {
                 loginDialog.dismiss();
@@ -1103,6 +1103,7 @@ public class LoginActivity extends BaseActivity {
             Toast.makeText(LoginActivity.this,
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
+
     }
 
     //*********************************************************************************\\

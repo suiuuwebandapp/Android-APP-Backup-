@@ -194,6 +194,12 @@
     <string name="editSuiuuInfo">Edit Suiuu Info</string>
     <string name="hintEditSuiuuInfo">Please Input Suiuu Info</string>
 
+    <string name="editSuiuuPrice">Edit Suiuu Price</string>
+    <string name="BasicPrice" translatable="false">基本价格 ￥：</string>
+    <string name="AdditionalPrice" translatable="false">附加价格 ￥：</string>
+    <string name="OtherPrice" translatable="false">其他价格 ￥：</string>
+    <string name="OrderManage">Order Manage</string>
+
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>
@@ -481,5 +487,11 @@
     <string name="title_activity_my_suiuu" translatable="false">MySuiuuActivity</string>
     <string name="title_activity_my_suiuu_details" translatable="false">MySuiuuDetailsActivity</string>
     <string name="title_activity_edit_suiuu_info">EditSuiuuInfoActivity</string>
+    <string name="title_activity_edit_suiuu_price">EditSuiuuPriceActivity</string>
+    <string name="title_activity_order_manage">OrderManageActivity</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
 
 </resources>

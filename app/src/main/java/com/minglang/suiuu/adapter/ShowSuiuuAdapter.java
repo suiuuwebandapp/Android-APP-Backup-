@@ -26,17 +26,10 @@ import java.util.List;
 public class ShowSuiuuAdapter extends BaseAdapter {
     private Context context;
     private List<SuiuuDataList> list;
-//    private ImageLoader imageLoader;
-//    private DisplayImageOptions options;
 
     public ShowSuiuuAdapter(Context context, List<SuiuuDataList> list) {
         this.context = context;
         this.list = list;
-//        imageLoader = ImageLoader.getInstance();
-//        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
-//                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
-//                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-//                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     @Override
@@ -65,11 +58,9 @@ public class ShowSuiuuAdapter extends BaseAdapter {
 
         title.setText(list.get(position).getTitle());
         description.setText(list.get(position).getIntro());
-//        imageLoader.displayImage(list.get(position).getTitleImg(), picContent, options);
         Uri uri = Uri.parse(list.get(position).getTitleImg());
         picContent.setImageURI(uri);
         return convertView;
     }
-
 
 }

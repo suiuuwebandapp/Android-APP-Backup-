@@ -11,7 +11,11 @@ import android.widget.Toast;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.utils.AppConstant;
 
+/**
+ * 编辑随游信息
+ */
 public class EditSuiuuInfoActivity extends BaseActivity {
 
     private ImageView back;
@@ -66,7 +70,7 @@ public class EditSuiuuInfoActivity extends BaseActivity {
                 } else {
                     Intent intent = new Intent();
                     intent.putExtra("newInfo", text);
-                    setResult(RESULT_OK, intent);
+                    setResult(AppConstant.EDIT_SUIUU_INFO_TEXT_BACK, intent);
                     finish();
                 }
             }

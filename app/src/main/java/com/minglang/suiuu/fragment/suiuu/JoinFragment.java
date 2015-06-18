@@ -2,6 +2,7 @@ package com.minglang.suiuu.fragment.suiuu;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,9 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class JoinFragment extends Fragment {
+
+    private static final String TAG = JoinFragment.class.getSimpleName();
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -80,6 +84,8 @@ public class JoinFragment extends Fragment {
      * @param rootView Fragment根View
      */
     private void initView(View rootView) {
+        Log.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+
         pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.JoinListView);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
 

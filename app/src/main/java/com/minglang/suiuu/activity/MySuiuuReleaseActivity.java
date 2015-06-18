@@ -39,13 +39,6 @@ public class MySuiuuReleaseActivity extends AppCompatActivity {
     private ImageView back;
 
     /**
-     * 可滑动的Tab头
-     */
-    private TabLayout tabLayout;
-
-    private ViewPager releaseViewPager;
-
-    /**
      * 我发布的随游标题，详细信息，价格
      */
     private TextView mySuiuuTitle, mySuiuuInfoText, mySuiuuPrice;
@@ -65,7 +58,7 @@ public class MySuiuuReleaseActivity extends AppCompatActivity {
     private void initView() {
 
         back = (ImageView) findViewById(R.id.my_suiuu_release_back);
-        releaseViewPager = (ViewPager) findViewById(R.id.my_suiuu_release_viewPager);
+        ViewPager releaseViewPager = (ViewPager) findViewById(R.id.my_suiuu_release_viewPager);
 
         mySuiuuTitle = (TextView) findViewById(R.id.my_suiuu_release_title);
         mySuiuuInfoText = (TextView) findViewById(R.id.my_suiuu_release_info_text);
@@ -74,7 +67,8 @@ public class MySuiuuReleaseActivity extends AppCompatActivity {
         String join = "已参加";
         String applyFor = "新申请";
 
-        tabLayout = (TabLayout) findViewById(R.id.my_suiuu_release_tabLayout);
+        //可滑动的Tab头
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.my_suiuu_release_tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(join), true);
         tabLayout.addTab(tabLayout.newTab().setText(applyFor), false);
         tabLayout.setTabTextColors(getResources().getColor(R.color.tr_black), getResources().getColor(R.color.text_select_true));
@@ -145,43 +139,9 @@ public class MySuiuuReleaseActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String priceNumber = mySuiuuPrice.getText().toString().trim();
-                Intent intent = new Intent();
+                Intent intent = new Intent(MySuiuuReleaseActivity.this, EditSuiuuPriceActivity.class);
                 intent.putExtra("oldPrice", priceNumber);
-                startActivityForResult(intent, AppConstant.EDIT_SUIUU_INFO_TEXT);
-            }
-        });
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                Log.i(TAG, "onTabSelected().position:" + tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                Log.i(TAG, "onTabUnselected().position:" + tab.getPosition());
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                Log.i(TAG, "onTabReselected().position:" + tab.getPosition());
-            }
-        });
-
-        releaseViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
+                startActivityForResult(intent, AppConstant.EDIT_SUIUU_PRICE);
             }
         });
 
@@ -189,23 +149,31 @@ public class MySuiuuReleaseActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Log.i(TAG, "requestCode:" + requestCode);
-        Log.i(TAG, "resultCode:" + resultCode);
-
-        switch (resultCode) {
+        switch (requestCode) {
 
             case AppConstant.EDIT_SUIUU_INFO_TEXT:
-                if (requestCode == RESULT_OK) {
-                    mySuiuuInfoText.setText(data.getStringExtra("newInfo"));
+                if (resultCode == AppConstant.EDIT_SUIUU_INFO_TEXT_BACK) {
+                    String newInfo = data.getStringExtra("newInfo");
+                    mySuiuuInfoText.setText(newInfo);
+
+                    Log.i(TAG, "newInfo:" + newInfo);
                 }
                 break;
 
             case AppConstant.EDIT_SUIUU_PRICE:
+                if (resultCode == AppConstant.EDIT_SUIUU_PRICE_BACK) {
+                    String newBasicPrice = data.getStringExtra("newBasicPrice");
+                    String newAdditionalPrice = data.getStringExtra("newAdditionalPrice");
+                    String newOtherPrice = data.getStringExtra("newOtherPrice");
+
+                    Log.i(TAG, "newBasicPrice:" + newBasicPrice + ",newAdditionalPrice:" + newAdditionalPrice +
+                            ",newOtherPrice:" + newOtherPrice);
+                    String allPrice = String.valueOf(Integer.valueOf(newBasicPrice) + Integer.valueOf(newAdditionalPrice)
+                            + Integer.valueOf(newAdditionalPrice));
+                    mySuiuuPrice.setText(allPrice);
+                }
                 break;
         }
-
 
     }
 

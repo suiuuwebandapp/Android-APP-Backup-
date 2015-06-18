@@ -17,8 +17,9 @@ public class HttpServicePath {
     /**
      * 服务器地址
      * <p/>
+     * 192.168.1.101
      */
-    public static String RootPath = "http://www.suiuu.com";
+    public static String RootPath = "http://192.168.1.101";
 
     public static String SharePath = "/circle/web-info?infoId=";
 
@@ -227,7 +228,7 @@ public class HttpServicePath {
      * 得到随游列表
      */
     public static String getSuiuuList = RootPath + "/app-travel/get-travel-list";
-  /**
+    /**
      * 得到随游高级搜索中的标签
      */
     public static String getSuiuuSearchTag = RootPath + "/app-travel/get-tag-list";
@@ -254,30 +255,37 @@ public class HttpServicePath {
      * 得到推荐的圈子
      */
     public static String GetRecommendLoopPath = RootPath + "/attention/get-recommend-circle";
+
     /**
      * 创建一条评论
      */
     public static String articleCreateComment = RootPath + "/circle/create-comment";
+
     /**
      * 创建一条评论
      */
     public static String suiuuCreateComment = RootPath + "/app-travel/add-comment";
+
     /**
      * 根据文章ID获得评论列表
      */
     public static String getCommentListByArticleId = RootPath + "/circle/get-comment-by-article-id";
+
     /**
      * 根据文章ID获得评论列表
      */
     public static String getCommentListByTripId = RootPath + "/app-travel/get-comment-list";
+
     /**
      * 随游中添加收藏
      */
     public static String travelAddCollection = RootPath + "/attention/add-collection-travel";
+
     /**
      * 随游中添加点赞
      */
     public static String travelAddPraise = RootPath + "/attention/add-praise-travel";
+
     /**
      * 圈子中添加点赞
      */
@@ -306,4 +314,23 @@ public class HttpServicePath {
      * 取消接口
      */
     public static String getCancelServicePath = RootPath + "/attention/delete-attention";
+
+    /**
+     * 我发布的随游地址
+     * <p/>
+     * 请求方式:POST
+     * <p/>
+     * 请求参数:userSign
+     */
+    public static String MyPublishedSuiuuPath = RootPath + "/app-travel/my-trip-list";
+
+    /**
+     * 我参加的随游地址
+     * <p/>
+     * 请求方式:POST
+     * <p/>
+     * 请求参数:userSign
+     */
+    public static String MyParticipateSuiuuPath = RootPath + "/app-travel/my-join-trip-list";
+
 }

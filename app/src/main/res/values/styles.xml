@@ -24,7 +24,7 @@
     </style>
 
     <style name="Base.Theme.Suiuu" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/tr_black</item>
+        <item name="colorPrimary">@color/backgroundColor</item>
     </style>
 
     <style name="Base.Theme.Suiuu.Release" parent="Base.Theme.Suiuu">
