@@ -18,7 +18,8 @@ public class HttpServicePath {
      * 服务器地址
      * <p/>
      */
-    public static String RootPath = "http://www.suiuu.com";
+//    public static String RootPath = "http://www.suiuu.com";
+    public static String RootPath = "http://192.168.1.101";
 
     public static String SharePath = "/circle/web-info?infoId=";
 
@@ -306,4 +307,12 @@ public class HttpServicePath {
      * 取消接口
      */
     public static String getCancelServicePath = RootPath + "/attention/delete-attention";
+    /**
+     * 生成订单号
+     */
+    public static String createOrderNumber = RootPath + "/app-travel/add-order";
+    /**
+     * 获得charge
+     */
+    public static String getCharge = RootPath + "/app-main/pay";
 }

@@ -56,6 +56,9 @@
     <!-- 允许一个程序打开窗口使用 TYPE_SYSTEM_ALERT，显示在其他所有程序的顶层 -->
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW"/>
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
     <application
         android:name=".application.SuiuuApplication"
         android:allowBackup="true"
@@ -376,6 +379,32 @@
             android:name=".activity.EditSuiuuInfoActivity"
             android:label="@string/title_activity_edit_suiuu_info"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
+        <!-- 支付相关-->
+        <!-- Ping++ SDK 注册 -->
+        <activity
+            android:name="com.pingplusplus.android.PaymentActivity"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- 微信支付注册 -->
+        <activity-alias
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:targetActivity="com.pingplusplus.android.PaymentActivity" />
+        <!-- 支付宝注册 -->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" />
+        <activity
+            android:name="com.alipay.sdk.auth.AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" />
+
+
+
 
     </application>
 

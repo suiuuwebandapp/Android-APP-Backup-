@@ -219,7 +219,7 @@ public class SuiuuDetailActivity extends BaseActivity {
             public void pagerClick(int position) {
 //				Intent intent = new Intent(ct,DetaiAct.class);
 //				ct.startActivity(intent);
-                Toast.makeText(SuiuuDetailActivity.this, "xxxxxx", Toast.LENGTH_SHORT).show();
+        Toast.makeText(SuiuuDetailActivity.this, "xxxxxx", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -497,6 +497,7 @@ public class SuiuuDetailActivity extends BaseActivity {
                     intentSchedule.putExtra("titleInfo",detailInfo.getTitle());
                     intentSchedule.putExtra("titleImg",detailInfo.getTitleImg());
                     intentSchedule.putExtra("price",detailInfo.getBasePrice());
+                    intentSchedule.putExtra("tripId",detailInfo.getTripId());
                     startActivity(intentSchedule);
 
                     break;
