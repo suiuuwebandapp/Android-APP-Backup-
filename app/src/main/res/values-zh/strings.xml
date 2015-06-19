@@ -239,4 +239,11 @@
     <string name="hintEditSuiuuInfo">请输入随游信息</string>
     <string name="editSuiuuPrice">编辑随游价格</string>
     <string name="OrderManage">订单管理</string>
+    <string name="AccountBalance">账户余额</string>
+    <string name="ClickWithdrawals">点击提现</string>
+    <string name="AccountManage">账户管理</string>
+    <string name="RMB">￥</string>
+    <string name="Date">日期</string>
+    <string name="TransferAccount">转账账户</string>
+    <string name="Money">金额</string>
 </resources>

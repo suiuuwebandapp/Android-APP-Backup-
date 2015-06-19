@@ -438,6 +438,7 @@ public class LoginActivity extends BaseActivity {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
+
         });
 
         popupRegister1ObtainCaptcha.setOnClickListener(new OnClickListener() {
@@ -702,7 +703,6 @@ public class LoginActivity extends BaseActivity {
                     SuiuuInfo.WriteVerification(LoginActivity.this, user.getMessage());
                     SuiuuInfo.WriteUserSign(LoginActivity.this, data.getUserSign());
                     SuiuuInfo.WriteUserData(LoginActivity.this, data);
-                    DeBugLog.i(TAG, "头像URL:" + data.getHeadImg());
                     huanXinUsername = user.getData().getUserSign();
                     huanXinLogin();
                 } else {
@@ -811,23 +811,28 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onError(int code, final String message) {
+
             loginFailure2Umeng(start, code, message);
+
             if (!progressShow) {
                 return;
             }
+
             runOnUiThread(new Runnable() {
                 public void run() {
                     pd.dismiss();
-                    Toast.makeText(getApplicationContext(),
+                    Toast.makeText(LoginActivity.this,
                             getResources().getString(R.string.Login_failed) + message, Toast.LENGTH_SHORT).show();
                 }
             });
+
         }
 
         @Override
         public void onProgress(int i, String s) {
 
         }
+
     }
 
     /**

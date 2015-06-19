@@ -200,6 +200,15 @@
     <string name="OtherPrice" translatable="false">其他价格 ￥：</string>
     <string name="OrderManage">Order Manage</string>
 
+    <string name="AccountManage">Account Management</string>
+    <string name="RMB">￥</string>
+    <string name="AccountBalance">Account Balance</string>
+    <string name="ClickWithdrawals">Click Withdrawals</string>
+
+    <string name="Date">Date</string>
+    <string name="TransferAccount">Transfer Account</string>
+    <string name= "Money">Money</string>
+
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>
@@ -493,5 +502,6 @@
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
+    <string name="title_activity_account_manage">AccountManageActivity</string>
 
 </resources>

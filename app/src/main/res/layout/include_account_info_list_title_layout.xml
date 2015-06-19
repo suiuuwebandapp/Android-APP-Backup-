@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/register_bg_color"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.3"
+        android:gravity="center_horizontal"
+        android:text="@string/Date"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/textView19"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.3"
+        android:gravity="center_horizontal"
+        android:text="@string/TransferAccount"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/textView23"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.3"
+        android:gravity="center_horizontal"
+        android:text="@string/Money"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"/>
+
+</LinearLayout>

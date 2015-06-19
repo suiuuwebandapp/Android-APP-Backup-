@@ -23,11 +23,15 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <style name="Base.Theme.Suiuu" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Base.Theme.Suiuu.Release" parent="Base.Theme.Suiuu">
         <item name="colorPrimary">@color/backgroundColor</item>
     </style>
 
-    <style name="Base.Theme.Suiuu.Release" parent="Base.Theme.Suiuu">
+    <style name="Base.Theme.Suiuu.Account" parent="Base.Theme.Suiuu">
+        <item name="colorPrimary">@color/tr_black</item>
+    </style>
+
+    <style name="Base.Theme.Suiuu" parent="Theme.AppCompat.Light.NoActionBar">
     </style>
 
     <!-- 主页面Tab页TextView控件样式 -->

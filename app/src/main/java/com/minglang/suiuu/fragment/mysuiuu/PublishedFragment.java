@@ -3,6 +3,7 @@ package com.minglang.suiuu.fragment.mysuiuu;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,13 +15,18 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.*;
+import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
+import com.minglang.suiuu.entity.Published;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 已发布的随游页面
@@ -45,6 +51,8 @@ public class PublishedFragment extends Fragment {
     private PullToRefreshListView pullToRefreshListView;
 
     private ProgressDialog progressDialog;
+
+    private List<Published.PublishedData> listAll = new ArrayList<>();
 
     /**
      * Use this factory method to create a new instance of
@@ -169,10 +177,16 @@ public class PublishedFragment extends Fragment {
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
 
-            String str = responseInfo.result;
-            Log.i(TAG, "我发布的随游:" + str);
-
             showOrHideDialog();
+
+            String str = responseInfo.result;
+            if (!TextUtils.isEmpty(str)) {
+                Published published = JsonUtils.getInstance().fromJSON(Published.class, str);
+                List<Published.PublishedData> list = published.getData();
+                if (list != null && list.size() > 0) {
+                    listAll.addAll(list);
+                }
+            }
 
         }
 

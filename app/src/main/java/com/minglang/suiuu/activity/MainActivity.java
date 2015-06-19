@@ -399,6 +399,8 @@ public class MainActivity extends BaseActivity {
                         break;
 
                     case 3:
+                        Intent intent3 = new Intent(MainActivity.this, AccountManageActivity.class);
+                        startActivity(intent3);
                         break;
                 }
             }

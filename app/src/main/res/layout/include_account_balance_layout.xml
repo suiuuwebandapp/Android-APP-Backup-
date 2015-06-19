@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/layout_background_balance">
+
+    <TextView
+        android:id="@+id/accountBalanceNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/layout_10dp"
+        android:layout_marginLeft="@dimen/layout_10dp"
+        android:layout_marginRight="@dimen/layout_10dp"
+        android:layout_marginStart="@dimen/layout_10dp"
+        android:singleLine="true"
+        android:text="@string/RMB"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/accountBalanceNumber"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/layout_5dp"
+        android:text="@string/AccountBalance"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/accountBalanceNumber"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/layout_10dp"
+        android:text="@string/ClickWithdrawals"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/login_bg_color"/>
+
+</RelativeLayout>

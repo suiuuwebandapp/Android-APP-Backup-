@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#b0000000">
@@ -15,8 +16,9 @@
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="请输入密码"
+        android:inputType="textPassword"
         android:textColor="@color/white"
-        android:inputType="textPassword" />
+        android:textColorHint="@color/textColor"/>
 
     <EditText
         android:id="@+id/userName"
@@ -24,18 +26,20 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/userPassword"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:hint="请输入用户名"
         android:textColor="@color/white"
-        android:layout_marginRight="10dp" />
+        android:textColorHint="@color/textColor"/>
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="登陆"
         android:id="@+id/popupLoginBtn"
         style="@style/login_button_style"
-        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/userPassword"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="登陆"
+        android:textColorHint="@color/textColor"/>
 
 </RelativeLayout>
