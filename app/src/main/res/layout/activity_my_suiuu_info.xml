@@ -1,4 +1,4 @@
-<android.support.design.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,19 +7,36 @@
     tools:context="com.minglang.suiuu.activity.MySuiuuInfoActivity">
 
     <!--头部Layout-->
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/mySuiuuBarLayout"
+    <LinearLayout
+        android:id="@+id/mySuiuuTitleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/mySuiuuToolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/tr_black"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            android:layout_height="@dimen/layout_50dp"
+            android:background="@color/tr_black">
+
+            <ImageView
+                android:id="@+id/mySuiuuBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/back"/>
+
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/MySuiuu"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white"/>
+        </RelativeLayout>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/mySuiuuTabLayout"
@@ -29,13 +46,14 @@
             app:tabIndicatorHeight="@dimen/layout_2dp"
             app:tabTextAppearance="?android:attr/textAppearanceMedium"/>
 
-    </android.support.design.widget.AppBarLayout>
+    </LinearLayout>
+
 
     <!--内容部分-->
     <android.support.v4.view.ViewPager
         android:id="@+id/mySuiuuViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        android:layout_below="@+id/mySuiuuTitleLayout"/>
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

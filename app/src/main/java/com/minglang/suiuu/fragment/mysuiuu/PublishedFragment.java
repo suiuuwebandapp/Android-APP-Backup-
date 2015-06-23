@@ -102,11 +102,12 @@ public class PublishedFragment extends Fragment {
     private void initView(View rootView) {
         Log.i(TAG, "userSign:" + userSign + ",verification:" + verification);
 
-        pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id._my_suiuu_published_list_view);
+        pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.my_suiuu_published_list_view);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
+
     }
 
     private void ViewAction() {
@@ -181,10 +182,16 @@ public class PublishedFragment extends Fragment {
 
             String str = responseInfo.result;
             if (!TextUtils.isEmpty(str)) {
-                Published published = JsonUtils.getInstance().fromJSON(Published.class, str);
-                List<Published.PublishedData> list = published.getData();
-                if (list != null && list.size() > 0) {
-                    listAll.addAll(list);
+                try {
+                    Published published = JsonUtils.getInstance().fromJSON(Published.class, str);
+                    List<Published.PublishedData> list = published.getData();
+                    if (list != null && list.size() > 0) {
+                        listAll.addAll(list);
+//                        PublishedAdapter publishedAdapter = new PublishedAdapter(getActivity(), listAll);
+//                        pullToRefreshListView.setAdapter(publishedAdapter);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Published Load Error:" + e.getMessage());
                 }
             }
 

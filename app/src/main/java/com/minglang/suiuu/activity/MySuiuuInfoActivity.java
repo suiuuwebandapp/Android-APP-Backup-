@@ -4,10 +4,9 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MySuiuuInfoAdapter;
@@ -25,7 +24,7 @@ import java.util.List;
  */
 public class MySuiuuInfoActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
+    private ImageView back;
 
     private ViewPager viewPager;
 
@@ -42,9 +41,8 @@ public class MySuiuuInfoActivity extends AppCompatActivity {
      * 初始化方法
      */
     private void initView() {
-        toolbar = (Toolbar) findViewById(R.id.mySuiuuToolbar);
-        toolbar.setTitle(getResources().getString(R.string.my_suiuu));
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+
+        back = (ImageView) findViewById(R.id.mySuiuuBack);
 
         String Published = "已发布";
         String Participate = "已参加";
@@ -81,12 +79,12 @@ public class MySuiuuInfoActivity extends AppCompatActivity {
      */
     private void ViewAction() {
 
-        setSupportActionBar(toolbar);
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.back);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -107,16 +105,6 @@ public class MySuiuuInfoActivity extends AppCompatActivity {
 
         });
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

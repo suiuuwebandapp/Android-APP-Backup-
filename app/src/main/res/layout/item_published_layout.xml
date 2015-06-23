@@ -13,8 +13,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/user_background"/>
+        android:scaleType="fitXY"/>
 
     <RelativeLayout
         android:id="@+id/item_published_content_layout"
@@ -29,18 +28,18 @@
             android:id="@+id/item_published_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/item_published_content"
-            android:layout_alignLeft="@+id/item_published_content"
-            android:layout_alignStart="@+id/item_published_content"
+            android:layout_above="@+id/item_published_intro"
+            android:layout_alignEnd="@+id/item_published_intro"
+            android:layout_alignLeft="@+id/item_published_intro"
+            android:layout_alignRight="@+id/item_published_intro"
+            android:layout_alignStart="@+id/item_published_intro"
             android:singleLine="true"
             android:text="New Text"
             android:textColor="@color/white"
-            android:textSize="20sp"
-            android:layout_alignRight="@+id/item_published_content"
-            android:layout_alignEnd="@+id/item_published_content"/>
+            android:textSize="20sp"/>
 
         <TextView
-            android:id="@+id/item_published_content"
+            android:id="@+id/item_published_intro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
