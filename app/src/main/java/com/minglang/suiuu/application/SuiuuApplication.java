@@ -29,6 +29,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.minglang.suiuu.chat.bean.User;
 import com.minglang.suiuu.chat.chat.DemoHXSDKHelper;
 import com.minglang.suiuu.chat.model.DefaultHXSDKModel;
+import com.minglang.suiuu.crash.GlobalCrashHandler;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -75,14 +76,12 @@ public class SuiuuApplication extends Application {
         super.onCreate();
         applicationContext = this;
         instance = this;
-
         refWatcher = LeakCanary.install(this);
-
         initHuanXin();
         initAboatOSS();
         initImageLoad();
         Fresco.initialize(this);
-        //GlobalCrashHandler.getInstance().init(this);
+        GlobalCrashHandler.getInstance().init(this);
     }
 
     @Override
@@ -121,11 +120,9 @@ public class SuiuuApplication extends Application {
                 return OSSToolKit.generateToken(accessKey, screctKey, content);
             }
         });
-
         ossService.setGlobalDefaultHostId("oss-cn-hongkong.aliyuncs.com");
         ossService.setCustomStandardTimeWithEpochSec(System.currentTimeMillis() / 1000);
         ossService.setGlobalDefaultACL(AccessControlList.PRIVATE); // 默认为private
-
         ClientConfiguration conf = new ClientConfiguration();
         conf.setConnectTimeout(15 * 1000); // 设置全局网络连接超时时间，默认30s
         conf.setSocketTimeout(15 * 1000); // 设置全局socket超时时间，默认30s
@@ -138,18 +135,13 @@ public class SuiuuApplication extends Application {
         DeBugLog.i(TAG, "最大可用内存为:" + String.valueOf(maxMemorySize));
         imageLoader = ImageLoader.getInstance();
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
-
         config.threadPoolSize(4);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
-
         config.denyCacheImageMultipleSizesInMemory();
-
         config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
         config.diskCacheSize(Long.bitCount(maxMemorySize / 2));
-
         config.memoryCacheSize(50 * 1024 * 1024);
         config.tasksProcessingOrder(QueueProcessingType.LIFO);
-
         imageLoader.init(config.build());
     }
 
@@ -199,7 +191,6 @@ public class SuiuuApplication extends Application {
     public void setUserName(String username) {
         hxSDKHelper.setHXId(username);
     }
-
     /**
      * 设置密码 下面的实例代码 只是demo，实际的应用中需要加password 加密后存入 preference 环信sdk
      * 内部的自动登录需要的密码，已经加密存储了
@@ -209,7 +200,6 @@ public class SuiuuApplication extends Application {
     public void setPassword(String pwd) {
         hxSDKHelper.setPassword(pwd);
     }
-
     /**
      * 退出登录,清空数据
      */

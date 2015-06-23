@@ -144,7 +144,7 @@ public class SuiuuOrderActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(SuiuuOrderActivity.this, "点赞失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SuiuuOrderActivity.this, "点赞失败，请稍候再试", Toast.LENGTH_SHORT).show();
             }
         }
 
