@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
@@ -88,6 +89,7 @@ import com.minglang.suiuu.chat.utils.ImageUtils;
 import com.minglang.suiuu.chat.utils.SmileUtils;
 import com.minglang.suiuu.chat.widgt.ExpandGridView;
 import com.minglang.suiuu.chat.widgt.PasteEditText;
+import com.minglang.suiuu.dbhelper.UserDbHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -299,7 +301,20 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		});
 
 	}
-
+	public String findUserName(String userId) {
+		String nickName = null;
+		UserDbHelper helper = new UserDbHelper(this);
+		//得到可读数据库
+		SQLiteDatabase db = helper.getReadableDatabase();
+		//得到数据库查询的结果集的游标（指针）
+		Cursor cursor = db.rawQuery("select * from user where userid = ? ", new String[]{userId});
+		while (cursor.moveToNext()) {
+			nickName = cursor.getString(1);
+		}
+		cursor.close();
+		db.close();
+		return nickName;
+	}
 	private void setUpView() {
 		activityInstance = this;
 		iv_emoticons_normal.setOnClickListener(this);
@@ -315,7 +330,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		if (chatType == CHATTYPE_SINGLE) { // 单聊
 			toChatUsername = getIntent().getStringExtra("userId");
 
-			((TextView) findViewById(R.id.name)).setText(toChatUsername);
+			((TextView) findViewById(R.id.name)).setText(findUserName(toChatUsername));
 			// conversation =
 			// EMChatManager.getInstance().getConversation(toChatUsername,false);
 		} else {

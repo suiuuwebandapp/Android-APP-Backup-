@@ -24,6 +24,7 @@ import com.minglang.suiuu.utils.SuHttpRequest;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -77,7 +78,7 @@ public class SuiuuOrderActivity extends BaseActivity {
         split = initTime.split(" ");
         tv_travel_date = (TextView) findViewById(R.id.tv_travel_date);
         tv_travel_time = (TextView) findViewById(R.id.tv_travel_time);
-        tv_travel_date.setText(split[0].replace("年","-").replace("月","-").replace("日",""));
+        tv_travel_date.setText(split[0].replace("年", "-").replace("月", "-").replace("日", ""));
         tv_travel_time.setText(split[1]);
         iv_release = (ImageView) findViewById(R.id.iv_release);
         tv_enjoy_number = (TextView) findViewById(R.id.tv_enjoy_number);
@@ -106,6 +107,24 @@ public class SuiuuOrderActivity extends BaseActivity {
 
     //获取订单的接口
     private void createOrderNumber() {
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String myString = tv_travel_date.getText().toString() +" "+tv_travel_time.getText().toString();
+        Date d = null;
+        try {
+            d = sdf1.parse(myString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        boolean flag = d.before(new Date());
+        if (flag) {
+
+            Toast.makeText(this, "请选择出行日期", Toast.LENGTH_SHORT).show();
+            return;
+        }else {
+            Toast.makeText(this, "晚于今天", Toast.LENGTH_SHORT);
+        }
+
+
         RequestParams params = new RequestParams();
         params.addBodyParameter("tripId", tripId);
         params.addBodyParameter("peopleCount", Integer.toString(enjoy_peopleNumber));
@@ -141,6 +160,9 @@ public class SuiuuOrderActivity extends BaseActivity {
                     intent.putExtra("orderNumber", orderNumber);
                     startActivity(intent);
                     Log.i("suiuu", "orderNumber" + orderNumber);
+                }else if("-2".equals(status)) {
+                    orderNumber = message.getString("data");
+                    Toast.makeText(SuiuuOrderActivity.this,orderNumber,Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -156,8 +178,6 @@ public class SuiuuOrderActivity extends BaseActivity {
     }
 
 
-
-
     class MyClick implements View.OnClickListener {
 
         /**
@@ -169,12 +189,12 @@ public class SuiuuOrderActivity extends BaseActivity {
             switch (v.getId()) {
                 case R.id.tv_travel_date:
                     DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
-                            SuiuuOrderActivity.this, initTime,null);
-                    dateTimePicKDialog.dateTimePicKDialog(1,tv_travel_date);
+                            SuiuuOrderActivity.this, initTime, null);
+                    dateTimePicKDialog.dateTimePicKDialog(1, tv_travel_date);
                     break;
                 case R.id.tv_travel_time:
                     DateTimePickDialogUtil dateTimePicKDialog1 = new DateTimePickDialogUtil(
-                            SuiuuOrderActivity.this, initTime,tv_travel_date.getText().toString());
+                            SuiuuOrderActivity.this, initTime, tv_travel_date.getText().toString());
                     dateTimePicKDialog1.dateTimePicKDialog(2, tv_travel_time);
                     break;
                 case R.id.iv_release:
@@ -194,8 +214,6 @@ public class SuiuuOrderActivity extends BaseActivity {
                     break;
                 case R.id.bb_suiuu_order_pay:
                     createOrderNumber();
-
-
 
 
                     break;

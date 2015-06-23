@@ -2,6 +2,8 @@ package com.minglang.suiuu.activity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -27,6 +29,7 @@ import com.minglang.suiuu.chat.activity.ChatActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.RollViewPager;
 import com.minglang.suiuu.customview.TextProgressDialog;
+import com.minglang.suiuu.dbhelper.UserDbHelper;
 import com.minglang.suiuu.entity.SuiuuDataDetail;
 import com.minglang.suiuu.entity.SuiuuDetailForData;
 import com.minglang.suiuu.entity.SuiuuDetailForInfo;
@@ -487,9 +490,14 @@ public class SuiuuDetailActivity extends BaseActivity {
                     break;
                 //点击咨询按钮
                 case R.id.bb_consult:
+                    if (isExistUser(suiuuDetailData.getUserInfo().getUserId())) {
+                        //当前用户在数据库中已经存在;
+                    } else {
+                        addUser();
+                        Log.i("suiuu", "不存在了");
+                    }
                     Intent intentConsult = new Intent(SuiuuDetailActivity.this, ChatActivity.class);
                     intentConsult.putExtra("userId", suiuuDetailData.getUserInfo().getUserId());
-                    intentConsult.putExtra("nikeName", suiuuDetailData.getUserInfo().getNickname());
                     startActivity(intentConsult);
                     break;
                 case R.id.bb_schedule:
@@ -533,5 +541,31 @@ public class SuiuuDetailActivity extends BaseActivity {
             dots_ll.addView(pointView);
         }
     }
+    /**
+     * 添加一条记录
+     */
+    public void addUser() {
+        UserDbHelper helper = new UserDbHelper(this);
+        //得到可读可写数据库
+        SQLiteDatabase db = helper.getReadableDatabase();
+        //执行sql语句
+        db.execSQL("insert into user (userid,nikename,titleimg) values (?,?,?)", new Object[]{suiuuDetailData.getUserInfo().getUserId(), suiuuDetailData.getUserInfo().getNickname(), suiuuDetailData.getUserInfo().getHeadImg()});
+        db.close();
+        Log.i("suiuu", "添加user成功");
+    }
 
+    public boolean isExistUser(String userId) {
+        boolean isexist = false;
+        UserDbHelper helper = new UserDbHelper(this);
+        //得到可读数据库
+        SQLiteDatabase db = helper.getReadableDatabase();
+        //得到数据库查询的结果集的游标（指针）
+        Cursor cursor = db.rawQuery("select * from user where userid = ? ", new String[]{userId});
+        while (cursor.moveToNext()) {
+            isexist = true;
+        }
+        cursor.close();
+        db.close();
+        return isexist;
+    }
 }

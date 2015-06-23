@@ -14,6 +14,8 @@
 package com.minglang.suiuu.chat.adapter;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +37,8 @@ import com.easemob.util.DateUtils;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.chat.chat.Constant;
 import com.minglang.suiuu.chat.utils.SmileUtils;
-import com.minglang.suiuu.chat.utils.UserUtils;
+import com.minglang.suiuu.dbhelper.UserDbHelper;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,15 +55,31 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 	private List<EMConversation> copyConversationList;
 	private ConversationFilter conversationFilter;
     private boolean notiyfyByFilter;
+	private Context context;
+	private String headImg ;
+	private String nickName ;
 
 	public ChatAllHistoryAdapter(Context context, int textViewResourceId, List<EMConversation> objects) {
 		super(context, textViewResourceId, objects);
+		this.context = context;
 		this.conversationList = objects;
 		copyConversationList = new ArrayList<EMConversation>();
 		copyConversationList.addAll(objects);
 		inflater = LayoutInflater.from(context);
 	}
-
+	public void findUserName(String userId) {
+		UserDbHelper helper = new UserDbHelper(context);
+		//得到可读数据库
+		SQLiteDatabase db = helper.getReadableDatabase();
+		//得到数据库查询的结果集的游标（指针）
+		Cursor cursor = db.rawQuery("select * from user where userid = ? ", new String[]{userId});
+		while (cursor.moveToNext()) {
+			nickName = cursor.getString(1);
+			headImg = cursor.getString(2);
+		}
+		cursor.close();
+		db.close();
+	}
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
@@ -103,14 +122,16 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 			holder.avatar.setImageResource(R.drawable.group_icon);
 			holder.name.setText(contact.getNick() != null ? contact.getNick() : username);
 		} else {
-		    UserUtils.setUserAvatar(getContext(), username, holder.avatar);
+			findUserName(username);
+//		    UserUtils.setUserAvatar(getContext(), username, holder.avatar);
+			Picasso.with(context).load(headImg).placeholder(R.drawable.default_avatar).into(holder.avatar);
 			if (username.equals(Constant.GROUP_USERNAME)) {
 				holder.name.setText("群聊");
 
 			} else if (username.equals(Constant.NEW_FRIENDS_USERNAME)) {
 				holder.name.setText("申请与通知");
 			}
-			holder.name.setText(username);
+			holder.name.setText(nickName);
 
 		}
 

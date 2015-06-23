@@ -2,11 +2,14 @@ package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -24,8 +27,10 @@ import com.minglang.suiuu.adapter.OtherUserArticleAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.ChatActivity;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase.*;
+import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase.Mode;
+import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase.OnRefreshListener2;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshGridView;
+import com.minglang.suiuu.dbhelper.UserDbHelper;
 import com.minglang.suiuu.entity.OtherUser;
 import com.minglang.suiuu.entity.OtherUserDataArticle;
 import com.minglang.suiuu.entity.OtherUserDataInfo;
@@ -107,7 +112,6 @@ public class OtherUserActivity extends BaseActivity {
 
         userSign = getIntent().getStringExtra(USERSIGNKEY);
         DeBugLog.i(TAG, "其他页面传递的userSign:" + userSign);
-
         initView();
         ViewAction();
         getData();
@@ -278,9 +282,15 @@ public class OtherUserActivity extends BaseActivity {
 
                 case R.id.otherUserConversation:
                     String userId = otherUser.getData().getUser().getUserId();
+                    Log.i("suiuu", "userId=" + userId);
+                    if (isExistUser(userId)) {
+                        //当前用户在数据库中已经存在;
+                    } else {
+                        addUser();
+                        Log.i("suiuu", "不存在了");
+                    }
                     Intent intent = new Intent(OtherUserActivity.this, ChatActivity.class);
                     intent.putExtra("userId", userId);
-                    intent.putExtra("nikeName", otherUser.getData().getUser().getNickname());
                     startActivity(intent);
                     break;
 
@@ -290,128 +300,160 @@ public class OtherUserActivity extends BaseActivity {
 
     }
 
-    //获取用户信息
-    private class GetOtherUserInformationRequestCallBack extends RequestCallBack<String> {
+    /**
+     * 添加一条记录
+     */
+    public void addUser() {
+        UserDbHelper helper = new UserDbHelper(this);
+        //得到可读可写数据库
+        SQLiteDatabase db = helper.getReadableDatabase();
+        //执行sql语句
+        db.execSQL("insert into user (userid,nikename,titleimg) values (?,?,?)", new Object[]{otherUser.getData().getUser().getUserId(), otherUser.getData().getUser().getNickname(), otherUser.getData().getUser().getHeadImg()});
+        db.close();
+        Log.i("suiuu", "添加user成功");
+    }
 
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+    public boolean isExistUser(String userId) {
+        boolean isexist = false;
+        UserDbHelper helper = new UserDbHelper(this);
+        //得到可读数据库
+        SQLiteDatabase db = helper.getReadableDatabase();
+        //得到数据库查询的结果集的游标（指针）
+        Cursor cursor = db.rawQuery("select * from user where userid = ? ", new String[]{userId});
+        while (cursor.moveToNext()) {
+            isexist = true;
+        }
+        cursor.close();
+        db.close();
+        return isexist;
+    }
 
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
 
-            otherUserLoopGridView.onRefreshComplete();
 
-            String str = stringResponseInfo.result;
-            DeBugLog.i(TAG, "用户信息:" + str);
-            try {
-                otherUser = JsonUtils.getInstance().fromJSON(OtherUser.class, str);
-                fullData();
-                List<OtherUserDataArticle> list = otherUser.getData().getArticleList();
-                if (list != null && list.size() > 0) {
-                    articleListAll.addAll(list);
-                    adapter.setList(articleListAll);
-                } else {
-                    if (page > 1) {
-                        page = page - 1;
-                    }
-                    Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                DeBugLog.e(TAG, "用户数据解析失败异常信息:" + e.getMessage());
 
+//获取用户信息
+private class GetOtherUserInformationRequestCallBack extends RequestCallBack<String> {
+
+    @Override
+    public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
+
+        otherUserLoopGridView.onRefreshComplete();
+
+        String str = stringResponseInfo.result;
+        DeBugLog.i(TAG, "用户信息:" + str);
+        try {
+            otherUser = JsonUtils.getInstance().fromJSON(OtherUser.class, str);
+            fullData();
+            List<OtherUserDataArticle> list = otherUser.getData().getArticleList();
+            if (list != null && list.size() > 0) {
+                articleListAll.addAll(list);
+                adapter.setList(articleListAll);
+            } else {
                 if (page > 1) {
                     page = page - 1;
                 }
-
-                Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
             }
-            DeBugLog.i(TAG, "当前页码:" + page);
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "获取用户数据失败异常信息:" + s);
-            DeBugLog.i(TAG, "当前页码:" + page);
-
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
+        } catch (Exception e) {
+            DeBugLog.e(TAG, "用户数据解析失败异常信息:" + e.getMessage());
 
             if (page > 1) {
                 page = page - 1;
             }
 
-            otherUserLoopGridView.onRefreshComplete();
-
-            Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
         }
-
+        DeBugLog.i(TAG, "当前页码:" + page);
     }
 
-    /**
-     * 添加关注回调接口
-     */
-    private class AddAttentionRequestCallBack extends RequestCallBack<String> {
+    @Override
+    public void onFailure(HttpException e, String s) {
+        DeBugLog.e(TAG, "获取用户数据失败异常信息:" + s);
+        DeBugLog.i(TAG, "当前页码:" + page);
 
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            String str = stringResponseInfo.result;
-            try {
-                JSONObject object = new JSONObject(str);
-                String status = object.getString("status");
-                if (status.equals("1")) {
-                    attentionId = object.getString("data");
-                    attention.setTextColor(getResources().getColor(R.color.text_select_true));
-                    attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_light), null, null, null);
-                    Toast.makeText(OtherUserActivity.this, "关注成功！", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(OtherUserActivity.this, "关注失败！", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
+
+        if (page > 1) {
+            page = page - 1;
+        }
+
+        otherUserLoopGridView.onRefreshComplete();
+
+        Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+    }
+
+}
+
+/**
+ * 添加关注回调接口
+ */
+private class AddAttentionRequestCallBack extends RequestCallBack<String> {
+
+    @Override
+    public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+        String str = stringResponseInfo.result;
+        try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString("status");
+            if (status.equals("1")) {
+                attentionId = object.getString("data");
+                attention.setTextColor(getResources().getColor(R.color.text_select_true));
+                attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_light), null, null, null);
+                Toast.makeText(OtherUserActivity.this, "关注成功！", Toast.LENGTH_SHORT).show();
+            } else {
                 Toast.makeText(OtherUserActivity.this, "关注失败！", Toast.LENGTH_SHORT).show();
             }
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "添加关注网络异常信息:" + s);
-            Toast.makeText(OtherUserActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(OtherUserActivity.this, "关注失败！", Toast.LENGTH_SHORT).show();
         }
     }
 
-    /**
-     * 取消关注用户回调接口
-     */
-    class CollectionArticleCancelRequestCallback extends RequestCallBack<String> {
+    @Override
+    public void onFailure(HttpException e, String s) {
+        DeBugLog.e(TAG, "添加关注网络异常信息:" + s);
+        Toast.makeText(OtherUserActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+    }
+}
 
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            try {
-                JSONObject json = new JSONObject(stringResponseInfo.result);
-                String status = json.getString("status");
-                String data = json.getString("data");
-                if ("1".equals(status) && "success".equals(data)) {
-                    attentionId = null;
-                    attention.setTextColor(getResources().getColor(R.color.white));
-                    attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_dark), null, null, null);
-                    Toast.makeText(OtherUserActivity.this, "取消关注用户成功", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
+/**
+ * 取消关注用户回调接口
+ */
+class CollectionArticleCancelRequestCallback extends RequestCallBack<String> {
+
+    @Override
+    public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+        try {
+            JSONObject json = new JSONObject(stringResponseInfo.result);
+            String status = json.getString("status");
+            String data = json.getString("data");
+            if ("1".equals(status) && "success".equals(data)) {
+                attentionId = null;
+                attention.setTextColor(getResources().getColor(R.color.white));
+                attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_dark), null, null, null);
+                Toast.makeText(OtherUserActivity.this, "取消关注用户成功", Toast.LENGTH_SHORT).show();
+            } else {
                 Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
             }
-
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, s);
+        } catch (JSONException e) {
             Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
         }
+
     }
+
+    @Override
+    public void onFailure(HttpException e, String s) {
+        DeBugLog.e(TAG, s);
+        Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
+    }
+
+}
 
     public Drawable setImgDrawTextPosition(int img) {
         Drawable drawable = this.getResources().getDrawable(img);
