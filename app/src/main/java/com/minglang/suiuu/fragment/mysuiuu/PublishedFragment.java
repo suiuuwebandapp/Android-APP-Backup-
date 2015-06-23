@@ -2,6 +2,8 @@ package com.minglang.suiuu.fragment.mysuiuu;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -17,12 +19,14 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.PublishedAdapter;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
 import com.minglang.suiuu.entity.Published;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
 import java.util.ArrayList;
@@ -48,11 +52,27 @@ public class PublishedFragment extends Fragment {
 
     private int page = 1;
 
-    private PullToRefreshListView pullToRefreshListView;
+    private static PullToRefreshListView pullToRefreshListView;
 
     private ProgressDialog progressDialog;
 
     private List<Published.PublishedData> listAll = new ArrayList<>();
+
+    private PublishedAdapter publishedAdapter;
+
+    private static final int COMPLETE = 1;
+
+    private static Handler publishHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case COMPLETE:
+                    pullToRefreshListView.onRefreshComplete();
+                    break;
+            }
+            return false;
+        }
+    });
 
     /**
      * Use this factory method to create a new instance of
@@ -108,6 +128,10 @@ public class PublishedFragment extends Fragment {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
 
+        publishedAdapter = new PublishedAdapter(getActivity());
+        publishedAdapter.setScreenHeight(new ScreenUtils(getActivity()).getScreenHeight());
+        pullToRefreshListView.setAdapter(publishedAdapter);
+
     }
 
     private void ViewAction() {
@@ -120,7 +144,8 @@ public class PublishedFragment extends Fragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                pullToRefreshListView.onRefreshComplete();
+                page = 1;
+                getMyPublishedSuiuuData(page);
             }
 
             @Override
@@ -129,7 +154,7 @@ public class PublishedFragment extends Fragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                pullToRefreshListView.onRefreshComplete();
+                publishHandler.sendEmptyMessage(COMPLETE);
             }
 
         });
@@ -164,48 +189,62 @@ public class PublishedFragment extends Fragment {
         httpRequest.requestNetworkData();
     }
 
+    /**
+     * 隐藏进度框和ListView加载进度View
+     */
     private void showOrHideDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
 
-        pullToRefreshListView.onRefreshComplete();
+        publishHandler.sendEmptyMessage(COMPLETE);
+    }
 
+    /**
+     * 如果页码为1，就清空数据
+     */
+    private void clearListData() {
+        if (page == 1) {
+            if (listAll != null && listAll.size() > 0) {
+                listAll.clear();
+            }
+        }
+    }
+
+    private void bindData2View(String str) {
+        if (!TextUtils.isEmpty(str)) {
+            try {
+                Published published = JsonUtils.getInstance().fromJSON(Published.class, str);
+                List<Published.PublishedData> list = published.getData();
+                if (list != null && list.size() > 0) {
+                    clearListData();
+                    listAll.addAll(list);
+                    publishedAdapter.setList(listAll);
+                }
+
+            } catch (Exception e) {
+                Log.e(TAG, "Published Load Error:" + e.getMessage());
+            }
+        }
     }
 
     private class MyPublishedRequestCallBack extends RequestCallBack<String> {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-
             showOrHideDialog();
 
             String str = responseInfo.result;
-            if (!TextUtils.isEmpty(str)) {
-                try {
-                    Published published = JsonUtils.getInstance().fromJSON(Published.class, str);
-                    List<Published.PublishedData> list = published.getData();
-                    if (list != null && list.size() > 0) {
-                        listAll.addAll(list);
-//                        PublishedAdapter publishedAdapter = new PublishedAdapter(getActivity(), listAll);
-//                        pullToRefreshListView.setAdapter(publishedAdapter);
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, "Published Load Error:" + e.getMessage());
-                }
-            }
-
+            bindData2View(str);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-
             DeBugLog.e(TAG, "我发布的随游请求失败(1):" + e.getMessage());
             DeBugLog.e(TAG, "我发布的随游请求失败(2):" + e.getExceptionCode());
             DeBugLog.e(TAG, "我发布的随游请求失败(3):" + s);
 
             showOrHideDialog();
-
         }
 
     }

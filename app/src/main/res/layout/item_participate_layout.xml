@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/item_published_image"
+        android:id="@+id/item_participate_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
@@ -17,7 +17,7 @@
         android:src="@drawable/loading"/>
 
     <RelativeLayout
-        android:id="@+id/item_published_content_layout"
+        android:id="@+id/item_participate_content_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
@@ -26,21 +26,21 @@
         android:background="@color/tr_black">
 
         <TextView
-            android:id="@+id/item_published_title"
+            android:id="@+id/item_participate_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/item_published_intro"
-            android:layout_alignEnd="@+id/item_published_intro"
-            android:layout_alignLeft="@+id/item_published_intro"
-            android:layout_alignRight="@+id/item_published_intro"
-            android:layout_alignStart="@+id/item_published_intro"
+            android:layout_above="@+id/item_participate_intro"
+            android:layout_alignEnd="@+id/item_participate_intro"
+            android:layout_alignLeft="@+id/item_participate_intro"
+            android:layout_alignRight="@+id/item_participate_intro"
+            android:layout_alignStart="@+id/item_participate_intro"
             android:singleLine="true"
             android:text="New Text"
             android:textColor="@color/white"
             android:textSize="20sp"/>
 
         <TextView
-            android:id="@+id/item_published_intro"
+            android:id="@+id/item_participate_intro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.Published;
+import com.minglang.suiuu.entity.Participate;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -20,15 +20,15 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import java.util.List;
 
 /**
- * 发布的随游数据适配器
+ * 参加的随游数据适配器
  * <p/>
- * Created by Administrator on 2015/6/19.
+ * Created by Administrator on 2015/6/23.
  */
-public class PublishedAdapter extends BaseAdapter {
+public class ParticipateAdapter extends BaseAdapter {
 
     private Context context;
 
-    private List<Published.PublishedData> list;
+    private List<Participate.ParticipateData> list;
 
     private int screenHeight;
 
@@ -36,7 +36,7 @@ public class PublishedAdapter extends BaseAdapter {
 
     private DisplayImageOptions options;
 
-    public PublishedAdapter(Context context) {
+    public ParticipateAdapter(Context context) {
         this.context = context;
         init();
     }
@@ -49,7 +49,7 @@ public class PublishedAdapter extends BaseAdapter {
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
-    public void setList(List<Published.PublishedData> list) {
+    public void setList(List<Participate.ParticipateData> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -83,35 +83,35 @@ public class PublishedAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_published_layout, position);
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_participate_layout, position);
         convertView = holder.getConvertView();
 
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, screenHeight / 4);
         convertView.setLayoutParams(params);
 
-        ImageView publishImage = holder.getView(R.id.item_published_image);
-        TextView publishTitle = holder.getView(R.id.item_published_title);
-        TextView publishIntro = holder.getView(R.id.item_published_intro);
+        ImageView participateImage = holder.getView(R.id.item_participate_image);
+        TextView participateTitle = holder.getView(R.id.item_participate_title);
+        TextView participateIntro = holder.getView(R.id.item_participate_intro);
 
-        Published.PublishedData publishedData = list.get(position);
+        Participate.ParticipateData participateData = list.get(position);
 
-        String imagePath = publishedData.getTitleImg();
+        String imagePath = participateData.getTitleImg();
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, publishImage, options);
+            imageLoader.displayImage(imagePath, participateImage, options);
         }
 
-        String title = publishedData.getTitle();
+        String title = participateData.getTitle();
         if (!TextUtils.isEmpty(title)) {
-            publishTitle.setText(title);
+            participateTitle.setText(title);
         } else {
-            publishTitle.setText("暂无标题");
+            participateTitle.setText("暂无标题");
         }
 
-        String intro = publishedData.getIntro();
+        String intro = participateData.getIntro();
         if (!TextUtils.isEmpty(intro)) {
-            publishIntro.setText(intro);
+            participateIntro.setText(intro);
         } else {
-            publishIntro.setText("暂无简介");
+            participateIntro.setText("暂无简介");
         }
 
         return convertView;
