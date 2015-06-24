@@ -9,13 +9,8 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.JoinAdapter;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
-import com.minglang.suiuu.entity.JoinEntity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AccountManageActivity extends AppCompatActivity {
 
@@ -47,21 +42,6 @@ public class AccountManageActivity extends AppCompatActivity {
 
         pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.account_balance_list_view);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
-        ListView listView = pullToRefreshListView.getRefreshableView();
-
-        List<JoinEntity> joinEntityList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            JoinEntity entity = new JoinEntity();
-            entity.setImagePath("http://q.qlogo.cn/qqapp/1104557000/C7A47D7E23F617EA5E0CF13B14A036FA/100");
-            entity.setUserName("佚名" + i);
-            entity.setUserLocation("北京");
-            entity.setRemoveFlag(true);
-            joinEntityList.add(entity);
-        }
-        JoinAdapter adapter = new JoinAdapter(this);
-        adapter.setList(joinEntityList);
-
-        listView.setAdapter(adapter);
 
     }
 

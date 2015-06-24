@@ -59,6 +59,7 @@
                 </RelativeLayout>
 
             </RelativeLayout>
+
             <!--发布的随游信息Layout-->
             <LinearLayout
                 android:id="@+id/suiuuInfoLayout"

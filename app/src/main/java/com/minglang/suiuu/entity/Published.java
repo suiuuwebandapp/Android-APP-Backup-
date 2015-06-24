@@ -72,7 +72,6 @@ public class Published {
          * lat : null
          * basePrice : 2450.00
          * info : 沿着狭长而陡峭的道路你就一路来到了葡萄牙里斯本--最有韵味的欧洲城市之一。在老石桥下，在修道院门前，你都能感受到这座古老城市在用一砖一瓦诉说着历史的痕迹。而当夜色降临，天气慢慢凉爽，街头欢笑畅饮的人群又会让你感受到充满活力的一面。这就是里斯本，一个白天夜晚都很美的地方。
-
          如果您想去其他的地方也可以私信我说明，一定尽量满足您的要求！
          * travelTime : 9
          * headImg : http://www.suiuu.com/assets/images/user_default.png

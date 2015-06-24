@@ -2,6 +2,7 @@ package com.minglang.suiuu.fragment.suiuu;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +25,16 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class NewApplyForFragment extends Fragment {
+
+    private static final String TAG = NewApplyForFragment.class.getSimpleName();
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     private String userSign;
     private String verification;
+    private String tripId;
 
     private PullToRefreshListView pullToRefreshListView;
 
@@ -42,11 +48,12 @@ public class NewApplyForFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment NewApplyForFragment.
      */
-    public static NewApplyForFragment newInstance(String param1, String param2) {
+    public static NewApplyForFragment newInstance(String param1, String param2, String param3) {
         NewApplyForFragment fragment = new NewApplyForFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,6 +68,7 @@ public class NewApplyForFragment extends Fragment {
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
+            tripId = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -80,6 +88,8 @@ public class NewApplyForFragment extends Fragment {
      * @param view Fragment的根View
      */
     private void initView(View view) {
+        Log.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
+
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.ApplyForListView);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
 

@@ -57,12 +57,37 @@ public class MySuiuuReleaseActivity extends AppCompatActivity {
      */
     private void initView() {
 
+        Intent oldIntent = getIntent();
+
         back = (ImageView) findViewById(R.id.my_suiuu_release_back);
         ViewPager releaseViewPager = (ViewPager) findViewById(R.id.my_suiuu_release_viewPager);
 
         mySuiuuTitle = (TextView) findViewById(R.id.my_suiuu_release_title);
         mySuiuuInfoText = (TextView) findViewById(R.id.my_suiuu_release_info_text);
         mySuiuuPrice = (TextView) findViewById(R.id.my_suiuu_release_price);
+
+        String title = oldIntent.getStringExtra("title");
+        String info = oldIntent.getStringExtra("info");
+        String price = oldIntent.getStringExtra("price");
+        String tripId = oldIntent.getStringExtra("tripId");
+
+        if (!TextUtils.isEmpty(title)) {
+            mySuiuuTitle.setText(title);
+        } else {
+            mySuiuuTitle.setText("暂无标题");
+        }
+
+        if (!TextUtils.isEmpty(info)) {
+            mySuiuuInfoText.setText(info);
+        } else {
+            mySuiuuInfoText.setText("暂无详细信息");
+        }
+
+        if (!TextUtils.isEmpty(price)) {
+            mySuiuuPrice.setText(price);
+        } else {
+            mySuiuuPrice.setText("0.0");
+        }
 
         String join = "已参加";
         String applyFor = "新申请";
@@ -76,8 +101,8 @@ public class MySuiuuReleaseActivity extends AppCompatActivity {
         String userSign = SuiuuInfo.ReadUserSign(this);
         String verification = SuiuuInfo.ReadVerification(this);
 
-        JoinFragment joinFragment = JoinFragment.newInstance(userSign, verification);
-        NewApplyForFragment newApplyForFragment = NewApplyForFragment.newInstance(userSign, verification);
+        JoinFragment joinFragment = JoinFragment.newInstance(userSign, verification, tripId);
+        NewApplyForFragment newApplyForFragment = NewApplyForFragment.newInstance(userSign, verification, tripId);
 
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(joinFragment);
@@ -168,8 +193,9 @@ public class MySuiuuReleaseActivity extends AppCompatActivity {
 
                     Log.i(TAG, "newBasicPrice:" + newBasicPrice + ",newAdditionalPrice:" + newAdditionalPrice +
                             ",newOtherPrice:" + newOtherPrice);
-                    String allPrice = String.valueOf(Integer.valueOf(newBasicPrice) + Integer.valueOf(newAdditionalPrice)
-                            + Integer.valueOf(newAdditionalPrice));
+
+                    String allPrice = String.valueOf(Double.valueOf(newBasicPrice) + Double.valueOf(newAdditionalPrice)
+                            + Double.valueOf(newAdditionalPrice));
                     mySuiuuPrice.setText(allPrice);
                 }
                 break;

@@ -1,25 +1,37 @@
 package com.minglang.suiuu.fragment.suiuu;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.JoinAdapter;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
-import com.minglang.suiuu.entity.JoinEntity;
+import com.minglang.suiuu.entity.ConfirmJoinSuiuu;
+import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.SuHttpRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 已参加的随游
+ * <p/>
  * A simple {@link Fragment} subclass.
  * Use the {@link JoinFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -30,13 +42,32 @@ public class JoinFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
+
+    private static final int COMPLETE = 1;
 
     private String userSign;
     private String verification;
+    private String tripId;
 
-    private PullToRefreshListView pullToRefreshListView;
+    private static PullToRefreshListView pullToRefreshListView;
 
-    private List<JoinEntity> joinEntityList;
+    private ProgressDialog progressDialog;
+
+    private JoinAdapter joinAdapter;
+
+    private static Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case COMPLETE:
+                    pullToRefreshListView.onRefreshComplete();
+                    break;
+            }
+
+            return false;
+        }
+    });
 
     /**
      * Use this factory method to create a new instance of
@@ -46,11 +77,12 @@ public class JoinFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment JoinFragment.
      */
-    public static JoinFragment newInstance(String param1, String param2) {
+    public static JoinFragment newInstance(String param1, String param2, String param3) {
         JoinFragment fragment = new JoinFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,6 +97,7 @@ public class JoinFragment extends Fragment {
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
+            tripId = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -75,6 +108,7 @@ public class JoinFragment extends Fragment {
 
         initView(rootView);
         ViewAction();
+        getData();
         return rootView;
     }
 
@@ -84,26 +118,16 @@ public class JoinFragment extends Fragment {
      * @param rootView Fragment根View
      */
     private void initView(View rootView) {
-        Log.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+        Log.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
 
         pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.JoinListView);
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 
-        ListView listView = pullToRefreshListView.getRefreshableView();
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
 
-        joinEntityList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            JoinEntity entity = new JoinEntity();
-            entity.setImagePath("http://q.qlogo.cn/qqapp/1104557000/C7A47D7E23F617EA5E0CF13B14A036FA/100");
-            entity.setUserName("佚名" + i);
-            entity.setUserLocation("北京");
-            entity.setRemoveFlag(true);
-            joinEntityList.add(entity);
-        }
+        joinAdapter = new JoinAdapter(getActivity());
 
-        JoinAdapter adapter = new JoinAdapter(getActivity());
-        adapter.setList(joinEntityList);
-        listView.setAdapter(adapter);
     }
 
     private void ViewAction() {
@@ -111,17 +135,72 @@ public class JoinFragment extends Fragment {
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), joinEntityList.get(position).getUserName(), Toast.LENGTH_SHORT).show();
+
             }
         });
 
-        pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
-            @Override
-            public void onLastItemVisible() {
-                Toast.makeText(getActivity(), "已到达底部", Toast.LENGTH_SHORT).show();
-            }
-        });
+    }
 
+    private void getData() {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
+
+        getJoinSuiuuData(1);
+    }
+
+    private void getJoinSuiuuData(int page) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("userSign", userSign);
+        params.addBodyParameter(HttpServicePath.key, verification);
+        params.addBodyParameter("page", String.valueOf(page));
+        params.addBodyParameter("number", String.valueOf(10));
+        params.addBodyParameter("trId", tripId);
+
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.getSuiuuItemInfo, new JoinSuiuuRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
+    }
+
+    /**
+     * 隐藏进度框和ListView加载进度View
+     */
+    private void showOrHideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+
+        handler.sendEmptyMessage(COMPLETE);
+
+    }
+
+    private void bindData2View(String str) {
+        if (!TextUtils.isEmpty(str)) {
+            try {
+                ConfirmJoinSuiuu confirmJoinSuiuu = JsonUtils.getInstance().fromJSON(ConfirmJoinSuiuu.class, str);
+                List<ConfirmJoinSuiuu.DataEntity.PublisherListEntity> list = confirmJoinSuiuu.getData().getPublisherList();
+                joinAdapter.setList(list);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class JoinSuiuuRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+            showOrHideDialog();
+            String str = responseInfo.result;
+            bindData2View(str);
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",error:" + s);
+            showOrHideDialog();
+        }
     }
 
 }

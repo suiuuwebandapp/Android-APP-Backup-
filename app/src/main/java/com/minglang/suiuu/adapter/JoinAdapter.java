@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
-import com.minglang.suiuu.entity.JoinEntity;
+import com.minglang.suiuu.entity.ConfirmJoinSuiuu;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -28,7 +28,7 @@ public class JoinAdapter extends BaseAdapter {
 
     private Context context;
 
-    private List<JoinEntity> list;
+    private List<ConfirmJoinSuiuu.DataEntity.PublisherListEntity> list;
 
     private ImageLoader imageLoader;
 
@@ -38,13 +38,13 @@ public class JoinAdapter extends BaseAdapter {
         this.context = context;
 
         imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
-                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
-    public void setList(List<JoinEntity> list) {
+    public void setList(List<ConfirmJoinSuiuu.DataEntity.PublisherListEntity> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -83,18 +83,14 @@ public class JoinAdapter extends BaseAdapter {
         TextView locationView = holder.getView(R.id.item_my_suiuu_join_location);
         Button removeBtn = holder.getView(R.id.item_my_suiuu_join_remove);
 
-        JoinEntity entity = list.get(position);
+        ConfirmJoinSuiuu.DataEntity.PublisherListEntity entity = list.get(position);
 
-        imageLoader.displayImage(entity.getImagePath(), headImageView, options);
-        nameView.setText(entity.getUserName());
-        locationView.setText(entity.getUserLocation());
+        imageLoader.displayImage(entity.getHeadImg(), headImageView, options);
+        nameView.setText(entity.getNickname());
+        locationView.setText(entity.getCountryName() + " " + entity.getCityName());
 
-        if (entity.isRemoveFlag()) {
-            removeBtn.setTag(position);
-            removeBtn.setOnClickListener(new RemoveClickListener(position));
-        } else {
-            removeBtn.setEnabled(false);
-        }
+        removeBtn.setTag(position);
+        removeBtn.setOnClickListener(new RemoveClickListener(position));
 
         return convertView;
     }

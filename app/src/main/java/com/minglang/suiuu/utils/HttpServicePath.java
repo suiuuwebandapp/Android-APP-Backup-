@@ -337,8 +337,19 @@ public class HttpServicePath {
      * 生成订单号
      */
     public static String createOrderNumber = RootPath + "/app-travel/add-order";
+
     /**
      * 获得charge
      */
     public static String getCharge = RootPath + "/app-main/pay";
+
+    /**
+     * 获取新订单
+     */
+    public static String getNewOrderDataPath = RootPath + "/app-travel/get-un-confirm-order";
+
+    /**
+     * 已接到的订单
+     */
+    public static String getConfirmOrderDataPath = RootPath + "/app-travel/get-publisher-order-list";
 }

@@ -72,6 +72,7 @@ import org.json.JSONObject;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -842,14 +843,14 @@ public class LoginActivity extends BaseActivity {
      */
     private void processContactsAndGroups() throws EaseMobException {
         // demo中简单的处理成每次登陆都去获取好友username，开发者自己根据情况而定
-        List<String> usernames = EMContactManager.getInstance().getContactUserNames();
-        EMLog.d("roster", "contacts size: " + usernames.size());
-        Map<String, User> userlist = new HashMap<>();
-        for (String username : usernames) {
+        List<String> userNameList = EMContactManager.getInstance().getContactUserNames();
+        EMLog.d("roster", "contacts size: " + userNameList.size());
+        Map<String, User> userList = new HashMap<>();
+        for (String username : userNameList) {
             User user = new User();
             user.setUsername(username);
             setUserHeader(username, user);
-            userlist.put(username, user);
+            userList.put(username, user);
         }
         // 添加user"申请与通知"
         User newFriends = new User();
@@ -857,21 +858,21 @@ public class LoginActivity extends BaseActivity {
         String strChat = getResources().getString(R.string.Application_and_notify);
         newFriends.setNick(strChat);
 
-        userlist.put(Constant.NEW_FRIENDS_USERNAME, newFriends);
+        userList.put(Constant.NEW_FRIENDS_USERNAME, newFriends);
         // 添加"群聊"
         User groupUser = new User();
         String strGroup = getResources().getString(R.string.group_chat);
         groupUser.setUsername(Constant.GROUP_USERNAME);
         groupUser.setNick(strGroup);
         groupUser.setHeader("");
-        userlist.put(Constant.GROUP_USERNAME, groupUser);
+        userList.put(Constant.GROUP_USERNAME, groupUser);
 
         // 存入内存
-        SuiuuApplication.getInstance().setContactList(userlist);
-        System.out.println("----------------" + userlist.values().toString());
+        SuiuuApplication.getInstance().setContactList(userList);
         // 存入db
         UserDao dao = new UserDao(LoginActivity.this);
-        List<User> users = new ArrayList<>(userlist.values());
+        Collection<User> userCollection = userList.values();
+        List<User> users = new ArrayList<>(userCollection);
         dao.saveContactList(users);
 
         //获取黑名单列表

@@ -7,7 +7,7 @@ import java.util.List;
  * <p/>
  * Created by Administrator on 2015/6/23.
  */
-public class NewOrder {
+public class OrderManage {
 
     /**
      * data : [{"birthday":"0000-00-00","orderNumber":"2015060910210056","orderId":"27","totalPrice":"3600.00","travelCount":"0","serviceInfo":[{"money":"2000.00","tripId":"105","serviceId":"422","title":"独家包车","type":"0"}],"tripId":"105","publisherId":"11","school":"","intro":"","nickname":"519*****@qq.com","startTime":"16:20:00","email":"519414839@qq.com","basePrice":"800.00","info":"","profession":"","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","sex":"2","userId":"085963dc0af031709b032725e3ef18f5","personCount":"2","beginDate":"2015-06-10","areaCode":"","servicePrice":"2000.00","createTime":"2015-06-09 16:21:03","phone":null,"isDel":"0","tripJsonInfo":{"createPublisherInfo":{"birthday":"1991-02-14","profession":"","headImg":"http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg","travelCount":"0","tripPublisherId":"120","sex":"0","tripId":"105","areaCode":"+86","publisherId":"11","phone":"15311445352","school":"","userSign":"a4c1406ff4cc382389f19bf6ec3e55c1","intro":"一座城市，一些岁月，和一个人。","nickname":"277*****@qq.com","email":"277646935@qq.com","hobby":"","info":"来自西南的小姑娘"},"picList":[{"tripId":"105","title":null,"picId":"1951","url":"http://image.suiuu.com/user_card/20150514113129_25927.jpg"},{"tripId":"105","title":null,"picId":"1952","url":"http://image.suiuu.com/user_card/20150514113054_24638.jpg"},{"tripId":"105","title":null,"picId":"1953","url":"http://image.suiuu.com/user_card/20150514113106_22469.jpg"},{"tripId":"105","title":null,"picId":"1954","url":"http://image.suiuu.com/user_card/20150514113047_17297.jpg"},{"tripId":"105","title":null,"picId":"1955","url":"http://image.suiuu.com/user_card/20150514113056_41135.jpg"},{"tripId":"105","title":null,"picId":"1956","url":"http://image.suiuu.com/user_card/20150514113044_84331.jpg"},{"tripId":"105","title":null,"picId":"1957","url":"http://image.suiuu.com/user_card/20150514113038_37961.jpg"}],"serviceList":[{"money":"2000.00","tripId":"105","serviceId":"422","title":"独家包车","type":"0"}],"attention":[{"addTime":"2015-06-23 18:05:23","userSign":"085963dc0af031709b032725e3ef18f5","relativeId":"41","attentionId":"174","relativeType":"6","status":"1"}],"publisherList":[{"birthday":"1991-02-14","profession":"","headImg":"http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg","travelCount":"0","tripPublisherId":"120","sex":"0","tripId":"105","areaCode":"+86","publisherId":"11","phone":"15311445352","school":"","userSign":"a4c1406ff4cc382389f19bf6ec3e55c1","intro":"一座城市，一些岁月，和一个人。","nickname":"277*****@qq.com","email":"277646935@qq.com","hobby":"","info":"来自西南的小姑娘"},{"birthday":"0000-00-00","profession":"","headImg":"http://tp3.sinaimg.cn/2429367174/180/5682258880/1","travelCount":"0","tripPublisherId":"143","sex":"1","tripId":"105","areaCode":"+86","publisherId":"49","phone":"18801413431","school":"","userSign":"e5c42ea7b11d3a4e91bc4fcc4b72cee8","intro":"","nickname":"爷们miku","email":"rodg2351@suiuu.com","hobby":"","info":""}],"scenicList":[{"scenicId":"1038","name":"富士山","tripId":"105","lon":"138.795814","lat":"35.483528"}],"praise":[{"addTime":"2015-06-23 18:05:23","userSign":"085963dc0af031709b032725e3ef18f5","relativeId":"41","attentionId":"174","relativeType":"6","status":"1"}],"info":{"cityCname":"东京","isAirplane":"0","titleImg":"http://image.suiuu.com/suiuu_trip/105_reset.jpg","tripId":"105","lon":null,"cityId":"3018","title":"富士山周边游","countryId":"3005","score":"0","travelTimeType":"1","tripCount":"0","intro":"富士山不可错过的某些地方","createPublisherId":"11","maxUserCount":"6","startTime":"09:00:00","cityEname":"Tokyo","lat":null,"basePrice":"800.00","info":"详情描述：\n日本映像富士山，无论是文学影视作品，还是推广宣传材料。富士山无疑是日本的名片。赏富士山美景，登五合目瞭望东京。观河口湖风景如画，看枫叶红漫遍野。宿河口湖酒店，享日本风情，体验正宗日式温泉。还可以游览日本\u201c九寨沟\u201d忍野八海。\n\n价格包含：\n1.地陪导游；\n2.陪同翻译；\n3.包车费用（可选）。\n\n价格不含：\n1.餐宿：需包导游餐食费用或补贴100元/餐；若旅程较长需要住宿时包住宿费；\n2.接/送机（包车时间内免费）；\n3.停车费用。\n\n退款说明：\n作为用户，您的权益会在随游得到充分保障。\n作为旅行者，您如果选择预订随游产品，可以享受以下的退款政策：\n1.支付并提交订单后48小时无人接单，则订单自动取消，全额返还服务费；\n2.订单提交时间未满48小时，但超过订单预期服务时间的，全额返还服务费；\n3.在订单被接单之前取消订单，全额返还所支付费用；\n4.所提交订单被随友接单，在服务指定日期前5天可以申请取消预订并全额退款；\n5.在指定日期内5天可以申请退款，经平台审核后返还部分预订费用。\n在随游服务过程中及服务后且未确认完成服务前，可以提交退款请求，经平台调查审核后返还部分服务费用。\n\n保险保障：\n1.旅行保险一份100%赔付：\n您和随友旅行过程中如出现意外情况，随友和游客无需承担保险范围内的任何费用，随游网提供的旅行保险全权处理100%赔付。据统计90%以上的游客和随友的相处都非常愉快，如需赔付，您只需要提供现场相关证据照片，在48小时内与随游客服联系，即可享受保险保障。\n2.全天候客服热线：\n您和随友旅行的过程中，如果有任何问题，欢迎随时拨打随游网客服电话或在微信公众号上与客服进行沟通，我们7x24随叫随到，为您服务！","travelTime":"10","countryEname":"Japan","tags":"家庭,猎奇,自然,浪漫,购物","createTime":"2015-05-14 11:59:50","countryCname":"日本","endTime":"19:00:00","isHotel":"0","basePriceType":"1","status":"1"},"priceList":[{"price":"250.00","tripId":"101","minCount":"1","priceId":"203","maxCount":"4"},{"price":"200.00","tripId":"101","minCount":"5","priceId":"204","maxCount":"7"}]},"status":"1","hobby":""}]
@@ -16,12 +16,12 @@ public class NewOrder {
      * token : 46b2db311f318ea6f4bcdcd238ce5156
      */
 
-    private List<NewOrderData> data;
+    private List<OrderManageData> data;
     private String message;
     private int status;
     private String token;
 
-    public void setData(List<NewOrderData> data) {
+    public void setData(List<OrderManageData> data) {
         this.data = data;
     }
 
@@ -37,7 +37,7 @@ public class NewOrder {
         this.token = token;
     }
 
-    public List<NewOrderData> getData() {
+    public List<OrderManageData> getData() {
         return data;
     }
 
@@ -53,7 +53,7 @@ public class NewOrder {
         return token;
     }
 
-    public class NewOrderData {
+    public class OrderManageData {
 
         /**
          * birthday : 0000-00-00

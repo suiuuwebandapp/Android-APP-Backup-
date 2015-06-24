@@ -1,17 +1,36 @@
 package com.minglang.suiuu.fragment.order;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.OrderListManageAdapter;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
+import com.minglang.suiuu.entity.OrderManage;
+import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.SuHttpRequest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 已接单页面
@@ -31,7 +50,30 @@ public class ConfirmOrderFragment extends Fragment {
     private String userSign;
     private String verification;
 
-    private PullToRefreshListView pullToRefreshListView;
+    private static PullToRefreshListView pullToRefreshListView;
+
+    private OrderListManageAdapter orderListManageAdapter;
+
+    private ProgressDialog progressDialog;
+
+    private int page = 1;
+
+    private static final int COMPLETE = 1;
+
+    private List<OrderManage.OrderManageData> listAll = new ArrayList<>();
+
+    private static Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+
+                case COMPLETE:
+                    pullToRefreshListView.onRefreshComplete();
+                    break;
+            }
+            return false;
+        }
+    });
 
     /**
      * Use this factory method to create a new instance of
@@ -69,6 +111,7 @@ public class ConfirmOrderFragment extends Fragment {
 
         initView(rootView);
         ViewAction();
+        getData();
         return rootView;
     }
 
@@ -80,8 +123,15 @@ public class ConfirmOrderFragment extends Fragment {
     private void initView(View rootView) {
         Log.i(TAG, "userSign:" + userSign + ",verification:" + verification);
 
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+
         pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.confirm_order_list_view);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        ListView listView = pullToRefreshListView.getRefreshableView();
+
+        orderListManageAdapter = new OrderListManageAdapter(getActivity());
+        listView.setAdapter(orderListManageAdapter);
     }
 
     /**
@@ -109,6 +159,90 @@ public class ConfirmOrderFragment extends Fragment {
             }
         });
 
+        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+
+    }
+
+    private void getData() {
+        if (progressDialog != null) {
+            progressDialog.show();
+        }
+
+        getConfirmOrderData(page);
+    }
+
+    private void getConfirmOrderData(int page) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("userSign", userSign);
+        params.addBodyParameter(HttpServicePath.key, verification);
+        params.addBodyParameter("page", String.valueOf(page));
+        params.addBodyParameter("number", String.valueOf(10));
+
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.getConfirmOrderDataPath, new ConfirmOrderManageRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
+    }
+
+    /**
+     * 隐藏进度框和ListView加载进度View
+     */
+    private void showOrHideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+
+        handler.sendEmptyMessage(COMPLETE);
+
+    }
+
+    /**
+     * 如果页码为1，就清空数据
+     */
+    private void clearListData() {
+        if (page == 1) {
+            if (listAll != null && listAll.size() > 0) {
+                listAll.clear();
+            }
+        }
+    }
+
+    private void bindData2View(String str) {
+        if (!TextUtils.isEmpty(str)) {
+            try {
+                OrderManage orderManage = JsonUtils.getInstance().fromJSON(OrderManage.class, str);
+                List<OrderManage.OrderManageData> list = orderManage.getData();
+                if (list != null && list.size() > 0) {
+                    clearListData();
+                    listAll.addAll(list);
+                    orderListManageAdapter.setList(listAll);
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "JSON Analytical:" + e.getMessage());
+            }
+        }
+    }
+
+    private class ConfirmOrderManageRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+            showOrHideDialog();
+
+            String str = responseInfo.result;
+            bindData2View(str);
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error Info:" + s);
+            showOrHideDialog();
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.mysuiuu;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.lidroid.xutils.exception.HttpException;
@@ -19,6 +21,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.MySuiuuReleaseActivity;
 import com.minglang.suiuu.adapter.ParticipateAdapter;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
@@ -157,6 +160,18 @@ public class ParticipateFragment extends Fragment {
                 participateHandler.sendEmptyMessage(COMPLETE);
             }
 
+        });
+
+        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), MySuiuuReleaseActivity.class);
+                intent.putExtra("title", listAll.get(position).getTitle());
+                intent.putExtra("info", listAll.get(position).getInfo());
+                intent.putExtra("price", listAll.get(position).getBasePrice());
+                intent.putExtra("tripId", listAll.get(position).getTripId());
+                startActivity(intent);
+            }
         });
 
     }
