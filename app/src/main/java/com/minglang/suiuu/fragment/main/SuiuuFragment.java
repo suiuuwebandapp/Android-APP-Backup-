@@ -4,20 +4,19 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +32,7 @@ import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.FlowLayout;
-import com.minglang.suiuu.customview.PullToRefreshView;
+import com.minglang.suiuu.customview.ReFlashListView;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.customview.rangebar.RangeBar;
 import com.minglang.suiuu.entity.SuiuuDataList;
@@ -49,29 +48,24 @@ import com.squareup.leakcanary.RefWatcher;
 
 import org.json.JSONObject;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
  * 随游页面
  */
 public class SuiuuFragment extends BaseFragment
-        implements PullToRefreshView.OnHeaderRefreshListener, PullToRefreshView.OnFooterRefreshListener {
+        implements ReFlashListView.IReflashListener,ReFlashListView.ILoadMoreDataListener {
 
     private List<TextView> list = new ArrayList<>();
     private List<TextView> listClick = new ArrayList<>();
 
     private List<String> tagList;
-    private ListView suiuuListView;
+    private ReFlashListView suiuuListView;
     private JsonUtils jsonUtil = JsonUtils.getInstance();
     private List<SuiuuDataList> suiuuDataList;
 
-    /**
-     * @description PopupWindow
-     */
-    private PullToRefreshView mPullToRefreshView;
+
     private int page = 1;
     private TextView noDataLoad;
     private TextProgressDialog dialog;
@@ -104,7 +98,7 @@ public class SuiuuFragment extends BaseFragment
     private ImageView main_suiuu_record;
     private ImageView main_suiuu_ask;
 
-
+    private ShowSuiuuAdapter adapter;
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -115,17 +109,16 @@ public class SuiuuFragment extends BaseFragment
         View rootView = inflater.inflate(R.layout.fragment_route, null);
         initView(rootView);
         loadDate(null, null, null, null, null, page);
+
         viewAction();
         return rootView;
     }
 
     private void initView(View rootView) {
+        suiuuDataList = new ArrayList<>();
         tagList = new ArrayList<>();
-        suiuuListView = (ListView) rootView.findViewById(R.id.lv_suiuu);
-        mPullToRefreshView = (PullToRefreshView) rootView.findViewById(R.id.main_pull_refresh_view);
+        suiuuListView = (ReFlashListView) rootView.findViewById(R.id.lv_suiuu);
         noDataLoad = (TextView) rootView.findViewById(R.id.tv_noDataLoad);
-        mPullToRefreshView.setVisibility(View.GONE);
-
         View topView = getActivity().findViewById(R.id.mainShowLayout);
         tabSelect = (LinearLayout) topView.findViewById(R.id.tabSelect);
         dialog = new TextProgressDialog(getActivity());
@@ -157,16 +150,12 @@ public class SuiuuFragment extends BaseFragment
         flowLayout = (FlowLayout) rootView.findViewById(R.id.id_flowLayout);
         rl_search_no_data = (RelativeLayout) rootView.findViewById(R.id.rl_search_no_data);
 
-        LinearLayout.LayoutParams paramTest = (LinearLayout.LayoutParams) suiuuListView.getLayoutParams();
+        RelativeLayout.LayoutParams paramTest = (RelativeLayout.LayoutParams) suiuuListView.getLayoutParams();
         paramTest.setMargins(10, ConstantUtils.topHeight + 10, 10, 0);
         suiuuListView.setLayoutParams(paramTest);
     }
 
     private void viewAction() {
-
-        mPullToRefreshView.setOnHeaderRefreshListener(this);
-        mPullToRefreshView.setOnFooterRefreshListener(this);
-
         iv_suiuu_search_more.setOnClickListener(new MyOnclick());
         ib_release.setOnClickListener(new MyOnclick());
         ib_plus.setOnClickListener(new MyOnclick());
@@ -199,39 +188,39 @@ public class SuiuuFragment extends BaseFragment
             }
         });
 
-        //滚动监听
-        suiuuListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-
-                switch (scrollState) {
-                    case SCROLL_STATE_IDLE://空闲状态
-                        tabSelect.setVisibility(View.VISIBLE);
-                        break;
-                    case SCROLL_STATE_FLING://滚动状态
-                        tabSelect.setVisibility(View.GONE);
-                        break;
-                    case SCROLL_STATE_TOUCH_SCROLL://触摸后滚动
-                        tabSelect.setVisibility(View.GONE);
-                        break;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                hideWhenScroll();
-                if (firstVisibleItem > lastVisibleItemPosition) {// 上滑
-                    transAnim.cancel();
-                    tabSelect.startAnimation(transAnim);
-                    tabSelect.setVisibility(View.VISIBLE);
-                } else if (firstVisibleItem < lastVisibleItemPosition) {// 下滑
-                    tabSelect.setVisibility(View.GONE);
-                }
-                lastVisibleItemPosition = firstVisibleItem;
-            }
-        });
+//        //滚动监听
+//        suiuuListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//
+//
+//                switch (scrollState) {
+//                    case SCROLL_STATE_IDLE://空闲状态
+//                        tabSelect.setVisibility(View.VISIBLE);
+//                        break;
+//                    case SCROLL_STATE_FLING://滚动状态
+//                        tabSelect.setVisibility(View.GONE);
+//                        break;
+//                    case SCROLL_STATE_TOUCH_SCROLL://触摸后滚动
+//                        tabSelect.setVisibility(View.GONE);
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                hideWhenScroll();
+//                if (firstVisibleItem > lastVisibleItemPosition) {// 上滑
+//                    transAnim.cancel();
+//                    tabSelect.startAnimation(transAnim);
+//                    tabSelect.setVisibility(View.VISIBLE);
+//                } else if (firstVisibleItem < lastVisibleItemPosition) {// 下滑
+//                    tabSelect.setVisibility(View.GONE);
+//                }
+//                lastVisibleItemPosition = firstVisibleItem;
+//            }
+//        });
 
         rangebar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
@@ -324,44 +313,7 @@ public class SuiuuFragment extends BaseFragment
         }
     }
 
-    @Override
-    public void onFooterRefresh(PullToRefreshView view) {
-        mPullToRefreshView.postDelayed(new Runnable() {
 
-            @Override
-            public void run() {
-                //重新加载数据
-                if (!dialog.isShow()) {
-                    page += 1;
-                    if (isSearch) {
-                        loadDate(searchText, "0".equals(enjoyPeopleCount) ? "" : enjoyPeopleCount, "".equals(tags) ? tags : tags.substring(0, tags.length() - 1), Integer.toString(startTick), Integer.toString(endTick), page);
-                    } else {
-
-                        loadDate(null, null, null, null, null, page);
-                    }
-                    mPullToRefreshView.onFooterRefreshComplete();
-                }
-            }
-        }, 1000);
-    }
-
-    @Override
-    public void onHeaderRefresh(PullToRefreshView view) {
-        mPullToRefreshView.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                // 设置更新时间
-                page = 1;
-                isSearch = false;
-                loadDate(null, null, null, null, null, page);
-//                mPullToRefreshView.onHeaderRefreshComplete("最近更新:" + new Date().toLocaleString());
-                mPullToRefreshView.onHeaderRefreshComplete("最近更新:" + DateFormat.getDateTimeInstance().format(new Date()));
-                mPullToRefreshView.onHeaderRefreshComplete();
-            }
-        }, 1000);
-
-    }
 
     @Override
     public void onDestroy() {
@@ -370,6 +322,41 @@ public class SuiuuFragment extends BaseFragment
         refWatcher.watch(this);
     }
 
+    @Override
+    public void onLoadMoreData() {
+        Log.i("suiuu", "加载更多数据了");
+        if (!dialog.isShow()) {
+            page += 1;
+            if (isSearch) {
+                loadDate(searchText, "0".equals(enjoyPeopleCount) ? "" : enjoyPeopleCount, "".equals(tags) ? tags : tags.substring(0, tags.length() - 1), Integer.toString(startTick), Integer.toString(endTick), page);
+            } else {
+                loadDate(null, null, null, null, null, page);
+            }
+
+        }
+
+        suiuuListView.loadComplete();
+    }
+
+    @Override
+    public void onReflash() {
+        Log.i("suiuu", "下拉刷新了");
+        page = 1;
+        isSearch = false;
+        loadDate(null, null, null, null, null, page);
+
+        suiuuListView.reflashComplete();
+    }
+    private void showList(List<SuiuuDataList> suiuuDataList) {
+        if (adapter == null) {
+            suiuuListView.setInterface(this);
+            suiuuListView.setLoadMoreInterface(this);
+            adapter = new ShowSuiuuAdapter(getActivity().getApplication(), suiuuDataList);
+            suiuuListView.setAdapter(adapter);
+        } else {
+            adapter.onDateChange(suiuuDataList);
+        }
+    }
     /**
      * 获取随游列表的回调接口
      */
@@ -383,20 +370,16 @@ public class SuiuuFragment extends BaseFragment
                 String status = json.getString("status");
                 if ("1".equals(status)) {
                     SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, stringResponseInfo.result);
-                    mPullToRefreshView.setVisibility(View.VISIBLE);
-                    suiuuDataList = baseCollection.getData();
 
-                    if (suiuuDataList.size() < 1) {
-                        if (isSearch) {
-                            rl_search_no_data.setVisibility(View.VISIBLE);
-                            mPullToRefreshView.setVisibility(View.INVISIBLE);
-                            page = 1;
-                        } else {
-                            mPullToRefreshView.setVisibility(View.INVISIBLE);
-                            noDataLoad.setVisibility(View.VISIBLE);
-                        }
+                    List<SuiuuDataList> suiuuDataListNew = baseCollection.getData();
+
+                    if (suiuuDataListNew.size() < 1) {
+                            Toast.makeText(getActivity().getApplicationContext(), "数据加载完毕", Toast.LENGTH_SHORT).show();
+
                     }
-                    suiuuListView.setAdapter(new ShowSuiuuAdapter(getActivity(), suiuuDataList));
+                    suiuuDataList.addAll(suiuuDataListNew);
+                    showList(suiuuDataList);
+//                    suiuuListView.setAdapter(new ShowSuiuuAdapter(getActivity(), suiuuDataList));
                     tabSelect.setVisibility(View.VISIBLE);
                 } else if ("-3".equals(status)) {
                     Toast.makeText(getActivity().getApplicationContext(), "登录信息过期,请重新登录", Toast.LENGTH_SHORT).show();

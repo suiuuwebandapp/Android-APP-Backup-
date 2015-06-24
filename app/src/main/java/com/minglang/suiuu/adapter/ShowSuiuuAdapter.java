@@ -31,7 +31,10 @@ public class ShowSuiuuAdapter extends BaseAdapter {
         this.context = context;
         this.list = list;
     }
-
+    public void onDateChange(List<SuiuuDataList> list) {
+        this.list = list;
+        this.notifyDataSetChanged();
+    }
     @Override
     public int getCount() {
         return list.size();

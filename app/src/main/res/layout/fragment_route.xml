@@ -33,24 +33,16 @@
 
     </RelativeLayout>
 
-    <com.minglang.suiuu.customview.PullToRefreshView
-        android:id="@+id/main_pull_refresh_view"
+    <com.minglang.suiuu.customview.ReFlashListView
+        android:id="@+id/lv_suiuu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:orientation="vertical">
+        android:layout_marginLeft="@dimen/layout_12dp"
+        android:layout_marginRight="@dimen/layout_12dp"
+        android:background="@color/white"
+        android:dividerHeight="@dimen/layout_10dp"
+        android:scrollbars="none"/>
 
-        <ListView
-            android:id="@+id/lv_suiuu"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/layout_12dp"
-            android:layout_marginRight="@dimen/layout_12dp"
-            android:background="@color/white"
-            android:dividerHeight="@dimen/layout_10dp"
-            android:scrollbars="none"/>
-
-    </com.minglang.suiuu.customview.PullToRefreshView>
 
     <TextView
         android:id="@+id/tv_noDataLoad"

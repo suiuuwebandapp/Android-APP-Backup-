@@ -108,7 +108,7 @@ public class SuiuuOrderActivity extends BaseActivity {
     //获取订单的接口
     private void createOrderNumber() {
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String myString = tv_travel_date.getText().toString() +" "+tv_travel_time.getText().toString();
+        String myString = tv_travel_date.getText().toString() + " " + tv_travel_time.getText().toString();
         Date d = null;
         try {
             d = sdf1.parse(myString);
@@ -117,14 +117,11 @@ public class SuiuuOrderActivity extends BaseActivity {
         }
         boolean flag = d.before(new Date());
         if (flag) {
-
             Toast.makeText(this, "请选择出行日期", Toast.LENGTH_SHORT).show();
             return;
-        }else {
+        } else {
             Toast.makeText(this, "晚于今天", Toast.LENGTH_SHORT);
         }
-
-
         RequestParams params = new RequestParams();
         params.addBodyParameter("tripId", tripId);
         params.addBodyParameter("peopleCount", Integer.toString(enjoy_peopleNumber));
@@ -160,9 +157,9 @@ public class SuiuuOrderActivity extends BaseActivity {
                     intent.putExtra("orderNumber", orderNumber);
                     startActivity(intent);
                     Log.i("suiuu", "orderNumber" + orderNumber);
-                }else if("-2".equals(status)) {
+                } else if ("-2".equals(status)) {
                     orderNumber = message.getString("data");
-                    Toast.makeText(SuiuuOrderActivity.this,orderNumber,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SuiuuOrderActivity.this, orderNumber, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
