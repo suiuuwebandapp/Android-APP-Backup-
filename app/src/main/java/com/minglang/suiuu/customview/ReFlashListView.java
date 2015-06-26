@@ -38,6 +38,7 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 	final int REFLASHING = 3;// 刷新状态；
 	IReflashListener iReflashListener;//刷新数据的接口
 	ILoadMoreDataListener iLoadMoreDataListener;//加载更多数据接口
+	IScrollListener iScrollListener;
 	private int mTouchSlop, downX, spaceMove, tempCount;
 	private boolean isFirshMeasure = true;
 
@@ -110,10 +111,10 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 		header = inflater.inflate(R.layout.header_layout, null);
 		footer = inflater.inflate(R.layout.footer_layout, null);
 		footer.findViewById(R.id.footer_layout).setVisibility(View.GONE);
-//		measureView(header);
-//		headerHeight = header.getMeasuredHeight();
+		measureView(header);
+		headerHeight = header.getMeasuredHeight();
 //		Log.i("tag", "headerHeight = " + headerHeight);
-//		topPadding(-headerHeight);
+		topPadding(-headerHeight);
 		this.addHeaderView(header);
 		this.addFooterView(footer);
 		this.setOnScrollListener(this);
@@ -172,6 +173,9 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 		this.firstVisibleItem = firstVisibleItem;
 		this.lastVisibleItem = firstVisibleItem + visibleItemCount;
 		this.totalItemCount = totalItemCount;
+		if(iScrollListener != null) {
+			iScrollListener.onScroll();
+		}
 	}
 
 	@Override
@@ -186,35 +190,37 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 				iLoadMoreDataListener.onLoadMoreData();
 			}
 		}
+		if(iScrollListener != null) {
+			iScrollListener.onScrollStateChanged(scrollState);
+		}
 	}
-	
-	/*@Override
-	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		
-		if (firstVisibleItem != 0) {
-			return super.onInterceptTouchEvent(ev);
-		}
-		switch (ev.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			downX = (int) ev.getRawX();
-			startY = (int) ev.getRawY();
-			Log.i("debug", "downX " + downX);
-			break;
-		case MotionEvent.ACTION_MOVE:
-			Log.i("debug", "ACTION_MOVE ");
-			int moveX = (int) ev.getRawX();
-			int moveY = (int) ev.getRawY();
-			Log.i("debug", "moveY " + moveX + " startY " + startY);
-			// 满足此条件屏蔽SildingFinishLayout里面子类的touch事件
-			if (moveY - startY > mTouchSlop
-					&& Math.abs((int) moveX - downX) < mTouchSlop) {
-				isRemark = true;
-				return true;
-			}
-			break;
-		}
-		return super.onInterceptTouchEvent(ev);
-	}*/
+//	@Override
+//	public boolean onInterceptTouchEvent(MotionEvent ev) {
+//
+//		if (firstVisibleItem != 0) {
+//			return super.onInterceptTouchEvent(ev);
+//		}
+//		switch (ev.getAction()) {
+//		case MotionEvent.ACTION_DOWN:
+//			downX = (int) ev.getRawX();
+//			startY = (int) ev.getRawY();
+//			Log.i("debug", "downX " + downX);
+//			break;
+//		case MotionEvent.ACTION_MOVE:
+//			Log.i("debug", "ACTION_MOVE ");
+//			int moveX = (int) ev.getRawX();
+//			int moveY = (int) ev.getRawY();
+//			Log.i("debug", "moveY " + moveX + " startY " + startY);
+//			// 满足此条件屏蔽SildingFinishLayout里面子类的touch事件
+//			if (moveY - startY > mTouchSlop
+//					&& Math.abs((int) moveX - downX) < mTouchSlop) {
+//				isRemark = true;
+//				return true;
+//			}
+//			break;
+//		}
+//		return super.onInterceptTouchEvent(ev);
+//	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
@@ -382,6 +388,9 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 	public void setLoadMoreInterface(ILoadMoreDataListener iLoadMoreDataListener){
 		this.iLoadMoreDataListener = iLoadMoreDataListener;
 	}
+	public void setIScrollListener(IScrollListener iScrollListener){
+		this.iScrollListener = iScrollListener;
+	}
 	/**
 	 * 刷新数据接口
 	 * @author Administrator
@@ -391,5 +400,9 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 	}
 	public interface ILoadMoreDataListener{
 		public void onLoadMoreData();
+	}
+	public interface IScrollListener{
+		public void onScroll();
+		public void onScrollStateChanged(int state);
 	}
 }

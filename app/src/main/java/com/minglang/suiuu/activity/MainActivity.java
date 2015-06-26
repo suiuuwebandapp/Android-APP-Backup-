@@ -160,7 +160,7 @@ public class MainActivity extends BaseActivity {
     private ImageView iv_conversation;
     private TextView tv_conversation_text;
     private RelativeLayout rl_top_info;
-    private ImageView iv_suiuu_search_more;
+
 
     private ExitBroadcastReceiver exitBroadcastReceiver;
 
@@ -303,7 +303,7 @@ public class MainActivity extends BaseActivity {
         record = (ImageView) findViewById(R.id.main_record);
 
         rl_top_info = (RelativeLayout) findViewById(R.id.rl_top_info);
-        iv_suiuu_search_more = (ImageView) findViewById(R.id.iv_suiuu_search_more);
+
 
         mainFragment = new MainFragment();
         conversationFragment = new ChatAllHistoryFragment();
@@ -443,7 +443,6 @@ public class MainActivity extends BaseActivity {
     public void showCommon() {
         titleInfo.setVisibility(View.VISIBLE);
         rl_top_info.setVisibility(View.GONE);
-        iv_suiuu_search_more.setVisibility(View.GONE);
     }
 
     /**
@@ -1039,7 +1038,6 @@ public class MainActivity extends BaseActivity {
                 case R.id.tab3:
                     titleInfo.setVisibility(View.GONE);
                     rl_top_info.setVisibility(View.VISIBLE);
-                    iv_suiuu_search_more.setVisibility(View.VISIBLE);
                     adjustAnimation();
                     changeTheme(false);
                     changeLoop(false);

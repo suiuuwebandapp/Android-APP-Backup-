@@ -357,6 +357,10 @@
             android:name=".activity.OrderManageActivity"
             android:label="@string/title_activity_order_manage"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+  <activity
+            android:name=".activity.SuiuuSearchActivity"
+            android:label="@string/title_activity_suiuu_search"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
 
         <!-- 支付相关 -->
         <!-- Ping++ SDK 注册 -->

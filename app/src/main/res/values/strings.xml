@@ -498,6 +498,7 @@
     <string name="title_activity_edit_suiuu_info">EditSuiuuInfoActivity</string>
     <string name="title_activity_edit_suiuu_price">EditSuiuuPriceActivity</string>
     <string name="title_activity_order_manage">OrderManageActivity</string>
+    <string name="title_activity_suiuu_search">SuiuuSearchActivity</string>
 
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
