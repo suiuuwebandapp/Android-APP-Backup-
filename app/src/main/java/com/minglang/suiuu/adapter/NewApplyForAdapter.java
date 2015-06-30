@@ -1,7 +1,9 @@
 package com.minglang.suiuu.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,13 +11,24 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
-import com.minglang.suiuu.entity.NewApplyForEntity;
+import com.minglang.suiuu.entity.NewApply;
+import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -26,9 +39,11 @@ import java.util.List;
  */
 public class NewApplyForAdapter extends BaseAdapter {
 
+    private static final String TAG = NewApplyForAdapter.class.getSimpleName();
+
     private Context context;
 
-    private List<NewApplyForEntity> list;
+    private List<NewApply.NewApplyData> list;
 
     private ImageLoader imageLoader;
 
@@ -38,13 +53,13 @@ public class NewApplyForAdapter extends BaseAdapter {
         this.context = context;
 
         imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
-                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
-    public void setList(List<NewApplyForEntity> list) {
+    public void setList(List<NewApply.NewApplyData> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -82,10 +97,17 @@ public class NewApplyForAdapter extends BaseAdapter {
         Button ignoreBtn = holder.getView(R.id.item_my_suiuu_new_apply_for_ignore);
         Button agreeBtn = holder.getView(R.id.item_my_suiuu_new_apply_for_agree);
 
-        NewApplyForEntity newApplyForEntity = list.get(position);
+        NewApply.NewApplyData newApplyData = list.get(position);
 
-        imageLoader.displayImage(newApplyForEntity.getImagePath(), headImageView, options);
-        userNameView.setText(newApplyForEntity.getUserName());
+        String headImagePath = newApplyData.getHeadImg();
+        if (!TextUtils.isEmpty(headImagePath)) {
+            imageLoader.displayImage(headImagePath, headImageView, options);
+        }
+
+        String name = newApplyData.getNickname();
+        if (!TextUtils.isEmpty(name)) {
+            userNameView.setText(name);
+        }
 
         ignoreBtn.setTag(position);
         ignoreBtn.setOnClickListener(new IgnoreClickListener(position));
@@ -106,7 +128,17 @@ public class NewApplyForAdapter extends BaseAdapter {
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(context, "ignore item" + index, Toast.LENGTH_SHORT).show();
+            String applyId = list.get(index).getApplyId();
+
+            RequestParams params = new RequestParams();
+            params.addBodyParameter("applyId", applyId);
+            params.addBodyParameter("userSign", SuiuuInfo.ReadUserSign(context));
+            params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(context));
+
+            SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                    HttpServicePath.ignoreDataPath, new IgnoreRequestCallBack(index));
+            httpRequest.setParams(params);
+            httpRequest.requestNetworkData();
         }
 
     }
@@ -121,9 +153,131 @@ public class NewApplyForAdapter extends BaseAdapter {
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(context, "agree item" + index, Toast.LENGTH_SHORT).show();
+            String applyId = list.get(index).getApplyId();
+            String publisherId = list.get(index).getPublisherId();
+
+            RequestParams params = new RequestParams();
+            params.addBodyParameter("applyId", applyId);
+            params.addBodyParameter("publisherId", publisherId);
+            params.addBodyParameter("userSign", SuiuuInfo.ReadUserSign(context));
+            params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(context));
+
+            SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                    HttpServicePath.agreeDataPath, new AgreeRequestCallBack(index));
+            httpRequest.setParams(params);
+            httpRequest.requestNetworkData();
         }
 
+    }
+
+    private ProgressDialog progressDialog;
+
+    private class IgnoreRequestCallBack extends RequestCallBack<String> {
+
+        private int index;
+
+        private IgnoreRequestCallBack(int index) {
+            this.index = index;
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage("请稍候...");
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+
+        @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
+
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+
+            String str = responseInfo.result;
+            try {
+                JSONObject object = new JSONObject(str);
+                String status = object.getString("status");
+                if (status.equals("1")) {
+                    list.remove(index);
+                    setList(list);
+                } else {
+                    Toast.makeText(context, context.getResources().getString(R.string.Network_error),
+                            Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+            }
+
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+
+            Toast.makeText(context, context.getResources().getString(R.string.NetworkAnomaly),
+                    Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+
+    private class AgreeRequestCallBack extends RequestCallBack<String> {
+
+        private int index;
+
+        private AgreeRequestCallBack(int index) {
+            this.index = index;
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage("请稍候...");
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+
+        @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
+
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+
+            String str = responseInfo.result;
+            try {
+                JSONObject object = new JSONObject(str);
+                String status = object.getString("status");
+                if (status.equals("1")) {
+                    list.remove(index);
+                    setList(list);
+                } else {
+                    Toast.makeText(context, context.getResources().getString(R.string.Network_error),
+                            Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+            }
+
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+
+            Toast.makeText(context, context.getResources().getString(R.string.NetworkAnomaly),
+                    Toast.LENGTH_SHORT).show();
+
+        }
     }
 
 }

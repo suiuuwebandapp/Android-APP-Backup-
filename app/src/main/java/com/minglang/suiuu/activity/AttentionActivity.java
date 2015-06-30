@@ -1,20 +1,17 @@
 package com.minglang.suiuu.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.AttentionPagerAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.fragment.attention.AttentionLoopFragment;
 import com.minglang.suiuu.fragment.attention.AttentionUserFragment;
-import com.minglang.suiuu.utils.DeBugLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,22 +30,6 @@ public class AttentionActivity extends BaseActivity {
 
     private ViewPager attentionPager;
 
-    /**
-     * tab头
-     */
-    private TextView attentionThemeTitle, attentionUserTitle;
-
-    /**
-     * 滑块
-     */
-    private ImageView attentionSliderView;
-
-    private int currIndex = 1;// 当前页卡编号
-
-    private int tabWidth;// 每个tab头的宽度
-
-    private int offsetX;//偏移量
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,33 +45,39 @@ public class AttentionActivity extends BaseActivity {
     private void initView() {
         attentionBack = (ImageView) findViewById(R.id.attentionBack);
         attentionPager = (ViewPager) findViewById(R.id.attentionPager);
-        attentionSliderView = (ImageView) findViewById(R.id.attention_sliderView);
-        attentionThemeTitle = (TextView) findViewById(R.id.attention_theme_title);
-        attentionUserTitle = (TextView) findViewById(R.id.attention_user_title);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.attentionTabLayout);
+        tabLayout.setTabTextColors(getResources().getColor(R.color.tr_black),
+                getResources().getColor(R.color.text_select_true));
+
+        List<String> titleList = new ArrayList<>();
+
+        String str1 = getResources().getString(R.string.title2);
+        String str2 = getResources().getString(R.string.user);
+
+        titleList.add(str1);
+        titleList.add(str2);
+
+        tabLayout.addTab(tabLayout.newTab().setText(str1), true);
+        tabLayout.addTab(tabLayout.newTab().setText(str2), false);
 
         //关注圈子页面
         AttentionLoopFragment attentionLoopFragment = AttentionLoopFragment.newInstance(userSign, verification);
         //关注用户页面
         AttentionUserFragment attentionUserFragment = AttentionUserFragment.newInstance(userSign, verification);
         List<Fragment> fragmentList = new ArrayList<>();
+
         fragmentList.add(attentionLoopFragment);
         fragmentList.add(attentionUserFragment);
-        AttentionPagerAdapter attentionPagerAdapter = new AttentionPagerAdapter(fm, fragmentList);
+
+        AttentionPagerAdapter attentionPagerAdapter = new AttentionPagerAdapter(fm, fragmentList, titleList);
         attentionPager.setAdapter(attentionPagerAdapter);
 
-        initImageView();
+        tabLayout.setupWithViewPager(attentionPager);
+        tabLayout.setTabsFromPagerAdapter(attentionPagerAdapter);
+
     }
 
-    private void initImageView() {
-        tabWidth = screenWidth / 2;
-        if (sliderImageWidth > tabWidth) {
-            attentionSliderView.getLayoutParams().width = tabWidth;
-            sliderImageWidth = tabWidth;
-        }
-
-        offsetX = (tabWidth - sliderImageWidth) / 2;
-        attentionSliderView.setPadding(offsetX, 0, 0, 0);
-    }
 
     /**
      * 控件动作
@@ -101,62 +88,29 @@ public class AttentionActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 
         attentionPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                DeBugLog.i(TAG, "position:" + position + ",positionOffset:" + positionOffset +
-                        ",positionOffsetPixels" + positionOffsetPixels);
+
             }
 
             @Override
             public void onPageSelected(int position) {
-                attentionSliderView.setPadding(0, 0, 0, 0);
 
-                switch (position) {
-                    case 0:
-                        attentionThemeTitle.setTextColor(getResources().getColor(R.color.slider_line_color));
-                        attentionUserTitle.setTextColor(getResources().getColor(R.color.textColor));
-                        break;
-                    case 1:
-                        attentionThemeTitle.setTextColor(getResources().getColor(R.color.textColor));
-                        attentionUserTitle.setTextColor(getResources().getColor(R.color.slider_line_color));
-                        break;
-                }
-
-                Animation anim = new TranslateAnimation(tabWidth * currIndex + offsetX, tabWidth * position + offsetX, 0, 0);
-                currIndex = position;
-                anim.setFillAfter(true);
-                anim.setDuration(200);
-                attentionSliderView.startAnimation(anim);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                DeBugLog.i(TAG, "state:" + state);
+
             }
+
         });
 
-        attentionThemeTitle.setOnClickListener(new AttentionClick(0));
-        attentionUserTitle.setOnClickListener(new AttentionClick(1));
 
     }
 
-    class AttentionClick implements View.OnClickListener {
-
-        private int index;
-
-        public AttentionClick(int index) {
-            this.index = index;
-        }
-
-        @Override
-        public void onClick(View v) {
-            attentionPager.setCurrentItem(index);
-        }
-    }
 
 }

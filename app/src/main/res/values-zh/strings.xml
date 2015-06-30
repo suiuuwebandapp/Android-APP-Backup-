@@ -8,7 +8,7 @@
     <string name="please_input_number">请输入手机号</string>
     <string name="please_check">key 验证出错! 请在 AndroidManifest.xml 文件中检查 key 设置</string>
     <string name="UMUpdateCheck">2.6.0.1.20150312</string>
-    <string name="UnknownArea">UnknownArea</string>
+    <string name="UnknownArea">未知区域</string>
     <string name="UnknownName">匿名</string>
     <string name="app_name">随游</string>
     <string name="homePage">首页</string>
@@ -246,4 +246,15 @@
     <string name="Date">日期</string>
     <string name="TransferAccount">转账账户</string>
     <string name="Money">金额</string>
+    <string name="IndividualResume">个人简介</string>
+    <string name="phoneNumber">电话号码:</string>
+    <string name="Email">电子邮箱:</string>
+    <string name="tripCount">伴游次数:</string>
+    <string name="hisSuiuu">他的随游</string>
+    <string name="hisParticipationSuiuu">他参与的随游</string>
+    <string name="route">路线</string>
+    <string name="save">保存</string>
+    <string name="userName">用户名</string>
+    <string name="userLocation">用户位置</string>
+    <string name="userSignature">个人签名</string>
 </resources>

@@ -237,6 +237,7 @@ public class HttpServicePath {
      * 得到随游的详细信息
      */
     public static String getSuiuuItemInfo = RootPath + "/app-travel/get-travel-info";
+
     /**
      * 得到选择国家的数据
      */
@@ -352,4 +353,21 @@ public class HttpServicePath {
      * 已接到的订单
      */
     public static String getConfirmOrderDataPath = RootPath + "/app-travel/get-publisher-order-list";
+
+    /**
+     * 新申请数据接口
+     */
+    public static String getNewApplyForDataPath = RootPath + "/app-travel/get-apply-list";
+
+    /**
+     * 移除随友
+     */
+    public static String removeSuiuuUserPath = RootPath + "/app-travel/remove-publisher";
+
+    public static String ignoreDataPath = RootPath + "/app-travel/oppose-apply";
+
+    public static String agreeDataPath = RootPath + "/app-travel/agree-apply";
+
+    public static String getSuiuuUserInfoPath = RootPath + "/app-travel/get-publisher-info";
+
 }

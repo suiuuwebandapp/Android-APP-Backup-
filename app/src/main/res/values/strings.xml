@@ -27,7 +27,6 @@
     <string name="blankSignature" translatable="false">暂无个性签名</string>
     <string name="blankContent" translatable="false">暂无详细信息</string>
     <string name="footprint" translatable="false">我的足迹</string>
-    <string name="route" translatable="false">路线</string>
 
     <string name="attention" translatable="false">关注</string>
     <string name="MyAttention">My Attention</string>
@@ -60,7 +59,6 @@
     <string name="send" translatable="false">发送</string>
     <string name="feedback_hint" translatable="false">请输入要反馈的内容</string>
     <string name="contactUs" translatable="false">联系我们</string>
-    <string name="save" translatable="false">保存</string>
     <string name="footprint0" translatable="false">足迹 0</string>
     <string name="attention_other" translatable="false">关注TA</string>
     <string name="TwentyThree" translatable="false">23</string>
@@ -207,7 +205,18 @@
 
     <string name="Date">Date</string>
     <string name="TransferAccount">Transfer Account</string>
-    <string name= "Money">Money</string>
+    <string name="Money">Money</string>
+
+    <string name="IndividualResume">Individual Resume</string>
+    <string name="phoneNumber">Phone Number:</string>
+    <string name="Email">E-mail:</string>
+    <string name="tripCount">Escort Count:</string>
+    <string name="hisSuiuu">His Suiuu</string>
+    <string name="hisParticipationSuiuu">His Participation Suiuu</string>
+
+    <string name="userName">userName</string>
+    <string name="userLocation">userLocation</string>
+    <string name="userSignature">personality Signature</string>
 
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
@@ -234,7 +243,7 @@
     <string name="delete_voice">删除语音</string>
     <string name="delete_video">删除视频</string>
     <string name="delete">删除</string>
-    <string name="resend">重发</string>
+    <string name="resend">resend</string>
     <string name="confirm_resend">确认重发该信息？</string>
     <string name="connect_failuer_toast">请检查网络或稍候重试</string>
     <string name="network_unavailable">网络连接不可用，请检查网络</string>
@@ -495,14 +504,17 @@
     <string name="accountManager">Account Management</string>
     <string name="title_activity_my_suiuu" translatable="false">MySuiuuActivity</string>
     <string name="title_activity_my_suiuu_details" translatable="false">MySuiuuDetailsActivity</string>
-    <string name="title_activity_edit_suiuu_info">EditSuiuuInfoActivity</string>
-    <string name="title_activity_edit_suiuu_price">EditSuiuuPriceActivity</string>
-    <string name="title_activity_order_manage">OrderManageActivity</string>
-    <string name="title_activity_suiuu_search">SuiuuSearchActivity</string>
+    <string name="title_activity_edit_suiuu_info" translatable="false">EditSuiuuInfoActivity</string>
+    <string name="title_activity_edit_suiuu_price" translatable="false">EditSuiuuPriceActivity</string>
+    <string name="title_activity_order_manage" translatable="false">OrderManageActivity</string>
+    <string name="title_activity_suiuu_search" translatable="false">SuiuuSearchActivity</string>
 
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
-    <string name="title_activity_account_manage">AccountManageActivity</string>
+    <string name="title_section1" translatable="false">Section 1</string>
+    <string name="title_section2" translatable="false">Section 2</string>
+    <string name="title_section3" translatable="false">Section 3</string>
+    <string name="title_activity_account_manage" translatable="false">AccountManageActivity</string>
+    <string name="title_activity_suiuu_user_info" translatable="false">SuiuuUserInfoActivity</string>
+    <string name="route">route</string>
+    <string name="save">save</string>
 
 </resources>

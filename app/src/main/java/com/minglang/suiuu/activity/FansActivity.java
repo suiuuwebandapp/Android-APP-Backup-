@@ -3,6 +3,7 @@ package com.minglang.suiuu.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -46,7 +47,7 @@ public class FansActivity extends BaseActivity {
 
     private ListView fansList;
 
-    private ProgressDialog dialog;
+    private ProgressDialog progressDialog;
 
     private List<FansData> fansDataList;
 
@@ -57,16 +58,16 @@ public class FansActivity extends BaseActivity {
 
         initView();
         ViewAction();
-        getData();
+        getFansData2Service();
     }
 
     /**
      * 初始化
      */
     private void initView() {
-        dialog = new ProgressDialog(this);
-        dialog.setMessage(getResources().getString(R.string.load_wait));
-        dialog.setCanceledOnTouchOutside(false);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
 
         mPtrFrame = (PtrClassicFrameLayout) findViewById(R.id.fans_head_frame);
 
@@ -77,7 +78,7 @@ public class FansActivity extends BaseActivity {
         int[] colors = getResources().getIntArray(R.array.google_colors);
         header.setColorSchemeColors(colors);
         header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, Utils.newInstance().dip2px(15,this), 0,Utils.newInstance().dip2px(10, this));
+        header.setPadding(0, Utils.newInstance().dip2px(15, this), 0, Utils.newInstance().dip2px(10, this));
         header.setPtrFrameLayout(mPtrFrame);
 
         mPtrFrame.setHeaderView(header);
@@ -132,11 +133,6 @@ public class FansActivity extends BaseActivity {
 
     }
 
-    private void getData() {
-        dialog.show();
-        getFansData2Service();
-    }
-
     /**
      * 数据请求
      */
@@ -150,18 +146,19 @@ public class FansActivity extends BaseActivity {
         httpRequest.requestNetworkData();
     }
 
-    private class FansRequestCallBack extends RequestCallBack<String> {
+    private void showOrHideDialog() {
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
 
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+        mPtrFrame.refreshComplete();
 
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
+    }
 
-            mPtrFrame.refreshComplete();
-
-            String str = stringResponseInfo.result;
+    private void bindData2View(String str) {
+        if (TextUtils.isEmpty(str)) {
+            Toast.makeText(FansActivity.this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+        } else {
             try {
                 Fans fans = JsonUtils.getInstance().fromJSON(Fans.class, str);
                 fansDataList = fans.getData().getData();
@@ -176,19 +173,31 @@ public class FansActivity extends BaseActivity {
                 Toast.makeText(FansActivity.this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private class FansRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            String str = stringResponseInfo.result;
+            bindData2View(str);
+        }
 
         @Override
         public void onFailure(HttpException e, String s) {
-
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-
-            mPtrFrame.refreshComplete();
-
             DeBugLog.e(TAG, "获取粉丝列表请求失败的异常信息:" + s);
-            Toast.makeText(FansActivity.this, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            showOrHideDialog();
+            Toast.makeText(FansActivity.this, getResources().getString(R.string.NetworkAnomaly),
+                    Toast.LENGTH_SHORT).show();
         }
+
     }
 
 }

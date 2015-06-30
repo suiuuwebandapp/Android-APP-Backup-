@@ -1,11 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/collectionRootLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/collectionRootLayout"
     tools:context="com.minglang.suiuu.activity.CollectionActivity">
-
 
     <RelativeLayout
         android:id="@+id/collectionHeadLayout"
@@ -21,55 +22,22 @@
             android:layout_centerVertical="true"
             android:text="@string/collection"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
         <ImageView
             android:id="@+id/collectionBack"
             style="@style/backKeyStyle"
-            android:src="@drawable/back" />
+            android:src="@drawable/back"/>
 
-        <ImageView
-            android:id="@+id/collectionSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="10dp"
-            android:src="@drawable/icon_search" />
     </RelativeLayout>
 
-    <LinearLayout
+    <android.support.design.widget.TabLayout
+        android:id="@+id/collectionTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2.5dp"
-        android:layout_marginBottom="2.5dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/collectionLoop"
-            style="@style/collectionInfoStyle"
-            android:textColor="@color/slider_line_color"
-            android:text="@string/title2" />
-
-        <TextView
-            android:id="@+id/collectionSuiuu"
-            style="@style/collectionInfoStyle"
-            android:textColor="@color/textColor"
-            android:text="@string/title3" />
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/collectionSlider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="matrix"
-        android:src="@drawable/slider" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/slider_line_color"/>
+        android:background="@color/white"
+        app:tabIndicatorColor="@color/slider_line_color"
+        app:tabIndicatorHeight="@dimen/layout_1dp"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/collectionPager"

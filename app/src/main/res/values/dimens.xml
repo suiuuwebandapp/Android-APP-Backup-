@@ -20,6 +20,7 @@
     <dimen name="sub_action_button_content_margin">6dp</dimen>
     <dimen name="layout_1dp">1dp</dimen>
     <dimen name="layout_2dp">2dp</dimen>
+    <dimen name="layout_4dp">4dp</dimen>
     <dimen name="layout_5dp">5dp</dimen>
     <dimen name="layout_8dp">8dp</dimen>
     <dimen name="layout_10dp">10dp</dimen>
@@ -48,6 +49,7 @@
     <dimen name="layout_200dp">200dp</dimen>
     <dimen name="layout_220dp">220dp</dimen>
     <dimen name="layout_250dp">250dp</dimen>
+    <dimen name="layout_300dp">300dp</dimen>
     <dimen name="layout_510dp">510dp</dimen>
 
 

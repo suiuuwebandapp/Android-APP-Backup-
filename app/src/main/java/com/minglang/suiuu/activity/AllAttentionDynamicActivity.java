@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -32,8 +34,6 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
-
 /**
  * 查看更多关注页面
  */
@@ -45,7 +45,9 @@ public class AllAttentionDynamicActivity extends Activity {
 
     private static final String ARTICLEID = "articleId";
 
-    private PullToRefreshListView listView;
+    private static final int COMPLETE = 1;
+
+    private static PullToRefreshListView pullToRefreshListView;
 
     private int page = 1;
 
@@ -53,11 +55,21 @@ public class AllAttentionDynamicActivity extends Activity {
 
     private AllAttentionDynamicAdapter adapter;
 
-    private ProgressDialog dialog;
+    private ProgressDialog progressDialog;
 
     private ImageView back;
 
-    private boolean isRefresh;
+    private static Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case COMPLETE:
+                    pullToRefreshListView.onRefreshComplete();
+                    break;
+            }
+            return false;
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,24 +77,23 @@ public class AllAttentionDynamicActivity extends Activity {
         setContentView(R.layout.activity_all_attention_dynamic);
 
         initView();
-
         ViewAction();
-        getData();
+        getDynamicData4Service(page);
     }
 
     /**
      * 初始化方法
      */
     private void initView() {
-        dialog = new ProgressDialog(this);
-        dialog.setMessage(getResources().getString(R.string.load_wait));
-        dialog.setCanceledOnTouchOutside(false);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
 
         back = (ImageView) findViewById(R.id.AllAttentionBack);
-        listView = (PullToRefreshListView) findViewById(R.id.all_attention_dynamic_list_view);
-        listView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.all_attention_dynamic_list_view);
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         adapter = new AllAttentionDynamicAdapter(this);
-        listView.setAdapter(adapter);
+        pullToRefreshListView.setAdapter(adapter);
     }
 
     /**
@@ -97,7 +108,7 @@ public class AllAttentionDynamicActivity extends Activity {
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String articleId = listAll.get(position).getArticleId();
@@ -108,7 +119,7 @@ public class AllAttentionDynamicActivity extends Activity {
             }
         });
 
-        listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 String label = DateUtils.formatDateTime(getApplicationContext(), System.currentTimeMillis(),
@@ -131,15 +142,6 @@ public class AllAttentionDynamicActivity extends Activity {
         });
     }
 
-    private void getData() {
-
-        if (dialog != null) {
-            dialog.show();
-        }
-
-        getDynamicData4Service(page);
-    }
-
     /**
      * 从网络获取数据
      */
@@ -156,11 +158,29 @@ public class AllAttentionDynamicActivity extends Activity {
     }
 
     /**
+     * 隐藏进度框和ListView加载进度View
+     */
+    private void showOrHideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+
+        handler.sendEmptyMessage(COMPLETE);
+
+    }
+
+    private void failureComputePage() {
+        if (page > 1) {
+            page = page - 1;
+        }
+    }
+
+    /**
      * 绑定数据到View
      *
      * @param str Json字符串
      */
-    private void setData2View(String str) {
+    private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureComputePage();
             Toast.makeText(this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
@@ -184,48 +204,39 @@ public class AllAttentionDynamicActivity extends Activity {
         }
     }
 
-    private void failureComputePage() {
-        if (page > 1) {
-            page = page - 1;
-        }
-    }
-
     /**
      * 网络请求回调接口
      */
     private class AllAttentionDynamicRequestCallBack extends RequestCallBack<String> {
 
         @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
+
+        @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
 
-            if (dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
-            }
-
-            if (isRefresh) {
-                listAll.clear();
-            }
-
-            listView.onRefreshComplete();
-
+            showOrHideDialog();
             String str = stringResponseInfo.result;
-            setData2View(str);
+            bindData2View(str);
+
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
+            DeBugLog.e(TAG, "关注动态数据加载失败:" + s);
 
-            if (dialog != null && dialog.isShowing()) {
-                dialog.dismiss();
-            }
-
+            showOrHideDialog();
             failureComputePage();
 
-            listView.onRefreshComplete();
-
-            DeBugLog.e(TAG, "关注动态数据加载失败:" + s);
             Toast.makeText(AllAttentionDynamicActivity.this,
                     getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+
         }
+
     }
+
 }

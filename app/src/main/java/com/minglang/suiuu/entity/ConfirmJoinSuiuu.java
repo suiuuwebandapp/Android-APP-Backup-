@@ -16,12 +16,12 @@ public class ConfirmJoinSuiuu {
      * status : 1
      * token : 183d9ee8ec2b732004559462f71662c0
      */
-    private DataEntity data;
+    private ConfirmJoinSuiuuData data;
     private String message;
     private int status;
     private String token;
 
-    public void setData(DataEntity data) {
+    public void setData(ConfirmJoinSuiuuData data) {
         this.data = data;
     }
 
@@ -37,7 +37,7 @@ public class ConfirmJoinSuiuu {
         this.token = token;
     }
 
-    public DataEntity getData() {
+    public ConfirmJoinSuiuuData getData() {
         return data;
     }
 
@@ -53,7 +53,7 @@ public class ConfirmJoinSuiuu {
         return token;
     }
 
-    public class DataEntity {
+    public class ConfirmJoinSuiuuData {
         /**
          * createPublisherInfo : {"birthday":"1991-02-14","profession":"","headImg":"http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg","travelCount":"0","tripPublisherId":"120","sex":"0","tripId":"105","cityId":"342","countryId":"336","areaCode":"+86","publisherId":"11","cityName":"朝阳","phone":"15311445352","school":"","userSign":"a4c1406ff4cc382389f19bf6ec3e55c1","intro":"一座城市，一些岁月，和一个人。","nickname":"277*****@qq.com","countryName":"中国","email":"277646935@qq.com","hobby":"","info":"来自西南的小姑娘"}
          * picList : [{"tripId":"105","title":null,"picId":"1951","url":"http://image.suiuu.com/user_card/20150514113129_25927.jpg"},{"tripId":"105","title":null,"picId":"1952","url":"http://image.suiuu.com/user_card/20150514113054_24638.jpg"},{"tripId":"105","title":null,"picId":"1953","url":"http://image.suiuu.com/user_card/20150514113106_22469.jpg"},{"tripId":"105","title":null,"picId":"1954","url":"http://image.suiuu.com/user_card/20150514113047_17297.jpg"},{"tripId":"105","title":null,"picId":"1955","url":"http://image.suiuu.com/user_card/20150514113056_41135.jpg"},{"tripId":"105","title":null,"picId":"1956","url":"http://image.suiuu.com/user_card/20150514113044_84331.jpg"},{"tripId":"105","title":null,"picId":"1957","url":"http://image.suiuu.com/user_card/20150514113038_37961.jpg"}]

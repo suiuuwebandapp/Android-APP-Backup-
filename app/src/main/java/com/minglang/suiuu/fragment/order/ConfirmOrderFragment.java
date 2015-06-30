@@ -7,12 +7,12 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -111,7 +111,7 @@ public class ConfirmOrderFragment extends Fragment {
 
         initView(rootView);
         ViewAction();
-        getData();
+        getConfirmOrderData(page);
         return rootView;
     }
 
@@ -121,7 +121,7 @@ public class ConfirmOrderFragment extends Fragment {
      * @param rootView Fragment根View
      */
     private void initView(View rootView) {
-        Log.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
@@ -166,14 +166,6 @@ public class ConfirmOrderFragment extends Fragment {
             }
         });
 
-    }
-
-    private void getData() {
-        if (progressDialog != null) {
-            progressDialog.show();
-        }
-
-        getConfirmOrderData(page);
     }
 
     private void getConfirmOrderData(int page) {
@@ -221,6 +213,8 @@ public class ConfirmOrderFragment extends Fragment {
                     clearListData();
                     listAll.addAll(list);
                     orderListManageAdapter.setList(listAll);
+                }else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "JSON Analytical:" + e.getMessage());
@@ -229,6 +223,13 @@ public class ConfirmOrderFragment extends Fragment {
     }
 
     private class ConfirmOrderManageRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {

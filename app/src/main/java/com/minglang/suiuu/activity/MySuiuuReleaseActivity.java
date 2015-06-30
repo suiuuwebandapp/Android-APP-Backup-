@@ -107,6 +107,7 @@ public class MySuiuuReleaseActivity extends AppCompatActivity {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(joinFragment);
         fragments.add(newApplyForFragment);
+
         List<String> titleList = new ArrayList<>();
         titleList.add(join);
         titleList.add(applyFor);

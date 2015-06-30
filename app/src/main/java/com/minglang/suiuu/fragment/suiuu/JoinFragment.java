@@ -6,11 +6,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -108,7 +110,7 @@ public class JoinFragment extends Fragment {
 
         initView(rootView);
         ViewAction();
-        getData();
+        getJoinSuiuuData(1);
         return rootView;
     }
 
@@ -118,35 +120,43 @@ public class JoinFragment extends Fragment {
      * @param rootView Fragment根View
      */
     private void initView(View rootView) {
-        Log.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
 
         pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.JoinListView);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        ListView listView = pullToRefreshListView.getRefreshableView();
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
 
         joinAdapter = new JoinAdapter(getActivity());
+        listView.setAdapter(joinAdapter);
 
     }
 
     private void ViewAction() {
 
-        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+                String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+
+                handler.sendEmptyMessage(COMPLETE);
 
             }
         });
 
-    }
+        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int index = position - 1;
+                Toast.makeText(getActivity(), "click " + index, Toast.LENGTH_SHORT).show();
+            }
+        });
 
-    private void getData() {
-        if (progressDialog != null && !progressDialog.isShowing()) {
-            progressDialog.show();
-        }
-
-        getJoinSuiuuData(1);
     }
 
     private void getJoinSuiuuData(int page) {
@@ -176,18 +186,31 @@ public class JoinFragment extends Fragment {
     }
 
     private void bindData2View(String str) {
-        if (!TextUtils.isEmpty(str)) {
+        if (TextUtils.isEmpty(str)) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+        } else {
             try {
                 ConfirmJoinSuiuu confirmJoinSuiuu = JsonUtils.getInstance().fromJSON(ConfirmJoinSuiuu.class, str);
-                List<ConfirmJoinSuiuu.DataEntity.PublisherListEntity> list = confirmJoinSuiuu.getData().getPublisherList();
-                joinAdapter.setList(list);
+                List<ConfirmJoinSuiuu.ConfirmJoinSuiuuData.PublisherListEntity> list = confirmJoinSuiuu.getData().getPublisherList();
+                if (list != null && list.size() > 0) {
+                    joinAdapter.setList(list);
+                } else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                }
             } catch (Exception e) {
-                e.printStackTrace();
+                DeBugLog.e(TAG, "解析错误:" + e.getMessage());
             }
         }
     }
 
     private class JoinSuiuuRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -200,7 +223,9 @@ public class JoinFragment extends Fragment {
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",error:" + s);
             showOrHideDialog();
+            Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
+
     }
 
 }

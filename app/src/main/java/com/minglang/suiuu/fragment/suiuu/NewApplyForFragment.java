@@ -1,8 +1,12 @@
 package com.minglang.suiuu.fragment.suiuu;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,16 +14,27 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.NewApplyForAdapter;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
-import com.minglang.suiuu.entity.NewApplyForEntity;
+import com.minglang.suiuu.entity.NewApply;
+import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.SuHttpRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 新申请的随游
+ * <p/>
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Use the {@link JoinFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -32,13 +47,34 @@ public class NewApplyForFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
 
+    private static final int COMPLETE = 1;
+
     private String userSign;
     private String verification;
     private String tripId;
 
-    private PullToRefreshListView pullToRefreshListView;
+    private static PullToRefreshListView pullToRefreshListView;
 
-    private List<NewApplyForEntity> newApplyForEntityList;
+    private ProgressDialog progressDialog;
+
+    private NewApplyForAdapter newApplyForAdapter;
+
+    private int page = 1;
+
+    private List<NewApply.NewApplyData> listAll = new ArrayList<>();
+
+    private static Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case COMPLETE:
+                    pullToRefreshListView.onRefreshComplete();
+                    break;
+            }
+
+            return false;
+        }
+    });
 
     /**
      * Use this factory method to create a new instance of
@@ -79,6 +115,7 @@ public class NewApplyForFragment extends Fragment {
 
         initView(rootView);
         ViewAction();
+        getNewApplyForData(page);
         return rootView;
     }
 
@@ -88,40 +125,152 @@ public class NewApplyForFragment extends Fragment {
      * @param view Fragment的根View
      */
     private void initView(View view) {
-        Log.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
 
         pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.ApplyForListView);
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
-
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         ListView listView = pullToRefreshListView.getRefreshableView();
 
-        newApplyForEntityList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            NewApplyForEntity newApplyForEntity = new NewApplyForEntity();
-            newApplyForEntity.setUserName("佚名" + i);
-            newApplyForEntity.setImagePath("http://q.qlogo.cn/qqapp/1104557000/C7A47D7E23F617EA5E0CF13B14A036FA/100");
-            newApplyForEntityList.add(newApplyForEntity);
-        }
-        NewApplyForAdapter applyForAdapter = new NewApplyForAdapter(getActivity());
-        applyForAdapter.setList(newApplyForEntityList);
-        listView.setAdapter(applyForAdapter);
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        newApplyForAdapter = new NewApplyForAdapter(getActivity());
+        listView.setAdapter(newApplyForAdapter);
+
     }
 
     private void ViewAction() {
 
+        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+
+                page = 1;
+                getNewApplyForData(page);
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+
+                page = page + 1;
+                getNewApplyForData(page);
+            }
+
+        });
+
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), newApplyForEntityList.get(position).getUserName(), Toast.LENGTH_SHORT).show();
+                int index = position - 1;
+                Toast.makeText(getActivity(), "click " + index, Toast.LENGTH_SHORT).show();
             }
         });
 
-        pullToRefreshListView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
-            @Override
-            public void onLastItemVisible() {
-                Toast.makeText(getActivity(), "已到达底部", Toast.LENGTH_SHORT).show();
+    }
+
+    private void getNewApplyForData(int page) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("userSign", userSign);
+        params.addBodyParameter(HttpServicePath.key, verification);
+        params.addBodyParameter("page", String.valueOf(page));
+        params.addBodyParameter("number", String.valueOf(10));
+        params.addBodyParameter("trId", tripId);
+
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.getNewApplyForDataPath, new NewApplyForRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
+    }
+
+    /**
+     * 隐藏进度框和ListView加载进度View
+     */
+    private void showOrHideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+
+        handler.sendEmptyMessage(COMPLETE);
+
+    }
+
+    /**
+     * 如果页码为1，就清空数据
+     */
+    private void clearListData() {
+        if (page == 1) {
+            if (listAll != null && listAll.size() > 0) {
+                listAll.clear();
             }
-        });
+        }
+    }
+
+    private void failureComputePage() {
+        if (page > 1) {
+            page = page - 1;
+        }
+    }
+
+    /**
+     * 绑定数据到View
+     *
+     * @param str JSON字符串
+     */
+    private void bindData2View(String str) {
+        if (TextUtils.isEmpty(str)) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                NewApply newApply = JsonUtils.getInstance().fromJSON(NewApply.class, str);
+                List<NewApply.NewApplyData> list = newApply.getData();
+                if (list != null && list.size() > 0) {
+                    clearListData();
+                    listAll.addAll(list);
+                    newApplyForAdapter.setList(listAll);
+                } else {
+                    failureComputePage();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                failureComputePage();
+                Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private class NewApplyForRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
+
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+            showOrHideDialog();
+            String str = responseInfo.result;
+            bindData2View(str);
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",error:" + s);
+            showOrHideDialog();
+            failureComputePage();
+            Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 }
