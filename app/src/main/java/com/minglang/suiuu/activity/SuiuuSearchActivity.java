@@ -27,7 +27,6 @@ import com.minglang.suiuu.customview.rangebar.RangeBar;
 import com.minglang.suiuu.entity.SuiuuDataList;
 import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.entity.SuiuuSearchTag;
-import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -55,9 +54,9 @@ public class SuiuuSearchActivity extends BaseActivity implements ReFlashListView
     private TextProgressDialog dialog;
     private List<TextView> list = new ArrayList<>();
     private List<TextView> listClick = new ArrayList<>();
-    String tags = "";
-    String searchText;
-    String enjoyPeopleCount;
+    private String tags = "";
+    private String searchText;
+    private String enjoyPeopleCount;
 
     private TextView tv_price_range;
     private int startTick = 0;
@@ -143,7 +142,7 @@ public class SuiuuSearchActivity extends BaseActivity implements ReFlashListView
         params.addBodyParameter("endPrice", endPrice);
 
         params.addBodyParameter("page", Integer.toString(page));
-        params.addBodyParameter("number", "10");
+        params.addBodyParameter("number", "2");
 
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuList, new getSuiuuDateCallBack());
@@ -176,6 +175,7 @@ public class SuiuuSearchActivity extends BaseActivity implements ReFlashListView
 
     @Override
     public void onLoadMoreData() {
+        Log.i("suiuu","tags="+tags);
         if (!dialog.isShow()) {
             page += 1;
             loadDate(searchText, "0".equals(enjoyPeopleCount) ? "" :
@@ -246,11 +246,7 @@ public class SuiuuSearchActivity extends BaseActivity implements ReFlashListView
                     }
                     suiuuDataList.addAll(suiuuDataListNew);
                     showList(suiuuDataList);
-                } else if ("-3".equals(status)) {
-                    Toast.makeText(SuiuuSearchActivity.this, "登录信息过期,请重新登录", Toast.LENGTH_SHORT).show();
-                    AppUtils.intentLogin(SuiuuSearchActivity.this);
-                    SuiuuSearchActivity.this.finish();
-                } else {
+                }  else {
                     Toast.makeText(SuiuuSearchActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
 
                 }
@@ -340,6 +336,7 @@ public class SuiuuSearchActivity extends BaseActivity implements ReFlashListView
                         Toast.makeText(SuiuuSearchActivity.this, R.string.please_enter_search_content, Toast.LENGTH_SHORT).show();
                         return;
                     }
+                    suiuuDataList.clear();
                     if (fl_search_more.isShown()) {
                         enjoyPeopleCount = peopleNumber.getText().toString().trim();
 
