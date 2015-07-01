@@ -1,31 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     android:id="@+id/headLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <com.minglang.suiuu.customview.CircleImageView
         android:id="@+id/headImage"
         android:layout_width="@dimen/layout_60dp"
         android:layout_height="@dimen/layout_60dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/layout_10dp"
         android:src="@drawable/default_head_image"/>
 
     <TextView
         android:id="@+id/nickName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/headImage"
-        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/layout_10dp"
         android:gravity="center"
         android:text="@string/nickname"
         android:textSize="20sp"/>
 
-</RelativeLayout>
+    <Switch
+        android:id="@+id/switchSuiuu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/layout_5dp"
+        android:layout_marginRight="@dimen/layout_5dp"
+        android:text="@string/SuiuuAccount"
+        android:textOff=" "
+        android:textOn=" "
+        android:textSize="@dimen/layout_18sp"
+        android:thumb="@drawable/widget_switch_selector"
+        android:track="@drawable/widget_switch_background"/>
+
+</LinearLayout>

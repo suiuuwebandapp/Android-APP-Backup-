@@ -1,14 +1,11 @@
 package com.minglang.suiuu.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.NewRemindAdapter;
@@ -31,18 +28,6 @@ public class NewRemindActivity extends BaseActivity {
      * 返回键
      */
     private ImageView newRemindBack;
-
-    private TextView newAt, newComment, newReply, newAttention;
-
-    private ImageView newRemindSlider;
-
-    private ViewPager newRemindPager;
-
-    private int currIndex = 1;// 当前页卡编号
-
-    private int tabWidth;// 每个tab头的宽度
-
-    private int offsetX;//偏移量
 
     /**
      * 新@页面
@@ -77,28 +62,30 @@ public class NewRemindActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-        RelativeLayout newRemindRootLayout = (RelativeLayout) findViewById(R.id.newRemindRootLayout);
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                newRemindRootLayout.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                newRemindRootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        }
-
         newRemindBack = (ImageView) findViewById(R.id.newRemindBack);
 
-        newAt = (TextView) findViewById(R.id.newAt);
-        newComment = (TextView) findViewById(R.id.newComment);
-        newReply = (TextView) findViewById(R.id.newReply);
-        newAttention = (TextView) findViewById(R.id.newAttention);
-
-        newRemindSlider = (ImageView) findViewById(R.id.newRemindSlider);
-
-        newRemindPager = (ViewPager) findViewById(R.id.newRemindPager);
+        ViewPager newRemindPager = (ViewPager) findViewById(R.id.newRemindPager);
         newRemindPager.setOffscreenPageLimit(4);
 
-        initImageView();
+        String str1 = getResources().getString(R.string.newAt);
+        String str2 = getResources().getString(R.string.newComment);
+        String str3 = getResources().getString(R.string.newReply);
+        String str4 = getResources().getString(R.string.newAttention);
+
+        List<String> titleList = new ArrayList<>();
+        titleList.add(str1);
+        titleList.add(str2);
+        titleList.add(str3);
+        titleList.add(str4);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.newRemindTabLayout);
+        tabLayout.addTab(tabLayout.newTab().setText(str1), true);
+        tabLayout.addTab(tabLayout.newTab().setText(str2), false);
+        tabLayout.addTab(tabLayout.newTab().setText(str3), false);
+        tabLayout.addTab(tabLayout.newTab().setText(str4), false);
+        tabLayout.setTabTextColors(getResources().getColor(R.color.tr_black),
+                getResources().getColor(R.color.text_select_true));
+
         CreateFragment();
 
         List<Fragment> fragmentList = new ArrayList<>();
@@ -107,82 +94,23 @@ public class NewRemindActivity extends BaseActivity {
         fragmentList.add(newReplyFragment);
         fragmentList.add(newAttentionFragment);
 
-        NewRemindAdapter newRemindAdapter = new NewRemindAdapter(fm, fragmentList);
+        NewRemindAdapter newRemindAdapter = new NewRemindAdapter(fm, fragmentList, titleList);
         newRemindPager.setAdapter(newRemindAdapter);
+
+        tabLayout.setupWithViewPager(newRemindPager);
+        tabLayout.setTabsFromPagerAdapter(newRemindAdapter);
     }
 
     /**
      * 控件动作
      */
     private void ViewAction() {
-        newRemindBack.setOnClickListener(new NewRemindClick());
-
-        newAt.setOnClickListener(new NewRemindClick(0));
-        newComment.setOnClickListener(new NewRemindClick(1));
-        newReply.setOnClickListener(new NewRemindClick(2));
-        newAttention.setOnClickListener(new NewRemindClick(3));
-
-        newRemindPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        newRemindBack.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-                switch (position) {
-                    case 0:
-                        newAt.setTextColor(getResources().getColor(R.color.slider_line_color));
-                        newComment.setTextColor(getResources().getColor(R.color.textColor));
-                        newReply.setTextColor(getResources().getColor(R.color.textColor));
-                        newAttention.setTextColor(getResources().getColor(R.color.textColor));
-                        break;
-
-                    case 1:
-                        newAt.setTextColor(getResources().getColor(R.color.textColor));
-                        newComment.setTextColor(getResources().getColor(R.color.slider_line_color));
-                        newReply.setTextColor(getResources().getColor(R.color.textColor));
-                        newAttention.setTextColor(getResources().getColor(R.color.textColor));
-                        break;
-
-                    case 2:
-                        newAt.setTextColor(getResources().getColor(R.color.textColor));
-                        newComment.setTextColor(getResources().getColor(R.color.textColor));
-                        newReply.setTextColor(getResources().getColor(R.color.slider_line_color));
-                        newAttention.setTextColor(getResources().getColor(R.color.textColor));
-                        break;
-
-                    case 3:
-                        newAt.setTextColor(getResources().getColor(R.color.textColor));
-                        newComment.setTextColor(getResources().getColor(R.color.textColor));
-                        newReply.setTextColor(getResources().getColor(R.color.textColor));
-                        newAttention.setTextColor(getResources().getColor(R.color.slider_line_color));
-                        break;
-                }
-
-                Animation anim = new TranslateAnimation(tabWidth * currIndex + offsetX, tabWidth * position + offsetX, 0, 0);
-                currIndex = position;
-                anim.setFillAfter(true);
-                anim.setDuration(200);
-                newRemindSlider.startAnimation(anim);
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
+            public void onClick(View v) {
+                finish();
             }
         });
-    }
-
-    private void initImageView() {
-        tabWidth = screenWidth / 4;
-        if (sliderImageWidth > tabWidth) {
-            newRemindSlider.getLayoutParams().width = tabWidth;
-            sliderImageWidth = tabWidth;
-        }
-        offsetX = (tabWidth - sliderImageWidth) / 2;
     }
 
     private void CreateFragment() {
@@ -190,40 +118,6 @@ public class NewRemindActivity extends BaseActivity {
         newCommentFragment = NewCommentFragment.newInstance(userSign, verification);
         newReplyFragment = NewReplyFragment.newInstance(userSign, verification);
         newAttentionFragment = NewAttentionFragment.newInstance(userSign, verification);
-    }
-
-    class NewRemindClick implements View.OnClickListener {
-
-        private int index;
-
-        public NewRemindClick() {
-
-        }
-
-        public NewRemindClick(int i) {
-            this.index = i;
-        }
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.newRemindBack:
-                    finish();
-                    break;
-                case R.id.newAt:
-                    newRemindPager.setCurrentItem(index);
-                    break;
-                case R.id.newComment:
-                    newRemindPager.setCurrentItem(index);
-                    break;
-                case R.id.newReply:
-                    newRemindPager.setCurrentItem(index);
-                    break;
-                case R.id.newAttention:
-                    newRemindPager.setCurrentItem(index);
-                    break;
-            }
-        }
     }
 
 }

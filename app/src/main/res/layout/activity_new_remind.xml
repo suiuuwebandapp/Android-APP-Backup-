@@ -1,17 +1,17 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
     android:id="@+id/newRemindRootLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.minglang.suiuu.activity.NewRemindActivity">
 
-
     <RelativeLayout
         android:id="@+id/NewRemindHeadLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentTop="true"
         android:background="@color/tr_black">
 
         <TextView
@@ -22,68 +22,26 @@
             android:layout_centerVertical="true"
             android:text="@string/NewRemind"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
         <ImageView
             android:id="@+id/newRemindBack"
             style="@style/backKeyStyle"
-            android:src="@drawable/back" />
+            android:src="@drawable/back"/>
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/newRemindTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/NewRemindHeadLayout"
-        android:layout_marginBottom="2.5dp"
-        android:layout_marginTop="2.5dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/newAt"
-            style="@style/newRemind"
-            android:text="@string/newAt"
-            android:textColor="@color/slider_line_color" />
-
-        <TextView
-            android:id="@+id/newComment"
-            style="@style/newRemind"
-            android:text="@string/newComment"
-            android:textColor="@color/textColor" />
-
-        <TextView
-            android:id="@+id/newReply"
-            style="@style/newRemind"
-            android:text="@string/newReply"
-            android:textColor="@color/textColor" />
-
-        <TextView
-            android:id="@+id/newAttention"
-            style="@style/newRemind"
-            android:text="@string/newAttention"
-            android:textColor="@color/textColor" />
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/newRemindSlider"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout2"
-        android:scaleType="matrix"
-        android:src="@drawable/slider" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="5px"
-        android:layout_below="@+id/newRemindSlider"
-        android:background="@color/slider_line_color" />
+        android:background="@color/white"
+        app:tabIndicatorColor="@color/slider_line_color"
+        app:tabIndicatorHeight="@dimen/layout_1dp"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/newRemindPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/view">
-
+        android:layout_height="match_parent">
     </android.support.v4.view.ViewPager>
-</RelativeLayout>
+
+</LinearLayout>

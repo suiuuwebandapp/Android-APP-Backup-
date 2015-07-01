@@ -257,4 +257,5 @@
     <string name="userName">用户名</string>
     <string name="userLocation">用户位置</string>
     <string name="userSignature">个人签名</string>
+    <string name="SuiuuAccount">随友帐号</string>
 </resources>

@@ -32,15 +32,15 @@ public class NormalSettingActivity extends BaseActivity implements View.OnClickL
      */
     private ImageView iv_switch_open_notification;
     /**
-     * 关闭新消息通知imageview
+     * 关闭新消息通知imageView
      */
     private ImageView iv_switch_close_notification;
     /**
-     * 打开声音提示imageview
+     * 打开声音提示imageView
      */
     private ImageView iv_switch_open_sound;
     /**
-     * 关闭声音提示imageview
+     * 关闭声音提示imageView
      */
     private ImageView iv_switch_close_sound;
     /**
@@ -234,4 +234,5 @@ public class NormalSettingActivity extends BaseActivity implements View.OnClickL
         }
 
     }
+
 }

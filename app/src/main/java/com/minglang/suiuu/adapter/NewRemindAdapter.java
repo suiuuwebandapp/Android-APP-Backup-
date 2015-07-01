@@ -15,9 +15,12 @@ public class NewRemindAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> list;
 
-    public NewRemindAdapter(FragmentManager fm, List<Fragment> list) {
+    private List<String> titleList;
+
+    public NewRemindAdapter(FragmentManager fm, List<Fragment> list, List<String> titleList) {
         super(fm);
         this.list = list;
+        this.titleList = titleList;
     }
 
     @Override
@@ -37,4 +40,10 @@ public class NewRemindAdapter extends FragmentPagerAdapter {
             return null;
         }
     }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return titleList.get(position);
+    }
+
 }

@@ -218,6 +218,8 @@
     <string name="userLocation">userLocation</string>
     <string name="userSignature">personality Signature</string>
 
+    <string name="SuiuuAccount">Suiuu Account</string>
+
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>

@@ -22,10 +22,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,6 +88,8 @@ public class MainActivity extends BaseActivity {
      * 点击修改头像
      */
     private CircleImageView headImageView;
+
+    private Switch switchSuiuu;
 
     private ListView sideListView;
 
@@ -161,7 +165,6 @@ public class MainActivity extends BaseActivity {
     private TextView tv_conversation_text;
     private RelativeLayout rl_top_info;
 
-
     private ExitBroadcastReceiver exitBroadcastReceiver;
 
     private EMChatManager chatManager;
@@ -189,10 +192,12 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         String network_headImage_path = SuiuuInfo.ReadUserData(this).getHeadImg();
         if (!TextUtils.isEmpty(network_headImage_path)) {
             imageLoader.displayImage(network_headImage_path, headImageView);
         }
+
         String user_name = SuiuuInfo.ReadUserData(this).getNickname();
         if (!TextUtils.isEmpty(user_name)) {
             nickNameView.setText(user_name);
@@ -271,6 +276,9 @@ public class MainActivity extends BaseActivity {
         if (!TextUtils.isEmpty(strHeadImagePath)) {
             imageLoader.displayImage(strHeadImagePath, headImageView);
         }
+
+        switchSuiuu = (Switch) findViewById(R.id.switchSuiuu);
+        switchSuiuu.setChecked(true);
 
         sideListView = (ListView) findViewById(R.id.sideListView);
         List<String> strList = new ArrayList<>();
@@ -370,6 +378,18 @@ public class MainActivity extends BaseActivity {
      * 控件行为
      */
     private void ViewAction() {
+
+        switchSuiuu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    DeBugLog.i(TAG, "isChecked1:" + Boolean.toString(isChecked));
+                } else {
+                    DeBugLog.i(TAG, "isChecked2:" + Boolean.toString(isChecked));
+                }
+            }
+        });
+
         MyOnClickListener onClickListener = new MyOnClickListener();
 
         drawerSwitch.setOnClickListener(onClickListener);

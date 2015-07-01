@@ -96,6 +96,7 @@
                     android:id="@+id/title1"
                     style="@style/titleText"
                     android:text="@string/title1"/>
+
             </LinearLayout>
 
             <LinearLayout
@@ -111,6 +112,7 @@
                     android:id="@+id/title2"
                     style="@style/titleText"
                     android:text="@string/title2"/>
+
             </LinearLayout>
 
             <ImageView
@@ -120,7 +122,6 @@
                 android:layout_marginTop="10dp"
                 android:layout_weight="0.2"
                 android:src="@drawable/icon_edit2"/>
-
 
             <LinearLayout
                 android:id="@+id/tab3"
@@ -135,6 +136,7 @@
                     android:id="@+id/title3"
                     style="@style/titleText"
                     android:text="@string/title3"/>
+
             </LinearLayout>
 
             <LinearLayout
@@ -165,7 +167,6 @@
                         android:textSize="12sp"
                         android:visibility="invisible"/>
                 </LinearLayout>
-
 
                 <TextView
                     android:id="@+id/title4"
