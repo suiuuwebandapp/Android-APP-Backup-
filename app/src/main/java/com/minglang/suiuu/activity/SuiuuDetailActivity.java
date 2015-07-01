@@ -222,7 +222,7 @@ public class SuiuuDetailActivity extends BaseActivity {
             public void pagerClick(int position) {
 //				Intent intent = new Intent(ct,DetaiAct.class);
 //				ct.startActivity(intent);
-        Toast.makeText(SuiuuDetailActivity.this, "xxxxxx", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SuiuuDetailActivity.this, "xxxxxx", Toast.LENGTH_SHORT).show();
             }
         });
 

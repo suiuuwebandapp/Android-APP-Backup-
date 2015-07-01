@@ -253,6 +253,7 @@ public class SuiuuFragment extends BaseFragment
             dialog.dismissDialog();
             try {
                 JSONObject json = new JSONObject(stringResponseInfo.result);
+                Log.i("suiuu","suiuu="+stringResponseInfo.result);
                 String status = json.getString("status");
                 if ("1".equals(status)) {
                     SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, stringResponseInfo.result);

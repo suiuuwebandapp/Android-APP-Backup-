@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/SuDetailsRootLayout"
-    tools:context="com.minglang.suiuu.activity.SuDetailsActivity">
+    tools:context="com.minglang.suiuu.activity.SuiuuDetailActivity">
 
     <RelativeLayout
         android:id="@+id/SuDetailsSlideLayout"

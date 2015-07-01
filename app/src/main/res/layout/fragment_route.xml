@@ -10,10 +10,9 @@
         android:id="@+id/lv_suiuu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/layout_12dp"
-        android:layout_marginRight="@dimen/layout_12dp"
+        android:layout_marginLeft="@dimen/layout_8dp"
+        android:layout_marginRight="@dimen/layout_8dp"
         android:background="@color/white"
-        android:dividerHeight="@dimen/layout_10dp"
         android:scrollbars="none"/>
 
 
