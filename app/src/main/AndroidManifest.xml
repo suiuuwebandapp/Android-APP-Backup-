@@ -411,6 +411,11 @@
             android:label="@string/title_activity_suiuu_user_info"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
+		<activity
+            android:name=".activity.SuDetailsActivity"
+            android:label="@string/title_activity_suiuu_details"
+            android:theme="@style/FullBleedTheme"/>
+
     </application>
 
 </manifest>
