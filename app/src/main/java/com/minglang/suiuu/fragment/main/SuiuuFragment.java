@@ -27,7 +27,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuDetailActivity;
-import com.minglang.suiuu.activity.SuiuuSearchActivity;
+import com.minglang.suiuu.activity.SuiuuSearchDetailActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
@@ -297,7 +297,7 @@ public class SuiuuFragment extends BaseFragment
             switch (v.getId()) {
                 case R.id.et_suiuu:
                     //跳转到搜索页面
-                    startActivity(new Intent(getActivity(), SuiuuSearchActivity.class));
+                    startActivity(new Intent(getActivity(), SuiuuSearchDetailActivity.class));
                     break;
             }
         }

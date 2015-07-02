@@ -1,132 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <include
-        android:id="@+id/top"
-        layout="@layout/common_top_layout"/>
-    <com.minglang.suiuu.customview.ReFlashListView
-        android:layout_below="@+id/top"
-        android:id="@+id/lv_search_suiuu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/layout_12dp"
-        android:layout_marginRight="@dimen/layout_12dp"
-        android:background="@color/white"
-        android:dividerHeight="@dimen/layout_10dp"
-        android:scrollbars="none"
-        android:visibility="gone"/>
-    <FrameLayout
-        android:layout_below="@+id/top"
-        android:layout_marginTop="@dimen/layout_10dp"
-        android:id="@+id/fl_search_more"
-        android:layout_width="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/layout_50dp"
+    android:background="@color/btn_register_pressed">
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/layout_5dp"
-        android:layout_marginRight="@dimen/layout_5dp"
-        android:background="@drawable/suiuu_framlayout_bg"
+        android:id="@+id/iv_top_back"
+        android:src="@drawable/back"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_top_info"
+        android:layout_width="@dimen/layout_200dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/et_search"
         android:visibility="visible">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tv_people_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/layout_5dp"
-                android:text="@string/people_number"
-                android:textColor="@color/textColor"
-                android:textSize="@dimen/layout_15sp"/>
-
-            <ImageButton
-                android:id="@+id/ib_release"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_people_number"
-                android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_marginStart="@dimen/layout_5dp"
-                android:background="@drawable/btn_release"/>
-
-            <EditText
-                android:id="@+id/et_people_number"
-                android:layout_width="@dimen/layout_50dp"
-                android:layout_height="@dimen/layout_25dp"
-                android:layout_below="@+id/tv_people_number"
-                android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_marginStart="@dimen/layout_5dp"
-                android:layout_toEndOf="@+id/ib_release"
-                android:layout_toRightOf="@+id/ib_release"
-                android:background="@color/white"
-                android:gravity="center"
-                android:inputType="number"
-                android:text="@string/zero"
-                android:textColor="@color/black"/>
-
-            <ImageButton
-                android:id="@+id/ib_plus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_people_number"
-                android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_marginStart="@dimen/layout_5dp"
-                android:layout_toEndOf="@+id/et_people_number"
-                android:layout_toRightOf="@+id/et_people_number"
-                android:background="@drawable/btn_plus"/>
-
-            <TextView
-                android:id="@+id/tv_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ib_release"
-                android:layout_marginTop="@dimen/layout_8dp"
-                android:padding="@dimen/layout_5dp"
-                android:text="@string/type"
-                android:textColor="@color/textColor"
-                android:textSize="@dimen/layout_15sp"/>
-
-            <com.minglang.suiuu.customview.FlowLayout
-                android:id="@+id/id_flowLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_type"
-                android:background="@color/transparent"
-                android:padding="5dp"/>
-
-            <TextView
-                android:id="@+id/tv_price_show"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/id_flowLayout"
-                android:padding="@dimen/layout_5dp"
-                android:text="@string/price"
-                android:textColor="@color/textColor"
-                android:textSize="@dimen/layout_15sp"/>
-
-            <TextView
-                android:id="@+id/tv_price_range"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/id_flowLayout"
-                android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_marginStart="@dimen/layout_5dp"
-                android:layout_toEndOf="@+id/tv_price_show"
-                android:layout_toRightOf="@+id/tv_price_show"
-                android:padding="@dimen/layout_5dp"
-                android:text="@string/zeroForTenKilo"
-                android:textColor="@color/login_bg_color"
-                android:textSize="@dimen/layout_15sp"/>
-
-            <com.minglang.suiuu.customview.rangebar.RangeBar
-                android:id="@+id/rangeBar"
-                android:layout_width="match_parent"
-                android:layout_height="70dip"
-                android:layout_below="@+id/tv_price_show"
-                android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_marginRight="@dimen/layout_5dp"
-                android:layout_marginBottom="@dimen/layout_10dp"/>
-        </RelativeLayout>
-    </FrameLayout>
-
+        <EditText
+            android:id="@+id/et_suiuu"
+            android:layout_width="@dimen/layout_200dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@color/transparent"
+            android:hint="输入你感兴趣的国家,城市"
+            android:padding="@dimen/layout_5dp"
+            android:singleLine="true"
+            android:textSize="@dimen/layout_15sp" />
+    </RelativeLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/iv_top_search"
+        android:src="@drawable/suiuu_search"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/layout_5dp"
+        />
 </RelativeLayout>

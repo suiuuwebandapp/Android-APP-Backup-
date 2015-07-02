@@ -6,31 +6,31 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundColor">
 
-    <RelativeLayout
-        android:id="@+id/viewPager"
-        android:layout_width="fill_parent"
-        android:layout_height="165dp">
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/viewPager"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="165dp">-->
 
-        <LinearLayout
-            android:id="@+id/top_news_viewpager"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/layout_180dp"
-            android:orientation="horizontal" />
+        <!--<LinearLayout-->
+            <!--android:id="@+id/top_news_viewpager"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="@dimen/layout_180dp"-->
+            <!--android:orientation="horizontal" />-->
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:background="#00000000">
+        <!--<RelativeLayout-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:background="#00000000">-->
 
-            <LinearLayout
-                android:id="@+id/dots_ll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="horizontal" />
-        </RelativeLayout>
-    </RelativeLayout>
+            <!--<LinearLayout-->
+                <!--android:id="@+id/dots_ll"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:orientation="horizontal" />-->
+        <!--</RelativeLayout>-->
+    <!--</RelativeLayout>-->
 
     <RelativeLayout
         android:id="@+id/suiuu_details_title_layout"
@@ -76,268 +76,272 @@
             android:textColor="@color/white"
             android:textSize="20sp" />
     </RelativeLayout>
-
-    <ScrollView
-        android:id="@+id/sll"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/suiuu_details_bottom_layout"
-        android:layout_below="@+id/viewPager"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="@dimen/layout_8dp"
-        android:scrollbars="none">
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:id="@+id/tl_user_message"
-                style="@style/comment_suiuu_detail"
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/layout_80dp">
-
-                <com.minglang.suiuu.customview.CircleImageView
-                    android:id="@+id/suiuu_details_user_head_image"
-                    android:layout_width="@dimen/layout_60dp"
-                    android:layout_height="@dimen/layout_60dp"
-                    android:layout_alignBottom="@+id/tv_choiced"
-                    android:layout_marginLeft="@dimen/layout_10dp"
-                    android:layout_marginTop="@dimen/layout_10dp"
-                    android:background="@drawable/user_head_image_bg" />
-
-                <TextView
-                    android:id="@+id/tv_nickname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/layout_2dp"
-                    android:layout_marginTop="@dimen/layout_8dp"
-                    android:layout_toRightOf="@+id/suiuu_details_user_head_image"
-                    android:singleLine="true"
-                    android:text="nikeName"
-                    android:textColor="@color/gray"
-                    android:textSize="@dimen/layout_15sp" />
-
-                <TextView
-                    android:id="@+id/tv_self_sign"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_nickname"
-                    android:layout_marginLeft="@dimen/layout_5dp"
-                    android:layout_toRightOf="@+id/suiuu_details_user_head_image"
-                    android:text="selfyour"
-                    android:textColor="@color/gray"
-                    android:textSize="@dimen/layout_15sp" />
-
-                <RatingBar
-                    android:id="@+id/rb_user_star"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/suiuu_details_user_head_image"
-                    android:layout_below="@+id/tv_self_sign"
-                    android:layout_toEndOf="@+id/suiuu_details_user_head_image"
-                    android:layout_toRightOf="@+id/suiuu_details_user_head_image"
-                    android:isIndicator="true"
-                    android:numStars="5"
-                    android:progressDrawable="@drawable/food_rating_bar_full"
-                    android:rating="2" />
-
-                <TextView
-                    android:id="@+id/tv_choiced"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_margin="@dimen/layout_8dp"
-                    android:textColor="@color/gray"
-                    android:textSize="@dimen/layout_15sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                style="@style/comment_suiuu_detail"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/tv_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/layout_10dp"
-                    android:text="$700"
-                    android:textColor="@color/text_select_true"
-                    android:textSize="@dimen/layout_20sp" />
-
-                <RatingBar
-                    android:id="@+id/rb_suiuu_star"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/tv_title"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="@dimen/layout_10dp"
-                    android:layout_toRightOf="@+id/tv_price"
-                    android:isIndicator="true"
-                    android:numStars="5"
-                    android:progressDrawable="@drawable/food_rating_bar_full"
-                    android:rating="2" />
-
-                <TextView
-                    android:id="@+id/tv_title"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_price"
-                    android:gravity="center"
-                    android:padding="@dimen/layout_5dp"
-                    android:text="标题"
-                    android:textSize="@dimen/layout_25sp" />
-
-                <TextView
-                    android:id="@+id/tv_content"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_title"
-                    android:lineSpacingExtra="@dimen/layout_5dp"
-                    android:padding="@dimen/layout_10dp"
-                    android:text="v" />
-            </RelativeLayout>
-
-            <LinearLayout
-                style="@style/comment_suiuu_detail"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_service_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/layout_8dp"
-                    android:textColor="@color/gray"
-                    android:textSize="@dimen/layout_15sp" />
-
-                <include layout="@layout/view_line" />
-
-                <TextView
-                    android:id="@+id/tv_suiuu_travel_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/layout_8dp"
-                    android:textColor="@color/gray"
-                    android:textSize="@dimen/layout_15sp" />
-
-                <include layout="@layout/view_line" />
-
-                <TextView
-                    android:id="@+id/tv_atmost_people"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/layout_8dp"
-                    android:textColor="@color/gray"
-                    android:textSize="@dimen/layout_15sp" />
-
-            </LinearLayout>
-            <RelativeLayout
-                style="@style/comment_suiuu_detail"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/tv_other_service"
-                    android:padding="@dimen/layout_5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="附加服务"
-                    android:textSize="@dimen/layout_15sp"
-                    android:gravity="center_vertical"/>
-                <TextView
-                    android:id="@+id/tv_other_service_value"
-                    android:layout_toRightOf="@id/tv_other_service"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_select_true"
-                    android:text="无"
-                    android:padding="@dimen/layout_5dp"
-                    android:gravity="center_vertical"/>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/layout_10dp"
-                android:layout_marginTop="@dimen/layout_5dp">
-
-                <TextView
-                    android:id="@+id/suiuu_details_comments"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:drawableLeft="@drawable/comments_select"
-                    android:drawablePadding="5dp"
-                    android:drawableStart="@drawable/comments_select"
-                    android:gravity="center_vertical"
-                    android:text="@string/comment"
-                    android:textColor="@drawable/text_select_color"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/suiuu_details_share"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/suiuu_details_comments"
-                    android:layout_toStartOf="@+id/suiuu_details_comments"
-                    android:drawableLeft="@drawable/share_select"
-                    android:drawablePadding="5dp"
-                    android:drawableStart="@drawable/share_select"
-                    android:gravity="center_vertical"
-                    android:text="@string/share"
-                    android:textColor="@drawable/text_select_color"
-                    android:textSize="20sp" />
-            </RelativeLayout>
-        </LinearLayout>
-    </ScrollView>
-
-    <RelativeLayout
-
-        android:id="@+id/suiuu_details_bottom_layout"
+    <WebView
+        android:id="@+id/suiuu_detail_web_view"
+        android:layout_below="@+id/suiuu_details_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_50dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
+        android:layout_height="match_parent" />
+    <!--<ScrollView-->
+        <!--android:id="@+id/sll"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@+id/suiuu_details_bottom_layout"-->
+        <!--android:layout_below="@+id/viewPager"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginBottom="@dimen/layout_8dp"-->
+        <!--android:scrollbars="none">-->
 
-        >
+        <!--<LinearLayout-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-            android:layout_width="@dimen/layout_100dp"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/layout_60dp"
-            android:text="咨询"
-            bootstrapbutton:bb_roundedCorners="true"
-            bootstrapbutton:bb_size="small"
-            bootstrapbutton:bb_type="info"
-            android:id="@+id/bb_consult"
-            />
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/tl_user_message"-->
+                <!--style="@style/comment_suiuu_detail"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="@dimen/layout_80dp">-->
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-            android:layout_width="@dimen/layout_100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/layout_60dp"
-            android:text="预定"
-            bootstrapbutton:bb_roundedCorners="true"
-            bootstrapbutton:bb_size="small"
-            bootstrapbutton:bb_type="warning"
-            android:id="@+id/bb_schedule"
-            />
+                <!--<com.minglang.suiuu.customview.CircleImageView-->
+                    <!--android:id="@+id/suiuu_details_user_head_image"-->
+                    <!--android:layout_width="@dimen/layout_60dp"-->
+                    <!--android:layout_height="@dimen/layout_60dp"-->
+                    <!--android:layout_alignBottom="@+id/tv_choiced"-->
+                    <!--android:layout_marginLeft="@dimen/layout_10dp"-->
+                    <!--android:layout_marginTop="@dimen/layout_10dp"-->
+                    <!--android:background="@drawable/user_head_image_bg" />-->
 
-    </RelativeLayout>
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_nickname"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="@dimen/layout_2dp"-->
+                    <!--android:layout_marginTop="@dimen/layout_8dp"-->
+                    <!--android:layout_toRightOf="@+id/suiuu_details_user_head_image"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:text="nikeName"-->
+                    <!--android:textColor="@color/gray"-->
+                    <!--android:textSize="@dimen/layout_15sp" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_self_sign"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/tv_nickname"-->
+                    <!--android:layout_marginLeft="@dimen/layout_5dp"-->
+                    <!--android:layout_toRightOf="@+id/suiuu_details_user_head_image"-->
+                    <!--android:text="selfyour"-->
+                    <!--android:textColor="@color/gray"-->
+                    <!--android:textSize="@dimen/layout_15sp" />-->
+
+                <!--<RatingBar-->
+                    <!--android:id="@+id/rb_user_star"-->
+                    <!--style="?android:attr/ratingBarStyleSmall"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignBottom="@+id/suiuu_details_user_head_image"-->
+                    <!--android:layout_below="@+id/tv_self_sign"-->
+                    <!--android:layout_toEndOf="@+id/suiuu_details_user_head_image"-->
+                    <!--android:layout_toRightOf="@+id/suiuu_details_user_head_image"-->
+                    <!--android:isIndicator="true"-->
+                    <!--android:numStars="5"-->
+                    <!--android:progressDrawable="@drawable/food_rating_bar_full"-->
+                    <!--android:rating="2" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_choiced"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentBottom="true"-->
+                    <!--android:layout_alignParentEnd="true"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_margin="@dimen/layout_8dp"-->
+                    <!--android:textColor="@color/gray"-->
+                    <!--android:textSize="@dimen/layout_15sp" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+                <!--style="@style/comment_suiuu_detail"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content">-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_price"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:padding="@dimen/layout_10dp"-->
+                    <!--android:text="$700"-->
+                    <!--android:textColor="@color/text_select_true"-->
+                    <!--android:textSize="@dimen/layout_20sp" />-->
+
+                <!--<RatingBar-->
+                    <!--android:id="@+id/rb_suiuu_star"-->
+                    <!--style="?android:attr/ratingBarStyleSmall"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_above="@+id/tv_title"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:layout_marginTop="@dimen/layout_10dp"-->
+                    <!--android:layout_toRightOf="@+id/tv_price"-->
+                    <!--android:isIndicator="true"-->
+                    <!--android:numStars="5"-->
+                    <!--android:progressDrawable="@drawable/food_rating_bar_full"-->
+                    <!--android:rating="2" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_title"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/tv_price"-->
+                    <!--android:gravity="center"-->
+                    <!--android:padding="@dimen/layout_5dp"-->
+                    <!--android:text="标题"-->
+                    <!--android:textSize="@dimen/layout_25sp" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_content"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/tv_title"-->
+                    <!--android:lineSpacingExtra="@dimen/layout_5dp"-->
+                    <!--android:padding="@dimen/layout_10dp"-->
+                    <!--android:text="v" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<LinearLayout-->
+                <!--style="@style/comment_suiuu_detail"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_service_time"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:padding="@dimen/layout_8dp"-->
+                    <!--android:textColor="@color/gray"-->
+                    <!--android:textSize="@dimen/layout_15sp" />-->
+
+                <!--<include layout="@layout/view_line" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_suiuu_travel_time"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:padding="@dimen/layout_8dp"-->
+                    <!--android:textColor="@color/gray"-->
+                    <!--android:textSize="@dimen/layout_15sp" />-->
+
+                <!--<include layout="@layout/view_line" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_atmost_people"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:padding="@dimen/layout_8dp"-->
+                    <!--android:textColor="@color/gray"-->
+                    <!--android:textSize="@dimen/layout_15sp" />-->
+
+            <!--</LinearLayout>-->
+            <!--<RelativeLayout-->
+                <!--style="@style/comment_suiuu_detail"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_other_service"-->
+                    <!--android:padding="@dimen/layout_5dp"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="附加服务"-->
+                    <!--android:textSize="@dimen/layout_15sp"-->
+                    <!--android:gravity="center_vertical"/>-->
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_other_service_value"-->
+                    <!--android:layout_toRightOf="@id/tv_other_service"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@color/text_select_true"-->
+                    <!--android:text="无"-->
+                    <!--android:padding="@dimen/layout_5dp"-->
+                    <!--android:gravity="center_vertical"/>-->
+            <!--</RelativeLayout>-->
+            <!--<RelativeLayout-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="@dimen/layout_10dp"-->
+                <!--android:layout_marginTop="@dimen/layout_5dp">-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/suiuu_details_comments"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentEnd="true"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginEnd="10dp"-->
+                    <!--android:layout_marginRight="10dp"-->
+                    <!--android:drawableLeft="@drawable/comments_select"-->
+                    <!--android:drawablePadding="5dp"-->
+                    <!--android:drawableStart="@drawable/comments_select"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:text="@string/comment"-->
+                    <!--android:textColor="@drawable/text_select_color"-->
+                    <!--android:textSize="20sp" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/suiuu_details_share"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginEnd="10dp"-->
+                    <!--android:layout_marginRight="10dp"-->
+                    <!--android:layout_toLeftOf="@+id/suiuu_details_comments"-->
+                    <!--android:layout_toStartOf="@+id/suiuu_details_comments"-->
+                    <!--android:drawableLeft="@drawable/share_select"-->
+                    <!--android:drawablePadding="5dp"-->
+                    <!--android:drawableStart="@drawable/share_select"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:text="@string/share"-->
+                    <!--android:textColor="@drawable/text_select_color"-->
+                    <!--android:textSize="20sp" />-->
+            <!--</RelativeLayout>-->
+        <!--</LinearLayout>-->
+    <!--</ScrollView>-->
+
+    <!--<RelativeLayout-->
+
+        <!--android:id="@+id/suiuu_details_bottom_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/layout_50dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@color/white"-->
+
+        <!-->-->
+
+        <!--<com.beardedhen.androidbootstrap.BootstrapButton-->
+            <!--android:layout_width="@dimen/layout_100dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="@dimen/layout_60dp"-->
+            <!--android:text="咨询"-->
+            <!--bootstrapbutton:bb_roundedCorners="true"-->
+            <!--bootstrapbutton:bb_size="small"-->
+            <!--bootstrapbutton:bb_type="info"-->
+            <!--android:id="@+id/bb_consult"-->
+            <!--/>-->
+
+        <!--<com.beardedhen.androidbootstrap.BootstrapButton-->
+            <!--android:layout_width="@dimen/layout_100dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="@dimen/layout_60dp"-->
+            <!--android:text="预定"-->
+            <!--bootstrapbutton:bb_roundedCorners="true"-->
+            <!--bootstrapbutton:bb_size="small"-->
+            <!--bootstrapbutton:bb_type="warning"-->
+            <!--android:id="@+id/bb_schedule"-->
+            <!--/>-->
+
+    <!--</RelativeLayout>-->
 </RelativeLayout>

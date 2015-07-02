@@ -371,7 +371,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <activity
-            android:name=".activity.SuiuuSearchActivity"
+            android:name=".activity.SuiuuSearchDetailActivity"
             android:label="@string/title_activity_suiuu_search"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
 
