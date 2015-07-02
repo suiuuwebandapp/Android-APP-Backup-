@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/titleLayout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:background="@color/tr_black">
+        android:layout_height="wrap_content"
+        android:background="@color/mainColor">
 
         <ImageView
             android:id="@+id/drawerSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/layout_45dp"
+            android:layout_height="@dimen/layout_45dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/ic_drawer"/>
+            android:layout_marginBottom="@dimen/layout_5dp"
+            android:layout_marginLeft="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_10dp"
+            android:layout_marginTop="@dimen/layout_5dp"
+            android:src="@drawable/default_head_image"/>
 
         <TextView
             android:id="@+id/titleInfo"
@@ -27,35 +32,43 @@
             android:layout_centerVertical="true"
             android:text="@string/title1"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/layout_20sp"/>
+
         <RelativeLayout
             android:id="@+id/rl_top_info"
             android:layout_width="@dimen/layout_200dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:background="@drawable/et_search"
             android:visibility="gone">
+
             <EditText
                 android:id="@+id/et_suiuu"
                 android:layout_width="@dimen/layout_200dp"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
                 android:layout_centerVertical="true"
+                android:background="@color/transparent"
+                android:hint="输入你感兴趣的国家,城市"
                 android:padding="@dimen/layout_5dp"
                 android:singleLine="true"
-                android:hint="输入你感兴趣的国家,城市"
-                android:textSize="@dimen/layout_15sp"
-                />
+                android:textSize="@dimen/layout_15sp"/>
+
             <ImageButton
                 android:id="@+id/ib_suiuu_search"
-                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+
                 android:background="@drawable/icon_search"
                 android:layout_marginRight="@dimen/layout_5dp"/>
+
+
+
+
         </RelativeLayout>
+
         <ImageView
             android:id="@+id/iv_suiuu_search_more"
             android:layout_width="wrap_content"
@@ -64,8 +77,137 @@
             android:layout_centerVertical="true"
             android:layout_margin="10dp"
             android:src="@drawable/iv_suiuu_search_more"
-            android:visibility="gone"
-            />
+            android:visibility="gone"/>
+
+        <!--旅图页面相关按钮-->
+        <RelativeLayout
+            android:id="@+id/TravelImageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/titleInfo"
+            android:layout_toRightOf="@+id/titleInfo"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/main_1_album"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/layout_5dp"
+                android:layout_marginRight="@dimen/layout_5dp"
+                android:src="@drawable/icon_album_selector"/>
+
+            <ImageView
+                android:id="@+id/main_1_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/main_1_album"
+                android:layout_toStartOf="@+id/main_1_album"
+                android:src="@drawable/icon_tag_selector"/>
+
+            <ImageView
+                android:id="@+id/main_1_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/main_1_tag"
+                android:layout_toStartOf="@+id/main_1_tag"
+                android:src="@drawable/icon_search_selector"/>
+
+        </RelativeLayout>
+
+        <!--随游页面相关按钮-->
+        <FrameLayout
+            android:id="@+id/SuiuuButtonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/titleInfo"
+            android:layout_toRightOf="@+id/titleInfo"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/main_2_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/icon_search_selector"/>
+
+        </FrameLayout>
+
+        <!--问答页面按钮布局-->
+        <RelativeLayout
+            android:id="@+id/QA_Layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/titleInfo"
+            android:layout_toRightOf="@+id/titleInfo"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/main_3_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_toLeftOf="@+id/main_3_record"
+                android:layout_toStartOf="@+id/main_3_record"
+                android:contentDescription="@string/openShoot"
+                android:src="@drawable/icon_main_pic"/>
+
+            <ImageView
+                android:id="@+id/main_3_record"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="10dp"
+                android:layout_toLeftOf="@+id/main_3_ask"
+                android:layout_toStartOf="@+id/main_3_ask"
+                android:contentDescription="@string/openRemember"
+                android:src="@drawable/icon_main_record"/>
+
+            <ImageView
+                android:id="@+id/main_3_ask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
+                android:contentDescription="@string/openAsk"
+                android:src="@drawable/icon_main_ask"/>
+
+        </RelativeLayout>
+
+        <!--收件箱搜索-->
+        <FrameLayout
+            android:id="@+id/InboxButtonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/titleInfo"
+            android:layout_toRightOf="@+id/titleInfo"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/main_4_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/icon_search_selector"/>
+
+        </FrameLayout>
 
     </RelativeLayout>
 

@@ -12,6 +12,12 @@
     <string name="title2" translatable="false">圈子</string>
     <string name="title3" translatable="false">随游</string>
     <string name="title4" translatable="false">会话</string>
+
+    <string name="mainTitle1" translatable="false">旅图</string>
+    <string name="mainTitle2" translatable="false">随游</string>
+    <string name="mainTitle3" translatable="false">问答社区</string>
+    <string name="mainTitle4" translatable="false">收件箱</string>
+
     <string name="sendMsg" translatable="false">M</string>
     <string name="nickname" translatable="false">昵称</string>
     <string name="sendNewPost" translatable="false">发布新帖子</string>
