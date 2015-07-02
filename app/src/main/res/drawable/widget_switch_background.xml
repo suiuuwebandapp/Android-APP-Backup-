@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--填充颜色-->
     <solid android:color="@color/mainColor"/>
 
+    <!--半径-->
     <corners android:radius="@dimen/layout_180dp"/>
 
+    <!--指定大小-->
     <size android:height="@dimen/layout_30dp"
           android:width="@dimen/layout_10dp"/>
 

@@ -17,12 +17,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -53,7 +51,7 @@ import com.minglang.suiuu.chat.chat.Constant;
 import com.minglang.suiuu.chat.utils.CommonUtils;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.fragment.main.LoopFragment;
-import com.minglang.suiuu.fragment.main.MainFragment;
+import com.minglang.suiuu.fragment.main.OldMainFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
 import com.minglang.suiuu.utils.ConstantUtils;
 import com.minglang.suiuu.utils.DeBugLog;
@@ -72,6 +70,7 @@ public class MainActivity extends BaseActivity {
 
     protected NotificationManager notificationManager;
     private static final int notificationId = 11;
+
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private DrawerLayout mDrawerLayout;
@@ -104,14 +103,9 @@ public class MainActivity extends BaseActivity {
     private LinearLayout tab1, tab2, tab3, tab4;
 
     /**
-     * 跳转发送新帖子
-     */
-    private ImageView sendMsg;
-
-    /**
      * 主页页面
      */
-    private MainFragment mainFragment;
+    private OldMainFragment oldMainFragment;
 
     /**
      * 圈子页面
@@ -128,22 +122,7 @@ public class MainActivity extends BaseActivity {
      */
     private ChatAllHistoryFragment conversationFragment;
 
-    /**
-     * 随问Button
-     */
-    private ImageView ask;
-
-    /**
-     * 随拍Button
-     */
-    private ImageView pic;
-
-    /**
-     * 随记Button
-     */
-    private ImageView record;
-
-    private AnimationSet animationSetHide, animationSetShow;
+    private AnimationSet animationSetHide;
 
     // 账号在别处登录
     public boolean isConflict = false;
@@ -155,14 +134,58 @@ public class MainActivity extends BaseActivity {
     private RelativeLayout errorItem;
     private TextView errorText;
 
+    /**
+     * 旅图页面按钮布局
+     */
+    private RelativeLayout TravelImageLayout;
+
+    /**
+     * 随游页面按钮布局
+     */
+    private FrameLayout SuiuuBtnLayout;
+
+    /**
+     * 问答页面按钮布局
+     */
+    private RelativeLayout QaLayout;
+
+    /**
+     * 收件箱页面按钮布局
+     */
+    private FrameLayout InboxBtnLayout;
+
+    /**
+     * 旅图页面搜索按钮
+     */
+    private ImageView Main_1_Search;
+
+    /**
+     * 旅图页面标签按钮
+     */
+    private ImageView Main_1_Tag;
+
+    /**
+     * 旅图页面相册按钮
+     */
+    private ImageView Main_1_Album;
+
+    /**
+     * 随游页面搜索按钮
+     */
+    private ImageView Main_2_Search;
+
+    private ImageView Main_3_Pic;
+
+    private ImageView Main_3_Record;
+
+    private ImageView Main_3_Ask;
+
+    private ImageView Main_4_Search;
+
     private ImageView iv_theme;
-    private TextView tv_theme_text;
     private ImageView iv_loop;
-    private TextView tv_loop_text;
     private ImageView iv_suiuu;
-    private TextView tv_suiuu_text;
     private ImageView iv_conversation;
-    private TextView tv_conversation_text;
     private RelativeLayout rl_top_info;
 
     private ExitBroadcastReceiver exitBroadcastReceiver;
@@ -260,6 +283,23 @@ public class MainActivity extends BaseActivity {
         RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
         ConstantUtils.topHeight = titleLayout.getLayoutParams().height;
 
+        TravelImageLayout = (RelativeLayout) findViewById(R.id.TravelImageLayout);
+        SuiuuBtnLayout = (FrameLayout) findViewById(R.id.SuiuuButtonLayout);
+        QaLayout = (RelativeLayout) findViewById(R.id.QA_Layout);
+        InboxBtnLayout = (FrameLayout) findViewById(R.id.InboxButtonLayout);
+
+        Main_1_Search = (ImageView) findViewById(R.id.main_1_search);
+        Main_1_Tag = (ImageView) findViewById(R.id.main_1_tag);
+        Main_1_Album = (ImageView) findViewById(R.id.main_1_album);
+
+        Main_2_Search = (ImageView) findViewById(R.id.main_2_search);
+
+        Main_3_Pic = (ImageView) findViewById(R.id.main_3_pic);
+        Main_3_Record = (ImageView) findViewById(R.id.main_3_record);
+        Main_3_Ask = (ImageView) findViewById(R.id.main_3_ask);
+
+        Main_4_Search = (ImageView) findViewById(R.id.main_4_search);
+
         titleInfo = (TextView) findViewById(R.id.titleInfo);
         drawerSwitch = (ImageView) findViewById(R.id.drawerSwitch);
 
@@ -294,30 +334,17 @@ public class MainActivity extends BaseActivity {
 
         //初始化底部控件
         iv_theme = (ImageView) findViewById(R.id.img1);
-        tv_theme_text = (TextView) findViewById(R.id.title1);
         iv_loop = (ImageView) findViewById(R.id.img2);
-        tv_loop_text = (TextView) findViewById(R.id.title2);
         iv_suiuu = (ImageView) findViewById(R.id.img3);
-        tv_suiuu_text = (TextView) findViewById(R.id.title3);
         iv_conversation = (ImageView) findViewById(R.id.img4);
-        tv_conversation_text = (TextView) findViewById(R.id.title4);
 
         changeTheme(true);
 
-        sendMsg = (ImageView) findViewById(R.id.sendNewMessage);
-
-        ask = (ImageView) findViewById(R.id.main_ask);
-        pic = (ImageView) findViewById(R.id.main_pic);
-        record = (ImageView) findViewById(R.id.main_record);
-
         rl_top_info = (RelativeLayout) findViewById(R.id.rl_top_info);
 
-
-        mainFragment = new MainFragment();
+        oldMainFragment = new OldMainFragment();
         conversationFragment = new ChatAllHistoryFragment();
         LoadDefaultFragment();
-
-        initAnimation();
     }
 
     private void initRegisterAllBroadcastReceiver() {
@@ -366,14 +393,6 @@ public class MainActivity extends BaseActivity {
         EMChat.getInstance().setAppInited();
     }
 
-    private void adjustAnimation() {
-        if (ConstantUtils.isShowArticleAnim) {
-            ask.startAnimation(animationSetHide);
-            pic.startAnimation(animationSetHide);
-            record.startAnimation(animationSetHide);
-        }
-    }
-
     /**
      * 控件行为
      */
@@ -382,11 +401,68 @@ public class MainActivity extends BaseActivity {
         switchSuiuu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    DeBugLog.i(TAG, "isChecked1:" + Boolean.toString(isChecked));
-                } else {
-                    DeBugLog.i(TAG, "isChecked2:" + Boolean.toString(isChecked));
-                }
+
+            }
+        });
+
+        Main_1_Search.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        Main_1_Tag.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        Main_1_Album.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        Main_2_Search.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        Main_3_Ask.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AskQuestionActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Main_3_Pic.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SelectPictureActivity.class);
+                intent.putExtra("state", 1);
+                startActivity(intent);
+            }
+        });
+
+        Main_3_Record.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AskQuestionActivity.class);
+                intent.putExtra("record", 1);
+                startActivity(intent);
+            }
+        });
+
+        Main_4_Search.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -431,33 +507,6 @@ public class MainActivity extends BaseActivity {
         tab3.setOnClickListener(onClickListener);
         tab4.setOnClickListener(onClickListener);
 
-        sendMsg.setOnClickListener(onClickListener);
-
-        ask.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AskQuestionActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        pic.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SelectPictureActivity.class);
-                intent.putExtra("state", 1);
-                startActivity(intent);
-            }
-        });
-
-        record.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AskQuestionActivity.class);
-                intent.putExtra("record", 1);
-                startActivity(intent);
-            }
-        });
     }
 
     public void showCommon() {
@@ -485,16 +534,17 @@ public class MainActivity extends BaseActivity {
                 ft.hide(conversationFragment);
             }
         }
-        if (mainFragment == null) {
-            mainFragment = new MainFragment();
+        if (oldMainFragment == null) {
+            oldMainFragment = new OldMainFragment();
         }
-        if (mainFragment.isAdded()) {
-            ft.show(mainFragment);
+        if (oldMainFragment.isAdded()) {
+            ft.show(oldMainFragment);
         } else {
-            ft.add(R.id.showLayout, mainFragment);
+            ft.add(R.id.showLayout, oldMainFragment);
         }
         currentIndex = 0;
         ft.commit();
+        showTravelImage();
     }
 
     /**
@@ -502,9 +552,9 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadLoopFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (mainFragment != null) {
-            if (mainFragment.isAdded()) {
-                ft.hide(mainFragment);
+        if (oldMainFragment != null) {
+            if (oldMainFragment.isAdded()) {
+                ft.hide(oldMainFragment);
             }
         }
         if (suiuuFragment != null) {
@@ -527,6 +577,7 @@ public class MainActivity extends BaseActivity {
         }
         currentIndex = 1;
         ft.commit();
+        showSuiuu();
     }
 
     /**
@@ -534,9 +585,9 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadSuiuuFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (mainFragment != null) {
-            if (mainFragment.isAdded()) {
-                ft.hide(mainFragment);
+        if (oldMainFragment != null) {
+            if (oldMainFragment.isAdded()) {
+                ft.hide(oldMainFragment);
             }
         }
         if (loopFragment != null) {
@@ -559,6 +610,7 @@ public class MainActivity extends BaseActivity {
         }
         currentIndex = 2;
         ft.commit();
+        showQA();
     }
 
     /**
@@ -566,9 +618,9 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadConversationFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (mainFragment != null) {
-            if (mainFragment.isAdded()) {
-                ft.hide(mainFragment);
+        if (oldMainFragment != null) {
+            if (oldMainFragment.isAdded()) {
+                ft.hide(oldMainFragment);
             }
         }
         if (loopFragment != null) {
@@ -591,6 +643,7 @@ public class MainActivity extends BaseActivity {
         currentIndex = 3;
         msgCount.setVisibility(View.INVISIBLE);
         ft.commit();
+        showInbox();
     }
 
     /**
@@ -598,111 +651,77 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadDefaultFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (mainFragment == null) {
-            mainFragment = new MainFragment();
-            ft.add(R.id.showLayout, mainFragment);
+        if (oldMainFragment == null) {
+            oldMainFragment = new OldMainFragment();
+            ft.add(R.id.showLayout, oldMainFragment);
         } else {
-            ft.add(R.id.showLayout, mainFragment);
+            ft.add(R.id.showLayout, oldMainFragment);
         }
         ft.commit();
+        showTravelImage();
+    }
+
+    private void showTravelImage() {
+        TravelImageLayout.setVisibility(View.VISIBLE);
+        SuiuuBtnLayout.setVisibility(View.GONE);
+        QaLayout.setVisibility(View.GONE);
+        InboxBtnLayout.setVisibility(View.GONE);
+    }
+
+    private void showSuiuu() {
+        TravelImageLayout.setVisibility(View.GONE);
+        SuiuuBtnLayout.setVisibility(View.VISIBLE);
+        QaLayout.setVisibility(View.GONE);
+        InboxBtnLayout.setVisibility(View.GONE);
+    }
+
+    private void showQA() {
+        TravelImageLayout.setVisibility(View.GONE);
+        SuiuuBtnLayout.setVisibility(View.GONE);
+        QaLayout.setVisibility(View.VISIBLE);
+        InboxBtnLayout.setVisibility(View.GONE);
+    }
+
+    private void showInbox() {
+        TravelImageLayout.setVisibility(View.GONE);
+        SuiuuBtnLayout.setVisibility(View.GONE);
+        QaLayout.setVisibility(View.GONE);
+        InboxBtnLayout.setVisibility(View.VISIBLE);
     }
 
     //判断主题
     private void changeTheme(Boolean isChoice) {
         if (isChoice) {
-            iv_theme.setImageResource(R.drawable.icon_main2_press);
-            tv_theme_text.setTextColor(getResources().getColor(R.color.login_bg_color));
+            iv_theme.setImageResource(R.drawable.icon_main_1_green);
         } else {
-            iv_theme.setImageResource(R.drawable.icon_main2);
-            tv_theme_text.setTextColor(getResources().getColor(R.color.textColor));
+            iv_theme.setImageResource(R.drawable.icon_main_1_white);
         }
     }
 
     //判断圈子
     private void changeLoop(Boolean isChoice) {
         if (isChoice) {
-            iv_loop.setImageResource(R.drawable.icon_loop2_press);
-            tv_loop_text.setTextColor(getResources().getColor(R.color.login_bg_color));
+            iv_loop.setImageResource(R.drawable.icon_main_2_green);
         } else {
-            iv_loop.setImageResource(R.drawable.icon_loop2);
-            tv_loop_text.setTextColor(getResources().getColor(R.color.textColor));
+            iv_loop.setImageResource(R.drawable.icon_main_2_white);
         }
     }
 
     //判断随游
     private void changeSuiuu(Boolean isChoice) {
         if (isChoice) {
-            iv_suiuu.setImageResource(R.drawable.icon_suiuu2_press);
-            tv_suiuu_text.setTextColor(getResources().getColor(R.color.login_bg_color));
+            iv_suiuu.setImageResource(R.drawable.icon_main_3_green);
         } else {
-            iv_suiuu.setImageResource(R.drawable.icon_suiuu2);
-            tv_suiuu_text.setTextColor(getResources().getColor(R.color.textColor));
+            iv_suiuu.setImageResource(R.drawable.icon_main_3_white);
         }
     }
 
     //判断会话
     private void changeConversation(Boolean isChoice) {
         if (isChoice) {
-            iv_conversation.setImageResource(R.drawable.icon_conversation2_press);
-            tv_conversation_text.setTextColor(getResources().getColor(R.color.login_bg_color));
+            iv_conversation.setImageResource(R.drawable.icon_main_4_green);
         } else {
-            iv_conversation.setImageResource(R.drawable.icon_conversation2);
-            tv_conversation_text.setTextColor(getResources().getColor(R.color.textColor));
-        }
-    }
-
-    /**
-     * 初始化动画
-     */
-    private void initAnimation() {
-
-        Animation animHide = new AlphaAnimation(1.0f, 0.0f);
-        Animation animShow = new AlphaAnimation(0.0f, 1.0f);
-
-        Animation animNarrow = new ScaleAnimation(1.0f, 0.0f, 1.0f, 0.0f,
-                Animation.RELATIVE_TO_PARENT, Animation.RELATIVE_TO_PARENT);
-        Animation animBoost = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f,
-                Animation.RELATIVE_TO_PARENT, Animation.RELATIVE_TO_PARENT);
-
-        animationSetHide = new AnimationSet(true);
-        animationSetHide.setDuration(500);
-        animationSetHide.setAnimationListener(new MyAnimationListener());
-
-        animationSetShow = new AnimationSet(true);
-        animationSetShow.setDuration(500);
-        animationSetShow.setAnimationListener(new MyAnimationListener());
-
-        animationSetHide.addAnimation(animHide);
-        animationSetHide.addAnimation(animNarrow);
-
-        animationSetShow.addAnimation(animShow);
-        animationSetShow.addAnimation(animBoost);
-    }
-
-    class MyAnimationListener implements Animation.AnimationListener {
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            if (ConstantUtils.isShowArticleAnim) {
-                ask.setVisibility(View.INVISIBLE);
-                pic.setVisibility(View.INVISIBLE);
-                record.setVisibility(View.INVISIBLE);
-                ConstantUtils.isShowArticleAnim = false;
-            } else {
-                ask.setVisibility(View.VISIBLE);
-                pic.setVisibility(View.VISIBLE);
-                record.setVisibility(View.VISIBLE);
-                ConstantUtils.isShowArticleAnim = true;
-            }
-        }
-
-        @Override
-        public void onAnimationStart(Animation animation) {
-
+            iv_conversation.setImageResource(R.drawable.icon_main_4_white);
         }
     }
 
@@ -806,7 +825,7 @@ public class MainActivity extends BaseActivity {
 
         boolean mainFragmentFlag, loopFragmentFlag, suiuuFragmentFlag, chatFragmentFlag;
 
-        mainFragmentFlag = mainFragment != null && !mainFragment.isInLayout();
+        mainFragmentFlag = oldMainFragment != null && !oldMainFragment.isInLayout();
         loopFragmentFlag = loopFragment != null && !loopFragment.isInLayout();
         suiuuFragmentFlag = suiuuFragment != null && !suiuuFragment.isInLayout();
         chatFragmentFlag = conversationFragment != null && !conversationFragment.isInLayout();
@@ -1035,8 +1054,7 @@ public class MainActivity extends BaseActivity {
 
                 case R.id.tab1:
                     showCommon();
-                    titleInfo.setText(getResources().getString(R.string.title1));
-                    adjustAnimation();
+                    titleInfo.setText(getResources().getString(R.string.mainTitle1));
                     changeTheme(true);
                     changeLoop(false);
                     changeSuiuu(false);
@@ -1046,8 +1064,7 @@ public class MainActivity extends BaseActivity {
 
                 case R.id.tab2:
                     showCommon();
-                    titleInfo.setText(getResources().getString(R.string.title2));
-                    adjustAnimation();
+                    titleInfo.setText(getResources().getString(R.string.mainTitle2));
                     changeTheme(false);
                     changeLoop(true);
                     changeSuiuu(false);
@@ -1058,7 +1075,6 @@ public class MainActivity extends BaseActivity {
                 case R.id.tab3:
                     titleInfo.setVisibility(View.GONE);
                     rl_top_info.setVisibility(View.VISIBLE);
-                    adjustAnimation();
                     changeTheme(false);
                     changeLoop(false);
                     changeSuiuu(true);
@@ -1068,25 +1084,12 @@ public class MainActivity extends BaseActivity {
 
                 case R.id.tab4:
                     showCommon();
-                    titleInfo.setText(getResources().getString(R.string.title4));
-                    adjustAnimation();
+                    titleInfo.setText(getResources().getString(R.string.mainTitle4));
                     changeTheme(false);
                     changeLoop(false);
                     changeSuiuu(false);
                     changeConversation(true);
                     LoadConversationFragment();
-                    break;
-
-                case R.id.sendNewMessage:
-                    if (ConstantUtils.isShowArticleAnim) {
-                        ask.startAnimation(animationSetHide);
-                        pic.startAnimation(animationSetHide);
-                        record.startAnimation(animationSetHide);
-                    } else {
-                        ask.startAnimation(animationSetShow);
-                        pic.startAnimation(animationSetShow);
-                        record.startAnimation(animationSetShow);
-                    }
                     break;
             }
         }

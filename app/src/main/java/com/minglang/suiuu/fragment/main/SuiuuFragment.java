@@ -96,9 +96,9 @@ public class SuiuuFragment extends BaseFragment
         dialog = new TextProgressDialog(getActivity());
         //处理头部控件
         et_suiuu = (EditText) topView.findViewById(R.id.et_suiuu);
-        main_suiuu_pic = (ImageView) topView.findViewById(R.id.main_pic);
-        main_suiuu_record = (ImageView) topView.findViewById(R.id.main_record);
-        main_suiuu_ask = (ImageView) topView.findViewById(R.id.main_ask);
+        main_suiuu_pic = (ImageView) topView.findViewById(R.id.main_3_pic);
+        main_suiuu_record = (ImageView) topView.findViewById(R.id.main_3_record);
+        main_suiuu_ask = (ImageView) topView.findViewById(R.id.main_3_ask);
 
         RelativeLayout.LayoutParams paramTest = (RelativeLayout.LayoutParams) suiuuListView.getLayoutParams();
         paramTest.setMargins(10, ConstantUtils.topHeight + 10, 10, 0);

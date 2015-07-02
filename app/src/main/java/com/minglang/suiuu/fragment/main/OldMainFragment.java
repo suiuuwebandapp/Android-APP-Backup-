@@ -65,9 +65,9 @@ import in.srain.cube.views.ptr.header.MaterialHeader;
 /**
  * 主页面
  */
-public class MainFragment extends BaseFragment {
+public class OldMainFragment extends BaseFragment {
 
-    private static final String TAG = MainFragment.class.getSimpleName();
+    private static final String TAG = OldMainFragment.class.getSimpleName();
 
     private static final String USERSIGNKEY = "userSign";
     private static final String ARTICLEID = "articleId";
@@ -131,7 +131,7 @@ public class MainFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_main, null);
+        View rootView = inflater.inflate(R.layout.fragment_old_main, null);
 
         initView(rootView);
         ViewAction();

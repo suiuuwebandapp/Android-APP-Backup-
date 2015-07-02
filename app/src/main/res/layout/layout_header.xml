@@ -7,23 +7,59 @@
     android:layout_alignParentTop="true"
     android:orientation="vertical">
 
-    <com.minglang.suiuu.customview.CircleImageView
-        android:id="@+id/headImage"
-        android:layout_width="@dimen/layout_60dp"
-        android:layout_height="@dimen/layout_60dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/layout_10dp"
-        android:src="@drawable/default_head_image"/>
-
-    <TextView
-        android:id="@+id/nickName"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/layout_10dp"
-        android:gravity="center"
-        android:text="@string/nickname"
-        android:textSize="20sp"/>
+        android:layout_height="@dimen/layout_150dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/dividingLine"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/white">
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/dividingLine"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/layout_2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@color/mainColor"/>
+
+        <FrameLayout
+            android:id="@+id/headImageLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/background_head_frame"
+            android:padding="@dimen/layout_2dp">
+
+            <com.minglang.suiuu.customview.CircleImageView
+                android:id="@+id/headImage"
+                android:layout_width="@dimen/layout_65dp"
+                android:layout_height="@dimen/layout_65dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/default_head_image"/>
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/nickName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/headImageLayout"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/layout_8dp"
+            android:gravity="center"
+            android:text="@string/nickname"
+            android:textColor="@color/mainColor"
+            android:textSize="@dimen/layout_20sp"/>
+
+    </RelativeLayout>
 
     <Switch
         android:id="@+id/switchSuiuu"
