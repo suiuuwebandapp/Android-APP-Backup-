@@ -13,7 +13,6 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,7 +26,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuDetailActivity;
-import com.minglang.suiuu.activity.SuiuuSearchDetailActivity;
+import com.minglang.suiuu.activity.SuiuuSearchActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
@@ -65,10 +64,7 @@ public class SuiuuFragment extends BaseFragment
     private LinearLayout tabSelect;
     private int lastVisibleItemPosition = 0;// 标记上次滑动位置
     //头部空间
-    private EditText et_suiuu;
-    private ImageView main_suiuu_pic;
-    private ImageView main_suiuu_record;
-    private ImageView main_suiuu_ask;
+    private ImageView et_suiuu;
     private ShowSuiuuAdapter adapter;
 
     @SuppressLint("InflateParams")
@@ -95,10 +91,8 @@ public class SuiuuFragment extends BaseFragment
         tabSelect = (LinearLayout) topView.findViewById(R.id.tabSelect);
         dialog = new TextProgressDialog(getActivity());
         //处理头部控件
-        et_suiuu = (EditText) topView.findViewById(R.id.et_suiuu);
-        main_suiuu_pic = (ImageView) topView.findViewById(R.id.main_3_pic);
-        main_suiuu_record = (ImageView) topView.findViewById(R.id.main_3_record);
-        main_suiuu_ask = (ImageView) topView.findViewById(R.id.main_3_ask);
+        et_suiuu = (ImageView) topView.findViewById(R.id.main_2_search);
+
 
         RelativeLayout.LayoutParams paramTest = (RelativeLayout.LayoutParams) suiuuListView.getLayoutParams();
         paramTest.setMargins(10, ConstantUtils.topHeight + 10, 10, 0);
@@ -126,14 +120,7 @@ public class SuiuuFragment extends BaseFragment
         });
     }
 
-    public void hideWhenScroll() {
-        if (ConstantUtils.isShowArticleAnim) {
-            main_suiuu_record.setVisibility(View.INVISIBLE);
-            main_suiuu_pic.setVisibility(View.INVISIBLE);
-            main_suiuu_ask.setVisibility(View.INVISIBLE);
-            ConstantUtils.isShowArticleAnim = false;
-        }
-    }
+
 
     /**
      * @param countryOrCity 国家或城市
@@ -145,8 +132,6 @@ public class SuiuuFragment extends BaseFragment
      */
     private void loadDate(String countryOrCity, String peopleCount, String tags, String startPrice, String endPrice, int page) {
         dialog.showDialog();
-        et_suiuu.setText("");
-
         String str = SuiuuInfo.ReadVerification(getActivity().getApplicationContext());
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
@@ -215,7 +200,7 @@ public class SuiuuFragment extends BaseFragment
         transAnimTo.setFillAfter(true);
         transAnimTo.setDuration(300);
 
-        hideWhenScroll();
+
         if (suiuuListView.getFirstVisiblePosition() > lastVisibleItemPosition) {// 上滑
             transAnim.cancel();
             tabSelect.startAnimation(transAnim);
@@ -295,9 +280,9 @@ public class SuiuuFragment extends BaseFragment
 
 
             switch (v.getId()) {
-                case R.id.et_suiuu:
+                case R.id.main_2_search:
                     //跳转到搜索页面
-                    startActivity(new Intent(getActivity(), SuiuuSearchDetailActivity.class));
+                    startActivity(new Intent(getActivity(), SuiuuSearchActivity.class));
                     break;
             }
         }

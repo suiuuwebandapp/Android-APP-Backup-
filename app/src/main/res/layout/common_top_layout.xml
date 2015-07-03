@@ -34,40 +34,6 @@
             android:textColor="@color/white"
             android:textSize="@dimen/layout_20sp"/>
 
-        <RelativeLayout
-            android:id="@+id/rl_top_info"
-            android:layout_width="@dimen/layout_200dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/et_search"
-            android:visibility="gone">
-
-            <EditText
-                android:id="@+id/et_suiuu"
-                android:layout_width="@dimen/layout_200dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="@color/transparent"
-                android:hint="输入你感兴趣的国家,城市"
-                android:padding="@dimen/layout_5dp"
-                android:singleLine="true"
-                android:textSize="@dimen/layout_15sp"/>
-
-            <ImageButton
-                android:id="@+id/ib_suiuu_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-
-                android:background="@drawable/icon_search"
-                android:layout_marginRight="@dimen/layout_5dp"/>
-
-
-
-
-        </RelativeLayout>
 
         <ImageView
             android:id="@+id/iv_suiuu_search_more"
@@ -140,56 +106,6 @@
                 android:src="@drawable/icon_search_selector"/>
 
         </FrameLayout>
-
-        <!--问答页面按钮布局-->
-        <RelativeLayout
-            android:id="@+id/QA_Layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/titleInfo"
-            android:layout_toRightOf="@+id/titleInfo"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/main_3_pic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_toLeftOf="@+id/main_3_record"
-                android:layout_toStartOf="@+id/main_3_record"
-                android:contentDescription="@string/openShoot"
-                android:src="@drawable/icon_main_pic"/>
-
-            <ImageView
-                android:id="@+id/main_3_record"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="10dp"
-                android:layout_toLeftOf="@+id/main_3_ask"
-                android:layout_toStartOf="@+id/main_3_ask"
-                android:contentDescription="@string/openRemember"
-                android:src="@drawable/icon_main_record"/>
-
-            <ImageView
-                android:id="@+id/main_3_ask"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginStart="15dp"
-                android:contentDescription="@string/openAsk"
-                android:src="@drawable/icon_main_ask"/>
-
-        </RelativeLayout>
-
         <!--收件箱搜索-->
         <FrameLayout
             android:id="@+id/InboxButtonLayout"

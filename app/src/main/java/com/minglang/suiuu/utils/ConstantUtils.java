@@ -7,5 +7,4 @@ public class ConstantUtils {
 
     public static boolean isKITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
-    public static boolean isShowArticleAnim = false;
 }

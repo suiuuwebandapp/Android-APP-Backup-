@@ -515,6 +515,7 @@
     <string name="title_activity_edit_suiuu_info" translatable="false">EditSuiuuInfoActivity</string>
     <string name="title_activity_edit_suiuu_price" translatable="false">EditSuiuuPriceActivity</string>
     <string name="title_activity_order_manage" translatable="false">OrderManageActivity</string>
+    <string name="title_activity_suiuu_search_detail" translatable="false">SuiuuSearchDetailActivity</string>
     <string name="title_activity_suiuu_search" translatable="false">SuiuuSearchActivity</string>
 
     <string name="title_section1" translatable="false">Section 1</string>

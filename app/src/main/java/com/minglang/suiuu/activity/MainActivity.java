@@ -143,12 +143,6 @@ public class MainActivity extends BaseActivity {
      * 随游页面按钮布局
      */
     private FrameLayout SuiuuBtnLayout;
-
-    /**
-     * 问答页面按钮布局
-     */
-    private RelativeLayout QaLayout;
-
     /**
      * 收件箱页面按钮布局
      */
@@ -173,20 +167,12 @@ public class MainActivity extends BaseActivity {
      * 随游页面搜索按钮
      */
     private ImageView Main_2_Search;
-
-    private ImageView Main_3_Pic;
-
-    private ImageView Main_3_Record;
-
-    private ImageView Main_3_Ask;
-
     private ImageView Main_4_Search;
 
     private ImageView iv_theme;
     private ImageView iv_loop;
     private ImageView iv_suiuu;
     private ImageView iv_conversation;
-    private RelativeLayout rl_top_info;
 
     private ExitBroadcastReceiver exitBroadcastReceiver;
 
@@ -285,21 +271,13 @@ public class MainActivity extends BaseActivity {
 
         TravelImageLayout = (RelativeLayout) findViewById(R.id.TravelImageLayout);
         SuiuuBtnLayout = (FrameLayout) findViewById(R.id.SuiuuButtonLayout);
-        QaLayout = (RelativeLayout) findViewById(R.id.QA_Layout);
         InboxBtnLayout = (FrameLayout) findViewById(R.id.InboxButtonLayout);
 
         Main_1_Search = (ImageView) findViewById(R.id.main_1_search);
         Main_1_Tag = (ImageView) findViewById(R.id.main_1_tag);
         Main_1_Album = (ImageView) findViewById(R.id.main_1_album);
-
         Main_2_Search = (ImageView) findViewById(R.id.main_2_search);
-
-        Main_3_Pic = (ImageView) findViewById(R.id.main_3_pic);
-        Main_3_Record = (ImageView) findViewById(R.id.main_3_record);
-        Main_3_Ask = (ImageView) findViewById(R.id.main_3_ask);
-
         Main_4_Search = (ImageView) findViewById(R.id.main_4_search);
-
         titleInfo = (TextView) findViewById(R.id.titleInfo);
         drawerSwitch = (ImageView) findViewById(R.id.drawerSwitch);
 
@@ -340,7 +318,7 @@ public class MainActivity extends BaseActivity {
 
         changeTheme(true);
 
-        rl_top_info = (RelativeLayout) findViewById(R.id.rl_top_info);
+
 
         oldMainFragment = new OldMainFragment();
         conversationFragment = new ChatAllHistoryFragment();
@@ -432,46 +410,15 @@ public class MainActivity extends BaseActivity {
 
             }
         });
-
-        Main_3_Ask.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AskQuestionActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        Main_3_Pic.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SelectPictureActivity.class);
-                intent.putExtra("state", 1);
-                startActivity(intent);
-            }
-        });
-
-        Main_3_Record.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AskQuestionActivity.class);
-                intent.putExtra("record", 1);
-                startActivity(intent);
-            }
-        });
-
         Main_4_Search.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
-
         MyOnClickListener onClickListener = new MyOnClickListener();
-
         drawerSwitch.setOnClickListener(onClickListener);
-
         nickNameView.setOnClickListener(onClickListener);
-
         headImageView.setOnClickListener(onClickListener);
 
         sideListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -511,7 +458,6 @@ public class MainActivity extends BaseActivity {
 
     public void showCommon() {
         titleInfo.setVisibility(View.VISIBLE);
-        rl_top_info.setVisibility(View.GONE);
     }
 
     /**
@@ -557,9 +503,9 @@ public class MainActivity extends BaseActivity {
                 ft.hide(oldMainFragment);
             }
         }
-        if (suiuuFragment != null) {
-            if (suiuuFragment.isAdded()) {
-                ft.hide(suiuuFragment);
+        if (loopFragment != null) {
+            if (loopFragment.isAdded()) {
+                ft.hide(loopFragment);
             }
         }
         if (conversationFragment != null) {
@@ -567,13 +513,13 @@ public class MainActivity extends BaseActivity {
                 ft.hide(conversationFragment);
             }
         }
-        if (loopFragment == null) {
-            loopFragment = new LoopFragment();
+        if (suiuuFragment == null) {
+            suiuuFragment = new SuiuuFragment();
         }
-        if (loopFragment.isAdded()) {
-            ft.show(loopFragment);
+        if (suiuuFragment.isAdded()) {
+            ft.show(suiuuFragment);
         } else {
-            ft.add(R.id.showLayout, loopFragment);
+            ft.add(R.id.showLayout, suiuuFragment);
         }
         currentIndex = 1;
         ft.commit();
@@ -664,28 +610,24 @@ public class MainActivity extends BaseActivity {
     private void showTravelImage() {
         TravelImageLayout.setVisibility(View.VISIBLE);
         SuiuuBtnLayout.setVisibility(View.GONE);
-        QaLayout.setVisibility(View.GONE);
         InboxBtnLayout.setVisibility(View.GONE);
     }
 
     private void showSuiuu() {
         TravelImageLayout.setVisibility(View.GONE);
         SuiuuBtnLayout.setVisibility(View.VISIBLE);
-        QaLayout.setVisibility(View.GONE);
         InboxBtnLayout.setVisibility(View.GONE);
     }
 
     private void showQA() {
         TravelImageLayout.setVisibility(View.GONE);
         SuiuuBtnLayout.setVisibility(View.GONE);
-        QaLayout.setVisibility(View.VISIBLE);
         InboxBtnLayout.setVisibility(View.GONE);
     }
 
     private void showInbox() {
         TravelImageLayout.setVisibility(View.GONE);
         SuiuuBtnLayout.setVisibility(View.GONE);
-        QaLayout.setVisibility(View.GONE);
         InboxBtnLayout.setVisibility(View.VISIBLE);
     }
 
@@ -958,11 +900,9 @@ public class MainActivity extends BaseActivity {
         if (!EasyUtils.isAppRunningForeground(this)) {
             return;
         }
-
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(getApplicationInfo().icon)
                 .setWhen(System.currentTimeMillis()).setAutoCancel(true);
-
         String ticker = CommonUtils.getMessageDigest(message, this);
         String st = getResources().getString(R.string.expression);
         if (message.getType() == Type.TXT)
@@ -975,7 +915,6 @@ public class MainActivity extends BaseActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, notificationId, intent, PendingIntent.FLAG_ONE_SHOT);
         mBuilder.setContentIntent(pendingIntent);
-
         Notification notification = mBuilder.build();
         notificationManager.notify(notificationId, notification);
         notificationManager.cancel(notificationId);
@@ -1012,7 +951,6 @@ public class MainActivity extends BaseActivity {
                         // 显示帐号在其他设备登陆dialog
                         showConflictDialog();
                     } else {
-
                         errorItem.setVisibility(View.VISIBLE);
                         if (NetUtils.hasNetwork(MainActivity.this))
                             errorText.setText(st1);
@@ -1074,7 +1012,6 @@ public class MainActivity extends BaseActivity {
 
                 case R.id.tab3:
                     titleInfo.setVisibility(View.GONE);
-                    rl_top_info.setVisibility(View.VISIBLE);
                     changeTheme(false);
                     changeLoop(false);
                     changeSuiuu(true);

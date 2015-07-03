@@ -5,6 +5,6 @@
     android:layout_margin="3dp"
     android:background="@drawable/tv_bg1"
     android:text="Helloworld"
-    android:textColor="@color/white" >
+    android:textColor="@color/gray" >
 
 </TextView>

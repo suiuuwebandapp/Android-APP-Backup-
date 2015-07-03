@@ -69,7 +69,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
     //处理头部
     private TextView titleInfo;
     private RelativeLayout rl_top_info;
-    private ImageButton ib_suiuu_search;
+
     private EditText et_suiuu;
     private ShowSuiuuAdapter adapter = null;
     private ImageView iv_suiuu_search_more;
@@ -103,7 +103,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
         titleInfo.setVisibility(View.GONE);
         rl_top_info = (RelativeLayout) findViewById(R.id.rl_top_info);
         rl_top_info.setVisibility(View.VISIBLE);
-        ib_suiuu_search = (ImageButton) findViewById(R.id.ib_suiuu_search);
+
         et_suiuu = (EditText) findViewById(R.id.et_suiuu);
         iv_suiuu_search_more = (ImageView) findViewById(R.id.iv_suiuu_search_more);
         iv_suiuu_search_more.setVisibility(View.VISIBLE);
@@ -115,7 +115,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
         ib_release.setOnClickListener(new MyOnclick());
         ib_plus.setOnClickListener(new MyOnclick());
         iv_suiuu_search_more.setOnClickListener(new MyOnclick());
-        ib_suiuu_search.setOnClickListener(new MyOnclick());
+
         rangebar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
             public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue,
@@ -328,31 +328,31 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
                     peopleNumber.setText(String.valueOf(enjoy_peopleNumber + 1));
                     break;
 
-                case R.id.ib_suiuu_search:
-                    page = 1;
-                    lv_search_suiuu.setEnabled(true);
-                    searchText = String.valueOf(et_suiuu.getText());
-                    if ("".equals(searchText) && !fl_search_more.isShown()) {
-                        Toast.makeText(SuiuuSearchDetailActivity.this, R.string.please_enter_search_content, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    suiuuDataList.clear();
-                    if (fl_search_more.isShown()) {
-                        enjoyPeopleCount = peopleNumber.getText().toString().trim();
-
-                        for (TextView textV : listClick) {
-                            tags += textV.getText() + ",";
-                        }
-                        loadDate(searchText, "0".equals(enjoyPeopleCount) ? "" :
-                                        enjoyPeopleCount, "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
-                                Integer.toString(startTick), Integer.toString(endTick), page);
-
-                        fl_search_more.setVisibility(View.GONE);
-                    } else {
-                        loadDate(searchText, null, null, null, null, page);
-                    }
-                    tags = "";
-                    break;
+//                case R.id.ib_suiuu_search:
+//                    page = 1;
+//                    lv_search_suiuu.setEnabled(true);
+//                    searchText = String.valueOf(et_suiuu.getText());
+//                    if ("".equals(searchText) && !fl_search_more.isShown()) {
+//                        Toast.makeText(SuiuuSearchDetailActivity.this, R.string.please_enter_search_content, Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                    suiuuDataList.clear();
+//                    if (fl_search_more.isShown()) {
+//                        enjoyPeopleCount = peopleNumber.getText().toString().trim();
+//
+//                        for (TextView textV : listClick) {
+//                            tags += textV.getText() + ",";
+//                        }
+//                        loadDate(searchText, "0".equals(enjoyPeopleCount) ? "" :
+//                                        enjoyPeopleCount, "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
+//                                Integer.toString(startTick), Integer.toString(endTick), page);
+//
+//                        fl_search_more.setVisibility(View.GONE);
+//                    } else {
+//                        loadDate(searchText, null, null, null, null, page);
+//                    }
+//                    tags = "";
+//                    break;
             }
         }
     }
