@@ -34,7 +34,7 @@
     <string name="blankContent" translatable="false">暂无详细信息</string>
     <string name="footprint" translatable="false">我的足迹</string>
 
-    <string name="attention" translatable="false">关注</string>
+    <string name="attention">Attention</string>
     <string name="MyAttention">My Attention</string>
     <string name="fans" translatable="false">粉丝</string>
     <string name="thirdParty" translatable="false">绑定的第三方账号</string>
@@ -225,6 +225,8 @@
     <string name="userSignature">personality Signature</string>
 
     <string name="SuiuuAccount">Suiuu Account</string>
+
+    <string name="answer_">Answer</string>
 
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
@@ -525,5 +527,6 @@
     <string name="title_activity_suiuu_user_info" translatable="false">SuiuuUserInfoActivity</string>
     <string name="route">route</string>
     <string name="save">save</string>
+    <string name="title_activity_community_item">CommunityItemActivity</string>
 
 </resources>

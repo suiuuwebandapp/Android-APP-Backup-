@@ -258,4 +258,6 @@
     <string name="userLocation">用户位置</string>
     <string name="userSignature">个人签名</string>
     <string name="SuiuuAccount">随友帐号</string>
+    <string name="attention">关注</string>
+    <string name="answer_">回答</string>
 </resources>

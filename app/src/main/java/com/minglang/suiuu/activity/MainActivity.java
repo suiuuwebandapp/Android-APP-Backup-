@@ -17,7 +17,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AnimationSet;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -121,8 +120,6 @@ public class MainActivity extends BaseActivity {
      * 会话页面
      */
     private ChatAllHistoryFragment conversationFragment;
-
-    private AnimationSet animationSetHide;
 
     // 账号在别处登录
     public boolean isConflict = false;

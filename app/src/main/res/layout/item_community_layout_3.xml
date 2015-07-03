@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/item_community_layout_3_attention"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/layout_50dp"
+        android:layout_weight="0.5"
+        android:background="@drawable/color_selector"
+        android:drawableLeft="@drawable/icon_heart_selector"
+        android:drawableStart="@drawable/icon_heart_selector"
+        android:drawablePadding="@dimen/layout_10dp"
+        android:gravity="center|start"
+        android:text="@string/attention"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <TextView
+        android:id="@+id/item_community_layout_3_answer"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/layout_50dp"
+        android:layout_weight="0.5"
+        android:background="@drawable/color_selector"
+        android:drawableLeft="@drawable/icon_answer_selector"
+        android:drawableStart="@drawable/icon_answer_selector"
+        android:drawablePadding="@dimen/layout_10dp"
+        android:gravity="center|start"
+        android:text="@string/answer_"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+</LinearLayout>

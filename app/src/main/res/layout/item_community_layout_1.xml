@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <com.minglang.suiuu.customview.CircleImageView
+        android:id="@+id/item_community_layout_1_head_view"
+        android:layout_width="@dimen/layout_50dp"
+        android:layout_height="@dimen/layout_50dp"
+        android:layout_marginBottom="@dimen/layout_10dp"
+        android:layout_marginLeft="@dimen/layout_5dp"
+        android:layout_marginRight="@dimen/layout_5dp"
+        android:layout_marginTop="@dimen/layout_10dp"
+        android:src="@drawable/default_head_image"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/item_community_layout_1_problem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_5dp"
+            android:singleLine="true"
+            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        <com.minglang.suiuu.customview.FlowLayout
+            android:id="@+id/item_community_layout_1_flow_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/layout_5dp"
+            android:layout_marginRight="@dimen/layout_5dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>
