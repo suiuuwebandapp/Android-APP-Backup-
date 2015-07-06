@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="3dp"
-    android:background="@drawable/tv_bg1"
+    android:background="@drawable/tv_group_selector"
     android:text="Helloworld"
     android:textColor="@color/gray" >
 

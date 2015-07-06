@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include
         android:id="@+id/top"
-        layout="@layout/common_top_layout"/>
+        layout="@layout/common_top2_layout"/>
     <com.minglang.suiuu.customview.ReFlashListView
         android:layout_below="@+id/top"
         android:id="@+id/lv_search_suiuu"
@@ -15,17 +16,17 @@
         android:background="@color/white"
         android:dividerHeight="@dimen/layout_10dp"
         android:scrollbars="none"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
     <FrameLayout
         android:layout_below="@+id/top"
         android:layout_marginTop="@dimen/layout_10dp"
         android:id="@+id/fl_search_more"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_marginLeft="@dimen/layout_5dp"
         android:layout_marginRight="@dimen/layout_5dp"
         android:background="@drawable/suiuu_framlayout_bg"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -126,6 +127,18 @@
                 android:layout_marginLeft="@dimen/layout_5dp"
                 android:layout_marginRight="@dimen/layout_5dp"
                 android:layout_marginBottom="@dimen/layout_10dp"/>
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                android:id="@+id/bb_search_confire"
+                android:layout_width="@dimen/layout_100dp"
+                android:layout_height="40dp"
+                android:text="确定"
+                bootstrapbutton:bb_roundedCorners="true"
+                bootstrapbutton:bb_size="small"
+                bootstrapbutton:bb_type="info"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="33dp" />
         </RelativeLayout>
     </FrameLayout>
 

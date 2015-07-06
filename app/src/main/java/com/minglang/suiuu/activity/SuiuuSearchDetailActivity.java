@@ -8,10 +8,10 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -55,7 +55,6 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
     private List<TextView> list = new ArrayList<>();
     private List<TextView> listClick = new ArrayList<>();
     private String tags = "";
-    private String searchText;
     private String enjoyPeopleCount;
 
     private TextView tv_price_range;
@@ -68,21 +67,25 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
     private int page = 1;
     //处理头部
     private TextView titleInfo;
-    private RelativeLayout rl_top_info;
 
-    private EditText et_suiuu;
+
+
     private ShowSuiuuAdapter adapter = null;
     private ImageView iv_suiuu_search_more;
     private ImageButton ib_plus;
     private ImageButton ib_release;
+    private String searchCountry;
+    private BootstrapButton bb_search_confire;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suiuu_search_detail);
+        searchCountry = this.getIntent().getStringExtra("country");
         initView();
         viewAction();
-        getSuiuuSearchTag();
+//        getSuiuuSearchTag();
+        loadDate(searchCountry, null, null, null, null, page);
     }
 
     private void initView() {
@@ -99,13 +102,10 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
         peopleNumber = (EditText) findViewById(R.id.et_people_number);
         peopleNumber.setKeyListener(null);
         flowLayout = (FlowLayout) findViewById(R.id.id_flowLayout);
-        titleInfo = (TextView) findViewById(R.id.titleInfo);
-        titleInfo.setVisibility(View.GONE);
-        rl_top_info = (RelativeLayout) findViewById(R.id.rl_top_info);
-        rl_top_info.setVisibility(View.VISIBLE);
+        titleInfo = (TextView) findViewById(R.id.tv_top_center);
+        bb_search_confire = (BootstrapButton) findViewById(R.id.bb_search_confire);
 
-        et_suiuu = (EditText) findViewById(R.id.et_suiuu);
-        iv_suiuu_search_more = (ImageView) findViewById(R.id.iv_suiuu_search_more);
+        iv_suiuu_search_more = (ImageView) findViewById(R.id.tv_top_right_more);
         iv_suiuu_search_more.setVisibility(View.VISIBLE);
         ib_plus = (ImageButton) findViewById(R.id.ib_plus);
         ib_release = (ImageButton) findViewById(R.id.ib_release);
@@ -113,6 +113,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
 
     private void viewAction() {
         ib_release.setOnClickListener(new MyOnclick());
+        bb_search_confire.setOnClickListener(new MyOnclick());
         ib_plus.setOnClickListener(new MyOnclick());
         iv_suiuu_search_more.setOnClickListener(new MyOnclick());
 
@@ -130,8 +131,6 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
     private void loadDate(String countryOrCity, String peopleCount, String tags, String startPrice, String endPrice, int page) {
         Log.i("suiuu", "contryOrcity=" + countryOrCity + ",peoplecount=" + peopleCount + ",tags=" + tags + "startPrice=" + startPrice + ",endprice=" + endPrice + ",page=" + page);
         dialog.showDialog();
-        et_suiuu.setText("");
-
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
@@ -178,7 +177,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
         Log.i("suiuu","tags="+tags);
         if (!dialog.isShow()) {
             page += 1;
-            loadDate(searchText, "0".equals(enjoyPeopleCount) ? "" :
+            loadDate(searchCountry, "0".equals(enjoyPeopleCount) ? "" :
                             enjoyPeopleCount, "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
                     Integer.toString(startTick), Integer.toString(endTick), page);
         }
@@ -189,7 +188,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
     public void onReflash() {
         suiuuDataList.clear();
         page = 1;
-        loadDate(searchText, "0".equals(enjoyPeopleCount) ? "" :
+        loadDate(searchCountry, "0".equals(enjoyPeopleCount) ? "" :
                         enjoyPeopleCount, "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
                 Integer.toString(startTick), Integer.toString(endTick), page);
         lv_search_suiuu.reflashComplete();
@@ -315,9 +314,6 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
             }
 
             switch (v.getId()) {
-                case R.id.iv_suiuu_search_more:
-                    fragmentShow();
-                    break;
                 case R.id.ib_release:
                     if (enjoy_peopleNumber != 0) {
                         peopleNumber.setText(String.valueOf(enjoy_peopleNumber - 1));
@@ -327,32 +323,30 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
                 case R.id.ib_plus:
                     peopleNumber.setText(String.valueOf(enjoy_peopleNumber + 1));
                     break;
+                case R.id.tv_top_right_more:
+                    fragmentShow();
+                    break;
 
-//                case R.id.ib_suiuu_search:
-//                    page = 1;
-//                    lv_search_suiuu.setEnabled(true);
-//                    searchText = String.valueOf(et_suiuu.getText());
-//                    if ("".equals(searchText) && !fl_search_more.isShown()) {
-//                        Toast.makeText(SuiuuSearchDetailActivity.this, R.string.please_enter_search_content, Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//                    suiuuDataList.clear();
-//                    if (fl_search_more.isShown()) {
-//                        enjoyPeopleCount = peopleNumber.getText().toString().trim();
-//
-//                        for (TextView textV : listClick) {
-//                            tags += textV.getText() + ",";
-//                        }
-//                        loadDate(searchText, "0".equals(enjoyPeopleCount) ? "" :
-//                                        enjoyPeopleCount, "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
-//                                Integer.toString(startTick), Integer.toString(endTick), page);
-//
-//                        fl_search_more.setVisibility(View.GONE);
-//                    } else {
-//                        loadDate(searchText, null, null, null, null, page);
-//                    }
-//                    tags = "";
-//                    break;
+                case R.id.bb_search_confire:
+                    page = 1;
+                    lv_search_suiuu.setEnabled(true);
+                    suiuuDataList.clear();
+                    if (fl_search_more.isShown()) {
+                        enjoyPeopleCount = peopleNumber.getText().toString().trim();
+
+                        for (TextView textV : listClick) {
+                            tags += textV.getText() + ",";
+                        }
+                        loadDate(searchCountry, "0".equals(enjoyPeopleCount) ? "" :
+                                        enjoyPeopleCount, "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
+                                Integer.toString(startTick), Integer.toString(endTick), page);
+
+                        fl_search_more.setVisibility(View.GONE);
+                    } else {
+                        loadDate(searchCountry, null, null, null, null, page);
+                    }
+                    tags = "";
+                    break;
             }
         }
     }

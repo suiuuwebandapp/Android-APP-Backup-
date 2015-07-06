@@ -19,7 +19,7 @@ public class HttpServicePath {
      * <p/>
      * 192.168.1.101
      */
-    public static String RootPath = "http://192.168.1.100";
+    public static String RootPath = "http://192.168.1.102";
 
     public static String SharePath = "/circle/web-info?infoId=";
 

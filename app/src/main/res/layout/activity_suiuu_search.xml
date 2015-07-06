@@ -30,7 +30,7 @@
         android:visibility="visible">
 
         <EditText
-            android:id="@+id/et_suiuu"
+            android:id="@+id/et_suiuu_search"
             android:layout_width="@dimen/layout_200dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -83,8 +83,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/gray"
+            android:layout_marginLeft="@dimen/layout_10dp"
             android:textSize="@dimen/layout_18sp"
-            android:layout_margin="@dimen/layout_10dp"
             android:text="亚洲"/>
         <com.minglang.suiuu.customview.FlowLayout
             android:id="@+id/fl_suiuu_asia_country"
@@ -106,8 +106,8 @@
             android:id="@+id/tv_suiuu_european_contry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_10dp"
-            android:text="推荐"
+            android:text="欧洲"
+            android:layout_marginLeft="@dimen/layout_10dp"
             android:textColor="@color/gray"
             android:textSize="@dimen/layout_18sp" />
 
