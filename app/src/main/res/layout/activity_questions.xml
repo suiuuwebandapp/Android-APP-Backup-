@@ -1,0 +1,128 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/questionToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_50dp"
+        android:background="@color/mainColor"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <ScrollView
+        android:id="@+id/questionsScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="579dp"
+        android:layout_below="@+id/questionToolbar"
+        android:layout_gravity="center"
+        android:fillViewport="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/layout_10dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <EditText
+                    android:id="@+id/inputProblemTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/inputProblemTitle"/>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_8dp"
+                android:background="@color/white">
+
+                <EditText
+                    android:id="@+id/inputProblemContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/layout_100dp"
+                    android:gravity="top"
+                    android:hint="@string/inputProblemContent"/>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_8dp"
+                android:background="@color/white">
+
+                <TextView
+                    android:id="@+id/questionLocaltion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/layout_8dp"
+                    android:text="@string/location"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/tagLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/layout_50dp"
+                android:layout_marginTop="@dimen/layout_8dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/layout_8dp"
+                    android:layout_marginStart="@dimen/layout_8dp"
+                    android:src="@drawable/icon_tag"/>
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_8dp">
+
+                <com.minglang.suiuu.customview.FlowLayout
+                    android:id="@+id/questionFlowLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/layout_50dp"
+                    android:background="@color/white"/>
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/answerUserLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/layout_50dp"
+                android:layout_marginTop="@dimen/layout_8dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_8dp">
+
+                <com.minglang.suiuu.customview.InnerListView
+                    android:id="@+id/answerUserListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_50dp"
         android:layout_alignParentTop="true"
-        android:background="@color/mainColor"
+        android:background="?attr/colorPrimary"
         android:id="@+id/community_item_toolbar"/>
 
     <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView

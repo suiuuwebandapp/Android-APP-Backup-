@@ -228,6 +228,11 @@
 
     <string name="answer_">Answer</string>
 
+    <string name="inputProblemTitle">输入问题标题吧</string>
+    <string name="inputProblemContent">输入问题内容吧</string>
+
+    <string name="answerQuestion">请填写答案</string>
+
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>
@@ -528,5 +533,7 @@
     <string name="route">route</string>
     <string name="save">save</string>
     <string name="title_activity_community_item">CommunityItemActivity</string>
+    <string name="title_activity_questions">QuestionsActivity</string>
+    <string name="title_activity_answer">AnswerActivity</string>
 
 </resources>

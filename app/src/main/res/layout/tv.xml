@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="3dp"
     android:background="@drawable/tv_bg1"
-    android:text="Helloworld"
+    android:text="Hello World"
     android:textColor="@color/gray" >
 
 </TextView>

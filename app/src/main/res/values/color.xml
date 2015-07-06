@@ -37,7 +37,7 @@
     <color name="slow_blue">#7088FF</color>
 
     <!--分割线-->
-
+    <color name="topColor">#55d4bf</color>
     <color name="mainColor">#62d6c3</color>
     <color name="mainColor2">#fde69a</color>
 

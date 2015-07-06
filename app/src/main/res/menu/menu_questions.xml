@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.minglang.suiuu.activity.QuestionsActivity">
+
+    <item
+        android:id="@+id/question_confirm"
+        android:icon="@drawable/icon_confirm_white"
+        android:orderInCategory="100"
+        android:title=""
+        app:showAsAction="ifRoom"/>
+
+</menu>

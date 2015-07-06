@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView37"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_1dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
+    <com.minglang.suiuu.customview.CircleImageView
+        android:id="@+id/question_user_head_image"
+        android:layout_width="@dimen/layout_60dp"
+        android:layout_height="@dimen/layout_60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/layout_10dp"
+        android:layout_marginStart="@dimen/layout_10dp"
+        android:src="@drawable/default_head_image"/>
+
+    <TextView
+        android:id="@+id/question_user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView37"
+        android:layout_marginBottom="@dimen/layout_8dp"
+        android:layout_marginEnd="@dimen/layout_8dp"
+        android:layout_marginLeft="@dimen/layout_10dp"
+        android:layout_marginRight="@dimen/layout_8dp"
+        android:layout_marginStart="@dimen/layout_10dp"
+        android:layout_toEndOf="@+id/question_user_head_image"
+        android:layout_toRightOf="@+id/question_user_head_image"
+        android:singleLine="true"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <TextView
+        android:id="@+id/question_user_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView37"
+        android:layout_marginEnd="@dimen/layout_8dp"
+        android:layout_marginLeft="@dimen/layout_10dp"
+        android:layout_marginRight="@dimen/layout_8dp"
+        android:layout_marginStart="@dimen/layout_10dp"
+        android:layout_marginTop="@dimen/layout_8dp"
+        android:layout_toEndOf="@+id/question_user_head_image"
+        android:layout_toRightOf="@+id/question_user_head_image"
+        android:singleLine="true"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <ImageView
+        android:id="@+id/question_user_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/layout_8dp"
+        android:layout_marginRight="@dimen/layout_8dp"
+        android:src="@drawable/icon_add"/>
+
+</RelativeLayout>
