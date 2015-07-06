@@ -1,0 +1,24 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.minglang.suiuu.activity.AnswerActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/answerToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_50dp"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"/>
+
+    <EditText
+        android:id="@+id/answerEditText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/answerToolbar"
+        android:layout_centerHorizontal="true"
+        android:gravity="top"
+        android:hint="@string/answerQuestion"/>
+
+</RelativeLayout>

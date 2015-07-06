@@ -49,9 +49,9 @@ import com.minglang.suiuu.chat.activity.ChatAllHistoryFragment;
 import com.minglang.suiuu.chat.chat.Constant;
 import com.minglang.suiuu.chat.utils.CommonUtils;
 import com.minglang.suiuu.customview.CircleImageView;
+import com.minglang.suiuu.fragment.main.CommunityFragment;
 import com.minglang.suiuu.fragment.main.LoopFragment;
 import com.minglang.suiuu.fragment.main.OldMainFragment;
-import com.minglang.suiuu.fragment.main.SuiuuFragment;
 import com.minglang.suiuu.utils.ConstantUtils;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -111,10 +111,7 @@ public class MainActivity extends BaseActivity {
      */
     private LoopFragment loopFragment;
 
-    /**
-     * 路线页面
-     */
-    private SuiuuFragment suiuuFragment;
+    private CommunityFragment communityFragment;
 
     /**
      * 会话页面
@@ -140,6 +137,9 @@ public class MainActivity extends BaseActivity {
      * 随游页面按钮布局
      */
     private FrameLayout SuiuuBtnLayout;
+
+    private RelativeLayout CommunityLayout;
+
     /**
      * 收件箱页面按钮布局
      */
@@ -164,6 +164,13 @@ public class MainActivity extends BaseActivity {
      * 随游页面搜索按钮
      */
     private ImageView Main_2_Search;
+
+    private ImageView Main_3_Search;
+
+    private ImageView Main_3_TAG;
+
+    private ImageView Main_3_Questions;
+
     private ImageView Main_4_Search;
 
     private ImageView iv_theme;
@@ -184,11 +191,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         UmengUpdateAgent.update(this);
-
-        exitBroadcastReceiver = new ExitBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(SettingActivity.class.getSimpleName());
-        this.registerReceiver(exitBroadcastReceiver, intentFilter);
 
         initView();
         initRegisterAllBroadcastReceiver();
@@ -220,30 +222,15 @@ public class MainActivity extends BaseActivity {
             SuiuuApplication.getInstance().logout(null);
             startActivity(new Intent(this, LoginActivity.class));
             finish();
-            return;
-        } else if (saveFlag && savedInstanceState.getBoolean("isConflict", false)) {
-            // 防止被T后，没点确定按钮然后按了home键，长期在后台又进app导致的crash
-            // 三个fragment里加的判断同理
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-            return;
-        }
-
-        if (saveFlag) {
-            if ("saveState".equals(savedInstanceState.getString("save"))) {
-                if (savedInstanceState.getBoolean("main", false)) {
-                    LoadMainFragment();
-                } else if (savedInstanceState.getBoolean("loop", false)) {
-                    LoadLoopFragment();
-                } else if (savedInstanceState.getBoolean("suiuu", false)) {
-                    LoadSuiuuFragment();
-                } else if (savedInstanceState.getBoolean("chat", false)) {
-                    LoadConversationFragment();
-                } else {
-                    LoadDefaultFragment();
-                }
+        } else {
+            if (saveFlag && savedInstanceState.getBoolean("isConflict", false)) {
+                // 防止被T后，没点确定按钮然后按了home键，长期在后台又进app导致的crash
+                // 三个fragment里加的判断同理
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
             }
         }
+
     }
 
     /**
@@ -268,13 +255,21 @@ public class MainActivity extends BaseActivity {
 
         TravelImageLayout = (RelativeLayout) findViewById(R.id.TravelImageLayout);
         SuiuuBtnLayout = (FrameLayout) findViewById(R.id.SuiuuButtonLayout);
+        CommunityLayout = (RelativeLayout) findViewById(R.id.CommunityLayout);
         InboxBtnLayout = (FrameLayout) findViewById(R.id.InboxButtonLayout);
 
         Main_1_Search = (ImageView) findViewById(R.id.main_1_search);
         Main_1_Tag = (ImageView) findViewById(R.id.main_1_tag);
         Main_1_Album = (ImageView) findViewById(R.id.main_1_album);
+
         Main_2_Search = (ImageView) findViewById(R.id.main_2_search);
+
+        Main_3_Search = (ImageView) findViewById(R.id.main_3_search);
+        Main_3_TAG = (ImageView) findViewById(R.id.main_3_tag);
+        Main_3_Questions = (ImageView) findViewById(R.id.main_3_questions);
+
         Main_4_Search = (ImageView) findViewById(R.id.main_4_search);
+
         titleInfo = (TextView) findViewById(R.id.titleInfo);
         drawerSwitch = (ImageView) findViewById(R.id.drawerSwitch);
 
@@ -315,10 +310,12 @@ public class MainActivity extends BaseActivity {
 
         changeTheme(true);
 
-
-
+        loopFragment = new LoopFragment();
         oldMainFragment = new OldMainFragment();
         conversationFragment = new ChatAllHistoryFragment();
+
+        communityFragment = CommunityFragment.newInstance(userSign, verification);
+
         LoadDefaultFragment();
     }
 
@@ -366,6 +363,11 @@ public class MainActivity extends BaseActivity {
 //		EMGroupManager.getInstance().addGroupChangeListener(new MyGroupChangeListener());
         // 通知sdk，UI 已经初始化完毕，注册了相应的receiver和listener, 可以接受broadcast了
         EMChat.getInstance().setAppInited();
+
+        exitBroadcastReceiver = new ExitBroadcastReceiver();
+        IntentFilter intentFilter2 = new IntentFilter();
+        intentFilter.addAction(SettingActivity.class.getSimpleName());
+        this.registerReceiver(exitBroadcastReceiver, intentFilter2);
     }
 
     /**
@@ -407,12 +409,36 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+
+        Main_3_Search.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        Main_3_TAG.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        Main_3_Questions.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, QuestionsActivity.class);
+                startActivity(intent);
+            }
+        });
+
         Main_4_Search.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
+
         MyOnClickListener onClickListener = new MyOnClickListener();
         drawerSwitch.setOnClickListener(onClickListener);
         nickNameView.setOnClickListener(onClickListener);
@@ -467,9 +493,9 @@ public class MainActivity extends BaseActivity {
                 ft.hide(loopFragment);
             }
         }
-        if (suiuuFragment != null) {
-            if (suiuuFragment.isAdded()) {
-                ft.hide(suiuuFragment);
+        if (communityFragment != null) {
+            if (communityFragment.isAdded()) {
+                ft.hide(communityFragment);
             }
         }
         if (conversationFragment != null) {
@@ -510,13 +536,13 @@ public class MainActivity extends BaseActivity {
                 ft.hide(conversationFragment);
             }
         }
-        if (suiuuFragment == null) {
-            suiuuFragment = new SuiuuFragment();
+        if (communityFragment == null) {
+            communityFragment = CommunityFragment.newInstance(userSign, verification);
         }
-        if (suiuuFragment.isAdded()) {
-            ft.show(suiuuFragment);
+        if (communityFragment.isAdded()) {
+            ft.show(communityFragment);
         } else {
-            ft.add(R.id.showLayout, suiuuFragment);
+            ft.add(R.id.showLayout, communityFragment);
         }
         currentIndex = 1;
         ft.commit();
@@ -526,31 +552,37 @@ public class MainActivity extends BaseActivity {
     /**
      * 加载路线页面
      */
-    private void LoadSuiuuFragment() {
+    private void LoadCommunityFragment() {
         FragmentTransaction ft = fm.beginTransaction();
+
         if (oldMainFragment != null) {
             if (oldMainFragment.isAdded()) {
                 ft.hide(oldMainFragment);
             }
         }
+
         if (loopFragment != null) {
             if (loopFragment.isAdded()) {
                 ft.hide(loopFragment);
             }
         }
+
         if (conversationFragment != null) {
             if (conversationFragment.isAdded()) {
                 ft.hide(conversationFragment);
             }
         }
-        if (suiuuFragment == null) {
-            suiuuFragment = new SuiuuFragment();
+
+        if (communityFragment == null) {
+            communityFragment = CommunityFragment.newInstance(userSign, verification);
         }
-        if (suiuuFragment.isAdded()) {
-            ft.show(suiuuFragment);
+
+        if (communityFragment.isAdded()) {
+            ft.show(communityFragment);
         } else {
-            ft.add(R.id.showLayout, suiuuFragment);
+            ft.add(R.id.showLayout, communityFragment);
         }
+
         currentIndex = 2;
         ft.commit();
         showQA();
@@ -571,9 +603,9 @@ public class MainActivity extends BaseActivity {
                 ft.hide(loopFragment);
             }
         }
-        if (suiuuFragment != null) {
-            if (suiuuFragment.isAdded()) {
-                ft.hide(suiuuFragment);
+        if (communityFragment != null) {
+            if (communityFragment.isAdded()) {
+                ft.hide(communityFragment);
             }
         }
 
@@ -607,24 +639,28 @@ public class MainActivity extends BaseActivity {
     private void showTravelImage() {
         TravelImageLayout.setVisibility(View.VISIBLE);
         SuiuuBtnLayout.setVisibility(View.GONE);
+        CommunityLayout.setVisibility(View.GONE);
         InboxBtnLayout.setVisibility(View.GONE);
     }
 
     private void showSuiuu() {
         TravelImageLayout.setVisibility(View.GONE);
         SuiuuBtnLayout.setVisibility(View.VISIBLE);
+        CommunityLayout.setVisibility(View.GONE);
         InboxBtnLayout.setVisibility(View.GONE);
     }
 
     private void showQA() {
         TravelImageLayout.setVisibility(View.GONE);
         SuiuuBtnLayout.setVisibility(View.GONE);
+        CommunityLayout.setVisibility(View.VISIBLE);
         InboxBtnLayout.setVisibility(View.GONE);
     }
 
     private void showInbox() {
         TravelImageLayout.setVisibility(View.GONE);
         SuiuuBtnLayout.setVisibility(View.GONE);
+        CommunityLayout.setVisibility(View.GONE);
         InboxBtnLayout.setVisibility(View.VISIBLE);
     }
 
@@ -756,26 +792,6 @@ public class MainActivity extends BaseActivity {
         } else if (getIntent().getBooleanExtra(Constant.ACCOUNT_REMOVED, false) && !isAccountRemovedDialogShow) {
             showAccountRemovedDialog();
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        boolean mainFragmentFlag, loopFragmentFlag, suiuuFragmentFlag, chatFragmentFlag;
-
-        mainFragmentFlag = oldMainFragment != null && !oldMainFragment.isInLayout();
-        loopFragmentFlag = loopFragment != null && !loopFragment.isInLayout();
-        suiuuFragmentFlag = suiuuFragment != null && !suiuuFragment.isInLayout();
-        chatFragmentFlag = conversationFragment != null && !conversationFragment.isInLayout();
-
-        String str = "saveState";
-
-        outState.putString("save", str);
-        outState.putBoolean("main", mainFragmentFlag);
-        outState.putBoolean("loop", loopFragmentFlag);
-        outState.putBoolean("suiuu", suiuuFragmentFlag);
-        outState.putBoolean("chat", chatFragmentFlag);
     }
 
     /**
@@ -1013,7 +1029,7 @@ public class MainActivity extends BaseActivity {
                     changeLoop(false);
                     changeSuiuu(true);
                     changeConversation(false);
-                    LoadSuiuuFragment();
+                    LoadCommunityFragment();
                     break;
 
                 case R.id.tab4:

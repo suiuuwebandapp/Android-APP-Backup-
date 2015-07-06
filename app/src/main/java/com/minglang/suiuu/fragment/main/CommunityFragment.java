@@ -23,9 +23,7 @@ import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
 import com.minglang.suiuu.utils.DeBugLog;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link CommunityFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 问答社区页面
  */
 public class CommunityFragment extends Fragment {
 
@@ -59,14 +57,6 @@ public class CommunityFragment extends Fragment {
         }
     });
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CommunityFragment.
-     */
     public static CommunityFragment newInstance(String param1, String param2) {
         CommunityFragment fragment = new CommunityFragment();
         Bundle args = new Bundle();
@@ -77,7 +67,7 @@ public class CommunityFragment extends Fragment {
     }
 
     public CommunityFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
