@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 主页面Tab页TextView控件样式 -->
+    <style name="titleText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textColor</item>
+    </style>
+
+    <style name="titleImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+
+    </style>
+
+    <!-- 主页面Tab页外层布局样式 -->
+    <style name="tabLayout">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.2</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginTop">@dimen/layout_5dp</item>
+        <item name="android:layout_marginBottom">@dimen/layout_5dp</item>
+    </style>
+
+    <style name="personalInfoStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_weight">0.5</item>
+    </style>
+
+    <style name="collectionInfoStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_weight">0.5</item>
+    </style>
+
+    <!--新提醒-->
+    <style name="newRemind">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.25</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!--登陆按钮style-->
+    <style name="login_button_style">
+        <item name="android:background">@color/login_bg_color</item>
+        <item name="android:text">@string/login</item>
+        <item name="android:textColor">@color/text_color1</item>
+    </style>
+
+    <!--注册按钮style-->
+    <style name="register_button_style">
+        <item name="android:background">@color/register_bg_color</item>
+        <item name="android:text">@string/register</item>
+        <item name="android:textColor">@color/text_color1</item>
+    </style>
+
+    <style name="register_edit_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <!--返回键的属性设置-->
+    <style name="backKeyStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">5dp</item>
+    </style>
+
+    <!--个人信息Item-->
+    <style name="personalItemStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:background">#eeeeee</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <!--个人信息文字-->
+    <style name="personalTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!--其他用户资料-->
+    <style name="otherUserInfo">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">0.2</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+</resources>

@@ -47,7 +47,6 @@ public class AnswerActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         switch (id) {
             case android.R.id.home:
                 finish();
@@ -57,14 +56,7 @@ public class AnswerActivity extends AppCompatActivity {
                 DeBugLog.i(TAG, "str:" + str);
                 break;
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
 }

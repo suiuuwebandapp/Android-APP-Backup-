@@ -245,6 +245,7 @@ public class MainActivity extends BaseActivity {
     private void initView() {
         errorItem = (RelativeLayout) findViewById(R.id.rl_error_item);
         errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
+
         msgCount = (TextView) findViewById(R.id.unread_msg_number);
 
         sliderView = (RelativeLayout) findViewById(R.id.sliderLayout);
@@ -526,7 +527,7 @@ public class MainActivity extends BaseActivity {
     /**
      * 加载圈子页面
      */
-    private void LoadLoopFragment() {
+    private void LoadSuiuuFragment() {
         FragmentTransaction ft = fm.beginTransaction();
         if (oldMainFragment != null) {
             if (oldMainFragment.isAdded()) {
@@ -620,8 +621,8 @@ public class MainActivity extends BaseActivity {
             ft.show(conversationFragment);
         } else {
             ft.add(R.id.showLayout, conversationFragment);
-
         }
+
         currentIndex = 3;
         msgCount.setVisibility(View.INVISIBLE);
         ft.commit();
@@ -1027,11 +1028,11 @@ public class MainActivity extends BaseActivity {
                     changeLoop(true);
                     changeSuiuu(false);
                     changeConversation(false);
-                    LoadLoopFragment();
+                    LoadSuiuuFragment();
                     break;
 
                 case R.id.tab3:
-                    titleInfo.setVisibility(View.GONE);
+                    titleInfo.setText(getResources().getString(R.string.mainTitle3));
                     changeTheme(false);
                     changeLoop(false);
                     changeSuiuu(true);

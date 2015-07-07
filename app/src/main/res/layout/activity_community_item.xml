@@ -1,5 +1,6 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,10 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_50dp"
         android:layout_alignParentTop="true"
-        android:background="@color/mainColor"/>
+        android:background="@color/mainColor"
+        app:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
     <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshScrollView
-        android:id="@+id/view"
+        android:id="@+id/community_item_refresh_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/community_item_toolbar">

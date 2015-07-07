@@ -32,7 +32,7 @@
             android:layout_centerVertical="true"
             android:text="@string/title1"
             android:textColor="@color/white"
-            android:textSize="@dimen/layout_20sp"/>
+            android:textSize="@dimen/layout_22sp"/>
 
         <!--旅图页面相关按钮-->
         <RelativeLayout
@@ -113,8 +113,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_toLeftOf="@+id/main_3_tag"
                 android:layout_toStartOf="@+id/main_3_tag"
                 android:contentDescription="@string/openShoot"
@@ -138,8 +136,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginStart="15dp"
                 android:contentDescription="@string/openAsk"
                 android:src="@drawable/icon_questions_selector"/>
 

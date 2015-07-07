@@ -56,9 +56,10 @@
     <dimen name="layout_10sp">10sp</dimen>
     <dimen name="layout_12sp">12sp</dimen>
     <dimen name="layout_15sp">15sp</dimen>
-	<dimen name="layout_16sp">16sp</dimen>
+    <dimen name="layout_16sp">16sp</dimen>
     <dimen name="layout_18sp">18sp</dimen>
     <dimen name="layout_20sp">20sp</dimen>
+    <dimen name="layout_22sp">22sp</dimen>
     <dimen name="layout_25sp">25sp</dimen>
     <dimen name="layout_50sp">50sp</dimen>
     <dimen name="layout_200sp">200sp</dimen>
@@ -70,7 +71,7 @@
     <dimen name="height_row_weixin">59dp</dimen>
     <dimen name="size_avatar">50dp</dimen>
     <dimen name="margin_chat_activity">5dp</dimen>
-    <dimen name="field_textsize">14sp</dimen>
+    <dimen name="field_text_size">14sp</dimen>
     <dimen name="field_margin_right">5dp</dimen>
     <dimen name="call_button_padding_vertical">10dp</dimen>
     <dimen name="call_button_padding_left">25dp</dimen>
