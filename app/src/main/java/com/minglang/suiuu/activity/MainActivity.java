@@ -52,6 +52,7 @@ import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.fragment.main.CommunityFragment;
 import com.minglang.suiuu.fragment.main.LoopFragment;
 import com.minglang.suiuu.fragment.main.OldMainFragment;
+import com.minglang.suiuu.fragment.main.SuiuuFragment;
 import com.minglang.suiuu.utils.ConstantUtils;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -112,6 +113,11 @@ public class MainActivity extends BaseActivity {
     private LoopFragment loopFragment;
 
     private CommunityFragment communityFragment;
+
+    /**
+     * 随游页面
+     */
+    private SuiuuFragment suiuuFragment;
 
     /**
      * 会话页面
@@ -488,9 +494,9 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadMainFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (loopFragment != null) {
-            if (loopFragment.isAdded()) {
-                ft.hide(loopFragment);
+        if (suiuuFragment != null) {
+            if (suiuuFragment.isAdded()) {
+                ft.hide(suiuuFragment);
             }
         }
         if (communityFragment != null) {
@@ -536,13 +542,13 @@ public class MainActivity extends BaseActivity {
                 ft.hide(conversationFragment);
             }
         }
-        if (communityFragment == null) {
-            communityFragment = CommunityFragment.newInstance(userSign, verification);
+        if (suiuuFragment == null) {
+            suiuuFragment = new SuiuuFragment();
         }
-        if (communityFragment.isAdded()) {
-            ft.show(communityFragment);
+        if (suiuuFragment.isAdded()) {
+            ft.show(suiuuFragment);
         } else {
-            ft.add(R.id.showLayout, communityFragment);
+            ft.add(R.id.showLayout, suiuuFragment);
         }
         currentIndex = 1;
         ft.commit();
@@ -561,9 +567,9 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if (loopFragment != null) {
-            if (loopFragment.isAdded()) {
-                ft.hide(loopFragment);
+        if (suiuuFragment != null) {
+            if (suiuuFragment.isAdded()) {
+                ft.hide(suiuuFragment);
             }
         }
 
@@ -598,9 +604,9 @@ public class MainActivity extends BaseActivity {
                 ft.hide(oldMainFragment);
             }
         }
-        if (loopFragment != null) {
-            if (loopFragment.isAdded()) {
-                ft.hide(loopFragment);
+        if (suiuuFragment != null) {
+            if (suiuuFragment.isAdded()) {
+                ft.hide(suiuuFragment);
             }
         }
         if (communityFragment != null) {

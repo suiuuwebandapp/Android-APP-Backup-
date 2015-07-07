@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
@@ -32,6 +33,7 @@ public class SuiuuSearchActivity extends BaseActivity {
     private String[] europeanList = {"法国","德国","英国","荷兰","瑞士","意大利","西班牙","葡萄牙","奥地利","比利时"};
     private List<TextView> list = new ArrayList<>();
     private EditText et_suiuu_search;
+    private ImageView iv_top_search;
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class SuiuuSearchActivity extends BaseActivity {
         fl_suiuu_asia_country = (FlowLayout) findViewById(R.id.fl_suiuu_asia_country);
         fl_suiuu_european_country = (FlowLayout) findViewById(R.id.fl_suiuu_european_country);
         et_suiuu_search = (EditText) findViewById(R.id.et_suiuu_search);
+        iv_top_search = (ImageView) findViewById(R.id.iv_top_search);
         setCommentGroup();
         setAsiaGroup();
         setEuropeanGroup();
@@ -54,6 +57,7 @@ public class SuiuuSearchActivity extends BaseActivity {
     }
 
     private void viewAction() {
+        iv_top_search.setOnClickListener(new MyOnClick());
     }
     public void setCommentGroup() {
         fl_suiuu_commend_country.removeAllViews();
