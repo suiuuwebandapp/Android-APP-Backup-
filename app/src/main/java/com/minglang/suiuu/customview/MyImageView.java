@@ -4,10 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-/**
- * Created by LZY on 2015/3/25 0025.
- */
 public class MyImageView extends ImageView {
+
     private OnMeasureListener onMeasureListener;
 
     public void setOnMeasureListener(OnMeasureListener onMeasureListener) {
@@ -33,7 +31,7 @@ public class MyImageView extends ImageView {
     }
 
     public interface OnMeasureListener {
-        public void onMeasureSize(int width, int height);
+        void onMeasureSize(int width, int height);
     }
 
 }

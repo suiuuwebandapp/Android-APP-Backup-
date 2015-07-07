@@ -69,7 +69,7 @@ public class LinearLayoutForListView extends LinearLayout {
             final Object obj = adapter.getItem(i);
 
             // view 点击事件触发时回调我们自己的接口
-            v.setOnClickListener(new View.OnClickListener() {
+            v.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {

@@ -14,7 +14,7 @@
     <ScrollView
         android:id="@+id/questionsScrollView"
         android:layout_width="match_parent"
-        android:layout_height="579dp"
+        android:layout_height="match_parent"
         android:layout_below="@+id/questionToolbar"
         android:layout_gravity="center"
         android:fillViewport="false">

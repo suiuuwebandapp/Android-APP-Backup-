@@ -86,7 +86,7 @@
                     android:textSize="@dimen/layout_15sp"/>
             </RelativeLayout>
 
-            <com.minglang.suiuu.customview.MyGridView
+            <com.minglang.suiuu.customview.NoScrollBarGridView
                 android:padding="@dimen/layout_10dp"
                 android:layout_marginLeft="@dimen/layout_16dp"
                 android:layout_marginRight="@dimen/layout_16dp"

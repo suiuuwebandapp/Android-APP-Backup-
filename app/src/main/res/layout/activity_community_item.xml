@@ -4,17 +4,37 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/community_item_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_50dp"
         android:layout_alignParentTop="true"
-        android:background="?attr/colorPrimary"
-        android:id="@+id/community_item_toolbar"/>
+        android:background="@color/mainColor"/>
 
-    <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView
+    <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshScrollView
+        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/community_item_list_view"
-        android:layout_below="@+id/community_item_toolbar"
-        android:layout_centerHorizontal="true"/>
+        android:layout_below="@+id/community_item_toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/view"
+            android:orientation="vertical">
+
+            <include layout="@layout/item_community_layout_1"/>
+
+            <include layout="@layout/item_community_layout_2"/>
+
+            <include layout="@layout/item_community_layout_3"/>
+
+            <com.minglang.suiuu.customview.NoScrollBarListView
+                android:id="@+id/noScrollListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+    </com.minglang.suiuu.customview.pulltorefresh.PullToRefreshScrollView>
 
 </RelativeLayout>

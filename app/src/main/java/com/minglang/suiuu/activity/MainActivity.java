@@ -426,7 +426,8 @@ public class MainActivity extends BaseActivity {
         Main_3_TAG.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(MainActivity.this, CommunityItemActivity.class);
+                startActivity(intent);
             }
         });
 

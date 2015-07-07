@@ -8,9 +8,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 
-/**
- * Created by Mostafa Gazar on 11/2/13.
- */
 public class RectangleImageView extends BaseImageView {
 
     public RectangleImageView(Context context) {
