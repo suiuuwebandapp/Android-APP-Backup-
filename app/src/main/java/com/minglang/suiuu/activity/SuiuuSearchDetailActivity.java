@@ -1,9 +1,11 @@
 package com.minglang.suiuu.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -126,6 +128,14 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
                 tv_price_range.setText(leftPinIndex * 1000 + "--" + rightPinIndex * 1000);
             }
         });
+        lv_search_suiuu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(SuiuuSearchDetailActivity.this, SuiuuDetailActivity.class);
+                intent.putExtra("tripId", suiuuDataList.get(position - 1).getTripId());
+                startActivity(intent);
+            }
+        });
     }
 
     private void loadDate(String countryOrCity, String peopleCount, String tags, String startPrice, String endPrice, int page) {
@@ -141,7 +151,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
         params.addBodyParameter("endPrice", endPrice);
 
         params.addBodyParameter("page", Integer.toString(page));
-        params.addBodyParameter("number", "2");
+        params.addBodyParameter("number", "10");
 
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuList, new getSuiuuDateCallBack());
@@ -240,8 +250,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
 
                     List<SuiuuDataList> suiuuDataListNew = baseCollection.getData();
                     if (suiuuDataListNew.size() < 1) {
-                        page = 1;
-                        Toast.makeText(SuiuuSearchDetailActivity.this, "数据加载完毕", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SuiuuSearchDetailActivity.this, "没有更多数据", Toast.LENGTH_SHORT).show();
                     }
                     suiuuDataList.addAll(suiuuDataListNew);
                     showList(suiuuDataList);
@@ -328,6 +337,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
                     break;
 
                 case R.id.bb_search_confire:
+                    tags = "";
                     page = 1;
                     lv_search_suiuu.setEnabled(true);
                     suiuuDataList.clear();
@@ -340,12 +350,10 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
                         loadDate(searchCountry, "0".equals(enjoyPeopleCount) ? "" :
                                         enjoyPeopleCount, "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
                                 Integer.toString(startTick), Integer.toString(endTick), page);
-
                         fl_search_more.setVisibility(View.GONE);
                     } else {
                         loadDate(searchCountry, null, null, null, null, page);
                     }
-                    tags = "";
                     break;
             }
         }

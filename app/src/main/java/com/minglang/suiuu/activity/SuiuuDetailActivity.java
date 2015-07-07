@@ -3,6 +3,7 @@ package com.minglang.suiuu.activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -112,16 +113,20 @@ public class SuiuuDetailActivity extends BaseActivity {
             }
 
         });
-//        suiuu_detail_web_view.setWebChromeClient(new WebChromeClient() {
-//
-//            @Override
-//            public void onProgressChanged(WebView view, int newProgress) {
-//                // TODO Auto-generated method stub
-//                super.onProgressChanged(view, newProgress);
-//                pd.setMessage("已经加载" + newProgress + "%");
-//            }
-//
-//        });
+        suiuu_detail_web_view.setWebChromeClient(new WebChromeClient() {
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                // TODO Auto-generated method stub
+                super.onProgressChanged(view, newProgress);
+                pd.setMessage("已经加载" + newProgress + "%");
+                if(newProgress >= 70) {
+                    pd.setMessage("已经加载" + 100 + "%");
+                    pd.dismiss();
+                }
+            }
+
+        });
 
         // 得到webview的设置
         WebSettings settings = suiuu_detail_web_view.getSettings();

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
@@ -28,12 +29,14 @@ public class SuiuuSearchActivity extends BaseActivity {
     private FlowLayout fl_suiuu_commend_country;
     private FlowLayout fl_suiuu_asia_country;
     private FlowLayout fl_suiuu_european_country;
-    private String[] commentList = {"香港","新加坡"};
-    private String[] asiaList = {"台湾","日本","马来西亚","韩国","泰国"};
-    private String[] europeanList = {"法国","德国","英国","荷兰","瑞士","意大利","西班牙","葡萄牙","奥地利","比利时"};
+    private String[] commentList = {"香港", "新加坡"};
+    private String[] asiaList = {"台湾", "日本", "马来西亚", "韩国", "泰国"};
+    private String[] europeanList = {"法国", "德国", "英国", "荷兰", "瑞士", "意大利", "西班牙", "葡萄牙", "奥地利", "比利时"};
     private List<TextView> list = new ArrayList<>();
     private EditText et_suiuu_search;
     private ImageView iv_top_search;
+    private ImageView iv_top_back;
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class SuiuuSearchActivity extends BaseActivity {
         fl_suiuu_european_country = (FlowLayout) findViewById(R.id.fl_suiuu_european_country);
         et_suiuu_search = (EditText) findViewById(R.id.et_suiuu_search);
         iv_top_search = (ImageView) findViewById(R.id.iv_top_search);
+        iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
         setCommentGroup();
         setAsiaGroup();
         setEuropeanGroup();
@@ -58,7 +62,9 @@ public class SuiuuSearchActivity extends BaseActivity {
 
     private void viewAction() {
         iv_top_search.setOnClickListener(new MyOnClick());
+        iv_top_back.setOnClickListener(new MyOnClick());
     }
+
     public void setCommentGroup() {
         fl_suiuu_commend_country.removeAllViews();
         LayoutInflater mInflater = LayoutInflater.from(this);
@@ -81,7 +87,7 @@ public class SuiuuSearchActivity extends BaseActivity {
             TextView tv = (TextView) mInflater.inflate(R.layout.tv,
                     fl_suiuu_asia_country, false);
             tv.setText(asiaList[i]);
-            tv.setId(commentList.length+i);
+            tv.setId(commentList.length + i);
             tv.setOnClickListener(new MyOnClick());
             list.add(tv);
             fl_suiuu_asia_country.addView(tv);
@@ -96,24 +102,40 @@ public class SuiuuSearchActivity extends BaseActivity {
             TextView tv = (TextView) mInflater.inflate(R.layout.tv,
                     fl_suiuu_european_country, false);
             tv.setText(europeanList[i]);
-            tv.setId(commentList.length+asiaList.length + i);
+            tv.setId(commentList.length + asiaList.length + i);
             tv.setOnClickListener(new MyOnClick());
             list.add(tv);
             fl_suiuu_european_country.addView(tv);
 
         }
     }
-    class MyOnClick implements View.OnClickListener{
+
+    class MyOnClick implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
+            int clickId = v.getId();
+            Intent intent = new Intent(SuiuuSearchActivity.this, SuiuuSearchDetailActivity.class);
             for (int i = 0; i < list.size(); i++) {
-                if (v.getId() == i) {
-//                        list.get(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.tv_bg));
-                    Intent intent = new Intent(SuiuuSearchActivity.this,SuiuuSearchDetailActivity.class);
-                    intent.putExtra("country",list.get(i).getText().toString());
+                if (clickId == i) {
+                    intent.putExtra("country", list.get(i).getText().toString());
                     startActivity(intent);
                 }
+            }
+            switch (clickId) {
+                case R.id.iv_top_back:
+                    finish();
+                    break;
+                case R.id.iv_top_search:
+                    if ("".equals(et_suiuu_search.getText().toString().trim())) {
+                        Toast.makeText(SuiuuSearchActivity.this, R.string.please_enter_search_content, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    intent.putExtra("country", et_suiuu_search.getText().toString().trim());
+                    startActivity(intent);
+                    break;
+                default:
+                    break;
             }
         }
     }

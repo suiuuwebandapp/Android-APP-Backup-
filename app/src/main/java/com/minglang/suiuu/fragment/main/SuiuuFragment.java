@@ -15,7 +15,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +34,6 @@ import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.SuiuuDataList;
 import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.utils.AppUtils;
-import com.minglang.suiuu.utils.ConstantUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -92,11 +90,6 @@ public class SuiuuFragment extends BaseFragment
         dialog = new TextProgressDialog(getActivity());
         //处理头部控件
         et_suiuu = (ImageView) topView.findViewById(R.id.main_2_search);
-
-
-        RelativeLayout.LayoutParams paramTest = (RelativeLayout.LayoutParams) suiuuListView.getLayoutParams();
-        paramTest.setMargins(10, ConstantUtils.topHeight + 10, 10, 0);
-        suiuuListView.setLayoutParams(paramTest);
     }
 
     private void viewAction() {

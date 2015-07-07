@@ -11,15 +11,11 @@
         android:id="@+id/lv_search_suiuu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/layout_12dp"
-        android:layout_marginRight="@dimen/layout_12dp"
         android:background="@color/white"
-        android:dividerHeight="@dimen/layout_10dp"
         android:scrollbars="none"
         android:visibility="visible"/>
     <FrameLayout
         android:layout_below="@+id/top"
-        android:layout_marginTop="@dimen/layout_10dp"
         android:id="@+id/fl_search_more"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

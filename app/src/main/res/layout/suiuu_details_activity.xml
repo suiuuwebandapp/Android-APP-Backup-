@@ -36,7 +36,7 @@
         android:id="@+id/suiuu_details_title_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/tr_black">
+        android:background="@color/mainColor">
 
         <ImageView
             android:id="@+id/suiuu_details_back"
@@ -44,37 +44,21 @@
             android:contentDescription="@string/back"
             android:src="@drawable/back" />
 
-        <TextView
-            android:id="@+id/suiuu_details_collection"
+        <ImageView
+            android:id="@+id/iv_suiuu_detail_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:background="@drawable/btn_suiuu_share_selector"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:drawableLeft="@drawable/icon_collection_white"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/icon_collection_white"
-            android:text="@string/collection"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
+            android:layout_marginRight="@dimen/layout_5dp"/>
         <TextView
-            android:id="@+id/suiuu_details_praise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/suiuu_details_collection"
-            android:layout_toStartOf="@+id/suiuu_details_collection"
-            android:drawableLeft="@drawable/icon_praise_white"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/icon_praise_white"
-            android:text="@string/clickPraise"
+            android:text="随游详情"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="@dimen/layout_22sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
     </RelativeLayout>
     <WebView
         android:id="@+id/suiuu_detail_web_view"

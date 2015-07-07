@@ -4,6 +4,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="3dp"
     android:background="@drawable/tv_group_selector"
-    android:text="Helloworld"
+    android:text="d"
     android:textColor="@color/gray" >
 </TextView>
