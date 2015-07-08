@@ -39,6 +39,7 @@ public class CommunityFragment extends Fragment {
 
     private ProgressDialog progressDialog;
 
+
     private static PullToRefreshListView pullToRefreshListView;
 
     private static Handler handler = new Handler(new Handler.Callback() {

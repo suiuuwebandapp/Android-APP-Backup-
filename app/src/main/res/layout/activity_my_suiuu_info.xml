@@ -48,7 +48,6 @@
 
     </LinearLayout>
 
-
     <!--内容部分-->
     <android.support.v4.view.ViewPager
         android:id="@+id/mySuiuuViewPager"

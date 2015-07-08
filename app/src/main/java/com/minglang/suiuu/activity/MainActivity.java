@@ -1,5 +1,6 @@
 package com.minglang.suiuu.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -173,16 +174,14 @@ public class MainActivity extends BaseActivity {
 
     private ImageView Main_3_Search;
 
-    private ImageView Main_3_TAG;
-
     private ImageView Main_3_Questions;
 
     private ImageView Main_4_Search;
 
-    private ImageView iv_theme;
-    private ImageView iv_loop;
-    private ImageView iv_suiuu;
-    private ImageView iv_conversation;
+    private ImageView iv_tab1;
+    private ImageView iv_tab2;
+    private ImageView iv_tab3;
+    private ImageView iv_tab4;
 
     private ExitBroadcastReceiver exitBroadcastReceiver;
 
@@ -242,6 +241,7 @@ public class MainActivity extends BaseActivity {
     /**
      * 初始化方法
      */
+    @SuppressLint("InflateParams")
     private void initView() {
         errorItem = (RelativeLayout) findViewById(R.id.rl_error_item);
         errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
@@ -249,10 +249,6 @@ public class MainActivity extends BaseActivity {
         msgCount = (TextView) findViewById(R.id.unread_msg_number);
 
         sliderView = (RelativeLayout) findViewById(R.id.sliderLayout);
-        ViewGroup.LayoutParams sliderNavigationViewParams = sliderView.getLayoutParams();
-        sliderNavigationViewParams.width = screenWidth / 4 * 3;
-        sliderNavigationViewParams.height = screenHeight;
-        sliderView.setLayoutParams(sliderNavigationViewParams);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mDrawerLayout.setFocusableInTouchMode(true);
@@ -272,37 +268,21 @@ public class MainActivity extends BaseActivity {
         Main_2_Search = (ImageView) findViewById(R.id.main_2_search);
 
         Main_3_Search = (ImageView) findViewById(R.id.main_3_search);
-        Main_3_TAG = (ImageView) findViewById(R.id.main_3_tag);
         Main_3_Questions = (ImageView) findViewById(R.id.main_3_questions);
 
         Main_4_Search = (ImageView) findViewById(R.id.main_4_search);
 
         titleInfo = (TextView) findViewById(R.id.titleInfo);
+
         drawerSwitch = (ImageView) findViewById(R.id.drawerSwitch);
 
         nickNameView = (TextView) findViewById(R.id.nickName);
-        String strNickName = SuiuuInfo.ReadUserData(this).getNickname();
-        if (!TextUtils.isEmpty(strNickName)) {
-            nickNameView.setText(strNickName);
-        } else {
-            nickNameView.setText("");
-        }
 
         headImageView = (CircleImageView) findViewById(R.id.headImage);
-        String strHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
-        if (!TextUtils.isEmpty(strHeadImagePath)) {
-            imageLoader.displayImage(strHeadImagePath, headImageView);
-        }
 
         switchSuiuu = (Switch) findViewById(R.id.switchSuiuu);
-        switchSuiuu.setChecked(true);
 
         sideListView = (ListView) findViewById(R.id.sideListView);
-        List<String> strList = new ArrayList<>();
-        Collections.addAll(strList, getResources().getStringArray(R.array.sideList));
-        MainSliderAdapter adapter = new MainSliderAdapter(this, strList);
-        adapter.setScreenHeight(screenHeight);
-        sideListView.setAdapter(adapter);
 
         tab1 = (LinearLayout) findViewById(R.id.tab1);
         tab2 = (LinearLayout) findViewById(R.id.tab2);
@@ -310,11 +290,44 @@ public class MainActivity extends BaseActivity {
         tab4 = (LinearLayout) findViewById(R.id.tab4);
 
         //初始化底部控件
-        iv_theme = (ImageView) findViewById(R.id.img1);
-        iv_loop = (ImageView) findViewById(R.id.img2);
-        iv_suiuu = (ImageView) findViewById(R.id.img3);
-        iv_conversation = (ImageView) findViewById(R.id.img4);
+        iv_tab1 = (ImageView) findViewById(R.id.img1);
+        iv_tab2 = (ImageView) findViewById(R.id.img2);
+        iv_tab3 = (ImageView) findViewById(R.id.img3);
+        iv_tab4 = (ImageView) findViewById(R.id.img4);
 
+        initData();
+        initFragment();
+    }
+
+    private void initData() {
+        ViewGroup.LayoutParams sliderNavigationViewParams = sliderView.getLayoutParams();
+        sliderNavigationViewParams.width = screenWidth / 4 * 3;
+        sliderNavigationViewParams.height = screenHeight;
+        sliderView.setLayoutParams(sliderNavigationViewParams);
+
+        String strNickName = SuiuuInfo.ReadUserData(this).getNickname();
+        if (!TextUtils.isEmpty(strNickName)) {
+            nickNameView.setText(strNickName);
+        } else {
+            nickNameView.setText("");
+        }
+
+        String strHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
+        if (!TextUtils.isEmpty(strHeadImagePath)) {
+            imageLoader.displayImage(strHeadImagePath, headImageView);
+            imageLoader.displayImage(strHeadImagePath, drawerSwitch);
+        }
+
+        switchSuiuu.setChecked(true);
+
+        List<String> strList = new ArrayList<>();
+        Collections.addAll(strList, getResources().getStringArray(R.array.sideList));
+        MainSliderAdapter adapter = new MainSliderAdapter(this, strList);
+        adapter.setScreenHeight(screenHeight);
+        sideListView.setAdapter(adapter);
+    }
+
+    private void initFragment() {
         changeTheme(true);
 
         loopFragment = new LoopFragment();
@@ -420,13 +433,6 @@ public class MainActivity extends BaseActivity {
         Main_3_Search.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
-            }
-        });
-
-        Main_3_TAG.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CommunityItemActivity.class);
                 startActivity(intent);
             }
@@ -448,6 +454,7 @@ public class MainActivity extends BaseActivity {
         });
 
         MyOnClickListener onClickListener = new MyOnClickListener();
+
         drawerSwitch.setOnClickListener(onClickListener);
         nickNameView.setOnClickListener(onClickListener);
         headImageView.setOnClickListener(onClickListener);
@@ -675,36 +682,36 @@ public class MainActivity extends BaseActivity {
     //判断主题
     private void changeTheme(Boolean isChoice) {
         if (isChoice) {
-            iv_theme.setImageResource(R.drawable.icon_main_1_green);
+            iv_tab1.setImageResource(R.drawable.icon_main_1_green);
         } else {
-            iv_theme.setImageResource(R.drawable.icon_main_1_white);
+            iv_tab1.setImageResource(R.drawable.icon_main_1_white);
         }
     }
 
     //判断圈子
     private void changeLoop(Boolean isChoice) {
         if (isChoice) {
-            iv_loop.setImageResource(R.drawable.icon_main_2_green);
+            iv_tab2.setImageResource(R.drawable.icon_main_2_green);
         } else {
-            iv_loop.setImageResource(R.drawable.icon_main_2_white);
+            iv_tab2.setImageResource(R.drawable.icon_main_2_white);
         }
     }
 
     //判断随游
     private void changeSuiuu(Boolean isChoice) {
         if (isChoice) {
-            iv_suiuu.setImageResource(R.drawable.icon_main_3_green);
+            iv_tab3.setImageResource(R.drawable.icon_main_3_green);
         } else {
-            iv_suiuu.setImageResource(R.drawable.icon_main_3_white);
+            iv_tab3.setImageResource(R.drawable.icon_main_3_white);
         }
     }
 
     //判断会话
     private void changeConversation(Boolean isChoice) {
         if (isChoice) {
-            iv_conversation.setImageResource(R.drawable.icon_main_4_green);
+            iv_tab4.setImageResource(R.drawable.icon_main_4_green);
         } else {
-            iv_conversation.setImageResource(R.drawable.icon_main_4_white);
+            iv_tab4.setImageResource(R.drawable.icon_main_4_white);
         }
     }
 
