@@ -408,12 +408,12 @@ public class PersonalSettingActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
-            DeBugLog.i(TAG, "select picture cancel");
+            DeBugLog.e(TAG, "select picture cancel");
             return;
         }
 
         if (data == null) {
-            DeBugLog.i(TAG, "back data is null!");
+            DeBugLog.e(TAG, "back data is null!");
             return;
         }
 

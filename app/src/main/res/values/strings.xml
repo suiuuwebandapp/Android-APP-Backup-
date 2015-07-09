@@ -234,6 +234,8 @@
 
     <string name="answerQuestion">请填写答案</string>
 
+    <string name="ProblemHint">输入你想问的问题吧</string>
+
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>
@@ -536,5 +538,6 @@
     <string name="title_activity_community_item">CommunityItemActivity</string>
     <string name="title_activity_questions">QuestionsActivity</string>
     <string name="title_activity_answer">AnswerActivity</string>
+    <string name="title_activity_community_search">CommunitySearchActivity</string>
 
 </resources>
