@@ -30,8 +30,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
 
     private static final int COMPLETE = 1;
 
-    @Bind(R.id.community_item_refresh_scroll_view)
-    static PullToRefreshScrollView pullToRefreshScrollView;
+    private static PullToRefreshScrollView pullToRefreshScrollView;
 
     @Bind(R.id.noScrollListView)
     NoScrollBarListView noScrollBarListView;
@@ -74,6 +73,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
 
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
+        pullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.community_item_refresh_scroll_view);
         pullToRefreshScrollView.setMode(Mode.BOTH);
     }
 

@@ -20,40 +20,36 @@ import com.minglang.suiuu.chat.activity.ShowBigImage;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 反馈页面
  */
 
 public class FeedbackActivity extends BaseActivity {
 
-    private ImageView back;
+    @Bind(R.id.iv_top_back)
+    ImageView back;
 
-    private TextView sendText;
+    @Bind(R.id.tv_top_right)
+    TextView sendText;
 
-    private EditText feedbackText;
+    @Bind(R.id.et_question_description)
+    EditText feedbackText;
 
-    private GridView gv_show_picture;
+    @Bind(R.id.gv_show_picture)
+    GridView gv_show_picture;
 
-    private ArrayList<String> listPicture;
+    private ArrayList<String> listPicture = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
 
-        initView();
+        ButterKnife.bind(this);
         ViewAction();
-    }
-
-    /**
-     * 初始化方法
-     */
-    private void initView() {
-        listPicture = new ArrayList<>();
-        back = (ImageView) findViewById(R.id.iv_top_back);
-        sendText = (TextView) findViewById(R.id.tv_top_right);
-        feedbackText = (EditText) findViewById(R.id.et_question_description);
-        gv_show_picture = (GridView) findViewById(R.id.gv_show_picture);
     }
 
     /**
@@ -96,7 +92,9 @@ public class FeedbackActivity extends BaseActivity {
 
             }
         });
+
         gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture, "0"));
+
         gv_show_picture.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

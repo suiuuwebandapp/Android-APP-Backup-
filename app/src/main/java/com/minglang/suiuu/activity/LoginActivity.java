@@ -77,6 +77,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 登录页面
  */
@@ -87,9 +90,11 @@ public class LoginActivity extends BaseActivity {
 
     private static final String HUANXINPASSWORD = "suIuu9Q5E2T7";
 
-    private Button loginBtn;
+    @Bind(R.id.loginBtn)
+    Button loginBtn;
 
-    private Button registerBtn;
+    @Bind(R.id.registerBtn)
+    Button registerBtn;
 
     /**
      * ***************************分割线***************************
@@ -211,7 +216,14 @@ public class LoginActivity extends BaseActivity {
     /**
      * 第三方登陆按钮
      */
-    private ImageView weiBoLogin, qqLogin, weChatLogin;
+    @Bind(R.id.weibo_login)
+     ImageView weiBoLogin;
+
+    @Bind(R.id.qq_login)
+    ImageView qqLogin;
+
+    @Bind(R.id.weChat_login)
+    ImageView weChatLogin;
 
     //微信相关
     private IWXAPI weChatApi;
@@ -237,12 +249,15 @@ public class LoginActivity extends BaseActivity {
 
     private ProgressDialog tencentLoginDialog;
 
-    private ImageView loginMainLogo;
+    @Bind(R.id.login_main_logo)
+    ImageView loginMainLogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        ButterKnife.bind(this);
 
         initView();
         getInternationalAreaCode();
@@ -255,17 +270,7 @@ public class LoginActivity extends BaseActivity {
     private void initView() {
         initDialog();
         initThirdParty();
-
-        loginMainLogo = (ImageView) findViewById(R.id.login_main_logo);
-
-        loginBtn = (Button) findViewById(R.id.loginBtn);
-        registerBtn = (Button) findViewById(R.id.registerBtn);
-
         initPopupWindow();
-
-        weiBoLogin = (ImageView) findViewById(R.id.weibo_login);
-        qqLogin = (ImageView) findViewById(R.id.qq_login);
-        weChatLogin = (ImageView) findViewById(R.id.weChat_login);
     }
 
     /**

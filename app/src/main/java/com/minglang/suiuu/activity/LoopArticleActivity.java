@@ -64,6 +64,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+
 /**
  * 具体某个地区/主题下的某个帖子
  * <p/>
@@ -81,72 +83,86 @@ public class LoopArticleActivity extends BaseActivity {
     /**
      * 封面图片
      */
-    private ImageView coverImage;
+    @Bind(R.id.loop_article_cover_image)
+    ImageView coverImage;
 
     /**
      * 点赞
      */
-    private TextView praise;
+    @Bind(R.id.loop_article_praise)
+    TextView praise;
 
     /**
      * 收藏
      */
-    private TextView collection;
+    @Bind(R.id.loop_article_collection)
+    TextView collection;
 
     /**
      * 位置信息
      */
-    private TextView locationName;
+    @Bind(R.id.loop_article_location)
+    TextView locationName;
 
     /**
      * 用户头像
      */
-    private CircleImageView headImage;
+    @Bind(R.id.loop_article_user_head_image)
+    CircleImageView headImage;
 
     /**
      * 用户名
      */
-    private TextView userName;
+    @Bind(R.id.loop_article_user_name)
+    TextView userName;
 
     /**
      * 用户位置
      */
-    private TextView userLocation;
+    @Bind(R.id.loop_article_user_location)
+    TextView userLocation;
 
     /**
      * 修改
      */
-    private TextView editor;
+    @Bind(R.id.loop_article_editor)
+    TextView editor;
 
     /**
      * 删除
      */
-    private TextView delete;
+    @Bind(R.id.loop_article_delete)
+    TextView delete;
 
     /**
      * 文章内容
      */
-    private TextView articleContent;
+    @Bind(R.id.loop_article_content)
+    TextView articleContent;
 
     /**
      * 展示图片的GridView
      */
-    private NoScrollBarGridView noScrollBarGridView;
+    @Bind(R.id.loop_article_grid)
+    NoScrollBarGridView noScrollBarGridView;
 
     /**
      * 展示评论
      */
-    private TextView showComments;
+    @Bind(R.id.loop_article_show_comment)
+    TextView showComments;
 
     /**
      * 分享
      */
-    private TextView share;
+    @Bind(R.id.loop_article_share)
+    TextView share;
 
     /**
      * 评论
      */
-    private TextView comments;
+    @Bind(R.id.loop_article_comments)
+    TextView comments;
 
     private String articleId;
 
@@ -161,19 +177,33 @@ public class LoopArticleActivity extends BaseActivity {
     private ProgressDialog progressDialog;
 
     private List<String> imageList;
-    private RelativeLayout rl_showForAsk;
-    private RelativeLayout rl_showForTakePhoto;
-    private ListView loop_article_listview;
-    private LinearLayoutForListView commentListView;
-    private ImageView loop_article_back;
+
+    @Bind(R.id.loop_article_showForAsk)
+    RelativeLayout rl_showForAsk;
+
+    @Bind(R.id.loop_article_showForTakePhoto)
+    RelativeLayout rl_showForTakePhoto;
+
+    @Bind(R.id.loop_article_listview)
+    ListView loop_article_listview;
+
+    @Bind(R.id.loop_article_comment_list)
+    LinearLayoutForListView commentListView;
+
+    @Bind(R.id.loop_article_back)
+    ImageView loop_article_back;
+
     private boolean isClickComment;
+
     private String attentionId;
 
     /**
      * 点赞Id
      */
     private String praiseId;
-    private ScrollView loop_article_scrollView;
+
+    @Bind(R.id.loop_article_scrollView)
+    ScrollView loop_article_scrollView;
 
     //判断取消的是点赞还是收藏
     private boolean isPraise;
@@ -200,47 +230,11 @@ public class LoopArticleActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-//        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.loop_article_root_layout);
-//        if (isKITKAT) {
-//            if (navigationBarHeight <= 0) {
-//                rootLayout.setPadding(0, statusBarHeight, 0, 0);
-//            } else {
-//                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-//            }
-//        }
-
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(true);
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
-
-        coverImage = (ImageView) findViewById(R.id.loop_article_cover_image);
-
-        praise = (TextView) findViewById(R.id.loop_article_praise);
-        collection = (TextView) findViewById(R.id.loop_article_collection);
-        locationName = (TextView) findViewById(R.id.loop_article_location);
-
-        headImage = (CircleImageView) findViewById(R.id.loop_article_user_head_image);
-        userName = (TextView) findViewById(R.id.loop_article_user_name);
-        userLocation = (TextView) findViewById(R.id.loop_article_user_location);
-
-        editor = (TextView) findViewById(R.id.loop_article_editor);
-        delete = (TextView) findViewById(R.id.loop_article_delete);
-
-        articleContent = (TextView) findViewById(R.id.loop_article_content);
-        noScrollBarGridView = (NoScrollBarGridView) findViewById(R.id.loop_article_grid);
-        showComments = (TextView) findViewById(R.id.loop_article_show_comment);
-
-        share = (TextView) findViewById(R.id.loop_article_share);
-        comments = (TextView) findViewById(R.id.loop_article_comments);
-        rl_showForTakePhoto = (RelativeLayout) findViewById(R.id.loop_article_showForTakePhoto);
-        rl_showForAsk = (RelativeLayout) findViewById(R.id.loop_article_showForAsk);
-        loop_article_listview = (ListView) findViewById(R.id.loop_article_listview);
-        loop_article_back = (ImageView) findViewById(R.id.loop_article_back);
-        commentListView = (LinearLayoutForListView) findViewById(R.id.loop_article_comment_list);
-        loop_article_scrollView = (ScrollView) findViewById(R.id.loop_article_scrollView);
-
     }
 
     /**
@@ -833,5 +827,5 @@ public class LoopArticleActivity extends BaseActivity {
         super.onBackPressed();
         finish();
     }
-}
 
+}

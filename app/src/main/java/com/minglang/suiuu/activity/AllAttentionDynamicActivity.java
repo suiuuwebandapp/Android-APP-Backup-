@@ -50,8 +50,7 @@ public class AllAttentionDynamicActivity extends Activity {
 
     private static final int COMPLETE = 1;
 
-    @Bind(R.id.all_attention_dynamic_list_view)
-    static PullToRefreshListView pullToRefreshListView;
+    private static PullToRefreshListView pullToRefreshListView;
 
     private int page = 1;
 
@@ -96,6 +95,7 @@ public class AllAttentionDynamicActivity extends Activity {
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
         progressDialog.setCanceledOnTouchOutside(false);
 
+        pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.all_attention_dynamic_list_view);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         adapter = new AllAttentionDynamicAdapter(this);
         pullToRefreshListView.setAdapter(adapter);

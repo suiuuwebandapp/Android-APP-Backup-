@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MySuiuuReleaseAdapter;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.suiuu.JoinFragment;
 import com.minglang.suiuu.fragment.suiuu.NewApplyForFragment;
 import com.minglang.suiuu.utils.AppConstant;
@@ -26,27 +26,46 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 我发布的随游页面
  */
-public class MySuiuuReleaseActivity extends AppCompatActivity {
+public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
 
     private static final String TAG = MySuiuuReleaseActivity.class.getSimpleName();
 
     /**
      * 返回键*
      */
-    private ImageView back;
+    @Bind(R.id.my_suiuu_release_back)
+    ImageView back;
+
+    @Bind(R.id.my_suiuu_release_viewPager)
+    ViewPager releaseViewPager;
 
     /**
      * 我发布的随游标题，详细信息，价格
      */
-    private TextView mySuiuuTitle, mySuiuuInfoText, mySuiuuPrice;
+    @Bind(R.id.my_suiuu_release_title)
+    TextView mySuiuuTitle;
+
+    @Bind(R.id.my_suiuu_release_info_text)
+    TextView mySuiuuInfoText;
+
+    @Bind(R.id.my_suiuu_release_price)
+    TextView mySuiuuPrice;
+
+    @Bind(R.id.my_suiuu_release_tabLayout)
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_suiuu_release);
+
+        ButterKnife.bind(this);
 
         initView();
         ViewAction();
@@ -58,13 +77,6 @@ public class MySuiuuReleaseActivity extends AppCompatActivity {
     private void initView() {
 
         Intent oldIntent = getIntent();
-
-        back = (ImageView) findViewById(R.id.my_suiuu_release_back);
-        ViewPager releaseViewPager = (ViewPager) findViewById(R.id.my_suiuu_release_viewPager);
-
-        mySuiuuTitle = (TextView) findViewById(R.id.my_suiuu_release_title);
-        mySuiuuInfoText = (TextView) findViewById(R.id.my_suiuu_release_info_text);
-        mySuiuuPrice = (TextView) findViewById(R.id.my_suiuu_release_price);
 
         String title = oldIntent.getStringExtra("title");
         String info = oldIntent.getStringExtra("info");
@@ -93,7 +105,6 @@ public class MySuiuuReleaseActivity extends AppCompatActivity {
         String applyFor = "新申请";
 
         //可滑动的Tab头
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.my_suiuu_release_tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(join), true);
         tabLayout.addTab(tabLayout.newTab().setText(applyFor), false);
         tabLayout.setTabTextColors(getResources().getColor(R.color.tr_black), getResources().getColor(R.color.text_select_true));

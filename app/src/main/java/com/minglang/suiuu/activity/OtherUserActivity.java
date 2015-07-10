@@ -328,144 +328,139 @@ public class OtherUserActivity extends BaseActivity {
         return isexist;
     }
 
+    //获取用户信息
+    private class GetOtherUserInformationRequestCallBack extends RequestCallBack<String> {
 
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
 
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
 
-//获取用户信息
-private class GetOtherUserInformationRequestCallBack extends RequestCallBack<String> {
+            otherUserLoopGridView.onRefreshComplete();
 
-    @Override
-    public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            String str = stringResponseInfo.result;
+            DeBugLog.i(TAG, "用户信息:" + str);
+            try {
+                otherUser = JsonUtils.getInstance().fromJSON(OtherUser.class, str);
+                fullData();
+                List<OtherUserDataArticle> list = otherUser.getData().getArticleList();
+                if (list != null && list.size() > 0) {
+                    articleListAll.addAll(list);
+                    adapter.setList(articleListAll);
+                } else {
+                    if (page > 1) {
+                        page = page - 1;
+                    }
+                    Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "用户数据解析失败异常信息:" + e.getMessage());
 
-        if (dialog.isShowing()) {
-            dialog.dismiss();
-        }
-
-        otherUserLoopGridView.onRefreshComplete();
-
-        String str = stringResponseInfo.result;
-        DeBugLog.i(TAG, "用户信息:" + str);
-        try {
-            otherUser = JsonUtils.getInstance().fromJSON(OtherUser.class, str);
-            fullData();
-            List<OtherUserDataArticle> list = otherUser.getData().getArticleList();
-            if (list != null && list.size() > 0) {
-                articleListAll.addAll(list);
-                adapter.setList(articleListAll);
-            } else {
                 if (page > 1) {
                     page = page - 1;
                 }
-                Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
             }
-        } catch (Exception e) {
-            DeBugLog.e(TAG, "用户数据解析失败异常信息:" + e.getMessage());
+            DeBugLog.i(TAG, "当前页码:" + page);
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            DeBugLog.e(TAG, "获取用户数据失败异常信息:" + s);
+            DeBugLog.i(TAG, "当前页码:" + page);
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
 
             if (page > 1) {
                 page = page - 1;
             }
 
-            Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+            otherUserLoopGridView.onRefreshComplete();
+
+            Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
-        DeBugLog.i(TAG, "当前页码:" + page);
+
     }
 
-    @Override
-    public void onFailure(HttpException e, String s) {
-        DeBugLog.e(TAG, "获取用户数据失败异常信息:" + s);
-        DeBugLog.i(TAG, "当前页码:" + page);
+    /**
+     * 添加关注回调接口
+     */
+    private class AddAttentionRequestCallBack extends RequestCallBack<String> {
 
-        if (dialog.isShowing()) {
-            dialog.dismiss();
-        }
-
-        if (page > 1) {
-            page = page - 1;
-        }
-
-        otherUserLoopGridView.onRefreshComplete();
-
-        Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
-    }
-
-}
-
-/**
- * 添加关注回调接口
- */
-private class AddAttentionRequestCallBack extends RequestCallBack<String> {
-
-    @Override
-    public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-        String str = stringResponseInfo.result;
-        try {
-            JSONObject object = new JSONObject(str);
-            String status = object.getString("status");
-            if (status.equals("1")) {
-                attentionId = object.getString("data");
-                attention.setTextColor(getResources().getColor(R.color.text_select_true));
-                attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_light), null, null, null);
-                Toast.makeText(OtherUserActivity.this, "关注成功！", Toast.LENGTH_SHORT).show();
-            } else {
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            String str = stringResponseInfo.result;
+            try {
+                JSONObject object = new JSONObject(str);
+                String status = object.getString("status");
+                if (status.equals("1")) {
+                    attentionId = object.getString("data");
+                    attention.setTextColor(getResources().getColor(R.color.text_select_true));
+                    attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_light), null, null, null);
+                    Toast.makeText(OtherUserActivity.this, "关注成功！", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(OtherUserActivity.this, "关注失败！", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
                 Toast.makeText(OtherUserActivity.this, "关注失败！", Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(OtherUserActivity.this, "关注失败！", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            DeBugLog.e(TAG, "添加关注网络异常信息:" + s);
+            Toast.makeText(OtherUserActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
 
-    @Override
-    public void onFailure(HttpException e, String s) {
-        DeBugLog.e(TAG, "添加关注网络异常信息:" + s);
-        Toast.makeText(OtherUserActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
-    }
-}
+    /**
+     * 取消关注用户回调接口
+     */
+    class CollectionArticleCancelRequestCallback extends RequestCallBack<String> {
 
-/**
- * 取消关注用户回调接口
- */
-class CollectionArticleCancelRequestCallback extends RequestCallBack<String> {
-
-    @Override
-    public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-        try {
-            JSONObject json = new JSONObject(stringResponseInfo.result);
-            String status = json.getString("status");
-            String data = json.getString("data");
-            if ("1".equals(status) && "success".equals(data)) {
-                attentionId = null;
-                attention.setTextColor(getResources().getColor(R.color.white));
-                attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_dark), null, null, null);
-                Toast.makeText(OtherUserActivity.this, "取消关注用户成功", Toast.LENGTH_SHORT).show();
-            } else {
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            try {
+                JSONObject json = new JSONObject(stringResponseInfo.result);
+                String status = json.getString("status");
+                String data = json.getString("data");
+                if ("1".equals(status) && "success".equals(data)) {
+                    attentionId = null;
+                    attention.setTextColor(getResources().getColor(R.color.white));
+                    attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_dark), null, null, null);
+                    Toast.makeText(OtherUserActivity.this, "取消关注用户成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
                 Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
             }
-        } catch (JSONException e) {
+
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            DeBugLog.e(TAG, s);
             Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    @Override
-    public void onFailure(HttpException e, String s) {
-        DeBugLog.e(TAG, s);
-        Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
-    }
-
-}
-
     public Drawable setImgDrawTextPosition(int img) {
         Drawable drawable = this.getResources().getDrawable(img);
         // 调用setCompoundDrawables时，必须调用Drawable.setBounds()方法,否则图片不显示
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        return drawable;
+        if (drawable != null) {
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            return drawable;
+        } else {
+            return null;
+        }
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        getUserInfo2Service(1);
-//    }
 
 }

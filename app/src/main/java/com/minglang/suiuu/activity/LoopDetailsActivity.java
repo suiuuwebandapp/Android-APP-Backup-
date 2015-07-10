@@ -41,6 +41,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 圈子-详情页页面
  */
@@ -63,22 +66,26 @@ public class LoopDetailsActivity extends BaseActivity {
     /**
      * 返回键
      */
-    private ImageView back;
+    @Bind(R.id.loop_details_back)
+    ImageView back;
 
     /**
      * 标题
      */
-    private TextView title;
+    @Bind(R.id.loop_details_title)
+    TextView title;
 
     /**
      * 添加关注
      */
-    private TextView addAttention;
+    @Bind(R.id.loop_details_add_attention)
+    TextView addAttention;
 
     /**
      * 数据显示控件
      */
-    private PullToRefreshStaggeredView loopDetailsGridView;
+    @Bind(R.id.loopDetailsGridView)
+    PullToRefreshStaggeredView loopDetailsGridView;
 
     private List<LoopDetailsDataList> listAll = new ArrayList<>();
 
@@ -94,7 +101,8 @@ public class LoopDetailsActivity extends BaseActivity {
 
     private Context context = LoopDetailsActivity.this;
 
-    private TextView reload;
+    @Bind(R.id.loopDetailsReload)
+    TextView reload;
 
     private TextProgressDialog textProgressDialog;
 
@@ -102,6 +110,8 @@ public class LoopDetailsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loop_details);
+
+        ButterKnife.bind(this);
 
         type = getIntent().getStringExtra(TYPE);
         circleId = getIntent().getStringExtra(CIRCLEID);
@@ -117,25 +127,18 @@ public class LoopDetailsActivity extends BaseActivity {
      */
     @SuppressWarnings("deprecation")
     private void initView() {
-
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(true);
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
 
-        back = (ImageView) findViewById(R.id.loop_details_back);
-        title = (TextView) findViewById(R.id.loop_details_title);
-        addAttention = (TextView) findViewById(R.id.loop_details_add_attention);
-
-        loopDetailsGridView = (PullToRefreshStaggeredView) findViewById(R.id.loopDetailsGridView);
         loopDetailsGridView.setMode(PullToRefreshBase.Mode.BOTH);
 
         loopDetailsAdapter = new LoopDetailsAdapter(this);
         loopDetailsAdapter.setScreenParams(screenWidth, screenHeight);
         loopDetailsGridView.setAdapter(loopDetailsAdapter);
 
-        reload = (TextView) findViewById(R.id.loopDetailsReload);
         textProgressDialog = new TextProgressDialog(context);
         textProgressDialog.setMessage(getResources().getString(R.string.pull_to_refresh_footer_refreshing_label));
     }

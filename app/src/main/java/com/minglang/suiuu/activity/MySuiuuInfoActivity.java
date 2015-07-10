@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MySuiuuInfoAdapter;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.mysuiuu.ParticipateFragment;
 import com.minglang.suiuu.fragment.mysuiuu.PublishedFragment;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -17,21 +17,28 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 我的随游页面
  * <p/>
  * 查看我已参加和发布的随游
  */
-public class MySuiuuInfoActivity extends AppCompatActivity {
+public class MySuiuuInfoActivity extends BaseAppCompatActivity {
 
-    private ImageView back;
+    @Bind(R.id.mySuiuuBack)
+    ImageView back;
 
-    private ViewPager viewPager;
+    @Bind(R.id.mySuiuuViewPager)
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_suiuu_info);
+
+        ButterKnife.bind(this);
 
         initView();
         ViewAction();
@@ -42,8 +49,6 @@ public class MySuiuuInfoActivity extends AppCompatActivity {
      */
     private void initView() {
 
-        back = (ImageView) findViewById(R.id.mySuiuuBack);
-
         String Published = "已发布";
         String Participate = "已参加";
 
@@ -51,8 +56,6 @@ public class MySuiuuInfoActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText(Published), true);
         tabLayout.addTab(tabLayout.newTab().setText(Participate), false);
         tabLayout.setTabTextColors(getResources().getColor(R.color.tr_black), getResources().getColor(R.color.text_select_true));
-
-        viewPager = (ViewPager) findViewById(R.id.mySuiuuViewPager);
 
         String userSign = SuiuuInfo.ReadUserSign(this);
         String verification = SuiuuInfo.ReadVerification(this);
@@ -105,12 +108,6 @@ public class MySuiuuInfoActivity extends AppCompatActivity {
 
         });
 
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
 }
