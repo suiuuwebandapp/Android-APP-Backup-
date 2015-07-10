@@ -1,5 +1,6 @@
 package com.minglang.suiuu.activity;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -53,6 +54,7 @@ import com.minglang.suiuu.fragment.main.CommunityFragment;
 import com.minglang.suiuu.fragment.main.LoopFragment;
 import com.minglang.suiuu.fragment.main.TripGalleryFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
+import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.ConstantUtils;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -63,44 +65,74 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 应用程序主界面
  */
 public class MainActivity extends BaseActivity {
 
     protected NotificationManager notificationManager;
+
     private static final int notificationId = 11;
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private DrawerLayout mDrawerLayout;
+    private static final int NUMBER1 = 1;
+
+    private static final int NUMBER2 = 2;
+
+    private static final int NUMBER3 = 3;
+
+    private static final int NUMBER4 = 4;
+
+    @Bind(R.id.drawerLayout)
+    DrawerLayout mDrawerLayout;
 
     //侧滑布局
-    private RelativeLayout sliderView;
+    @Bind(R.id.sliderLayout)
+    RelativeLayout sliderView;
 
     /**
      * 点击修改昵称
      */
-    private TextView nickNameView;
+    @Bind(R.id.nickName)
+    TextView nickNameView;
 
     /**
      * 点击修改头像
      */
-    private CircleImageView headImageView;
+    @Bind(R.id.headImage)
+    CircleImageView headImageView;
 
-    private Switch switchSuiuu;
+    @Bind(R.id.switchSuiuu)
+    Switch switchSuiuu;
 
-    private ListView sideListView;
+    @Bind(R.id.sideListView)
+    ListView sideListView;
 
     //标题
-    private TextView titleInfo;
+    @Bind(R.id.titleInfo)
+    TextView titleInfo;
 
-    private ImageView drawerSwitch;
+    @Bind(R.id.drawerSwitch)
+    CircleImageView drawerSwitch;
 
     /**
      * 各个Tab页
      */
-    private LinearLayout tab1, tab2, tab3, tab4;
+    @Bind(R.id.tab1)
+    LinearLayout tab1;
+
+    @Bind(R.id.tab2)
+    LinearLayout tab2;
+
+    @Bind(R.id.tab3)
+    LinearLayout tab3;
+
+    @Bind(R.id.tab4)
+    LinearLayout tab4;
 
     /**
      * 主页页面
@@ -126,65 +158,88 @@ public class MainActivity extends BaseActivity {
 
     // 账号在别处登录
     public boolean isConflict = false;
-    private NewMessageBroadcastReceiver msgReceiver;
+    private NewMessageReceiver msgReceiver;
 
     //当前为fragment的第几页
     private int currentIndex = 0;
+
     private TextView msgCount;
-    private RelativeLayout errorItem;
+
+    @Bind(R.id.rl_error_item)
+    RelativeLayout errorItem;
+
     private TextView errorText;
+
+    @Bind(R.id.titleLayout)
+    RelativeLayout titleLayout;
 
     /**
      * 旅图页面按钮布局
      */
-    private RelativeLayout TravelImageLayout;
+    @Bind(R.id.TravelImageLayout)
+    RelativeLayout TravelImageLayout;
 
     /**
      * 随游页面按钮布局
      */
-    private FrameLayout SuiuuBtnLayout;
+    @Bind(R.id.SuiuuButtonLayout)
+    FrameLayout SuiuuButtonLayout;
 
-    private RelativeLayout CommunityLayout;
+    @Bind(R.id.CommunityLayout)
+    RelativeLayout CommunityLayout;
 
     /**
      * 收件箱页面按钮布局
      */
-    private FrameLayout InboxBtnLayout;
+    @Bind(R.id.InboxButtonLayout)
+    FrameLayout InboxBtnLayout;
 
     /**
      * 旅图页面搜索按钮
      */
-    private ImageView Main_1_Search;
+    @Bind(R.id.main_1_search)
+    ImageView Main_1_Search;
 
     /**
      * 旅图页面标签按钮
      */
-    private ImageView Main_1_Tag;
+    @Bind(R.id.main_1_tag)
+    ImageView Main_1_Tag;
 
     /**
      * 旅图页面相册按钮
      */
-    private ImageView Main_1_Album;
+    @Bind(R.id.main_1_album)
+    ImageView Main_1_Album;
 
     /**
      * 随游页面搜索按钮
      */
-    private ImageView Main_2_Search;
+    @Bind(R.id.main_2_search)
+    ImageView Main_2_Search;
 
-    private ImageView Main_3_Search;
+    @Bind(R.id.main_3_search)
+    ImageView Main_3_Search;
 
-    private ImageView Main_3_TAG;
+    @Bind(R.id.main_3_questions)
+    ImageView Main_3_Questions;
 
-    private ImageView Main_3_Questions;
+    @Bind(R.id.main_4_search)
+    ImageView Main_4_Search;
 
-    private ImageView Main_4_Search;
+    @Bind(R.id.img1)
+    ImageView iv_tab1;
 
-    private ImageView iv_theme;
-    private ImageView iv_loop;
-    private ImageView iv_suiuu;
-    private ImageView iv_conversation;
+    @Bind(R.id.img2)
+    ImageView iv_tab2;
 
-    private ExitBroadcastReceiver exitBroadcastReceiver;
+    @Bind(R.id.img3)
+    ImageView iv_tab3;
+
+    @Bind(R.id.img4)
+    ImageView iv_tab4;
+
+    private ExitReceiver exitReceiver;
 
     private EMChatManager chatManager;
 
@@ -197,6 +252,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         UmengUpdateAgent.update(this);
+        ButterKnife.bind(this);
 
         initView();
         initRegisterAllBroadcastReceiver();
@@ -243,44 +299,18 @@ public class MainActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-        errorItem = (RelativeLayout) findViewById(R.id.rl_error_item);
-        errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
+        msgCount = (TextView) findViewById(R.id.unread_msg_number);//使用注解报错
+        errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);//使用注解正常，为保险起见暂不使用注解
 
-        msgCount = (TextView) findViewById(R.id.unread_msg_number);
+        mDrawerLayout.setFocusableInTouchMode(true);
 
-        sliderView = (RelativeLayout) findViewById(R.id.sliderLayout);
+        ConstantUtils.topHeight = titleLayout.getLayoutParams().height;
+
         ViewGroup.LayoutParams sliderNavigationViewParams = sliderView.getLayoutParams();
         sliderNavigationViewParams.width = screenWidth / 4 * 3;
         sliderNavigationViewParams.height = screenHeight;
         sliderView.setLayoutParams(sliderNavigationViewParams);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        mDrawerLayout.setFocusableInTouchMode(true);
-
-        RelativeLayout titleLayout = (RelativeLayout) findViewById(R.id.titleLayout);
-        ConstantUtils.topHeight = titleLayout.getLayoutParams().height;
-
-        TravelImageLayout = (RelativeLayout) findViewById(R.id.TravelImageLayout);
-        SuiuuBtnLayout = (FrameLayout) findViewById(R.id.SuiuuButtonLayout);
-        CommunityLayout = (RelativeLayout) findViewById(R.id.CommunityLayout);
-        InboxBtnLayout = (FrameLayout) findViewById(R.id.InboxButtonLayout);
-
-        Main_1_Search = (ImageView) findViewById(R.id.main_1_search);
-        Main_1_Tag = (ImageView) findViewById(R.id.main_1_tag);
-        Main_1_Album = (ImageView) findViewById(R.id.main_1_album);
-
-        Main_2_Search = (ImageView) findViewById(R.id.main_2_search);
-
-        Main_3_Search = (ImageView) findViewById(R.id.main_3_search);
-        Main_3_TAG = (ImageView) findViewById(R.id.main_3_tag);
-        Main_3_Questions = (ImageView) findViewById(R.id.main_3_questions);
-
-        Main_4_Search = (ImageView) findViewById(R.id.main_4_search);
-
-        titleInfo = (TextView) findViewById(R.id.titleInfo);
-        drawerSwitch = (ImageView) findViewById(R.id.drawerSwitch);
-
-        nickNameView = (TextView) findViewById(R.id.nickName);
         String strNickName = SuiuuInfo.ReadUserData(this).getNickname();
         if (!TextUtils.isEmpty(strNickName)) {
             nickNameView.setText(strNickName);
@@ -288,39 +318,29 @@ public class MainActivity extends BaseActivity {
             nickNameView.setText("");
         }
 
-        headImageView = (CircleImageView) findViewById(R.id.headImage);
         String strHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
         if (!TextUtils.isEmpty(strHeadImagePath)) {
             imageLoader.displayImage(strHeadImagePath, headImageView);
+            imageLoader.displayImage(strHeadImagePath, drawerSwitch);
         }
 
-        switchSuiuu = (Switch) findViewById(R.id.switchSuiuu);
         switchSuiuu.setChecked(true);
 
-        sideListView = (ListView) findViewById(R.id.sideListView);
         List<String> strList = new ArrayList<>();
         Collections.addAll(strList, getResources().getStringArray(R.array.sideList));
         MainSliderAdapter adapter = new MainSliderAdapter(this, strList);
         adapter.setScreenHeight(screenHeight);
         sideListView.setAdapter(adapter);
 
-        tab1 = (LinearLayout) findViewById(R.id.tab1);
-        tab2 = (LinearLayout) findViewById(R.id.tab2);
-        tab3 = (LinearLayout) findViewById(R.id.tab3);
-        tab4 = (LinearLayout) findViewById(R.id.tab4);
+        initFragment();
+    }
 
-        //初始化底部控件
-        iv_theme = (ImageView) findViewById(R.id.img1);
-        iv_loop = (ImageView) findViewById(R.id.img2);
-        iv_suiuu = (ImageView) findViewById(R.id.img3);
-        iv_conversation = (ImageView) findViewById(R.id.img4);
-
-        changeTheme(true);
+    private void initFragment() {
+        switchViewState(NUMBER1);
 
         loopFragment = new LoopFragment();
         tripGalleryFragment = new TripGalleryFragment();
         conversationFragment = new ChatAllHistoryFragment();
-
         communityFragment = CommunityFragment.newInstance(userSign, verification);
 
         LoadDefaultFragment();
@@ -340,7 +360,7 @@ public class MainActivity extends BaseActivity {
 
 
         // 注册一个接收消息的BroadcastReceiver
-        msgReceiver = new NewMessageBroadcastReceiver();
+        msgReceiver = new NewMessageReceiver();
         IntentFilter intentFilter = new IntentFilter(chatManager.getNewMessageBroadcastAction());
         intentFilter.setPriority(3);
         registerReceiver(msgReceiver, intentFilter);
@@ -371,10 +391,10 @@ public class MainActivity extends BaseActivity {
         // 通知sdk，UI 已经初始化完毕，注册了相应的receiver和listener, 可以接受broadcast了
         EMChat.getInstance().setAppInited();
 
-        exitBroadcastReceiver = new ExitBroadcastReceiver();
+        exitReceiver = new ExitReceiver();
         IntentFilter intentFilter2 = new IntentFilter();
         intentFilter.addAction(SettingActivity.class.getSimpleName());
-        this.registerReceiver(exitBroadcastReceiver, intentFilter2);
+        this.registerReceiver(exitReceiver, intentFilter2);
     }
 
     /**
@@ -420,15 +440,8 @@ public class MainActivity extends BaseActivity {
         Main_3_Search.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
-            }
-        });
-
-        Main_3_TAG.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, CommunityItemActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, CommunitySearchActivity.class);
+                startActivityForResult(intent, AppConstant.COMMUNITY_SEARCH_SKIP);
             }
         });
 
@@ -448,6 +461,7 @@ public class MainActivity extends BaseActivity {
         });
 
         MyOnClickListener onClickListener = new MyOnClickListener();
+
         drawerSwitch.setOnClickListener(onClickListener);
         nickNameView.setOnClickListener(onClickListener);
         headImageView.setOnClickListener(onClickListener);
@@ -487,10 +501,6 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    public void showCommon() {
-        titleInfo.setVisibility(View.VISIBLE);
-    }
-
     /**
      * 加载主页页面
      */
@@ -521,7 +531,6 @@ public class MainActivity extends BaseActivity {
         }
         currentIndex = 0;
         ft.commit();
-        showTravelImage();
     }
 
     /**
@@ -554,7 +563,6 @@ public class MainActivity extends BaseActivity {
         }
         currentIndex = 1;
         ft.commit();
-        showSuiuu();
     }
 
     /**
@@ -593,7 +601,6 @@ public class MainActivity extends BaseActivity {
 
         currentIndex = 2;
         ft.commit();
-        showQA();
     }
 
     /**
@@ -624,9 +631,8 @@ public class MainActivity extends BaseActivity {
         }
 
         currentIndex = 3;
-        msgCount.setVisibility(View.INVISIBLE);
+//        msgCount.setVisibility(View.INVISIBLE);
         ft.commit();
-        showInbox();
     }
 
     /**
@@ -641,70 +647,75 @@ public class MainActivity extends BaseActivity {
             ft.add(R.id.showLayout, tripGalleryFragment);
         }
         ft.commit();
-        showTravelImage();
     }
 
-    private void showTravelImage() {
-        TravelImageLayout.setVisibility(View.VISIBLE);
-        SuiuuBtnLayout.setVisibility(View.GONE);
-        CommunityLayout.setVisibility(View.GONE);
-        InboxBtnLayout.setVisibility(View.GONE);
-    }
+    private void switchViewState(int number) {
 
-    private void showSuiuu() {
-        TravelImageLayout.setVisibility(View.GONE);
-        SuiuuBtnLayout.setVisibility(View.VISIBLE);
-        CommunityLayout.setVisibility(View.GONE);
-        InboxBtnLayout.setVisibility(View.GONE);
-    }
+        switch (number) {
 
-    private void showQA() {
-        TravelImageLayout.setVisibility(View.GONE);
-        SuiuuBtnLayout.setVisibility(View.GONE);
-        CommunityLayout.setVisibility(View.VISIBLE);
-        InboxBtnLayout.setVisibility(View.GONE);
-    }
+            case NUMBER1:
+                iv_tab1.setImageResource(R.drawable.icon_main_1_green);
+                iv_tab2.setImageResource(R.drawable.icon_main_2_white);
+                iv_tab3.setImageResource(R.drawable.icon_main_3_white);
+                iv_tab4.setImageResource(R.drawable.icon_main_4_white);
 
-    private void showInbox() {
-        TravelImageLayout.setVisibility(View.GONE);
-        SuiuuBtnLayout.setVisibility(View.GONE);
-        CommunityLayout.setVisibility(View.GONE);
-        InboxBtnLayout.setVisibility(View.VISIBLE);
-    }
+                TravelImageLayout.setVisibility(View.VISIBLE);
+                SuiuuButtonLayout.setVisibility(View.GONE);
+                CommunityLayout.setVisibility(View.GONE);
+                InboxBtnLayout.setVisibility(View.GONE);
+                break;
 
-    //判断主题
-    private void changeTheme(Boolean isChoice) {
-        if (isChoice) {
-            iv_theme.setImageResource(R.drawable.icon_main_1_green);
-        } else {
-            iv_theme.setImageResource(R.drawable.icon_main_1_white);
+            case NUMBER2:
+                iv_tab1.setImageResource(R.drawable.icon_main_1_white);
+                iv_tab2.setImageResource(R.drawable.icon_main_2_green);
+                iv_tab3.setImageResource(R.drawable.icon_main_3_white);
+                iv_tab4.setImageResource(R.drawable.icon_main_4_white);
+
+                TravelImageLayout.setVisibility(View.GONE);
+                SuiuuButtonLayout.setVisibility(View.VISIBLE);
+                CommunityLayout.setVisibility(View.GONE);
+                InboxBtnLayout.setVisibility(View.GONE);
+                break;
+
+            case NUMBER3:
+                iv_tab1.setImageResource(R.drawable.icon_main_1_white);
+                iv_tab2.setImageResource(R.drawable.icon_main_2_white);
+                iv_tab3.setImageResource(R.drawable.icon_main_3_green);
+                iv_tab4.setImageResource(R.drawable.icon_main_4_white);
+
+                TravelImageLayout.setVisibility(View.GONE);
+                SuiuuButtonLayout.setVisibility(View.GONE);
+                CommunityLayout.setVisibility(View.VISIBLE);
+                InboxBtnLayout.setVisibility(View.GONE);
+                break;
+
+            case NUMBER4:
+                iv_tab1.setImageResource(R.drawable.icon_main_1_white);
+                iv_tab2.setImageResource(R.drawable.icon_main_2_white);
+                iv_tab3.setImageResource(R.drawable.icon_main_3_white);
+                iv_tab4.setImageResource(R.drawable.icon_main_4_green);
+
+                TravelImageLayout.setVisibility(View.GONE);
+                SuiuuButtonLayout.setVisibility(View.GONE);
+                CommunityLayout.setVisibility(View.GONE);
+                InboxBtnLayout.setVisibility(View.VISIBLE);
+                break;
+
         }
+
     }
 
-    //判断圈子
-    private void changeLoop(Boolean isChoice) {
-        if (isChoice) {
-            iv_loop.setImageResource(R.drawable.icon_main_2_green);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            DeBugLog.e(TAG, "return information is null");
+        } else if (data == null) {
+            DeBugLog.e(TAG, "back data is null!");
         } else {
-            iv_loop.setImageResource(R.drawable.icon_main_2_white);
-        }
-    }
-
-    //判断随游
-    private void changeSuiuu(Boolean isChoice) {
-        if (isChoice) {
-            iv_suiuu.setImageResource(R.drawable.icon_main_3_green);
-        } else {
-            iv_suiuu.setImageResource(R.drawable.icon_main_3_white);
-        }
-    }
-
-    //判断会话
-    private void changeConversation(Boolean isChoice) {
-        if (isChoice) {
-            iv_conversation.setImageResource(R.drawable.icon_main_4_green);
-        } else {
-            iv_conversation.setImageResource(R.drawable.icon_main_4_white);
+            switch (requestCode) {
+                case AppConstant.COMMUNITY_SEARCH_SKIP:
+                    break;
+            }
         }
     }
 
@@ -805,7 +816,7 @@ public class MainActivity extends BaseActivity {
     /**
      * 新消息广播接收者
      */
-    private class NewMessageBroadcastReceiver extends BroadcastReceiver {
+    private class NewMessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             // 主页面收到消息后，主要为了提示未读，实际消息内容需要到chat页面查看
@@ -897,7 +908,7 @@ public class MainActivity extends BaseActivity {
         }
     };
 
-    private class ExitBroadcastReceiver extends BroadcastReceiver {
+    private class ExitReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -1012,41 +1023,26 @@ public class MainActivity extends BaseActivity {
                     break;
 
                 case R.id.tab1:
-                    showCommon();
                     titleInfo.setText(getResources().getString(R.string.mainTitle1));
-                    changeTheme(true);
-                    changeLoop(false);
-                    changeSuiuu(false);
-                    changeConversation(false);
+                    switchViewState(NUMBER1);
                     LoadMainFragment();
                     break;
 
                 case R.id.tab2:
-                    showCommon();
                     titleInfo.setText(getResources().getString(R.string.mainTitle2));
-                    changeTheme(false);
-                    changeLoop(true);
-                    changeSuiuu(false);
-                    changeConversation(false);
+                    switchViewState(NUMBER2);
                     LoadSuiuuFragment();
                     break;
 
                 case R.id.tab3:
                     titleInfo.setText(getResources().getString(R.string.mainTitle3));
-                    changeTheme(false);
-                    changeLoop(false);
-                    changeSuiuu(true);
-                    changeConversation(false);
+                    switchViewState(NUMBER3);
                     LoadCommunityFragment();
                     break;
 
                 case R.id.tab4:
-                    showCommon();
                     titleInfo.setText(getResources().getString(R.string.mainTitle4));
-                    changeTheme(false);
-                    changeLoop(false);
-                    changeSuiuu(false);
-                    changeConversation(true);
+                    switchViewState(NUMBER4);
                     LoadConversationFragment();
                     break;
             }
@@ -1102,7 +1098,7 @@ public class MainActivity extends BaseActivity {
         }
 
         try {
-            unregisterReceiver(exitBroadcastReceiver);
+            unregisterReceiver(exitReceiver);
         } catch (Exception e) {
             DeBugLog.e(TAG, "反注册ExitBroadcastReceiver失败:" + e.getMessage());
         }

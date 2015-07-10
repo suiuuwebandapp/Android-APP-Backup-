@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -156,14 +155,6 @@ public class OldMainFragment extends BaseFragment {
 
         scrollView = (ScrollView) rootView.findViewById(R.id.main_fragment_scrollView);
 
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                scrollView.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                scrollView.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        }
-
         MaterialHeader header = new MaterialHeader(getActivity());
         int[] colors = getResources().getIntArray(R.array.google_colors);
         header.setColorSchemeColors(colors);
@@ -196,12 +187,6 @@ public class OldMainFragment extends BaseFragment {
         loopDynamicGridView = (NoScrollBarGridView) rootView.findViewById(R.id.mainLoopDynamicGridView);
 
         moreButton = (TextView) rootView.findViewById(R.id.main_fragment_more);
-
-        RelativeLayout footBlackView = (RelativeLayout) rootView.findViewById(R.id.main_fragment_foot_black_view);
-        ViewGroup.LayoutParams params = footBlackView.getLayoutParams();
-        params.height = BitmapFactory.decodeResource(getResources(), R.drawable.main_guide_line).getHeight();
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        footBlackView.setLayoutParams(params);
 
         attentionDynamicTitleLayout = (RelativeLayout) rootView.findViewById(R.id.AttentionDynamicTitleLayout);
         recommendDynamicTitleLayout = (RelativeLayout) rootView.findViewById(R.id.RecommendTravelTitleLayout);

@@ -42,8 +42,8 @@
             android:layout_marginRight="10dp"
             android:text="@string/attention"
             android:textColor="@color/white"
-            android:drawableLeft="@drawable/iv_attention"
-            android:drawableStart="@drawable/iv_attention"
+            android:drawableLeft="@drawable/icon_attention_selector"
+            android:drawableStart="@drawable/icon_attention_selector"
             android:textSize="20sp"
             tools:ignore="RelativeOverlap"/>
     </RelativeLayout>

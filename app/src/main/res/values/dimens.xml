@@ -22,6 +22,7 @@
     <dimen name="layout_2dp">2dp</dimen>
     <dimen name="layout_4dp">4dp</dimen>
     <dimen name="layout_5dp">5dp</dimen>
+    <dimen name="layout_7dp">7dp</dimen>
     <dimen name="layout_8dp">8dp</dimen>
     <dimen name="layout_10dp">10dp</dimen>
     <dimen name="layout_12dp">12dp</dimen>

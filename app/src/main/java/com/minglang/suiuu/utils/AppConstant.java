@@ -40,4 +40,6 @@ public class AppConstant {
 
     public static final int EDIT_SUIUU_PRICE_BACK = 110;
 
+    public static final int COMMUNITY_SEARCH_SKIP = 300;
+
 }

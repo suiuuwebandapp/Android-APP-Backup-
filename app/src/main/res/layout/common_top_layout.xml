@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@color/mainColor">
 
-        <ImageView
+        <com.minglang.suiuu.customview.CircleImageView
             android:id="@+id/drawerSwitch"
             android:layout_width="@dimen/layout_45dp"
             android:layout_height="@dimen/layout_45dp"
@@ -113,21 +113,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/main_3_tag"
-                android:layout_toStartOf="@+id/main_3_tag"
-                android:contentDescription="@string/openShoot"
-                android:src="@drawable/icon_search_selector"/>
-
-            <ImageView
-                android:id="@+id/main_3_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="10dp"
                 android:layout_toLeftOf="@+id/main_3_questions"
                 android:layout_toStartOf="@+id/main_3_questions"
-                android:contentDescription="@string/openRemember"
-                android:src="@drawable/icon_tag_selector"/>
+                android:contentDescription="@string/openShoot"
+                android:src="@drawable/icon_search_selector"/>
 
             <ImageView
                 android:id="@+id/main_3_questions"
