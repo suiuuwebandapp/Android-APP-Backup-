@@ -51,7 +51,7 @@ import com.minglang.suiuu.chat.utils.CommonUtils;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.fragment.main.CommunityFragment;
 import com.minglang.suiuu.fragment.main.LoopFragment;
-import com.minglang.suiuu.fragment.main.OldMainFragment;
+import com.minglang.suiuu.fragment.main.TripGalleryFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
 import com.minglang.suiuu.utils.ConstantUtils;
 import com.minglang.suiuu.utils.DeBugLog;
@@ -105,7 +105,7 @@ public class MainActivity extends BaseActivity {
     /**
      * 主页页面
      */
-    private OldMainFragment oldMainFragment;
+    private TripGalleryFragment tripGalleryFragment;
 
     /**
      * 圈子页面
@@ -318,7 +318,7 @@ public class MainActivity extends BaseActivity {
         changeTheme(true);
 
         loopFragment = new LoopFragment();
-        oldMainFragment = new OldMainFragment();
+        tripGalleryFragment = new TripGalleryFragment();
         conversationFragment = new ChatAllHistoryFragment();
 
         communityFragment = CommunityFragment.newInstance(userSign, verification);
@@ -511,13 +511,13 @@ public class MainActivity extends BaseActivity {
                 ft.hide(conversationFragment);
             }
         }
-        if (oldMainFragment == null) {
-            oldMainFragment = new OldMainFragment();
+        if (tripGalleryFragment == null) {
+            tripGalleryFragment = new TripGalleryFragment();
         }
-        if (oldMainFragment.isAdded()) {
-            ft.show(oldMainFragment);
+        if (tripGalleryFragment.isAdded()) {
+            ft.show(tripGalleryFragment);
         } else {
-            ft.add(R.id.showLayout, oldMainFragment);
+            ft.add(R.id.showLayout, tripGalleryFragment);
         }
         currentIndex = 0;
         ft.commit();
@@ -529,9 +529,9 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadSuiuuFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (oldMainFragment != null) {
-            if (oldMainFragment.isAdded()) {
-                ft.hide(oldMainFragment);
+        if (tripGalleryFragment != null) {
+            if (tripGalleryFragment.isAdded()) {
+                ft.hide(tripGalleryFragment);
             }
         }
         if (loopFragment != null) {
@@ -563,9 +563,9 @@ public class MainActivity extends BaseActivity {
     private void LoadCommunityFragment() {
         FragmentTransaction ft = fm.beginTransaction();
 
-        if (oldMainFragment != null) {
-            if (oldMainFragment.isAdded()) {
-                ft.hide(oldMainFragment);
+        if (tripGalleryFragment != null) {
+            if (tripGalleryFragment.isAdded()) {
+                ft.hide(tripGalleryFragment);
             }
         }
 
@@ -601,9 +601,9 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadConversationFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (oldMainFragment != null) {
-            if (oldMainFragment.isAdded()) {
-                ft.hide(oldMainFragment);
+        if (tripGalleryFragment != null) {
+            if (tripGalleryFragment.isAdded()) {
+                ft.hide(tripGalleryFragment);
             }
         }
         if (suiuuFragment != null) {
@@ -634,11 +634,11 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadDefaultFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (oldMainFragment == null) {
-            oldMainFragment = new OldMainFragment();
-            ft.add(R.id.showLayout, oldMainFragment);
+        if (tripGalleryFragment == null) {
+            tripGalleryFragment = new TripGalleryFragment();
+            ft.add(R.id.showLayout, tripGalleryFragment);
         } else {
-            ft.add(R.id.showLayout, oldMainFragment);
+            ft.add(R.id.showLayout, tripGalleryFragment);
         }
         ft.commit();
         showTravelImage();

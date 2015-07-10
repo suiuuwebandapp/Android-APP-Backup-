@@ -276,6 +276,7 @@ public class SuiuuFragment extends BaseFragment
                 case R.id.main_2_search:
                     //跳转到搜索页面
                     startActivity(new Intent(getActivity(), SuiuuSearchActivity.class));
+//                    startActivity(new Intent(getActivity(), TripGalleryDetailActivity.class));
                     break;
             }
         }

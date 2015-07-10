@@ -10,7 +10,7 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0.1"
-        multiDexEnabled true
+        multiDexEnabled false
     }
     buildTypes {
         release {
@@ -35,9 +35,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.2.0'
     compile 'com.beardedhen:androidbootstrap:1.1.1'
     compile 'com.facebook.fresco:fresco:0.5.3+'
-    compile files('libs/baidumapapi_v3_2_0.jar')
     compile files('libs/easemobchat_2.1.7.jar')
-    compile files('libs/locSDK_3.3.jar')
     compile files('libs/picasso-2.4.0.jar')
     compile files('libs/umeng-analytics-v5.2.4.jar')
     compile files('libs/universal-image-loader-1.9.3.jar')
@@ -56,4 +54,6 @@ dependencies {
     compile files('libs/SocialSDK_QQZone_3.jar')
     compile files('libs/umeng-update-v2.6.0.1.jar')
     compile files('libs/alipaysdk.jar')
+    compile files('libs/Android_Map_V2.5.0.jar')
 }
+
