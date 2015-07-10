@@ -28,6 +28,8 @@ import com.minglang.suiuu.utils.Utils;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -41,11 +43,14 @@ public class FansActivity extends BaseActivity {
 
     private static final String TAG = FansActivity.class.getSimpleName();
 
-    private ImageView fansBack;
+    @Bind(R.id.fansBack)
+    ImageView fansBack;
 
-    private PtrClassicFrameLayout mPtrFrame;
+    @Bind(R.id.fans_head_frame)
+    PtrClassicFrameLayout mPtrFrame;
 
-    private ListView fansList;
+    @Bind(R.id.fansList)
+    ListView fansList;
 
     private ProgressDialog progressDialog;
 
@@ -55,6 +60,8 @@ public class FansActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fans);
+
+        ButterKnife.bind(this);
 
         initView();
         ViewAction();
@@ -68,11 +75,6 @@ public class FansActivity extends BaseActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
         progressDialog.setCanceledOnTouchOutside(false);
-
-        mPtrFrame = (PtrClassicFrameLayout) findViewById(R.id.fans_head_frame);
-
-        fansBack = (ImageView) findViewById(R.id.fansBack);
-        fansList = (ListView) findViewById(R.id.fansList);
 
         MaterialHeader header = new MaterialHeader(this);
         int[] colors = getResources().getIntArray(R.array.google_colors);

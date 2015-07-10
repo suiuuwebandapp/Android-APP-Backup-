@@ -34,6 +34,9 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 查看更多关注页面
  */
@@ -47,7 +50,8 @@ public class AllAttentionDynamicActivity extends Activity {
 
     private static final int COMPLETE = 1;
 
-    private static PullToRefreshListView pullToRefreshListView;
+    @Bind(R.id.all_attention_dynamic_list_view)
+    static PullToRefreshListView pullToRefreshListView;
 
     private int page = 1;
 
@@ -57,7 +61,8 @@ public class AllAttentionDynamicActivity extends Activity {
 
     private ProgressDialog progressDialog;
 
-    private ImageView back;
+    @Bind(R.id.AllAttentionBack)
+    ImageView back;
 
     private static Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -76,6 +81,8 @@ public class AllAttentionDynamicActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_attention_dynamic);
 
+        ButterKnife.bind(this);
+
         initView();
         ViewAction();
         getDynamicData4Service(page);
@@ -89,8 +96,6 @@ public class AllAttentionDynamicActivity extends Activity {
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
         progressDialog.setCanceledOnTouchOutside(false);
 
-        back = (ImageView) findViewById(R.id.AllAttentionBack);
-        pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.all_attention_dynamic_list_view);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         adapter = new AllAttentionDynamicAdapter(this);
         pullToRefreshListView.setAdapter(adapter);

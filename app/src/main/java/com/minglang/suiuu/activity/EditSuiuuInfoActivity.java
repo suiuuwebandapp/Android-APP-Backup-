@@ -13,16 +13,22 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.utils.AppConstant;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 编辑随游信息
  */
 public class EditSuiuuInfoActivity extends BaseActivity {
 
-    private ImageView back;
+    @Bind(R.id.edit_suiuu_info_back)
+    ImageView back;
 
-    private TextView ok;
+    @Bind(R.id.edit_suiuu_info_ok)
+    TextView ok;
 
-    private EditText editInfo;
+    @Bind(R.id.edit_suiuu_info_text)
+    EditText editInfo;
 
     private Intent suiuuIntent;
 
@@ -31,19 +37,11 @@ public class EditSuiuuInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_suiuu_info);
 
+        ButterKnife.bind(this);
+
         suiuuIntent = getIntent();
 
-        initView();
         ViewAction();
-    }
-
-    /**
-     * 初始化方法
-     */
-    private void initView() {
-        back = (ImageView) findViewById(R.id.edit_suiuu_info_back);
-        ok = (TextView) findViewById(R.id.edit_suiuu_info_ok);
-        editInfo = (EditText) findViewById(R.id.edit_suiuu_info_text);
     }
 
     /**

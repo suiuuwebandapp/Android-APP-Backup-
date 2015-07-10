@@ -14,6 +14,9 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.utils.AppConstant;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 编辑随游价格
  */
@@ -21,15 +24,20 @@ public class EditSuiuuPriceActivity extends BaseActivity {
 
     private static final String TAG = EditSuiuuPriceActivity.class.getSimpleName();
 
-    private ImageView back;
+    @Bind(R.id.edit_suiuu_price_back)
+    ImageView back;
 
-    private TextView ok;
+    @Bind(R.id.edit_suiuu_price_ok)
+    TextView ok;
 
-    private EditText editBasicPrice;
+    @Bind(R.id.edit_suiuu_basic_price)
+    EditText editBasicPrice;
 
-    private EditText editAdditionalPrice;
+    @Bind(R.id.edit_suiuu_additional_price)
+    EditText editAdditionalPrice;
 
-    private EditText editOtherPrice;
+    @Bind(R.id.edit_suiuu_other_price)
+    EditText editOtherPrice;
 
     private Intent oldIntent;
 
@@ -38,22 +46,11 @@ public class EditSuiuuPriceActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_suiuu_price);
 
+        ButterKnife.bind(this);
+
         oldIntent = getIntent();
 
-        initView();
         ViewAction();
-    }
-
-    /**
-     * 初始化方法
-     */
-    private void initView() {
-        back = (ImageView) findViewById(R.id.edit_suiuu_price_back);
-        ok = (TextView) findViewById(R.id.edit_suiuu_price_ok);
-
-        editBasicPrice = (EditText) findViewById(R.id.edit_suiuu_basic_price);
-        editAdditionalPrice = (EditText) findViewById(R.id.edit_suiuu_additional_price);
-        editOtherPrice = (EditText) findViewById(R.id.edit_suiuu_other_price);
     }
 
     private void ViewAction() {

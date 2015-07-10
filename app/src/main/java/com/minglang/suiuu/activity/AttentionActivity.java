@@ -16,6 +16,9 @@ import com.minglang.suiuu.fragment.attention.AttentionUserFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 关注页面
  */
@@ -26,14 +29,21 @@ public class AttentionActivity extends BaseActivity {
     /**
      * 返回键
      */
-    private ImageView attentionBack;
+    @Bind(R.id.attentionBack)
+    ImageView attentionBack;
 
-    private ViewPager attentionPager;
+    @Bind(R.id.attentionPager)
+    ViewPager attentionPager;
+
+    @Bind(R.id.attentionTabLayout)
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attention);
+
+        ButterKnife.bind(this);
 
         initView();
         ViewAction();
@@ -43,10 +53,7 @@ public class AttentionActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-        attentionBack = (ImageView) findViewById(R.id.attentionBack);
-        attentionPager = (ViewPager) findViewById(R.id.attentionPager);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.attentionTabLayout);
         tabLayout.setTabTextColors(getResources().getColor(R.color.tr_black),
                 getResources().getColor(R.color.text_select_true));
 
@@ -75,9 +82,7 @@ public class AttentionActivity extends BaseActivity {
 
         tabLayout.setupWithViewPager(attentionPager);
         tabLayout.setTabsFromPagerAdapter(attentionPagerAdapter);
-
     }
-
 
     /**
      * 控件动作
@@ -111,6 +116,5 @@ public class AttentionActivity extends BaseActivity {
 
 
     }
-
 
 }

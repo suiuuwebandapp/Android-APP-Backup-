@@ -18,6 +18,9 @@ import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase.Mode;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshScrollView;
 import com.minglang.suiuu.utils.DeBugLog;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 问题详情页
  */
@@ -27,9 +30,14 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
 
     private static final int COMPLETE = 1;
 
-    private static PullToRefreshScrollView pullToRefreshScrollView;
+    @Bind(R.id.community_item_refresh_scroll_view)
+    static PullToRefreshScrollView pullToRefreshScrollView;
 
-    private NoScrollBarListView noScrollBarListView;
+    @Bind(R.id.noScrollListView)
+    NoScrollBarListView noScrollBarListView;
+
+    @Bind(R.id.community_item_toolbar)
+    Toolbar toolbar;
 
     private static final Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -48,12 +56,14 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_item);
 
+        ButterKnife.bind(this);
+
         initView();
         ViewAction();
     }
 
     private void initView() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.community_item_toolbar);
+
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -61,12 +71,10 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
+
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
-        pullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.community_item_refresh_scroll_view);
         pullToRefreshScrollView.setMode(Mode.BOTH);
-
-        noScrollBarListView = (NoScrollBarListView) findViewById(R.id.noScrollListView);
     }
 
     private void ViewAction() {
@@ -116,4 +124,5 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

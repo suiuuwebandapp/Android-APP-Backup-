@@ -16,6 +16,9 @@ import com.minglang.suiuu.fragment.collection.CollectionSuiuuFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 收藏页面
  */
@@ -24,14 +27,21 @@ public class CollectionActivity extends BaseActivity {
     /**
      * 返回
      */
-    private ImageView collectionBack;
+    @Bind(R.id.collectionBack)
+    ImageView collectionBack;
 
-    private ViewPager collectionPager;
+    @Bind(R.id.collectionPager)
+    ViewPager collectionPager;
+
+    @Bind(R.id.collectionTabLayout)
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection);
+
+        ButterKnife.bind(this);
 
         initView();
         ViewAction();
@@ -41,10 +51,6 @@ public class CollectionActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-        collectionBack = (ImageView) findViewById(R.id.collectionBack);
-        collectionPager = (ViewPager) findViewById(R.id.collectionPager);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.collectionTabLayout);
         tabLayout.setTabTextColors(getResources().getColor(R.color.tr_black),
                 getResources().getColor(R.color.text_select_true));
 
@@ -59,7 +65,6 @@ public class CollectionActivity extends BaseActivity {
         tabLayout.addTab(tabLayout.newTab().setText(str1), true);
         tabLayout.addTab(tabLayout.newTab().setText(str2), false);
 
-
         CollectionLoopFragment collectionLoopFragment = CollectionLoopFragment.newInstance(userSign, verification);
         CollectionSuiuuFragment collectionSuiuuFragment = CollectionSuiuuFragment.newInstance(userSign, verification);
 
@@ -72,7 +77,6 @@ public class CollectionActivity extends BaseActivity {
 
         tabLayout.setupWithViewPager(collectionPager);
         tabLayout.setTabsFromPagerAdapter(collectionAdapter);
-
     }
 
     /**
