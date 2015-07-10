@@ -5,16 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
    >
-
     <com.minglang.suiuu.customview.ReFlashListView
         android:id="@+id/lv_suiuu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/layout_50dp"
         android:background="@color/white"
         android:scrollbars="none"/>
-
-
     <TextView
         android:id="@+id/tv_noDataLoad"
         android:layout_width="fill_parent"
@@ -26,7 +22,4 @@
         android:textColor="@color/text_select_true"
         android:textSize="@dimen/layout_20sp"
         android:visibility="gone"/>
-
-
-
 </RelativeLayout>
