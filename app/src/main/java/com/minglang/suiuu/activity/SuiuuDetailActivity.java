@@ -3,10 +3,12 @@ package com.minglang.suiuu.activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
@@ -61,6 +63,7 @@ public class SuiuuDetailActivity extends BaseActivity {
     private String tripId;
     private WebView suiuu_detail_web_view;
     private ProgressDialog pd = null;
+    private ImageView suiuu_details_back;
 //    private DisplayImageOptions options;
 //    private List<SuiuuDetailForPicList> picList;
 //    private LinearLayout dots_ll;
@@ -79,22 +82,28 @@ public class SuiuuDetailActivity extends BaseActivity {
 
         initView();
 //        loadDate(tripId);
-//        viewAction();
+        viewAction();
     }
 
-//    private void viewAction() {
+    private void viewAction() {
 //        suiuu_details_praise.setOnClickListener(new MyOnclick());
 //        suiuu_details_collection.setOnClickListener(new MyOnclick());
 //        suiuu_details_comments.setOnClickListener(new MyOnclick());
 //        suiuu_details_user_head_image.setOnClickListener(new MyOnclick());
-//        suiuu_details_back.setOnClickListener(new MyOnclick());
 //        bb_consult.setOnClickListener(new MyOnclick());
 //        bb_schedule.setOnClickListener(new MyOnclick());
-//    }
+        suiuu_details_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
 //
     private void initView() {
         pd = new ProgressDialog(this);
         pd.setMessage("玩命加载中.....");
+        suiuu_details_back = (ImageView) findViewById(R.id.suiuu_details_back);
         suiuu_detail_web_view = (WebView) findViewById(R.id.suiuu_detail_web_view);
         suiuu_detail_web_view.setWebViewClient(new WebViewClient() {
 
@@ -111,7 +120,6 @@ public class SuiuuDetailActivity extends BaseActivity {
                 super.onPageFinished(view, url);
                 pd.dismiss();
             }
-
         });
         suiuu_detail_web_view.setWebChromeClient(new WebChromeClient() {
 
@@ -120,14 +128,13 @@ public class SuiuuDetailActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 super.onProgressChanged(view, newProgress);
                 pd.setMessage("已经加载" + newProgress + "%");
-                if(newProgress >= 70) {
+                if(newProgress >= 85) {
                     pd.setMessage("已经加载" + 100 + "%");
                     pd.dismiss();
                 }
             }
 
         });
-
         // 得到webview的设置
         WebSettings settings = suiuu_detail_web_view.getSettings();
         // webview支持缩放
@@ -135,8 +142,6 @@ public class SuiuuDetailActivity extends BaseActivity {
         settings.setSupportZoom(true);
         //让webview支持js
         settings.setJavaScriptEnabled(true);
-
-
         suiuu_detail_web_view.addJavascriptInterface(new Object() {
             public void demoTest(String msg) {
                 Toast.makeText(SuiuuDetailActivity.this, msg, Toast.LENGTH_SHORT).show();
