@@ -33,7 +33,6 @@
             android:text="@string/title1"
             android:textColor="@color/white"
             android:textSize="@dimen/layout_22sp"/>
-
         <!--旅图页面相关按钮-->
         <RelativeLayout
             android:id="@+id/TravelImageLayout"
@@ -45,7 +44,6 @@
             android:layout_toEndOf="@+id/titleInfo"
             android:layout_toRightOf="@+id/titleInfo"
             android:visibility="gone">
-
             <ImageView
                 android:id="@+id/main_1_album"
                 android:layout_width="wrap_content"
@@ -56,25 +54,6 @@
                 android:layout_marginEnd="@dimen/layout_5dp"
                 android:layout_marginRight="@dimen/layout_5dp"
                 android:src="@drawable/icon_album_selector"/>
-
-            <ImageView
-                android:id="@+id/main_1_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/main_1_album"
-                android:layout_toStartOf="@+id/main_1_album"
-                android:src="@drawable/icon_tag_selector"/>
-
-            <ImageView
-                android:id="@+id/main_1_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/main_1_tag"
-                android:layout_toStartOf="@+id/main_1_tag"
-                android:src="@drawable/icon_search_selector"/>
-
         </RelativeLayout>
 
         <!--随游页面相关按钮-->

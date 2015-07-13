@@ -36,12 +36,17 @@ public class SuiuuSearchActivity extends BaseActivity {
     private EditText et_suiuu_search;
     private ImageView iv_top_search;
     private ImageView iv_top_back;
+    /**
+     * 搜索的类别  1为旅途跳进来 2为随游跳进来
+     */
+    private int searchClass = 0;
 
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suiuu_search);
+        searchClass = this.getIntent().getIntExtra("searchClass",0);
         initView();
         viewAction();
     }

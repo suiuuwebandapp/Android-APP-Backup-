@@ -107,7 +107,7 @@ public class LoopFragment extends BaseFragment {
     private List<String> imagePathList = new ArrayList<>();
 
     private CirclePageIndicator pageIndicator;
-
+    private RelativeLayout x;
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

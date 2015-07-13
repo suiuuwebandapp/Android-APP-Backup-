@@ -296,6 +296,7 @@ public class LoopArticleActivity extends BaseActivity {
             }
         });
 
+
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
