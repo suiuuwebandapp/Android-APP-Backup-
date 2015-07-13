@@ -1,5 +1,6 @@
 package com.minglang.suiuu.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,11 @@ public class DrawableUtils {
     public static Drawable setBounds(Drawable drawable) {
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         return drawable;
+    }
+
+    public static Drawable setBounds(Context context, int drawableId) {
+        Drawable drawable = context.getResources().getDrawable(drawableId);
+        return setBounds(drawable);
     }
 
     /**
@@ -44,7 +50,8 @@ public class DrawableUtils {
         int degree = 0;
         try {
             ExifInterface exifInterface = new ExifInterface(path);
-            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
             switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
                     degree = 90;
@@ -61,6 +68,5 @@ public class DrawableUtils {
         }
         return degree;
     }
-
 
 }

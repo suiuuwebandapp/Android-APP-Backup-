@@ -13,8 +13,8 @@
 
         <com.minglang.suiuu.customview.CircleImageView
             android:id="@+id/drawerSwitch"
-            android:layout_width="@dimen/layout_45dp"
-            android:layout_height="@dimen/layout_45dp"
+            android:layout_width="@dimen/layout_40dp"
+            android:layout_height="@dimen/layout_40dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"

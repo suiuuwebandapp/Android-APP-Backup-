@@ -1,47 +1,68 @@
 package com.minglang.suiuu.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.FlowLayout;
-import com.minglang.suiuu.customview.InnerListView;
-import com.minglang.suiuu.utils.ScreenUtils;
+import com.minglang.suiuu.customview.NoScrollBarListView;
+import com.minglang.suiuu.utils.AppConstant;
+import com.minglang.suiuu.utils.DeBugLog;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * 提问页面
  */
-public class QuestionsActivity extends AppCompatActivity {
+public class QuestionsActivity extends BaseAppCompatActivity {
 
-    private ScrollView scrollView;
+    private static final String TAG = QuestionsActivity.class.getSimpleName();
 
-    private EditText inputQuestionTitle;
-    private EditText inputProblemContent;
+    @Bind(R.id.questionsScrollView)
+    ScrollView scrollView;
 
-    private TextView questionLocaltion;
+    @Bind(R.id.inputProblemTitle)
+    EditText inputQuestionTitle;
 
-    private LinearLayout tagLayout;
+    @Bind(R.id.inputProblemContent)
+    EditText inputProblemContent;
 
-    private FlowLayout questionFlowLayout;
+    @Bind(R.id.LocationLayout)
+    FrameLayout locationLayout;
 
-    private LinearLayout answerUserLayout;
+    @Bind(R.id.questionLocation)
+    TextView questionLocation;
 
-    private InnerListView answerUserListView;
+    @Bind(R.id.questionFlowLayout)
+    FlowLayout questionFlowLayout;
+
+    @Bind(R.id.answerUserLayout)
+    LinearLayout answerUserLayout;
+
+    @Bind(R.id.answerUserListView)
+    NoScrollBarListView answerUserListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_questions);
+
+        ButterKnife.bind(this);
 
         initView();
         ViewAction();
@@ -58,26 +79,11 @@ public class QuestionsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
-
-        scrollView = (ScrollView) findViewById(R.id.questionsScrollView);
-
-        inputQuestionTitle = (EditText) findViewById(R.id.inputProblemTitle);
-        inputProblemContent = (EditText) findViewById(R.id.inputProblemContent);
-
-        questionLocaltion = (TextView) findViewById(R.id.questionLocaltion);
-
-        tagLayout = (LinearLayout) findViewById(R.id.tagLayout);
-
-        questionFlowLayout = (FlowLayout) findViewById(R.id.questionFlowLayout);
-
-        answerUserLayout = (LinearLayout) findViewById(R.id.answerUserLayout);
-
-        answerUserListView = (InnerListView) findViewById(R.id.answerUserListView);
-        answerUserListView.setParentScrollView(scrollView);
-        answerUserListView.setMaxHeight(new ScreenUtils(this).getScreenHeight());
     }
 
     private void ViewAction() {
+
+        scrollView.smoothScrollTo(0, 0);
 
         answerUserListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -85,6 +91,49 @@ public class QuestionsActivity extends AppCompatActivity {
 
             }
         });
+
+        locationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(QuestionsActivity.this, SelectCountryActivity.class);
+                startActivityForResult(intent, AppConstant.SELECT_COUNTRY_OK);
+            }
+        });
+
+        DeBugLog.i(TAG, "questionFlowLayout child count:" + questionFlowLayout.getChildCount());
+
+        DeBugLog.i(TAG, "answerUserLayout child count:" + answerUserLayout.getChildCount());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            DeBugLog.e(TAG, "select cancel");
+            return;
+        }
+
+        if (data == null) {
+            DeBugLog.e(TAG, "back data is null!");
+            return;
+        }
+
+        switch (requestCode) {
+            case AppConstant.SELECT_COUNTRY_OK:
+                String countryCNname = data.getStringExtra("countryCNname");
+                String cityName = data.getStringExtra("cityName");
+                DeBugLog.i(TAG, "countryCNname:" + countryCNname + ",cityName:" + cityName);
+
+                if (!TextUtils.isEmpty(countryCNname)) {
+                    if (!TextUtils.isEmpty(cityName)) {
+                        questionLocation.setText(countryCNname + "," + countryCNname);
+                    } else {
+                        questionLocation.setText(countryCNname);
+                    }
+                } else {
+                    questionLocation.setText("");
+                }
+                break;
+        }
 
     }
 
@@ -102,15 +151,12 @@ public class QuestionsActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.question_confirm:
+                String title = inputQuestionTitle.getText().toString().trim();
+                String content = inputProblemContent.getText().toString().trim();
+                DeBugLog.i(TAG, "title:" + title + ",content:" + content);
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
 }

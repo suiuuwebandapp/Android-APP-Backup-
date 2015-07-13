@@ -236,6 +236,12 @@
 
     <string name="ProblemHint">输入你想问的问题吧</string>
 
+    <string name="SelectDestination">选择目的地</string>
+
+    <string name="SelectLocation">选择位置</string>
+
+    <string name="AddTag">添加标签</string>
+
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>

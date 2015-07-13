@@ -47,11 +47,6 @@ public class SelectPictureActivity extends BaseActivity {
 
     private static final String TAG = SelectPictureActivity.class.getSimpleName();
 
-    /**
-     * 最多选择图片的个数
-     */
-    private static int MAX_NUM = 9;
-
     private static final int OPEN_CAMERA = 100;
 
     private DisplayImageOptions options;
@@ -106,19 +101,17 @@ public class SelectPictureActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_picture);
+
         state = this.getIntent().getIntExtra("state", 0);
+
         initView();
-
         initPopupWindow();
-
         ObtainThumbnail();
-
         ViewAction();
 
         selectPictureAdapter = new SelectPictureAdapter(context, currentImageFolder.images,
                 currentImageFolder, selectedPicture, complete);
         selectImage.setAdapter(selectPictureAdapter);
-
 
     }
 
@@ -191,7 +184,6 @@ public class SelectPictureActivity extends BaseActivity {
             do {
                 // 获取图片的路径
                 String path = mCursor.getString(_date);
-
                 imageAll.images.add(new ImageItem(path));
 
                 // 获取该图片的父路径名
@@ -202,9 +194,7 @@ public class SelectPictureActivity extends BaseActivity {
                 }
 
                 ImageFolder imageFolder;
-
                 String dirPath = parentFile.getAbsolutePath();
-
                 if (!tmpDir.containsKey(dirPath)) {
                     // 初始化imageFolder
                     imageFolder = new ImageFolder();
@@ -215,26 +205,27 @@ public class SelectPictureActivity extends BaseActivity {
                 } else {
                     imageFolder = mDirPaths.get(tmpDir.get(dirPath));
                 }
-
                 imageFolder.images.add(new ImageItem(path));
-
             } while (mCursor.moveToNext());
+
             mCursor.close();
 
             for (int i = 0; i < mDirPaths.size(); i++) {
                 ImageFolder folder = mDirPaths.get(i);
                 DeBugLog.d(TAG, i + "-----" + folder.getName() + "---" + folder.images.size());
             }
+
             tmpDir = null;
         }
 
     }
 
-
     /**
      * 使用相机拍照
      */
     protected void openCamera() {
+        //最多选择图片的个数
+        int MAX_NUM = 9;
         if (selectedPicture.size() + 1 > MAX_NUM) {
             Toast.makeText(context, "最多选择" + MAX_NUM + "张", Toast.LENGTH_SHORT).show();
             return;
@@ -321,7 +312,7 @@ public class SelectPictureActivity extends BaseActivity {
 
         private ListView mListDir;
 
-        public ListPictureDirPopupWindow(View contentView, int width, int height,boolean focusable, List<ImageFolder> data) {
+        public ListPictureDirPopupWindow(View contentView, int width, int height, boolean focusable, List<ImageFolder> data) {
             super(contentView, width, height, focusable, data);
         }
 

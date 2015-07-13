@@ -48,8 +48,8 @@ public class SelectPictureAdapter extends BaseAdapter {
         this.complete = complete;
 
         loader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.ic_launcher)
-                .showImageForEmptyUri(R.drawable.ic_launcher).showImageOnFail(R.drawable.ic_launcher)
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }

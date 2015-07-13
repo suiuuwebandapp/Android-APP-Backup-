@@ -35,15 +35,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class SelectCityActivity extends BaseActivity {
 
     private static final String TAG = SelectCityActivity.class.getSimpleName();
 
-    private ImageView back;
+    @Bind(R.id.select_city_back)
+    ImageView back;
 
-    private SideBar sideBar;
+    @Bind(R.id.select_city_sidebar)
+    SideBar sideBar;
 
-    private ListView cityListView;
+    @Bind(R.id.select_city_list_view)
+    ListView cityListView;
 
     private ProgressDialog progressDialog;
 
@@ -68,34 +74,28 @@ public class SelectCityActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_city);
 
+        ButterKnife.bind(this);
+
         Intent intent = getIntent();
 
         countryId = intent.getStringExtra("countryId");
         countryCNname = intent.getStringExtra("countryCNname");
 
         initView();
-        getData();
+        getSelectCity4Service();
         ViewAction();
     }
 
-    private void getData() {
+    /**
+     * 初始化方法
+     */
+    private void initView() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
 
-        if (progressDialog != null) {
-            progressDialog.show();
-        }
-
-        getSelectCity4Service();
-    }
-
-    private void getSelectCity4Service() {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
-        params.addBodyParameter("countryId", countryId);
-
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getCityListPath, new SelectCityRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        characterParser = CharacterParser.getInstance();
+        cityNameComparator = new CityNameComparator();
     }
 
     private void ViewAction() {
@@ -143,20 +143,15 @@ public class SelectCityActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 初始化方法
-     */
-    private void initView() {
-        back = (ImageView) findViewById(R.id.select_city_back);
-        cityListView = (ListView) findViewById(R.id.select_city_list_view);
-        sideBar = (SideBar) findViewById(R.id.select_city_sidebar);
+    private void getSelectCity4Service() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
+        params.addBodyParameter("countryId", countryId);
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
-        progressDialog.setCanceledOnTouchOutside(false);
-
-        characterParser = CharacterParser.getInstance();
-        cityNameComparator = new CityNameComparator();
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.getCityListPath, new SelectCityRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
     }
 
     private List<CityAssistData> TransformationData(List<CityData> countryDataList) {
@@ -178,6 +173,13 @@ public class SelectCityActivity extends BaseActivity {
      * 城市列表网络请求回调接口
      */
     private class SelectCityRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
@@ -214,4 +216,5 @@ public class SelectCityActivity extends BaseActivity {
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
+
 }

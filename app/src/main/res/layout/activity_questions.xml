@@ -54,13 +54,14 @@
             </FrameLayout>
 
             <FrameLayout
+                android:id="@+id/LocationLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/layout_8dp"
                 android:background="@color/white">
 
                 <TextView
-                    android:id="@+id/questionLocaltion"
+                    android:id="@+id/questionLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/layout_8dp"
@@ -70,11 +71,12 @@
             </FrameLayout>
 
             <LinearLayout
-                android:id="@+id/tagLayout"
+                android:id="@+id/TagLayout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/layout_50dp"
                 android:layout_marginTop="@dimen/layout_8dp"
                 android:background="@color/white"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -84,6 +86,17 @@
                     android:layout_marginLeft="@dimen/layout_8dp"
                     android:layout_marginStart="@dimen/layout_8dp"
                     android:src="@drawable/icon_tag"/>
+
+                <TextView
+                    android:id="@+id/question_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/layout_8dp"
+                    android:layout_marginStart="@dimen/layout_8dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="@string/AddTag"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             </LinearLayout>
 
@@ -114,7 +127,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/layout_8dp">
 
-                <com.minglang.suiuu.customview.InnerListView
+                <com.minglang.suiuu.customview.NoScrollBarListView
                     android:id="@+id/answerUserListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

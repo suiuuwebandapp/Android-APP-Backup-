@@ -1,45 +1,43 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.minglang.suiuu.activity.SelectImageActivity"
-    android:id="@+id/selectPicture_root">
-
+<RelativeLayout android:id="@+id/selectPicture_root"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.minglang.suiuu.activity.SelectImageActivity">
 
     <include
         android:id="@+id/top_action"
-        layout="@layout/common_top2_layout"
-       />
+        layout="@layout/common_top2_layout"/>
+
     <RelativeLayout
+        android:id="@+id/relativeLayout12"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/tr_black"
-        android:id="@+id/relativeLayout12">
+        android:background="@color/tr_black">
 
         <TextView
+            android:id="@+id/selectPictureAll"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/AllPicture"
-            android:textSize="20sp"
-            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/AllPicture"
             android:textColor="@color/white"
-            android:id="@+id/selectPictureAll"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:textSize="20sp"/>
     </RelativeLayout>
 
     <GridView
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
         android:id="@+id/selectPicture"
-        android:numColumns="3"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@+id/relativeLayout12"
-        android:layout_below="@+id/top_action" />
-
+        android:layout_below="@+id/top_action"
+        android:numColumns="3"/>
 
 </RelativeLayout>

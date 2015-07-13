@@ -223,10 +223,10 @@ public class PersonalSettingActivity extends BaseActivity {
         sex_woman.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sex_woman.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_woman)),
-                        null, null, null);
-                sex_man.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_none)),
-                        null, null, null);
+                sex_woman.setCompoundDrawables(DrawableUtils.setBounds(PersonalSettingActivity.this,
+                        R.drawable.sex_woman), null, null, null);
+                sex_man.setCompoundDrawables(DrawableUtils.setBounds(PersonalSettingActivity.this,
+                        R.drawable.sex_none), null, null, null);
                 strGender = "0";
             }
         });

@@ -36,15 +36,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class SelectCountryActivity extends BaseActivity {
 
     private static final String TAG = SelectCountryActivity.class.getSimpleName();
 
-    private ImageView back;
+    @Bind(R.id.select_country_back)
+    ImageView back;
 
-    private SideBar sideBar;
+    @Bind(R.id.select_country_dialog)
+    TextView textDialog;
 
-    private ListView countryListView;
+    @Bind(R.id.select_country_index_side_bar)
+    SideBar sideBar;
+
+    @Bind(R.id.select_country_index_list_view)
+    ListView countryListView;
 
     private ProgressDialog progressDialog;
 
@@ -67,9 +76,26 @@ public class SelectCountryActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_country);
 
+        ButterKnife.bind(this);
+
         initView();
         ViewAction();
-        getData();
+        getCountryData4Service();
+    }
+
+    /**
+     * 初始化方法
+     */
+    private void initView() {
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        characterParser = CharacterParser.getInstance();
+        countryNameComparator = new CountryNameComparator();
+
+        sideBar.setTextView(textDialog);
     }
 
     private void ViewAction() {
@@ -112,15 +138,6 @@ public class SelectCountryActivity extends BaseActivity {
 
     }
 
-    private void getData() {
-
-        if (progressDialog != null) {
-            progressDialog.show();
-        }
-
-        getCountryData4Service();
-    }
-
     private void getCountryData4Service() {
         String ver = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
@@ -149,26 +166,6 @@ public class SelectCountryActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 初始化方法
-     */
-    private void initView() {
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
-        progressDialog.setCanceledOnTouchOutside(false);
-
-        characterParser = CharacterParser.getInstance();
-        countryNameComparator = new CountryNameComparator();
-
-        back = (ImageView) findViewById(R.id.select_country_back);
-        TextView textDialog = (TextView) findViewById(R.id.select_country_dialog);
-        sideBar = (SideBar) findViewById(R.id.select_country_index_side_bar);
-        sideBar.setTextView(textDialog);
-
-        countryListView = (ListView) findViewById(R.id.select_country_index_list_view);
-    }
-
     private List<CountryAssistData> TransformationData(List<CountryData> countryDataList) {
         List<CountryAssistData> list = new ArrayList<>();
         for (CountryData data : countryDataList) {
@@ -189,6 +186,13 @@ public class SelectCountryActivity extends BaseActivity {
      * 国家列表网络请求回调接口
      */
     private class SelectCountryRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
@@ -227,4 +231,5 @@ public class SelectCountryActivity extends BaseActivity {
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
     }
+
 }

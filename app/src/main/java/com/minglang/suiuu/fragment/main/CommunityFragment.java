@@ -10,12 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.CommunitySortAdapter;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase.Mode;
 import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase.OnRefreshListener2;
@@ -39,21 +43,23 @@ public class CommunityFragment extends Fragment {
 
     private ProgressDialog progressDialog;
 
+    private String[] stringArray;
+
+    private Spinner spinner;
+
+    private FrameLayout selectLayout;
 
     private static PullToRefreshListView pullToRefreshListView;
 
     private static Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-
             switch (msg.what) {
-
                 case COMPLETE:
                     pullToRefreshListView.onRefreshComplete();
                     break;
 
             }
-
             return false;
         }
     });
@@ -94,10 +100,16 @@ public class CommunityFragment extends Fragment {
         pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.CommunityListView);
         pullToRefreshListView.setMode(Mode.BOTH);
 
+        spinner = (Spinner) rootView.findViewById(R.id.spinner);
+
+        selectLayout = (FrameLayout) rootView.findViewById(R.id.selectLayout);
+
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
         progressDialog.setCanceledOnTouchOutside(false);
 
+        stringArray = getResources().getStringArray(R.array.communitySort);
+        spinner.setAdapter(new CommunitySortAdapter(stringArray, getActivity()));
     }
 
     private void ViewAction() {
@@ -126,6 +138,25 @@ public class CommunityFragment extends Fragment {
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity(), stringArray[position], Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        selectLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });

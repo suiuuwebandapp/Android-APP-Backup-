@@ -52,8 +52,8 @@
 
     </RelativeLayout>
 
-    <com.minglang.suiuu.customview.FlowLayout
-        android:id="@+id/community_search_tag_layout"
+    <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView
+        android:id="@+id/community_search_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
