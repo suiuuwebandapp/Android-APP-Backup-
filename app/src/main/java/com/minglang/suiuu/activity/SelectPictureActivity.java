@@ -98,6 +98,8 @@ public class SelectPictureActivity extends BaseActivity {
     private ListPictureDirPopupWindow listPictureDirPopupWindow;
     private static final int result = 9;
     private int state = 0;
+    private ImageView tv_top_right_more;
+    private TextView tv_top_center;
 
     public SelectPictureActivity() {
     }
@@ -311,9 +313,13 @@ public class SelectPictureActivity extends BaseActivity {
 
         back = (ImageView) findViewById(R.id.iv_top_back);
         complete = (TextView) findViewById(R.id.tv_top_right);
-
+        complete.setVisibility(View.VISIBLE);
         selectImage = (GridView) findViewById(R.id.selectPicture);
         allPicture = (TextView) findViewById(R.id.selectPictureAll);
+        tv_top_right_more = (ImageView) findViewById(R.id.tv_top_right_more);
+        tv_top_right_more.setVisibility(View.GONE);
+        tv_top_center  = (TextView) findViewById(R.id.tv_top_center);
+        tv_top_center.setText("选择图片");
 
     }
 

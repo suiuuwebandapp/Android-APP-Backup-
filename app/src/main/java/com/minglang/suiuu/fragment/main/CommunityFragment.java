@@ -26,7 +26,6 @@ import com.minglang.suiuu.utils.DeBugLog;
  * 问答社区页面
  */
 public class CommunityFragment extends Fragment {
-
     private static final String TAG = CommunityFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
@@ -38,7 +37,6 @@ public class CommunityFragment extends Fragment {
     private String verification;
 
     private ProgressDialog progressDialog;
-
 
     private static PullToRefreshListView pullToRefreshListView;
 

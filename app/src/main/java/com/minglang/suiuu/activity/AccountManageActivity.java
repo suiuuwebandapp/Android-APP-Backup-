@@ -16,13 +16,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class AccountManageActivity extends BaseAppCompatActivity {
-
     @Bind(R.id.account_balance_list_view)
     PullToRefreshListView pullToRefreshListView;
 
     @Bind(R.id.account_balance_toolbar)
     Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

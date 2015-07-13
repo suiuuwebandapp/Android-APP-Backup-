@@ -193,19 +193,6 @@ public class MainActivity extends BaseActivity {
      */
     @Bind(R.id.InboxButtonLayout)
     FrameLayout InboxBtnLayout;
-
-    /**
-     * 旅图页面搜索按钮
-     */
-    @Bind(R.id.main_1_search)
-    ImageView Main_1_Search;
-
-    /**
-     * 旅图页面标签按钮
-     */
-    @Bind(R.id.main_1_tag)
-    ImageView Main_1_Tag;
-
     /**
      * 旅图页面相册按钮
      */
@@ -408,32 +395,17 @@ public class MainActivity extends BaseActivity {
 
             }
         });
-
-        Main_1_Search.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        Main_1_Tag.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         Main_1_Album.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(MainActivity.this,SelectPictureActivity.class);
+                intent.putExtra("state",1);
+                startActivity(intent);
             }
         });
-
         Main_2_Search.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
             }
         });
 
