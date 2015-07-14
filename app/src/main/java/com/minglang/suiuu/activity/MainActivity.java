@@ -395,6 +395,7 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+
         Main_1_Album.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -983,7 +984,7 @@ public class MainActivity extends BaseActivity {
                     break;
 
                 case R.id.headImage:
-                    Intent headIntent = new Intent(MainActivity.this, PersonalActivity.class);
+                    Intent headIntent = new Intent(MainActivity.this, PersonalCenterActivity.class);
                     startActivity(headIntent);
                     mDrawerLayout.closeDrawer(sliderView);
                     break;

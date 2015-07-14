@@ -17,6 +17,7 @@ import com.minglang.suiuu.base.BaseActivity;
  * 修改备注：
  */
 public class TripGalleryDetailActivity extends BaseActivity {
+
     private MapView mapView;
     private AMap aMap;
 
@@ -28,18 +29,13 @@ public class TripGalleryDetailActivity extends BaseActivity {
         mapView.onCreate(savedInstanceState);// 必须要写
         init();
     }
-    /**
-     * 初始化AMap对象
-     */
+
     /**
      * 初始化AMap对象
      */
     private void init() {
         if (aMap == null) {
             aMap = mapView.getMap();
-
-
-
         }
     }
 
@@ -78,4 +74,5 @@ public class TripGalleryDetailActivity extends BaseActivity {
         super.onDestroy();
         mapView.onDestroy();
     }
+
 }

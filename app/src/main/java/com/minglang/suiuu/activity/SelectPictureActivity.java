@@ -18,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +58,7 @@ public class SelectPictureActivity extends BaseActivity {
      * 临时的辅助类，用于防止同一个文件夹的多次扫描
      */
     private Map<String, Integer> tmpDir = new HashMap<>();
+
     private List<ImageFolder> mDirPaths = new ArrayList<>();
 
     /**
@@ -93,8 +93,6 @@ public class SelectPictureActivity extends BaseActivity {
     private ListPictureDirPopupWindow listPictureDirPopupWindow;
     private static final int result = 9;
     private int state = 0;
-    private ImageView tv_top_right_more;
-    private TextView tv_top_center;
 
     public SelectPictureActivity() {
     }
@@ -282,14 +280,6 @@ public class SelectPictureActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.selectPicture_root);
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                rootLayout.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        }
 
         mContentResolver = getContentResolver();
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
@@ -307,9 +297,9 @@ public class SelectPictureActivity extends BaseActivity {
         complete.setVisibility(View.VISIBLE);
         selectImage = (GridView) findViewById(R.id.selectPicture);
         allPicture = (TextView) findViewById(R.id.selectPictureAll);
-        tv_top_right_more = (ImageView) findViewById(R.id.tv_top_right_more);
+        ImageView tv_top_right_more = (ImageView) findViewById(R.id.tv_top_right_more);
         tv_top_right_more.setVisibility(View.GONE);
-        tv_top_center  = (TextView) findViewById(R.id.tv_top_center);
+        TextView tv_top_center = (TextView) findViewById(R.id.tv_top_center);
         tv_top_center.setText("选择图片");
 
     }

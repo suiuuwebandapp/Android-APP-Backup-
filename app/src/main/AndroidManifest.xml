@@ -71,7 +71,8 @@
             android:value="554c2a0567e58e074f00054e" />
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="e305ef7850d9f5d2e8f7b0c3c3fbb16c"/>
+            android:value="e305ef7850d9f5d2e8f7b0c3c3fbb16c" />
+
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
@@ -190,8 +191,7 @@
         <activity
             android:name=".activity.TripGalleryDetailActivity"
             android:label="TripGalleryActivity"
-            android:theme="@style/FullBleedTheme"
-             />
+            android:theme="@style/FullBleedTheme" />
 
         <!-- 聊天页面 -->
         <activity
@@ -427,6 +427,11 @@
         <activity
             android:name=".activity.CommunitySearchActivity"
             android:label="@string/title_activity_community_search"
+            android:theme="@style/AppCustomTheme" >
+        </activity>
+        <activity
+            android:name=".activity.PersonalCenterActivity"
+            android:label="@string/title_activity_personal_center"
             android:theme="@style/AppCustomTheme">
         </activity>
     </application>

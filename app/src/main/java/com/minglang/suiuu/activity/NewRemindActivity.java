@@ -18,6 +18,9 @@ import com.minglang.suiuu.fragment.remind.NewReplyFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 新提醒页面
  */
@@ -27,7 +30,14 @@ public class NewRemindActivity extends BaseActivity {
     /**
      * 返回键
      */
-    private ImageView newRemindBack;
+    @Bind(R.id.newRemindBack)
+    ImageView newRemindBack;
+
+    @Bind(R.id.newRemindPager)
+    ViewPager newRemindPager;
+
+    @Bind(R.id.newRemindTabLayout)
+    TabLayout tabLayout;
 
     /**
      * 新@页面
@@ -54,6 +64,8 @@ public class NewRemindActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_remind);
 
+        ButterKnife.bind(this);
+
         initView();
         ViewAction();
     }
@@ -62,9 +74,6 @@ public class NewRemindActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-        newRemindBack = (ImageView) findViewById(R.id.newRemindBack);
-
-        ViewPager newRemindPager = (ViewPager) findViewById(R.id.newRemindPager);
         newRemindPager.setOffscreenPageLimit(4);
 
         String str1 = getResources().getString(R.string.newAt);
@@ -78,7 +87,6 @@ public class NewRemindActivity extends BaseActivity {
         titleList.add(str3);
         titleList.add(str4);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.newRemindTabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(str1), true);
         tabLayout.addTab(tabLayout.newTab().setText(str2), false);
         tabLayout.addTab(tabLayout.newTab().setText(str3), false);

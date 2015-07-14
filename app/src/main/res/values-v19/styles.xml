@@ -14,4 +14,10 @@
         <!-- API 19 theme customizations can go here. -->
     </style>
 
+    <style name="AppCustomTheme" parent="AppNewBaseTheme">
+        <item name="colorPrimaryDark">@color/topColor</item>
+        <item name="colorPrimary">@color/mainColor</item>
+        <item name="android:windowTranslucentStatus">false</item>
+    </style>
+
 </resources>
