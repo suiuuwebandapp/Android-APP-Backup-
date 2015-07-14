@@ -28,6 +28,7 @@
                 android:contentDescription="@string/app_name"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
+                android:layout_above="@+id/personal_center_toolbar"
                 android:src="@drawable/default_background_image"
                 app:layout_collapseMode="parallax"/>
 
@@ -35,8 +36,9 @@
                 android:id="@+id/personal_center_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/layout_50dp"
+                android:background="@color/mainColor"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:popupTheme="@style/AppCustomTheme"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
