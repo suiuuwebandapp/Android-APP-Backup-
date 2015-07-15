@@ -1,6 +1,8 @@
 package com.minglang.suiuu.utils.qq;
 
 /**
+ * QQ所需相关数据
+ * <p/>
  * Created by Administrator on 2015/5/8.
  */
 public class TencentConstant {

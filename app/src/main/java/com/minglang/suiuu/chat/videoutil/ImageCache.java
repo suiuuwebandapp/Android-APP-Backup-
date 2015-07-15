@@ -400,8 +400,8 @@ public class ImageCache {
 	private static String bytesToHexString(byte[] bytes) {
 		// http://stackoverflow.com/questions/332079
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < bytes.length; i++) {
-			String hex = Integer.toHexString(0xFF & bytes[i]);
+		for (byte aByte : bytes) {
+			String hex = Integer.toHexString(0xFF & aByte);
 			if (hex.length() == 1) {
 				sb.append('0');
 			}
@@ -445,10 +445,7 @@ public class ImageCache {
 	 *         otherwise.
 	 */
 	public static boolean isExternalStorageRemovable() {
-		if (Utils.hasGingerbread()) {
-			return Environment.isExternalStorageRemovable();
-		}
-		return true;
+		return !Utils.hasGingerbread() || Environment.isExternalStorageRemovable();
 	}
 
 	/**

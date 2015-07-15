@@ -10,6 +10,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:numColumns="auto_fit"
-        android:orientation="vertical"></GridLayout>
+        android:orientation="vertical"/>
 
 </FrameLayout>

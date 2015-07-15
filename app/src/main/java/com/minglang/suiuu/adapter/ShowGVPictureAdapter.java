@@ -1,7 +1,9 @@
 package com.minglang.suiuu.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -27,13 +29,13 @@ public class ShowGVPictureAdapter extends BaseAdapter {
     private DisplayImageOptions options;
     private BitmapUtils bitmapUtils;
 
-    public ShowGVPictureAdapter(Context context,List<String> list,String type) {
+    public ShowGVPictureAdapter(Context context, List<String> list, String type) {
         super();
         this.context = context;
         this.list = list;
         this.type = type;
         bitmapUtils = new BitmapUtils(context);
-        if("1".equals(type)) {
+        if ("1".equals(type)) {
             imageLoader = ImageLoader.getInstance();
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
             options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
@@ -42,9 +44,10 @@ public class ShowGVPictureAdapter extends BaseAdapter {
                     .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
         }
     }
+
     @Override
     public int getCount() {
-        return list.size()+1;
+        return list.size() + 1;
 
     }
 
@@ -63,14 +66,15 @@ public class ShowGVPictureAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View view = View.inflate(context, R.layout.adapter_show_picture, null);
-        ImageView iv_picture = (ImageView)view.findViewById(R.id.iv_picture);
-        if(position>=list.size()) {
+        @SuppressLint("ViewHolder")
+        View view = LayoutInflater.from(context).inflate(R.layout.adapter_show_picture, null);
+        ImageView iv_picture = (ImageView) view.findViewById(R.id.iv_picture);
+        if (position >= list.size()) {
             iv_picture.setImageResource(R.drawable.btn_add_picture);
-        }else {
-            if("1".equals(type)) {
+        } else {
+            if ("1".equals(type)) {
                 imageLoader.displayImage(list.get(position), iv_picture, options);
-            }else {
+            } else {
                 bitmapUtils.display(iv_picture, list.get(position));
             }
         }

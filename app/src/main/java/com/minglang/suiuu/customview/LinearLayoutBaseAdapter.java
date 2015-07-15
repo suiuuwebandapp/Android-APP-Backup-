@@ -15,7 +15,7 @@ public abstract class LinearLayoutBaseAdapter {
     private List<?> list;
     private Context context;
 
-    public LinearLayoutBaseAdapter(Context context, List<? extends Object> list) {
+    public LinearLayoutBaseAdapter(Context context, List<?> list) {
         this.context = context;
         this.list = list;
     }

@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 个人信息
+ * 旧个人中心页面,后期会删除
  */
 public class PersonalActivity extends BaseActivity {
 

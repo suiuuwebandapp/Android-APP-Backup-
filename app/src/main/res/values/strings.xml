@@ -50,7 +50,7 @@
     <string name="Signature_hint">Signature hint</string>
 
     <string name="NewRemind">New Remind</string>
-    <string name="newAt" translatable="false">新@我的</string>
+    <string name="newAt" translatable="false">新@</string>
     <string name="newComment" translatable="false">新评论</string>
     <string name="newReply" translatable="false">新回复</string>
     <string name="newAttention" translatable="false">新关注</string>

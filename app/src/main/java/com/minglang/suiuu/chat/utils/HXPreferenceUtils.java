@@ -13,8 +13,6 @@
  */
 package com.minglang.suiuu.chat.utils;
 
-import java.util.Locale;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 

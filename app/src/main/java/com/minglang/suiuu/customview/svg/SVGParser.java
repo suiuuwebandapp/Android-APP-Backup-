@@ -59,7 +59,6 @@ import javax.xml.parsers.SAXParserFactory;
  * @author Larva Labs, LLC
  * @see #getSVGFromResource(android.content.res.Resources, int)
  * @see #getSVGFromAsset(android.content.res.AssetManager, String)
- * @see #getSVGFromString(String)
  * @see #getSVGFromInputStream(java.io.InputStream)
  * @see #parsePath(String)
  */
@@ -222,7 +221,7 @@ public class SVGParser {
         //Util.debug("Parsing numbers from: '" + s + "'");
         int n = s.length();
         int p = 0;
-        ArrayList<Float> numbers = new ArrayList<Float>();
+        ArrayList<Float> numbers = new ArrayList<>();
         boolean skipChar = false;
         for (int i = 1; i < n; i++) {
             if (skipChar) {
@@ -666,8 +665,8 @@ public class SVGParser {
         boolean isLinear;
         float x1, y1, x2, y2;
         float x, y, radius;
-        ArrayList<Float> positions = new ArrayList<Float>();
-        ArrayList<Integer> colors = new ArrayList<Integer>();
+        ArrayList<Float> positions = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
         Matrix matrix = null;
 
         public Gradient createChild(Gradient g) {
@@ -699,7 +698,7 @@ public class SVGParser {
     }
 
     private static class StyleSet {
-        HashMap<String, String> styleMap = new HashMap<String, String>();
+        HashMap<String, String> styleMap = new HashMap<>();
 
         private StyleSet(String string) {
             String[] styles = string.split(";");
@@ -799,8 +798,8 @@ public class SVGParser {
 
         boolean pushed = false;
 
-        HashMap<String, Shader> gradientMap = new HashMap<String, Shader>();
-        HashMap<String, Gradient> gradientRefMap = new HashMap<String, Gradient>();
+        HashMap<String, Shader> gradientMap = new HashMap<>();
+        HashMap<String, Gradient> gradientRefMap = new HashMap<>();
         Gradient gradient = null;
 
         private SVGHandler(Picture picture) {
@@ -1236,77 +1235,83 @@ public class SVGParser {
         @Override
         public void endElement(String namespaceURI, String localName, String qName)
                 throws SAXException {
-            if (localName.equals("svg")) {
+            if (!localName.equals("svg")) {
+                switch (localName) {
+                    case "linearGradient":
+                        if (gradient.id != null) {
+                            if (gradient.xlink != null) {
+                                Gradient parent = gradientRefMap.get(gradient.xlink);
+                                if (parent != null) {
+                                    gradient = parent.createChild(gradient);
+                                }
+                            }
+                            int[] colors = new int[gradient.colors.size()];
+                            for (int i = 0; i < colors.length; i++) {
+                                colors[i] = gradient.colors.get(i);
+                            }
+                            float[] positions = new float[gradient.positions.size()];
+                            for (int i = 0; i < positions.length; i++) {
+                                positions[i] = gradient.positions.get(i);
+                            }
+                            if (colors.length == 0) {
+                                Log.d("BAD", "BAD");
+                            }
+                            LinearGradient g = new LinearGradient(gradient.x1, gradient.y1, gradient.x2, gradient.y2, colors, positions, Shader.TileMode.CLAMP);
+                            if (gradient.matrix != null) {
+                                g.setLocalMatrix(gradient.matrix);
+                            }
+                            gradientMap.put(gradient.id, g);
+                            gradientRefMap.put(gradient.id, gradient);
+                        }
+                        break;
+                    case "radialGradient":
+                        if (gradient.id != null) {
+                            if (gradient.xlink != null) {
+                                Gradient parent = gradientRefMap.get(gradient.xlink);
+                                if (parent != null) {
+                                    gradient = parent.createChild(gradient);
+                                }
+                            }
+                            int[] colors = new int[gradient.colors.size()];
+                            for (int i = 0; i < colors.length; i++) {
+                                colors[i] = gradient.colors.get(i);
+                            }
+                            float[] positions = new float[gradient.positions.size()];
+                            for (int i = 0; i < positions.length; i++) {
+                                positions[i] = gradient.positions.get(i);
+                            }
+                            if (gradient.xlink != null) {
+                                Gradient parent = gradientRefMap.get(gradient.xlink);
+                                if (parent != null) {
+                                    gradient = parent.createChild(gradient);
+                                }
+                            }
+                            RadialGradient g = new RadialGradient(gradient.x, gradient.y, gradient.radius, colors, positions, Shader.TileMode.CLAMP);
+                            if (gradient.matrix != null) {
+                                g.setLocalMatrix(gradient.matrix);
+                            }
+                            gradientMap.put(gradient.id, g);
+                            gradientRefMap.put(gradient.id, gradient);
+                        }
+                        break;
+                    case "g":
+                        if (boundsMode) {
+                            boundsMode = false;
+                        }
+                        // Break out of hidden mode
+                        if (hidden) {
+                            hiddenLevel--;
+                            //Util.debug("Hidden down: " + hiddenLevel);
+                            if (hiddenLevel == 0) {
+                                hidden = false;
+                            }
+                        }
+                        // Clear gradient map
+                        gradientMap.clear();
+                        break;
+                }
+            } else {
                 picture.endRecording();
-            } else if (localName.equals("linearGradient")) {
-                if (gradient.id != null) {
-                    if (gradient.xlink != null) {
-                        Gradient parent = gradientRefMap.get(gradient.xlink);
-                        if (parent != null) {
-                            gradient = parent.createChild(gradient);
-                        }
-                    }
-                    int[] colors = new int[gradient.colors.size()];
-                    for (int i = 0; i < colors.length; i++) {
-                        colors[i] = gradient.colors.get(i);
-                    }
-                    float[] positions = new float[gradient.positions.size()];
-                    for (int i = 0; i < positions.length; i++) {
-                        positions[i] = gradient.positions.get(i);
-                    }
-                    if (colors.length == 0) {
-                        Log.d("BAD", "BAD");
-                    }
-                    LinearGradient g = new LinearGradient(gradient.x1, gradient.y1, gradient.x2, gradient.y2, colors, positions, Shader.TileMode.CLAMP);
-                    if (gradient.matrix != null) {
-                        g.setLocalMatrix(gradient.matrix);
-                    }
-                    gradientMap.put(gradient.id, g);
-                    gradientRefMap.put(gradient.id, gradient);
-                }
-            } else if (localName.equals("radialGradient")) {
-                if (gradient.id != null) {
-                    if (gradient.xlink != null) {
-                        Gradient parent = gradientRefMap.get(gradient.xlink);
-                        if (parent != null) {
-                            gradient = parent.createChild(gradient);
-                        }
-                    }
-                    int[] colors = new int[gradient.colors.size()];
-                    for (int i = 0; i < colors.length; i++) {
-                        colors[i] = gradient.colors.get(i);
-                    }
-                    float[] positions = new float[gradient.positions.size()];
-                    for (int i = 0; i < positions.length; i++) {
-                        positions[i] = gradient.positions.get(i);
-                    }
-                    if (gradient.xlink != null) {
-                        Gradient parent = gradientRefMap.get(gradient.xlink);
-                        if (parent != null) {
-                            gradient = parent.createChild(gradient);
-                        }
-                    }
-                    RadialGradient g = new RadialGradient(gradient.x, gradient.y, gradient.radius, colors, positions, Shader.TileMode.CLAMP);
-                    if (gradient.matrix != null) {
-                        g.setLocalMatrix(gradient.matrix);
-                    }
-                    gradientMap.put(gradient.id, g);
-                    gradientRefMap.put(gradient.id, gradient);
-                }
-            } else if (localName.equals("g")) {
-                if (boundsMode) {
-                    boundsMode = false;
-                }
-                // Break out of hidden mode
-                if (hidden) {
-                    hiddenLevel--;
-                    //Util.debug("Hidden down: " + hiddenLevel);
-                    if (hiddenLevel == 0) {
-                        hidden = false;
-                    }
-                }
-                // Clear gradient map
-                gradientMap.clear();
             }
         }
     }

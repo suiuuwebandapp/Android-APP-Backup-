@@ -10,9 +10,6 @@
         <!-- API 14 theme customizations can go here. -->
     </style>
 
-    <style name="FullBleedTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- API 19 theme customizations can go here. -->
-    </style>
 
     <style name="AppCustomTheme" parent="AppNewBaseTheme">
         <item name="colorPrimaryDark">@color/topColor</item>

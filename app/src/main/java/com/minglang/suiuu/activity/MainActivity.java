@@ -51,9 +51,8 @@ import com.minglang.suiuu.chat.chat.Constant;
 import com.minglang.suiuu.chat.utils.CommonUtils;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.fragment.main.CommunityFragment;
-import com.minglang.suiuu.fragment.main.LoopFragment;
-import com.minglang.suiuu.fragment.main.TripGalleryFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
+import com.minglang.suiuu.fragment.main.TripGalleryFragment;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.ConstantUtils;
 import com.minglang.suiuu.utils.DeBugLog;
@@ -140,27 +139,30 @@ public class MainActivity extends BaseActivity {
     private TripGalleryFragment tripGalleryFragment;
 
     /**
-     * 圈子页面
-     */
-    private LoopFragment loopFragment;
-
-    private CommunityFragment communityFragment;
-
-    /**
      * 随游页面
      */
     private SuiuuFragment suiuuFragment;
 
     /**
+     * 问答社区页面
+     */
+    private CommunityFragment communityFragment;
+
+    /**
      * 会话页面
      */
-    private ChatAllHistoryFragment conversationFragment;
+    private ChatAllHistoryFragment chatFragment;
 
-    // 账号在别处登录
+    /**
+     * 账号在别处登录
+     */
     public boolean isConflict = false;
+
     private NewMessageReceiver msgReceiver;
 
-    //当前为fragment的第几页
+    /**
+     * 当前为fragment的第几页
+     */
     private int currentIndex = 0;
 
     private TextView msgCount;
@@ -325,9 +327,8 @@ public class MainActivity extends BaseActivity {
     private void initFragment() {
         switchViewState(NUMBER1);
 
-        loopFragment = new LoopFragment();
         tripGalleryFragment = new TripGalleryFragment();
-        conversationFragment = new ChatAllHistoryFragment();
+        chatFragment = new ChatAllHistoryFragment();
         communityFragment = CommunityFragment.newInstance(userSign, verification);
 
         LoadDefaultFragment();
@@ -399,8 +400,8 @@ public class MainActivity extends BaseActivity {
         Main_1_Album.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,SelectPictureActivity.class);
-                intent.putExtra("state",1);
+                Intent intent = new Intent(MainActivity.this, SelectPictureActivity.class);
+                intent.putExtra("state", 1);
                 startActivity(intent);
             }
         });
@@ -484,24 +485,29 @@ public class MainActivity extends BaseActivity {
                 ft.hide(suiuuFragment);
             }
         }
+
         if (communityFragment != null) {
             if (communityFragment.isAdded()) {
                 ft.hide(communityFragment);
             }
         }
-        if (conversationFragment != null) {
-            if (conversationFragment.isAdded()) {
-                ft.hide(conversationFragment);
+
+        if (chatFragment != null) {
+            if (chatFragment.isAdded()) {
+                ft.hide(chatFragment);
             }
         }
+
         if (tripGalleryFragment == null) {
             tripGalleryFragment = new TripGalleryFragment();
         }
+
         if (tripGalleryFragment.isAdded()) {
             ft.show(tripGalleryFragment);
         } else {
             ft.add(R.id.showLayout, tripGalleryFragment);
         }
+
         currentIndex = 0;
         ft.commit();
     }
@@ -516,19 +522,23 @@ public class MainActivity extends BaseActivity {
                 ft.hide(tripGalleryFragment);
             }
         }
-        if (loopFragment != null) {
-            if (loopFragment.isAdded()) {
-                ft.hide(loopFragment);
+
+        if (communityFragment != null) {
+            if (communityFragment.isAdded()) {
+                ft.hide(communityFragment);
             }
         }
-        if (conversationFragment != null) {
-            if (conversationFragment.isAdded()) {
-                ft.hide(conversationFragment);
+
+        if (chatFragment != null) {
+            if (chatFragment.isAdded()) {
+                ft.hide(chatFragment);
             }
         }
+
         if (suiuuFragment == null) {
             suiuuFragment = new SuiuuFragment();
         }
+
         if (suiuuFragment.isAdded()) {
             ft.show(suiuuFragment);
         } else {
@@ -543,7 +553,6 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadCommunityFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-
         if (tripGalleryFragment != null) {
             if (tripGalleryFragment.isAdded()) {
                 ft.hide(tripGalleryFragment);
@@ -556,9 +565,9 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if (conversationFragment != null) {
-            if (conversationFragment.isAdded()) {
-                ft.hide(conversationFragment);
+        if (chatFragment != null) {
+            if (chatFragment.isAdded()) {
+                ft.hide(chatFragment);
             }
         }
 
@@ -597,10 +606,10 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if (conversationFragment.isAdded()) {
-            ft.show(conversationFragment);
+        if (chatFragment.isAdded()) {
+            ft.show(chatFragment);
         } else {
-            ft.add(R.id.showLayout, conversationFragment);
+            ft.add(R.id.showLayout, chatFragment);
         }
 
         currentIndex = 3;
@@ -825,8 +834,8 @@ public class MainActivity extends BaseActivity {
             updateUnreadLabel();
             if (currentIndex == 3) {
                 // 当前页面如果为聊天历史页面，刷新此页面
-                if (conversationFragment != null) {
-                    conversationFragment.refresh();
+                if (chatFragment != null) {
+                    chatFragment.refresh();
                     msgCount.setVisibility(View.INVISIBLE);
                 }
             }
@@ -967,6 +976,7 @@ public class MainActivity extends BaseActivity {
 
             });
         }
+
     }
 
     private class MyOnClickListener implements OnClickListener {

@@ -1,9 +1,10 @@
-<RelativeLayout android:id="@+id/selectPicture_root"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="com.minglang.suiuu.activity.SelectImageActivity">
+<RelativeLayout
+    android:id="@+id/selectPicture_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.minglang.suiuu.activity.SelectImageActivity">
 
     <include
         android:id="@+id/top_action"

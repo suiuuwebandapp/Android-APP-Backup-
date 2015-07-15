@@ -131,7 +131,7 @@ public abstract class ImageWorker {
         new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
     }
 
-    
+
     /**
      * If set to true, the image will fade-in once it has been loaded by the background thread.
      */
@@ -254,7 +254,7 @@ public abstract class ImageWorker {
                 }
             }
 
-            
+
 
             // If the bitmap was not found in the cache and this task has not been cancelled by
             // another thread and the ImageView that was originally bound to this task is still
@@ -358,7 +358,7 @@ public abstract class ImageWorker {
     }
 
     /**
-     * Called when the processing is complete and the final drawable should be 
+     * Called when the processing is complete and the final drawable should be
      * set on the ImageView.
      *
      * @param imageView
@@ -369,7 +369,7 @@ public abstract class ImageWorker {
             // Transition drawable with a transparent drawable and the final drawable
             final TransitionDrawable td =
                     new TransitionDrawable(new Drawable[] {
-                            new ColorDrawable(android.R.color.transparent),
+                            new ColorDrawable(mResources.getColor(android.R.color.transparent)),
                             drawable
                     });
             // Set background to loading bitmap
@@ -412,12 +412,12 @@ public abstract class ImageWorker {
                 case MESSAGE_CLEAR:
                     clearCacheInternal();
                     break;
-                
+
             }
             return null;
         }
     }
- 
+
 
     protected void clearCacheInternal() {
         if (mImageCache != null) {
@@ -425,7 +425,7 @@ public abstract class ImageWorker {
         }
     }
 
-    
+
     public void clearCache() {
         new CacheAsyncTask().execute(MESSAGE_CLEAR);
     }

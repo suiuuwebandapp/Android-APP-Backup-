@@ -48,7 +48,7 @@
             tools:ignore="RelativeOverlap"/>
     </RelativeLayout>
 
-    <com.minglang.suiuu.customview.PullToRefreshStaggeredView
+    <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshStaggeredView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/loopDetailsGridView"
         android:layout_width="match_parent"

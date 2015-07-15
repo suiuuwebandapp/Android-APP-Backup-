@@ -59,10 +59,7 @@ public class User extends EMContact {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == null || !(o instanceof User)) {
-			return false;
-		}
-		return getUsername().equals(((User) o).getUsername());
+		return !(o == null || !(o instanceof User)) && getUsername().equals(((User) o).getUsername());
 	}
 
 	@Override

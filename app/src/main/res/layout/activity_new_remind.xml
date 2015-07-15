@@ -1,47 +1,39 @@
-<LinearLayout
-    android:id="@+id/newRemindRootLayout"
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.minglang.suiuu.activity.NewRemindActivity">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/NewRemindHeadLayout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/mainColor">
-
-        <TextView
-            android:id="@+id/textView27"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/NewRemind"
-            android:textColor="@color/white"
-            android:textSize="18sp"/>
-
-        <ImageView
-            android:id="@+id/newRemindBack"
-            style="@style/backKeyStyle"
-            android:src="@drawable/back"/>
-    </RelativeLayout>
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/newRemindTabLayout"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/new_remind_app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:tabIndicatorColor="@color/slider_line_color"
-        app:tabIndicatorHeight="@dimen/layout_1dp"/>
+        android:theme="@style/AppBarLayoutTheme">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/new_remind_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/layout_50dp"
+            android:background="@color/mainColor"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:title="@string/NewRemind"
+            app:popupTheme="@style/AppCustomTheme"/>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/new_remind_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:tabIndicatorColor="@color/mainColor"
+            app:tabIndicatorHeight="@dimen/layout_1dp"
+            app:tabTextAppearance="?android:attr/textAppearanceMedium"/>
+
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/newRemindPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </android.support.v4.view.ViewPager>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

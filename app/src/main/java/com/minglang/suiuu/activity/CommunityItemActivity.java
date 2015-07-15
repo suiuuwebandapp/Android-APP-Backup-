@@ -10,12 +10,11 @@ import android.view.MenuItem;
 import android.widget.AbsListView;
 import android.widget.ScrollView;
 
+import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
+import com.minglang.pulltorefreshlibrary.PullToRefreshScrollView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.NoScrollBarListView;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase.Mode;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshScrollView;
 import com.minglang.suiuu.utils.DeBugLog;
 
 import butterknife.Bind;
@@ -74,7 +73,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
         pullToRefreshScrollView = (PullToRefreshScrollView) findViewById(R.id.community_item_refresh_scroll_view);
-        pullToRefreshScrollView.setMode(Mode.BOTH);
+        pullToRefreshScrollView.setMode(PullToRefreshBase.Mode.BOTH);
     }
 
     private void ViewAction() {

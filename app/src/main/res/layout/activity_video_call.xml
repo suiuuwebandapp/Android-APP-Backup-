@@ -82,6 +82,7 @@
                 android:paddingBottom="18dp" >
 
                 <LinearLayout
+                    android:baselineAligned="false"
                     android:id="@+id/ll_voice_control"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" >

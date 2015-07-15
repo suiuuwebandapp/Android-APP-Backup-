@@ -1,4 +1,4 @@
-﻿package com.minglang.suiuu.utils;
+package com.minglang.suiuu.utils;
 
 /**
  * 存放接口URL

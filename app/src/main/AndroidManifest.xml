@@ -90,7 +90,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
 
         <!-- 应用主页面 -->
         <activity
@@ -103,32 +103,32 @@
             android:name=".activity.PersonalActivity"
             android:label="@string/title_activity_personal"
             android:screenOrientation="portrait"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.AttentionActivity"
             android:label="@string/title_activity_attention"
             android:screenOrientation="portrait"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.CollectionActivity"
             android:label="@string/title_activity_collection"
             android:screenOrientation="portrait"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.FansActivity"
             android:label="@string/title_activity_fans"
             android:screenOrientation="portrait"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/title_activity_setting"
             android:screenOrientation="portrait"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.PersonalSettingActivity"
             android:label="@string/title_activity_person_setting"
             android:screenOrientation="portrait"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.OtherUserActivity"
             android:label="@string/title_activity_other_user"
@@ -139,7 +139,7 @@
             android:name=".activity.NewRemindActivity"
             android:label="@string/title_activity_new_remind"
             android:screenOrientation="portrait"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.OtherUserTraceActivity"
             android:label="@string/title_activity_other_user_trace"
@@ -147,37 +147,37 @@
         <activity
             android:name=".activity.FeedbackActivity"
             android:label="@string/title_activity_feedback"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.ContactUsActivity"
             android:label="@string/title_activity_contact_us"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.SuiuuDetailActivity"
             android:label="@string/title_activity_suiuu_details"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.CommentsActivity"
             android:label="@string/title_activity_comments"
-            android:theme="@style/FullBleedTheme"
+            android:theme="@style/AppCustomTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.SelectPictureActivity"
             android:label="@string/title_activity_select_picture"
-            android:theme="@style/FullBleedTheme"
+            android:theme="@style/AppCustomTheme"
             android:windowSoftInputMode="stateHidden" />
 
         <!-- 随问的页面 -->
         <activity
             android:name=".activity.AskQuestionActivity"
             android:label="AskQuestionActivity"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
 
         <!-- 通用设置的页面 -->
         <activity
             android:name=".activity.NormalSettingActivity"
             android:label="NormalSettingActivity"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
 
         <!-- 通用设置的页面 -->
 
@@ -186,12 +186,12 @@
         <activity
             android:name=".activity.EasyTackPhotoActivity"
             android:label="EasyTackPhotoActivity"
-            android:theme="@style/FullBleedTheme"
+            android:theme="@style/AppCustomTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.TripGalleryDetailActivity"
             android:label="TripGalleryActivity"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
 
         <!-- 聊天页面 -->
         <activity
@@ -267,12 +267,6 @@
         <!-- 声明sdk所需的service SDK核心功能 -->
         <service android:name="com.easemob.chat.EMChatService" />
 
-        <!-- 百度地图所需的service -->
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" />
-
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="3ecea51f560650b1ed8a4b99808f52e8" />
@@ -301,15 +295,15 @@
         <activity
             android:name=".activity.LoopDetailsActivity"
             android:label="@string/title_activity_loop_details"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.LoopArticleActivity"
             android:label="@string/title_activity_loop_article"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.AllAttentionDynamicActivity"
             android:label="@string/title_activity_all_attention_dynamic"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
 
         <!-- 微信回调Activity -->
         <activity
@@ -410,7 +404,7 @@
         <activity
             android:name=".activity.SuDetailsActivity"
             android:label="@string/title_activity_suiuu_details"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.CommunityItemActivity"
             android:label="@string/title_activity_community_item"

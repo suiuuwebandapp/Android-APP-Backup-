@@ -18,12 +18,10 @@ import android.widget.Toast;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
+import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.CommunitySortAdapter;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase.Mode;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase.OnRefreshListener2;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
 import com.minglang.suiuu.utils.DeBugLog;
 
 /**
@@ -97,7 +95,7 @@ public class CommunityFragment extends Fragment {
     private void initView(View rootView) {
 
         pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.CommunityListView);
-        pullToRefreshListView.setMode(Mode.BOTH);
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
 
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
 
@@ -113,7 +111,7 @@ public class CommunityFragment extends Fragment {
 
     private void ViewAction() {
 
-        pullToRefreshListView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
+        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
