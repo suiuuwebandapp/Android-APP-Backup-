@@ -196,6 +196,11 @@
             android:name=".activity.TripGallerySearchActivity"
             android:label="TripGallerySearchActivity"
             android:theme="@style/FullBleedTheme" />
+        <activity
+            android:name=".activity.TripGallerySearchActivity"
+            android:label="TripGallerySearchActivity"
+            android:theme="@style/FullBleedTheme" />
+
 
         <!-- 聊天页面 -->
         <activity
@@ -444,6 +449,15 @@
             android:label="@string/title_activity_community_search"
             android:theme="@style/AppCustomTheme"/>
 
+        <activity
+            android:name=".activity.PersonalCenterActivity"
+            android:label="@string/title_activity_personal_center"
+            android:theme="@style/AppCustomTheme"/>
+
+        <activity
+            android:name=".activity.CommunitySearchActivity"
+            android:label="@string/title_activity_community_search"
+            android:theme="@style/AppCustomTheme"/>
         <activity
             android:name=".activity.PersonalCenterActivity"
             android:label="@string/title_activity_personal_center"
