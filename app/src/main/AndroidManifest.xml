@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.minglang.suiuu" >
+    package="com.minglang.suiuu">
 
     <!-- 内置SD卡的写入权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -65,7 +65,7 @@
         android:icon="@drawable/main_icon"
         android:label="@string/app_name"
         android:screenOrientation="portrait"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="554c2a0567e58e074f00054e" />
@@ -76,7 +76,7 @@
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" >
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -192,6 +192,10 @@
             android:name=".activity.TripGalleryDetailActivity"
             android:label="TripGalleryActivity"
             android:theme="@style/AppCustomTheme" />
+        <activity
+            android:name=".activity.TripGallerySearchActivity"
+            android:label="TripGallerySearchActivity"
+            android:theme="@style/FullBleedTheme" />
 
         <!-- 聊天页面 -->
         <activity
@@ -267,15 +271,11 @@
         <!-- 声明sdk所需的service SDK核心功能 -->
         <service android:name="com.easemob.chat.EMChatService" />
 
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="3ecea51f560650b1ed8a4b99808f52e8" />
-
         <!-- QQ SDK所需的Activity -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true" >
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -285,6 +285,7 @@
                 <data android:scheme="tencent1104557000" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -296,10 +297,12 @@
             android:name=".activity.LoopDetailsActivity"
             android:label="@string/title_activity_loop_details"
             android:theme="@style/AppCustomTheme" />
+
         <activity
             android:name=".activity.LoopArticleActivity"
             android:label="@string/title_activity_loop_article"
             android:theme="@style/AppCustomTheme" />
+
         <activity
             android:name=".activity.AllAttentionDynamicActivity"
             android:label="@string/title_activity_all_attention_dynamic"
@@ -311,22 +314,27 @@
             android:exported="true"
             android:label="@string/title_activity_wxentry"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+
         <activity
             android:name=".activity.SelectCountryActivity"
             android:label="@string/title_activity_select_country"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+
         <activity
             android:name=".activity.SelectCityActivity"
             android:label="@string/title_activity_select_city"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+
         <activity
             android:name=".activity.SuiuuOrderActivity"
             android:label="@string/title_activity_suiuu_order"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+
         <activity
             android:name=".activity.SuiuuPayActivity"
             android:label="@string/title_activity_suiuu_pay"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+
         <activity
             android:name=".base.BaseActivity"
             android:label="@string/title_activity_base" />
@@ -334,36 +342,42 @@
         <!-- 友盟更新SDK相关组件 -->
         <service
             android:name="com.umeng.update.net.DownloadingService"
-            android:process=":DownloadingService" >
-        </service>
+            android:process=":DownloadingService"></service>
 
         <activity
             android:name="com.umeng.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <activity
             android:name=".activity.MySuiuuInfoActivity"
             android:label="@string/title_activity_my_suiuu"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity
             android:name=".activity.MySuiuuReleaseActivity"
             android:label="@string/title_activity_my_suiuu_details"
             android:theme="@style/AppReleaseTheme" />
+
         <activity
             android:name=".activity.EditSuiuuInfoActivity"
             android:label="@string/title_activity_edit_suiuu_info"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+
         <activity
             android:name=".activity.EditSuiuuPriceActivity"
             android:label="@string/title_activity_edit_suiuu_price"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+
         <activity
             android:name=".activity.OrderManageActivity"
             android:label="@string/title_activity_order_manage"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity
             android:name=".activity.SuiuuSearchDetailActivity"
             android:label="@string/title_activity_suiuu_search_detail"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+
         <activity
             android:name=".activity.SuiuuSearchActivity"
             android:label="@string/title_activity_suiuu_search"
@@ -388,46 +402,53 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind" />
+
         <activity
             android:name="com.alipay.sdk.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind" />
+
         <activity
             android:name=".activity.AccountManageActivity"
             android:label="@string/title_activity_account_manage"
             android:theme="@style/AppAccountTheme" />
+
         <activity
             android:name=".activity.SuiuuUserInfoActivity"
             android:label="@string/title_activity_suiuu_user_info"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity
             android:name=".activity.SuDetailsActivity"
             android:label="@string/title_activity_suiuu_details"
             android:theme="@style/AppCustomTheme" />
+
         <activity
             android:name=".activity.CommunityItemActivity"
             android:label="@string/title_activity_community_item"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity
             android:name=".activity.QuestionsActivity"
             android:label="@string/title_activity_questions"
             android:theme="@style/AppCustomTheme" />
+
         <activity
             android:name=".activity.AnswerActivity"
             android:label="@string/title_activity_answer"
-            android:theme="@style/AppCustomTheme" >
-        </activity>
+            android:theme="@style/AppCustomTheme"/>
+
         <activity
             android:name=".activity.CommunitySearchActivity"
             android:label="@string/title_activity_community_search"
-            android:theme="@style/AppCustomTheme" >
-        </activity>
+            android:theme="@style/AppCustomTheme"/>
+
         <activity
             android:name=".activity.PersonalCenterActivity"
             android:label="@string/title_activity_personal_center"
-            android:theme="@style/AppCustomTheme">
-        </activity>
+            android:theme="@style/AppCustomTheme"/>
+
     </application>
 
 </manifest>

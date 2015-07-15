@@ -7,7 +7,7 @@
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_trip_gallery_item_picture"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_170dp"
+        android:layout_height="@dimen/layout_200dp"
         android:layout_alignParentTop="true"
         android:scaleType="centerCrop"
         fresco:placeholderImage="@drawable/loading"
@@ -15,7 +15,7 @@
 
     <RelativeLayout
         android:layout_width="@dimen/layout_170dp"
-        android:layout_height="@dimen/layout_60dp"
+        android:layout_height="@dimen/layout_50dp"
         android:layout_alignParentRight="true"
         android:layout_marginTop="@dimen/layout_20dp"
         android:background="@drawable/item_trip_gallery_back">
@@ -41,7 +41,8 @@
         android:layout_below="@+id/sdv_trip_gallery_item_picture"
         android:background="@color/white">
 
-        <com.minglang.suiuu.customview.CircleImageView
+        <com.facebook.drawee.view.SimpleDraweeView
+            fresco:roundAsCircle="true"
             android:id="@+id/civ_trip_gallery_headpotrait"
             android:layout_width="@dimen/layout_50dp"
             android:layout_height="@dimen/layout_50dp"
