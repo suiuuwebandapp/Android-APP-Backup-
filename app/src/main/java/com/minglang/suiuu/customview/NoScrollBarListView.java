@@ -14,7 +14,8 @@ import android.util.AttributeSet;
 import android.widget.ListView;
 
 public class NoScrollBarListView extends ListView {
-
+    private int lastX;
+    private int lastY;
     public NoScrollBarListView(Context context) {
         super(context);
     }
@@ -26,7 +27,6 @@ public class NoScrollBarListView extends ListView {
     public NoScrollBarListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
-
     @Override
     /**
      * 重写该方法，达到使ListView适应ScrollView的效果

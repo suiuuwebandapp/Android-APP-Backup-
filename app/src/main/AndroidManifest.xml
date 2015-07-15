@@ -192,6 +192,11 @@
             android:label="TripGalleryActivity"
             android:theme="@style/FullBleedTheme"
              />
+        <activity
+            android:name=".activity.TripGallerySearchActivity"
+            android:label="TripGallerySearchActivity"
+            android:theme="@style/FullBleedTheme"
+             />
 
         <!-- 聊天页面 -->
         <activity
@@ -267,15 +272,15 @@
         <!-- 声明sdk所需的service SDK核心功能 -->
         <service android:name="com.easemob.chat.EMChatService" />
 
-        <!-- 百度地图所需的service -->
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" />
+        <!--&lt;!&ndash; 百度地图所需的service &ndash;&gt;-->
+        <!--<service-->
+            <!--android:name="com.baidu.location.f"-->
+            <!--android:enabled="true"-->
+            <!--android:process=":remote" />-->
 
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="3ecea51f560650b1ed8a4b99808f52e8" />
+        <!--<meta-data-->
+            <!--android:name="com.baidu.lbsapi.API_KEY"-->
+            <!--android:value="3ecea51f560650b1ed8a4b99808f52e8" />-->
 
         <!-- QQ SDK所需的Activity -->
         <activity

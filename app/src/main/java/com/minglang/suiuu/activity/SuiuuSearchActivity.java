@@ -99,7 +99,6 @@ public class SuiuuSearchActivity extends BaseActivity {
 
         }
     }
-
     public void setEuropeanGroup() {
         fl_suiuu_european_country.removeAllViews();
         LayoutInflater mInflater = LayoutInflater.from(this);
@@ -111,20 +110,15 @@ public class SuiuuSearchActivity extends BaseActivity {
             tv.setOnClickListener(new MyOnClick());
             list.add(tv);
             fl_suiuu_european_country.addView(tv);
-
         }
     }
-
     class MyOnClick implements View.OnClickListener {
-
         @Override
         public void onClick(View v) {
             int clickId = v.getId();
-            Intent intent = new Intent(SuiuuSearchActivity.this, SuiuuSearchDetailActivity.class);
             for (int i = 0; i < list.size(); i++) {
                 if (clickId == i) {
-                    intent.putExtra("country", list.get(i).getText().toString());
-                    startActivity(intent);
+                    judgeIntent(list.get(i).getText().toString());
                 }
             }
             switch (clickId) {
@@ -136,12 +130,22 @@ public class SuiuuSearchActivity extends BaseActivity {
                         Toast.makeText(SuiuuSearchActivity.this, R.string.please_enter_search_content, Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    intent.putExtra("country", et_suiuu_search.getText().toString().trim());
-                    startActivity(intent);
+                    judgeIntent(et_suiuu_search.getText().toString().trim());
                     break;
                 default:
                     break;
             }
+        }
+    }
+    public void judgeIntent(String country) {
+        Intent intentSuiuu = new Intent(SuiuuSearchActivity.this, SuiuuSearchDetailActivity.class);
+        Intent intentGallery = new Intent(SuiuuSearchActivity.this, TripGallerySearchActivity.class);
+        if(searchClass == 1) {
+            intentGallery.putExtra("country", country);
+            startActivity(intentGallery);
+        }else if(searchClass == 2) {
+            intentSuiuu.putExtra("country", country);
+            startActivity(intentSuiuu);
         }
     }
 }
