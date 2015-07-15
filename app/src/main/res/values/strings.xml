@@ -242,6 +242,10 @@
 
     <string name="AddTag">添加标签</string>
 
+    <string name="Problem">问题</string>
+
+    <string name="tempText">《未踏召唤://鲜血印记》是镰池和马创作，依河和希插画，并由电击文库发售的小说。第1卷于2014年9月10日发售。此作为《魔法禁书目录》作者镰池和马在“镰池和马十周年”网站的十大重大消息中宣布出版的正统派新作</string>
+
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>
@@ -545,5 +549,6 @@
     <string name="title_activity_questions">QuestionsActivity</string>
     <string name="title_activity_answer">AnswerActivity</string>
     <string name="title_activity_community_search">CommunitySearchActivity</string>
+    <string name="title_activity_personal_center">PersonalCenterActivity</string>
 
 </resources>

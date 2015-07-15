@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,6 +18,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.SuiuuUser;
 import com.minglang.suiuu.utils.DeBugLog;
@@ -30,62 +30,78 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
-public class SuiuuUserInfoActivity extends AppCompatActivity {
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+public class SuiuuUserInfoActivity extends BaseAppCompatActivity {
 
     private static final String TAG = SuiuuUserInfoActivity.class.getSimpleName();
 
     /**
      * 返回按钮
      */
-    private ImageView back;
+    @Bind(R.id.suiuu_user_info_back)
+    ImageView back;
 
     /**
      * 头像
      */
-    private CircleImageView headImage;
+    @Bind(R.id.suiuu_user_info_head_image)
+    CircleImageView headImage;
 
     /**
      * 用户名
      */
-    private TextView userName;
+    @Bind(R.id.suiuu_user_info_name)
+    TextView userName;
 
     /**
      * 用户所在位置
      */
-    private TextView userLocation;
+    @Bind(R.id.suiuu_user_info_location)
+    TextView userLocation;
 
     /**
      * 用户个性签名
      */
-    private TextView userIntro;
+    @Bind(R.id.suiuu_user_info_intro)
+    TextView userIntro;
 
     /**
      * 个人简介
      */
-    private TextView individualResume;
+    @Bind(R.id.suiuu_user_info_individual_resume)
+    TextView individualResume;
 
     /**
      * 电话号码
      */
-    private TextView phoneNumber;
+    @Bind(R.id.suiuu_user_info_phone_number)
+    TextView phoneNumber;
 
     /**
      * 拨打电话
      */
-    private ImageView callButton;
+    @Bind(R.id.suiuu_user_info_call)
+    ImageView callButton;
 
     /**
      * 电子邮箱地址
      */
-    private TextView emailAddress;
+    @Bind(R.id.suiuu_user_info_email_address)
+    TextView emailAddress;
 
-    private TextView tripCount;
+    @Bind(R.id.suiuu_user_info_trip_count)
+    TextView tripCount;
 
-    private RatingBar ratingBar;
+    @Bind(R.id.suiuu_user_info_indicator)
+    RatingBar ratingBar;
 
-    private TextView hisSuiuu;
+    @Bind(R.id.suiuu_user_info_his_suiuu)
+    TextView hisSuiuu;
 
-    private TextView hisParticipationSuiuu;
+    @Bind(R.id.suiuu_user_info_his_participation_suiuu)
+    TextView hisParticipationSuiuu;
 
     private String userSign;
 
@@ -100,6 +116,8 @@ public class SuiuuUserInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suiuu_user_info);
 
+        ButterKnife.bind(this);
+
         userSign = getIntent().getStringExtra("userSign");
 
         initView();
@@ -111,22 +129,6 @@ public class SuiuuUserInfoActivity extends AppCompatActivity {
      * 初始化方法
      */
     private void initView() {
-        back = (ImageView) findViewById(R.id.suiuu_user_info_back);
-        headImage = (CircleImageView) findViewById(R.id.suiuu_user_info_head_image);
-
-        userName = (TextView) findViewById(R.id.suiuu_user_info_name);
-        userLocation = (TextView) findViewById(R.id.suiuu_user_info_location);
-        userIntro = (TextView) findViewById(R.id.suiuu_user_info_intro);
-
-        individualResume = (TextView) findViewById(R.id.suiuu_user_info_individual_resume);
-        phoneNumber = (TextView) findViewById(R.id.suiuu_user_info_phone_number);
-        callButton = (ImageView) findViewById(R.id.suiuu_user_info_call);
-        emailAddress = (TextView) findViewById(R.id.suiuu_user_info_email_address);
-        tripCount = (TextView) findViewById(R.id.suiuu_user_info_trip_count);
-        ratingBar = (RatingBar) findViewById(R.id.suiuu_user_info_indicator);
-        hisSuiuu = (TextView) findViewById(R.id.suiuu_user_info_his_suiuu);
-        hisParticipationSuiuu = (TextView) findViewById(R.id.suiuu_user_info_his_participation_suiuu);
-
         ratingBar.setIsIndicator(true);
         ratingBar.setNumStars(5);
 
@@ -280,12 +282,6 @@ public class SuiuuUserInfoActivity extends AppCompatActivity {
             }
 
         }
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     private class SuiuuUserDataInfoRequestCallBack extends RequestCallBack<String> {

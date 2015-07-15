@@ -13,4 +13,9 @@
         <!-- API 14 theme customizations can go here. -->
     </style>
 
+    <style name="AppCustomTheme" parent="AppNewBaseTheme">
+        <item name="colorPrimaryDark">@color/topColor</item>
+        <item name="colorPrimary">@color/mainColor</item>
+    </style>
+
 </resources>

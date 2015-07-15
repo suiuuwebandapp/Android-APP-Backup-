@@ -48,7 +48,8 @@ import java.util.List;
  * 修改时间：2015/6/25 15:02
  * 修改备注：
  */
-public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashListView.IReflashListener, ReFlashListView.ILoadMoreDataListener {
+public class SuiuuSearchDetailActivity extends BaseActivity
+        implements ReFlashListView.IReflashListener, ReFlashListView.ILoadMoreDataListener {
     private JsonUtils jsonUtil = JsonUtils.getInstance();
     private List<String> tagList;
     private RangeBar rangebar;

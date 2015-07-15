@@ -9,6 +9,8 @@ import android.widget.GridView;
 import java.util.List;
 
 /**
+ * 个人中心页面适配器
+ * <p/>
  * Created by Administrator on 2015/5/11.
  */
 public class PersonalShowPageAdapter extends PagerAdapter {
