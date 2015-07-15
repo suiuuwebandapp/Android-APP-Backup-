@@ -1,13 +1,13 @@
 package com.minglang.suiuu.entity;
 
 /**
- * ÏîÄ¿Ãû³Æ£ºAndroid-APP-Backup-
- * ÀàÃèÊö£º
- * ´´½¨ÈË£ºAdministrator
- * ´´½¨Ê±¼ä£º2015/7/15 12:01
- * ĞŞ¸ÄÈË£ºAdministrator
- * ĞŞ¸ÄÊ±¼ä£º2015/7/15 12:01
- * ĞŞ¸Ä±¸×¢£º
+ * é¡¹ç›®åç§°ï¼šAndroid-APP-Backup-
+ * ç±»æè¿°ï¼š
+ * åˆ›å»ºäººï¼šAdministrator
+ * åˆ›å»ºæ—¶é—´ï¼š2015/7/15 12:01
+ * ä¿®æ”¹äººï¼šAdministrator
+ * ä¿®æ”¹æ—¶é—´ï¼š2015/7/15 12:01
+ * ä¿®æ”¹å¤‡æ³¨ï¼š
  */
 public class TripGallery {
     private String headUrl;

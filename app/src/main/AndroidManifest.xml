@@ -196,11 +196,6 @@
             android:name=".activity.TripGallerySearchActivity"
             android:label="TripGallerySearchActivity"
             android:theme="@style/FullBleedTheme" />
-        <activity
-            android:name=".activity.TripGallerySearchActivity"
-            android:label="TripGallerySearchActivity"
-            android:theme="@style/FullBleedTheme" />
-
 
         <!-- 聊天页面 -->
         <activity
@@ -347,7 +342,7 @@
         <!-- 友盟更新SDK相关组件 -->
         <service
             android:name="com.umeng.update.net.DownloadingService"
-            android:process=":DownloadingService"></service>
+            android:process=":DownloadingService"/>
 
         <activity
             android:name="com.umeng.update.UpdateDialogActivity"
@@ -449,15 +444,6 @@
             android:label="@string/title_activity_community_search"
             android:theme="@style/AppCustomTheme"/>
 
-        <activity
-            android:name=".activity.PersonalCenterActivity"
-            android:label="@string/title_activity_personal_center"
-            android:theme="@style/AppCustomTheme"/>
-
-        <activity
-            android:name=".activity.CommunitySearchActivity"
-            android:label="@string/title_activity_community_search"
-            android:theme="@style/AppCustomTheme"/>
         <activity
             android:name=".activity.PersonalCenterActivity"
             android:label="@string/title_activity_personal_center"

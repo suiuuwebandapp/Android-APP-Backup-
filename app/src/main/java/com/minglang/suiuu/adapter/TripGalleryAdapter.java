@@ -16,37 +16,44 @@ import com.minglang.suiuu.utils.ViewHolder;
 import java.util.List;
 
 /**
- * ÏîÄ¿Ãû³Æ£ºAndroid-APP-Backup-
- * ÀàÃèÊö£º
- * ´´½¨ÈË£ºAdministrator
- * ´´½¨Ê±¼ä£º2015/7/15 11:29
- * ĞŞ¸ÄÈË£ºAdministrator
- * ĞŞ¸ÄÊ±¼ä£º2015/7/15 11:29
- * ĞŞ¸Ä±¸×¢£º
+ * é¡¹ç›®åç§°ï¼šAndroid-APP-Backup-
+ * ç±»æè¿°ï¼š
+ * åˆ›å»ºäººï¼šAdministrator
+ * åˆ›å»ºæ—¶é—´ï¼š2015/7/15 11:29
+ * ä¿®æ”¹äººï¼šAdministrator
+ * ä¿®æ”¹æ—¶é—´ï¼š2015/7/15 11:29
+ * ä¿®æ”¹å¤‡æ³¨ï¼š
  */
 public class TripGalleryAdapter extends BaseAdapter {
+
     private Context context;
     private List<TripGallery> list;
+
     public TripGalleryAdapter(Context context, List<TripGallery> list) {
         this.context = context;
         this.list = list;
     }
+
     public void onDateChange(List<TripGallery> list) {
         this.list = list;
         this.notifyDataSetChanged();
     }
+
     @Override
     public int getCount() {
         return list.size();
     }
+
     @Override
     public Object getItem(int position) {
         return null;
     }
+
     @Override
     public long getItemId(int position) {
         return 0;
     }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_trip_gallery, position);
