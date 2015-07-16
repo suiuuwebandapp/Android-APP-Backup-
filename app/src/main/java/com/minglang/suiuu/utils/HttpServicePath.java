@@ -1,10 +1,5 @@
 ﻿package com.minglang.suiuu.utils;
 
-/**
- * 存放接口URL
- * <p/>
- * Created by Administrator on 2015/4/24.
- */
 public class HttpServicePath {
 
     /**
