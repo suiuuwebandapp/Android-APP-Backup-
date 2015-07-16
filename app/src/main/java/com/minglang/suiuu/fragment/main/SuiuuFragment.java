@@ -71,11 +71,9 @@ public class SuiuuFragment extends BaseFragment
 
         final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Light_NoTitleBar);
         inflater.cloneInContext(contextThemeWrapper);
-
         View rootView = inflater.inflate(R.layout.fragment_route, null);
         initView(rootView);
         loadDate(null, null, null, null, null, page);
-
         viewAction();
         return rootView;
     }

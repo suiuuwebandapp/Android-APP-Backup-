@@ -97,8 +97,6 @@ public class HttpServicePath {
      * 修改圈子文章
      */
     public static String updateLoop = RootPath + "/circle/up-date-article";
-
-
     /**
      * 获取收藏的圈子
      * <p/>

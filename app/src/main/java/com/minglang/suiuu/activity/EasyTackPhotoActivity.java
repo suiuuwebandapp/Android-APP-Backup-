@@ -5,15 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,12 +28,10 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.EasyTackPhotoAdapter;
-import com.minglang.suiuu.adapter.MyListAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.BaiduMapActivity;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.LoopArticleData;
-import com.minglang.suiuu.entity.LoopBase;
 import com.minglang.suiuu.entity.LoopBaseData;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.CompressImageUtil;
@@ -66,7 +60,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
 
     private static OSSService ossService = OSSServiceProvider.getService();
     private static OSSBucket bucket = ossService.getOssBucket("suiuu");
-    //    private ImageView iv_cancel;
     /**
      * 取消按钮
      */
@@ -84,19 +77,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
      * 保存照片描述的List集合
      */
     private List<String> picDescriptionList;
-    private PopupWindow popupWindow;
-    /**
-     * PopupWindow中的ListView
-     */
-    private ListView listView;
-    /**
-     * 选择主题
-     */
-    private TextView tv_theme_choice;
-    /**
-     * 选择地区
-     */
-    private TextView tv_area_choice;
     /**
      * 标题描写
      */
@@ -172,8 +152,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
 //        iv_cancel.setVisibility(View.GONE);
         tv_cancel.setVisibility(View.VISIBLE);
 
-        initPopupWindow();
-
         ViewAction();
     }
 
@@ -182,23 +160,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         tv_top_right.setOnClickListener(this);
         iv_top_back.setOnClickListener(this);
         tv_show_your_location.setOnClickListener(this);
-        tv_theme_choice.setOnClickListener(this);
-        tv_area_choice.setOnClickListener(this);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (themeOrArea == 1) {
-                    tv_theme_choice.setText(list.get(position).getcName());
-                    themeCid = list.get(position).getcId();
-                } else {
-                    tv_area_choice.setText(list.get(position).getcName());
-                    areaCid = list.get(position).getcId();
-
-                }
-                popupWindow.dismiss();
-            }
-        });
     }
 
     private void initView() {
@@ -218,8 +180,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         tv_cancel = (TextView) findViewById(R.id.tv_top_cancel);
         lv_picture_description = (ListView) findViewById(R.id.lv_picture_description);
         tv_top_right = (TextView) findViewById(R.id.tv_top_right);
-        tv_theme_choice = (TextView) findViewById(R.id.tv_theme_choice);
-        tv_area_choice = (TextView) findViewById(R.id.tv_area_choice);
         search_question = (EditText) findViewById(R.id.search_question);
         tv_show_your_location = (TextView) findViewById(R.id.tv_show_your_location);
         sll = (ScrollView) findViewById(R.id.sll);
@@ -234,8 +194,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
     }
 
     private void changeArticleFullData() {
-        tv_theme_choice.setVisibility(View.GONE);
-        tv_area_choice.setVisibility(View.GONE);
         search_question.setText(articleDetail.getaTitle());
         tv_show_your_location.setText(articleDetail.getaAddr());
         changePicList = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>() {
@@ -285,104 +243,12 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             } else {
                 loadDate();
             }
-        } else if (mId == R.id.tv_theme_choice) {
-            loadThemeDate();
-        } else if (mId == R.id.tv_area_choice) {
-            loadAreaDate();
-        } else if (mId == R.id.tv_show_your_location) {
+        }  else if (mId == R.id.tv_show_your_location) {
             startActivityForResult(new Intent(EasyTackPhotoActivity.this, BaiduMapActivity.class), REQUEST_CODE_MAP);
         } else if (mId == R.id.iv_top_back) {
             finish();
         }
     }
-
-    //访问主题的数据
-    public void loadThemeDate() {
-        String str = SuiuuInfo.ReadVerification(this);
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, str);
-        params.addBodyParameter("type", "1");
-        SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.LoopDataPath, new ThemeRequestCallback());
-        suHttpRequest.setParams(params);
-        suHttpRequest.requestNetworkData();
-    }
-
-    /**
-     * 主题请求回调接口
-     */
-    class ThemeRequestCallback extends RequestCallBack<String> {
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            LoopBase loopBase;
-            loopBase = JsonUtils.getInstance().fromJSON(LoopBase.class, str);
-            if (loopBase != null) {
-                if (Integer.parseInt(loopBase.getStatus()) == 1) {
-                    list = loopBase.getData().getData();
-                    for (LoopBaseData date : list) {
-                        DeBugLog.i(TAG, date.toString());
-                    }
-                    listView.setAdapter(new MyListAdapter(EasyTackPhotoActivity.this, list));
-                    themeOrArea = 1;
-
-                    popupWindow.showAsDropDown(tv_theme_choice, 10, 10);
-                } else {
-                    Toast.makeText(EasyTackPhotoActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(HttpException error, String msg) {
-            DeBugLog.e(TAG, "error:" + error.getMessage());
-            DeBugLog.e(TAG, "msg:" + msg);
-            Toast.makeText(EasyTackPhotoActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void loadAreaDate() {
-        String str = SuiuuInfo.ReadVerification(this);
-
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, str);
-        params.addBodyParameter("type", "2");
-        params.addBodyParameter("showAll", "true");
-
-        SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.LoopDataPath, new AreaRequestCallback());
-        suHttpRequest.setParams(params);
-        suHttpRequest.requestNetworkData();
-    }
-
-    /**
-     * 地区回调接口
-     */
-    class AreaRequestCallback extends RequestCallBack<String> {
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            LoopBase loopBase = JsonUtils.getInstance().fromJSON(LoopBase.class, str);
-            if (loopBase != null) {
-                if (Integer.parseInt(loopBase.getStatus()) == 1) {
-                    list = loopBase.getData().getData();
-
-                    listView.setAdapter(new MyListAdapter(EasyTackPhotoActivity.this, list));
-                    themeOrArea = 2;
-                    popupWindow.showAsDropDown(tv_area_choice, 0, 10);
-                } else {
-                    Toast.makeText(EasyTackPhotoActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(HttpException error, String msg) {
-            Toast.makeText(EasyTackPhotoActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void loadDate() {
         ListView list = (ListView) findViewById(R.id.lv_picture_description);//获得listview
         for (int i = 0; i < list.getChildCount() - 1; i++) {
@@ -391,15 +257,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
             picDescriptionList.add(et.getText().toString());
         }
-        if (TextUtils.isEmpty(search_question.getText().toString().trim())) {
-            Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
-            return;
-        }
 
-        if ("".equals(tv_theme_choice.getText().toString().trim()) && "".equals(tv_area_choice.getText().toString().trim())) {
-            Toast.makeText(this, R.string.theme_or_area_is_empty, Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         //访问网络相关
         dialog.showDialog();
@@ -469,23 +327,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         suHttpRequest.requestNetworkData();
     }
 
-    //初始化popupWindow
-    public void initPopupWindow() {
-        dialog = new TextProgressDialog(this);
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.pop_select_list, null);
-        listView = (ListView) view.findViewById(R.id.pictureSelectList);
-//        listView.setBackgroundResource(R.drawable.listview_background);
-        //自适配长、框设置
-        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.listview_background));
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.setAnimationStyle(android.R.style.Animation_Dialog);
-        popupWindow.update();
-        popupWindow.setTouchable(true);
-        popupWindow.setFocusable(true);
-    }
+
 
     private void updateDate(final String path) {
         new Thread(new Runnable() {
