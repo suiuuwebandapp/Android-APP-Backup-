@@ -14,7 +14,7 @@ public class HttpServicePath {
      * <p/>
      * 192.168.1.101
      */
-    public static String RootPath = "http://192.168.1.102";
+    public static String RootPath = "http://192.168.1.173";
 
     public static String SharePath = "/circle/web-info?infoId=";
 
@@ -98,8 +98,6 @@ public class HttpServicePath {
      * 修改圈子文章
      */
     public static String updateLoop = RootPath + "/circle/up-date-article";
-
-
     /**
      * 获取收藏的圈子
      * <p/>
