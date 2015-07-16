@@ -101,7 +101,7 @@ public class LinearLayoutForListView extends LinearLayout {
          * @param obj      点击的 view 所绑定的对象
          * @param position 点击位置的 index
          */
-        public void onItemClicked(View v, Object obj, int position);
+        void onItemClicked(View v, Object obj, int position);
     }
 
 }

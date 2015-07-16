@@ -1,6 +1,5 @@
 package com.minglang.suiuu.entity;
 
-
 public class TripGallery {
     private String headUrl;
     private String locationDistance;

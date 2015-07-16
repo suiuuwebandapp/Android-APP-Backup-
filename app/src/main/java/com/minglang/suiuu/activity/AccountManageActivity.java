@@ -7,20 +7,25 @@ import android.text.format.DateUtils;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
+import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * 账户管理页面
+ */
 public class AccountManageActivity extends BaseAppCompatActivity {
+
     @Bind(R.id.account_balance_list_view)
     PullToRefreshListView pullToRefreshListView;
 
     @Bind(R.id.account_balance_toolbar)
     Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

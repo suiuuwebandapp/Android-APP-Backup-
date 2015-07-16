@@ -8,10 +8,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
+import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView;
 import com.minglang.suiuu.utils.DeBugLog;
 
 import butterknife.Bind;

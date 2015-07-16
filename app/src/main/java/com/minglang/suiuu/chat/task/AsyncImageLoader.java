@@ -1,12 +1,12 @@
 package com.minglang.suiuu.chat.task;
 
-import java.lang.ref.SoftReference;
-import java.util.HashMap;
-
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.os.Handler;
 import android.provider.MediaStore.Video.Thumbnails;
+
+import java.lang.ref.SoftReference;
+import java.util.HashMap;
 
 public class AsyncImageLoader {
 
@@ -18,9 +18,9 @@ public class AsyncImageLoader {
 	final Handler handler = new Handler();
 
 	public interface OnImageLoadListener {
-		public void onImageLoad(Integer t, Bitmap bitmap);
+		void onImageLoad(Integer t, Bitmap bitmap);
 
-		public void onError(Integer t);
+		void onError(Integer t);
 
 	}
 
@@ -110,7 +110,7 @@ public class AsyncImageLoader {
 		try {
 			final Bitmap b = loadImageFromFilePath(mImageUrl);
 			if (b != null) {
-				imageCache.put(mImageUrl, new SoftReference<Bitmap>(b));
+				imageCache.put(mImageUrl, new SoftReference<>(b));
 			}
 			handler.post(new Runnable() {
 
@@ -138,7 +138,7 @@ public class AsyncImageLoader {
 	private HashMap<String, SoftReference<Bitmap>> imageCache;
 
 	public AsyncImageLoader() {
-		imageCache = new HashMap<String, SoftReference<Bitmap>>();
+		imageCache = new HashMap<>();
 	}
 
 	public static Bitmap loadImageFromFilePath(String filePath) {

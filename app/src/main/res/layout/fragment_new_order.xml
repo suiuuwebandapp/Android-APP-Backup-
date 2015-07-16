@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.minglang.suiuu.fragment.order.NewOrderFragment">
 
-    <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView
+    <com.minglang.pulltorefreshlibrary.PullToRefreshListView
         android:id="@+id/new_order_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

@@ -96,7 +96,7 @@ public class LoadVideoImageTask extends AsyncTask<Object, Void, Bitmap> {
 						@Override
 						protected void onPostExecute(Void result) {
 							adapter.notifyDataSetChanged();
-						};
+						}
 					}.execute();
 				}
 			}

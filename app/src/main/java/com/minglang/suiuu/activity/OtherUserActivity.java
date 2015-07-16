@@ -22,14 +22,12 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
+import com.minglang.pulltorefreshlibrary.PullToRefreshGridView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.OtherUserArticleAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.ChatActivity;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase.Mode;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshBase.OnRefreshListener2;
-import com.minglang.suiuu.customview.pulltorefresh.PullToRefreshGridView;
 import com.minglang.suiuu.dbhelper.UserDbHelper;
 import com.minglang.suiuu.entity.OtherUser;
 import com.minglang.suiuu.entity.OtherUserDataArticle;
@@ -174,7 +172,7 @@ public class OtherUserActivity extends BaseActivity {
         attention.setOnClickListener(otherUserClick);
         conversation.setOnClickListener(otherUserClick);
 
-        otherUserLoopGridView.setOnRefreshListener(new OnRefreshListener2<GridView>() {
+        otherUserLoopGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
 
@@ -225,7 +223,7 @@ public class OtherUserActivity extends BaseActivity {
         conversation = (TextView) findViewById(R.id.otherUserConversation);
 
         otherUserLoopGridView = (PullToRefreshGridView) findViewById(R.id.otherUserLoop);
-        otherUserLoopGridView.setMode(Mode.PULL_FROM_END);
+        otherUserLoopGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
 
         otherUserName = (TextView) findViewById(R.id.otherUserName);
         otherUserLocation = (TextView) findViewById(R.id.otherUserLocation);

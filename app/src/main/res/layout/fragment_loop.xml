@@ -76,7 +76,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="5px"
+        android:layout_height="@dimen/layout_2dp"
         android:background="@color/slider_line_color"
         android:id="@+id/view2"
         android:layout_below="@+id/sliderView"/>

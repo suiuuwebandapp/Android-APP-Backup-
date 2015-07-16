@@ -21,6 +21,8 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="AppNewBaseTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
+
     <style name="AppReleaseTheme" parent="AppNewBaseTheme">
         <item name="colorPrimary">@color/backgroundColor</item>
     </style>
@@ -34,7 +36,11 @@
         <item name="colorPrimary">@color/mainColor</item>
     </style>
 
-    <style name="AppNewBaseTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
+    <style name="BaseLayoutTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppBarLayoutTheme" parent="BaseLayoutTheme">
+        <item name="colorPrimary">@color/mainColor</item>
+    </style>
 
     <style name="anim_popup_dir">
         <item name="android:windowEnterAnimation">@anim/slide_in</item>

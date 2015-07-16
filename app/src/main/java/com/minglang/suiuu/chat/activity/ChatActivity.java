@@ -31,6 +31,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
@@ -185,13 +186,14 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	private Button btnMore;
 	public String playMsgId;
 
-	private Handler micImageHandler = new Handler() {
+	private Handler micImageHandler = new Handler(new Handler.Callback() {
 		@Override
-		public void handleMessage(android.os.Message msg) {
+		public boolean handleMessage(Message msg) {
 			// 切换msg切换图片
 			micImage.setImageDrawable(micImages[msg.what]);
+			return false;
 		}
-	};
+	});
 	private EMGroup group;
 
 	@Override
@@ -243,7 +245,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 		// 表情list
 		reslist = getExpressionRes(35);
 		// 初始化表情viewpager
-		List<View> views = new ArrayList<View>();
+		List<View> views = new ArrayList<>();
 		View gv1 = getGridChildView(1);
 		View gv2 = getGridChildView(2);
 		views.add(gv1);
@@ -1199,7 +1201,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	private View getGridChildView(int i) {
 		View view = View.inflate(this, R.layout.expression_gridview, null);
 		ExpandGridView gv = (ExpandGridView) view.findViewById(R.id.grid_view);
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		if (i == 1) {
 			List<String> list1 = reslist.subList(0, 20);
 			list.addAll(list1);
@@ -1255,7 +1257,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener {
 	}
 
 	public List<String> getExpressionRes(int getSum) {
-		List<String> reslist = new ArrayList<String>();
+		List<String> reslist = new ArrayList<>();
 		for (int x = 1; x <= getSum; x++) {
 			String filename = "ee_" + x;
 

@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToPadding="false"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -11,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_250dp"
         android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/AppBarLayoutTheme">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/personal_center_collapsing_toolbar_layout"
@@ -28,7 +27,6 @@
                 android:contentDescription="@string/app_name"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                android:layout_above="@+id/personal_center_toolbar"
                 android:src="@drawable/default_background_image"
                 app:layout_collapseMode="parallax"/>
 
@@ -36,9 +34,9 @@
                 android:id="@+id/personal_center_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/layout_50dp"
-                android:background="@color/mainColor"
+                android:background="@color/transparent"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppCustomTheme"/>
+                app:popupTheme="@style/Theme.AppCompat.Light"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -63,5 +61,7 @@
             android:id="@+id/personal_center_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
     </LinearLayout>
+
 </android.support.design.widget.CoordinatorLayout>

@@ -399,13 +399,13 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 	 * @author Administrator
 	 */
 	public interface IReflashListener{
-		public void onReflash();
+		void onReflash();
 	}
 	public interface ILoadMoreDataListener{
-		public void onLoadMoreData();
+		void onLoadMoreData();
 	}
 	public interface IScrollListener{
-		public void onScroll();
-		public void onScrollStateChanged(int state);
+		void onScroll();
+		void onScrollStateChanged(int state);
 	}
 }

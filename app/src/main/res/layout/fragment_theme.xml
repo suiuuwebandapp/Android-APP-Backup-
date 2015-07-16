@@ -6,7 +6,7 @@
     android:padding="5dp"
     tools:context="com.minglang.suiuu.fragment.loop.ThemeFragment">
 
-    <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshGridView
+    <com.minglang.pulltorefreshlibrary.PullToRefreshGridView
         android:id="@+id/themeGridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

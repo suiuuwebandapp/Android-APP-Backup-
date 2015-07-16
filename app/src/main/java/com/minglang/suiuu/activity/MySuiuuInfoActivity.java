@@ -39,7 +39,6 @@ public class MySuiuuInfoActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_my_suiuu_info);
 
         ButterKnife.bind(this);
-
         initView();
         ViewAction();
     }

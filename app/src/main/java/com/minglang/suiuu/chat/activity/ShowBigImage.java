@@ -166,7 +166,7 @@ public class ShowBigImage extends BaseActivity {
             }
         } else if (remotepath != null) { //去服务器下载图片
             System.err.println("download remote image");
-            Map<String, String> maps = new HashMap<String, String>();
+            Map<String, String> maps = new HashMap<>();
             if (!TextUtils.isEmpty(secret)) {
                 maps.put("share-secret", secret);
             }

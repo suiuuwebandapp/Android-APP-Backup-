@@ -6,7 +6,7 @@
     tools:context="com.minglang.suiuu.fragment.main.TravelFragment">
 
 
-    <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView
+    <com.minglang.pulltorefreshlibrary.PullToRefreshListView
         android:id="@+id/travelListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

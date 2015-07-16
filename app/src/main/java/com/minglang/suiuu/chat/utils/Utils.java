@@ -17,7 +17,7 @@ import java.util.List;
 public class Utils {
 
 	private Utils() {
-	};
+	}
 
 	@SuppressLint("NewApi")
 	public static void enableStrictMode() {

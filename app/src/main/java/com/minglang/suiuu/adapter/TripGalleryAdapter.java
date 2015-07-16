@@ -15,30 +15,49 @@ import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.List;
 
+<<<<<<< HEAD
 
+=======
+/**
+ * 项目名称：Android-APP-Backup-
+ * 类描述：
+ * 创建人：Administrator
+ * 创建时间：2015/7/15 11:29
+ * 修改人：Administrator
+ * 修改时间：2015/7/15 11:29
+ * 修改备注：
+ */
+>>>>>>> origin/master
 public class TripGalleryAdapter extends BaseAdapter {
+
     private Context context;
     private List<TripGallery> list;
+
     public TripGalleryAdapter(Context context, List<TripGallery> list) {
         this.context = context;
         this.list = list;
     }
+
     public void onDateChange(List<TripGallery> list) {
         this.list = list;
         this.notifyDataSetChanged();
     }
+
     @Override
     public int getCount() {
         return list.size();
     }
+
     @Override
     public Object getItem(int position) {
         return null;
     }
+
     @Override
     public long getItemId(int position) {
         return 0;
     }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_trip_gallery, position);

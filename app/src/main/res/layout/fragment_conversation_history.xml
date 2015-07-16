@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/chat_all_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-     android:background="@color/common_bg"
-    android:orientation="vertical"
-    android:id="@+id/chat_all_root">
-      <ListView
-        android:cacheColorHint="#00000000"
+    android:background="@color/common_bg"
+    android:orientation="vertical">
+
+    <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
-        android:divider="@null"
-        />
+        android:cacheColorHint="#00000000"
+        android:divider="@null"/>
+
     <TextView
         android:id="@+id/tv_nochat_history"
-        android:textSize="@dimen/layout_20sp"
-        android:textColor="@color/text_select_true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/noChatHistory"
         android:gravity="center"
-        android:visibility="gone"
-        />
+        android:text="@string/noChatHistory"
+        android:textColor="@color/text_select_true"
+        android:textSize="@dimen/layout_20sp"
+        android:visibility="gone"/>
+
 </LinearLayout>

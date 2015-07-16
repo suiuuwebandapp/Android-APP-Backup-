@@ -7,7 +7,7 @@
     android:padding="@dimen/layout_5dp"
     tools:context="com.minglang.suiuu.fragment.collection.CollectionLoopFragment">
 
-    <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshGridView
+    <com.minglang.pulltorefreshlibrary.PullToRefreshGridView
         android:id="@+id/collection_loop_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

@@ -1,10 +1,10 @@
 /**
  * Copyright (C) 2013-2014 EaseMob Technologies. All rights reserved.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Message;
 import android.text.Spannable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -129,11 +130,10 @@ public class MessageAdapter extends BaseAdapter {
         this.conversation = EMChatManager.getInstance().getConversation(username);
     }
 
-    Handler handler = new Handler() {
-
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(android.os.Message message) {
-            switch (message.what) {
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
                 case HANDLER_MESSAGE_REFRESH_LIST:
                     // UI线程不能直接使用conversation.getAllMessages()
                     // 否则在UI刷新过程中，如果收到新的消息，会导致并发问题
@@ -150,8 +150,9 @@ public class MessageAdapter extends BaseAdapter {
                     break;
                 default:
             }
+            return false;
         }
-    };
+    });
 
 
     /**
@@ -1295,7 +1296,7 @@ public class MessageAdapter extends BaseAdapter {
                     if (file.exists()) {
                         Uri uri = Uri.fromFile(file);
                         intent.putExtra("uri", uri);
-                        intent.putExtra("isHuanXin",true);
+                        intent.putExtra("isHuanXin", true);
                         System.err.println("here need to check why download everytime");
                     } else {
                         // The local full size pic does not exist yet.

@@ -22,16 +22,15 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.adapter.ContactAdapter;
 import com.minglang.suiuu.chat.bean.User;
 import com.minglang.suiuu.chat.chat.Constant;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.widgt.Sidebar;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -82,9 +81,7 @@ public class PickContactNoCheckboxActivity extends BaseActivity {
         Map<String,User> users;
 		contactList.clear();
 		users = SuiuuApplication.getInstance().getContactList();
-		Iterator<Entry<String, User>> iterator = users.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Entry<String, User> entry = iterator.next();
+		for (Entry<String, User> entry : users.entrySet()) {
 			if (!entry.getKey().equals(Constant.NEW_FRIENDS_USERNAME) && !entry.getKey().equals(Constant.GROUP_USERNAME))
 				contactList.add(entry.getValue());
 		}

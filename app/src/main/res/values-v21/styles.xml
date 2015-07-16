@@ -5,11 +5,6 @@
         <!-- API 21 theme customizations can go here. -->
     </style>
 
-    <style name="FullBleedTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
-
     <style name="AppCustomTheme" parent="AppNewBaseTheme">
         <item name="android:colorPrimaryDark">@color/topColor</item>
         <item name="android:colorPrimary">@color/mainColor</item>

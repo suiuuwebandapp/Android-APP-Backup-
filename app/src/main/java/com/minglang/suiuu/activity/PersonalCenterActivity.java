@@ -16,6 +16,7 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.center.PersonalProblemFragment;
 import com.minglang.suiuu.fragment.center.PersonalSuiuuFragment;
 import com.minglang.suiuu.fragment.center.PersonalTravelFragment;
+import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,9 @@ import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
+/**
+ * 个人中心页面
+ */
 public class PersonalCenterActivity extends BaseAppCompatActivity {
 
     @BindString(R.string.mainTitle1)
@@ -40,9 +44,6 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.personal_center_toolbar)
     Toolbar toolbar;
-
-//    @Bind(R.id.personal_center_main_image)
-//    ImageView mainImageView;
 
     @Bind(R.id.personal_center_tab_layout)
     TabLayout tabLayout;
@@ -64,6 +65,10 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
     }
 
     private void initView() {
+
+        userSign = SuiuuInfo.ReadUserSign(this);
+        verification = SuiuuInfo.ReadVerification(this);
+
         setSupportActionBar(toolbar);
 
         final ActionBar actionBar = getSupportActionBar();
@@ -113,6 +118,10 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
         switch (id) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.personal_center_setting:
+                break;
+            case R.id.personal_center_dialogue:
                 break;
         }
         return super.onOptionsItemSelected(item);

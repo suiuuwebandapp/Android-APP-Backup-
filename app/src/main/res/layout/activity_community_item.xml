@@ -24,10 +24,13 @@
             android:layout_alignTop="@+id/view"
             android:orientation="vertical">
 
+            <!--suppress AndroidElementNotAllowed -->
             <include layout="@layout/item_community_layout_1"/>
 
+            <!--suppress AndroidElementNotAllowed -->
             <include layout="@layout/item_community_layout_2"/>
 
+            <!--suppress AndroidElementNotAllowed -->
             <include layout="@layout/item_community_layout_3"/>
 
             <com.minglang.suiuu.customview.NoScrollBarListView

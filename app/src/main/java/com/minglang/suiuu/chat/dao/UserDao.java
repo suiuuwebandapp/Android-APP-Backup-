@@ -67,7 +67,7 @@ public class UserDao {
 	 */
 	public Map<String, User> getContactList() {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		Map<String, User> users = new HashMap<String, User>();
+		Map<String, User> users = new HashMap<>();
 		if (db.isOpen()) {
 			Cursor cursor = db.rawQuery("select * from " + TABLE_NAME /* + " desc" */, null);
 			while (cursor.moveToNext()) {

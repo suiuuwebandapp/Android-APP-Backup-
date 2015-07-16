@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.widget.ImageView;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.NewRemindAdapter;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.remind.NewAtFragment;
 import com.minglang.suiuu.fragment.remind.NewAttentionFragment;
 import com.minglang.suiuu.fragment.remind.NewCommentFragment;
@@ -19,24 +21,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindColor;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
  * 新提醒页面
  */
 
-public class NewRemindActivity extends BaseActivity {
+public class NewRemindActivity extends BaseAppCompatActivity {
 
-    /**
-     * 返回键
-     */
-    @Bind(R.id.newRemindBack)
-    ImageView newRemindBack;
+    @BindString(R.string.newAt)
+    String str1;
+
+    @BindString(R.string.newComment)
+    String str2;
+
+    @BindString(R.string.newReply)
+    String str3;
+
+    @BindString(R.string.newAttention)
+    String str4;
+
+    @BindColor(R.color.tr_black)
+    int normalColor;
+
+    @BindColor(R.color.mainColor)
+    int selectedColor;
+
+    @Bind(R.id.new_remind_toolbar)
+    Toolbar toolbar;
 
     @Bind(R.id.newRemindPager)
     ViewPager newRemindPager;
 
-    @Bind(R.id.newRemindTabLayout)
+    @Bind(R.id.new_remind_tab_layout)
     TabLayout tabLayout;
 
     /**
@@ -65,21 +84,22 @@ public class NewRemindActivity extends BaseActivity {
         setContentView(R.layout.activity_new_remind);
 
         ButterKnife.bind(this);
-
         initView();
-        ViewAction();
     }
 
     /**
      * 初始化方法
      */
     private void initView() {
-        newRemindPager.setOffscreenPageLimit(4);
 
-        String str1 = getResources().getString(R.string.newAt);
-        String str2 = getResources().getString(R.string.newComment);
-        String str3 = getResources().getString(R.string.newReply);
-        String str4 = getResources().getString(R.string.newAttention);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        newRemindPager.setOffscreenPageLimit(4);
 
         List<String> titleList = new ArrayList<>();
         titleList.add(str1);
@@ -91,8 +111,7 @@ public class NewRemindActivity extends BaseActivity {
         tabLayout.addTab(tabLayout.newTab().setText(str2), false);
         tabLayout.addTab(tabLayout.newTab().setText(str3), false);
         tabLayout.addTab(tabLayout.newTab().setText(str4), false);
-        tabLayout.setTabTextColors(getResources().getColor(R.color.tr_black),
-                getResources().getColor(R.color.text_select_true));
+        tabLayout.setTabTextColors(normalColor, selectedColor);
 
         CreateFragment();
 
@@ -102,23 +121,11 @@ public class NewRemindActivity extends BaseActivity {
         fragmentList.add(newReplyFragment);
         fragmentList.add(newAttentionFragment);
 
-        NewRemindAdapter newRemindAdapter = new NewRemindAdapter(fm, fragmentList, titleList);
+        NewRemindAdapter newRemindAdapter = new NewRemindAdapter(getSupportFragmentManager(), fragmentList, titleList);
         newRemindPager.setAdapter(newRemindAdapter);
 
         tabLayout.setupWithViewPager(newRemindPager);
         tabLayout.setTabsFromPagerAdapter(newRemindAdapter);
-    }
-
-    /**
-     * 控件动作
-     */
-    private void ViewAction() {
-        newRemindBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     private void CreateFragment() {
@@ -126,6 +133,24 @@ public class NewRemindActivity extends BaseActivity {
         newCommentFragment = NewCommentFragment.newInstance(userSign, verification);
         newReplyFragment = NewReplyFragment.newInstance(userSign, verification);
         newAttentionFragment = NewAttentionFragment.newInstance(userSign, verification);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_new_remind, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

@@ -1,9 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.minglang.suiuu.fragment.trace.TracePostFragment">
-
+    android:layout_height="match_parent">
 
     <GridLayout
         android:id="@+id/TracePostGrid"
@@ -11,5 +8,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:numColumns="auto_fit"
-        android:orientation="vertical"></GridLayout>
+        android:orientation="vertical"/>
+
 </FrameLayout>

@@ -1333,9 +1333,9 @@ public class RangeBar extends View {
      * listener will only be called when either thumb's index has changed - not
      * for every movement of the thumb.
      */
-    public static interface OnRangeBarChangeListener {
+    public interface OnRangeBarChangeListener {
 
-        public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex,
+        void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex,
                                           int rightPinIndex, String leftPinValue, String rightPinValue);
     }
 
