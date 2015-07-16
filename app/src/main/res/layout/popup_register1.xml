@@ -7,7 +7,7 @@
 
     <Button
         android:id="@+id/popup_register1_button"
-        style="@style/register_button_style"
+        style="@style/registerButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

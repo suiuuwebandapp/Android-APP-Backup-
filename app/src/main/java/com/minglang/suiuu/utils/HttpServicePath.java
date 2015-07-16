@@ -12,9 +12,8 @@ public class HttpServicePath {
     /**
      * 服务器地址
      * <p/>
-     * 192.168.1.101
      */
-    public static String RootPath = "http://192.168.1.102";
+    public static String RootPath = "http://192.168.1.173";
 
     public static String SharePath = "/circle/web-info?infoId=";
 
@@ -134,15 +133,16 @@ public class HttpServicePath {
      * 请求参数:需要收藏文章的attentionId
      */
     public static String CollectionArticleCancelPath = RootPath + "/attention/delete-attention";
-    /**
-     * 首页动态请求地址
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数：无
-     */
-    public static String MainDynamicPath = RootPath + "/app-main/get-index-list";
 
+    //    /**
+    //     * 首页动态请求地址
+    //     * <p/>
+    //     * 请求方式:POST
+    //     * <p/>
+    //     * 请求参数：无
+    //     */
+
+//    public static String MainDynamicPath = RootPath + "/app-main/get-index-list";
     /**
      * 得到详细关注动态数据
      * <p/>
@@ -272,15 +272,15 @@ public class HttpServicePath {
      */
     public static String getCommentListByTripId = RootPath + "/app-travel/get-comment-list";
 
-    /**
-     * 随游中添加收藏
-     */
-    public static String travelAddCollection = RootPath + "/attention/add-collection-travel";
+    //    /**
+    //     * 随游中添加收藏
+    //     */
+    //    public static String travelAddCollection = RootPath + "/attention/add-collection-travel";
 
-    /**
-     * 随游中添加点赞
-     */
-    public static String travelAddPraise = RootPath + "/attention/add-praise-travel";
+    //    /**
+    //     * 随游中添加点赞
+    //     */
+    //    public static String travelAddPraise = RootPath + "/attention/add-praise-travel";
 
     /**
      * 圈子中添加点赞
@@ -364,5 +364,10 @@ public class HttpServicePath {
     public static String agreeDataPath = RootPath + "/app-travel/agree-apply";
 
     public static String getSuiuuUserInfoPath = RootPath + "/app-travel/get-publisher-info";
+
+    /**
+     * 得到问答社区页面上问题列表的数据
+     */
+    public static String getMainProblemListPath = RootPath + "/app-qa/get-qa-list";
 
 }

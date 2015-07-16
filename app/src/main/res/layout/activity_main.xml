@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToPadding="false"
     android:fitsSystemWindows="true">
 
     <!--主要显示区域-->
@@ -15,7 +14,7 @@
         android:layout_alignParentTop="true">
 
         <LinearLayout
-            android:id="@+id/ll_title"
+            android:id="@+id/topTitleLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -37,65 +36,14 @@
             android:id="@+id/showLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/tabSelect"
+            android:layout_above="@+id/tabSelectCardLayout"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/ll_title"/>
+            android:layout_below="@+id/topTitleLayout"/>
 
-        <LinearLayout
-            android:id="@+id/tabSelect"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/tab1"
-                style="@style/tabLayout">
-
-                <ImageView
-                    android:id="@+id/img1"
-                    style="@style/titleImage"
-                    android:contentDescription="@string/homePage"
-                    android:src="@drawable/icon_main_1_green"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/tab2"
-                style="@style/tabLayout">
-
-                <ImageView
-                    android:id="@+id/img2"
-                    style="@style/titleImage"
-                    android:src="@drawable/icon_main_2_white"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/tab3"
-                style="@style/tabLayout">
-
-                <ImageView
-                    android:id="@+id/img3"
-                    style="@style/titleImage"
-                    android:src="@drawable/icon_main_3_white"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/tab4"
-                style="@style/tabLayout">
-
-                <ImageView
-                    android:id="@+id/img4"
-                    style="@style/titleImage"
-                    android:src="@drawable/icon_main_4_white"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
+        <include
+            android:id="@+id/tabSelectCardLayout"
+            layout="@layout/layout_main_bottom_bar"/>
 
     </RelativeLayout>
 
@@ -114,17 +62,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"/>
 
-        <FrameLayout
+        <ListView
+            android:id="@+id/sideListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/include"
-            android:layout_centerHorizontal="true">
-
-            <ListView
-                android:id="@+id/sideListView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </FrameLayout>
+            android:layout_below="@+id/include"/>
 
     </RelativeLayout>
 

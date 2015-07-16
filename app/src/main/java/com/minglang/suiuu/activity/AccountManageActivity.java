@@ -13,12 +13,16 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
  * 账户管理页面
  */
 public class AccountManageActivity extends BaseAppCompatActivity {
+
+    @BindString(R.string.AccountManage)
+    String titleText;
 
     @Bind(R.id.account_balance_list_view)
     PullToRefreshListView pullToRefreshListView;
@@ -32,7 +36,6 @@ public class AccountManageActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_account_manage);
 
         ButterKnife.bind(this);
-
         initView();
         ViewAction();
     }
@@ -41,22 +44,19 @@ public class AccountManageActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
-
-        toolbar.setTitle(getResources().getString(R.string.AccountManage));
+        toolbar.setTitle(titleText);
         setSupportActionBar(toolbar);
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.back);
+//            actionBar.setHomeAsUpIndicator(R.drawable.back);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
-
     }
 
     private void ViewAction() {
-
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 
             @Override
@@ -80,7 +80,6 @@ public class AccountManageActivity extends BaseAppCompatActivity {
             }
 
         });
-
     }
 
     @Override

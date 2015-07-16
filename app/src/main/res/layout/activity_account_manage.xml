@@ -27,41 +27,22 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v7.widget.CardView
+        <include
+            layout="@layout/include_account_balance_layout"
+            android:layout_width="@dimen/layout_150dp"
+            android:layout_height="@dimen/layout_150dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/layout_20dp"
+            android:layout_marginTop="@dimen/layout_20dp"/>
+
+        <include
+            android:id="@+id/account_balance_info_title_layout"
+            layout="@layout/include_account_info_list_title_layout"/>
+
+        <com.minglang.pulltorefreshlibrary.PullToRefreshListView
+            android:id="@+id/account_balance_list_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include
-                layout="@layout/include_account_balance_layout"
-                android:layout_width="@dimen/layout_150dp"
-                android:layout_height="@dimen/layout_150dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/layout_20dp"
-                android:layout_marginTop="@dimen/layout_20dp"/>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/layout_1dp"
-            android:layout_marginTop="@dimen/layout_1dp">
-
-            <include layout="@layout/include_account_info_list_title_layout"/>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/layout_5dp">
-
-            <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView
-                android:id="@+id/account_balance_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </android.support.v7.widget.CardView>
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 

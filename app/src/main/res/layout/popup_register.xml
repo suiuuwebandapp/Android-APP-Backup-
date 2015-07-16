@@ -6,7 +6,7 @@
 
     <EditText
         android:id="@+id/registerUserInfo"
-        style="@style/register_edit_style"
+        style="@style/registerEditStyle"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -15,7 +15,7 @@
 
     <EditText
         android:id="@+id/registerPassword1"
-        style="@style/register_edit_style"
+        style="@style/registerEditStyle"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_margin="10dp"
@@ -25,7 +25,7 @@
 
     <Button
         android:id="@+id/registerBtn"
-        style="@style/register_button_style"
+        style="@style/registerButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

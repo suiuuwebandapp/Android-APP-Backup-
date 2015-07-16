@@ -33,7 +33,7 @@
 
     <Button
         android:id="@+id/popupLoginBtn"
-        style="@style/login_button_style"
+        style="@style/loginButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/userPassword"

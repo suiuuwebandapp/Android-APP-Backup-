@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindColor;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -27,8 +29,23 @@ import butterknife.ButterKnife;
  */
 public class MySuiuuInfoActivity extends BaseAppCompatActivity {
 
+    @BindString(R.string.Published)
+    String Published;
+
+    @BindString(R.string.Participate)
+    String Participate;
+
+    @BindColor(R.color.tr_black)
+    int normalColor;
+
+    @BindColor(R.color.mainColor)
+    int selectedColor;
+
     @Bind(R.id.mySuiuuBack)
     ImageView back;
+
+    @Bind(R.id.mySuiuuTabLayout)
+    TabLayout tabLayout;
 
     @Bind(R.id.mySuiuuViewPager)
     ViewPager viewPager;
@@ -48,13 +65,9 @@ public class MySuiuuInfoActivity extends BaseAppCompatActivity {
      */
     private void initView() {
 
-        String Published = "已发布";
-        String Participate = "已参加";
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.mySuiuuTabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(Published), true);
         tabLayout.addTab(tabLayout.newTab().setText(Participate), false);
-        tabLayout.setTabTextColors(getResources().getColor(R.color.tr_black), getResources().getColor(R.color.text_select_true));
+        tabLayout.setTabTextColors(normalColor, selectedColor);
 
         String userSign = SuiuuInfo.ReadUserSign(this);
         String verification = SuiuuInfo.ReadVerification(this);

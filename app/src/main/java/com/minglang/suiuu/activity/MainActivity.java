@@ -242,9 +242,8 @@ public class MainActivity extends BaseActivity {
 
         UmengUpdateAgent.update(this);
         ButterKnife.bind(this);
-
         initView();
-        initRegisterAllBroadcastReceiver();
+        initRegisterReceiver();
         ViewAction();
     }
 
@@ -325,6 +324,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initFragment() {
+        userSign = SuiuuInfo.ReadUserSign(this);
+        verification = SuiuuInfo.ReadVerification(this);
+
         switchViewState(NUMBER1);
 
         tripGalleryFragment = new TripGalleryFragment();
@@ -334,7 +336,7 @@ public class MainActivity extends BaseActivity {
         LoadDefaultFragment();
     }
 
-    private void initRegisterAllBroadcastReceiver() {
+    private void initRegisterReceiver() {
         chatManager = EMChatManager.getInstance();
 
         MobclickAgent.updateOnlineConfig(this);
@@ -345,7 +347,6 @@ public class MainActivity extends BaseActivity {
         }
 
         MobclickAgent.updateOnlineConfig(this);
-
 
         // 注册一个接收消息的BroadcastReceiver
         msgReceiver = new NewMessageReceiver();
@@ -374,6 +375,7 @@ public class MainActivity extends BaseActivity {
 //        EMContactManager.getInstance().setContactListener(new MyContactListener());
         // 注册一个监听连接状态的listener
         chatManager.addConnectionListener(new MyConnectionListener());
+
         // 注册群聊相关的listener
 //		EMGroupManager.getInstance().addGroupChangeListener(new MyGroupChangeListener());
         // 通知sdk，UI 已经初始化完毕，注册了相应的receiver和listener, 可以接受broadcast了
@@ -405,6 +407,7 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
         Main_2_Search.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

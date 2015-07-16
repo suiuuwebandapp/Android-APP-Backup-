@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindColor;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -27,6 +29,24 @@ import butterknife.ButterKnife;
  * 查看我的订单
  */
 public class OrderManageActivity extends BaseAppCompatActivity {
+
+    @BindString(R.string.orderManager)
+    String titleText;
+
+    @BindColor(R.color.white)
+    int titleTextColor;
+
+    @BindString(R.string.NewOrder)
+    String newOrder;
+
+    @BindString(R.string.ConfirmOrder)
+    String confirmOrder;
+
+    @BindColor(R.color.tr_black)
+    int normalColor;
+
+    @BindColor(R.color.mainColor)
+    int selectedColor;
 
     @Bind(R.id.orderManageToolbar)
     Toolbar toolbar;
@@ -52,16 +72,12 @@ public class OrderManageActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
-        toolbar.setTitle(getResources().getString(R.string.OrderManage));
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-
-        String newOrder = "新订单";
-        String confirmOrder = "已接单";
+        toolbar.setTitle(titleText);
+        toolbar.setTitleTextColor(titleTextColor);
 
         tabLayout.addTab(tabLayout.newTab().setText(newOrder), true);
         tabLayout.addTab(tabLayout.newTab().setText(confirmOrder), false);
-        tabLayout.setTabTextColors(getResources().getColor(R.color.tr_black),
-                getResources().getColor(R.color.text_select_true));
+        tabLayout.setTabTextColors(normalColor, selectedColor);
 
         String userSign = SuiuuInfo.ReadUserSign(this);
         String verification = SuiuuInfo.ReadVerification(this);

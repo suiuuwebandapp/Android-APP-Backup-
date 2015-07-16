@@ -2,8 +2,6 @@ package com.minglang.suiuu.fragment.main;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -16,13 +14,24 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.CommunitySortAdapter;
+import com.minglang.suiuu.entity.MainCommunity.MainCommunityData.MainCommunityItemData;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.SuHttpRequest;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * 问答社区页面
@@ -33,8 +42,6 @@ public class CommunityFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private static final int COMPLETE = 1;
-
     private String userSign;
     private String verification;
 
@@ -42,24 +49,20 @@ public class CommunityFragment extends Fragment {
 
     private String[] stringArray;
 
-    private Spinner spinner;
+    private int page = 1;
 
-    private FrameLayout selectLayout;
+    @Bind(R.id.spinner)
+    Spinner spinner;
 
-    private static PullToRefreshListView pullToRefreshListView;
+    @Bind(R.id.selectLayout)
+    FrameLayout selectLayout;
 
-    private static Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case COMPLETE:
-                    pullToRefreshListView.onRefreshComplete();
-                    break;
+    @Bind(R.id.CommunityListView)
+    PullToRefreshListView pullToRefreshListView;
 
-            }
-            return false;
-        }
-    });
+    private CommunitySortAdapter adapter;
+
+    private List<MainCommunityItemData> list = new ArrayList<>();
 
     public static CommunityFragment newInstance(String param1, String param2) {
         CommunityFragment fragment = new CommunityFragment();
@@ -86,27 +89,24 @@ public class CommunityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_community, container, false);
-        initView(rootView);
+        ButterKnife.bind(this, rootView);
+        initView();
         ViewAction();
+        getProblemList(page);
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 
-    private void initView(View rootView) {
-
-        pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.CommunityListView);
+    private void initView() {
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
-
-        spinner = (Spinner) rootView.findViewById(R.id.spinner);
-
-        selectLayout = (FrameLayout) rootView.findViewById(R.id.selectLayout);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
         progressDialog.setCanceledOnTouchOutside(false);
 
         stringArray = getResources().getStringArray(R.array.communitySort);
-        spinner.setAdapter(new CommunitySortAdapter(stringArray, getActivity()));
+        adapter = new CommunitySortAdapter(stringArray, getActivity());
+        spinner.setAdapter(adapter);
     }
 
     private void ViewAction() {
@@ -118,7 +118,7 @@ public class CommunityFragment extends Fragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                handler.sendEmptyMessage(COMPLETE);
+                getProblemList(1);
             }
 
             @Override
@@ -127,7 +127,8 @@ public class CommunityFragment extends Fragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                handler.sendEmptyMessage(COMPLETE);
+                page = page + 1;
+                getProblemList(page);
             }
 
         });
@@ -139,16 +140,17 @@ public class CommunityFragment extends Fragment {
             }
         });
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        adapter.setOnItemClickListener(new CommunitySortAdapter.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), stringArray[position], Toast.LENGTH_SHORT).show();
+            public void onItemClick(View view, int position) {
+                Toast.makeText(getActivity(), "click:" + stringArray[position], Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public void onItemLongClick(View view, int position) {
+                Toast.makeText(getActivity(), "long click:" + stringArray[position], Toast.LENGTH_SHORT).show();
             }
+
         });
 
         selectLayout.setOnClickListener(new View.OnClickListener() {
@@ -160,14 +162,31 @@ public class CommunityFragment extends Fragment {
 
     }
 
+    private void getProblemList(int page) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter(HttpServicePath.key, verification);
+        params.addBodyParameter("number", String.valueOf(20));
+        params.addBodyParameter("page", String.valueOf(page));
+
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.getMainProblemListPath, new CommunityRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
+    }
+
     private void hideDialog() {
 
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
 
-        handler.sendEmptyMessage(COMPLETE);
+        pullToRefreshListView.onRefreshComplete();
+    }
 
+    private void lessPageNumber() {
+        if (page > 1) {
+            page = page - 1;
+        }
     }
 
     private class CommunityRequestCallBack extends RequestCallBack<String> {
@@ -181,17 +200,20 @@ public class CommunityFragment extends Fragment {
 
         @Override
         public void onLoading(long total, long current, boolean isUploading) {
-            DeBugLog.i(TAG, "total:" + total + ",current:" + current + isUploading);
+            DeBugLog.i(TAG, "total:" + total + ",current:" + current + "isUploading:" + Boolean.toString(isUploading));
         }
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
             hideDialog();
+            String str = responseInfo.result;
+            DeBugLog.i(TAG, "返回的数据:" + str);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",error:" + s);
+            lessPageNumber();
             hideDialog();
         }
 

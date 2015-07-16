@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/tabSelect"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/white"
+    android:orientation="horizontal">
+
+    <!--tab1-->
+    <LinearLayout
+        android:id="@+id/tab1"
+        style="@style/tabLayout">
+
+        <ImageView
+            android:id="@+id/img1"
+            style="@style/mainBottomBarImage"
+            android:contentDescription="@string/TripGallery"
+            android:src="@drawable/icon_main_1_green"/>
+
+    </LinearLayout>
+
+    <!--tab2-->
+    <LinearLayout
+        android:id="@+id/tab2"
+        style="@style/tabLayout">
+
+        <ImageView
+            android:id="@+id/img2"
+            style="@style/mainBottomBarImage"
+            android:contentDescription="@string/SuiuuPage"
+            android:src="@drawable/icon_main_2_white"/>
+
+    </LinearLayout>
+
+    <!--tab3-->
+    <LinearLayout
+        android:id="@+id/tab3"
+        style="@style/tabLayout">
+
+        <ImageView
+            android:id="@+id/img3"
+            style="@style/mainBottomBarImage"
+            android:contentDescription="@string/CommunityPage"
+            android:src="@drawable/icon_main_3_white"/>
+
+    </LinearLayout>
+
+    <!--tab4-->
+    <LinearLayout
+        android:id="@+id/tab4"
+        style="@style/tabLayout">
+
+        <ImageView
+            android:id="@+id/img4"
+            style="@style/mainBottomBarImage"
+            android:contentDescription="@string/ChatPage"
+            android:src="@drawable/icon_main_4_white"/>
+
+    </LinearLayout>
+
+</LinearLayout>

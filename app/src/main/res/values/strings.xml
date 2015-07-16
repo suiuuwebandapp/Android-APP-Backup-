@@ -1,7 +1,7 @@
 <resources>
 
     <string name="hello_world" translatable="false">Hello world!</string>
-    <string name="action_settings" translatable="false">Settings</string>
+    <string name="action_settings">Settings</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
@@ -56,7 +56,7 @@
     <string name="newAttention" translatable="false">新关注</string>
     <string name="post" translatable="false">帖子</string>
     <string name="back" translatable="false">返回</string>
-    <string name="confirm" translatable="false">确认</string>
+    <string name="confirm">Confirm</string>
     <string name="AllPicture">All pictures</string>
     <string name="gender" translatable="false">性别</string>
     <string name="location" translatable="false">所在地</string>
@@ -69,11 +69,10 @@
     <string name="attention_other" translatable="false">关注TA</string>
     <string name="TwentyThree" translatable="false">23</string>
     <string name="clickPraise" translatable="false">点赞</string>
-    <string name="comment" translatable="false">评论</string>
 
     <string name="user" translatable="false">用户</string>
 
-    <string name="complete" translatable="false">完成</string>
+    <string name="complete">Complete</string>
     <string name="Singapore_n">aaaaaaaaaaaaaaaaaaa</string>
     <string name="Jeju_Island">Jeju Island</string>
     <string name="editor" translatable="false">修改</string>
@@ -138,10 +137,8 @@
     <string name="woman" translatable="false">女</string>
 
     <string name="country" translatable="false">国家</string>
-    <string name="city" translatable="false">城市</string>
     <string name="local" translatable="false">请选择所在地</string>
     <string name="countryDetails" translatable="false">请选择国家</string>
-    <string name="cityDetails" translatable="false">请选择城市</string>
 
     <string name="next" translatable="false">下一步</string>
     <string name="a" translatable="false">A</string>
@@ -153,7 +150,10 @@
     <string name="openRemember">openSuiuuRemember</string>
     <string name="openShoot">openSuiuuShoot</string>
     <string name="please_enter_search_content" translatable="false">请输入搜索内容</string>
-    <string name="homePage">HomePage</string>
+    <string name="TripGallery" translatable="false">TripGallery</string>
+    <string name="SuiuuPage" translatable="false">SuiuuPage</string>
+    <string name="CommunityPage" translatable="false">CommunityPage</string>
+    <string name="ChatPage" translatable="false">ChatPage</string>
     <string name="china">china</string>
     <string name="chinaCode">+86</string>
     <string name="internationalCodeFailure">The code for international telephone access failed, please click Logo to retry</string>
@@ -199,15 +199,14 @@
     <string name="hintEditSuiuuInfo">Please Input Suiuu Info</string>
 
     <string name="editSuiuuPrice">Edit Suiuu Price</string>
-    <string name="BasicPrice" translatable="false">基本价格 ￥：</string>
-    <string name="AdditionalPrice" translatable="false">附加价格 ￥：</string>
-    <string name="OtherPrice" translatable="false">其他价格 ￥：</string>
+    <string name="BasicPrice">Basic Price ￥：</string>
+    <string name="AdditionalPrice">Additional Price ￥:</string>
     <string name="OrderManage">Order Manage</string>
 
     <string name="AccountManage">Account Management</string>
     <string name="RMB">￥</string>
-    <string name="AccountBalance">Account Balance</string>
-    <string name="ClickWithdrawals">Click Withdrawals</string>
+    <string name="AccountBalance">Balance</string>
+    <string name="ClickWithdrawals">Withdrawals</string>
 
     <string name="Date">Date</string>
     <string name="TransferAccount">Transfer Account</string>
@@ -229,22 +228,20 @@
     <string name="answer_">Answer</string>
     <string name="suiuu">随游</string>
 
-    <string name="inputProblemTitle">输入问题标题吧</string>
-    <string name="inputProblemContent">输入问题内容吧</string>
+    <string name="inputProblemTitle" translatable="false">输入问题标题吧</string>
+    <string name="inputProblemContent" translatable="false">输入问题内容吧</string>
 
-    <string name="answerQuestion">请填写答案</string>
+    <string name="answerQuestion" translatable="false">请填写答案</string>
+    <string name="ProblemHint">Enter your question</string>
+    <string name="SelectDestination">Select Destination</string>
 
-    <string name="ProblemHint">输入你想问的问题吧</string>
+    <string name="tempText" translatable="false">《未踏召唤://鲜血印记》是镰池和马创作，依河和希插画，并由电击文库发售的小说。第1卷于2014年9月10日发售。此作为《魔法禁书目录》作者镰池和马在“镰池和马十周年”网站的十大重大消息中宣布出版的正统派新作</string>
 
-    <string name="SelectDestination">选择目的地</string>
+    <string name="NewOrder">New Order</string>
+    <string name="ConfirmOrder">Confirm Order</string>
 
-    <string name="SelectLocation">选择位置</string>
-
-    <string name="AddTag">添加标签</string>
-
-    <string name="Problem">问题</string>
-
-    <string name="tempText">《未踏召唤://鲜血印记》是镰池和马创作，依河和希插画，并由电击文库发售的小说。第1卷于2014年9月10日发售。此作为《魔法禁书目录》作者镰池和马在“镰池和马十周年”网站的十大重大消息中宣布出版的正统派新作</string>
+    <string name="Published">Published</string>
+    <string name="Participate">Participate</string>
 
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
@@ -280,7 +277,7 @@
     <string name="button_logout">退出登录</string>
     <string name="button_uploadlog">上传运行日志</string>
     <string name="ok">确定</string>
-    <string name="cancel">取消</string>
+    <string name="cancel">Cancel</string>
     <string name="prompt">提示</string>
     <string name="clear_records">清空记录</string>
     <string name="clear_all_records">是否清空所有聊天记录？</string>
@@ -371,7 +368,7 @@
     <string name="Removed_from_the_failure">Move out of failure</string>
     <string name="be_removing" translatable="false">正在移出&#8230;</string>
     <string name="call_duration" translatable="false">通话时长</string>
-    <string name="Refused">已拒绝</string>
+    <string name="Refused">Rejected </string>
     <string name="The_other_party_has_refused_to" translatable="false">对方已拒绝</string>
     <string name="The_other_is_not_online">The other is bot online</string>
     <string name="The_other_is_on_the_phone" translatable="false">对方正在通话中</string>
@@ -545,10 +542,17 @@
     <string name="title_activity_suiuu_user_info" translatable="false">SuiuuUserInfoActivity</string>
     <string name="route">route</string>
     <string name="save">save</string>
-    <string name="title_activity_community_item">CommunityItemActivity</string>
-    <string name="title_activity_questions">QuestionsActivity</string>
-    <string name="title_activity_answer">AnswerActivity</string>
-    <string name="title_activity_community_search">CommunitySearchActivity</string>
-    <string name="title_activity_personal_center">PersonalCenterActivity</string>
+    <string name="title_activity_community_item" translatable="false">CommunityItemActivity</string>
+    <string name="title_activity_questions" translatable="false">QuestionsActivity</string>
+    <string name="title_activity_answer" translatable="false">AnswerActivity</string>
+    <string name="title_activity_community_search" translatable="false">CommunitySearchActivity</string>
+    <string name="title_activity_personal_center" translatable="false">PersonalCenterActivity</string>
+    <string name="AddTag">Add Tag</string>
+    <string name="Problem">Problem</string>
+    <string name="OtherPrice">Other Price ￥：</string>
+    <string name="SelectLocation">Select Location</string>
+    <string name="city">City</string>
+    <string name="cityDetails">Please select city</string>
+    <string name="comment">Comment</string>
 
 </resources>

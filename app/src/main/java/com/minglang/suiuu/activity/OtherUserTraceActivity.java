@@ -25,8 +25,6 @@ import java.util.List;
 
 public class OtherUserTraceActivity extends BaseActivity {
 
-    private TextView userNameView;
-
     private ImageView traceBack;
 
     private ImageView traceSlider;
@@ -94,7 +92,7 @@ public class OtherUserTraceActivity extends BaseActivity {
     }
 
     private void initView() {
-        userNameView = (TextView) findViewById(R.id.OtherUserTraceName);
+        TextView userNameView = (TextView) findViewById(R.id.OtherUserTraceName);
         userNameView.setText("用户名");
 
         traceBack = (ImageView) findViewById(R.id.otherUserTraceBack);

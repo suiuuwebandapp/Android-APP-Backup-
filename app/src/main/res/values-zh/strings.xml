@@ -11,7 +11,6 @@
     <string name="UnknownArea">未知区域</string>
     <string name="UnknownName">匿名</string>
     <string name="app_name">随游</string>
-    <string name="homePage">首页</string>
     <string name="china">中国</string>
     <string name="chinaCode">+86</string>
     <string name="please_input_obtain_captcha">请输入验证码</string>
@@ -260,4 +259,23 @@
     <string name="SuiuuAccount">随友帐号</string>
     <string name="attention">关注</string>
     <string name="answer_">回答</string>
+    <string name="ConfirmOrder">已接单</string>
+    <string name="NewOrder">新订单</string>
+    <string name="Participate">已参加</string>
+    <string name="Published">已发布</string>
+    <string name="AddTag">添加标签</string>
+    <string name="Problem">问题</string>
+    <string name="AdditionalPrice">附加价格</string>
+    <string name="BasicPrice">基本价格 ￥：</string>
+    <string name="OtherPrice">其他价格 ￥：</string>
+    <string name="ProblemHint">输入你想问的问题吧</string>
+    <string name="SelectDestination">选择目的地</string>
+    <string name="SelectLocation">选择位置</string>
+    <string name="action_settings">设置</string>
+    <string name="city">城市</string>
+    <string name="cityDetails">请选择城市</string>
+    <string name="confirm">确认</string>
+    <string name="complete">完成</string>
+    <string name="comment">评论</string>
+    <string name="TripGallery"></string>
 </resources>

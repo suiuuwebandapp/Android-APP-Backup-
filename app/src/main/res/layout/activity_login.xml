@@ -69,7 +69,7 @@
 
         <Button
             android:id="@+id/loginBtn"
-            style="@style/login_button_style"
+            style="@style/loginButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
@@ -78,7 +78,7 @@
 
         <Button
             android:id="@+id/registerBtn"
-            style="@style/register_button_style"
+            style="@style/registerButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"

@@ -9,6 +9,6 @@
 
     <!--指定大小-->
     <size android:height="@dimen/layout_30dp"
-          android:width="@dimen/layout_10dp"/>
+          android:width="@dimen/layout_30dp"/>
 
 </shape>

@@ -25,7 +25,7 @@
             android:id="@+id/orderManageTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabIndicatorColor="@color/slider_line_color"
+            app:tabIndicatorColor="@color/mainColor"
             app:tabIndicatorHeight="@dimen/layout_2dp"
             app:tabTextAppearance="?android:attr/textAppearanceMedium"/>
 

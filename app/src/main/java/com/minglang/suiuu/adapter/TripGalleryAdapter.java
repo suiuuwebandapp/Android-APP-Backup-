@@ -15,9 +15,6 @@ import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.List;
 
-<<<<<<< HEAD
-
-=======
 /**
  * 项目名称：Android-APP-Backup-
  * 类描述：
@@ -27,7 +24,6 @@ import java.util.List;
  * 修改时间：2015/7/15 11:29
  * 修改备注：
  */
->>>>>>> origin/master
 public class TripGalleryAdapter extends BaseAdapter {
 
     private Context context;
