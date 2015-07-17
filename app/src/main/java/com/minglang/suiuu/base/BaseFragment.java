@@ -39,6 +39,7 @@ public class BaseFragment extends Fragment {
      * 屏幕宽度
      */
     public int screenWidth;
+
     /**
      * 屏幕高度
      */
@@ -90,6 +91,12 @@ public class BaseFragment extends Fragment {
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
+        getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
         getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 

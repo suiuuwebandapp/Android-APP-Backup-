@@ -13,7 +13,7 @@ public class HttpServicePath {
      * 服务器地址
      * <p/>
      */
-    public static String RootPath = "http://192.168.1.173";
+    public static String RootPath = "http://192.168.1.110";
 
     public static String SharePath = "/circle/web-info?infoId=";
 

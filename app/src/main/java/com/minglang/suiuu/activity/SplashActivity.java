@@ -12,19 +12,26 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.chat.DemoHXSDKHelper;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class SplashActivity extends BaseActivity {
-    private ImageView iv_backGround;
-    private ImageView iv_backGround2;
-    private ImageView iv_showInCenter;
+
+    @Bind(R.id.iv_background)
+    ImageView iv_backGround;
+
+    @Bind(R.id.iv_background2)
+    ImageView iv_backGround2;
+
+    @Bind(R.id.im_splash)
+    ImageView iv_showInCenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        iv_backGround = (ImageView) findViewById(R.id.iv_background);
-        iv_backGround2 = (ImageView) findViewById(R.id.iv_background2);
-        iv_showInCenter = (ImageView) findViewById(R.id.im_splash);
+        ButterKnife.bind(this);
 
         AlphaAnimation animation = new AlphaAnimation(0.2f, 1.0f);
         animation.setDuration(1500);
@@ -52,7 +59,9 @@ public class SplashActivity extends BaseActivity {
 
             @Override
             public void onAnimationRepeat(Animation animation) {
+
             }
+
         });
 
         transAnim.setAnimationListener(new Animation.AnimationListener() {
@@ -82,7 +91,6 @@ public class SplashActivity extends BaseActivity {
             }
 
         });
-
     }
 
 }

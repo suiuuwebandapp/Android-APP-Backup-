@@ -2,8 +2,6 @@ package com.minglang.suiuu.fragment.order;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -32,6 +30,9 @@ import com.minglang.suiuu.utils.SuHttpRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 新订单页面
  * <p/>
@@ -43,37 +44,34 @@ public class NewOrderFragment extends Fragment {
 
     private static final String TAG = NewOrderFragment.class.getSimpleName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private String userSign;
     private String verification;
 
-    private static PullToRefreshListView pullToRefreshListView;
+    @Bind(R.id.new_order_list_view)
+    PullToRefreshListView pullToRefreshListView;
 
+    /**
+     * 数据适配器
+     */
     private OrderListManageAdapter orderListManageAdapter;
 
+    /**
+     * 进度框
+     */
     private ProgressDialog progressDialog;
 
+    /**
+     * 页码
+     */
     private int page = 1;
 
-    private static final int COMPLETE = 1;
-
+    /**
+     * 数据源
+     */
     private List<OrderManage.OrderManageData> listAll = new ArrayList<>();
-
-    private static Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-
-                case COMPLETE:
-                    pullToRefreshListView.onRefreshComplete();
-                    break;
-            }
-            return false;
-        }
-    });
 
     /**
      * Use this factory method to create a new instance of
@@ -108,25 +106,22 @@ public class NewOrderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_new_order, container, false);
-
-        initView(rootView);
+        ButterKnife.bind(this, rootView);
+        initView();
         ViewAction();
         getNewOrderData(page);
         return rootView;
     }
 
     /**
-     * 厨初始化方法
-     *
-     * @param rootView Fragment根View
+     * 初始化方法
      */
-    private void initView(View rootView) {
+    private void initView() {
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
 
-        pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.new_order_list_view);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         ListView listView = pullToRefreshListView.getRefreshableView();
 
@@ -189,8 +184,7 @@ public class NewOrderFragment extends Fragment {
             progressDialog.dismiss();
         }
 
-        handler.sendEmptyMessage(COMPLETE);
-
+      pullToRefreshListView.onRefreshComplete();
     }
 
     /**

@@ -3,8 +3,6 @@ package com.minglang.suiuu.fragment.mysuiuu;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -35,6 +33,9 @@ import com.minglang.suiuu.utils.SuHttpRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 已发布的随游页面
  * <p/>
@@ -46,7 +47,6 @@ public class PublishedFragment extends Fragment {
 
     private static final String TAG = PublishedFragment.class.getSimpleName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -55,27 +55,14 @@ public class PublishedFragment extends Fragment {
 
     private int page = 1;
 
-    private static PullToRefreshListView pullToRefreshListView;
+    @Bind(R.id.my_suiuu_published_list_view)
+    PullToRefreshListView pullToRefreshListView;
 
     private ProgressDialog progressDialog;
 
     private List<Published.PublishedData> listAll = new ArrayList<>();
 
     private PublishedAdapter publishedAdapter;
-
-    private static final int COMPLETE = 1;
-
-    private static Handler publishHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case COMPLETE:
-                    pullToRefreshListView.onRefreshComplete();
-                    break;
-            }
-            return false;
-        }
-    });
 
     /**
      * Use this factory method to create a new instance of
@@ -110,22 +97,19 @@ public class PublishedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_published, container, false);
-
-        initView(rootView);
+        ButterKnife.bind(this, rootView);
+        initView();
         ViewAction();
-        getData();
+        getMyPublishedSuiuuData(page);
         return rootView;
     }
 
     /**
      * 初始化方法
-     *
-     * @param rootView Fragment的根View
      */
-    private void initView(View rootView) {
-        Log.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+    private void initView() {
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
 
-        pullToRefreshListView = (PullToRefreshListView) rootView.findViewById(R.id.my_suiuu_published_list_view);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
 
         progressDialog = new ProgressDialog(getActivity());
@@ -157,7 +141,7 @@ public class PublishedFragment extends Fragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                publishHandler.sendEmptyMessage(COMPLETE);
+                pullToRefreshListView.onRefreshComplete();
             }
 
         });
@@ -173,16 +157,6 @@ public class PublishedFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-    }
-
-    private void getData() {
-
-        if (progressDialog != null) {
-            progressDialog.show();
-        }
-
-        getMyPublishedSuiuuData(page);
 
     }
 
@@ -212,7 +186,7 @@ public class PublishedFragment extends Fragment {
             progressDialog.dismiss();
         }
 
-        publishHandler.sendEmptyMessage(COMPLETE);
+        pullToRefreshListView.onRefreshComplete();
     }
 
     /**
@@ -244,6 +218,13 @@ public class PublishedFragment extends Fragment {
     }
 
     private class MyPublishedRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {

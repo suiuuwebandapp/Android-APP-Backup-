@@ -55,6 +55,7 @@ public abstract class BasePopupWindowForListView<T> extends PopupWindow {
                 return false;
             }
         });
+
         initViews();
         initEvents();
         init();
