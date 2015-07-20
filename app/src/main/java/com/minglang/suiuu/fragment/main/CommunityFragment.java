@@ -1,8 +1,10 @@
 package com.minglang.suiuu.fragment.main;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -20,19 +23,25 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.CommunityItemActivity;
 import com.minglang.suiuu.activity.SelectCountryActivity;
+import com.minglang.suiuu.adapter.CommunityAdapter;
 import com.minglang.suiuu.adapter.CommunitySortAdapter;
 import com.minglang.suiuu.base.BaseFragment;
+import com.minglang.suiuu.entity.MainCommunity;
+import com.minglang.suiuu.entity.MainCommunity.MainCommunityData;
 import com.minglang.suiuu.entity.MainCommunity.MainCommunityData.MainCommunityItemData;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -47,6 +56,9 @@ public class CommunityFragment extends BaseFragment {
     private static final String NUMBER = "number";
     private static final String PAGES = "page";
     private static final String SORT_NAME = "sortName";
+
+    private static final String COUNTRY_ID = "countryId";
+    private static final String CITY_ID = "cityId";
 
     private String userSign;
     private String verification;
@@ -65,6 +77,13 @@ public class CommunityFragment extends BaseFragment {
      */
     private int page = 1;
 
+    private String countryId = null;
+
+    private String cityId = null;
+
+    @BindString(R.string.NoData)
+    String NoDataHint;
+
     @Bind(R.id.spinner)
     Spinner spinner;
 
@@ -74,7 +93,9 @@ public class CommunityFragment extends BaseFragment {
     @Bind(R.id.CommunityListView)
     PullToRefreshListView pullToRefreshListView;
 
-    private List<MainCommunityItemData> list = new ArrayList<>();
+    private List<MainCommunityItemData> listAll = new ArrayList<>();
+
+    private CommunityAdapter listViewAdapter;
 
     public static CommunityFragment newInstance(String param1, String param2) {
         CommunityFragment fragment = new CommunityFragment();
@@ -104,13 +125,16 @@ public class CommunityFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         initView();
         ViewAction();
-        getProblemList(buildRequestParams(selectedState, page));
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 
+    /**
+     * 初始化方法
+     */
     private void initView() {
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        ListView listView = pullToRefreshListView.getRefreshableView();
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
@@ -119,8 +143,14 @@ public class CommunityFragment extends BaseFragment {
         stringArray = getResources().getStringArray(R.array.communitySort);
         CommunitySortAdapter adapter = new CommunitySortAdapter(stringArray, getActivity());
         spinner.setAdapter(adapter);
+
+        listViewAdapter = new CommunityAdapter(getActivity());
+        listView.setAdapter(listViewAdapter);
     }
 
+    /**
+     * 各种控件的相关事件
+     */
     private void ViewAction() {
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -149,6 +179,7 @@ public class CommunityFragment extends BaseFragment {
         });
 
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
@@ -174,7 +205,10 @@ public class CommunityFragment extends BaseFragment {
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                int index = position - 1;
+                Intent intent = new Intent(getActivity(), CommunityItemActivity.class);
+                intent.putExtra("id", listAll.get(index).getQId());
+                startActivity(intent);
             }
         });
 
@@ -196,6 +230,7 @@ public class CommunityFragment extends BaseFragment {
      * @return 网络请求参数
      */
     private RequestParams buildRequestParams(int selected, int page) {
+        DeBugLog.i(TAG, "当前页码:" + page);
         RequestParams params = new RequestParams();
         switch (selected) {
             case 0:
@@ -217,6 +252,15 @@ public class CommunityFragment extends BaseFragment {
                 params.addBodyParameter(PAGES, String.valueOf(page));
                 params.addBodyParameter(SORT_NAME, String.valueOf(1));
                 break;
+
+            case 3:
+                params.addBodyParameter(HttpServicePath.key, verification);
+                params.addBodyParameter(NUMBER, String.valueOf(20));
+                params.addBodyParameter(PAGES, String.valueOf(page));
+                params.addBodyParameter(SORT_NAME, String.valueOf(1));
+                params.addBodyParameter(COUNTRY_ID, countryId);
+                params.addBodyParameter(CITY_ID, cityId);
+                break;
         }
         return params;
     }
@@ -233,6 +277,9 @@ public class CommunityFragment extends BaseFragment {
         httpRequest.requestNetworkData();
     }
 
+    /**
+     * 隐藏加载的进度框等
+     */
     private void hideDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -241,16 +288,86 @@ public class CommunityFragment extends BaseFragment {
         pullToRefreshListView.onRefreshComplete();
     }
 
+    /**
+     * 请求失败，页码减1
+     */
     private void lessPageNumber() {
         if (page > 1) {
             page = page - 1;
         }
     }
 
+    /**
+     * 请求第一页时，清除其他数据
+     */
+    private void clearDataList() {
+        if (page == 1) {
+            if (listAll != null && listAll.size() > 0) {
+                listAll.clear();
+            }
+        }
+    }
+
+    /**
+     * 绑定数据到View上
+     *
+     * @param str Json字符串
+     */
+    private void bindData2View(String str) {
+        if (TextUtils.isEmpty(str)) {
+            Toast.makeText(getActivity(), NoDataHint, Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                MainCommunity mainCommunity = JsonUtils.getInstance().fromJSON(MainCommunity.class, str);
+                if (mainCommunity != null) {
+                    MainCommunityData communityData = mainCommunity.getData();
+                    if (communityData != null) {
+                        List<MainCommunityItemData> list = communityData.getData();
+                        if (list != null && list.size() > 0) {
+                            clearDataList();
+                            listAll.addAll(list);
+                            listViewAdapter.setList(listAll);
+                            DeBugLog.i(TAG, "当前数据数量:" + listAll.size());
+                        } else {
+                            DeBugLog.e(TAG, "返回列表数据为Null");
+                            lessPageNumber();
+                        }
+                    } else {
+                        DeBugLog.e(TAG, "返回二级数据为Null");
+                        lessPageNumber();
+                    }
+                } else {
+                    DeBugLog.e(TAG, "返回一级数据为Null");
+                    lessPageNumber();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "解析异常:" + e.getMessage());
+                lessPageNumber();
+            }
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        DeBugLog.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        if (data != null) {
+            countryId = data.getStringExtra("countryId");
+            cityId = data.getStringExtra("cityId");
+
+            page = 1;
+            selectedState = 3;
+            getProblemList(buildRequestParams(selectedState, page));
+
+            DeBugLog.i(TAG, "countryId:" + countryId);
+            DeBugLog.i(TAG, "countryCNname:" + data.getStringExtra("countryCNname"));
+            DeBugLog.i(TAG, "cityId:" + cityId);
+            DeBugLog.i(TAG, "cityName:" + data.getStringExtra("cityName"));
+        }
+
     }
 
     /**
@@ -266,15 +383,9 @@ public class CommunityFragment extends BaseFragment {
         }
 
         @Override
-        public void onLoading(long total, long current, boolean isUploading) {
-            DeBugLog.i(TAG, "total:" + total + ",current:" + current + "isUploading:" + Boolean.toString(isUploading));
-        }
-
-        @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
             hideDialog();
-            String str = responseInfo.result;
-            DeBugLog.i(TAG, "返回的数据:" + str);
+            bindData2View(responseInfo.result);
         }
 
         @Override

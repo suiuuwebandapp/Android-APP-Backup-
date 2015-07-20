@@ -13,7 +13,7 @@ public class HttpServicePath {
      * 服务器地址
      * <p/>
      */
-    public static String RootPath = "http://192.168.1.110";
+    public static String RootPath = "http://apptest.suiuu.com";
 
     public static String SharePath = "/circle/web-info?infoId=";
 
@@ -245,10 +245,10 @@ public class HttpServicePath {
      */
     public static String setAddAttentionPath = RootPath + "/attention/add-attention-circle";
 
-    /**
-     * 得到推荐的圈子
-     */
-    public static String GetRecommendLoopPath = RootPath + "/attention/get-recommend-circle";
+    //    /**
+    //     * 得到推荐的圈子
+    //     */
+    //    public static String GetRecommendLoopPath = RootPath + "/attention/get-recommend-circle";
 
     /**
      * 创建一条评论
@@ -367,5 +367,15 @@ public class HttpServicePath {
      * 得到问答社区页面上问题列表的数据
      */
     public static String getMainProblemListPath = RootPath + "/app-qa/get-qa-list";
+
+    /**
+     * 得到问题详情
+     */
+    public static String getProblemDetailsPath = RootPath + "/app-qa/get-qa-info";
+
+    /**
+     * 得到系统默认Tag
+     */
+    public static String getDefaultTagListPath = RootPath + "/app-qa/get-tag";
 
 }

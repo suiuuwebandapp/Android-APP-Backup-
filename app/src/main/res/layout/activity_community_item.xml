@@ -2,7 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/community_item_toolbar"
@@ -12,7 +13,7 @@
         android:background="@color/mainColor"
         app:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
-    <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshScrollView
+    <com.minglang.pulltorefreshlibrary.PullToRefreshScrollView
         android:id="@+id/community_item_refresh_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,6 +41,6 @@
 
         </LinearLayout>
 
-    </com.minglang.suiuu.customview.pulltorefresh.PullToRefreshScrollView>
+    </com.minglang.pulltorefreshlibrary.PullToRefreshScrollView>
 
 </RelativeLayout>

@@ -6,8 +6,8 @@
 
     <com.minglang.suiuu.customview.CircleImageView
         android:id="@+id/item_community_layout_4_head_image_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/layout_50dp"
+        android:layout_height="@dimen/layout_50dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
@@ -49,8 +49,7 @@
                 android:layout_marginTop="@dimen/layout_8dp"
                 android:layout_weight="0.6"
                 android:singleLine="true"
-                android:text="Medium Text"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:text="Medium Text"/>
         </LinearLayout>
 
         <TextView

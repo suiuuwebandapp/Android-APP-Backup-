@@ -9,30 +9,28 @@
         android:id="@+id/item_community_layout_3_attention"
         android:layout_width="0dp"
         android:layout_height="@dimen/layout_50dp"
-        android:layout_marginEnd="@dimen/layout_1dp"
-        android:layout_marginRight="@dimen/layout_1dp"
         android:layout_weight="0.5"
-        android:background="@drawable/color_selector"
+        android:background="@drawable/btn_community_item"
         android:drawableLeft="@drawable/icon_heart_selector"
         android:drawablePadding="@dimen/layout_10dp"
         android:drawableStart="@drawable/icon_heart_selector"
         android:gravity="center|start"
         android:text="@string/attention"
+        android:textColor="@drawable/text_community_item_color_selector"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TextView
         android:id="@+id/item_community_layout_3_answer"
         android:layout_width="0dp"
         android:layout_height="@dimen/layout_50dp"
-        android:layout_marginLeft="@dimen/layout_1dp"
-        android:layout_marginStart="@dimen/layout_1dp"
         android:layout_weight="0.5"
-        android:background="@drawable/color_selector"
+        android:background="@drawable/btn_community_item"
         android:drawableLeft="@drawable/icon_answer_selector"
         android:drawablePadding="@dimen/layout_10dp"
         android:drawableStart="@drawable/icon_answer_selector"
         android:gravity="center|start"
         android:text="@string/answer_"
+        android:textColor="@drawable/text_community_item_color_selector"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 </LinearLayout>
