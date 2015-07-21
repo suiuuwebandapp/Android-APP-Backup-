@@ -24,11 +24,8 @@ public class ContactUsActivity extends Activity {
 
     private static final String[] TITLES = {"网站","邮箱","电话","地址"};
 
-    private static final String[] INFOS = {"www.suiuu.com","info@suiuu.com","010-58483692","北京市东城区银河SOHO"};
+    private static final String[] INFO_ARRAY = {"www.suiuu.com","info@suiuu.com","010-58483692","北京市东城区银河SOHO"};
 
-    /**
-     * 返回键
-     */
     private ImageView contactUsBack;
 
     private ListView contactUsInfoList;
@@ -93,7 +90,7 @@ public class ContactUsActivity extends Activity {
 
             Contact contact = new Contact();
             contact.setContactTitle(TITLES[i]);
-            contact.setContactInfo(INFOS[i]);
+            contact.setContactInfo(INFO_ARRAY[i]);
 
             list.add(contact);
         }
@@ -102,6 +99,5 @@ public class ContactUsActivity extends Activity {
         contactUsInfoList.setAdapter(contactUsAdapter);
 
     }
-
 
 }

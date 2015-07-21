@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--问题详情页 标签标识图标-->
+<ImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/layout_5dp"
+    android:src="@drawable/icon_tag"/>

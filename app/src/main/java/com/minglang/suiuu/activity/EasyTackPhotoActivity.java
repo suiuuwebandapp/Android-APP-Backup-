@@ -60,50 +60,66 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
 
     private static final String TAG = EasyTackPhotoActivity.class.getSimpleName();
 
+    protected static final int getData_Success = 0;
+    protected static final int getData_FAILURE = 1;
+
+    int status = 0;
+
     private static OSSService ossService = OSSServiceProvider.getService();
     private static OSSBucket bucket = ossService.getOssBucket("suiuu");
     private String[] suiuuTag = {"家庭", "购物", "自然", "惊险", "浪漫", "博物馆", "猎奇"};
+
     /**
      * 取消按钮
      */
     private TextView tv_cancel;
+
     private ArrayList<String> picList = new ArrayList<>();
+
     /**
      * 显示选择的照片
      */
     private ListView lv_picture_description;
+
     /**
      * 完成按钮
      */
     private TextView tv_top_right;
+
     /**
      * 保存照片描述的List集合
      */
     private List<String> picDescriptionList;
+
     /**
      * 标题描写
      */
     private EditText search_question;
+
     private static final int REQUEST_CODE_MAP = 8;
+
     /**
      * 主题数据集合
      */
     private List<LoopBaseData> list;
+
     /**
      * 选择位置
      */
     private TextView tv_show_your_location;
+
     private int picSuccessCount = 0;
-    protected static final int getData_Success = 0;
-    protected static final int getData_FAILURE = 1;
-    int status = 0;
+
     private TextProgressDialog dialog;
+
     private ImageView iv_top_back;
-    private ScrollView sll;
+
     private String dataNum;
+
     private LoopArticleData articleDetail;
-    private List<String> changePicList;
+
     private JsonUtils jsonUtil = JsonUtils.getInstance();
+
     //修改文章进来是否重新选择图片
     private boolean isChangePic = false;
     private FlowLayout fl_easy_take_photo;
@@ -118,9 +134,10 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             switch (msg.what) {
                 case getData_Success:
                     if (1 == status && picSuccessCount == picList.size()) {
+
                         dialog.dismissDialog();
                         Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
-                        //TODO 发布完成后在此跳转
+
                         Intent intent = new Intent(EasyTackPhotoActivity.this, LoopArticleActivity.class);
                         intent.putExtra("articleId", dataNum);
                         intent.putExtra("TAG", TAG);
@@ -130,10 +147,12 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
                         Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
                     }
                     break;
+
                 case getData_FAILURE:
                     dialog.dismissDialog();
                     Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
                     break;
+
                 default:
                     break;
             }
@@ -149,8 +168,8 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         picList = this.getIntent().getStringArrayListExtra("pictureMessage");
 //        articleDetail = (LoopArticleData)getIntent().getSerializableExtra("articleDetail");
         articleDetail = jsonUtil.fromJSON(LoopArticleData.class, getIntent().getStringExtra("articleDetail"));
-        initView();
 
+        initView();
 
         //判断如果文章详情信息不为空就是修改文章的图片反之为新文章图片
 //        iv_cancel.setVisibility(View.GONE);
@@ -169,19 +188,21 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
 
     private void initView() {
 
-        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                rootLayout.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        }
+//        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
+//        if (isKITKAT) {
+//            if (navigationBarHeight <= 0) {
+//                rootLayout.setPadding(0, statusBarHeight, 0, 0);
+//            } else {
+//                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
+//            }
+//        }
         dialog = new TextProgressDialog(this);
         picDescriptionList = new ArrayList<>();
         iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
         iv_top_back.setVisibility(View.GONE);
+
         tv_cancel = (TextView) findViewById(R.id.tv_top_cancel);
+
         lv_picture_description = (ListView) findViewById(R.id.lv_picture_description);
         tv_top_right = (TextView) findViewById(R.id.tv_top_right);
         tv_top_right.setVisibility(View.VISIBLE);
@@ -191,8 +212,12 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         tv_show_tag = (TextView) findViewById(R.id.tv_show_tag);
         tv_top_right_more = (ImageView) findViewById(R.id.tv_top_right_more);
         tv_top_right_more.setVisibility(View.GONE);
-        sll = (ScrollView) findViewById(R.id.sll);
+
+        ScrollView sll = (ScrollView) findViewById(R.id.sll);
         sll.smoothScrollTo(0, 0);
+
+        dialog = new TextProgressDialog(this);
+
         if (articleDetail != null) {
             changeArticleFullData();
         } else {
@@ -204,7 +229,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
     private void changeArticleFullData() {
         search_question.setText(articleDetail.getaTitle());
         tv_show_your_location.setText(articleDetail.getaAddr());
-        changePicList = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>() {
+        List<String> changePicList = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>() {
         }.getType(), articleDetail.getaImgList());
         List<String> changeContentList = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>() {
         }.getType(), articleDetail.getaContent());

@@ -1,11 +1,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.minglang.suiuu.fragment.attention.AttentionUserFragment">
+    android:layout_height="match_parent">
 
-    <com.minglang.pulltorefreshlibrary.PullToRefreshListView
+    <com.minglang.pulltorefreshlibrary.PullToRefreshGridView
         android:id="@+id/attention_user_ListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

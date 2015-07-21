@@ -1,6 +1,8 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -8,8 +10,13 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
-import com.minglang.suiuu.customview.FlowLayout;
+import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.AnswerEntity;
 import com.minglang.suiuu.utils.ViewHolder;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+
+import java.util.List;
 
 /**
  * 社区条目数据适配器
@@ -18,107 +25,89 @@ import com.minglang.suiuu.utils.ViewHolder;
  */
 public class CommunityItemAdapter extends BaseAdapter {
 
-    private static final int ONE = 1;
-    private static final int TWO = 2;
-    private static final int THREE = 3;
-    private static final int FOUR = 4;
-
     private Context context;
+
+    private List<AnswerEntity> list;
+
+    private ImageLoader imageLoader;
+
+    private DisplayImageOptions options;
 
     public CommunityItemAdapter(Context context) {
         this.context = context;
+
+        imageLoader = ImageLoader.getInstance();
+
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
+    }
+
+    public void setList(List<AnswerEntity> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return 0;
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position == 0) {
-            return ONE;
-        } else if (position == 1) {
-            return TWO;
-        } else if (position == 2) {
-            return THREE;
+        if (list != null && list.size() > 0) {
+            return list.size();
         } else {
-            return FOUR;
+            return 0;
         }
     }
 
     @Override
-    public int getViewTypeCount() {
-        return 4;
+    public Object getItem(int position) {
+        if (list != null && list.size() > 0) {
+            return list.size();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder4 = ViewHolder.get(context, convertView, parent, R.layout.item_community_layout, position);
+        convertView = holder4.getConvertView();
 
-        int viewType = getItemViewType(position);
+        CircleImageView headImageView = holder4.getView(R.id.item_community_layout_4_head_image_view);
+        TextView nameView = holder4.getView(R.id.item_community_layout_4_name);
+        TextView dateAndTimeView = holder4.getView(R.id.item_community_layout_4_date_time);
+        TextView detailsView = holder4.getView(R.id.item_community_layout_4_details);
 
-        switch (viewType) {
+        AnswerEntity answerEntity = list.get(position);
 
-            case ONE:
-                ViewHolder holder1 = ViewHolder.get(context, convertView, parent,
-                        R.layout.item_community_layout_1, position);
-                convertView = holder1.getConvertView();
+        String headImagePath = answerEntity.getHeadImg();
+        if (!TextUtils.isEmpty(headImagePath)) {
+            imageLoader.displayImage(headImagePath, headImageView, options);
+        }
 
-                CircleImageView headImageView1 = holder1.getView(R.id.
-                        item_community_layout_1_head_view);
-                TextView problemText = holder1.getView(R.id.
-                        item_community_layout_1_problem);
-                FlowLayout flowLayout = holder1.getView(R.id.
-                        item_community_layout_1_flow_layout);
+        String strName = answerEntity.getNickname();
+        if (!TextUtils.isEmpty(strName)) {
+            nameView.setText(strName);
+        } else {
+            nameView.setText("");
+        }
 
-                break;
+        String strDateAndTime = answerEntity.getACreateTime();
+        if (!TextUtils.isEmpty(strDateAndTime)) {
+            dateAndTimeView.setText(strDateAndTime);
+        } else {
+            dateAndTimeView.setText("");
+        }
 
-            case TWO:
-                ViewHolder holder2 = ViewHolder.get(context, convertView, parent,
-                        R.layout.item_community_layout_2, position);
-                convertView = holder2.getConvertView();
-
-                TextView problemContent = holder2.getView(R.id.
-                        item_community_layout_2_problem);
-                break;
-
-            case THREE:
-                ViewHolder holder3 = ViewHolder.get(context, convertView, parent,
-                        R.layout.item_community_layout_3, position);
-                convertView = holder3.getConvertView();
-
-                TextView attentionView = holder3.getView(R.id.
-                        item_community_layout_3_attention);
-                TextView answerView = holder3.getView(R.id.
-                        item_community_layout_3_answer);
-
-                break;
-
-            case FOUR:
-                ViewHolder holder4 = ViewHolder.get(context, convertView, parent,
-                        R.layout.item_community_layout_4, position);
-                convertView = holder4.getConvertView();
-
-                CircleImageView headImageView2 = holder4.getView(R.id.
-                        item_community_layout_4_head_image_view);
-                TextView nameView = holder4.getView(R.id.
-                        item_community_layout_4_name);
-                TextView dateAndTimeView = holder4.getView(R.id.
-                        item_community_layout_4_date_time);
-                TextView detailsView = holder4.getView(R.id.
-                        item_community_layout_4_details);
-                break;
-
+        String strContent = answerEntity.getAContent();
+        if (!TextUtils.isEmpty(strContent)) {
+            detailsView.setText(strContent);
+        } else {
+            detailsView.setText("");
         }
 
         return convertView;

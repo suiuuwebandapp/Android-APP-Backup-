@@ -33,11 +33,12 @@
             android:text="@string/title1"
             android:textColor="@color/white"
             android:textSize="@dimen/layout_22sp"/>
+
         <!--旅图页面相关按钮-->
         <RelativeLayout
             android:id="@+id/TravelImageLayout"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/layout_50dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -60,7 +61,7 @@
         <FrameLayout
             android:id="@+id/SuiuuButtonLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/layout_50dp"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/titleInfo"
             android:layout_toRightOf="@+id/titleInfo"
@@ -79,7 +80,7 @@
         <RelativeLayout
             android:id="@+id/CommunityLayout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/layout_50dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -113,7 +114,7 @@
         <FrameLayout
             android:id="@+id/InboxButtonLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/layout_50dp"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/titleInfo"
             android:layout_toRightOf="@+id/titleInfo"

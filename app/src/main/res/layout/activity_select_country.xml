@@ -10,7 +10,7 @@
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/tr_black">
+        android:background="@color/mainColor">
 
         <TextView
             android:id="@+id/textView12"

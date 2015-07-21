@@ -24,6 +24,8 @@ import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
 
 import butterknife.Bind;
+import butterknife.BindColor;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -32,6 +34,12 @@ import butterknife.ButterKnife;
 public class QuestionsActivity extends BaseAppCompatActivity {
 
     private static final String TAG = QuestionsActivity.class.getSimpleName();
+
+    @BindString(R.string.Question)
+    String titleText;
+
+    @BindColor(R.color.white)
+    int titleTextColor;
 
     @Bind(R.id.questionsScrollView)
     ScrollView scrollView;
@@ -57,21 +65,22 @@ public class QuestionsActivity extends BaseAppCompatActivity {
     @Bind(R.id.answerUserListView)
     NoScrollBarListView answerUserListView;
 
+    @Bind(R.id.questionToolbar)
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_questions);
 
         ButterKnife.bind(this);
-
         initView();
         ViewAction();
     }
 
     private void initView() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.questionToolbar);
-        toolbar.setTitle("提问");
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setTitle(titleText);
+        toolbar.setTitleTextColor(titleTextColor);
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

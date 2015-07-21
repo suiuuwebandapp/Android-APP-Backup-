@@ -12,10 +12,7 @@ import com.minglang.suiuu.utils.ViewHolder;
 public class CommunitySortAdapter extends BaseAdapter {
 
     private String[] stringArray;
-
     private Context context;
-
-    private OnItemClickListener onItemClickListener;
 
     public CommunitySortAdapter(String[] stringArray, Context context) {
         this.stringArray = stringArray;
@@ -43,44 +40,7 @@ public class CommunitySortAdapter extends BaseAdapter {
         convertView = holder.getConvertView();
         TextView textView = holder.getView(R.id.item_community_text);
         textView.setText(stringArray[position]);
-
-        final View view = convertView;
-        final int index = position;
-
-        if (onItemClickListener != null) {
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemClickListener.onItemClick(view, index);
-                }
-            });
-
-            convertView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    onItemClickListener.onItemLongClick(view, index);
-                    return false;
-                }
-            });
-        }
-
         return convertView;
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
-    }
-
-    public void setOnItemLongClickListener(OnItemClickListener onItemClickListener){
-        this.onItemClickListener = onItemClickListener;
-    }
-
-    public interface OnItemClickListener {
-
-        void onItemClick(View view, int position);
-
-        void onItemLongClick(View view, int position);
     }
 
 }

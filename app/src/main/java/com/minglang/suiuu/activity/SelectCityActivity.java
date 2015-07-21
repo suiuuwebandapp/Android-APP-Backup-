@@ -125,7 +125,7 @@ public class SelectCityActivity extends BaseActivity {
                 selectCityId = data.getId();
 
                 Toast.makeText(SelectCityActivity.this,
-                        "您选择的城市为:" + selectCityName, Toast.LENGTH_LONG).show();
+                        "您选择的城市为:" + selectCityName, Toast.LENGTH_SHORT).show();
 
                 if (TextUtils.isEmpty(selectCityId) && TextUtils.isEmpty(selectCityName)) {
                     Toast.makeText(SelectCityActivity.this, "请选择城市!", Toast.LENGTH_SHORT).show();

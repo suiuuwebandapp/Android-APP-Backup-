@@ -54,15 +54,10 @@ import com.minglang.suiuu.fragment.main.CommunityFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
 import com.minglang.suiuu.fragment.main.TripGalleryFragment;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.ConstantUtils;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -110,6 +105,9 @@ public class MainActivity extends BaseActivity {
 
     @Bind(R.id.sideListView)
     ListView sideListView;
+
+    @Bind(R.id.sideListView2)
+    ListView sideListView2;
 
     //标题
     @Bind(R.id.titleInfo)
@@ -292,8 +290,6 @@ public class MainActivity extends BaseActivity {
 
         mDrawerLayout.setFocusableInTouchMode(true);
 
-        ConstantUtils.topHeight = titleLayout.getLayoutParams().height;
-
         ViewGroup.LayoutParams sliderNavigationViewParams = sliderView.getLayoutParams();
         sliderNavigationViewParams.width = screenWidth / 4 * 3;
         sliderNavigationViewParams.height = screenHeight;
@@ -314,11 +310,15 @@ public class MainActivity extends BaseActivity {
 
         switchSuiuu.setChecked(true);
 
-        List<String> strList = new ArrayList<>();
-        Collections.addAll(strList, getResources().getStringArray(R.array.sideList));
-        MainSliderAdapter adapter = new MainSliderAdapter(this, strList);
+        MainSliderAdapter adapter =
+                new MainSliderAdapter(this, getResources().getStringArray(R.array.sideList));
         adapter.setScreenHeight(screenHeight);
         sideListView.setAdapter(adapter);
+
+        MainSliderAdapter adapter2 =
+                new MainSliderAdapter(this, getResources().getStringArray(R.array.sideList2));
+        adapter2.setScreenHeight(screenHeight);
+        sideListView2.setAdapter(adapter2);
 
         initFragment();
     }
@@ -467,6 +467,32 @@ public class MainActivity extends BaseActivity {
                         Intent intent3 = new Intent(MainActivity.this, AccountManageActivity.class);
                         startActivity(intent3);
                         break;
+                }
+            }
+        });
+
+        sideListView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mDrawerLayout.closeDrawer(sliderView);
+                switch (position) {
+                    case 0:
+                        break;
+
+                    case 1:
+                        Intent intent1 = new Intent(MainActivity.this, AttentionActivity.class);
+                        startActivity(intent1);
+                        break;
+
+                    case 2:
+                        Intent intent2 = new Intent(MainActivity.this, NewRemindActivity.class);
+                        startActivity(intent2);
+                        break;
+
+                    case 3:
+                        finish();
+                        break;
+
                 }
             }
         });
@@ -692,6 +718,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != Activity.RESULT_OK) {
             DeBugLog.e(TAG, "return information is null");
         } else if (data == null) {

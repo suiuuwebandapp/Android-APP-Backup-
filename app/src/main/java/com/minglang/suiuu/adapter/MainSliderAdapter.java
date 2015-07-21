@@ -8,36 +8,31 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
-
-import java.util.List;
 
 public class MainSliderAdapter extends BaseAdapter {
 
     private Context context;
-
-    private List<String> list;
+    private String[] titleArray;
 
     private int itemScreenHeight;
 
-    public MainSliderAdapter(Context context, List<String> list) {
+    public MainSliderAdapter(Context context, String[] titleArray) {
         this.context = context;
-        this.list = list;
+        this.titleArray = titleArray;
     }
 
     public void setScreenHeight(int screenHeight) {
         int tempScreenHeight1 = screenHeight / 12;
         int tempScreenHeight2 = Utils.newInstance().px2dip(60, context);
         itemScreenHeight = tempScreenHeight1 > tempScreenHeight2 ? tempScreenHeight1 : tempScreenHeight2;
-        DeBugLog.i("MainSliderAdapter", "itemScreenHeight:" + itemScreenHeight);
     }
 
     @Override
     public int getCount() {
-        if (list != null && list.size() > 0) {
-            return list.size();
+        if (titleArray != null && titleArray.length > 0) {
+            return titleArray.length;
         } else {
             return 0;
         }
@@ -50,8 +45,8 @@ public class MainSliderAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        if (list != null && list.size() > 0) {
-            return list.get(position);
+        if (titleArray != null && titleArray.length > 0) {
+            return titleArray[position];
         } else {
             return position;
         }
@@ -59,11 +54,12 @@ public class MainSliderAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        String str = list.get(position);
+        String str = titleArray[position];
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_slider, position);
         convertView = holder.getConvertView();
 
-        AbsListView.LayoutParams params = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, itemScreenHeight);
+        AbsListView.LayoutParams params =
+                new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, itemScreenHeight);
         convertView.setLayoutParams(params);
 
         TextView textView = holder.getView(R.id.itemSliderText);

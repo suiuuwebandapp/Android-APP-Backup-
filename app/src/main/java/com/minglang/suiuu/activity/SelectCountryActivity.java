@@ -77,7 +77,6 @@ public class SelectCountryActivity extends BaseActivity {
         setContentView(R.layout.activity_select_country);
 
         ButterKnife.bind(this);
-
         initView();
         ViewAction();
         getCountryData4Service();

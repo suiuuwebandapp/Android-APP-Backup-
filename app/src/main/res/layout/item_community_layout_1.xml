@@ -27,6 +27,7 @@
             android:layout_margin="@dimen/layout_5dp"
             android:singleLine="true"
             android:text="Large Text"
+            android:textColor="@color/textColor"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
 
         <com.minglang.suiuu.customview.FlowLayout

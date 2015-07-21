@@ -14,6 +14,7 @@ public class HttpServicePath {
      * <p/>
      */
 //    public static String RootPath = "http://192.168.1.173";
+
     public static String RootPath = "http://apptest.suiuu.com";
 
     public static String SharePath = "/circle/web-info?infoId=";
@@ -94,10 +95,12 @@ public class HttpServicePath {
      * 发布圈子文章
      */
     public static String createLoop = RootPath + "/circle/create-article";
+
     /**
      * 修改圈子文章
      */
     public static String updateLoop = RootPath + "/circle/up-date-article";
+
     /**
      * 获取收藏的圈子
      * <p/>
@@ -124,6 +127,7 @@ public class HttpServicePath {
      * 请求参数:需要收藏文章的id:articleId
      */
     public static String CollectionArticlePath = RootPath + "/attention/add-collection-article";
+
     /**
      * 取消收藏文章
      * <p/>
@@ -142,6 +146,7 @@ public class HttpServicePath {
     //     */
 
 //    public static String MainDynamicPath = RootPath + "/app-main/get-index-list";
+
     /**
      * 得到详细关注动态数据
      * <p/>
@@ -246,10 +251,10 @@ public class HttpServicePath {
      */
     public static String setAddAttentionPath = RootPath + "/attention/add-attention-circle";
 
-    /**
-     * 得到推荐的圈子
-     */
-    public static String GetRecommendLoopPath = RootPath + "/attention/get-recommend-circle";
+    //    /**
+    //     * 得到推荐的圈子
+    //     */
+    //    public static String GetRecommendLoopPath = RootPath + "/attention/get-recommend-circle";
 
     /**
      * 创建一条评论
@@ -368,5 +373,25 @@ public class HttpServicePath {
      * 得到问答社区页面上问题列表的数据
      */
     public static String getMainProblemListPath = RootPath + "/app-qa/get-qa-list";
+
+    /**
+     * 得到问题详情
+     */
+    public static String getProblemDetailsPath = RootPath + "/app-qa/get-qa-info";
+
+    /**
+     * 得到系统默认Tag
+     */
+    public static String getDefaultTagListPath = RootPath + "/app-qa/get-tag";
+
+    /**
+     * 得到关注的旅图
+     */
+    public static String getAttentionTripPath = RootPath + "/attention/get-attention-tp";
+
+    /**
+     * 得到关注的问答
+     */
+    public static String getAttentionProblemPath = RootPath + "/attention/get-attention-qa";
 
 }

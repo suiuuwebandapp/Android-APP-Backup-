@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/root">
+    android:id="@+id/tack_photo_root_layout">
 
     <include
         layout="@layout/common_top2_layout"/>
@@ -34,8 +34,8 @@
                 android:textColor="@color/black"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/layout_16dp"
-                android:layout_marginRight="@dimen/layout_16dp"
-                />
+                android:layout_marginRight="@dimen/layout_16dp"/>
+
             <TextView
                 android:id="@+id/tv_show_your_location"
                 android:layout_width="fill_parent"
@@ -48,9 +48,7 @@
                 android:padding="@dimen/layout_8dp"
                 android:background="@color/white"
                 android:textSize="@dimen/layout_15sp"
-                android:gravity="center_vertical"
-                />
-
+                android:gravity="center_vertical"/>
 
           <!--  <com.minglang.suiuu.customview.ListViewForScrollView-->
             <ListView
@@ -63,6 +61,7 @@
                 android:scrollbars="none"
                 android:divider="@null"
                 android:dividerHeight="@dimen/layout_10dp"/>
+
             <TextView
                 android:id="@+id/tv_show_tag"
                 android:layout_width="fill_parent"
@@ -77,8 +76,8 @@
                 android:padding="@dimen/layout_8dp"
                 android:background="@color/white"
                 android:textSize="@dimen/layout_15sp"
-                android:gravity="center_vertical"
-                />
+                android:gravity="center_vertical"/>
+
             <com.minglang.suiuu.customview.FlowLayout
                 android:id="@+id/fl_easy_take_photo"
                 android:layout_width="wrap_content"
@@ -87,6 +86,9 @@
                 android:layout_marginRight="@dimen/layout_10dp"
                 android:background="@color/transparent"
                 android:padding="5dp"/>
+
         </LinearLayout>
+
     </ScrollView>
+
 </LinearLayout>

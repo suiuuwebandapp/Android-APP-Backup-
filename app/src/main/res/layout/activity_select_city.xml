@@ -10,7 +10,7 @@
         android:layout_height="@dimen/layout_50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/tr_black"
+        android:background="@color/mainColor"
         android:id="@+id/relativeLayout2">
 
         <TextView

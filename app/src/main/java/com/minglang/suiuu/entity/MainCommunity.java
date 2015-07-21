@@ -10,10 +10,10 @@ import java.util.List;
 public class MainCommunity {
 
     /**
-     * data : {"msg":{"sortName":"pvNumber","showAll":false,"startRow":0,"sortType":"DESC","pageSize":10,"currentPage":1,"totalCount":"4"},"data":[{"qTitle":"测试004","qInviteAskUser":"测试004","qCityId":"221","Number":"0","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 15:58:26","qContent":"测试004","qCountryId":"5","qId":"4","qTag":"1,2,3","pvNumber":"0"},{"qTitle":"测试004","qInviteAskUser":"测试004","qCityId":"221","Number":"0","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 15:59:04","qContent":"测试004","qCountryId":"5","qId":"5","qTag":"1,2,3","pvNumber":"0"},{"qTitle":"测试004","qInviteAskUser":"测试004","qCityId":"221","Number":"0","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 16:23:07","qContent":"测试004","qCountryId":"5","qId":"6","qTag":"1,3,5","pvNumber":"0"},{"qTitle":"测试004","qInviteAskUser":"测试004","qCityId":"221","Number":"0","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 16:23:17","qContent":"测试004","qCountryId":"5","qId":"7","qTag":"1,3,4","pvNumber":"0"}]}
+     * data : {"msg":{"sortName":"pvNumber","showAll":false,"startRow":0,"sortType":"DESC","pageSize":10,"currentPage":1,"totalCount":"7"},"data":[{"qTitle":"测试01","qCityId":"0","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"1","pvNumber":"5","aNumber":"0","qInviteAskUser":"085963dc0af031709b032725e3ef18f5","qAddr":"地址01","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-13 14:27:06","qContent":"内容01","qCountryId":"0","qTag":"1"},{"qTitle":"测试02","qCityId":"15","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"2","pvNumber":"0","aNumber":"0","qInviteAskUser":"085963dc0af031709b032725e3ef18f5","qAddr":"地址02","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-13 18:10:40","qContent":"内容02","qCountryId":"14","qTag":"1"},{"qTitle":"测试03","qCityId":"15","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"3","pvNumber":"0","aNumber":"3","qInviteAskUser":"085963dc0af031709b032725e3ef18f5","qAddr":"地址03","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-13 18:10:56","qContent":"内容03","qCountryId":"7","qTag":"1"},{"qTitle":"测试004","qCityId":"221","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"4","pvNumber":"0","aNumber":"0","qInviteAskUser":"测试004","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 15:58:26","qContent":"测试004","qCountryId":"5","qTag":"1,2,3"},{"qTitle":"测试004","qCityId":"221","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"5","pvNumber":"0","aNumber":"0","qInviteAskUser":"测试004","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 15:59:04","qContent":"测试004","qCountryId":"5","qTag":"1,2,3"},{"qTitle":"测试004","qCityId":"221","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"6","pvNumber":"0","aNumber":"0","qInviteAskUser":"测试004","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 16:23:07","qContent":"测试004","qCountryId":"5","qTag":"1,3,5"},{"qTitle":"测试004","qCityId":"221","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"7","pvNumber":"0","aNumber":"0","qInviteAskUser":"测试004","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 16:23:17","qContent":"测试004","qCountryId":"5","qTag":"1,3,4"}]}
      * message :
      * status : 1
-     * token : 655d3f0cf9eb2898d1280b4ebcf261dd
+     * token : fe5111df294e2735bb110dde5fded9fd
      */
     private MainCommunityData data;
     private String message;
@@ -54,8 +54,8 @@ public class MainCommunity {
 
     public class MainCommunityData {
         /**
-         * msg : {"sortName":"pvNumber","showAll":false,"startRow":0,"sortType":"DESC","pageSize":10,"currentPage":1,"totalCount":"4"}
-         * data : [{"qTitle":"测试004","qInviteAskUser":"测试004","qCityId":"221","Number":"0","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 15:58:26","qContent":"测试004","qCountryId":"5","qId":"4","qTag":"1,2,3","pvNumber":"0"},{"qTitle":"测试004","qInviteAskUser":"测试004","qCityId":"221","Number":"0","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 15:59:04","qContent":"测试004","qCountryId":"5","qId":"5","qTag":"1,2,3","pvNumber":"0"},{"qTitle":"测试004","qInviteAskUser":"测试004","qCityId":"221","Number":"0","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 16:23:07","qContent":"测试004","qCountryId":"5","qId":"6","qTag":"1,3,5","pvNumber":"0"},{"qTitle":"测试004","qInviteAskUser":"测试004","qCityId":"221","Number":"0","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 16:23:17","qContent":"测试004","qCountryId":"5","qId":"7","qTag":"1,3,4","pvNumber":"0"}]
+         * msg : {"sortName":"pvNumber","showAll":false,"startRow":0,"sortType":"DESC","pageSize":10,"currentPage":1,"totalCount":"7"}
+         * data : [{"qTitle":"测试01","qCityId":"0","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"1","pvNumber":"5","aNumber":"0","qInviteAskUser":"085963dc0af031709b032725e3ef18f5","qAddr":"地址01","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-13 14:27:06","qContent":"内容01","qCountryId":"0","qTag":"1"},{"qTitle":"测试02","qCityId":"15","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"2","pvNumber":"0","aNumber":"0","qInviteAskUser":"085963dc0af031709b032725e3ef18f5","qAddr":"地址02","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-13 18:10:40","qContent":"内容02","qCountryId":"14","qTag":"1"},{"qTitle":"测试03","qCityId":"15","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"3","pvNumber":"0","aNumber":"3","qInviteAskUser":"085963dc0af031709b032725e3ef18f5","qAddr":"地址03","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-13 18:10:56","qContent":"内容03","qCountryId":"7","qTag":"1"},{"qTitle":"测试004","qCityId":"221","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"4","pvNumber":"0","aNumber":"0","qInviteAskUser":"测试004","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 15:58:26","qContent":"测试004","qCountryId":"5","qTag":"1,2,3"},{"qTitle":"测试004","qCityId":"221","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"5","pvNumber":"0","aNumber":"0","qInviteAskUser":"测试004","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 15:59:04","qContent":"测试004","qCountryId":"5","qTag":"1,2,3"},{"qTitle":"测试004","qCityId":"221","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"6","pvNumber":"0","aNumber":"0","qInviteAskUser":"测试004","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 16:23:07","qContent":"测试004","qCountryId":"5","qTag":"1,3,5"},{"qTitle":"测试004","qCityId":"221","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"7","pvNumber":"0","aNumber":"0","qInviteAskUser":"测试004","qAddr":"测试004","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-14 16:23:17","qContent":"测试004","qCountryId":"5","qTag":"1,3,4"}]
          */
         private MsgEntity msg;
         private List<MainCommunityItemData> data;
@@ -84,7 +84,7 @@ public class MainCommunity {
              * sortType : DESC
              * pageSize : 10
              * currentPage : 1
-             * totalCount : 4
+             * totalCount : 7
              */
             private String sortName;
             private boolean showAll;
@@ -153,46 +153,66 @@ public class MainCommunity {
 
         public class MainCommunityItemData {
             /**
-             * qTitle : 测试004
-             * qInviteAskUser : 测试004
-             * qCityId : 221
-             * Number : 0
-             * qAddr : 测试004
+             * qTitle : 测试01
+             * qCityId : 0
+             * attentionNumber : 0
+             * headImg : http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg
+             * qId : 1
+             * pvNumber : 5
+             * aNumber : 0
+             * qInviteAskUser : 085963dc0af031709b032725e3ef18f5
+             * qAddr : 地址01
              * qUserSign : 085963dc0af031709b032725e3ef18f5
-             * qCreateTime : 2015-07-14 15:58:26
-             * qContent : 测试004
-             * qCountryId : 5
-             * qId : 4
-             * qTag : 1,2,3
-             * pvNumber : 0
+             * qCreateTime : 2015-07-13 14:27:06
+             * qContent : 内容01
+             * qCountryId : 0
+             * qTag : 1
              */
             private String qTitle;
-            private String qInviteAskUser;
             private String qCityId;
-            private String Number;
+            private String attentionNumber;
+            private String headImg;
+            private String qId;
+            private String pvNumber;
+            private String aNumber;
+            private String qInviteAskUser;
             private String qAddr;
             private String qUserSign;
             private String qCreateTime;
             private String qContent;
             private String qCountryId;
-            private String qId;
             private String qTag;
-            private String pvNumber;
 
             public void setQTitle(String qTitle) {
                 this.qTitle = qTitle;
-            }
-
-            public void setQInviteAskUser(String qInviteAskUser) {
-                this.qInviteAskUser = qInviteAskUser;
             }
 
             public void setQCityId(String qCityId) {
                 this.qCityId = qCityId;
             }
 
-            public void setNumber(String Number) {
-                this.Number = Number;
+            public void setAttentionNumber(String attentionNumber) {
+                this.attentionNumber = attentionNumber;
+            }
+
+            public void setHeadImg(String headImg) {
+                this.headImg = headImg;
+            }
+
+            public void setQId(String qId) {
+                this.qId = qId;
+            }
+
+            public void setPvNumber(String pvNumber) {
+                this.pvNumber = pvNumber;
+            }
+
+            public void setANumber(String aNumber) {
+                this.aNumber = aNumber;
+            }
+
+            public void setQInviteAskUser(String qInviteAskUser) {
+                this.qInviteAskUser = qInviteAskUser;
             }
 
             public void setQAddr(String qAddr) {
@@ -215,32 +235,40 @@ public class MainCommunity {
                 this.qCountryId = qCountryId;
             }
 
-            public void setQId(String qId) {
-                this.qId = qId;
-            }
-
             public void setQTag(String qTag) {
                 this.qTag = qTag;
-            }
-
-            public void setPvNumber(String pvNumber) {
-                this.pvNumber = pvNumber;
             }
 
             public String getQTitle() {
                 return qTitle;
             }
 
-            public String getQInviteAskUser() {
-                return qInviteAskUser;
-            }
-
             public String getQCityId() {
                 return qCityId;
             }
 
-            public String getNumber() {
-                return Number;
+            public String getAttentionNumber() {
+                return attentionNumber;
+            }
+
+            public String getHeadImg() {
+                return headImg;
+            }
+
+            public String getQId() {
+                return qId;
+            }
+
+            public String getPvNumber() {
+                return pvNumber;
+            }
+
+            public String getANumber() {
+                return aNumber;
+            }
+
+            public String getQInviteAskUser() {
+                return qInviteAskUser;
             }
 
             public String getQAddr() {
@@ -263,18 +291,9 @@ public class MainCommunity {
                 return qCountryId;
             }
 
-            public String getQId() {
-                return qId;
-            }
-
             public String getQTag() {
                 return qTag;
             }
-
-            public String getPvNumber() {
-                return pvNumber;
-            }
         }
     }
-
 }

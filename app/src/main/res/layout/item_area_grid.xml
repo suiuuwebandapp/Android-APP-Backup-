@@ -24,4 +24,5 @@
         android:text="@string/UnknownArea"
         android:textColor="@color/white"
         android:textSize="20sp"/>
+
 </RelativeLayout>

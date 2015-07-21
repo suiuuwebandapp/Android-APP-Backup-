@@ -12,7 +12,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -170,6 +169,92 @@ public class PersonalSettingActivity extends BaseActivity {
     }
 
     /**
+     * 初始化方法
+     */
+    private void initView() {
+        personalSettingBack = (ImageView) findViewById(R.id.personalSettingBack);
+        save = (TextView) findViewById(R.id.personal_save);
+        headImageView = (CircleImageView) findViewById(R.id.headImageView);
+        sex_man = (TextView) findViewById(R.id.personal_setting_man);
+        sex_woman = (TextView) findViewById(R.id.personal_setting_woman);
+        localDetails = (TextView) findViewById(R.id.localDetails);
+        editNickName = (EditText) findViewById(R.id.editNickName);
+        editTrade = (EditText) findViewById(R.id.editTrade);
+        editSign = (EditText) findViewById(R.id.editSign);
+
+        upLoadDialog = new ProgressDialog(this);
+        upLoadDialog.setMessage("正在上传...");
+        upLoadDialog.setCanceledOnTouchOutside(false);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("正在更新数据,请稍候...");
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        data = SuiuuInfo.ReadUserData(this);
+    }
+
+    /**
+     * 添加初始化数据
+     */
+    private void initLoadDefaultData() {
+        netWorkImagePath = data.getHeadImg();
+        //nativeImagePath = SuiuuInfo.ReadNativeHeadImagePath(this);
+
+        if (!TextUtils.isEmpty(netWorkImagePath)) {
+            imageLoader.displayImage(netWorkImagePath, headImageView, options);
+        } else {
+            if (!TextUtils.isEmpty(nativeImagePath)) {
+                imageLoader.displayImage("file://" + nativeImagePath, headImageView, options);
+            }
+        }
+
+        String strNickName = data.getNickname();
+        if (!TextUtils.isEmpty(strNickName)) {
+            editNickName.setText(strNickName);
+        }
+
+        String strGender = data.getSex();
+        if (!TextUtils.isEmpty(strGender)) {
+            if (strGender.equals("1")) {
+                sex_man.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_man)),
+                        null, null, null);
+                DeBugLog.i(TAG, "男");
+            } else if (strGender.equals("0")) {
+                sex_woman.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_woman)),
+                        null, null, null);
+                DeBugLog.i(TAG, "女");
+            }
+        }
+
+        String countryName = SuiuuInfo.ReadDomicileCountry(this);
+        String cityName = SuiuuInfo.ReadDomicileCity(this);
+        if (!TextUtils.isEmpty(countryName) && !TextUtils.isEmpty(cityName)) {
+            localDetails.setText(countryName + "," + cityName);
+        } else if (TextUtils.isEmpty(countryName) && !TextUtils.isEmpty(cityName)) {
+            localDetails.setText(cityName);
+        } else if (!TextUtils.isEmpty(countryName) && TextUtils.isEmpty(cityName)) {
+            localDetails.setText(countryName);
+        } else {
+            localDetails.setText(getResources().getString(R.string.local));
+        }
+
+        String profession = data.getProfession();
+        if (!TextUtils.isEmpty(profession)) {
+            editTrade.setText(profession);
+        }
+
+        String signature = data.getIntro();
+        if (!TextUtils.isEmpty(signature)) {
+            editSign.setText(signature);
+        }
+    }
+
+    /**
      * 控件行为
      */
     private void ViewAction() {
@@ -307,102 +392,6 @@ public class PersonalSettingActivity extends BaseActivity {
                 HttpServicePath.upDatePersonalStatus, new PersonalSettingRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
-    }
-
-    /**
-     * 添加初始化数据
-     */
-    private void initLoadDefaultData() {
-        netWorkImagePath = data.getHeadImg();
-        //nativeImagePath = SuiuuInfo.ReadNativeHeadImagePath(this);
-
-        if (!TextUtils.isEmpty(netWorkImagePath)) {
-            imageLoader.displayImage(netWorkImagePath, headImageView, options);
-        } else {
-            if (!TextUtils.isEmpty(nativeImagePath)) {
-                imageLoader.displayImage("file://" + nativeImagePath, headImageView, options);
-            }
-        }
-
-        String strNickName = data.getNickname();
-        if (!TextUtils.isEmpty(strNickName)) {
-            editNickName.setText(strNickName);
-        }
-
-        String strGender = data.getSex();
-        if (!TextUtils.isEmpty(strGender)) {
-            if (strGender.equals("1")) {
-                sex_man.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_man)),
-                        null, null, null);
-                DeBugLog.i(TAG, "男");
-            } else if (strGender.equals("0")) {
-                sex_woman.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_woman)),
-                        null, null, null);
-                DeBugLog.i(TAG, "女");
-            }
-        }
-
-        String countryName = SuiuuInfo.ReadDomicileCountry(this);
-        String cityName = SuiuuInfo.ReadDomicileCity(this);
-        if (!TextUtils.isEmpty(countryName) && !TextUtils.isEmpty(cityName)) {
-            localDetails.setText(countryName + "," + cityName);
-        } else if (TextUtils.isEmpty(countryName) && !TextUtils.isEmpty(cityName)) {
-            localDetails.setText(cityName);
-        } else if (!TextUtils.isEmpty(countryName) && TextUtils.isEmpty(cityName)) {
-            localDetails.setText(countryName);
-        } else {
-            localDetails.setText(getResources().getString(R.string.local));
-        }
-
-        String profession = data.getProfession();
-        if (!TextUtils.isEmpty(profession)) {
-            editTrade.setText(profession);
-        }
-
-        String signature = data.getIntro();
-        if (!TextUtils.isEmpty(signature)) {
-            editSign.setText(signature);
-        }
-    }
-
-    /**
-     * 初始化方法
-     */
-    private void initView() {
-
-        RelativeLayout personalRootLayout = (RelativeLayout) findViewById(R.id.personalRootLayout);
-        if (isKITKAT) {
-            if (navigationBarHeight <= 0) {
-                personalRootLayout.setPadding(0, statusBarHeight, 0, 0);
-            } else {
-                personalRootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-            }
-        }
-
-        personalSettingBack = (ImageView) findViewById(R.id.personalSettingBack);
-        save = (TextView) findViewById(R.id.personal_save);
-        headImageView = (CircleImageView) findViewById(R.id.headImageView);
-        sex_man = (TextView) findViewById(R.id.personal_setting_man);
-        sex_woman = (TextView) findViewById(R.id.personal_setting_woman);
-        localDetails = (TextView) findViewById(R.id.localDetails);
-        editNickName = (EditText) findViewById(R.id.editNickName);
-        editTrade = (EditText) findViewById(R.id.editTrade);
-        editSign = (EditText) findViewById(R.id.editSign);
-
-        upLoadDialog = new ProgressDialog(this);
-        upLoadDialog.setMessage("正在上传...");
-        upLoadDialog.setCanceledOnTouchOutside(false);
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("正在更新数据,请稍候...");
-        progressDialog.setCanceledOnTouchOutside(false);
-
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
-
-        data = SuiuuInfo.ReadUserData(this);
     }
 
     @Override

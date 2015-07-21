@@ -2,8 +2,6 @@ package com.minglang.suiuu.fragment.suiuu;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -32,6 +30,9 @@ import com.minglang.suiuu.utils.SuHttpRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 新申请的随游
  * <p/>
@@ -40,20 +41,18 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class NewApplyForFragment extends Fragment {
-
     private static final String TAG = NewApplyForFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
 
-    private static final int COMPLETE = 1;
-
     private String userSign;
     private String verification;
     private String tripId;
 
-    private static PullToRefreshListView pullToRefreshListView;
+    @Bind(R.id.ApplyForListView)
+    PullToRefreshListView pullToRefreshListView;
 
     private ProgressDialog progressDialog;
 
@@ -62,19 +61,6 @@ public class NewApplyForFragment extends Fragment {
     private int page = 1;
 
     private List<NewApply.NewApplyData> listAll = new ArrayList<>();
-
-    private static Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case COMPLETE:
-                    pullToRefreshListView.onRefreshComplete();
-                    break;
-            }
-
-            return false;
-        }
-    });
 
     /**
      * Use this factory method to create a new instance of
@@ -110,10 +96,9 @@ public class NewApplyForFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_new_apply_for, container, false);
-
-        initView(rootView);
+        ButterKnife.bind(this, rootView);
+        initView();
         ViewAction();
         getNewApplyForData(page);
         return rootView;
@@ -121,13 +106,10 @@ public class NewApplyForFragment extends Fragment {
 
     /**
      * 初始化方法
-     *
-     * @param view Fragment的根View
      */
-    private void initView(View view) {
+    private void initView() {
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
 
-        pullToRefreshListView = (PullToRefreshListView) view.findViewById(R.id.ApplyForListView);
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         ListView listView = pullToRefreshListView.getRefreshableView();
 
@@ -198,8 +180,7 @@ public class NewApplyForFragment extends Fragment {
             progressDialog.dismiss();
         }
 
-        handler.sendEmptyMessage(COMPLETE);
-
+        pullToRefreshListView.onRefreshComplete();
     }
 
     /**

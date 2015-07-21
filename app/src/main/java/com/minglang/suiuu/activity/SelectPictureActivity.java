@@ -42,11 +42,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class SelectPictureActivity extends BaseActivity {
 
     private static final String TAG = SelectPictureActivity.class.getSimpleName();
 
     private static final int OPEN_CAMERA = 100;
+
+    private static final int result = 9;
 
     private DisplayImageOptions options;
 
@@ -71,27 +76,37 @@ public class SelectPictureActivity extends BaseActivity {
     /**
      * 返回键
      */
-    private ImageView back;
+    @Bind(R.id.iv_top_back)
+    ImageView back;
 
     /**
      * 完成
      */
-    private TextView complete;
+    @Bind(R.id.tv_top_right)
+    TextView complete;
 
     /**
      * 选择图片
      */
-    private GridView selectImage;
+    @Bind(R.id.selectPicture)
+    GridView selectImage;
 
     /**
      * 所有图片
      */
-    private TextView allPicture;
+    @Bind(R.id.selectPictureAll)
+    TextView allPicture;
+
+    @Bind(R.id.tv_top_right_more)
+    ImageView tv_top_right_more;
+
+    @Bind(R.id.tv_top_center)
+    TextView tv_top_center;
 
     private SelectPictureAdapter selectPictureAdapter;
 
     private ListPictureDirPopupWindow listPictureDirPopupWindow;
-    private static final int result = 9;
+
     private int state = 0;
 
     public SelectPictureActivity() {
@@ -101,6 +116,7 @@ public class SelectPictureActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_picture);
+        ButterKnife.bind(this);
 
         state = this.getIntent().getIntExtra("state", 0);
 
@@ -112,7 +128,29 @@ public class SelectPictureActivity extends BaseActivity {
         selectPictureAdapter = new SelectPictureAdapter(context, currentImageFolder.images,
                 currentImageFolder, selectedPicture, complete);
         selectImage.setAdapter(selectPictureAdapter);
+    }
 
+    /**
+     * 初始化方法
+     */
+    private void initView() {
+
+        mContentResolver = getContentResolver();
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        imageAll = new ImageFolder();
+        imageAll.setDir("/所有图片");
+        currentImageFolder = imageAll;
+        mDirPaths.add(imageAll);
+
+        complete.setVisibility(View.VISIBLE);
+
+        tv_top_right_more.setVisibility(View.GONE);
+
+        tv_top_center.setText("选择图片");
     }
 
     /**
@@ -274,34 +312,6 @@ public class SelectPictureActivity extends BaseActivity {
 
         listPictureDirPopupWindow = new ListPictureDirPopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT,
                 screenHeight / 10 * 7, true, mDirPaths);
-    }
-
-    /**
-     * 初始化方法
-     */
-    private void initView() {
-
-        mContentResolver = getContentResolver();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
-
-        imageAll = new ImageFolder();
-        imageAll.setDir("/所有图片");
-        currentImageFolder = imageAll;
-        mDirPaths.add(imageAll);
-
-        back = (ImageView) findViewById(R.id.iv_top_back);
-        complete = (TextView) findViewById(R.id.tv_top_right);
-        complete.setVisibility(View.VISIBLE);
-        selectImage = (GridView) findViewById(R.id.selectPicture);
-        allPicture = (TextView) findViewById(R.id.selectPictureAll);
-        ImageView tv_top_right_more = (ImageView) findViewById(R.id.tv_top_right_more);
-        tv_top_right_more.setVisibility(View.GONE);
-        TextView tv_top_center = (TextView) findViewById(R.id.tv_top_center);
-        tv_top_center.setText("选择图片");
-
     }
 
     class ListPictureDirPopupWindow extends BasePopupWindowForListView<ImageFolder> {
