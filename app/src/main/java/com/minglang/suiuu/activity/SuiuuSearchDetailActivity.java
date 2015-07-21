@@ -283,7 +283,6 @@ public class SuiuuSearchDetailActivity extends BaseActivity
             tv.setOnClickListener(new MyOnclick());
             list.add(tv);
             flowLayout.addView(tv);
-
         }
     }
 

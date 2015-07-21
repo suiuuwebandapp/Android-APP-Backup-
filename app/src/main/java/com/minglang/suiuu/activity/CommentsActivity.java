@@ -46,7 +46,6 @@ public class CommentsActivity extends BaseActivity {
      * 评论列表
      */
     private ListView mListView;
-
     private CommentAdapter adapter;
     private EditText et_input_comment;
     private Button bt_send_comment;

@@ -534,6 +534,7 @@
     <string name="title_activity_order_manage" translatable="false">OrderManageActivity</string>
     <string name="title_activity_suiuu_search_detail" translatable="false">SuiuuSearchDetailActivity</string>
     <string name="title_activity_suiuu_search" translatable="false">SuiuuSearchActivity</string>
+    <string name="title_activity_common_comment" translatable="false">CommonCommentActivity</string>
 
     <string name="title_section1" translatable="false">Section 1</string>
     <string name="title_section2" translatable="false">Section 2</string>

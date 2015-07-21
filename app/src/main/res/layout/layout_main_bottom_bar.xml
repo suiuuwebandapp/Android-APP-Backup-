@@ -51,7 +51,6 @@
     <LinearLayout
         android:id="@+id/tab4"
         style="@style/tabLayout">
-
         <ImageView
             android:id="@+id/img4"
             style="@style/mainBottomBarImage"

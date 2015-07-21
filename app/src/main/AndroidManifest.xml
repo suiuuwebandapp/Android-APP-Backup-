@@ -342,7 +342,7 @@
         <!-- 友盟更新SDK相关组件 -->
         <service
             android:name="com.umeng.update.net.DownloadingService"
-            android:process=":DownloadingService"/>
+            android:process=":DownloadingService" />
 
         <activity
             android:name="com.umeng.update.UpdateDialogActivity"
@@ -377,11 +377,15 @@
             android:name=".activity.SuiuuSearchDetailActivity"
             android:label="@string/title_activity_suiuu_search_detail"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-
         <activity
             android:name=".activity.SuiuuSearchActivity"
             android:label="@string/title_activity_suiuu_search"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+        <activity
+            android:name=".activity.CommonCommentActivity"
+            android:label="@string/title_activity_common_comment"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:windowSoftInputMode="stateVisible"/>
 
         <!-- 支付相关 -->
         <!-- Ping++ SDK 注册 -->
@@ -437,17 +441,17 @@
         <activity
             android:name=".activity.AnswerActivity"
             android:label="@string/title_activity_answer"
-            android:theme="@style/AppCustomTheme"/>
+            android:theme="@style/AppCustomTheme" />
 
         <activity
             android:name=".activity.CommunitySearchActivity"
             android:label="@string/title_activity_community_search"
-            android:theme="@style/AppCustomTheme"/>
+            android:theme="@style/AppCustomTheme" />
 
         <activity
             android:name=".activity.PersonalCenterActivity"
             android:label="@string/title_activity_personal_center"
-            android:theme="@style/AppCustomTheme"/>
+            android:theme="@style/AppCustomTheme" />
 
     </application>
 

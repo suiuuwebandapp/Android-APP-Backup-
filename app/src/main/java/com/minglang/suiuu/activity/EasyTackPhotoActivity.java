@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,6 +31,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.EasyTackPhotoAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.BaiduMapActivity;
+import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.entity.LoopBaseData;
@@ -60,6 +62,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
 
     private static OSSService ossService = OSSServiceProvider.getService();
     private static OSSBucket bucket = ossService.getOssBucket("suiuu");
+    private String[] suiuuTag = {"家庭", "购物", "自然", "惊险", "浪漫", "博物馆", "猎奇"};
     /**
      * 取消按钮
      */
@@ -86,10 +89,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
      * 主题数据集合
      */
     private List<LoopBaseData> list;
-    //判断是主题下拉框还是地区下拉框
-    private int themeOrArea = 1;
-    private String themeCid;
-    private String areaCid;
     /**
      * 选择位置
      */
@@ -107,7 +106,12 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
     private JsonUtils jsonUtil = JsonUtils.getInstance();
     //修改文章进来是否重新选择图片
     private boolean isChangePic = false;
-
+    private FlowLayout fl_easy_take_photo;
+    private List<TextView> suiuuTagClick = new ArrayList<>();
+    private List<TextView> suiuuTagList = new ArrayList<>();
+    private String tagText;
+    private TextView tv_show_tag;
+    private ImageView tv_top_right_more;
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -151,7 +155,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         //判断如果文章详情信息不为空就是修改文章的图片反之为新文章图片
 //        iv_cancel.setVisibility(View.GONE);
         tv_cancel.setVisibility(View.VISIBLE);
-
+        setSuiuuTag();
         ViewAction();
     }
 
@@ -173,18 +177,22 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
                 rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
             }
         }
-
+        dialog = new TextProgressDialog(this);
         picDescriptionList = new ArrayList<>();
         iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
         iv_top_back.setVisibility(View.GONE);
         tv_cancel = (TextView) findViewById(R.id.tv_top_cancel);
         lv_picture_description = (ListView) findViewById(R.id.lv_picture_description);
         tv_top_right = (TextView) findViewById(R.id.tv_top_right);
+        tv_top_right.setVisibility(View.VISIBLE);
         search_question = (EditText) findViewById(R.id.search_question);
         tv_show_your_location = (TextView) findViewById(R.id.tv_show_your_location);
+        fl_easy_take_photo = (FlowLayout) findViewById(R.id.fl_easy_take_photo);
+        tv_show_tag = (TextView) findViewById(R.id.tv_show_tag);
+        tv_top_right_more = (ImageView) findViewById(R.id.tv_top_right_more);
+        tv_top_right_more.setVisibility(View.GONE);
         sll = (ScrollView) findViewById(R.id.sll);
         sll.smoothScrollTo(0, 0);
-
         if (articleDetail != null) {
             changeArticleFullData();
         } else {
@@ -218,11 +226,8 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             double latitude = data.getDoubleExtra("latitude", 0);
             double longitude = data.getDoubleExtra("longitude", 0);
             String locationAddress = data.getStringExtra("address");
-
-            DeBugLog.i(TAG, "locationAddress:" + locationAddress);
-            DeBugLog.i(TAG, "latitude:" + latitude);
-            DeBugLog.i(TAG, "longitude:" + longitude);
-
+            String locationCountry = data.getStringExtra("country");
+            String locationCity = data.getStringExtra("city");
             if (locationAddress != null && !locationAddress.equals("")) {
                 tv_show_your_location.setText(locationAddress);
             } else {
@@ -243,12 +248,13 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             } else {
                 loadDate();
             }
-        }  else if (mId == R.id.tv_show_your_location) {
+        } else if (mId == R.id.tv_show_your_location) {
             startActivityForResult(new Intent(EasyTackPhotoActivity.this, BaiduMapActivity.class), REQUEST_CODE_MAP);
         } else if (mId == R.id.iv_top_back) {
             finish();
         }
     }
+
     private void loadDate() {
         ListView list = (ListView) findViewById(R.id.lv_picture_description);//获得listview
         for (int i = 0; i < list.getChildCount() - 1; i++) {
@@ -257,8 +263,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
             picDescriptionList.add(et.getText().toString());
         }
-
-
         //访问网络相关
         dialog.showDialog();
         String str = SuiuuInfo.ReadVerification(this);
@@ -266,8 +270,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         params.addBodyParameter("type", 1 + "");
         params.addBodyParameter(HttpServicePath.key, str);
         params.addBodyParameter("title", search_question.getText().toString().trim());
-        params.addBodyParameter("addrId", areaCid);
-        params.addBodyParameter("circleId", themeCid);
         params.addBodyParameter("content", jsonUtil.toJSON(picDescriptionList));
         params.addBodyParameter("addr", tv_show_your_location.getText().toString().trim());
         List<String> picNameList = new ArrayList<>();
@@ -328,7 +330,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
     }
 
 
-
     private void updateDate(final String path) {
         new Thread(new Runnable() {
             @Override
@@ -352,9 +353,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
                             if (picSuccessCount == picList.size()) {
                                 handler.sendEmptyMessage(getData_Success);
                             }
-
                         }
-
                         @Override
                         public void onProgress(String objectKey, int byteCount, int totalSize) {
                             DeBugLog.i(TAG, "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
@@ -433,5 +432,44 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         }
     }
 
+    public void setSuiuuTag() {
+        fl_easy_take_photo.removeAllViews();
+        LayoutInflater mInflater = LayoutInflater.from(this);
+        for (int i = 0; i < suiuuTag.length - 1; i++) {
+            TextView tv = (TextView) mInflater.inflate(R.layout.tv,
+                    fl_easy_take_photo, false);
+            tv.setBackgroundResource(R.drawable.tag_shape_trip_gallery_publish);
+            tv.setText(suiuuTag[i]);
+            tv.setTag(i);
+            suiuuTagList.add(tv);
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tagText = "";
+                    int tagNumber = (int) v.getTag();
+                    if (suiuuTagClick.contains(suiuuTagList.get(tagNumber))) {
+                        suiuuTagList.get(tagNumber).setBackgroundResource(R.drawable.tag_shape_trip_gallery_publish);
+                        suiuuTagList.get(tagNumber).setTextColor(getResources().getColor(R.color.gray));
+                        suiuuTagClick.remove(suiuuTagList.get(tagNumber));
+                    } else {
+                        suiuuTagList.get(tagNumber).setBackgroundResource(R.drawable.tag_shape_trip_gallery_publish_press);
+                        suiuuTagList.get(tagNumber).setTextColor(getResources().getColor(R.color.white));
+                        suiuuTagClick.add(suiuuTagList.get(tagNumber));
+                    }
+                    for (TextView tv : suiuuTagClick) {
+                        tagText += tv.getText() + "  ";
+                    }
+                    if ("".equals(tagText)) {
+                        tv_show_tag.setText("选择标签");
+                    } else {
+                        tv_show_tag.setText(tagText);
+
+                    }
+                }
+            });
+
+            fl_easy_take_photo.addView(tv);
+        }
+    }
 
 }

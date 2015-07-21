@@ -48,7 +48,7 @@
             android:layout_height="@dimen/layout_50dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/layout_10dp"
-            android:background="@drawable/user_head_image_bg" />
+            android:background="@drawable/user_head_image_bg"/>
 
         <TextView
             android:id="@+id/tv_trip_gallery_name"

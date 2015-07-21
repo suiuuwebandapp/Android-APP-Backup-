@@ -71,18 +71,20 @@
                 android:layout_marginLeft="@dimen/layout_16dp"
                 android:layout_marginRight="@dimen/layout_16dp"
                 android:textColor="@color/mainColor"
-                android:text="显示标签"
+                android:drawableLeft="@drawable/small_tag"
+                android:drawablePadding="@dimen/layout_5dp"
+                android:text="选择标签"
                 android:padding="@dimen/layout_8dp"
                 android:background="@color/white"
                 android:textSize="@dimen/layout_15sp"
                 android:gravity="center_vertical"
                 />
             <com.minglang.suiuu.customview.FlowLayout
-                android:id="@+id/id_flowLayout"
+                android:id="@+id/fl_easy_take_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/layout_16dp"
-                android:layout_marginRight="@dimen/layout_16dp"
+                android:layout_marginLeft="@dimen/layout_10dp"
+                android:layout_marginRight="@dimen/layout_10dp"
                 android:background="@color/transparent"
                 android:padding="5dp"/>
         </LinearLayout>

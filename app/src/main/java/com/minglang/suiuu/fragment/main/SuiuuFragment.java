@@ -84,7 +84,7 @@ public class SuiuuFragment extends BaseFragment
         suiuuListView.setIScrollListener(this);
         noDataLoad = (TextView) rootView.findViewById(R.id.tv_noDataLoad);
         View topView = getActivity().findViewById(R.id.mainShowLayout);
-        tabSelect = (LinearLayout) topView.findViewById(R.id.tabSelect);
+        tabSelect = (LinearLayout) topView.findViewById(R.id.tabSelectCardLayout);
         dialog = new TextProgressDialog(getActivity());
         //处理头部控件
         et_suiuu = (ImageView) topView.findViewById(R.id.main_2_search);
@@ -183,6 +183,7 @@ public class SuiuuFragment extends BaseFragment
 
     @Override
     public void onScroll() {
+        Log.i("suiuu","tabselect="+tabSelect.getHeight());
         final Animation transAnim = new TranslateAnimation(0, 0, tabSelect.getHeight(), 0);
         transAnim.setFillAfter(true);
         transAnim.setDuration(500);

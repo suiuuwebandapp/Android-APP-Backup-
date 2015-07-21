@@ -13,7 +13,8 @@ public class HttpServicePath {
      * 服务器地址
      * <p/>
      */
-    public static String RootPath = "http://192.168.1.173";
+//    public static String RootPath = "http://192.168.1.173";
+    public static String RootPath = "http://apptest.suiuu.com";
 
     public static String SharePath = "/circle/web-info?infoId=";
 
@@ -229,7 +230,7 @@ public class HttpServicePath {
     /**
      * 得到随游的详细信息
      */
-    public static String getSuiuuItemInfo = RootPath + "/app-travel/get-travel-info";
+    public static String getSuiuuItemInfo = RootPath + "/app-travel/get-travel-info-json";
 
     /**
      * 得到选择国家的数据

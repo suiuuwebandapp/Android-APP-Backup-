@@ -1,243 +1,186 @@
-/**
- * Copyright (C) 2013-2014 EaseMob Technologies. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package com.minglang.suiuu.chat.activity;
+
+import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.LocationManagerProxy;
+import com.amap.api.location.LocationProviderProxy;
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.LocationSource;
+import com.amap.api.maps.MapView;
+import com.amap.api.maps.UiSettings;
+import com.minglang.suiuu.R;
 
 
-public class BaiduMapActivity extends BaseActivity {
+public class BaiduMapActivity extends BaseActivity implements LocationSource,
+        AMapLocationListener {
+    private MapView mapView;
+    private AMap aMap;
+    private UiSettings mUiSettings;
+    private OnLocationChangedListener mListener;
+    private LocationManagerProxy aMapManager;
+    private double latitude;
+    private double longitude;
+    private String country;
+    private String city;
+    private String address ;
+    private Button btn_location_send;
 
-//	private final static String TAG = "map";
-//	static MapView mMapView = null;
-//	FrameLayout mMapViewContainer = null;
-//	// 定位相关
-//	LocationClient mLocClient;
-//	public MyLocationListenner myListener = new MyLocationListenner();
-//	public NotifyLister mNotifyer = null;
-//
-//	Button sendButton = null;
-//
-//	EditText indexText = null;
-//	int index = 0;
-//	// LocationData locData = null;
-//	static BDLocation lastLocation = null;
-//	public static BaiduMapActivity instance = null;
-//	ProgressDialog progressDialog;
-//	private BaiduMap mBaiduMap;
-//
-//	private LocationMode mCurrentMode;
-	
-	/**
-	 * 构造广播监听类，监听 SDK key 验证以及网络异常广播
-//	 */
-//	public class BaiduSDKReceiver extends BroadcastReceiver {
-//		public void onReceive(Context context, Intent intent) {
-//			String s = intent.getAction();
-//			String st1 = getResources().getString(R.string.Network_error);
-//			if (s.equals(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR)) {
-//
-//				String st2 = getResources().getString(R.string.please_check);
-//				Toast.makeText(instance, st2, Toast.LENGTH_SHORT).show();
-//			} else if (s.equals(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR)) {
-//				Toast.makeText(instance, st1, Toast.LENGTH_SHORT).show();
-//			}
-//		}
-//	}
 
-//	private BaiduSDKReceiver mBaiduReceiver;
-	
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-//		instance = this;
-//		//在使用SDK各组件之前初始化context信息，传入ApplicationContext
-//        //注意该方法要再setContentView方法之前实现
-//        SDKInitializer.initialize(getApplicationContext());
-//		setContentView(R.layout.activity_baidumap);
-//		mMapView = (MapView) findViewById(R.id.bmapView);
-//		sendButton = (Button) findViewById(R.id.btn_location_send);
-//		Intent intent = getIntent();
-//		double latitude = intent.getDoubleExtra("latitude", 0);
-//		mCurrentMode = LocationMode.NORMAL;
-//		mBaiduMap = mMapView.getMap();
-//		MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(15.0f);
-//		mBaiduMap.setMapStatus(msu);
-//		initMapView();
-//		if (latitude == 0) {
-//			mMapView = new MapView(this, new BaiduMapOptions());
-//			mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
-//							mCurrentMode, true, null));
-//			showMapWithLocationClient();
-//		} else {
-//			double longtitude = intent.getDoubleExtra("longitude", 0);
-//			String address = intent.getStringExtra("address");
-//			LatLng p = new LatLng(latitude, longtitude);
-//			mMapView = new MapView(this,
-//					new BaiduMapOptions().mapStatus(new MapStatus.Builder()
-//							.target(p).build()));
-//			showMap(latitude, longtitude, address);
-//		}
-//		// 注册 SDK 广播监听者
-//		IntentFilter iFilter = new IntentFilter();
-//		iFilter.addAction(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR);
-//		iFilter.addAction(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR);
-//		mBaiduReceiver = new BaiduSDKReceiver();
-//		registerReceiver(mBaiduReceiver, iFilter);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_baidumap);
+        mapView = (MapView) findViewById(R.id.map);
+        mapView.onCreate(savedInstanceState);// 必须要写
+        init();
+        viewAction();
+        aMap.setLocationSource(this);// 设置定位监听
+        mUiSettings.setMyLocationButtonEnabled(true);// 是否显示定位按钮
+        aMap.setMyLocationEnabled(true);//
+    }
 
-//	private void showMap(double latitude, double longtitude, String address) {
-//		sendButton.setVisibility(View.GONE);
-//		LatLng llA = new LatLng(latitude, longtitude);
-//		CoordinateConverter converter= new CoordinateConverter();
-//		converter.coord(llA);
-//		converter.from(CoordinateConverter.CoordType.COMMON);
-//		LatLng convertLatLng = converter.convert();
-//		OverlayOptions ooA = new MarkerOptions().position(convertLatLng).icon(BitmapDescriptorFactory
-//				.fromResource(R.drawable.icon_marka))
-//				.zIndex(4).draggable(true);
-//		mBaiduMap.addOverlay(ooA);
-//		MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(convertLatLng, 17.0f);
-//		mBaiduMap.animateMapStatus(u);
-//	}
-//
-//	private void showMapWithLocationClient() {
-//		String str1 = getResources().getString(R.string.Making_sure_your_location);
-//		progressDialog = new ProgressDialog(this);
-//		progressDialog.setCanceledOnTouchOutside(false);
-//		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//		progressDialog.setMessage(str1);
-//
-//		progressDialog.setOnCancelListener(new OnCancelListener() {
-//
-//			public void onCancel(DialogInterface arg0) {
-//				if (progressDialog.isShowing()) {
-//					progressDialog.dismiss();
-//				}
-//				Log.d("map", "cancel retrieve location");
-//				finish();
-//			}
-//		});
-//
-//		progressDialog.show();
-//
-//		mLocClient = new LocationClient(this);
-//		mLocClient.registerLocationListener(myListener);
-//
-//		LocationClientOption option = new LocationClientOption();
-//		option.setOpenGps(true);// 打开gps
-//		// option.setCoorType("bd09ll"); //设置坐标类型
-//		// Johnson change to use gcj02 coordination. chinese national standard
-//		// so need to conver to bd09 everytime when draw on baidu map
-//		option.setCoorType("gcj02");
-//		option.setScanSpan(30000);
-//		option.setAddrType("all");
-//		mLocClient.setLocOption(option);
-//	}
-//
-//	@Override
-//	protected void onPause() {
-//		mMapView.onPause();
-//		if (mLocClient != null) {
-//			mLocClient.stop();
-//		}
-//		super.onPause();
-//		lastLocation = null;
-//	}
-//
-//	@Override
-//	protected void onResume() {
-//		mMapView.onResume();
-//		if (mLocClient != null) {
-//			mLocClient.start();
-//		}
-//		super.onResume();
-//	}
-//
-//	@Override
-//	protected void onDestroy() {
-//		if (mLocClient != null)
-//			mLocClient.stop();
-//		mMapView.onDestroy();
-//		unregisterReceiver(mBaiduReceiver);
-//		super.onDestroy();
-//	}
-//	private void initMapView() {
-//		mMapView.setLongClickable(true);
-//	}
-//
-//	/**
-//	 * 监听函数，有新位置的时候，格式化成字符串，输出到屏幕中
-//	 */
-//	public class MyLocationListenner implements BDLocationListener {
-//		@Override
-//		public void onReceiveLocation(BDLocation location) {
-//			if (location == null) {
-//				return;
-//			}
-//			Log.d("map", "On location change received:" + location);
-//			Log.d("map", "addr:" + location.getAddrStr());
-//			sendButton.setEnabled(true);
-//			if (progressDialog != null) {
-//				progressDialog.dismiss();
-//			}
-//
-//			if (lastLocation != null) {
-//				if (lastLocation.getLatitude() == location.getLatitude() && lastLocation.getLongitude() == location.getLongitude()) {
-//					Log.d("map", "same location, skip refresh");
-//					// mMapView.refresh(); //need this refresh?
-//					return;
-//				}
-//			}
-//			lastLocation = location;
-//			mBaiduMap.clear();
-//			LatLng llA = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-//			CoordinateConverter converter= new CoordinateConverter();
-//			converter.coord(llA);
-//			converter.from(CoordinateConverter.CoordType.COMMON);
-//			LatLng convertLatLng = converter.convert();
-//			OverlayOptions ooA = new MarkerOptions().position(convertLatLng).icon(BitmapDescriptorFactory
-//					.fromResource(R.drawable.icon_marka))
-//					.zIndex(4).draggable(true);
-//			mBaiduMap.addOverlay(ooA);
-//			MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(convertLatLng, 17.0f);
-//			mBaiduMap.animateMapStatus(u);
-//		}
-//
-//		public void onReceivePoi(BDLocation poiLocation) {
-//			if (poiLocation == null) {
-//				return;
-//			}
-//		}
-//	}
-//
-//	public class NotifyLister extends BDNotifyListener {
-//		public void onNotify(BDLocation mlocation, float distance) {
-//		}
-//	}
-//
-//	public void back(View v) {
-//		finish();
-//	}
-//
-//	public void sendLocation(View view) {
-//		Intent intent = this.getIntent();
-//		intent.putExtra("latitude", lastLocation.getLatitude());
-//		intent.putExtra("longitude", lastLocation.getLongitude());
-//		intent.putExtra("address", lastLocation.getAddrStr());
-//		this.setResult(RESULT_OK, intent);
-//		finish();
-//		overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
-//	}
+    /**
+     * 初始化AMap对象
+     */
+    private void init() {
+        btn_location_send = (Button) findViewById(R.id.btn_location_send);
+        if (aMap == null) {
+            aMap = mapView.getMap();
+            mUiSettings = aMap.getUiSettings();
+
+
+        }
+    }
+
+    private void viewAction() {
+        btn_location_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("suiuu", "点击了吧");
+                Intent intent = BaiduMapActivity.this.getIntent();
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
+                intent.putExtra("address", address);
+                intent.putExtra("country",country);
+                intent.putExtra("city",city);
+                BaiduMapActivity.this.setResult(RESULT_OK, intent);
+                finish();
+                overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
+            }
+        });
+    }
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+        deactivate();
+    }
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+        deactivate();
+    }
+    /**
+     * 定位成功后回调函数
+     */
+    @Override
+    public void onLocationChanged(AMapLocation aLocation) {
+        if (mListener != null) {
+            mListener.onLocationChanged(aLocation);// 显示系统小蓝点
+        }
+        Log.i("suiuu", "getAdCode=" + aLocation.getAdCode() + "getLatitude=" + aLocation.getLatitude() + "getLongitude()=" + aLocation.getLongitude() + "aLocation.getAddress()" + aLocation.getAddress());
+        latitude = aLocation.getLatitude();
+        longitude = aLocation.getLongitude();
+        address = aLocation.getAddress();
+        country = aLocation.getCountry();
+        city = aLocation.getCity();
+    }
+
+    /**
+     * 激活定位
+     */
+    @Override
+    public void activate(OnLocationChangedListener listener) {
+        mListener = listener;
+        if (aMapManager == null) {
+            aMapManager = LocationManagerProxy.getInstance(this);
+            /*
+			 * mAMapLocManager.setGpsEnable(false);//
+			 * 1.0.2版本新增方法，设置true表示混合定位中包含gps定位，false表示纯网络定位，默认是true
+			 */
+            // Location API定位采用GPS和网络混合定位方式，时间最短是2000毫秒
+            aMapManager.requestLocationData(
+                    LocationProviderProxy.AMapNetwork, 2000, 10, this);
+        }
+    }
+
+    /**
+     * 停止定位
+     */
+    @Override
+    public void deactivate() {
+        mListener = null;
+        if (aMapManager != null) {
+            aMapManager.removeUpdates(this);
+            aMapManager.destroy();
+        }
+        aMapManager = null;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
 
 }

@@ -11,21 +11,35 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
-import com.minglang.suiuu.entity.LoopArticleCommentList;
+import com.minglang.suiuu.entity.SuiuuDeatailData;
 
 import java.util.List;
 
-public class CommentAdapter extends BaseAdapter {
+/**
+ * 项目名称：Android-APP-Backup-
+ * 类描述：
+ * 创建人：Administrator
+ * 创建时间：2015/7/21 18:39
+ * 修改人：Administrator
+ * 修改时间：2015/7/21 18:39
+ * 修改备注：
+ */
+public class CommonCommentAdapter extends BaseAdapter {
 
     private Context context;
 
-    private List<LoopArticleCommentList> list;
-    public CommentAdapter(Context context) {
+    private List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> list;
+    public CommonCommentAdapter(Context context,List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> list) {
         this.context = context;
+        this.list = list;
     }
-    public void setList(List<LoopArticleCommentList> list) {
+    public void setList(List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> list) {
         this.list = list;
         notifyDataSetChanged();
+    }
+    public void onDateChange(List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> list) {
+        this.list = list;
+        this.notifyDataSetChanged();
     }
     @Override
     public int getCount() {
@@ -70,9 +84,8 @@ public class CommentAdapter extends BaseAdapter {
             holder.headImage.setImageURI(uri);
         }
         holder.title.setText(list.get(position).getNickname());
-        holder.time.setText(list.get(position).getcTime());
-        if (!TextUtils.isEmpty(list.get(position).getrTitle())) {
-            holder.content.setText(list.get(position).getrTitle() + "  " + list.get(position).getContent());
+        if (!TextUtils.isEmpty(list.get(position).getRTitle())) {
+            holder.content.setText(list.get(position).getRTitle() + "  " + list.get(position).getContent());
         } else {
             holder.content.setText(list.get(position).getContent());
 
@@ -87,5 +100,4 @@ public class CommentAdapter extends BaseAdapter {
         TextView content;
         TextView time;
     }
-
 }

@@ -48,46 +48,6 @@ public class TripGalleryFragment extends BaseFragment {
         initView(rootView);
         initData();
         viewAction();
-        TripGallery tg = new TripGallery();
-        tg.setHeadPotrait("http://file-www.sioe.cn/201109/14/222299785.jpg");
-        tg.setHeadUrl("http://h.hiphotos.baidu.com/baike/c0%3Dbaike92%2C5%2C5%2C92%2C30/sign=13643272a6cc7cd9ee203c8b58684a5a/d1160924ab18972b6bcc2955e3cd7b899f510abe.jpg");
-        tg.setLocationDistance("普吉岛\n11KM");
-        tg.setLoveNumber("20");
-        tg.setTripGalleryName("带你畅玩普吉岛");
-        tg.setTripGalleryTag("自然   惊奇");
-        TripGallery tg1 = new TripGallery();
-        tg1.setHeadPotrait("http://file-www.sioe.cn/201109/14/222299785.jpg");
-        tg1.setHeadUrl("http://www.9tour.cn/UploadFile/news/2009-12-23/3131538734.jpg");
-        tg1.setLocationDistance("普吉岛\n11KM");
-        tg1.setLoveNumber("20");
-        tg1.setTripGalleryName("带你畅玩普吉岛");
-        tg1.setTripGalleryTag("自然   惊奇");
-        TripGallery tg2 = new TripGallery();
-        tg2.setHeadPotrait("http://file-www.sioe.cn/201109/14/222299785.jpg");
-        tg2.setHeadUrl("http://f.hiphotos.baidu.com/image/pic/item/58ee3d6d55fbb2fb06ad82a74d4a20a44723dc85.jpg");
-        tg2.setLocationDistance("普吉岛\n11KM");
-        tg2.setLoveNumber("20");
-        tg2.setTripGalleryName("带你畅玩普吉岛");
-        tg2.setTripGalleryTag("自然   惊奇");
-        TripGallery tg3 = new TripGallery();
-        tg3.setHeadPotrait("http://file-www.sioe.cn/201109/14/222299785.jpg");
-        tg3.setHeadUrl("http://pic41.nipic.com/20140522/18818002_090044572197_2.jpg");
-        tg3.setLocationDistance("普吉岛\n11KM");
-        tg3.setLoveNumber("20");
-        tg3.setTripGalleryName("带你畅玩普吉岛");
-        tg3.setTripGalleryTag("自然   惊奇");
-        TripGallery tg4 = new TripGallery();
-        tg4.setHeadPotrait("http://file-www.sioe.cn/201109/14/222299785.jpg");
-        tg4.setHeadUrl("http://www.3487.com/res/allimg/110622/1153022227-1.jpg");
-        tg4.setLocationDistance("普吉岛\n11KM");
-        tg4.setLoveNumber("20");
-        tg4.setTripGalleryName("带你畅玩普吉岛");
-        tg4.setTripGalleryTag("自然   惊奇");
-        tripGalleryList.add(tg);
-        tripGalleryList.add(tg1);
-        tripGalleryList.add(tg2);
-        tripGalleryList.add(tg3);
-        tripGalleryList.add(tg4);
         showList(tripGalleryList);
         return rootView;
     }
@@ -134,6 +94,7 @@ public class TripGalleryFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), SuiuuSearchActivity.class);
                 intent.putExtra("searchClass", 1);
                 startActivity(intent);
+
             }
         });
         lv_trip_gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -141,24 +102,7 @@ public class TripGalleryFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i("suiuu", "点击的position=" + position);
                 if(position == tripGalleryList.size()) {
-                    Toast.makeText(getActivity(),"加载更多",Toast.LENGTH_SHORT).show();
-                    TripGallery tg6 = new TripGallery();
-                    tg6.setHeadPotrait("http://file-www.sioe.cn/201109/14/222299785.jpg");
-                    tg6.setLocationDistance("普吉岛\n11KM");
-                    tg6.setHeadUrl("http://image.tianjimedia.com/uploadImages/2012/096/KX88V30738W0.jpg");
-                    tg6.setLoveNumber("20");
-                    tg6.setTripGalleryName("带你畅玩普吉岛");
-                    tg6.setTripGalleryTag("自然   惊奇");
-                    tripGalleryList.add(tg6);
-                    TripGallery tg7 = new TripGallery();
-                    tg7.setHeadPotrait("http://file-www.sioe.cn/201109/14/222299785.jpg");
-                    tg7.setHeadUrl("http://www.9tour.cn/UploadFile/news/2009-12-23/3131538734.jpg");
-                    tg7.setLocationDistance("普吉岛\n11KM");
-                    tg7.setLoveNumber("20");
-                    tg7.setTripGalleryName("带你畅玩普吉岛");
-                    tg7.setTripGalleryTag("自然   惊奇");
-                    tripGalleryList.add(tg7);
-                    showList(tripGalleryList);
+
                 }
             }
         });

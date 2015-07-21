@@ -16,7 +16,7 @@
         android:textColorHighlight="@color/textColor"
         android:gravity="left"
         android:textSize="@dimen/layout_15sp"
-        android:textColor="@color/black"
+        android:textColor="@color/textColor"
         android:background="@color/white"
         android:layout_marginLeft="@dimen/layout_16dp"
     />

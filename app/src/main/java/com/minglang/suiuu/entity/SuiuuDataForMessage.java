@@ -1,12 +1,12 @@
 package com.minglang.suiuu.entity;
 
 /**
- * 项目名称：Suiuu
+ * 项目名称：Android-APP-Backup-
  * 类描述：
  * 创建人：Administrator
- * 创建时间：2015/5/4 12:30
+ * 创建时间：2015/7/21 17:04
  * 修改人：Administrator
- * 修改时间：2015/5/4 12:30
+ * 修改时间：2015/7/21 17:04
  * 修改备注：
  */
 public class SuiuuDataForMessage {
@@ -77,7 +77,7 @@ public class SuiuuDataForMessage {
 
     @Override
     public String toString() {
-        return "SuiuuData{" +
+        return "SuiuuDataForMessage{" +
                 "currentPage='" + currentPage + '\'' +
                 ", startRow='" + startRow + '\'' +
                 ", pageSize='" + pageSize + '\'' +

@@ -26,7 +26,7 @@
         
         
          <Button
-              android:enabled="false"
+
               android:id="@+id/btn_location_send"
             android:layout_width="52dp"
             android:layout_height="match_parent"
@@ -39,11 +39,10 @@
             android:textSize="17sp" />
 
     </RelativeLayout>
-    
-    <com.baidu.mapapi.map.MapView android:id="@+id/bmapView"
-	    android:layout_width="fill_parent" android:layout_height="fill_parent" 
-	    android:clickable="true"
-	    android:background="#fff"
-	/>
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     
 </LinearLayout>
