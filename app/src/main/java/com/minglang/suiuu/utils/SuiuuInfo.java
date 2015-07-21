@@ -76,7 +76,6 @@ public class SuiuuInfo implements Serializable {
         editor.apply();
     }
 
-
     /**
      * 读取居住地城市信息
      *
@@ -114,7 +113,6 @@ public class SuiuuInfo implements Serializable {
         editor.apply();
 
     }
-
 
     /**
      * 读取个性签名

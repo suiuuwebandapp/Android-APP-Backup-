@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/root_layout"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:animateLayoutChanges="true"
-                android:background="#f2f0eb">
+<RelativeLayout
+    android:id="@+id/root_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="#f2f0eb">
 
     <RelativeLayout
         android:id="@+id/top_bar"
@@ -21,13 +22,13 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="#ffffff"
-            android:textSize="20sp"
-            />
+            android:textSize="20sp"/>
 
         <RelativeLayout
             android:id="@+id/container_remove"
             android:layout_width="50dp"
             android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:background="@drawable/common_tab_bg"
             android:onClick="emptyHistory">
@@ -46,6 +47,7 @@
             android:id="@+id/container_to_group"
             android:layout_width="50dp"
             android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:background="@drawable/common_tab_bg"
             android:onClick="toGroupDetails"
@@ -59,6 +61,7 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/to_group_details_normal"/>
         </RelativeLayout>
+
     </RelativeLayout>
 
     <LinearLayout
@@ -256,6 +259,7 @@
                                 android:clickable="true"
                                 android:onClick="onClick"
                                 android:scaleType="fitCenter"/>
+
                         </RelativeLayout>
 
                         <TextView
@@ -264,6 +268,7 @@
                             android:gravity="center"
                             android:text="@string/attach_take_pic"
                             android:textColor="#727171"/>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -286,6 +291,7 @@
                                 android:clickable="true"
                                 android:onClick="onClick"
                                 android:scaleType="fitCenter"/>
+
                         </RelativeLayout>
 
                         <TextView
@@ -294,6 +300,7 @@
                             android:gravity="center"
                             android:text="@string/attach_picture"
                             android:textColor="#727171"/>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -316,6 +323,7 @@
                                 android:onClick="onClick"
                                 android:scaleType="fitCenter"
                                 android:src="@drawable/chat_location_selector"/>
+
                         </RelativeLayout>
 
                         <TextView
@@ -355,14 +363,15 @@
                             android:text="视频"
                             android:textColor="#727171"/>
                     </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
-                    android:baselineAligned="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:layout_marginTop="6dp"
+                    android:baselineAligned="false"
                     android:weightSum="4">
 
                     <LinearLayout
@@ -385,6 +394,7 @@
                                 android:clickable="true"
                                 android:onClick="onClick"
                                 android:scaleType="fitCenter"/>
+
                         </RelativeLayout>
 
                         <TextView
@@ -393,6 +403,7 @@
                             android:gravity="center"
                             android:text="@string/attach_file"
                             android:textColor="#727171"/>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -416,6 +427,7 @@
                                 android:clickable="true"
                                 android:onClick="onClick"
                                 android:scaleType="fitCenter"/>
+
                         </RelativeLayout>
 
                         <TextView
@@ -424,6 +436,7 @@
                             android:gravity="center"
                             android:text="@string/attach_voice_call"
                             android:textColor="#727171"/>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -455,10 +468,15 @@
                             android:gravity="center"
                             android:text="@string/attach_video_call"
                             android:textColor="#727171"/>
+
                     </LinearLayout>
+
                 </LinearLayout>
+
             </LinearLayout>
+
         </LinearLayout>
+
     </LinearLayout>
 
     <RelativeLayout
@@ -512,7 +530,9 @@
                 android:padding="2dp"
                 android:text="@string/move_up_to_cancel"
                 android:textSize="10sp"/>
+
         </RelativeLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>

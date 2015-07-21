@@ -18,20 +18,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.MainActivity;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.chat.adapter.ChatAllHistoryAdapter;
 import com.minglang.suiuu.chat.chat.Constant;
-import com.minglang.suiuu.application.SuiuuApplication;
-import com.minglang.suiuu.chat.dao.InviteMessgeDao;
-import com.minglang.suiuu.utils.ConstantUtils;
-import com.minglang.suiuu.utils.SystemBarTintManager;
+import com.minglang.suiuu.chat.dao.InviteMessageDao;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,15 +43,21 @@ import java.util.List;
 public class ChatAllHistoryFragment extends Fragment {
 
     private InputMethodManager inputMethodManager;
-    private ListView listView;
     private ChatAllHistoryAdapter adapter;
 
     private boolean hidden;
-    private List<EMConversation> conversationList = new ArrayList<EMConversation>();
+    private List<EMConversation> conversationList = new ArrayList<>();
+
+    private ListView listView;
+
+    private TextView textView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_conversation_history, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_conversation_history, container, false);
+        listView = (ListView) rootView.findViewById(R.id.list);
+        textView = (TextView) rootView.findViewById(R.id.tv_nochat_history);
+        return rootView;
     }
 
     @Override
@@ -63,24 +67,15 @@ public class ChatAllHistoryFragment extends Fragment {
             return;
         inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-
         conversationList.addAll(loadConversationsWithRecentChat());
-        listView = (ListView) getView().findViewById(R.id.list);
-        if (ConstantUtils.isKITKAT) {
-            LinearLayout rootLayout = (LinearLayout) getView().findViewById(R.id.chat_all_root);
-            rootLayout.setPadding(0, new SystemBarTintManager(getActivity()).getConfig().getStatusBarHeight(), 0, 0);
-        }
-        LinearLayout.LayoutParams paramTest = (LinearLayout.LayoutParams) listView.getLayoutParams();
-        //paramTest.topMargin = ConstantUtil.topHeight;
-        paramTest.setMargins(0, ConstantUtils.topHeight, 0, 0);
+
         if(conversationList.size()>=1) {
-            listView.setLayoutParams(paramTest);
             adapter = new ChatAllHistoryAdapter(getActivity(), 1, conversationList);
             // 设置adapter
             listView.setAdapter(adapter);
         }else {
             listView.setVisibility(View.GONE);
-            getView().findViewById(R.id.tv_nochat_history).setVisibility(View.VISIBLE);
+            textView.setVisibility(View.VISIBLE);
         }
         final String st2 = getResources().getString(R.string.Cant_chat_with_yourself);
         listView.setOnItemClickListener(new OnItemClickListener() {
@@ -153,28 +148,29 @@ public class ChatAllHistoryFragment extends Fragment {
         EMConversation tobeDeleteCons = adapter.getItem(((AdapterContextMenuInfo) item.getMenuInfo()).position);
         // 删除此会话
         EMChatManager.getInstance().deleteConversation(tobeDeleteCons.getUserName(), tobeDeleteCons.isGroup(), deleteMessage);
-        InviteMessgeDao inviteMessgeDao = new InviteMessgeDao(getActivity());
-        inviteMessgeDao.deleteMessage(tobeDeleteCons.getUserName());
+        InviteMessageDao inviteMessageDao = new InviteMessageDao(getActivity());
+        inviteMessageDao.deleteMessage(tobeDeleteCons.getUserName());
         adapter.remove(tobeDeleteCons);
         adapter.notifyDataSetChanged();
 
         // 更新消息未读数
 //		((MainActivity) getActivity()).updateUnreadLabel();
 
-        return handled ? true : super.onContextItemSelected(item);
+        return handled || super.onContextItemSelected(item);
     }
-    /**
-     * 刷新未读消息数
-     */
-//    public void updateUnreadLabel() {
-//        int count = getUnreadMsgCountTotal();
-//        if (count > 0) {
-//            unreadLabel.setText(String.valueOf(count));
-//            unreadLabel.setVisibility(View.VISIBLE);
-//        } else {
-//            unreadLabel.setVisibility(View.INVISIBLE);
-//        }
-//    }
+
+    //    /**
+    //     * 刷新未读消息数
+    //     */
+    //    public void updateUnreadLabel() {
+    //        int count = getUnreadMsgCountTotal();
+    //        if (count > 0) {
+    //            unreadLabel.setText(String.valueOf(count));
+    //            unreadLabel.setVisibility(View.VISIBLE);
+    //        } else {
+    //            unreadLabel.setVisibility(View.INVISIBLE);
+    //        }
+    //    }
 
     /**
      * 获取未读消息数
@@ -212,7 +208,7 @@ public class ChatAllHistoryFragment extends Fragment {
          * 保证Conversation在Sort过程中最后一条消息的时间不变
          * 避免并发问题
          */
-        List<Pair<Long, EMConversation>> sortList = new ArrayList<Pair<Long, EMConversation>>();
+        List<Pair<Long, EMConversation>> sortList = new ArrayList<>();
         synchronized (conversations) {
             for (EMConversation conversation : conversations.values()) {
                 if (conversation.getAllMessages().size() != 0) {
@@ -226,7 +222,7 @@ public class ChatAllHistoryFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        List<EMConversation> list = new ArrayList<EMConversation>();
+        List<EMConversation> list = new ArrayList<>();
         for (Pair<Long, EMConversation> sortItem : sortList) {
             list.add(sortItem.second);
         }
@@ -279,4 +275,5 @@ public class ChatAllHistoryFragment extends Fragment {
             outState.putBoolean(Constant.ACCOUNT_REMOVED, true);
         }
     }
+
 }

@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.attention;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -19,42 +20,60 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshGridView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.AttentionLoopAdapter;
+import com.minglang.suiuu.activity.OtherUserActivity;
+import com.minglang.suiuu.adapter.AttentionSuiuuAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
-import com.minglang.suiuu.entity.AttentionLoop;
-import com.minglang.suiuu.entity.AttentionLoopData;
+import com.minglang.suiuu.entity.AttentionSuiuu;
+import com.minglang.suiuu.entity.AttentionSuiuu.AttentionSuiuuData;
+import com.minglang.suiuu.entity.AttentionSuiuu.AttentionSuiuuData.AttentionSuiuuItemData;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 关注主题
- */
-public class AttentionLoopFragment extends BaseFragment {
+import butterknife.Bind;
+import butterknife.BindString;
+import butterknife.ButterKnife;
 
-    private static final String TAG = AttentionLoopFragment.class.getSimpleName();
+/**
+ * 关注的随游页面
+ */
+public class AttentionSuiuuFragment extends BaseFragment {
+
+    private static final String TAG = AttentionSuiuuFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private static final String PAGE = "page";
+    private static final String NUMBER = "number";
+
     private String userSign;
     private String verification;
 
-    private PullToRefreshGridView pullToRefreshGridView;
+    @BindString(R.string.load_wait)
+    String progressString;
+
+    @BindString(R.string.NoData)
+    String noData;
+
+    @BindString(R.string.DataError)
+    String errorString;
+
+    @Bind(R.id.attention_user_ListView)
+    PullToRefreshGridView pullToRefreshGridView;
 
     private int page = 1;
 
-    private List<AttentionLoopData> listAll = new ArrayList<>();
+    private List<AttentionSuiuuItemData> listAll = new ArrayList<>();
 
     private ProgressDialog progressDialog;
 
-    private AttentionLoopAdapter attentionLoopAdapter;
+    private AttentionSuiuuAdapter adapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -62,10 +81,10 @@ public class AttentionLoopFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AttentionThemeFragment.
+     * @return A new instance of fragment AttentionUserFragment.
      */
-    public static AttentionLoopFragment newInstance(String param1, String param2) {
-        AttentionLoopFragment fragment = new AttentionLoopFragment();
+    public static AttentionSuiuuFragment newInstance(String param1, String param2) {
+        AttentionSuiuuFragment fragment = new AttentionSuiuuFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -73,8 +92,8 @@ public class AttentionLoopFragment extends BaseFragment {
         return fragment;
     }
 
-    public AttentionLoopFragment() {
-        // Required empty public constructor
+    public AttentionSuiuuFragment() {
+
     }
 
     @Override
@@ -88,36 +107,28 @@ public class AttentionLoopFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.fragment_attention_loop, container, false);
-        initView(rootView);
-        getData();
+        View rootView = inflater.inflate(R.layout.fragment_attention_user, container, false);
+        ButterKnife.bind(this, rootView);
+        initView();
         ViewAction();
-
+        getAttentionData4Service(page);
         return rootView;
     }
 
     /**
      * 初始化方法
-     *
-     * @param rootView Fragment根View
      */
-    private void initView(View rootView) {
-        ScreenUtils utils = new ScreenUtils(getActivity());
-        int screenWidth = utils.getScreenWidth();
-
+    private void initView() {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setMessage(progressString);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        pullToRefreshGridView = (PullToRefreshGridView) rootView.findViewById(R.id.attentionThemeGridView);
         pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
-        GridView mGridView = pullToRefreshGridView.getRefreshableView();
-        mGridView.setNumColumns(2);
+        GridView girdView = pullToRefreshGridView.getRefreshableView();
+        girdView.setNumColumns(2);
 
-        attentionLoopAdapter = new AttentionLoopAdapter(getActivity());
-        attentionLoopAdapter.setScreenParams(screenWidth);
-        mGridView.setAdapter(attentionLoopAdapter);
+        adapter = new AttentionSuiuuAdapter(getActivity());
+        girdView.setAdapter(adapter);
 
         DeBugLog.i(TAG, "userSign:" + userSign);
     }
@@ -126,6 +137,7 @@ public class AttentionLoopFragment extends BaseFragment {
      * 控件动作
      */
     private void ViewAction() {
+
         pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
@@ -146,75 +158,33 @@ public class AttentionLoopFragment extends BaseFragment {
                 page = page + 1;
                 getAttentionData4Service(page);
             }
-
         });
 
         pullToRefreshGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                String otherUserSign = listAll.get(position).getUserSign();
+                Intent intent = new Intent(getActivity(), OtherUserActivity.class);
+                intent.putExtra("userSign", otherUserSign);
+                startActivity(intent);
             }
         });
-    }
 
-    private void getData() {
-        if (progressDialog != null) {
-            progressDialog.show();
-        }
-        getAttentionData4Service(page);
     }
 
     /**
-     * 从服务器获取数据
+     * 从服务获取关注用户的数据
      */
     private void getAttentionData4Service(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter("page", String.valueOf(page));
-        params.addBodyParameter("number", String.valueOf(10));
+        params.addBodyParameter(PAGE, String.valueOf(page));
+        params.addBodyParameter(NUMBER, String.valueOf(20));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.AttentionLoopPath, new AttentionLoopRequestCallback());
+                HttpServicePath.AttentionUserPath, new AttentionSuiuuRequestCallback());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
-    }
-
-    /**
-     * 将数据绑定到View
-     *
-     * @param str 网络请求返回的Json字符串
-     */
-    private void bindData2View(String str) {
-        if (TextUtils.isEmpty(str)) {
-            failureComputePage();
-            Toast.makeText(SuiuuApplication.applicationContext, "关注圈子" +
-                    getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                AttentionLoop attentionLoop = JsonUtils.getInstance().fromJSON(AttentionLoop.class, str);
-                if (attentionLoop.getStatus().equals("1")) {
-                    List<AttentionLoopData> list = attentionLoop.getData().getData();
-                    if (list != null && list.size() > 0) {
-                        clearDataList();
-                        listAll.addAll(list);
-                        attentionLoopAdapter.setList(listAll);
-                    } else {
-                        failureComputePage();
-                        Toast.makeText(SuiuuApplication.applicationContext, "关注圈子" +
-                                getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    failureComputePage();
-                    Toast.makeText(SuiuuApplication.applicationContext,
-                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                failureComputePage();
-                DeBugLog.e(TAG, "关注的圈子数据解析异常:" + e.getMessage());
-                Toast.makeText(SuiuuApplication.applicationContext,
-                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     /**
@@ -230,7 +200,7 @@ public class AttentionLoopFragment extends BaseFragment {
     /**
      * 请求失败or无数据，请求页数减1
      */
-    private void failureComputePage() {
+    private void failureLessPage() {
         if (page > 1) {
             page = page - 1;
         }
@@ -248,9 +218,59 @@ public class AttentionLoopFragment extends BaseFragment {
     }
 
     /**
-     * 关注的圈子网络请求回调接口
+     * 将数据绑定到View
+     *
+     * @param str 网络请求返回的Json字符串
      */
-    private class AttentionLoopRequestCallback extends RequestCallBack<String> {
+    private void bindData2View(String str) {
+        if (TextUtils.isEmpty(str)) {
+            failureLessPage();
+            Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                AttentionSuiuu attentionSuiuu = JsonUtils.getInstance().fromJSON(AttentionSuiuu.class, str);
+                if (attentionSuiuu != null) {
+                    AttentionSuiuuData suiuuData = attentionSuiuu.getData();
+                    if (suiuuData != null) {
+                        List<AttentionSuiuuItemData> list = suiuuData.getData();
+                        if (list != null && list.size() > 0) {
+                            clearDataList();
+                            listAll.addAll(list);
+                            adapter.setList(listAll);
+                        } else {
+                            DeBugLog.e(TAG, "；列表为Null");
+                            failureLessPage();
+                            Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        DeBugLog.e(TAG, "第二层为Null");
+                        failureLessPage();
+                        Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    DeBugLog.e(TAG, "第一层为Null");
+                    failureLessPage();
+                    Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                failureLessPage();
+                DeBugLog.e(TAG, "关注的用户的数据解析失败:" + e.getMessage());
+                Toast.makeText(SuiuuApplication.applicationContext, errorString, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * 网络请求回调接口
+     */
+    private class AttentionSuiuuRequestCallback extends RequestCallBack<String> {
+
+        @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
@@ -260,12 +280,12 @@ public class AttentionLoopFragment extends BaseFragment {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "关注的圈子数据请求失败:" + s);
+            DeBugLog.e(TAG, "关注的用户数据请求失败:" + s);
 
             hideDialogAndRefreshView();
-            failureComputePage();
+            failureLessPage();
 
-            Toast.makeText(getActivity(),
+            Toast.makeText(SuiuuApplication.applicationContext,
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
 

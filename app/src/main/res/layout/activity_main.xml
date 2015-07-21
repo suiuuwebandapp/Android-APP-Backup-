@@ -68,6 +68,13 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/include"/>
 
+        <ListView
+            android:id="@+id/sideListView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/include"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>

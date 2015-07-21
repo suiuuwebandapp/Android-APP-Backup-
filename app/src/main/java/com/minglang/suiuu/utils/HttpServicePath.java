@@ -93,10 +93,12 @@ public class HttpServicePath {
      * 发布圈子文章
      */
     public static String createLoop = RootPath + "/circle/create-article";
+
     /**
      * 修改圈子文章
      */
     public static String updateLoop = RootPath + "/circle/up-date-article";
+
     /**
      * 获取收藏的圈子
      * <p/>
@@ -123,6 +125,7 @@ public class HttpServicePath {
      * 请求参数:需要收藏文章的id:articleId
      */
     public static String CollectionArticlePath = RootPath + "/attention/add-collection-article";
+
     /**
      * 取消收藏文章
      * <p/>
@@ -141,6 +144,7 @@ public class HttpServicePath {
     //     */
 
 //    public static String MainDynamicPath = RootPath + "/app-main/get-index-list";
+
     /**
      * 得到详细关注动态数据
      * <p/>
@@ -377,5 +381,15 @@ public class HttpServicePath {
      * 得到系统默认Tag
      */
     public static String getDefaultTagListPath = RootPath + "/app-qa/get-tag";
+
+    /**
+     * 得到关注的旅图
+     */
+    public static String getAttentionTripPath = RootPath + "/attention/get-attention-tp";
+
+    /**
+     * 得到关注的问答
+     */
+    public static String getAttentionProblemPath = RootPath + "/attention/get-attention-qa";
 
 }

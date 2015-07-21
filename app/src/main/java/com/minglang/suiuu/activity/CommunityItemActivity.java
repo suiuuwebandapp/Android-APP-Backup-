@@ -113,6 +113,9 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         getCommunityItemDetails(buildRequestParams(strID));
     }
 
+    /**
+     * 初始化方法
+     */
     private void initView() {
         setSupportActionBar(toolbar);
 
@@ -145,6 +148,9 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         noScrollBarListView.setAdapter(communityItemAdapter);
     }
 
+    /**
+     * 控件相关事件
+     */
     private void ViewAction() {
 
         attentionBtn.setOnClickListener(new View.OnClickListener() {
@@ -196,12 +202,21 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
 
     }
 
+    /**
+     * 获取系统标签
+     */
     private void getTagList() {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.GET,
                 HttpServicePath.getDefaultTagListPath, new TagRequestCallBack());
         httpRequest.requestNetworkData();
     }
 
+    /**
+     * 构造问题详情网络请求参数
+     *
+     * @param id 问题ID
+     * @return 网络请求参数
+     */
     private RequestParams buildRequestParams(String id) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
@@ -209,6 +224,11 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         return params;
     }
 
+    /**
+     * 问题详情网络请求
+     *
+     * @param params 网络请求参数
+     */
     private void getCommunityItemDetails(RequestParams params) {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getProblemDetailsPath, new CommunityItemRequestCallBack());

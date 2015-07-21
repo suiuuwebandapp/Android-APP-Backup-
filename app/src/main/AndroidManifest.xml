@@ -22,7 +22,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- 允许一个程序获取信息有关当前或最近运行的任务，一个缩略的任务状态，是否活动等等 -->
-    <!-- suppress DeprecatedClassUsageInspection -->
+    <!--suppress DeprecatedClassUsageInspection -->
     <uses-permission android:name="android.permission.GET_TASKS" />
     <!-- 允许程序访问有关GSM网络信息 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -292,11 +292,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!-- QQ SDK所需的Activity -->
-
-        <activity
-            android:name=".activity.LoopDetailsActivity"
-            android:label="@string/title_activity_loop_details"
-            android:theme="@style/AppCustomTheme" />
 
         <activity
             android:name=".activity.LoopArticleActivity"

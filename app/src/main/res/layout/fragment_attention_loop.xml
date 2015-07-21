@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="5dp"
-    tools:context="com.minglang.suiuu.fragment.attention.AttentionLoopFragment">
+    tools:context="com.minglang.suiuu.fragment.attention.AttentionGalleryFragment">
 
     <com.minglang.pulltorefreshlibrary.PullToRefreshGridView
-        android:id="@+id/attentionThemeGridView"
+        android:id="@+id/attention_galler_gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

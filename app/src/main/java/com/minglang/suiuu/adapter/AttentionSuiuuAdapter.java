@@ -5,12 +5,14 @@ import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.AttentionUserData;
+import com.minglang.suiuu.entity.AttentionSuiuu.AttentionSuiuuData.AttentionSuiuuItemData;
+import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -24,17 +26,19 @@ import java.util.List;
  * <p/>
  * Created by Administrator on 2015/4/27.
  */
-public class AttentionUserAdapter extends BaseAdapter {
+public class AttentionSuiuuAdapter extends BaseAdapter {
 
     private Context context;
 
-    private List<AttentionUserData> list;
+    private List<AttentionSuiuuItemData> list;
 
     private ImageLoader imageLoader;
 
-    private DisplayImageOptions displayImageOptions;
+    private DisplayImageOptions options;
 
-    public AttentionUserAdapter(Context context) {
+    private int screenWidth;
+
+    public AttentionSuiuuAdapter(Context context) {
         this.context = context;
 
         imageLoader = ImageLoader.getInstance();
@@ -42,13 +46,17 @@ public class AttentionUserAdapter extends BaseAdapter {
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
 
-        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
-    public void setList(List<AttentionUserData> list) {
+    public void setScreenWidth(int screenWidth) {
+        this.screenWidth = screenWidth;
+    }
+
+    public void setList(List<AttentionSuiuuItemData> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -78,34 +86,31 @@ public class AttentionUserAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_attention_suiuu, position);
+        convertView = holder.getConvertView();
 
-        AttentionUserData attentionUserData = list.get(position);
+        int itemParams = screenWidth / 3 - Utils.newInstance().dip2px(10, context);
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemParams, itemParams);
+        convertView.setLayoutParams(params);
 
-        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_attention_user, position);
+        ImageView imageView = holder.getView(R.id.item_attention_suiuu_image);
+        TextView titleView = holder.getView(R.id.item_attention_suiuu_title);
+        TextView heartView = holder.getView(R.id.item_attention_suiuu_heart);
+        TextView commentView = holder.getView(R.id.item_attention_suiuu_comment);
 
-        ImageView headImage = holder.getView(R.id.item_attention_user_head_image);
-        TextView title = holder.getView(R.id.item_attention_user_title);
-        TextView content = holder.getView(R.id.item_attention_user_content);
-
-        String headImagePath = attentionUserData.getHeadImg();
-        if (!TextUtils.isEmpty(headImagePath)) {
-            imageLoader.displayImage(headImagePath, headImage, displayImageOptions);
+        String imagePath = list.get(position).getTitleImg();
+        if (!TextUtils.isEmpty(imagePath)) {
+            imageLoader.displayImage(imagePath, imageView, options);
         }
 
-        String str_title = attentionUserData.getNickname();
-        if (!TextUtils.isEmpty(str_title)) {
-            title.setText(str_title);
+        String strTitle = list.get(position).getTitle();
+        if (!TextUtils.isEmpty(strTitle)) {
+            titleView.setText(strTitle);
         } else {
-            title.setText("匿名用户");
+            titleView.setText("");
         }
 
-
-        String str_content = attentionUserData.getIntro();
-        if (!TextUtils.isEmpty(str_content)) {
-            content.setText(str_content);
-        } else {
-            content.setText("暂无内容");
-        }
-        return holder.getConvertView();
+        return convertView;
     }
+
 }

@@ -32,15 +32,15 @@ public class DbOpenHelper extends SQLiteOpenHelper{
 			+ UserDao.COLUMN_NAME_ID + " TEXT PRIMARY KEY);";
 	
 	private static final String INIVTE_MESSAGE_TABLE_CREATE = "CREATE TABLE "
-			+ InviteMessgeDao.TABLE_NAME + " ("
-			+ InviteMessgeDao.COLUMN_NAME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ InviteMessgeDao.COLUMN_NAME_FROM + " TEXT, "
-			+ InviteMessgeDao.COLUMN_NAME_GROUP_ID + " TEXT, "
-			+ InviteMessgeDao.COLUMN_NAME_GROUP_Name + " TEXT, "
-			+ InviteMessgeDao.COLUMN_NAME_REASON + " TEXT, "
-			+ InviteMessgeDao.COLUMN_NAME_STATUS + " INTEGER, "
-			+ InviteMessgeDao.COLUMN_NAME_ISINVITEFROMME + " INTEGER, "
-			+ InviteMessgeDao.COLUMN_NAME_TIME + " TEXT); ";
+			+ InviteMessageDao.TABLE_NAME + " ("
+			+ InviteMessageDao.COLUMN_NAME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ InviteMessageDao.COLUMN_NAME_FROM + " TEXT, "
+			+ InviteMessageDao.COLUMN_NAME_GROUP_ID + " TEXT, "
+			+ InviteMessageDao.COLUMN_NAME_GROUP_Name + " TEXT, "
+			+ InviteMessageDao.COLUMN_NAME_REASON + " TEXT, "
+			+ InviteMessageDao.COLUMN_NAME_STATUS + " INTEGER, "
+			+ InviteMessageDao.COLUMN_NAME_ISINVITEFROMME + " INTEGER, "
+			+ InviteMessageDao.COLUMN_NAME_TIME + " TEXT); ";
 			
 			
 	

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/item_attention_suiuu_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitXY"
+        android:src="@drawable/default_background_image"/>
+
+    <TextView
+        android:id="@+id/item_attention_suiuu_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_attention_suiuu_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="@dimen/layout_10dp"
+        android:layout_marginLeft="@dimen/layout_10dp"
+        android:layout_marginRight="@dimen/layout_10dp"
+        android:layout_marginStart="@dimen/layout_10dp"
+        android:layout_marginTop="@dimen/layout_8dp"
+        android:padding="@dimen/layout_5dp"
+        android:text="@string/title"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_attention_suiuu_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/layout_8dp">
+
+        <TextView
+            android:id="@+id/item_attention_suiuu_heart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/layout_8dp"
+            android:layout_marginStart="@dimen/layout_8dp"
+            android:layout_toLeftOf="@+id/textView5"
+            android:layout_toStartOf="@+id/textView5"
+            android:drawableLeft="@drawable/icon_heart"
+            android:drawablePadding="@dimen/layout_3dp"
+            android:drawableStart="@drawable/icon_heart"
+            android:gravity="center_vertical"
+            android:padding="@dimen/layout_3dp"
+            android:text="@string/zero"
+            android:textSize="@dimen/layout_18sp"/>
+
+        <TextView
+            android:id="@+id/item_attention_suiuu_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="@dimen/layout_8dp"
+            android:layout_marginRight="@dimen/layout_8dp"
+            android:layout_toEndOf="@+id/textView5"
+            android:layout_toRightOf="@+id/textView5"
+            android:drawableEnd="@drawable/icon_small_comment"
+            android:drawablePadding="@dimen/layout_3dp"
+            android:drawableRight="@drawable/icon_small_comment"
+            android:gravity="center_vertical|end"
+            android:padding="@dimen/layout_3dp"
+            android:text="@string/zero"
+            android:textSize="@dimen/layout_18sp"/>
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="@dimen/layout_1dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

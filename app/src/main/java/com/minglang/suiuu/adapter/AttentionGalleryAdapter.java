@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.AttentionLoopData;
+import com.minglang.suiuu.entity.AttentionGallery.AttentionGalleryData.AttentionGalleryItemData;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -26,20 +26,19 @@ import java.util.List;
  * <p/>
  * Created by Administrator on 2015/4/27.
  */
-public class AttentionLoopAdapter extends BaseAdapter {
+public class AttentionGalleryAdapter extends BaseAdapter {
 
     private Context context;
 
-
-    private List<AttentionLoopData> list;
+    private List<AttentionGalleryItemData> list;
 
     private ImageLoader imageLoader;
 
-    private DisplayImageOptions displayImageOptions;
+    private DisplayImageOptions options;
 
     private int screenWidth;
 
-    public AttentionLoopAdapter(Context context) {
+    public AttentionGalleryAdapter(Context context) {
         this.context = context;
 
         imageLoader = ImageLoader.getInstance();
@@ -47,7 +46,7 @@ public class AttentionLoopAdapter extends BaseAdapter {
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
 
-        displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
                 .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
@@ -57,7 +56,7 @@ public class AttentionLoopAdapter extends BaseAdapter {
         this.screenWidth = screenWidth;
     }
 
-    public void setList(List<AttentionLoopData> list) {
+    public void setList(List<AttentionGalleryItemData> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -87,24 +86,29 @@ public class AttentionLoopAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_attention_loop, position);
-
-        ImageView imageView = holder.getView(R.id.item_attention_loop_image);
-        String imageURL = list.get(position).getCpic();
-        if (!TextUtils.isEmpty(imageURL)) {
-            imageLoader.displayImage(imageURL, imageView, displayImageOptions);
-        }
-
-        TextView title = holder.getView(R.id.item_attention_loop_title);
-        String str_title = list.get(position).getcName();
-        title.setText(str_title);
-
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_attention_gallery, position);
         convertView = holder.getConvertView();
 
         int itemParams = screenWidth / 3 - Utils.newInstance().dip2px(10, context);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemParams, itemParams);
         convertView.setLayoutParams(params);
 
+        ImageView imageView = holder.getView(R.id.item_attention_gallery_image);
+        TextView titleView = holder.getView(R.id.item_attention_gallery_title);
+
+        String imagePath = list.get(position).getTitleImg();
+        if (!TextUtils.isEmpty(imagePath)) {
+            imageLoader.displayImage(imagePath, imageView, options);
+        }
+
+        String strTitle = list.get(position).getTitle();
+        if (!TextUtils.isEmpty(strTitle)) {
+            titleView.setText(strTitle);
+        } else {
+            titleView.setText("");
+        }
+
         return convertView;
     }
+
 }
