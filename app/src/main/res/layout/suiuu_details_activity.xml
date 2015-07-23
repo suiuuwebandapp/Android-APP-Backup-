@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/layout_50dp"
-        android:fillViewport="true">
+        >
 
         <RelativeLayout
             android:id="@+id/rl_suiuu_detail"
@@ -77,11 +77,10 @@
                 <LinearLayout
                     android:id="@+id/ll_suiuu_detail_input_comment"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:orientation="vertical"
                     android:layout_marginBottom="@dimen/layout_15dp"
-                    android:visibility="gone">
-
+                    android:visibility="visible">
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -89,19 +88,20 @@
 
                         <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/sdv_comment_head_img"
-                            android:layout_width="@dimen/layout_50dp"
-                            android:layout_height="@dimen/layout_50dp"
+                            android:layout_width="@dimen/layout_45dp"
+                            android:layout_height="@dimen/layout_45dp"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/layout_10dp"
-                            android:background="@drawable/user_head_image_bg"
-                            fresco:roundAsCircle="true" />
+                            android:background="@drawable/default_head_image2"
+                            fresco:roundAsCircle="true"
+                            android:layout_margin="@dimen/layout_10dp"/>
 
                         <EditText
                             android:id="@+id/et_suiuu_detail_comment"
+                            android:editable="false"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/layout_10dp"
                             android:layout_marginRight="@dimen/layout_10dp"
                             android:background="@drawable/suiuudetail_edit_bg"
                             android:hint="请输入评论"
@@ -110,11 +110,10 @@
                     </LinearLayout>
 
                     <include layout="@layout/view_line" />
-
                     <com.minglang.suiuu.customview.NoScrollBarListView
                         android:id="@+id/lv_suiuu_detail_comment"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"></com.minglang.suiuu.customview.NoScrollBarListView>
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/ll_suiuu_detail_nocomment"
@@ -122,7 +121,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@color/white"
-                    android:layout_marginBottom="@dimen/layout_15dp">
+                    android:layout_marginBottom="@dimen/layout_15dp"
+                    android:visibility="visible">
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

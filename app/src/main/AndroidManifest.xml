@@ -167,11 +167,6 @@
             android:theme="@style/AppCustomTheme"
             android:windowSoftInputMode="stateHidden" />
 
-        <!-- 随问的页面 -->
-        <activity
-            android:name=".activity.AskQuestionActivity"
-            android:label="AskQuestionActivity"
-            android:theme="@style/AppCustomTheme" />
 
         <!-- 通用设置的页面 -->
         <activity

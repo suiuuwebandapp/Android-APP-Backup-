@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -128,6 +129,14 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
     private String tagText;
     private TextView tv_show_tag;
     private ImageView tv_top_right_more;
+    /**
+     * 位置相关
+     */
+    private double latitude;
+    private double longitude;
+    private String locationAddress;
+    private String locationCountry;
+    private String locationCity;
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -168,7 +177,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         picList = this.getIntent().getStringArrayListExtra("pictureMessage");
 //        articleDetail = (LoopArticleData)getIntent().getSerializableExtra("articleDetail");
         articleDetail = jsonUtil.fromJSON(LoopArticleData.class, getIntent().getStringExtra("articleDetail"));
-
         initView();
 
         //判断如果文章详情信息不为空就是修改文章的图片反之为新文章图片
@@ -187,15 +195,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initView() {
-
-//        LinearLayout rootLayout = (LinearLayout) findViewById(R.id.root);
-//        if (isKITKAT) {
-//            if (navigationBarHeight <= 0) {
-//                rootLayout.setPadding(0, statusBarHeight, 0, 0);
-//            } else {
-//                rootLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-//            }
-//        }
         dialog = new TextProgressDialog(this);
         picDescriptionList = new ArrayList<>();
         iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
@@ -248,11 +247,11 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             lv_picture_description.setAdapter(new EasyTackPhotoAdapter(this, picList, "0"));
             Utils.setListViewHeightBasedOnChildren(lv_picture_description);
         } else if (data != null && requestCode == REQUEST_CODE_MAP) {
-            double latitude = data.getDoubleExtra("latitude", 0);
-            double longitude = data.getDoubleExtra("longitude", 0);
-            String locationAddress = data.getStringExtra("address");
-            String locationCountry = data.getStringExtra("country");
-            String locationCity = data.getStringExtra("city");
+            latitude = data.getDoubleExtra("latitude", 0);
+            longitude = data.getDoubleExtra("longitude", 0);
+            locationAddress = data.getStringExtra("address");
+            locationCountry = data.getStringExtra("country");
+            locationCity = data.getStringExtra("city");
             if (locationAddress != null && !locationAddress.equals("")) {
                 tv_show_your_location.setText(locationAddress);
             } else {
@@ -281,6 +280,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
     }
 
     private void loadDate() {
+        Log.i("suiuu", "开始发布");
         ListView list = (ListView) findViewById(R.id.lv_picture_description);//获得listview
         for (int i = 0; i < list.getChildCount() - 1; i++) {
             LinearLayout layout = (LinearLayout) list.getChildAt(i);// 获得子item的layout
@@ -288,25 +288,32 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
             picDescriptionList.add(et.getText().toString());
         }
+//        if(TextUtils.isEmpty(locationAddress)) {
+//            Toast.makeText(this,"请选择位置",Toast.LENGTH_SHORT).show();
+//            return;
+//        }
         //访问网络相关
-        dialog.showDialog();
+//        dialog.showDialog();
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
-        params.addBodyParameter("type", 1 + "");
         params.addBodyParameter(HttpServicePath.key, str);
         params.addBodyParameter("title", search_question.getText().toString().trim());
         params.addBodyParameter("content", jsonUtil.toJSON(picDescriptionList));
-        params.addBodyParameter("addr", tv_show_your_location.getText().toString().trim());
+        params.addBodyParameter("country", locationCountry);
+        params.addBodyParameter("city", locationCity);
+        params.addBodyParameter("lon", String.valueOf(longitude));
+        params.addBodyParameter("lat", String.valueOf(latitude));
+//        params.addBodyParameter("tags",jsonUtil.toJSON(suiuuTagClick));
         List<String> picNameList = new ArrayList<>();
-        for (String string : picList) {
-            updateDate(string);
-            String substring = string.substring(string.lastIndexOf("/"));
-            picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
-        }
-        params.addBodyParameter("imgList", jsonUtil.toJSON(picNameList));
-        params.addBodyParameter("img", picNameList.get(0));
+//        for (String string : picList) {
+//            updateDate(string);
+//            String substring = string.substring(string.lastIndexOf("/"));
+//            picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
+//        }
+        params.addBodyParameter("picList", jsonUtil.toJSON(picNameList));
+//        params.addBodyParameter("img", picNameList.get(0));
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.createLoop, new CreateLoopCallBack());
+                HttpServicePath.createTripGallery, new CreateLoopCallBack());
         suHttpRequest.setParams(params);
         suHttpRequest.requestNetworkData();
     }
@@ -407,6 +414,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String result = stringResponseInfo.result;
+            Log.i("suiuu","result="+result);
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
@@ -419,7 +427,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onFailure(HttpException e, String s) {
             handler.sendEmptyMessage(getData_FAILURE);
-            DeBugLog.i(TAG, "请求失败------------------------------------" + s);
+            Log.i("suiuu", "请求失败------------------------------------" + s);
         }
     }
 

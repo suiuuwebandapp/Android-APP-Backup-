@@ -13,6 +13,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,12 +34,14 @@ import com.minglang.suiuu.chat.activity.ChatActivity;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.dbhelper.UserDbHelper;
 import com.minglang.suiuu.entity.SuiuuDeatailData;
+import com.minglang.suiuu.entity.UserBackData;
 import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
@@ -55,6 +58,7 @@ import java.util.List;
  */
 @SuppressWarnings("deprecation")
 public class SuiuuDetailActivity extends BaseActivity {
+    private static final int COMMENT_SUCCESS = 20;
     private String tripId;
     private WebView mWebView;
     private ProgressDialog pd = null;
@@ -76,6 +80,11 @@ public class SuiuuDetailActivity extends BaseActivity {
     private LinearLayout ll_suiuu_detail_nocomment;
     private LinearLayout ll_suiuu_detail_input_comment;
     private CommonCommentAdapter adapter;
+    /**
+     * 评论集合
+     */
+    private List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> commentDataList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +92,8 @@ public class SuiuuDetailActivity extends BaseActivity {
         setContentView(R.layout.suiuu_details_activity);
         tripId = this.getIntent().getStringExtra("tripId");
         initView();
-        showWebView();
         loadDate(tripId);
+        showWebView();
         viewAction();
     }
 
@@ -100,8 +109,8 @@ public class SuiuuDetailActivity extends BaseActivity {
         bb_consult = (BootstrapButton) findViewById(R.id.bb_consult);
         bb_schedule = (BootstrapButton) findViewById(R.id.bb_schedule);
         tv_to_commnet_activity = (TextView) findViewById(R.id.tv_to_commnet_activity);
-        ll_suiuu_detail_nocomment = (LinearLayout)findViewById(R.id.ll_suiuu_detail_nocomment);
-        ll_suiuu_detail_input_comment = (LinearLayout)findViewById(R.id.ll_suiuu_detail_nocomment);
+        ll_suiuu_detail_nocomment = (LinearLayout) findViewById(R.id.ll_suiuu_detail_nocomment);
+        ll_suiuu_detail_input_comment = (LinearLayout) findViewById(R.id.ll_suiuu_detail_input_comment);
     }
 
     private void viewAction() {
@@ -116,13 +125,22 @@ public class SuiuuDetailActivity extends BaseActivity {
         tv_to_commnet_activity.setOnClickListener(new MyOnClickListener());
         bb_consult.setOnClickListener(new MyOnClickListener());
         bb_schedule.setOnClickListener(new MyOnClickListener());
+        lv_suiuu_detail_comment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(SuiuuDetailActivity.this, CommonCommentActivity.class);
+                intent.putExtra("tripId", tripId);
+                intent.putExtra("rId",commentDataList.get(position).getCommentId());
+                intent.putExtra("nikeName",commentDataList.get(position).getNickname());
+                startActivityForResult(intent, COMMENT_SUCCESS);
+            }
+        });
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private void showWebView() {        // webView与js交互代码
         try {
             mWebView.requestFocus();
-
             mWebView.setWebChromeClient(new WebChromeClient() {
                 @Override
                 public void onProgressChanged(WebView view, int progress) {
@@ -228,6 +246,7 @@ public class SuiuuDetailActivity extends BaseActivity {
                 String status = json.getString("status");
                 if ("1".equals(status)) {
                     detail = JsonUtils.getInstance().fromJSON(SuiuuDeatailData.class, responseInfo.result);
+                    commentDataList = detail.getData().getComment().getData();
                     fullCommentList();
                 } else if ("-3".equals(status)) {
                     Toast.makeText(getApplicationContext(), "登录信息过期,请重新登录", Toast.LENGTH_SHORT).show();
@@ -238,6 +257,7 @@ public class SuiuuDetailActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 Toast.makeText(SuiuuDetailActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                Log.i("suiuu", "异常" + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -249,19 +269,23 @@ public class SuiuuDetailActivity extends BaseActivity {
     }
 
     public void fullCommentList() {
-        List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> data = detail.getData().getComment().getData();
-        if(data.size() >= 1) {
+        if (commentDataList.size() >= 1) {
+            tv_suiuu_detail_comment_number.setText("全部评论 (共"+commentDataList.size()+"条评论)");
             ll_suiuu_detail_input_comment.setVisibility(View.VISIBLE);
             ll_suiuu_detail_nocomment.setVisibility(View.GONE);
-            showList(data);
+            showList(commentDataList);
+        } else {
+            ll_suiuu_detail_nocomment.setVisibility(View.VISIBLE);
+            ll_suiuu_detail_input_comment.setVisibility(View.GONE);
         }
     }
-    private void showList(List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> tripGalleryList) {
+
+    private void showList(List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> commentDataList) {
         if (adapter == null) {
-            adapter = new CommonCommentAdapter(this, tripGalleryList);
+            adapter = new CommonCommentAdapter(this, commentDataList);
             lv_suiuu_detail_comment.setAdapter(adapter);
         } else {
-            adapter.onDateChange(tripGalleryList);
+            adapter.onDateChange(commentDataList);
         }
     }
 
@@ -279,13 +303,13 @@ public class SuiuuDetailActivity extends BaseActivity {
                     //跳到评论页
                     Intent intent = new Intent(SuiuuDetailActivity.this, CommonCommentActivity.class);
                     intent.putExtra("tripId", tripId);
-                    startActivity(intent);
+                    startActivityForResult(intent, COMMENT_SUCCESS);
                     break;
                 case R.id.tv_to_commnet_activity:
                     //跳到评论页
                     Intent commentintent = new Intent(SuiuuDetailActivity.this, CommonCommentActivity.class);
                     commentintent.putExtra("tripId", tripId);
-                    startActivity(commentintent);
+                    startActivityForResult(commentintent,COMMENT_SUCCESS);
                     break;
                 case R.id.bb_consult:
                     //跳到会话页面
@@ -317,5 +341,25 @@ public class SuiuuDetailActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(data != null && resultCode == COMMENT_SUCCESS) {
+            UserBackData userBackData = SuiuuInfo.ReadUserData(this);
+            String content = data.getStringExtra("content");
+            JSONObject json = new JSONObject();
+            try {
+                json.put("headImg",userBackData.getHeadImg());
+                json.put("nickname",userBackData.getNickname());
+                json.put("content",content);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity newCommentData = JsonUtils.getInstance().fromJSON(SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity.class,  json.toString());
+            commentDataList.add(0,newCommentData);
+            fullCommentList();
+        }
     }
 }

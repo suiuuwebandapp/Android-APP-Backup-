@@ -285,12 +285,7 @@ public class LoopArticleActivity extends BaseActivity {
         editor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent;
-                if ("1".equals(loopArticleData.getaType())) {
-                    intent = new Intent(LoopArticleActivity.this, EasyTackPhotoActivity.class);
-                } else {
-                    intent = new Intent(LoopArticleActivity.this, AskQuestionActivity.class);
-                }
+                Intent intent = new Intent(LoopArticleActivity.this, EasyTackPhotoActivity.class);
                 intent.putExtra("articleDetail", JsonUtils.getInstance().toJSON(loopArticleData));
                 startActivity(intent);
             }
@@ -806,14 +801,8 @@ public class LoopArticleActivity extends BaseActivity {
 
     @Override
     public void finish() {
-        String AskQuestionActivityTAG = AskQuestionActivity.class.getSimpleName();
         String EasyTackPhotoActivityTAG = EasyTackPhotoActivity.class.getSimpleName();
-
-        if (OtherTAG.equals(AskQuestionActivityTAG)) {
-            DeBugLog.i(TAG, "AskQuestionActivityTAG:" + AskQuestionActivityTAG + ",Executive this judge");
-            startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
-            super.finish();
-        } else if (OtherTAG.equals(EasyTackPhotoActivityTAG)) {
+        if (OtherTAG.equals(EasyTackPhotoActivityTAG)) {
             DeBugLog.i(TAG, "EasyTackPhotoActivityTAG:" + EasyTackPhotoActivityTAG + ",Executive this judge");
             startActivity(new Intent(LoopArticleActivity.this, MainActivity.class));
             super.finish();

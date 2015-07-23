@@ -195,9 +195,7 @@ public class CommentsActivity extends BaseActivity {
                 HttpServicePath.suiuuCreateComment, new requestCommentSendCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
-
     }
-
     class requestCommentSendCallBack extends RequestCallBack<String> {
 
         @Override
@@ -218,7 +216,6 @@ public class CommentsActivity extends BaseActivity {
                     } else {
                         requestDataSuiuu(tripId, "1");
                     }
-
                     rId = null;
                     rTitle = null;
                     et_input_comment.setText("");
@@ -238,7 +235,6 @@ public class CommentsActivity extends BaseActivity {
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
-
             rId = null;
             rTitle = null;
             et_input_comment.setText("");

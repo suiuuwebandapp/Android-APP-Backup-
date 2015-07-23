@@ -94,7 +94,7 @@ public class HttpServicePath {
     /**
      * 发布圈子文章
      */
-    public static String createLoop = RootPath + "/circle/create-article";
+    public static String createTripGallery = RootPath + "/travel-picture/add-travel-picture";
 
     /**
      * 修改圈子文章

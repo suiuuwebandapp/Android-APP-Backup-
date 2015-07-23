@@ -12,12 +12,6 @@ import java.util.List;
  * 修改备注：
  */
 public class SuiuuDeatailData {
-    /**
-     * data : {"publisherList":[{"birthday":"0000-00-00","profession":"","headImg":"http://www.suiuu.com/assets/images/user_default.png","travelCount":"0","tripPublisherId":"39","sex":"2","tripId":"41","cityId":null,"countryId":null,"areaCode":null,"publisherId":"18","cityName":null,"phone":null,"school":"","userSign":"fcefd450496f3fe497af6841f6f12ae1","intro":"","nickname":"王晟","countryName":null,"email":"87720829@qq.com","hobby":"","info":""}],"scenicList":[{"scenicId":"1502","name":"巴黎香榭丽舍大道","tripId":"41","lon":"2.30825","lat":"48.869576"},{"scenicId":"1503","name":"协和广场","tripId":"41","lon":"2.3214677","lat":"48.8653383"},{"scenicId":"1504","name":"巴黎凯旋门","tripId":"41","lon":"2.2950275","lat":"48.8737917"}],"praise":[],"priceList":[],"createPublisherInfo":{"birthday":"0000-00-00","profession":"","headImg":"http://www.suiuu.com/assets/images/user_default.png","travelCount":"0","tripPublisherId":"39","sex":"2","tripId":"41","cityId":null,"countryId":null,"areaCode":null,"publisherId":"18","cityName":null,"phone":null,"school":"","userSign":"fcefd450496f3fe497af6841f6f12ae1","intro":"","nickname":"王晟","countryName":null,"email":"87720829@qq.com","hobby":"","info":""},"picList":[{"tripId":"41","title":null,"picId":"2802","url":"http://image.suiuu.com/user_card/20150511192250_30981.jpeg"},{"tripId":"41","title":null,"picId":"2803","url":"http://image.suiuu.com/user_card/20150511192247_56890.jpg"},{"tripId":"41","title":null,"picId":"2804","url":"http://image.suiuu.com/user_card/20150511190452_77558.jpg"},{"tripId":"41","title":null,"picId":"2805","url":"http://image.suiuu.com/user_card/20150501153913_19574.jpg"}],"serviceList":[],"includeDetailList":[{"name":"地陪导游","detailId":"976","tripId":"41","type":"1"},{"name":"陪同翻译","detailId":"977","tripId":"41","type":"1"}],"attention":{"addTime":"2015-07-21 15:26:36","userSign":"22e64460c94f3b44bc0a8790ed146d3b","relativeId":"41","attentionId":"212","relativeType":"6","status":"1"},"comment":{"msg":{"sortName":null,"showAll":false,"startRow":0,"sortType":"asc","pageSize":10,"currentPage":1,"totalCount":"1"},"data":[{"headImg":"http://www.suiuu.com/assets/images/user_default.png","userSign":"22e64460c94f3b44bc0a8790ed146d3b","travelCount":null,"isTravel":"2","nickname":"15111993537","commentId":"68","content":"jjkkd","rTitle":null,"status":null}]},"highlightList":[],"info":{"cityCname":"巴黎","isAirplane":"0","titleImg":"http://image.suiuu.com/suiuu_trip/41_reset.jpg","tripId":"41","lon":null,"cityId":"1641","title":"【包车】法国巴黎最浪漫温馨之路","countryId":"1636","score":"0","travelTimeType":"1","tripCount":"0","intro":"香榭丽舍大道(Champs-Elysees) \u2014\u2014> 凯旋门(ArcdeTriomphe) \u2014\u2014> 协和广场(PlacedelaConcorde)。","createPublisherId":"18","maxUserCount":"7","startTime":"09:00:00","cityEname":"Paris","lat":null,"basePrice":"2205.00","info":"入夜后，香榭丽舍大道显得份外美丽，大道尽头的凯旋门与协和广场在五光十色的霓虹灯映照下璀璨夺目。\n    精彩的Montaigne大道云集Dior、Laroche及Mugler等典雅的女装设计专卖店，再加上CalvinKlein及Prada等世 界名牌时装店，巴黎于世界时装界独领风骚的地位在此可见一斑。四周的街道上，也满布潮流新贵餐厅，像Spoon、Food&Wine及 ManRay等。\n    在协和广场悠闲漫步，您可以看到香榭丽舍大道其实是Tuileries花园的延续，大道两旁皆是色彩缤纷的花园和雅致的风味餐厅。法国总统官邸ElyseePalace在香榭丽舍大道与典雅的rueduFbg-St-Honore中间，分外引人注目。","travelTime":"10","countryEname":"France","tags":"家庭,自然,浪漫,购物","createTime":"2015-05-01 15:51:56","countryCname":"法国","endTime":"19:00:00","isHotel":"0","basePriceType":"2","status":"1"},"unIncludeDetailList":[{"name":"随行的交通费用","detailId":"978","tripId":"41","type":"2"},{"name":"餐食费用，需包导游餐食费用","detailId":"979","tripId":"41","type":"2"}]}
-     * message :
-     * status : 1
-     * token : d576305f910b6c5e0a0d1d3e53ceb7de
-     */
     private DataEntity data;
     private String message;
     private int status;
@@ -56,32 +50,17 @@ public class SuiuuDeatailData {
     }
 
     public class DataEntity {
-        /**
-         * publisherList : [{"birthday":"0000-00-00","profession":"","headImg":"http://www.suiuu.com/assets/images/user_default.png","travelCount":"0","tripPublisherId":"39","sex":"2","tripId":"41","cityId":null,"countryId":null,"areaCode":null,"publisherId":"18","cityName":null,"phone":null,"school":"","userSign":"fcefd450496f3fe497af6841f6f12ae1","intro":"","nickname":"王晟","countryName":null,"email":"87720829@qq.com","hobby":"","info":""}]
-         * scenicList : [{"scenicId":"1502","name":"巴黎香榭丽舍大道","tripId":"41","lon":"2.30825","lat":"48.869576"},{"scenicId":"1503","name":"协和广场","tripId":"41","lon":"2.3214677","lat":"48.8653383"},{"scenicId":"1504","name":"巴黎凯旋门","tripId":"41","lon":"2.2950275","lat":"48.8737917"}]
-         * praise : []
-         * priceList : []
-         * createPublisherInfo : {"birthday":"0000-00-00","profession":"","headImg":"http://www.suiuu.com/assets/images/user_default.png","travelCount":"0","tripPublisherId":"39","sex":"2","tripId":"41","cityId":null,"countryId":null,"areaCode":null,"publisherId":"18","cityName":null,"phone":null,"school":"","userSign":"fcefd450496f3fe497af6841f6f12ae1","intro":"","nickname":"王晟","countryName":null,"email":"87720829@qq.com","hobby":"","info":""}
-         * picList : [{"tripId":"41","title":null,"picId":"2802","url":"http://image.suiuu.com/user_card/20150511192250_30981.jpeg"},{"tripId":"41","title":null,"picId":"2803","url":"http://image.suiuu.com/user_card/20150511192247_56890.jpg"},{"tripId":"41","title":null,"picId":"2804","url":"http://image.suiuu.com/user_card/20150511190452_77558.jpg"},{"tripId":"41","title":null,"picId":"2805","url":"http://image.suiuu.com/user_card/20150501153913_19574.jpg"}]
-         * serviceList : []
-         * includeDetailList : [{"name":"地陪导游","detailId":"976","tripId":"41","type":"1"},{"name":"陪同翻译","detailId":"977","tripId":"41","type":"1"}]
-         * attention : {"addTime":"2015-07-21 15:26:36","userSign":"22e64460c94f3b44bc0a8790ed146d3b","relativeId":"41","attentionId":"212","relativeType":"6","status":"1"}
-         * comment : {"msg":{"sortName":null,"showAll":false,"startRow":0,"sortType":"asc","pageSize":10,"currentPage":1,"totalCount":"1"},"data":[{"headImg":"http://www.suiuu.com/assets/images/user_default.png","userSign":"22e64460c94f3b44bc0a8790ed146d3b","travelCount":null,"isTravel":"2","nickname":"15111993537","commentId":"68","content":"jjkkd","rTitle":null,"status":null}]}
-         * highlightList : []
-         * info : {"cityCname":"巴黎","isAirplane":"0","titleImg":"http://image.suiuu.com/suiuu_trip/41_reset.jpg","tripId":"41","lon":null,"cityId":"1641","title":"【包车】法国巴黎最浪漫温馨之路","countryId":"1636","score":"0","travelTimeType":"1","tripCount":"0","intro":"香榭丽舍大道(Champs-Elysees) \u2014\u2014> 凯旋门(ArcdeTriomphe) \u2014\u2014> 协和广场(PlacedelaConcorde)。","createPublisherId":"18","maxUserCount":"7","startTime":"09:00:00","cityEname":"Paris","lat":null,"basePrice":"2205.00","info":"入夜后，香榭丽舍大道显得份外美丽，大道尽头的凯旋门与协和广场在五光十色的霓虹灯映照下璀璨夺目。\n    精彩的Montaigne大道云集Dior、Laroche及Mugler等典雅的女装设计专卖店，再加上CalvinKlein及Prada等世 界名牌时装店，巴黎于世界时装界独领风骚的地位在此可见一斑。四周的街道上，也满布潮流新贵餐厅，像Spoon、Food&Wine及 ManRay等。\n    在协和广场悠闲漫步，您可以看到香榭丽舍大道其实是Tuileries花园的延续，大道两旁皆是色彩缤纷的花园和雅致的风味餐厅。法国总统官邸ElyseePalace在香榭丽舍大道与典雅的rueduFbg-St-Honore中间，分外引人注目。","travelTime":"10","countryEname":"France","tags":"家庭,自然,浪漫,购物","createTime":"2015-05-01 15:51:56","countryCname":"法国","endTime":"19:00:00","isHotel":"0","basePriceType":"2","status":"1"}
-         * unIncludeDetailList : [{"name":"随行的交通费用","detailId":"978","tripId":"41","type":"2"},{"name":"餐食费用，需包导游餐食费用","detailId":"979","tripId":"41","type":"2"}]
-         */
         private List<PublisherListEntity> publisherList;
         private List<ScenicListEntity> scenicList;
-        private List<?> praise;
+        private List<PraiseEntity> praise;
         private List<?> priceList;
         private CreatePublisherInfoEntity createPublisherInfo;
         private List<PicListEntity> picList;
-        private List<?> serviceList;
+        private List<ServiceListEntity> serviceList;
         private List<IncludeDetailListEntity> includeDetailList;
-        private AttentionEntity attention;
+        private List<AttentionEntity> attention;
         private CommentEntity comment;
-        private List<?> highlightList;
+        private List<HighlightListEntity> highlightList;
         private InfoEntity info;
         private List<UnIncludeDetailListEntity> unIncludeDetailList;
 
@@ -93,7 +72,7 @@ public class SuiuuDeatailData {
             this.scenicList = scenicList;
         }
 
-        public void setPraise(List<?> praise) {
+        public void setPraise(List<PraiseEntity> praise) {
             this.praise = praise;
         }
 
@@ -109,7 +88,7 @@ public class SuiuuDeatailData {
             this.picList = picList;
         }
 
-        public void setServiceList(List<?> serviceList) {
+        public void setServiceList(List<ServiceListEntity> serviceList) {
             this.serviceList = serviceList;
         }
 
@@ -117,7 +96,7 @@ public class SuiuuDeatailData {
             this.includeDetailList = includeDetailList;
         }
 
-        public void setAttention(AttentionEntity attention) {
+        public void setAttention(List<AttentionEntity> attention) {
             this.attention = attention;
         }
 
@@ -125,7 +104,7 @@ public class SuiuuDeatailData {
             this.comment = comment;
         }
 
-        public void setHighlightList(List<?> highlightList) {
+        public void setHighlightList(List<HighlightListEntity> highlightList) {
             this.highlightList = highlightList;
         }
 
@@ -145,7 +124,7 @@ public class SuiuuDeatailData {
             return scenicList;
         }
 
-        public List<?> getPraise() {
+        public List<PraiseEntity> getPraise() {
             return praise;
         }
 
@@ -161,7 +140,7 @@ public class SuiuuDeatailData {
             return picList;
         }
 
-        public List<?> getServiceList() {
+        public List<ServiceListEntity> getServiceList() {
             return serviceList;
         }
 
@@ -169,7 +148,7 @@ public class SuiuuDeatailData {
             return includeDetailList;
         }
 
-        public AttentionEntity getAttention() {
+        public List<AttentionEntity> getAttention() {
             return attention;
         }
 
@@ -177,7 +156,7 @@ public class SuiuuDeatailData {
             return comment;
         }
 
-        public List<?> getHighlightList() {
+        public List<HighlightListEntity> getHighlightList() {
             return highlightList;
         }
 
@@ -195,21 +174,21 @@ public class SuiuuDeatailData {
              * profession :
              * headImg : http://www.suiuu.com/assets/images/user_default.png
              * travelCount : 0
-             * tripPublisherId : 39
+             * tripPublisherId : 42
              * sex : 2
-             * tripId : 41
+             * tripId : 44
              * cityId : null
              * countryId : null
              * areaCode : null
-             * publisherId : 18
+             * publisherId : 26
              * cityName : null
              * phone : null
              * school :
-             * userSign : fcefd450496f3fe497af6841f6f12ae1
+             * userSign : 0c73410ed4033cf8b32c4ab1f2e86aaa
              * intro :
-             * nickname : 王晟
+             * nickname : 历伟
              * countryName : null
-             * email : 87720829@qq.com
+             * email : weili9963@hotmail.com
              * hobby :
              * info :
              */
@@ -406,11 +385,11 @@ public class SuiuuDeatailData {
 
         public class ScenicListEntity {
             /**
-             * scenicId : 1502
-             * name : 巴黎香榭丽舍大道
-             * tripId : 41
-             * lon : 2.30825
-             * lat : 48.869576
+             * scenicId : 1596
+             * name : 维也纳
+             * tripId : 44
+             * lon : 16.3738189
+             * lat : 48.2081743
              */
             private String scenicId;
             private String name;
@@ -459,27 +438,92 @@ public class SuiuuDeatailData {
             }
         }
 
+        public class PraiseEntity {
+            /**
+             * addTime : 2015-06-08 11:33:04
+             * userSign : 22e64460c94f3b44bc0a8790ed146d3b
+             * relativeId : 44
+             * attentionId : 162
+             * relativeType : 11
+             * status : 1
+             */
+            private String addTime;
+            private String userSign;
+            private String relativeId;
+            private String attentionId;
+            private String relativeType;
+            private String status;
+
+            public void setAddTime(String addTime) {
+                this.addTime = addTime;
+            }
+
+            public void setUserSign(String userSign) {
+                this.userSign = userSign;
+            }
+
+            public void setRelativeId(String relativeId) {
+                this.relativeId = relativeId;
+            }
+
+            public void setAttentionId(String attentionId) {
+                this.attentionId = attentionId;
+            }
+
+            public void setRelativeType(String relativeType) {
+                this.relativeType = relativeType;
+            }
+
+            public void setStatus(String status) {
+                this.status = status;
+            }
+
+            public String getAddTime() {
+                return addTime;
+            }
+
+            public String getUserSign() {
+                return userSign;
+            }
+
+            public String getRelativeId() {
+                return relativeId;
+            }
+
+            public String getAttentionId() {
+                return attentionId;
+            }
+
+            public String getRelativeType() {
+                return relativeType;
+            }
+
+            public String getStatus() {
+                return status;
+            }
+        }
+
         public class CreatePublisherInfoEntity {
             /**
              * birthday : 0000-00-00
              * profession :
              * headImg : http://www.suiuu.com/assets/images/user_default.png
              * travelCount : 0
-             * tripPublisherId : 39
+             * tripPublisherId : 42
              * sex : 2
-             * tripId : 41
+             * tripId : 44
              * cityId : null
              * countryId : null
              * areaCode : null
-             * publisherId : 18
+             * publisherId : 26
              * cityName : null
              * phone : null
              * school :
-             * userSign : fcefd450496f3fe497af6841f6f12ae1
+             * userSign : 0c73410ed4033cf8b32c4ab1f2e86aaa
              * intro :
-             * nickname : 王晟
+             * nickname : 历伟
              * countryName : null
-             * email : 87720829@qq.com
+             * email : weili9963@hotmail.com
              * hobby :
              * info :
              */
@@ -676,10 +720,10 @@ public class SuiuuDeatailData {
 
         public class PicListEntity {
             /**
-             * tripId : 41
+             * tripId : 44
              * title : null
-             * picId : 2802
-             * url : http://image.suiuu.com/user_card/20150511192250_30981.jpeg
+             * picId : 3287
+             * url : http://image.suiuu.com/suiuu_head/20150610092047_19915.jpg
              */
             private String tripId;
             private String title;
@@ -719,11 +763,66 @@ public class SuiuuDeatailData {
             }
         }
 
+        public class ServiceListEntity {
+            /**
+             * money : 280.00
+             * tripId : 44
+             * serviceId : 463
+             * title : 接机-奔驰9座轿车
+             * type : 0
+             */
+            private String money;
+            private String tripId;
+            private String serviceId;
+            private String title;
+            private String type;
+
+            public void setMoney(String money) {
+                this.money = money;
+            }
+
+            public void setTripId(String tripId) {
+                this.tripId = tripId;
+            }
+
+            public void setServiceId(String serviceId) {
+                this.serviceId = serviceId;
+            }
+
+            public void setTitle(String title) {
+                this.title = title;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }
+
+            public String getMoney() {
+                return money;
+            }
+
+            public String getTripId() {
+                return tripId;
+            }
+
+            public String getServiceId() {
+                return serviceId;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public String getType() {
+                return type;
+            }
+        }
+
         public class IncludeDetailListEntity {
             /**
-             * name : 地陪导游
-             * detailId : 976
-             * tripId : 41
+             * name : 导游费用
+             * detailId : 1446
+             * tripId : 44
              * type : 1
              */
             private String name;
@@ -766,10 +865,10 @@ public class SuiuuDeatailData {
 
         public class AttentionEntity {
             /**
-             * addTime : 2015-07-21 15:26:36
+             * addTime : 2015-07-22 09:41:51
              * userSign : 22e64460c94f3b44bc0a8790ed146d3b
-             * relativeId : 41
-             * attentionId : 212
+             * relativeId : 44
+             * attentionId : 214
              * relativeType : 6
              * status : 1
              */
@@ -831,8 +930,8 @@ public class SuiuuDeatailData {
 
         public class CommentEntity {
             /**
-             * msg : {"sortName":null,"showAll":false,"startRow":0,"sortType":"asc","pageSize":10,"currentPage":1,"totalCount":"1"}
-             * data : [{"headImg":"http://www.suiuu.com/assets/images/user_default.png","userSign":"22e64460c94f3b44bc0a8790ed146d3b","travelCount":null,"isTravel":"2","nickname":"15111993537","commentId":"68","content":"jjkkd","rTitle":null,"status":null}]
+             * msg : {"sortName":null,"showAll":false,"startRow":0,"sortType":"asc","pageSize":10,"currentPage":1,"totalCount":"0"}
+             * data : []
              */
             private MsgEntity msg;
             private List<CommentDataEntity> data;
@@ -861,7 +960,7 @@ public class SuiuuDeatailData {
                  * sortType : asc
                  * pageSize : 10
                  * currentPage : 1
-                 * totalCount : 1
+                 * totalCount : 0
                  */
                 private String sortName;
                 private boolean showAll;
@@ -927,7 +1026,6 @@ public class SuiuuDeatailData {
                     return totalCount;
                 }
             }
-
             public class CommentDataEntity {
                 /**
                  * headImg : http://www.suiuu.com/assets/images/user_default.png
@@ -1024,34 +1122,70 @@ public class SuiuuDeatailData {
             }
         }
 
+        public class HighlightListEntity {
+            /**
+             * tripId : 44
+             * value : 音乐之都
+             * hlId : 387
+             */
+            private String tripId;
+            private String value;
+            private String hlId;
+
+            public void setTripId(String tripId) {
+                this.tripId = tripId;
+            }
+
+            public void setValue(String value) {
+                this.value = value;
+            }
+
+            public void setHlId(String hlId) {
+                this.hlId = hlId;
+            }
+
+            public String getTripId() {
+                return tripId;
+            }
+
+            public String getValue() {
+                return value;
+            }
+
+            public String getHlId() {
+                return hlId;
+            }
+        }
+
         public class InfoEntity {
             /**
-             * cityCname : 巴黎
+             * cityCname : 维也纳
              * isAirplane : 0
-             * titleImg : http://image.suiuu.com/suiuu_trip/41_reset.jpg
-             * tripId : 41
+             * titleImg : http://image.suiuu.com/suiuu_trip/44_reset.jpg
+             * tripId : 44
              * lon : null
-             * cityId : 1641
-             * title : 【包车】法国巴黎最浪漫温馨之路
-             * countryId : 1636
+             * cityId : 1080
+             * title : 【包车】维也纳之恋
+             * countryId : 1072
              * score : 0
              * travelTimeType : 1
              * tripCount : 0
-             * intro : 香榭丽舍大道(Champs-Elysees) ——> 凯旋门(ArcdeTriomphe) ——> 协和广场(PlacedelaConcorde)。
-             * createPublisherId : 18
-             * maxUserCount : 7
+             * intro : 【包车】维也纳之恋
+             * createPublisherId : 26
+             * maxUserCount : 8
              * startTime : 09:00:00
-             * cityEname : Paris
+             * cityEname : Vienna
              * lat : null
-             * basePrice : 2205.00
-             * info : 入夜后，香榭丽舍大道显得份外美丽，大道尽头的凯旋门与协和广场在五光十色的霓虹灯映照下璀璨夺目。
-             精彩的Montaigne大道云集Dior、Laroche及Mugler等典雅的女装设计专卖店，再加上CalvinKlein及Prada等世 界名牌时装店，巴黎于世界时装界独领风骚的地位在此可见一斑。四周的街道上，也满布潮流新贵餐厅，像Spoon、Food&Wine及 ManRay等。
-             在协和广场悠闲漫步，您可以看到香榭丽舍大道其实是Tuileries花园的延续，大道两旁皆是色彩缤纷的花园和雅致的风味餐厅。法国总统官邸ElyseePalace在香榭丽舍大道与典雅的rueduFbg-St-Honore中间，分外引人注目。
+             * basePrice : 2058.00
+             * info : 详情描述：
+             我是奥地利维也纳欧洲地接导游领队（欧盟官方导游证件编号.ChL219AA）和小团司机兼导游（营运证号码.51193/2006）厉伟，有十几年的欧洲旅游包车导游，带旅行团经验！
+             可提供奥地利和欧洲其他地方.德国，意大利，瑞士，法国，荷比卢，捷克，匈牙利，斯洛伐克，斯洛文尼亚等国多日游，包车旅游导游服务。
+             车型：可选择德国欧宝7座车或奔驰9座车。
              * travelTime : 10
-             * countryEname : France
-             * tags : 家庭,自然,浪漫,购物
-             * createTime : 2015-05-01 15:51:56
-             * countryCname : 法国
+             * countryEname : Austria
+             * tags : 家庭,猎奇
+             * createTime : 2015-05-01 16:54:49
+             * countryCname : 奥地利
              * endTime : 19:00:00
              * isHotel : 0
              * basePriceType : 2
@@ -1313,9 +1447,9 @@ public class SuiuuDeatailData {
 
         public class UnIncludeDetailListEntity {
             /**
-             * name : 随行的交通费用
-             * detailId : 978
-             * tripId : 41
+             * name : 餐饮费用
+             * detailId : 1449
+             * tripId : 44
              * type : 2
              */
             private String name;

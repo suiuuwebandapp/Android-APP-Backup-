@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.SuiuuDeatailData;
 
 import java.util.List;
@@ -33,10 +33,10 @@ public class CommonCommentAdapter extends BaseAdapter {
         this.context = context;
         this.list = list;
     }
-    public void setList(List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> list) {
-        this.list = list;
-        notifyDataSetChanged();
-    }
+//    public void setList(List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> list) {
+//        this.list = list;
+//        notifyDataSetChanged();
+//    }
     public void onDateChange(List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> list) {
         this.list = list;
         this.notifyDataSetChanged();
@@ -70,10 +70,9 @@ public class CommonCommentAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.item_comment, null);
-            holder.headImage = (CircleImageView) convertView.findViewById(R.id.item_comment_head_image);
+            holder.headImage = (SimpleDraweeView) convertView.findViewById(R.id.item_comment_head_image);
             holder.title = (TextView) convertView.findViewById(R.id.item_comment_title);
             holder.content = (TextView) convertView.findViewById(R.id.item_comment_content);
-            holder.time = (TextView) convertView.findViewById(R.id.tv_time);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -88,16 +87,13 @@ public class CommonCommentAdapter extends BaseAdapter {
             holder.content.setText(list.get(position).getRTitle() + "  " + list.get(position).getContent());
         } else {
             holder.content.setText(list.get(position).getContent());
-
         }
-
         return convertView;
     }
-
     class ViewHolder {
-        CircleImageView headImage;
+        SimpleDraweeView headImage;
         TextView title;
         TextView content;
-        TextView time;
+
     }
 }

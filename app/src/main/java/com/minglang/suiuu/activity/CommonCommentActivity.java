@@ -1,6 +1,7 @@
 package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -32,6 +33,7 @@ import org.json.JSONObject;
  * 修改备注：
  */
 public class CommonCommentActivity extends BaseActivity {
+    private static final int COMMENT_SUCCESS = 20;
     private String articleId;
     private String tripId;
     private String rId;
@@ -42,6 +44,11 @@ public class CommonCommentActivity extends BaseActivity {
     private TextView tv_top_center;
     private ProgressDialog dialog;
     private EditText et_input_comment;
+
+    /**
+     * 评论内容
+     */
+    private String commentContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +86,7 @@ public class CommonCommentActivity extends BaseActivity {
         tv_top_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String commentContent = et_input_comment.getText().toString().trim();
+                commentContent = et_input_comment.getText().toString().trim();
                 if (TextUtils.isEmpty(commentContent)) {
                     Toast.makeText(CommonCommentActivity.this, "请输入评论内容", Toast.LENGTH_SHORT).show();
                 } else {
@@ -141,6 +148,13 @@ public class CommonCommentActivity extends BaseActivity {
                 String status = json.getString("status");
                 String data = json.getString("data");
                 if ("1".equals(status) && "success".equals(data)) {
+                    Intent intent = CommonCommentActivity.this.getIntent();
+                    if(!TextUtils.isEmpty(rId)) {
+                        intent.putExtra("content", "@"+rTitle+" "+commentContent);
+                    }else {
+                        intent.putExtra("content", commentContent);
+                    }
+                    CommonCommentActivity.this.setResult(COMMENT_SUCCESS, intent);
                     Toast.makeText(CommonCommentActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
                     finish();
                 }
