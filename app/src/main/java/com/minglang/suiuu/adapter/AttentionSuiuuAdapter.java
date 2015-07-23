@@ -16,7 +16,6 @@ import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
@@ -42,9 +41,6 @@ public class AttentionSuiuuAdapter extends BaseAdapter {
         this.context = context;
 
         imageLoader = ImageLoader.getInstance();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        }
 
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
                 .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
@@ -108,6 +104,20 @@ public class AttentionSuiuuAdapter extends BaseAdapter {
             titleView.setText(strTitle);
         } else {
             titleView.setText("");
+        }
+
+        String collectCount = list.get(position).getCollectCount();
+        if (!TextUtils.isEmpty(collectCount)) {
+            heartView.setText(collectCount);
+        } else {
+            heartView.setText("0");
+        }
+
+        String commentCount = list.get(position).getCommentCount();
+        if (!TextUtils.isEmpty(commentCount)) {
+            commentView.setText(commentCount);
+        } else {
+            commentView.setText("0");
         }
 
         return convertView;

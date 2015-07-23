@@ -21,6 +21,7 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.OrderListManageAdapter;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.entity.OrderManage;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -47,8 +49,21 @@ public class ConfirmOrderFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private static final String USER_SIGN = "userSign";
+    private static final String PAGE = "page";
+    private static final String NUMBER = "number";
+
     private String userSign;
     private String verification;
+
+    @BindString(R.string.load_wait)
+    String wait;
+
+    @BindString(R.string.NoData)
+    String noData;
+
+    @BindString(R.string.DataError)
+    String errorString;
 
     @Bind(R.id.confirm_order_list_view)
     PullToRefreshListView pullToRefreshListView;
@@ -118,8 +133,10 @@ public class ConfirmOrderFragment extends Fragment {
      */
     private void initView() {
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setMessage(wait);
+        progressDialog.setCanceledOnTouchOutside(false);
 
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         ListView listView = pullToRefreshListView.getRefreshableView();
@@ -140,7 +157,8 @@ public class ConfirmOrderFragment extends Fragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                pullToRefreshListView.onRefreshComplete();
+                page = 1;
+                getConfirmOrderData(page);
             }
 
             @Override
@@ -149,8 +167,10 @@ public class ConfirmOrderFragment extends Fragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                pullToRefreshListView.onRefreshComplete();
+                page = page + 1;
+                getConfirmOrderData(page);
             }
+
         });
 
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -164,10 +184,10 @@ public class ConfirmOrderFragment extends Fragment {
 
     private void getConfirmOrderData(int page) {
         RequestParams params = new RequestParams();
-        params.addBodyParameter("userSign", userSign);
+        params.addBodyParameter(USER_SIGN, userSign);
         params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter("page", String.valueOf(page));
-        params.addBodyParameter("number", String.valueOf(10));
+        params.addBodyParameter(PAGE, String.valueOf(page));
+        params.addBodyParameter(NUMBER, String.valueOf(15));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getConfirmOrderDataPath, new ConfirmOrderManageRequestCallBack());
@@ -178,12 +198,21 @@ public class ConfirmOrderFragment extends Fragment {
     /**
      * 隐藏进度框和ListView加载进度View
      */
-    private void showOrHideDialog() {
+    private void hideDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
 
         pullToRefreshListView.onRefreshComplete();
+    }
+
+    /**
+     * 请求失败or无数据，请求页数减1
+     */
+    private void failureLessPage() {
+        if (page > 1) {
+            page = page - 1;
+        }
     }
 
     /**
@@ -198,19 +227,30 @@ public class ConfirmOrderFragment extends Fragment {
     }
 
     private void bindData2View(String str) {
-        if (!TextUtils.isEmpty(str)) {
+        if (TextUtils.isEmpty(str)) {
+            failureLessPage();
+            Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+        } else {
             try {
                 OrderManage orderManage = JsonUtils.getInstance().fromJSON(OrderManage.class, str);
-                List<OrderManage.OrderManageData> list = orderManage.getData();
-                if (list != null && list.size() > 0) {
-                    clearListData();
-                    listAll.addAll(list);
-                    orderListManageAdapter.setList(listAll);
+                if (orderManage != null) {
+                    List<OrderManage.OrderManageData> list = orderManage.getData();
+                    if (list != null && list.size() > 0) {
+                        clearListData();
+                        listAll.addAll(list);
+                        orderListManageAdapter.setList(listAll);
+                    } else {
+                        failureLessPage();
+                        Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                    failureLessPage();
+                    Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "JSON Analytical:" + e.getMessage());
+                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                failureLessPage();
+                Toast.makeText(SuiuuApplication.applicationContext, errorString, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -226,17 +266,20 @@ public class ConfirmOrderFragment extends Fragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            showOrHideDialog();
-
             String str = responseInfo.result;
+            DeBugLog.i(TAG, "已接单数据:" + str);
+            hideDialog();
             bindData2View(str);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error Info:" + s);
-            showOrHideDialog();
+            hideDialog();
+            failureLessPage();
+            Toast.makeText(SuiuuApplication.applicationContext, errorString, Toast.LENGTH_SHORT).show();
         }
+
     }
 
 }

@@ -18,55 +18,55 @@
     <string name="attach_voice_call">语音电话</string>
     <string name="attach_video_call">视频通话</string>
     <string name="user_card">名片</string>
-    <string name="move_up_to_cancel">手指上滑，取消发送</string>
-    <string name="release_to_cancel">松开手指，取消发送</string>
+    <string name="move_up_to_cancel" translatable="false">手指上滑，取消发送</string>
+    <string name="release_to_cancel" translatable="false">松开手指，取消发送</string>
     <string name="send_fail">发送消息失败,</string>
-    <string name="delete_message">删除会话和消息</string>
-    <string name="delete_conversation">删除会话</string>
+    <string name="delete_message" translatable="false">删除会话和消息</string>
+    <string name="delete_conversation" translatable="false">删除会话</string>
     <string name="copy_message">复制消息</string>
-    <string name="delete_voice">删除语音</string>
-    <string name="delete_video">删除视频</string>
-    <string name="delete">删除</string>
+    <string name="delete_voice" translatable="false">删除语音</string>
+    <string name="delete_video" translatable="false">删除视频</string>
+    <string name="delete" translatable="false">删除</string>
     <string name="resend">resend</string>
     <string name="confirm_resend">确认重发该信息？</string>
     <string name="connect_failuer_toast">请检查网络或稍候重试</string>
-    <string name="network_unavailable">网络连接不可用，请检查网络</string>
+    <string name="network_unavailable" translatable="false">网络连接不可用，请检查网络</string>
     <string name="copy">复制</string>
-    <string name="forward">转发</string>
+    <string name="forward" translatable="false">转发</string>
     <string name="button_logout">退出登录</string>
     <string name="button_uploadlog">上传运行日志</string>
-    <string name="ok">确定</string>
+    <string name="ok" translatable="false">确定</string>
     <string name="cancel">Cancel</string>
     <string name="prompt">提示</string>
     <string name="clear_records">清空记录</string>
     <string name="clear_all_records">是否清空所有聊天记录？</string>
-    <string name="location_recv">[%1$s的位置]</string>
-    <string name="location_message">位置信息</string>
+    <string name="location_recv" translatable="false">[%1$s的位置]</string>
+    <string name="location_message" translatable="false">位置信息</string>
     <string name="recording_video">录制视频</string>
-    <string name="location_prefix">[我的位置]</string>
-    <string name="picture">[图片]</string>
-    <string name="video">[视频]</string>
-    <string name="file">[文件]</string>
-    <string name="voice_call">[语音通话]</string>
+    <string name="location_prefix" translatable="false">[我的位置]</string>
+    <string name="picture" translatable="false">[图片]</string>
+    <string name="video" translatable="false">[视频]</string>
+    <string name="file" translatable="false">[文件]</string>
+    <string name="voice_call" translatable="false">[语音通话]</string>
     <string name="button_cancel">取消</string>
     <string name="button_save">保存</string>
     <string name="button_search">查找</string>
     <string name="button_add">添加</string>
     <string name="search_header">搜</string>
-    <string name="network_isnot_available">网络不可用</string>
+    <string name="network_isnot_available" translatable="false">网络不可用</string>
     <string name="recoding_fail">录音失败，请重试！</string>
     <string name="select_contacts">选择联系人</string>
     <string name="confirm_forward_to">确定转发到：%1$s ?</string>
-    <string name="logout">退出登录</string>
+    <string name="logout" translatable="false">退出登录</string>
     <string name="logout_hint">退出后不会删除任何历史数据，下次登录依然可以使用本账号</string>
-    <string name="exit_group_hint">退出后，将不再接收此群聊信息</string>
-    <string name="dissolution_group_hint">退出后，此群将被解散</string>
-    <string name="exit_group">退出</string>
+    <string name="exit_group_hint" translatable="false">退出后，将不再接收此群聊信息</string>
+    <string name="dissolution_group_hint" translatable="false">退出后，此群将被解散</string>
+    <string name="exit_group" translatable="false">退出</string>
     <string name="connect_conflict">同一帐号已在其他设备登录</string>
-    <string name="em_user_remove">此用户已被移除</string>
+    <string name="em_user_remove" translatable="false">此用户已被移除</string>
     <string name="set">设置</string>
-    <string name="notify">新消息提醒</string>
-    <string name="newnotify">接收新消息通知</string>
+    <string name="notify" translatable="false">新消息提醒</string>
+    <string name="newnotify" translatable="false">接收新消息通知</string>
     <string name="voice">声音</string>
     <string name="shake">震动</string>
     <string name="chatset">聊天设置</string>
@@ -74,7 +74,7 @@
     <string name="book_black">通讯录黑名单</string>
     <string name="session">会话</string>
     <string name="address_book">通讯录</string>
-    <string name="now_refresh_list">正在刷新联系人</string>
+    <string name="now_refresh_list" translatable="false">正在刷新联系人</string>
     <string name="Application_and_notify">Application and notification</string>
     <string name="group_chat" translatable="false">群聊</string>
     <string name="add_friend" translatable="false">添加好友</string>
@@ -117,7 +117,7 @@
     <string name="Exit_the_group_chat">Exit group chat</string>
     <string name="not_add_myself" translatable="false">不能添加自己</string>
     <string name="This_user_is_already_your_friend" translatable="false">此用户已是你的好友</string>
-    <string name="Add_a_friend">make friend</string>
+    <string name="Add_a_friend" translatable="false">做个朋友呗</string>
     <string name="send_successful" translatable="false">发送请求成功,等待对方验证</string>
     <string name="Request_add_buddy_failure">Request to add friends failed:</string>
     <string name="Network_error">Network error!</string>

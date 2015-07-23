@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.minglang.suiuu.R;
@@ -16,6 +15,7 @@ import com.minglang.suiuu.fragment.remind.NewAtFragment;
 import com.minglang.suiuu.fragment.remind.NewAttentionFragment;
 import com.minglang.suiuu.fragment.remind.NewCommentFragment;
 import com.minglang.suiuu.fragment.remind.NewReplyFragment;
+import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,17 +130,13 @@ public class NewRemindActivity extends BaseAppCompatActivity {
     }
 
     private void CreateFragment() {
+        userSign = SuiuuInfo.ReadUserSign(this);
+        verification = SuiuuInfo.ReadVerification(this);
+
         newAtFragment = NewAtFragment.newInstance(userSign, verification);
         newCommentFragment = NewCommentFragment.newInstance(userSign, verification);
         newReplyFragment = NewReplyFragment.newInstance(userSign, verification);
         newAttentionFragment = NewAttentionFragment.newInstance(userSign, verification);
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_new_remind, menu);
-        return true;
     }
 
     @Override

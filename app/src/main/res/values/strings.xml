@@ -148,9 +148,6 @@
     <string name="type" translatable="false">类型</string>
     <string name="price" translatable="false">价格</string>
     <string name="refreshData" translatable="false">点击重新加载数据</string>
-    <string name="openAsk">openSuiuuAsk</string>
-    <string name="openRemember">openSuiuuRemember</string>
-    <string name="openShoot">openSuiuuShoot</string>
     <string name="please_enter_search_content" translatable="false">请输入搜索内容</string>
     <string name="TripGallery" translatable="false">TripGallery</string>
     <string name="SuiuuPage" translatable="false">SuiuuPage</string>
@@ -183,7 +180,7 @@
     <string name="all_attention_dynamic_contentDescription">main show image</string>
     <string name="noChatHistory" translatable="false">当前没有聊天信息</string>
 
-    <string name="noData_AgainLoad">No Data,please again obtain</string>
+    <string name="noData_AgainLoad" translatable="false">没有数据,请重新获取</string>
     <string name="zero" translatable="false">0</string>
     <string name="zeroForTenKilo" translatable="false">0 &#8211; 10000</string>
     <string name="suiuu_order_sure" translatable="false">订单确认</string>
@@ -208,7 +205,7 @@
     <string name="AccountManage">Account Management</string>
     <string name="RMB">￥</string>
     <string name="AccountBalance">Balance</string>
-    <string name="ClickWithdrawals">Withdrawals</string>
+    <string name="ClickWithdrawals" translatable="false">点击提现</string>
 
     <string name="Date">Date</string>
     <string name="TransferAccount">Transfer Account</string>
@@ -228,7 +225,7 @@
     <string name="SuiuuAccount">Suiuu Account</string>
 
     <string name="answer_">Answer</string>
-    <string name="suiuu">随游</string>
+    <string name="suiuu" translatable="false">随游</string>
 
     <string name="inputProblemTitle" translatable="false">输入问题标题吧</string>
     <string name="inputProblemContent" translatable="false">输入问题内容吧</string>
@@ -255,6 +252,33 @@
 
     <string name="AttentionQuestion_SUC" translatable="false">关注成功！</string>
     <string name="AttentionQuestion_FAI" translatable="false">关注失败,请稍候再试！</string>
+
+    <string name="app_name">Suiuu</string>
+    <string name="message">Message</string>
+    <string name="my_suiuu">My Suiuu</string>
+    <string name="orderManager">Order Management</string>
+    <string name="accountManager">Account Management</string>
+
+    <string name="route">route</string>
+    <string name="save">save</string>
+    <string name="title_activity_community_item" translatable="false">CommunityItemActivity</string>
+    <string name="title_activity_questions" translatable="false">QuestionsActivity</string>
+    <string name="title_activity_answer" translatable="false">AnswerActivity</string>
+    <string name="title_activity_community_search" translatable="false">CommunitySearchActivity</string>
+    <string name="title_activity_personal_center" translatable="false">PersonalCenterActivity</string>
+    <string name="AddTag">Add Tag</string>
+    <string name="Problem">Problem</string>
+    <string name="OtherPrice">Other Price ￥：</string>
+    <string name="SelectLocation">Select Location</string>
+    <string name="city">City</string>
+    <string name="cityDetails">Please select city</string>
+    <string name="comment">Comment</string>
+
+    <string name="PersonalCenter">Personal Center</string>
+
+    <string name="openAsk" translatable="false">打开随问</string>
+    <string name="openRemember" translatable="false">打开随记</string>
+    <string name="openShoot" translatable="false">打开随拍</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
@@ -285,11 +309,6 @@
     <string name="title_activity_select_city" translatable="false">SelectCityActivity</string>
     <string name="title_activity_suiuu_order" translatable="false">SuiuuOrderActivity</string>
     <string name="title_activity_suiuu_pay" translatable="false">SuiuuPayActivity</string>
-    <string name="app_name">Suiuu</string>
-    <string name="message">Message</string>
-    <string name="my_suiuu">My Suiuu</string>
-    <string name="orderManager">Order Management</string>
-    <string name="accountManager">Account Management</string>
     <string name="title_activity_my_suiuu" translatable="false">MySuiuuActivity</string>
     <string name="title_activity_my_suiuu_details" translatable="false">MySuiuuDetailsActivity</string>
     <string name="title_activity_edit_suiuu_info" translatable="false">EditSuiuuInfoActivity</string>
@@ -304,19 +323,6 @@
     <string name="title_section3" translatable="false">Section 3</string>
     <string name="title_activity_account_manage" translatable="false">AccountManageActivity</string>
     <string name="title_activity_suiuu_user_info" translatable="false">SuiuuUserInfoActivity</string>
-    <string name="route">route</string>
-    <string name="save">save</string>
-    <string name="title_activity_community_item" translatable="false">CommunityItemActivity</string>
-    <string name="title_activity_questions" translatable="false">QuestionsActivity</string>
-    <string name="title_activity_answer" translatable="false">AnswerActivity</string>
-    <string name="title_activity_community_search" translatable="false">CommunitySearchActivity</string>
-    <string name="title_activity_personal_center" translatable="false">PersonalCenterActivity</string>
-    <string name="AddTag">Add Tag</string>
-    <string name="Problem">Problem</string>
-    <string name="OtherPrice">Other Price ￥：</string>
-    <string name="SelectLocation">Select Location</string>
-    <string name="city">City</string>
-    <string name="cityDetails">Please select city</string>
-    <string name="comment">Comment</string>
+    <string name="title_activity_order_details">OrderDetailsActivity</string>
 
 </resources>

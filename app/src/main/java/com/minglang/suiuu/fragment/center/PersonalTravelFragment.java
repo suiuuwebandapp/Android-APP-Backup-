@@ -2,11 +2,13 @@ package com.minglang.suiuu.fragment.center;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.TempAdapter;
@@ -32,6 +34,12 @@ public class PersonalTravelFragment extends Fragment {
 
     @Bind(R.id.personal_travel_list)
     RecyclerView recyclerView;
+
+    private LinearLayoutManager layoutManager;
+
+    private int lastVisibleItem;
+
+    private TempAdapter adapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -69,12 +77,36 @@ public class PersonalTravelFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_personal_travel, container, false);
         ButterKnife.bind(this, rootView);
         initView();
+        ViewAction();
         return rootView;
     }
 
     private void initView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-        recyclerView.setAdapter(new TempAdapter(getActivity()));
+        layoutManager = new LinearLayoutManager(getActivity());
+
+        adapter = new TempAdapter(getActivity());
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void ViewAction() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
+                    Toast.makeText(getActivity(), "已到达底部", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+            }
+        });
     }
 
 }

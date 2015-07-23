@@ -63,7 +63,6 @@ public class OrderManageActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_order_manage);
 
         ButterKnife.bind(this);
-
         initView();
         ViewAction();
     }

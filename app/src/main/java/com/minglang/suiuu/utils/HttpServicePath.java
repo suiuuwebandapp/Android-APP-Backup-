@@ -38,15 +38,6 @@ public class HttpServicePath {
     public static String ThirdPartyPath = RootPath + "/app-login/access-login";
 
     /**
-     * 圈子数据
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:type(1为主题页面，2为地区页面) 统一参数key{@link #key}
-     */
-    public static String LoopDataPath = RootPath + "/circle/get-circle";
-
-    /**
      * 圈子文章请求地址
      * 请求方式:POST
      * 请求参数: 文章id articleId、统一参数key{@link #key}
@@ -197,6 +188,7 @@ public class HttpServicePath {
      * 得到随游列表
      */
     public static String getSuiuuList = RootPath + "/app-travel/get-travel-list";
+
     /**
      * 得到随游高级搜索中的标签
      */

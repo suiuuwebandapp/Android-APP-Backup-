@@ -4,41 +4,48 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.minglang.suiuu.customview.CircleImageView
-        android:id="@+id/item_community_header_image"
-        android:layout_width="@dimen/layout_50dp"
-        android:layout_height="@dimen/layout_50dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/layout_10dp"
-        android:layout_marginStart="@dimen/layout_10dp"
-        android:layout_marginTop="@dimen/layout_15dp"
-        android:src="@drawable/default_head_image"/>
-
-    <TextView
-        android:id="@+id/item_community_count"
+    <RelativeLayout
+        android:id="@+id/item_community_left_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/item_community_header_image"
-        android:layout_alignLeft="@+id/item_community_header_image"
-        android:layout_alignRight="@+id/item_community_header_image"
-        android:layout_alignStart="@+id/item_community_header_image"
-        android:layout_below="@+id/item_community_header_image"
-        android:layout_marginTop="@dimen/layout_5dp"
-        android:gravity="center_horizontal"
-        android:text="@string/zero"
-        android:textSize="@dimen/layout_18sp"/>
+        android:layout_margin="@dimen/layout_8dp">
+
+        <com.minglang.suiuu.customview.CircleImageView
+            android:id="@+id/item_community_header_image"
+            android:layout_width="@dimen/layout_50dp"
+            android:layout_height="@dimen/layout_50dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_10dp"
+            android:src="@drawable/default_head_image"/>
+
+        <TextView
+            android:id="@+id/item_community_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_community_header_image"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/layout_5dp"
+            android:layout_marginTop="@dimen/layout_10dp"
+            android:drawableLeft="@drawable/icon_comment"
+            android:drawableStart="@drawable/icon_comment"
+            android:text="@string/zero"
+            android:textSize="@dimen/layout_18sp"/>
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/item_community_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/item_community_header_image"
+        android:layout_alignTop="@+id/item_community_left_layout"
         android:layout_marginEnd="@dimen/layout_8dp"
         android:layout_marginLeft="@dimen/layout_8dp"
         android:layout_marginRight="@dimen/layout_8dp"
         android:layout_marginStart="@dimen/layout_8dp"
-        android:layout_toEndOf="@+id/item_community_header_image"
-        android:layout_toRightOf="@+id/item_community_header_image"
+        android:layout_toEndOf="@+id/item_community_left_layout"
+        android:layout_toRightOf="@+id/item_community_left_layout"
         android:maxEms="20"
         android:singleLine="true"
         android:text="@string/app_name"

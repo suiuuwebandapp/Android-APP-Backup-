@@ -146,7 +146,6 @@ public class NewReplyFragment extends BaseFragment {
         header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
         header.setPadding(0, paddingParams, 0, paddingParams);
         header.setPtrFrameLayout(mPtrFrame);
-        header.setPtrFrameLayout(mPtrFrame);
 
         mPtrFrame.setHeaderView(header);
         mPtrFrame.addPtrUIHandler(header);

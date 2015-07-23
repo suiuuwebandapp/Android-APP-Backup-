@@ -120,7 +120,7 @@ public class SuiuuOrderActivity extends BaseActivity {
             Toast.makeText(this, "请选择出行日期", Toast.LENGTH_SHORT).show();
             return;
         } else {
-            Toast.makeText(this, "晚于今天", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "晚于今天", Toast.LENGTH_SHORT).show();
         }
         RequestParams params = new RequestParams();
         params.addBodyParameter("tripId", tripId);
@@ -177,9 +177,6 @@ public class SuiuuOrderActivity extends BaseActivity {
 
     class MyClick implements View.OnClickListener {
 
-        /**
-         * @param v
-         */
         @Override
         public void onClick(View v) {
             enjoy_peopleNumber = Integer.valueOf(String.valueOf(tv_enjoy_number.getText()));

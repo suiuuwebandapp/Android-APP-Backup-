@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -29,6 +30,15 @@ import butterknife.ButterKnife;
  * 个人中心页面
  */
 public class PersonalCenterActivity extends BaseAppCompatActivity {
+
+    @BindString(R.string.PersonalCenter)
+    String titleText;
+
+    @BindColor(R.color.mainColor)
+    int expandedTitleColor;
+
+    @BindColor(R.color.white)
+    int collapsedTitleTextColor;
 
     @BindString(R.string.mainTitle1)
     String str1;
@@ -65,7 +75,6 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
     }
 
     private void initView() {
-
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
 
@@ -74,12 +83,12 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
 
-        toolbarLayout.setTitle("个人中心");
-        toolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.mainColor));
-        toolbarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
-        toolbarLayout.setStatusBarScrimColor(getResources().getColor(R.color.mainColor));
+        toolbarLayout.setTitle(titleText);
+        toolbarLayout.setExpandedTitleColor(expandedTitleColor);
+        toolbarLayout.setCollapsedTitleTextColor(collapsedTitleTextColor);
 
         titleList.add(str1);
         titleList.add(str2);

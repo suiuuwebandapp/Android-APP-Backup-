@@ -11,12 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.AttentionGallery.AttentionGalleryData.AttentionGalleryItemData;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
@@ -33,8 +33,8 @@ public class AttentionGalleryAdapter extends BaseAdapter {
     private List<AttentionGalleryItemData> list;
 
     private ImageLoader imageLoader;
-
-    private DisplayImageOptions options;
+    private DisplayImageOptions options1;
+    private DisplayImageOptions options2;
 
     private int screenWidth;
 
@@ -42,12 +42,14 @@ public class AttentionGalleryAdapter extends BaseAdapter {
         this.context = context;
 
         imageLoader = ImageLoader.getInstance();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        }
 
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+        options1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
                 .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        options2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image2)
+                .showImageForEmptyUri(R.drawable.default_head_image2).showImageOnFail(R.drawable.default_head_image2)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
@@ -94,11 +96,17 @@ public class AttentionGalleryAdapter extends BaseAdapter {
         convertView.setLayoutParams(params);
 
         ImageView imageView = holder.getView(R.id.item_attention_gallery_image);
+        CircleImageView headView = holder.getView(R.id.item_attention_gallery_head_image_view);
         TextView titleView = holder.getView(R.id.item_attention_gallery_title);
 
         String imagePath = list.get(position).getTitleImg();
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, imageView, options);
+            imageLoader.displayImage(imagePath, imageView, options1);
+        }
+
+        String headImagePath = list.get(position).getHeadImg();
+        if (!TextUtils.isEmpty(headImagePath)) {
+            imageLoader.displayImage(headImagePath, headView, options2);
         }
 
         String strTitle = list.get(position).getTitle();

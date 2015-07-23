@@ -10,22 +10,39 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:contentDescription="@string/app_name"
         android:scaleType="fitXY"
         android:src="@drawable/default_background_image"/>
 
-    <TextView
-        android:id="@+id/item_attention_gallery_title"
+    <RelativeLayout
+        android:id="@+id/item_attention_gallery_bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/item_attention_gallery_image"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="@dimen/layout_10dp"
-        android:layout_marginLeft="@dimen/layout_10dp"
-        android:layout_marginRight="@dimen/layout_10dp"
-        android:layout_marginStart="@dimen/layout_10dp"
-        android:layout_marginTop="@dimen/layout_8dp"
-        android:padding="@dimen/layout_5dp"
-        android:text="@string/title"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:layout_below="@+id/item_attention_gallery_image">
+
+        <com.minglang.suiuu.customview.CircleImageView
+            android:id="@+id/item_attention_gallery_head_image_view"
+            android:layout_width="@dimen/layout_50dp"
+            android:layout_height="@dimen/layout_50dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/layout_8dp"
+            android:src="@drawable/default_head_image2"/>
+
+        <TextView
+            android:id="@+id/item_attention_gallery_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/layout_10dp"
+            android:layout_marginRight="@dimen/layout_10dp"
+            android:layout_marginTop="@dimen/layout_8dp"
+            android:layout_toEndOf="@+id/item_attention_gallery_head_image_view"
+            android:layout_toRightOf="@+id/item_attention_gallery_head_image_view"
+            android:padding="@dimen/layout_5dp"
+            android:singleLine="true"
+            android:text="@string/title"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

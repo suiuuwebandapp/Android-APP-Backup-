@@ -39,6 +39,7 @@
     <dimen name="layout_40dp">40dp</dimen>
     <dimen name="layout_45dp">45dp</dimen>
     <dimen name="layout_50dp">50dp</dimen>
+    <dimen name="layout_55dp">55dp</dimen>
     <dimen name="layout_60dp">60dp</dimen>
     <dimen name="layout_65dp">65dp</dimen>
     <dimen name="layout_70dp">70dp</dimen>

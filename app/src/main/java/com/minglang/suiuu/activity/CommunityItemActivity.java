@@ -257,6 +257,12 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         httpRequest.requestNetworkData();
     }
 
+    /**
+     * 构造关注问题的网络请求参数
+     *
+     * @param id 问题ID
+     * @return 请求参数
+     */
     private RequestParams buildAttentionParams(String id) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
@@ -264,6 +270,11 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         return params;
     }
 
+    /**
+     * 关注问题的网络请求
+     *
+     * @param params 请求参数
+     */
     private void getAttentionRequest(RequestParams params) {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getAttentionQuestionPath, new AttentionQuestionRequestCallBack());
