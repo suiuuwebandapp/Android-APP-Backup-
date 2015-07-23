@@ -131,10 +131,8 @@ public class SuiuuFragment extends BaseFragment
         params.addBodyParameter("tag", tags);
         params.addBodyParameter("startPrice", startPrice);
         params.addBodyParameter("endPrice", endPrice);
-
         params.addBodyParameter("page", Integer.toString(page));
         params.addBodyParameter("number", "10");
-
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuList, new getSuiuuDateCallBack());
         suHttpRequest.setParams(params);
@@ -233,10 +231,8 @@ public class SuiuuFragment extends BaseFragment
                 Log.i("suiuu","suiuu="+stringResponseInfo.result);
                 String status = json.getString("status");
                 if ("1".equals(status)) {
-                    SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, stringResponseInfo.result);
-
+                    SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class,stringResponseInfo.result);
                     List<SuiuuDataList> suiuuDataListNew = baseCollection.getData();
-
                     if (suiuuDataListNew.size() < 1) {
                         Toast.makeText(getActivity().getApplicationContext(), "数据加载完毕", Toast.LENGTH_SHORT).show();
                     }

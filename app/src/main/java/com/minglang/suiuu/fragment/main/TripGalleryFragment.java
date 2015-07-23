@@ -1,6 +1,5 @@
 package com.minglang.suiuu.fragment.main;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,14 +13,25 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuSearchActivity;
 import com.minglang.suiuu.adapter.TripGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.entity.TripGallery;
+import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuInfo;
 
-import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 /**
@@ -33,14 +43,15 @@ import java.util.List;
  * 修改时间：2015/7/8 15:46
  * 修改备注：
  */
-@SuppressLint("InflateParams")
+
 public class TripGalleryFragment extends BaseFragment {
 
     private LinearLayout mGalleryLinearLayout;
     private TextView tv_trip_gallery_search;
     private NoScrollBarListView lv_trip_gallery;
     private TripGalleryAdapter adapter;
-    private List<TripGallery> tripGalleryList = new ArrayList<>();
+    private List<TripGallery.DataEntity.TripGalleryDataInfo> tripGalleryList;
+    private int page = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,19 +59,21 @@ public class TripGalleryFragment extends BaseFragment {
         initView(rootView);
         initData();
         viewAction();
-        showList(tripGalleryList);
+        loadTripGalleryList(null, "0", null, page);
         return rootView;
     }
 
     private void initView(View rootView) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
+//        LayoutInflater inflater = LayoutInflater.from(getActivity());
         mGalleryLinearLayout = (LinearLayout) rootView.findViewById(R.id.galleryLinearLayout);
         tv_trip_gallery_search = (TextView) rootView.findViewById(R.id.tv_trip_grllery_search);
         lv_trip_gallery = (NoScrollBarListView) rootView.findViewById(R.id.lv_trip_gallery);
         ScrollView sv_trip_gallery = (ScrollView) rootView.findViewById(R.id.sv_trip_gallery);
         sv_trip_gallery.smoothScrollTo(0, 0);
-        View footer = inflater.inflate(R.layout.footer_layout, null);
-        lv_trip_gallery.addFooterView(footer);
+//        View footer = inflater.inflate(R.layout.footer_layout, null);
+        ImageView ddd = new ImageView(getActivity());
+        ddd.setImageResource(R.drawable.trip_gallery_loading_more);
+        lv_trip_gallery.addFooterView(ddd);
     }
 
     private void initData() {
@@ -121,7 +134,7 @@ public class TripGalleryFragment extends BaseFragment {
         });
     }
 
-    private void showList(List<TripGallery> tripGalleryList) {
+    private void showList(List<TripGallery.DataEntity.TripGalleryDataInfo> tripGalleryList) {
         if (adapter == null) {
             adapter = new TripGalleryAdapter(getActivity().getApplication(), tripGalleryList);
             lv_trip_gallery.setAdapter(adapter);
@@ -129,5 +142,47 @@ public class TripGalleryFragment extends BaseFragment {
             adapter.onDateChange(tripGalleryList);
         }
     }
+    private void loadTripGalleryList(String tags,String sortName,String search,int page) {
+        String str = SuiuuInfo.ReadVerification(getActivity());
+        RequestParams params = new RequestParams();
+        params.addBodyParameter(HttpServicePath.key, str);
+        params.addBodyParameter("tag", tags);
+        params.addBodyParameter("sortName", sortName);
+        params.addBodyParameter("search", search);
+        params.addBodyParameter("page", Integer.toString(page));
+        params.addBodyParameter("number", "10");
+        SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.getTripGalleryList, new loadTripGalleryListCallBack());
+        suHttpRequest.setParams(params);
+        suHttpRequest.requestNetworkData();
+    }
+    /**
+     * 发布圈子文章回调接口
+     */
+    class loadTripGalleryListCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            String result = stringResponseInfo.result;
+            Log.i("suiuu","result="+result);
+            try {
+                JSONObject json = new JSONObject(result);
+                int status = (int) json.get("status");
+                if(status == 1) {
+                    Log.i("suiuu",json.getString("data"));
+                    TripGallery tripGallery = JsonUtils.getInstance().fromJSON(TripGallery.class, result);
+                    tripGalleryList = tripGallery.getData().getData();
+                    showList(tripGalleryList);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        @Override
+        public void onFailure(HttpException e, String s) {
+            Log.i("suiuu", "请求失败------------------------------------" + s);
+        }
+    }
+
 
 }

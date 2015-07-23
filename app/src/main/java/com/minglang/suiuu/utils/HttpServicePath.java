@@ -63,9 +63,13 @@ public class HttpServicePath {
     public static String AttentionUserPath = RootPath + "/attention/get-attention-user";
 
     /**
-     * 发布圈子文章
+     * 发布旅图文章
      */
-    public static String createTripGallery = RootPath + "/travel-picture/add-travel-picture";
+    public static String createTripGallery = RootPath + "/app-travel-picture/add-travel-picture";
+    /**
+     * 得到旅图列表
+     */
+    public static String getTripGalleryList = RootPath + "/app-travel-picture/get-list";
 
     /**
      * 修改圈子文章

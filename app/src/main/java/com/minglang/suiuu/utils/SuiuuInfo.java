@@ -8,6 +8,8 @@ import com.minglang.suiuu.entity.RequestData;
 import com.minglang.suiuu.entity.UserBackData;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 读取保存用户基本信息
@@ -52,6 +54,11 @@ public class SuiuuInfo implements Serializable {
      * 登陆成功后返回的验证信息
      */
     private static final String PREFERENCE_NAME2 = "SuiuuInfo";
+
+    /**
+     * 当前用户的位置信息
+     */
+    private static final String LocationInfo = "SuiuuLocationInfo";
 
     private static final String MESSAGE = "message";
 
@@ -365,6 +372,30 @@ public class SuiuuInfo implements Serializable {
     public static void ClearSuiuuInfo(Context context) {
         context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND)
                 .edit().clear().apply();
+    }
+
+    /**
+     * 保存当前用户位置信息
+     */
+    public static void WriteUserLocation(Context context, double lat, double lng) {
+        SharedPreferences sp = context.getSharedPreferences(LocationInfo, Context.MODE_APPEND);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("lat", String.valueOf(lat));
+        editor.putString("lng", String.valueOf(lng));
+        editor.apply();
+    }
+
+    /**
+     * 读取当前用户的位置信息
+     * @param context
+     * @return
+     */
+    public static Map ReadUserLocation(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(LocationInfo, Context.MODE_APPEND);
+        Map<String, String> map = new HashMap<>();
+        map.put("lat", sp.getString("lat", ""));
+        map.put("lng", sp.getString("lng", ""));
+        return map;
     }
 
 }

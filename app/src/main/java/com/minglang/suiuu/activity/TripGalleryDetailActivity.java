@@ -24,7 +24,7 @@ public class TripGalleryDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_gallery);
+        setContentView(R.layout.activity_trip_gallery_detail);
         mapView = (MapView) findViewById(R.id.mv_trip_gallery_map);
         mapView.onCreate(savedInstanceState);// 必须要写
         init();

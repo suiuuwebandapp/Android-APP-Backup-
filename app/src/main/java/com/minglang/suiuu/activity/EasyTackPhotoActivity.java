@@ -146,11 +146,11 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
 
                         dialog.dismissDialog();
                         Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
-
-                        Intent intent = new Intent(EasyTackPhotoActivity.this, LoopArticleActivity.class);
-                        intent.putExtra("articleId", dataNum);
-                        intent.putExtra("TAG", TAG);
-                        startActivity(intent);
+//                        Intent intent = new Intent(EasyTackPhotoActivity.this, LoopArticleActivity.class);
+//                        intent.putExtra("articleId", dataNum);
+//                        intent.putExtra("TAG", TAG);
+//                        startActivity(intent);
+                        finish();
                     } else {
                         dialog.dismissDialog();
                         Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
@@ -288,12 +288,12 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
             // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
             picDescriptionList.add(et.getText().toString());
         }
-//        if(TextUtils.isEmpty(locationAddress)) {
-//            Toast.makeText(this,"请选择位置",Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+        if(TextUtils.isEmpty(locationAddress)) {
+            Toast.makeText(this,"请选择位置",Toast.LENGTH_SHORT).show();
+            return;
+        }
         //访问网络相关
-//        dialog.showDialog();
+        dialog.showDialog();
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
@@ -303,15 +303,15 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         params.addBodyParameter("city", locationCity);
         params.addBodyParameter("lon", String.valueOf(longitude));
         params.addBodyParameter("lat", String.valueOf(latitude));
-//        params.addBodyParameter("tags",jsonUtil.toJSON(suiuuTagClick));
+        params.addBodyParameter("tags",tagText);
         List<String> picNameList = new ArrayList<>();
-//        for (String string : picList) {
-//            updateDate(string);
-//            String substring = string.substring(string.lastIndexOf("/"));
-//            picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
-//        }
+        for (String string : picList) {
+            updateDate(string);
+            String substring = string.substring(string.lastIndexOf("/"));
+            picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
+        }
         params.addBodyParameter("picList", jsonUtil.toJSON(picNameList));
-//        params.addBodyParameter("img", picNameList.get(0));
+        params.addBodyParameter("titleImg", picNameList.get(0));
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.createTripGallery, new CreateLoopCallBack());
         suHttpRequest.setParams(params);

@@ -8,12 +8,17 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.model.LatLng;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.TripGallery;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.List;
+import java.util.Map;
+
 
 /**
  * 项目名称：Android-APP-Backup-
@@ -27,14 +32,20 @@ import java.util.List;
 public class TripGalleryAdapter extends BaseAdapter {
 
     private Context context;
-    private List<TripGallery> list;
+    private List<TripGallery.DataEntity.TripGalleryDataInfo> list;
+    private String lat;
+    private String lng;
 
-    public TripGalleryAdapter(Context context, List<TripGallery> list) {
+    public TripGalleryAdapter(Context context, List<TripGallery.DataEntity.TripGalleryDataInfo> list) {
         this.context = context;
         this.list = list;
+        Map map = SuiuuInfo.ReadUserLocation(context);
+        this.lat = (String)map.get("lat");
+        this.lng = (String)map.get("lng");
+
     }
 
-    public void onDateChange(List<TripGallery> list) {
+    public void onDateChange(List<TripGallery.DataEntity.TripGalleryDataInfo> list) {
         this.list = list;
         this.notifyDataSetChanged();
     }
@@ -64,14 +75,17 @@ public class TripGalleryAdapter extends BaseAdapter {
         TextView trip_gallery_name = holder.getView(R.id.tv_trip_gallery_name);
         TextView trip_gallery_tag = holder.getView(R.id.tv_trip_gallery_tag);
         TextView trip_gallery_loveNumber = holder.getView(R.id.tv_trip_gallery_love_number);
-        tv_location_distance.setText(list.get(position).getLocationDistance());
-        trip_gallery_name.setText(list.get(position).getTripGalleryName());
-        trip_gallery_tag.setText(list.get(position).getTripGalleryTag());
-        trip_gallery_loveNumber.setText(list.get(position).getLoveNumber());
-        Uri uri = Uri.parse(list.get(position).getHeadUrl());
+        LatLng lngLat = new LatLng(Double.valueOf(list.get(position).getLon()),Double.valueOf(list.get(position).getLat()) );
+        LatLng lngLat1 = new LatLng(Double.valueOf(lng),Double.valueOf(lat));
+        float v1 = AMapUtils.calculateLineDistance(lngLat, lngLat1);
+        tv_location_distance.setText(String.valueOf(v1).length()>=4?String.valueOf(v1).substring(0,4):String.valueOf(v1));
+        trip_gallery_name.setText(list.get(position).getTitle());
+        trip_gallery_tag.setText(list.get(position).getTags());
+        trip_gallery_loveNumber.setText(list.get(position).getAttentionCount());
+        Uri uri = Uri.parse(list.get(position).getTitleImg());
         picContent.setImageURI(uri);
-        if(!TextUtils.isEmpty(list.get(position).getHeadPotrait())) {
-            Uri uri1 = Uri.parse(list.get(position).getHeadPotrait());
+        if(!TextUtils.isEmpty(list.get(position).getHeadImg())) {
+            Uri uri1 = Uri.parse(list.get(position).getHeadImg());
             headPotrait.setImageURI(uri1);
         }
         return convertView;
