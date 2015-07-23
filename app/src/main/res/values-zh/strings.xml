@@ -278,4 +278,7 @@
     <string name="complete">完成</string>
     <string name="comment">评论</string>
     <string name="Question">提问</string>
+    <string name="AnswerNoNull">答案不能为空！</string>
+    <string name="AnswerSuccess">回答成功！</string>
+    <string name="Waiting">请稍候&#8230;</string>
 </resources>

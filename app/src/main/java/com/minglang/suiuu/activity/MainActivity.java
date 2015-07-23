@@ -170,9 +170,6 @@ public class MainActivity extends BaseActivity {
 
     private TextView errorText;
 
-    @Bind(R.id.titleLayout)
-    RelativeLayout titleLayout;
-
     /**
      * 旅图页面按钮布局
      */
@@ -395,7 +392,13 @@ public class MainActivity extends BaseActivity {
         switchSuiuu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                if (isChecked) {
+                    sideListView.setVisibility(View.VISIBLE);
+                    sideListView2.setVisibility(View.GONE);
+                } else {
+                    sideListView.setVisibility(View.GONE);
+                    sideListView2.setVisibility(View.VISIBLE);
+                }
             }
         });
 

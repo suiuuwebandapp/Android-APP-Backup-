@@ -177,7 +177,7 @@ public class AttentionGalleryFragment extends BaseFragment {
         params.addBodyParameter(NUMBER, String.valueOf(20));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.AttentionLoopPath, new AttentionGalleryRequestCallback());
+                HttpServicePath.getAttentionTripPath, new AttentionGalleryRequestCallback());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }

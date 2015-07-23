@@ -247,6 +247,15 @@
 
     <string name="Question">Question</string>
 
+    <string name="AnswerNoNull">The answer can not be empty!</string>
+
+    <string name="AnswerSuccess">Answer Success!</string>
+
+    <string name="Waiting">please wait&#8230;</string>
+
+    <string name="AttentionQuestion_SUC" translatable="false">关注成功！</string>
+    <string name="AttentionQuestion_FAI" translatable="false">关注失败,请稍候再试！</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="title_activity_personal" translatable="false">PersonalActivity</string>

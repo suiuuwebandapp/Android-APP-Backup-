@@ -42,9 +42,6 @@ public class AttentionActivity extends BaseAppCompatActivity {
     @BindString(R.string.QuestionsAndAnswers)
     String str3;
 
-    /**
-     * 返回键
-     */
     @Bind(R.id.attentionBack)
     ImageView attentionBack;
 
@@ -60,7 +57,6 @@ public class AttentionActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_attention);
 
         ButterKnife.bind(this);
-
         initView();
         ViewAction();
     }
@@ -80,6 +76,7 @@ public class AttentionActivity extends BaseAppCompatActivity {
 
         tabLayout.addTab(tabLayout.newTab().setText(str1), true);
         tabLayout.addTab(tabLayout.newTab().setText(str2), false);
+        tabLayout.addTab(tabLayout.newTab().setText(str3), false);
 
         //关注的旅图
         AttentionGalleryFragment attentionGalleryFragment = AttentionGalleryFragment.newInstance(userSign, verification);
@@ -130,7 +127,6 @@ public class AttentionActivity extends BaseAppCompatActivity {
             }
 
         });
-
 
     }
 

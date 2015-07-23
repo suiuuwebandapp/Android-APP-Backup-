@@ -37,6 +37,7 @@ dependencies {
     compile 'com.beardedhen:androidbootstrap:1.1.1'
     compile 'com.facebook.fresco:fresco:0.5.3'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.githang:com-phillipcalvin-iconbutton:1.0.1@aar'
     compile files('libs/ easemobchat_2. 1.7.jar ')
     compile files('libs/picasso-2.4.0.jar')
     compile files('libs/umeng-analytics-v5.2.4.jar')

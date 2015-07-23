@@ -384,8 +384,10 @@ public class CommunityFragment extends BaseFragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
+            String str = responseInfo.result;
+            DeBugLog.i(TAG, "问答社区返回的数据:" + str);
             hideDialog();
-            bindData2View(responseInfo.result);
+            bindData2View(str);
         }
 
         @Override

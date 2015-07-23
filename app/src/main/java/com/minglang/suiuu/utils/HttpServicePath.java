@@ -13,8 +13,6 @@ public class HttpServicePath {
      * 服务器地址
      * <p/>
      */
-//    public static String RootPath = "http://192.168.1.173";
-
     public static String RootPath = "http://apptest.suiuu.com";
 
     public static String SharePath = "/circle/web-info?infoId=";
@@ -49,15 +47,6 @@ public class HttpServicePath {
     public static String LoopDataPath = RootPath + "/circle/get-circle";
 
     /**
-     * 圈子内容地址
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:圈子ID circleId、统一参数key{@link #key}
-     */
-    public static String LoopDetailsPath = RootPath + "/circle/get-article-by-circle-id";
-
-    /**
      * 圈子文章请求地址
      * 请求方式:POST
      * 请求参数: 文章id articleId、统一参数key{@link #key}
@@ -72,15 +61,6 @@ public class HttpServicePath {
      * 请求参数:文章ID articleId、统一参数key{@link #key}
      */
     public static String DeleteArticlePath = RootPath + "/circle/delete-article";
-
-    /**
-     * 获取关注的圈子
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:页码 page(0 得到全部、1—— +∞ 对应页码数)
-     */
-    public static String AttentionLoopPath = RootPath + "/attention/get-attention-circle";
 
     /**
      * 获取关注的用户
@@ -136,16 +116,6 @@ public class HttpServicePath {
      * 请求参数:需要收藏文章的attentionId
      */
     public static String CollectionArticleCancelPath = RootPath + "/attention/delete-attention";
-
-    //    /**
-    //     * 首页动态请求地址
-    //     * <p/>
-    //     * 请求方式:POST
-    //     * <p/>
-    //     * 请求参数：无
-    //     */
-
-//    public static String MainDynamicPath = RootPath + "/app-main/get-index-list";
 
     /**
      * 得到详细关注动态数据
@@ -243,20 +213,6 @@ public class HttpServicePath {
     public static String getCountryData = RootPath + "/app-travel/get-country";
 
     /**
-     * 添加关注的圈子
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:要关注的圈子的ID cId
-     */
-    public static String setAddAttentionPath = RootPath + "/attention/add-attention-circle";
-
-    //    /**
-    //     * 得到推荐的圈子
-    //     */
-    //    public static String GetRecommendLoopPath = RootPath + "/attention/get-recommend-circle";
-
-    /**
      * 创建一条评论
      */
     public static String articleCreateComment = RootPath + "/circle/create-comment";
@@ -275,16 +231,6 @@ public class HttpServicePath {
      * 根据文章ID获得评论列表
      */
     public static String getCommentListByTripId = RootPath + "/app-travel/get-comment-list";
-
-    //    /**
-    //     * 随游中添加收藏
-    //     */
-    //    public static String travelAddCollection = RootPath + "/attention/add-collection-travel";
-
-    //    /**
-    //     * 随游中添加点赞
-    //     */
-    //    public static String travelAddPraise = RootPath + "/attention/add-praise-travel";
 
     /**
      * 圈子中添加点赞
@@ -309,11 +255,6 @@ public class HttpServicePath {
      * 请求参数:国家ID countryId
      */
     public static String getCityListPath = RootPath + "/app-travel/get-city";
-
-    /**
-     * 取消接口
-     */
-    public static String getCancelServicePath = RootPath + "/attention/delete-attention";
 
     /**
      * 我发布的随游地址
@@ -392,6 +333,16 @@ public class HttpServicePath {
     /**
      * 得到关注的问答
      */
-    public static String getAttentionProblemPath = RootPath + "/attention/get-attention-qa";
+    public static String getAttentionProblemInfoPath = RootPath + "/attention/get-attention-qa";
+
+    /**
+     * 关注问题
+     */
+    public static String getAttentionQuestionPath = RootPath + "/attention/attention-qa";
+
+    /**
+     * 回答问题
+     */
+    public static String setAnswerToQuestionPath = RootPath + "/app-qa/add-answer";
 
 }

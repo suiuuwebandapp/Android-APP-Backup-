@@ -186,7 +186,7 @@ public class AttentionProblemFragment extends BaseFragment {
      */
     private void getProblemData4Service(RequestParams params) {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getAttentionProblemPath, new AttentionProblemRequestCallBack());
+                HttpServicePath.getAttentionProblemInfoPath, new AttentionProblemRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }

@@ -162,6 +162,8 @@ public class AttentionSuiuu {
              * tripId : 41
              * title : 【包车】法国巴黎最浪漫温馨之路
              * basePrice : 2205.00
+             * collectCount: 3,
+             * commentCount": 6
              */
             private String score;
             private String titleImg;
@@ -172,6 +174,8 @@ public class AttentionSuiuu {
             private String tripId;
             private String title;
             private String basePrice;
+            private String collectCount;
+            private String commentCount;
 
             public void setScore(String score) {
                 this.score = score;
@@ -209,6 +213,14 @@ public class AttentionSuiuu {
                 this.basePrice = basePrice;
             }
 
+            public void setCollectCount(String collectCount) {
+                this.collectCount = collectCount;
+            }
+
+            public void setCommentCount(String commentCount) {
+                this.commentCount = commentCount;
+            }
+
             public String getScore() {
                 return score;
             }
@@ -244,6 +256,17 @@ public class AttentionSuiuu {
             public String getBasePrice() {
                 return basePrice;
             }
+
+            public String getCollectCount() {
+                return collectCount;
+            }
+
+            public String getCommentCount() {
+                return commentCount;
+            }
+
         }
+
     }
+
 }

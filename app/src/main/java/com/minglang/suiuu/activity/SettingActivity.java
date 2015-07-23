@@ -65,21 +65,6 @@ public class SettingActivity extends BaseActivity {
             btn_logout.setText(getString(R.string.button_logout));
         }
 
-//        LinearLayout settingLayout = (LinearLayout) findViewById(R.id.settingRootLayout);
-//        if (isKITKAT) {
-//            if (navigationBarHeight <= 0) {
-//                settingLayout.setPadding(0, statusBarHeight, 0, 0);
-//            } else {
-//                settingLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-//            }
-//        } else {
-//            if (navigationBarHeight > 0) {
-//                settingLayout.setPadding(0, statusBarHeight, 0, navigationBarHeight);
-//            } else {
-//                settingLayout.setPadding(0, 0, 0, navigationBarHeight);
-//            }
-//        }
-
         settingBack = (ImageView) findViewById(R.id.iv_top_back);
         settingList = (ListView) findViewById(R.id.settingList);
 

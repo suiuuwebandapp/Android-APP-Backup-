@@ -27,7 +27,6 @@ import java.util.List;
 public class MessageAdapter extends BaseAdapter {
 
     private Context context;
-
     private List<SuiuuMessageData> list;
 
     private ImageLoader imageLoader;
@@ -81,6 +80,7 @@ public class MessageAdapter extends BaseAdapter {
         SuiuuMessageData data = list.get(position);
 
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_message_layout, position);
+        convertView = holder.getConvertView();
 
         CircleImageView headImage = holder.getView(R.id.item_message_head_image);
         TextView info = holder.getView(R.id.item_message_info);
@@ -128,4 +128,5 @@ public class MessageAdapter extends BaseAdapter {
 
         return convertView;
     }
+
 }

@@ -97,6 +97,7 @@ public class NewRemindActivity extends BaseAppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
 
         newRemindPager.setOffscreenPageLimit(4);

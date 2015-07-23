@@ -49,8 +49,8 @@ public class AccountManageActivity extends BaseAppCompatActivity {
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-//            actionBar.setHomeAsUpIndicator(R.drawable.back);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
 
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);

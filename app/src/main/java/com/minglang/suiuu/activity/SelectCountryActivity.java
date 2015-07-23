@@ -138,9 +138,8 @@ public class SelectCountryActivity extends BaseActivity {
     }
 
     private void getCountryData4Service() {
-        String ver = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, ver);
+        params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getCountryData, new SelectCountryRequestCallBack());
@@ -200,6 +199,7 @@ public class SelectCountryActivity extends BaseActivity {
             }
 
             String str = stringResponseInfo.result;
+            DeBugLog.i(TAG, "返回的国家信息数据:" + str);
             try {
                 Country country = JsonUtils.getInstance().fromJSON(Country.class, str);
                 List<CountryData> countryDataList = country.getData();

@@ -1,13 +1,12 @@
 package com.minglang.suiuu.fragment.remind;
 
-import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,6 +19,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.CommentsActivity;
 import com.minglang.suiuu.adapter.MessageAdapter;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.SuiuuMessage;
 import com.minglang.suiuu.entity.SuiuuMessageData;
@@ -32,6 +32,9 @@ import com.minglang.suiuu.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.BindString;
+import butterknife.ButterKnife;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -54,16 +57,33 @@ public class NewCommentFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private static final String PAGE = "page";
+    private static final String NUMBER = "number";
+
+    private static final String TRIP_ID = "tripId";
+    private static final String ARTICLE_ID = "articleId";
+
     private String userSign;
     private String verification;
 
-    private PtrClassicFrameLayout mPtrFrame;
+    @BindString(R.string.load_wait)
+    String loadString;
 
-    private ListView newCommentList;
+    @BindString(R.string.NoData)
+    String noData;
+
+    @BindString(R.string.NetworkAnomaly)
+    String netWorkError;
+
+    @Bind(R.id.new_comment_fragment_head_frame)
+    PtrClassicFrameLayout mPtrFrame;
+
+    @Bind(R.id.newCommentList)
+    ListView newCommentList;
 
     private List<SuiuuMessageData> listAll = new ArrayList<>();
 
-    private Dialog dialog;
+    private ProgressDialog progressDialog;
 
     private MessageAdapter adapter;
 
@@ -102,33 +122,29 @@ public class NewCommentFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_new_comment, container, false);
-
-        initView(rootView);
+        ButterKnife.bind(this, rootView);
+        initView();
         ViewAction();
-        getData();
+        getNewAt4Service(page);
+        DeBugLog.i(TAG, "userSign:" + userSign);
         return rootView;
     }
 
     /**
      * 初始化方法
-     *
-     * @param rootView Fragment根View
      */
-    private void initView(View rootView) {
+    private void initView() {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage(loadString);
+        progressDialog.setCanceledOnTouchOutside(false);
 
-        dialog = new Dialog(getActivity());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progress_bar);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-
-        mPtrFrame = (PtrClassicFrameLayout) rootView.findViewById(R.id.new_comment_fragment_head_frame);
+        int paddingParams = Utils.newInstance().dip2px(15, getActivity());
 
         MaterialHeader header = new MaterialHeader(getActivity());
         int[] colors = getResources().getIntArray(R.array.google_colors);
         header.setColorSchemeColors(colors);
         header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, Utils.newInstance().dip2px(15, getActivity()), 0, Utils.newInstance().dip2px(10, getActivity()));
-        header.setPtrFrameLayout(mPtrFrame);
+        header.setPadding(0, paddingParams, 0, paddingParams);
         header.setPtrFrameLayout(mPtrFrame);
 
         mPtrFrame.setHeaderView(header);
@@ -144,8 +160,6 @@ public class NewCommentFragment extends BaseFragment {
         mPtrFrame.setPullToRefresh(false);
         // default is true
         mPtrFrame.setKeepHeaderWhenRefresh(true);
-
-        newCommentList = (ListView) rootView.findViewById(R.id.newCommentList);
 
         adapter = new MessageAdapter(getActivity(), "2");
         newCommentList.setAdapter(adapter);
@@ -173,22 +187,15 @@ public class NewCommentFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), CommentsActivity.class);
                 String relativeId = listAll.get(position).getRelativeId();
                 if (rType.equals("1")) {
-                    intent.putExtra("tripId", relativeId);
-                    intent.putExtra("articleId", "");
+                    intent.putExtra(TRIP_ID, relativeId);
+                    intent.putExtra(ARTICLE_ID, "");
                 } else if (rType.equals("2")) {
-                    intent.putExtra("tripId", "");
-                    intent.putExtra("articleId", relativeId);
+                    intent.putExtra(TRIP_ID, "");
+                    intent.putExtra(ARTICLE_ID, relativeId);
                 }
                 startActivity(intent);
             }
         });
-    }
-
-    private void getData() {
-        if (dialog != null) {
-            dialog.show();
-        }
-        getNewAt4Service(page);
     }
 
     /**
@@ -198,8 +205,8 @@ public class NewCommentFragment extends BaseFragment {
         RequestParams params = new RequestParams();
         params.addBodyParameter(TYPE, "3");
         params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter("number", String.valueOf(10));
-        params.addBodyParameter("page", String.valueOf(page));
+        params.addBodyParameter(PAGE, String.valueOf(page));
+        params.addBodyParameter(NUMBER, String.valueOf(10));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.GetMessageListPath, new NewCommentRequestCallBack());
@@ -207,55 +214,77 @@ public class NewCommentFragment extends BaseFragment {
         httpRequest.requestNetworkData();
     }
 
-    public String getUserSign() {
-        return userSign;
+    private void hideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+
+        mPtrFrame.refreshComplete();
+    }
+
+    private void failureLessPage() {
+        if (page > 1) {
+            page = page - 1;
+        }
+    }
+
+    private void clearDataList() {
+        if (page == 1) {
+            if (listAll != null && listAll.size() > 0) {
+                listAll.clear();
+            }
+        }
+    }
+
+    private void bindData2View(String str) {
+        if (TextUtils.isEmpty(str)) {
+            failureLessPage();
+            Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                SuiuuMessage message = JsonUtils.getInstance().fromJSON(SuiuuMessage.class, str);
+                List<SuiuuMessageData> list = message.getData().getData();
+                if (list != null && list.size() > 0) {
+                    clearDataList();
+                    listAll.addAll(list);
+                    adapter.setList(listAll);
+                } else {
+                    failureLessPage();
+                    Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "新评论数据请求失败:" + e.getMessage());
+                failureLessPage();
+                Toast.makeText(SuiuuApplication.applicationContext, netWorkError, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private class NewCommentRequestCallBack extends RequestCallBack<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-
-            mPtrFrame.refreshComplete();
-
-            if (page == 1) {
-                if (listAll != null && listAll.size() > 0) {
-                    listAll.clear();
-                }
-            }
-
-            String str = stringResponseInfo.result;
-            try {
-                SuiuuMessage message = JsonUtils.getInstance().fromJSON(SuiuuMessage.class, str);
-                List<SuiuuMessageData> list = message.getData().getData();
-                if (list != null && list.size() > 0) {
-                    listAll.addAll(list);
-                    adapter.setList(listAll);
-                } else {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                DeBugLog.e(TAG, "新评论数据请求失败:" + e.getMessage());
-                Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
             }
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-
-            mPtrFrame.refreshComplete();
-
-            DeBugLog.e(TAG, "新评论数据请求失败:" + s);
-            Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            String str = stringResponseInfo.result;
+            DeBugLog.i(TAG, "新评论返回的数据:" + str);
+            hideDialog();
+            bindData2View(str);
         }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            DeBugLog.e(TAG, "新评论数据请求失败:" + s);
+            hideDialog();
+            failureLessPage();
+            Toast.makeText(SuiuuApplication.applicationContext, netWorkError, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 }

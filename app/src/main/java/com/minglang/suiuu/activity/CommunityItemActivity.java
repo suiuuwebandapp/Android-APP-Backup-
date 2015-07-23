@@ -1,6 +1,7 @@
 package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -30,8 +31,8 @@ import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.entity.CommunityItem;
-import com.minglang.suiuu.entity.Tag;
 import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.AnswerEntity;
+import com.minglang.suiuu.entity.Tag;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -40,6 +41,9 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.phillipcalvin.iconbutton.IconButton;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -57,11 +61,24 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
 
     private static final String ID = "id";
 
+    private static final String Q_ID = "qId";
+
+    private static final String STATUS = "status";
+    private static final String SUC_VALUE = "1";
+
+    private String qID;
+
     @BindColor(R.color.white)
     int titleTextColor;
 
     @BindString(R.string.NoData)
     String NoData;
+
+    @BindString(R.string.AttentionQuestion_SUC)
+    String attention_suc;
+
+    @BindString(R.string.AttentionQuestion_FAI)
+    String attention_fai;
 
     @Bind(R.id.community_item_refresh_scroll_view)
     PullToRefreshScrollView pullToRefreshScrollView;
@@ -85,10 +102,10 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
     TextView problemContent;
 
     @Bind(R.id.item_community_layout_3_attention)
-    TextView attentionBtn;
+    IconButton attentionBtn;
 
     @Bind(R.id.item_community_layout_3_answer)
-    TextView answerBtn;
+    IconButton answerBtn;
 
     private ProgressDialog progressDialog;
 
@@ -156,14 +173,18 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         attentionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                getAttentionRequest(buildAttentionParams(qID));
             }
         });
 
         answerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (!TextUtils.isEmpty(qID)) {
+                    Intent intent = new Intent(CommunityItemActivity.this, AnswerActivity.class);
+                    intent.putExtra(Q_ID, qID);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -236,6 +257,20 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         httpRequest.requestNetworkData();
     }
 
+    private RequestParams buildAttentionParams(String id) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
+        params.addBodyParameter("id", id);
+        return params;
+    }
+
+    private void getAttentionRequest(RequestParams params) {
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.getAttentionQuestionPath, new AttentionQuestionRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.requestNetworkData();
+    }
+
     /**
      * 隐藏加载的进度框等
      */
@@ -262,6 +297,8 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
                     CommunityItem.CommunityItemData itemData = communityItem.getData();
                     if (itemData != null) {
                         CommunityItem.CommunityItemData.QuestionEntity questionEntity = itemData.getQuestion();
+
+                        qID = questionEntity.getQId();
 
                         String headImagePath = questionEntity.getHeadImg();
                         if (!TextUtils.isEmpty(headImagePath)) {
@@ -367,6 +404,32 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, "get Tag HttpException:" + e.getMessage());
             DeBugLog.e(TAG, "get Tag Error:" + s);
+        }
+
+    }
+
+    private class AttentionQuestionRequestCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+            String str = responseInfo.result;
+            try {
+                JSONObject object = new JSONObject(str);
+                String stats = object.getString(STATUS);
+                if (stats.equals(SUC_VALUE)) {
+                    Toast.makeText(CommunityItemActivity.this, attention_suc, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CommunityItemActivity.this, attention_fai, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+            }
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            DeBugLog.e(TAG, "Attention HttpException:" + e.getMessage());
+            DeBugLog.e(TAG, "Attention Error:" + s);
         }
     }
 
