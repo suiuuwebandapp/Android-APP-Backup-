@@ -280,6 +280,19 @@
     <string name="openRemember" translatable="false">打开随记</string>
     <string name="openShoot" translatable="false">打开随拍</string>
 
+    <string name="ContactPhone" translatable="false">联系电话:</string>
+    <string name="DepartureDate" translatable="false">出发日期:</string>
+    <string name="StartTime" translatable="false">开始时间:</string>
+    <string name="SuiuuNumber" translatable="false">随游人数:</string>
+
+    <string name="tempDate" translatable="false">15.08.15</string>
+    <string name="tempTime" translatable="false">9:00 AM</string>
+    <string name="tempNumber" translatable="false">2人</string>
+
+    <string name="AdditionalServices" translatable="false">附加服务:</string>
+    <string name="Shuttle" translatable="false">机场接送:</string>
+    <string name="ProvideTickets" translatable="false">提供景区门票:</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="title_activity_personal" translatable="false">PersonalActivity</string>
