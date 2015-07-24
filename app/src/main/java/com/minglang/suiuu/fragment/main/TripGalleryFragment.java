@@ -20,6 +20,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuSearchActivity;
+import com.minglang.suiuu.activity.TripGalleryDetailActivity;
 import com.minglang.suiuu.adapter.TripGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.NoScrollBarListView;
@@ -128,8 +129,11 @@ public class TripGalleryFragment extends BaseFragment {
                 Log.i("suiuu", "点击的position=" + position);
 
                 if(position == tripGalleryList.size()) {
-
                 }
+                Intent intent = new Intent(getActivity(), TripGalleryDetailActivity.class);
+                intent.putExtra("id",tripGalleryList.get(position).getId());
+                Log.i("suiuu","旅图的id为="+tripGalleryList.get(position).getId());
+                startActivity(intent);
             }
         });
     }

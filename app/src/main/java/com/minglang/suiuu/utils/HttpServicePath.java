@@ -1,5 +1,8 @@
 package com.minglang.suiuu.utils;
 
+/**
+ *
+ */
 public class HttpServicePath {
 
     /**
@@ -70,6 +73,10 @@ public class HttpServicePath {
      * 得到旅图列表
      */
     public static String getTripGalleryList = RootPath + "/app-travel-picture/get-list";
+    /**
+     * 根据id获得旅图详情
+     */
+    public static String getTripGalleryDetailById = RootPath + "/app-travel-picture/get-info";
 
     /**
      * 修改圈子文章

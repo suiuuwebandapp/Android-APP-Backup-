@@ -2,88 +2,128 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/common_top2_layout"
-        android:id="@+id/trip_gallery_detail_title"/>
+
+    <include
+        android:id="@+id/trip_gallery_detail_title"
+        layout="@layout/common_top2_layout" />
 
     <ScrollView
-        android:layout_below="@+id/trip_gallery_detail_title"
-        android:id="@+id/sv_suiuu_detail"
+        android:id="@+id/sv_trip_gallery_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/layout_50dp">
+        android:layout_below="@+id/trip_gallery_detail_title"
+        android:layout_marginBottom="@dimen/layout_50dp"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
+                android:id="@+id/tv_trip_gallery_detail_name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="法国最浪漫的温馨之旅"
-                android:textSize="@dimen/layout_18sp"
-                android:textColor="@color/textColor"
                 android:layout_margin="@dimen/layout_8dp"
-                />
+                android:text="法国最浪漫的温馨之旅"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_18sp" />
+
             <TextView
+                android:id="@+id/tv_trip_gallery_detail_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="吃货,博物馆"
-                android:textColor="@color/mainColor"
-                android:textSize="@dimen/layout_15sp"
                 android:layout_marginLeft="@dimen/layout_8dp"
                 android:drawableLeft="@drawable/icon_tag"
-                android:drawablePadding="@dimen/layout_6dp"/>
+                android:drawablePadding="@dimen/layout_6dp"
+                android:text="吃货,博物馆"
+                android:textColor="@color/mainColor"
+                android:textSize="@dimen/layout_15sp" />
+
             <com.minglang.suiuu.customview.NoScrollBarListView
                 android:id="@+id/nsbv_trip_gallery_detail_content"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
+
             <RelativeLayout
-                android:layout_margin="@dimen/layout_8dp"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_8dp">
+
                 <com.facebook.drawee.view.SimpleDraweeView
-                    fresco:roundAsCircle="true"
                     android:id="@+id/sdv_trip_gallery_detail_portait"
                     android:layout_width="@dimen/layout_50dp"
                     android:layout_height="@dimen/layout_50dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/layout_10dp"
-                    android:background="@drawable/user_head_image_bg"/>
+                    android:background="@drawable/user_head_image_bg"
+                    fresco:roundAsCircle="true" />
+
                 <TextView
                     android:id="@+id/tv_trip_gallery_detail_publisername"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="刘振宇"
-                    android:layout_toRightOf="@+id/sdv_trip_gallery_detail_portait"
                     android:layout_margin="@dimen/layout_5dp"
-                    android:textSize="@dimen/layout_18sp"
+                    android:layout_toRightOf="@+id/sdv_trip_gallery_detail_portait"
+                    android:text="刘振宇"
                     android:textColor="@color/textColor"
-                    />
+                    android:textSize="@dimen/layout_18sp" />
+
                 <TextView
+                    android:id="@+id/tv_trip_gallery_detail_publish_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="香榭丽大道"
-                    android:drawableLeft="@drawable/icon_location_indicator"
-                    android:gravity="center"
-                    android:drawablePadding="@dimen/layout_6dp"
-                    android:layout_toRightOf="@+id/sdv_trip_gallery_detail_portait"
                     android:layout_below="@+id/tv_trip_gallery_detail_publisername"
                     android:layout_marginLeft="@dimen/layout_5dp"
-                    android:textSize="@dimen/layout_15sp"
-                    android:textColor="@color/mainColor"/>
+                    android:layout_toRightOf="@+id/sdv_trip_gallery_detail_portait"
+                    android:drawableLeft="@drawable/icon_location_indicator"
+                    android:drawablePadding="@dimen/layout_6dp"
+                    android:gravity="center"
+                    android:text="香榭丽大道"
+                    android:textColor="@color/mainColor"
+                    android:textSize="@dimen/layout_15sp" />
+
                 <ImageView
+                    android:id="@+id/iv_trip_gallery_detail_heart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/small_heat"
-                    android:layout_margin="@dimen/layout_10dp"/>
+                    android:layout_margin="@dimen/layout_10dp"
+                    android:background="@drawable/small_heat" />
 
             </RelativeLayout>
+
             <com.amap.api.maps.MapView
                 android:id="@+id/mv_trip_gallery_map"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"></com.amap.api.maps.MapView>
+            <include layout="@layout/view_line"/>
+            <include layout="@layout/common_comment_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/suiuu_detail_web_view"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/layout_8dp"
+                android:drawableLeft="@drawable/icon_guess_your_love_sun"
+                android:drawablePadding="@dimen/layout_6dp"
+                android:text="猜你喜欢"
+                android:textColor="@color/mainColor"
+                android:textSize="@dimen/layout_15sp" />
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/layout_80dp"
+                android:scrollbars="none">
+                <LinearLayout
+                    android:id="@+id/ll_trip_gallery_detail_guessyourlove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@color/white"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"></LinearLayout>
+            </HorizontalScrollView>
 
         </LinearLayout>
     </ScrollView>

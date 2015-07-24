@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+
     android:id="@+id/suiuu_detail_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -55,98 +55,21 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/suiuu_details_title_layout" />
 
-            <LinearLayout
+            <!--<LinearLayout-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/suiuu_detail_web_view"-->
+                <!--android:layout_marginTop="@dimen/layout_5dp"-->
+                <!--android:background="@color/white"-->
+                <!--android:orientation="vertical">-->
+               <!-- -->
+            <!--</LinearLayout>-->
+            <include layout="@layout/common_comment_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/suiuu_detail_web_view"
                 android:layout_marginTop="@dimen/layout_5dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_suiuu_detail_comment_number"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/layout_5dp"
-                    android:drawableLeft="@drawable/icon_comment"
-                    android:drawablePadding="@dimen/layout_5dp"
-                    android:text="全部评论 (共0条评论)" />
-
-                <include layout="@layout/view_line" />
-
-                <LinearLayout
-                    android:id="@+id/ll_suiuu_detail_input_comment"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="@dimen/layout_15dp"
-                    android:visibility="visible">
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <com.facebook.drawee.view.SimpleDraweeView
-                            android:id="@+id/sdv_comment_head_img"
-                            android:layout_width="@dimen/layout_45dp"
-                            android:layout_height="@dimen/layout_45dp"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/layout_10dp"
-                            android:background="@drawable/default_head_image2"
-                            fresco:roundAsCircle="true"
-                            android:layout_margin="@dimen/layout_10dp"/>
-
-                        <EditText
-                            android:id="@+id/et_suiuu_detail_comment"
-                            android:editable="false"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="@dimen/layout_10dp"
-                            android:background="@drawable/suiuudetail_edit_bg"
-                            android:hint="请输入评论"
-                            android:padding="@dimen/layout_6dp"
-                            android:textColor="@color/textColor" />
-                    </LinearLayout>
-
-                    <include layout="@layout/view_line" />
-                    <com.minglang.suiuu.customview.NoScrollBarListView
-                        android:id="@+id/lv_suiuu_detail_comment"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/ll_suiuu_detail_nocomment"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@color/white"
-                    android:layout_marginBottom="@dimen/layout_15dp"
-                    android:visibility="visible">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/icon_main_4_green"
-                        android:layout_gravity="center_horizontal"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="还没有随友评论,快来抢沙发"
-                        android:textSize="@dimen/layout_15sp"
-                        android:textColor="@color/textColor"
-                        android:layout_gravity="center_horizontal"/>
-                    <TextView
-                        android:id="@+id/tv_to_commnet_activity"
-                        android:layout_marginTop="@dimen/layout_5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="抢沙发"
-                        android:textColor="@color/textColor"
-                        android:textSize="@dimen/layout_15sp"
-                        android:background="@drawable/btn_white_bg"
-                        android:layout_gravity="center_horizontal"/>
-                </LinearLayout>
-            </LinearLayout>
+                />
         </RelativeLayout>
     </ScrollView>
 

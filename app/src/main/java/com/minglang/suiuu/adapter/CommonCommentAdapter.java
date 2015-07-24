@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.SuiuuDeatailData;
+import com.minglang.suiuu.entity.TripGalleryDetail;
 
 import java.util.List;
 
@@ -29,9 +30,16 @@ public class CommonCommentAdapter extends BaseAdapter {
     private Context context;
 
     private List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> list;
+    private List<TripGalleryDetail.DataEntity.CommentEntity> tripList;
+    private String type;
     public CommonCommentAdapter(Context context,List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> list) {
         this.context = context;
         this.list = list;
+    }
+    public CommonCommentAdapter(Context context,List<TripGalleryDetail.DataEntity.CommentEntity> list,String type) {
+        this.context = context;
+        this.tripList = tripList;
+        this.type = type;
     }
 //    public void setList(List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> list) {
 //        this.list = list;
@@ -77,17 +85,30 @@ public class CommonCommentAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        if("1".equals(type)) {
+            if (!TextUtils.isEmpty(tripList.get(position).getHeadImg())) {
+                Uri uri = Uri.parse(tripList.get(position).getHeadImg());
+                holder.headImage.setImageURI(uri);
+            }
+            holder.title.setText(tripList.get(position).getNickname());
+//            if (!TextUtils.isEmpty(tripList.get(position).get)) {
+//                holder.content.setText(tripList.get(position).getRTitle() + "  " + tripList.get(position).getContent());
+//            } else {
+                holder.content.setText(tripList.get(position).getComment());
+//            }
+        }else{
+            if (!TextUtils.isEmpty(list.get(position).getHeadImg())) {
+                Uri uri = Uri.parse(list.get(position).getHeadImg());
+                holder.headImage.setImageURI(uri);
+            }
+            holder.title.setText(list.get(position).getNickname());
+            if (!TextUtils.isEmpty(list.get(position).getRTitle())) {
+                holder.content.setText(list.get(position).getRTitle() + "  " + list.get(position).getContent());
+            } else {
+                holder.content.setText(list.get(position).getContent());
+            }
+        }
 
-        if (!TextUtils.isEmpty(list.get(position).getHeadImg())) {
-            Uri uri = Uri.parse(list.get(position).getHeadImg());
-            holder.headImage.setImageURI(uri);
-        }
-        holder.title.setText(list.get(position).getNickname());
-        if (!TextUtils.isEmpty(list.get(position).getRTitle())) {
-            holder.content.setText(list.get(position).getRTitle() + "  " + list.get(position).getContent());
-        } else {
-            holder.content.setText(list.get(position).getContent());
-        }
         return convertView;
     }
     class ViewHolder {
