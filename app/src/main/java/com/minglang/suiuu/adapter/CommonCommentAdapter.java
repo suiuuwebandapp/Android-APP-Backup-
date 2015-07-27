@@ -38,7 +38,7 @@ public class CommonCommentAdapter extends BaseAdapter {
     }
     public CommonCommentAdapter(Context context,List<TripGalleryDetail.DataEntity.CommentEntity> list,String type) {
         this.context = context;
-        this.tripList = tripList;
+        this.tripList = list;
         this.type = type;
     }
 //    public void setList(List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> list) {
@@ -51,19 +51,36 @@ public class CommonCommentAdapter extends BaseAdapter {
     }
     @Override
     public int getCount() {
-        if (list != null && list.size() > 0) {
-            return list.size();
-        } else {
-            return 0;
+        if("1".equals(type)) {
+            if (tripList != null && tripList.size() > 0) {
+                return tripList.size();
+            } else {
+                return 0;
+            }
+        }else {
+            if (list != null && list.size() > 0) {
+                return list.size();
+            } else {
+                return 0;
+            }
         }
+
     }
 
     @Override
     public Object getItem(int position) {
-        if (list != null && list.size() > 0) {
-            return list.get(position);
-        } else {
-            return null;
+        if("1".equals(type)) {
+            if (tripList != null && tripList.size() > 0) {
+                return tripList.get(position);
+            } else {
+                return null;
+            }
+        }else {
+            if (list != null && list.size() > 0) {
+                return list.get(position);
+            } else {
+                return null;
+            }
         }
     }
 

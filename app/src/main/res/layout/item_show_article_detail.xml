@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/layout_20dp"
     android:layout_marginRight="@dimen/layout_20dp">
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/iv_show_pic"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/layout_200dp"
-        android:scaleType="centerCrop"
+        fresco:actualImageScaleType="fitXY"
+        fresco:placeholderImage="@drawable/loading"
         />
     <TextView
         android:padding="@dimen/layout_10dp"
@@ -16,6 +18,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/layout_15sp"
-        android:textColor="@color/gray"/>
+        android:textColor="@color/gray"
+        android:text="嘿嘿"/>
 
 </LinearLayout>

@@ -33,6 +33,7 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,6 +66,7 @@ public class TripGalleryFragment extends BaseFragment {
     }
 
     private void initView(View rootView) {
+        tripGalleryList = new ArrayList<>();
 //        LayoutInflater inflater = LayoutInflater.from(getActivity());
         mGalleryLinearLayout = (LinearLayout) rootView.findViewById(R.id.galleryLinearLayout);
         tv_trip_gallery_search = (TextView) rootView.findViewById(R.id.tv_trip_grllery_search);
@@ -129,11 +131,13 @@ public class TripGalleryFragment extends BaseFragment {
                 Log.i("suiuu", "点击的position=" + position);
 
                 if(position == tripGalleryList.size()) {
+                    loadTripGalleryList(null, "0", null, page += 1);
+                }else {
+                    Intent intent = new Intent(getActivity(), TripGalleryDetailActivity.class);
+                    intent.putExtra("id", tripGalleryList.get(position).getId());
+                    Log.i("suiuu", "旅图的id为=" + tripGalleryList.get(position).getId());
+                    startActivity(intent);
                 }
-                Intent intent = new Intent(getActivity(), TripGalleryDetailActivity.class);
-                intent.putExtra("id",tripGalleryList.get(position).getId());
-                Log.i("suiuu","旅图的id为="+tripGalleryList.get(position).getId());
-                startActivity(intent);
             }
         });
     }
@@ -175,7 +179,7 @@ public class TripGalleryFragment extends BaseFragment {
                 if(status == 1) {
                     Log.i("suiuu",json.getString("data"));
                     TripGallery tripGallery = JsonUtils.getInstance().fromJSON(TripGallery.class, result);
-                    tripGalleryList = tripGallery.getData().getData();
+                    tripGalleryList.addAll(tripGallery.getData().getData());
                     showList(tripGalleryList);
                 }
             } catch (JSONException e) {

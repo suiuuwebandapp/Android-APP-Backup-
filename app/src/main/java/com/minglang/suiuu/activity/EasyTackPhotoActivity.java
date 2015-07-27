@@ -298,12 +298,13 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
         params.addBodyParameter("title", search_question.getText().toString().trim());
-        params.addBodyParameter("content", jsonUtil.toJSON(picDescriptionList));
+        params.addBodyParameter("contents", jsonUtil.toJSON(picDescriptionList));
         params.addBodyParameter("country", locationCountry);
         params.addBodyParameter("city", locationCity);
         params.addBodyParameter("lon", String.valueOf(longitude));
         params.addBodyParameter("lat", String.valueOf(latitude));
         params.addBodyParameter("tags",tagText);
+        params.addBodyParameter("address",locationAddress);
         List<String> picNameList = new ArrayList<>();
         for (String string : picList) {
             updateDate(string);
@@ -363,6 +364,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
 
 
     private void updateDate(final String path) {
+        Log.i("suiuu","上传的path="+path);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -388,7 +390,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
                         }
                         @Override
                         public void onProgress(String objectKey, int byteCount, int totalSize) {
-                            DeBugLog.i(TAG, "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
+                            Log.i("suiuu", "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
                         }
 
                         @Override
