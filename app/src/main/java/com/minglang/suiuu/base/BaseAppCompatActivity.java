@@ -6,12 +6,16 @@ import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 
+import com.minglang.suiuu.application.SuiuuApplication;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
 
-    public ImageLoader imageLoader = ImageLoader.getInstance();
+    private static final String TAG = BaseAppCompatActivity.class.getSimpleName();
+
+    public ImageLoader imageLoader;
 
     public DisplayMetrics dm;
 
@@ -42,6 +46,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
+        imageLoader = ImageLoader.getInstance();
         initScreen();
         initSundry();
     }
@@ -56,8 +61,9 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     private void initSundry() {
-        userSign = SuiuuInfo.ReadUserSign(this);
-        verification = SuiuuInfo.ReadVerification(this);
+        userSign = SuiuuInfo.ReadUserSign(SuiuuApplication.getInstance());
+        verification = SuiuuInfo.ReadVerification(SuiuuApplication.getInstance());
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
     }
 
     @Override

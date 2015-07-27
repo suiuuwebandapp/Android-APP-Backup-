@@ -118,9 +118,9 @@
     <string name="please_input_confirm_password">Please enter a confirmation password</string>
     <string name="please_input_obtain_captcha">Please enter the verification code</string>
 
-    <string name="DataError">Data acquisition error, please try again later!</string>
-    <string name="NetworkAnomaly">Network exception, please check and try again!</string>
-    <string name="NoData">No more data!</string>
+    <string name="DataError" translatable="false">数据获取失败，请稍候再试！</string>
+    <string name="NetworkAnomaly" translatable="false">网络异常，请检查后再试！</string>
+    <string name="NoData" translatable="false">暂无更多数据！</string>
 
     <string name="all_attention" translatable="false">关注动态</string>
     <string name="thisArticNoComment" translatable="false">该文章暂时没有评论</string>
@@ -293,6 +293,13 @@
     <string name="Shuttle" translatable="false">机场接送:</string>
     <string name="ProvideTickets" translatable="false">提供景区门票:</string>
 
+    <string name="TotalPrices" translatable="false">总价:</string>
+
+    <string name="MyOrder_general" translatable="false">我的订单</string>
+
+    <string name="Completed" translatable="false">已完成</string>
+    <string name="NotFinished" translatable="false">未完成</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="title_activity_personal" translatable="false">PersonalActivity</string>
@@ -337,5 +344,6 @@
     <string name="title_activity_account_manage" translatable="false">AccountManageActivity</string>
     <string name="title_activity_suiuu_user_info" translatable="false">SuiuuUserInfoActivity</string>
     <string name="title_activity_order_details">OrderDetailsActivity</string>
+    <string name="title_activity_my_order_list">MyOrderListActivity</string>
 
 </resources>

@@ -11,13 +11,12 @@ import java.util.List;
  * <p/>
  * Created by LZY on 2015/3/24 0024.
  */
-public class NewRemindAdapter extends FragmentPagerAdapter {
+public class NewRemindPageAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> list;
-
     private List<String> titleList;
 
-    public NewRemindAdapter(FragmentManager fm, List<Fragment> list, List<String> titleList) {
+    public NewRemindPageAdapter(FragmentManager fm, List<Fragment> list, List<String> titleList) {
         super(fm);
         this.list = list;
         this.titleList = titleList;

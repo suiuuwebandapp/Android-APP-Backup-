@@ -74,11 +74,8 @@ public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int NUMBER1 = 1;
-
     private static final int NUMBER2 = 2;
-
     private static final int NUMBER3 = 3;
-
     private static final int NUMBER4 = 4;
 
     @Bind(R.id.drawerLayout)
@@ -116,9 +113,6 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.drawerSwitch)
     CircleImageView drawerSwitch;
 
-    /**
-     * 各个Tab页
-     */
     @Bind(R.id.tab1)
     LinearLayout tab1;
 
@@ -132,7 +126,7 @@ public class MainActivity extends BaseActivity {
     LinearLayout tab4;
 
     /**
-     * 主页页面
+     * 旅图页面
      */
     private TripGalleryFragment tripGalleryFragment;
 
@@ -385,7 +379,7 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * 控件行为
+     * 控件相关事件
      */
     private void ViewAction() {
 
@@ -414,6 +408,7 @@ public class MainActivity extends BaseActivity {
         Main_2_Search.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
             }
         });
 
@@ -480,6 +475,8 @@ public class MainActivity extends BaseActivity {
                 mDrawerLayout.closeDrawer(sliderView);
                 switch (position) {
                     case 0:
+                        Intent intent0 = new Intent(MainActivity.this, MyOrderListActivity.class);
+                        startActivity(intent0);
                         break;
 
                     case 1:
@@ -645,7 +642,6 @@ public class MainActivity extends BaseActivity {
         }
 
         currentIndex = 3;
-//        msgCount.setVisibility(View.INVISIBLE);
         ft.commit();
     }
 
@@ -660,13 +656,18 @@ public class MainActivity extends BaseActivity {
         } else {
             ft.add(R.id.showLayout, tripGalleryFragment);
         }
+
         ft.commit();
     }
 
+    /**
+     * 切换页面钻咋状态
+     *
+     * @param number 页码
+     */
     private void switchViewState(int number) {
 
         switch (number) {
-
             case NUMBER1:
                 iv_tab1.setImageResource(R.drawable.icon_main_1_green);
                 iv_tab2.setImageResource(R.drawable.icon_main_2_white);
@@ -1148,7 +1149,6 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                     exitTime = System.currentTimeMillis();
                 } else {
-//                DemoApplication.getInstance().exit();
                     finish();
                 }
             }

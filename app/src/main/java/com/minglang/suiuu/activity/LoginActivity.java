@@ -217,7 +217,7 @@ public class LoginActivity extends BaseActivity {
      * 第三方登陆按钮
      */
     @Bind(R.id.weibo_login)
-     ImageView weiBoLogin;
+    ImageView weiBoLogin;
 
     @Bind(R.id.qq_login)
     ImageView qqLogin;
@@ -410,15 +410,12 @@ public class LoginActivity extends BaseActivity {
                 if (TextUtils.isEmpty(suiuuLoginUserName)) {
                     Toast.makeText(LoginActivity.this,
                             getResources().getString(R.string.User_name_cannot_be_empty), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (TextUtils.isEmpty(suiuuLoginPassword)) {
+                } else if (TextUtils.isEmpty(suiuuLoginPassword)) {
                     Toast.makeText(LoginActivity.this,
                             getResources().getString(R.string.Password_cannot_be_empty), Toast.LENGTH_SHORT).show();
-                    return;
+                } else {
+                    suiuuLogin(suiuuLoginUserName, suiuuLoginPassword);
                 }
-
-                suiuuLogin(suiuuLoginUserName, suiuuLoginPassword);
             }
         });
 
@@ -482,7 +479,6 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View v) {
                 type = "3";
                 mController.doOauthVerify(LoginActivity.this, SHARE_MEDIA.SINA, new MicroBlog4UMAuthListener());
-//                Toast.makeText(LoginActivity.this, "微博暂未接通", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -521,7 +517,7 @@ public class LoginActivity extends BaseActivity {
      * 获取国际电话区号
      */
     private void getInternationalAreaCode() {
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.GET,
                 HttpServicePath.GetInternationalAreaCode, new AreaCodeRequestCallBack());
         httpRequest.requestNetworkData();
     }
@@ -534,6 +530,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
+            DeBugLog.i(TAG, "返回的国际电话区号数据:" + str);
             try {
                 AreaCode areaCode = JsonUtils.getInstance().fromJSON(AreaCode.class, str);
                 areaCodeDataList = areaCode.getData();
@@ -552,10 +549,11 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onFailure(HttpException httpException, String s) {
-            DeBugLog.e(TAG, "国际电话区号数据请求失败1:" + s);
+            DeBugLog.e(TAG, "国际电话区号数据请求失败:" + s);
             Toast.makeText(LoginActivity.this, getResources().getString(R.string.internationalCodeFailure),
                     Toast.LENGTH_SHORT).show();
         }
+
     }
 
     /**
@@ -1363,33 +1361,39 @@ public class LoginActivity extends BaseActivity {
             if (status == 200 && info != null) {
                 DeBugLog.i(TAG, "微博返回数据为:" + info.toString());
 
+                String openid = null;
                 try {
-                    String openid = info.get("openid").toString();
+                    openid = info.get("openid").toString();
                     Log.i(TAG, "openid:" + openid);
                 } catch (Exception e) {
                     Log.e(TAG, "获取openid失败:" + e.getMessage());
                 }
 
+                String screenName = null;
                 try {
-                    String screenName = info.get("screen_name").toString();
+                    screenName = info.get("screen_name").toString();
                     Log.i(TAG, "获取screenName失败:" + screenName);
                 } catch (Exception e) {
                     Log.e(TAG, "获取screenName失败:" + e.getMessage());
                 }
 
+                String gender = null;
                 try {
-                    String gender = info.get("gender").toString();
+                    gender = info.get("gender").toString();
                     Log.i(TAG, "gender:" + gender);
                 } catch (Exception e) {
                     Log.e(TAG, "获取gender失败:" + e.getMessage());
                 }
 
+                String image_url = null;
                 try {
-                    String image_url = info.get("profile_image_url").toString();
+                    image_url = info.get("profile_image_url").toString();
                     Log.i(TAG, "image_url:" + image_url);
                 } catch (Exception e) {
                     Log.e(TAG, "获取image_url失败:" + e.getMessage());
                 }
+
+                setWeiBoData2Service(openid, screenName, gender, image_url);
             } else {
                 DeBugLog.e(TAG, "发生错误，未接收到数据！");
             }

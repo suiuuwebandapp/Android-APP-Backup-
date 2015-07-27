@@ -348,4 +348,14 @@ public class HttpServicePath {
      */
     public static String setAnswerToQuestionPath = RootPath + "/app-qa/add-answer";
 
+    /**
+     * 得到普通用户的已完成的订单
+     */
+    public static String getGeneralUserCompletedOrderPath = RootPath + "/app-travel/get-finish-order";
+
+    /**
+     * 得到普通用户未完成的订单
+     */
+    public static String getGeneralUserNotFinishOrderPath = RootPath + "/app-travel/get-un-finish-order";
+
 }

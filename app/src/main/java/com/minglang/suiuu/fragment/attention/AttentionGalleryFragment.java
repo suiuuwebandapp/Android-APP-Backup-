@@ -139,7 +139,7 @@ public class AttentionGalleryFragment extends BaseFragment {
         pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
-                String label = DateUtils.formatDateTime(SuiuuApplication.applicationContext, System.currentTimeMillis(),
+                String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
@@ -149,7 +149,7 @@ public class AttentionGalleryFragment extends BaseFragment {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
-                String label = DateUtils.formatDateTime(SuiuuApplication.applicationContext, System.currentTimeMillis(),
+                String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
@@ -220,7 +220,7 @@ public class AttentionGalleryFragment extends BaseFragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+            Toast.makeText(SuiuuApplication.getInstance(), noData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 AttentionGallery attentionGallery = JsonUtils.getInstance().fromJSON(AttentionGallery.class, str);
@@ -235,22 +235,22 @@ public class AttentionGalleryFragment extends BaseFragment {
                         } else {
                             DeBugLog.e(TAG, "；列表为Null");
                             failureLessPage();
-                            Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SuiuuApplication.getInstance(), noData, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         DeBugLog.e(TAG, "第二层为Null");
                         failureLessPage();
-                        Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SuiuuApplication.getInstance(), noData, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     DeBugLog.e(TAG, "第一层为Null");
                     failureLessPage();
-                    Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SuiuuApplication.getInstance(), noData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "数据解析失败:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(SuiuuApplication.applicationContext, errorString, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SuiuuApplication.getInstance(), errorString, Toast.LENGTH_SHORT).show();
             }
         }
     }

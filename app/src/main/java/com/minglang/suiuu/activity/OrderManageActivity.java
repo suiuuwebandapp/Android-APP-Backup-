@@ -24,7 +24,7 @@ import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
- * 订单管理页面
+ * 订单管理页面-仅限随友使用
  * <p/>
  * 查看我的订单
  */
