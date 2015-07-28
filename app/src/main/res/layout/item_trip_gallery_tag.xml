@@ -10,18 +10,9 @@
         android:layout_width="80dip"
         android:layout_height="fill_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_action_camera"
+        android:src="@drawable/loading"
         app:borderRadius="@dimen/layout_5dp"
         app:type="round"/>
-
-    <!--<com.facebook.drawee.view.SimpleDraweeView-->
-        <!--android:id="@+id/iv_item_trip_gallery_tag"-->
-        <!--android:layout_width="80dip"-->
-        <!--android:layout_height="fill_parent"-->
-        <!--android:scaleType="fitXY"-->
-        <!--android:src="@drawable/ic_action_camera"-->
-        <!--app:borderRadius="@dimen/layout_5dp"-->
-        <!--app:type="round" />-->
 
     <TextView
         android:id="@+id/tv_item_trip_gallery_tag"

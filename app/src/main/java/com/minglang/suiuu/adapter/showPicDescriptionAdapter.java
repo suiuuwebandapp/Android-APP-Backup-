@@ -35,9 +35,6 @@ public class showPicDescriptionAdapter extends BaseAdapter {
         this.context = context;
         this.imageList = imageList;
         this.contentList = conentList;
-        for (String s : conentList) {
-            Log.i("suiuu", s + "------------");
-        }
     }
 
     @Override

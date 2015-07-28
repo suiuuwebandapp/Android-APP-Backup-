@@ -303,7 +303,8 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         params.addBodyParameter("city", locationCity);
         params.addBodyParameter("lon", String.valueOf(longitude));
         params.addBodyParameter("lat", String.valueOf(latitude));
-        params.addBodyParameter("tags",tagText);
+        params.addBodyParameter("tags",tagText.replace(" ", ","));
+        Log.i("suiuu","传上去的tag="+tagText.replace(" ",","));
         params.addBodyParameter("address",locationAddress);
         List<String> picNameList = new ArrayList<>();
         for (String string : picList) {
@@ -492,7 +493,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
                         suiuuTagClick.add(suiuuTagList.get(tagNumber));
                     }
                     for (TextView tv : suiuuTagClick) {
-                        tagText += tv.getText() + "  ";
+                        tagText += tv.getText() + " ";
                     }
                     if ("".equals(tagText)) {
                         tv_show_tag.setText("选择标签");

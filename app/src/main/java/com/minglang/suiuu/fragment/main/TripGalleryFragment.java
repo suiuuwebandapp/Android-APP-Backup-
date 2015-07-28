@@ -2,6 +2,7 @@ package com.minglang.suiuu.fragment.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.minglang.suiuu.activity.TripGalleryDetailActivity;
 import com.minglang.suiuu.adapter.TripGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.NoScrollBarListView;
+import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.TripGallery;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -47,13 +49,14 @@ import java.util.List;
  */
 
 public class TripGalleryFragment extends BaseFragment {
-
+    private TextProgressDialog dialog;
     private LinearLayout mGalleryLinearLayout;
     private TextView tv_trip_gallery_search;
     private NoScrollBarListView lv_trip_gallery;
     private TripGalleryAdapter adapter;
     private List<TripGallery.DataEntity.TripGalleryDataInfo> tripGalleryList;
     private int page = 1;
+    private String clickTag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class TripGalleryFragment extends BaseFragment {
     }
 
     private void initView(View rootView) {
+        dialog = new TextProgressDialog(getActivity());
         tripGalleryList = new ArrayList<>();
 //        LayoutInflater inflater = LayoutInflater.from(getActivity());
         mGalleryLinearLayout = (LinearLayout) rootView.findViewById(R.id.galleryLinearLayout);
@@ -80,37 +84,30 @@ public class TripGalleryFragment extends BaseFragment {
     }
 
     private void initData() {
-
-        int[] mPhotosIntArray =  new int[]{R.drawable.tag_family, R.drawable.tag_shopping, R.drawable.tag_nature,
-                        R.drawable.tag_dangerous, R.drawable.tag_romantic, R.drawable.tag_museam, R.drawable.tag_novelty};
-
+        int[] mPhotosIntArray = new int[]{R.drawable.tag_family, R.drawable.tag_shopping, R.drawable.tag_nature,
+                R.drawable.tag_dangerous, R.drawable.tag_romantic, R.drawable.tag_museam, R.drawable.tag_novelty};
         final String[] mTagIntArray = new String[]{"家庭", "购物", "自然", "惊险", "浪漫", "博物馆", "猎奇"};
 
         View itemView;
         ImageView imageView;
         TextView textView;
-
         for (int i = 0; i < mPhotosIntArray.length; i++) {
-
             itemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_trip_gallery_tag, null);
             itemView.setTag(i);
-
             imageView = (ImageView) itemView.findViewById(R.id.iv_item_trip_gallery_tag);
             textView = (TextView) itemView.findViewById(R.id.tv_item_trip_gallery_tag);
-
             imageView.setImageResource(mPhotosIntArray[i]);
             textView.setText(mTagIntArray[i]);
-
             itemView.setPadding(10, 0, 0, 0);
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    tripGalleryList.clear();
                     int tag = (int) v.getTag();
-                    Toast.makeText(getActivity(), "点击了" + mTagIntArray[tag], Toast.LENGTH_SHORT).show();
+                    clickTag = mTagIntArray[tag];
+                    loadTripGalleryList(clickTag, "0", null, page);
                 }
             });
-
             mGalleryLinearLayout.addView(itemView);
         }
     }
@@ -130,12 +127,15 @@ public class TripGalleryFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i("suiuu", "点击的position=" + position);
 
-                if(position == tripGalleryList.size()) {
-                    loadTripGalleryList(null, "0", null, page += 1);
-                }else {
+                if (position == tripGalleryList.size()) {
+                    if (!TextUtils.isEmpty(clickTag)) {
+                        loadTripGalleryList(clickTag, "0", null, page += 1);
+                    } else {
+                        loadTripGalleryList(null, "0", null, page += 1);
+                    }
+                } else {
                     Intent intent = new Intent(getActivity(), TripGalleryDetailActivity.class);
                     intent.putExtra("id", tripGalleryList.get(position).getId());
-                    Log.i("suiuu", "旅图的id为=" + tripGalleryList.get(position).getId());
                     startActivity(intent);
                 }
             }
@@ -150,7 +150,9 @@ public class TripGalleryFragment extends BaseFragment {
             adapter.onDateChange(tripGalleryList);
         }
     }
-    private void loadTripGalleryList(String tags,String sortName,String search,int page) {
+
+    private void loadTripGalleryList(String tags, String sortName, String search, int page) {
+        dialog.showDialog();
         String str = SuiuuInfo.ReadVerification(getActivity());
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
@@ -164,6 +166,7 @@ public class TripGalleryFragment extends BaseFragment {
         suHttpRequest.setParams(params);
         suHttpRequest.requestNetworkData();
     }
+
     /**
      * 发布圈子文章回调接口
      */
@@ -171,23 +174,30 @@ public class TripGalleryFragment extends BaseFragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            dialog.dismissDialog();
             String result = stringResponseInfo.result;
-            Log.i("suiuu","result="+result);
+            Log.i("suiuu", "result=" + result);
             try {
                 JSONObject json = new JSONObject(result);
                 int status = (int) json.get("status");
-                if(status == 1) {
-                    Log.i("suiuu",json.getString("data"));
+                if (status == 1) {
                     TripGallery tripGallery = JsonUtils.getInstance().fromJSON(TripGallery.class, result);
-                    tripGalleryList.addAll(tripGallery.getData().getData());
-                    showList(tripGalleryList);
+                    List<TripGallery.DataEntity.TripGalleryDataInfo> data = tripGallery.getData().getData();
+                    if (data.size() < 1) {
+                        Toast.makeText(getActivity(), "没有更多数据显示", Toast.LENGTH_SHORT).show();
+                    } else {
+                        tripGalleryList.addAll(data);
+                        showList(tripGalleryList);
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+
         @Override
         public void onFailure(HttpException e, String s) {
+            dialog.dismissDialog();
             Log.i("suiuu", "请求失败------------------------------------" + s);
         }
     }

@@ -80,7 +80,7 @@ public class TripGalleryAdapter extends BaseAdapter {
         float v1 = AMapUtils.calculateLineDistance(lngLat, lngLat1);
         tv_location_distance.setText(String.valueOf(v1).length()>=4?String.valueOf(v1).substring(0,4):String.valueOf(v1));
         trip_gallery_name.setText(list.get(position).getTitle());
-        trip_gallery_tag.setText(list.get(position).getTags());
+        trip_gallery_tag.setText(list.get(position).getTags().replace(","," "));
         trip_gallery_loveNumber.setText(list.get(position).getAttentionCount());
         Uri uri = Uri.parse(list.get(position).getTitleImg());
         picContent.setImageURI(uri);

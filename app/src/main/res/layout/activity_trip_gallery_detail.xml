@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/trip_gallery_detail_title"
-        android:layout_marginBottom="@dimen/layout_50dp"
         android:scrollbars="none"
+        android:background="@color/white"
        >
 
         <LinearLayout
@@ -35,6 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/layout_8dp"
+                android:layout_marginBottom="@dimen/layout_5dp"
                 android:drawableLeft="@drawable/icon_tag"
                 android:drawablePadding="@dimen/layout_6dp"
                 android:text="吃货,博物馆"
@@ -105,8 +106,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/suiuu_detail_web_view"
                 />
+            <include layout="@layout/view_line"/>
             <TextView
-                android:layout_marginTop="@dimen/layout_10dp"
+                android:layout_margin="@dimen/layout_8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/layout_8dp"
@@ -114,21 +116,21 @@
                 android:drawablePadding="@dimen/layout_6dp"
                 android:text="猜你喜欢"
                 android:textColor="@color/mainColor"
-                android:textSize="@dimen/layout_15sp" />
+                android:textSize="@dimen/layout_15sp"
+                android:background="@color/white"/>
             <HorizontalScrollView
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/layout_80dp"
+                android:layout_height="wrap_content"
                 android:scrollbars="none"
-                android:background="@color/white">
+                android:layout_marginBottom="@dimen/layout_15dp"
+                >
                 <LinearLayout
                     android:id="@+id/ll_trip_gallery_detail_guessyourlove"
                     android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
+                    android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:gravity="center_horizontal"
                     android:orientation="horizontal"></LinearLayout>
             </HorizontalScrollView>
-
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

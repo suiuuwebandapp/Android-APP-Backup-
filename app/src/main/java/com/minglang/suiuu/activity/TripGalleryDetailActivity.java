@@ -3,7 +3,6 @@ package com.minglang.suiuu.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,10 +27,17 @@ import com.minglang.suiuu.adapter.CommonCommentAdapter;
 import com.minglang.suiuu.adapter.showPicDescriptionAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.NoScrollBarListView;
+import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.TripGalleryDetail;
+import com.minglang.suiuu.entity.UserBackData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuInfo;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +52,7 @@ import java.util.List;
  * 修改备注：
  */
 public class TripGalleryDetailActivity extends BaseActivity {
+    private TextProgressDialog dialog;
     private static final int COMMENT_SUCCESS = 20;
     private MapView mapView;
     private AMap aMap;
@@ -128,7 +135,7 @@ public class TripGalleryDetailActivity extends BaseActivity {
      * 猜你喜欢的数据集合
      */
     private List<TripGalleryDetail.DataEntity.LikeEntity> likeList;
-
+    private DisplayImageOptions options2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,7 +147,6 @@ public class TripGalleryDetailActivity extends BaseActivity {
         loadTripGalleryDetailDate(id);
         viewAction();
     }
-
     /**
      * 初始化AMap对象
      */
@@ -149,6 +155,7 @@ public class TripGalleryDetailActivity extends BaseActivity {
             aMap = mapView.getMap();
         }
         sv_trip_gallery_detail = (ScrollView) findViewById(R.id.sv_trip_gallery_detail);
+        sv_trip_gallery_detail.smoothScrollTo(0,0);
         tv_trip_gallery_detail_name = (TextView) findViewById(R.id.tv_trip_gallery_detail_name);
         tv_trip_gallery_detail_tag = (TextView) findViewById(R.id.tv_trip_gallery_detail_tag);
         nsbv_trip_gallery_detail_content = (NoScrollBarListView) findViewById(R.id.nsbv_trip_gallery_detail_content);
@@ -164,10 +171,12 @@ public class TripGalleryDetailActivity extends BaseActivity {
         ll_suiuu_detail_nocomment = (LinearLayout) findViewById(R.id.ll_suiuu_detail_nocomment);
         tv_to_commnet_activity = (TextView) findViewById(R.id.tv_to_commnet_activity);
         ll_trip_gallery_detail_guessyourlove = (LinearLayout) findViewById(R.id.ll_trip_gallery_detail_guessyourlove);
+        dialog = new TextProgressDialog(this);
     }
 
     private void viewAction() {
         et_suiuu_detail_comment.setOnClickListener(new MyOnClickListener());
+        tv_to_commnet_activity.setOnClickListener(new MyOnClickListener());
         aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
 
             @Override
@@ -220,6 +229,7 @@ public class TripGalleryDetailActivity extends BaseActivity {
 
     //根据id获得旅图详情
     private void loadTripGalleryDetailDate(String id) {
+        dialog.showDialog();
         RequestParams params = new RequestParams();
         params.addBodyParameter("id", id);
         params.addBodyParameter(HttpServicePath.key, verification);
@@ -236,7 +246,7 @@ public class TripGalleryDetailActivity extends BaseActivity {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            Log.i("suiuu", responseInfo.result);
+            dialog.dismissDialog();
             String resultData = responseInfo.result;
             TripGalleryDetail tripGalleryDetail = JsonUtils.getInstance().fromJSON(TripGalleryDetail.class, resultData);
             if (tripGalleryDetail.getStatus() == 1) {
@@ -252,6 +262,7 @@ public class TripGalleryDetailActivity extends BaseActivity {
 
         @Override
         public void onFailure(HttpException error, String msg) {
+            dialog.dismissDialog();
             Toast.makeText(TripGalleryDetailActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -259,12 +270,11 @@ public class TripGalleryDetailActivity extends BaseActivity {
     private void fullData() {
         fullCommentList();
         tv_trip_gallery_detail_name.setText(tripGalleryDetailInfo.getTitle());
-        tv_trip_gallery_detail_tag.setText(tripGalleryDetailInfo.getTags());
+        tv_trip_gallery_detail_tag.setText(tripGalleryDetailInfo.getTags().replace(","," "));
         Uri url = Uri.parse(tripGalleryDetailInfo.getHeadImg());
         sdv_trip_gallery_detail_portait.setImageURI(url);
         tv_trip_gallery_detail_publisername.setText(tripGalleryDetailInfo.getNickname());
         tv_trip_gallery_detail_publish_location.setText(tripGalleryDetailInfo.getAddress());
-        tv_suiuu_detail_comment_number.setText(tripGalleryDetailInfo.getCommentCount());
         List<String> picList = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>(){
         }.getType(), tripGalleryDetailInfo.getPicList());
         List<String> picDescription = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>() {
@@ -275,22 +285,24 @@ public class TripGalleryDetailActivity extends BaseActivity {
 
     private void fullGuessYourLove() {
         View itemView = null;
-        ImageView imageView = null;
+        SimpleDraweeView sdv_item_trip_gallery_tag = null;
         TextView textView;
         for (int i = 0; i < likeList.size(); i++) {
-            itemView = LayoutInflater.from(this).inflate(R.layout.item_trip_gallery_tag, null);
+            itemView = LayoutInflater.from(this).inflate(R.layout.item_trip_gallery_guess_your_love, null);
             itemView.setTag(i);
-            itemView.measure(150,100);
-            imageView = (ImageView) itemView.findViewById(R.id.iv_item_trip_gallery_tag);
-            textView = (TextView) itemView.findViewById(R.id.tv_item_trip_gallery_tag);
-//            imageView.setImageResource(mPhotosIntArray[i]);
+            sdv_item_trip_gallery_tag = (SimpleDraweeView) itemView.findViewById(R.id.sdv_trip_gallery_detail_like_titleimg);
+            Uri uri = Uri.parse(likeList.get(i).getTitleImg());
+            sdv_item_trip_gallery_tag.setImageURI(uri);
+            textView = (TextView) itemView.findViewById(R.id.tv_item_trip_gallery_like_tag);
             textView.setText(likeList.get(i).getTitle());
             itemView.setPadding(10, 0, 0, 0);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int tag = (int) v.getTag();
-                    Toast.makeText(TripGalleryDetailActivity.this, "点击了" + likeList.get(tag).getTitle(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(TripGalleryDetailActivity.this, TripGalleryDetailActivity.class);
+                    intent.putExtra("id", likeList.get(tag).getId());
+                    startActivity(intent);
                 }
             });
             ll_trip_gallery_detail_guessyourlove.addView(itemView);
@@ -299,6 +311,7 @@ public class TripGalleryDetailActivity extends BaseActivity {
 
     public void fullCommentList() {
         if (commentContentList.size() >= 1) {
+            tv_suiuu_detail_comment_number.setText("全部评论 (共"+commentContentList.size()+"条评论)");
             ll_suiuu_detail_input_comment.setVisibility(View.VISIBLE);
             ll_suiuu_detail_nocomment.setVisibility(View.GONE);
             showCommentList(commentContentList);
@@ -329,21 +342,35 @@ public class TripGalleryDetailActivity extends BaseActivity {
                 case R.id.et_suiuu_detail_comment:
                     //跳到评论页
                     Intent intent = new Intent(TripGalleryDetailActivity.this, CommonCommentActivity.class);
-                    intent.putExtra("tripId", id);
+                    intent.putExtra("articleId", id);
                     startActivityForResult(intent, COMMENT_SUCCESS);
                     break;
                 case R.id.tv_to_commnet_activity:
                     //跳到评论页
                     Intent commentintent = new Intent(TripGalleryDetailActivity.this, CommonCommentActivity.class);
-                    commentintent.putExtra("tripId", id);
+                    commentintent.putExtra("articleId", id);
                     startActivityForResult(commentintent, COMMENT_SUCCESS);
                     break;
-
-
             }
         }
-
     }
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(data != null && resultCode == COMMENT_SUCCESS) {
+            UserBackData userBackData = SuiuuInfo.ReadUserData(this);
+            String content = data.getStringExtra("content");
+            JSONObject json = new JSONObject();
+            try {
+                json.put("headImg",userBackData.getHeadImg());
+                json.put("nickname",userBackData.getNickname());
+                json.put("comment",content);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            TripGalleryDetail.DataEntity.CommentEntity newCommentData = JsonUtils.getInstance().fromJSON(TripGalleryDetail.DataEntity.CommentEntity.class,  json.toString());
+            commentContentList.add(0,newCommentData);
+            fullCommentList();
+        }
+    }
 }

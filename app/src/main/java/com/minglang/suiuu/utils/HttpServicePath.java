@@ -218,7 +218,7 @@ public class HttpServicePath {
     /**
      * 创建一条评论
      */
-    public static String articleCreateComment = RootPath + "/circle/create-comment";
+    public static String articleCreateComment = RootPath + "/app-travel-picture/add-travel-picture-comment";
 
     /**
      * 创建一条评论

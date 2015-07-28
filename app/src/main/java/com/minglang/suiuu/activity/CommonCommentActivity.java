@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -103,9 +104,10 @@ public class CommonCommentActivity extends BaseActivity {
 
     //文章详情发送评论
     private void requestArticleCommentSend(String commentContent, String rId, String rTitle) {
+        Log.i("suiuu","commentId= " + articleId);
         RequestParams params = new RequestParams();
-        params.addBodyParameter("articleId", articleId);
-        params.addBodyParameter("content", commentContent);
+        params.addBodyParameter("tpId", articleId);
+        params.addBodyParameter("comment", commentContent);
         if (!TextUtils.isEmpty(rId)) {
             params.addBodyParameter("rId", rId);
             params.addBodyParameter("rTitle", rTitle);
@@ -140,14 +142,15 @@ public class CommonCommentActivity extends BaseActivity {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
+            Log.i("suiuu", "评论结果" + responseInfo.result);
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
             try {
                 JSONObject json = new JSONObject(responseInfo.result);
-                String status = json.getString("status");
+                int status = json.getInt("status");
                 String data = json.getString("data");
-                if ("1".equals(status) && "success".equals(data)) {
+                if (status == 1 && "success".equals(data)) {
                     Intent intent = CommonCommentActivity.this.getIntent();
                     if(!TextUtils.isEmpty(rId)) {
                         intent.putExtra("content", "@"+rTitle+" "+commentContent);

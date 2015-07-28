@@ -73,14 +73,12 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="e305ef7850d9f5d2e8f7b0c3c3fbb16c"/>
-
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
