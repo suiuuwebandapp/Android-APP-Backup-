@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +58,7 @@ public class TripGalleryFragment extends BaseFragment {
     private List<TripGallery.DataEntity.TripGalleryDataInfo> tripGalleryList;
     private int page = 1;
     private String clickTag;
+    private RelativeLayout rl_common_nodata;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,6 +83,7 @@ public class TripGalleryFragment extends BaseFragment {
         ImageView ddd = new ImageView(getActivity());
         ddd.setImageResource(R.drawable.trip_gallery_loading_more);
         lv_trip_gallery.addFooterView(ddd);
+        rl_common_nodata = (RelativeLayout) rootView.findViewById(R.id.rl_common_nodata);
     }
 
     private void initData() {
@@ -102,6 +105,7 @@ public class TripGalleryFragment extends BaseFragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    page = 1;
                     tripGalleryList.clear();
                     int tag = (int) v.getTag();
                     clickTag = mTagIntArray[tag];
@@ -153,10 +157,11 @@ public class TripGalleryFragment extends BaseFragment {
 
     private void loadTripGalleryList(String tags, String sortName, String search, int page) {
         dialog.showDialog();
+        Log.i("suiuu","请求条件tags="+tags+"search="+search+",page="+page);
         String str = SuiuuInfo.ReadVerification(getActivity());
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
-        params.addBodyParameter("tag", tags);
+        params.addBodyParameter("tags", tags);
         params.addBodyParameter("sortName", sortName);
         params.addBodyParameter("search", search);
         params.addBodyParameter("page", Integer.toString(page));
@@ -184,8 +189,15 @@ public class TripGalleryFragment extends BaseFragment {
                     TripGallery tripGallery = JsonUtils.getInstance().fromJSON(TripGallery.class, result);
                     List<TripGallery.DataEntity.TripGalleryDataInfo> data = tripGallery.getData().getData();
                     if (data.size() < 1) {
-                        Toast.makeText(getActivity(), "没有更多数据显示", Toast.LENGTH_SHORT).show();
+                        if(!TextUtils.isEmpty(clickTag) && page == 1) {
+                            lv_trip_gallery.setVisibility(View.GONE);
+                            rl_common_nodata.setVisibility(View.VISIBLE);
+                        }else {
+                            Toast.makeText(getActivity(), "没有更多数据显示", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
+                        lv_trip_gallery.setVisibility(View.VISIBLE);
+                        rl_common_nodata.setVisibility(View.GONE);
                         tripGalleryList.addAll(data);
                         showList(tripGalleryList);
                     }

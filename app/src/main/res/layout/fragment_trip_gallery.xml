@@ -72,6 +72,8 @@
                 android:background="@color/white"
                 android:dividerHeight="@dimen/layout_5dp"
                 android:scrollbars="none" />
+            <include layout="@layout/common_no_data_layout"
+                />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

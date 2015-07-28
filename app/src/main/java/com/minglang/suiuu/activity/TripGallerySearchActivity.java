@@ -1,14 +1,37 @@
 package com.minglang.suiuu.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.LinearLayout;
+
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.TripGalleryAdapter;
 import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.customview.ReFlashListView;
+import com.minglang.suiuu.customview.TextProgressDialog;
+import com.minglang.suiuu.entity.TripGallery;
+import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuInfo;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 项目名称：Android-APP-Backup-
@@ -19,20 +42,35 @@ import com.minglang.suiuu.base.BaseActivity;
  * 修改时间：2015/7/14 14:36
  * 修改备注：
  */
-public class TripGallerySearchActivity extends BaseActivity {
+public class TripGallerySearchActivity extends BaseActivity implements ReFlashListView.IReflashListener, ReFlashListView.ILoadMoreDataListener {
     private LinearLayout ll_trip_gallery_search_tag;
     private ImageView iv_top_back;
     private ImageView tv_top_right_more;
     private TextView tv_top_center;
+    private String searchCountry;
+    private TextProgressDialog dialog;
+    private String clickTag;
+    private int page = 1;
+    private RelativeLayout rl_common_nodata;
+    private TripGalleryAdapter adapter;
+    private ReFlashListView rfv_trip_gallery_search;
+    private List<TripGallery.DataEntity.TripGalleryDataInfo> tripGalleryList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_gallery_search);
+        searchCountry = this.getIntent().getStringExtra("country");
         initView();
+        loadTripGalleryList(null, "0", searchCountry, page);
         viewAction();
     }
 
     private void initView() {
+        dialog = new TextProgressDialog(this);
+        tripGalleryList = new ArrayList<>();
+        rfv_trip_gallery_search = (ReFlashListView) findViewById(R.id.rfv_trip_gallery_search);
+        rl_common_nodata = (RelativeLayout) findViewById(R.id.rl_common_nodata);
         ll_trip_gallery_search_tag = (LinearLayout) findViewById(R.id.ll_trip_gallery_search_tag);
         iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
         tv_top_right_more = (ImageView) findViewById(R.id.tv_top_right_more);
@@ -58,7 +96,10 @@ public class TripGallerySearchActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     int tag = (int) v.getTag();
-                    Toast.makeText(TripGallerySearchActivity.this, "点击了" + mTagIntArray[tag], Toast.LENGTH_SHORT).show();
+                    page = 1;
+                    tripGalleryList.clear();
+                    clickTag = mTagIntArray[tag];
+                    loadTripGalleryList(clickTag, "0", searchCountry, page);
                 }
             });
             ll_trip_gallery_search_tag.addView(itemView);
@@ -72,5 +113,84 @@ public class TripGallerySearchActivity extends BaseActivity {
                 finish();
             }
         });
+    }
+
+    private void loadTripGalleryList(String tags, String sortName, String search, int page) {
+        dialog.showDialog();
+        Log.i("suiuu", "请求条件tags=" + tags + "search=" + search + ",page=" + page);
+        String str = SuiuuInfo.ReadVerification(this);
+        RequestParams params = new RequestParams();
+        params.addBodyParameter(HttpServicePath.key, str);
+        params.addBodyParameter("tags", tags);
+        params.addBodyParameter("sortName", sortName);
+        params.addBodyParameter("search", search);
+        params.addBodyParameter("page", Integer.toString(page));
+        params.addBodyParameter("number", "10");
+        SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.getTripGalleryList, new loadTripGalleryListCallBack());
+        suHttpRequest.setParams(params);
+        suHttpRequest.requestNetworkData();
+    }
+
+    /**
+     * 发布圈子文章回调接口
+     */
+    class loadTripGalleryListCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            dialog.dismissDialog();
+            String result = stringResponseInfo.result;
+            Log.i("suiuu", "result=" + result);
+            try {
+                JSONObject json = new JSONObject(result);
+                int status = (int) json.get("status");
+                if (status == 1) {
+                    TripGallery tripGallery = JsonUtils.getInstance().fromJSON(TripGallery.class, result);
+                    List<TripGallery.DataEntity.TripGalleryDataInfo> data = tripGallery.getData().getData();
+                    if (data.size() < 1) {
+                        if (!TextUtils.isEmpty(clickTag) && page == 1) {
+                            rfv_trip_gallery_search.setVisibility(View.GONE);
+                            rl_common_nodata.setVisibility(View.VISIBLE);
+                        } else {
+                            Toast.makeText(TripGallerySearchActivity.this, "没有更多数据显示", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        rfv_trip_gallery_search.setVisibility(View.VISIBLE);
+                        rl_common_nodata.setVisibility(View.GONE);
+                        tripGalleryList.addAll(data);
+                        showList(tripGalleryList);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            dialog.dismissDialog();
+            Log.i("suiuu", "请求失败------------------------------------" + s);
+        }
+    }
+
+    private void showList(List<TripGallery.DataEntity.TripGalleryDataInfo> tripGalleryList) {
+        if (adapter == null) {
+            adapter = new TripGalleryAdapter(this, tripGalleryList);
+            rfv_trip_gallery_search.setAdapter(adapter);
+        } else {
+            adapter.onDateChange(tripGalleryList);
+        }
+    }
+
+    @Override
+    public void onLoadMoreData() {
+        page = 1;
+        loadTripGalleryList(null, "0", searchCountry, page);
+    }
+
+    @Override
+    public void onReflash() {
+        loadTripGalleryList(TextUtils.isEmpty(clickTag)?null:clickTag, "0", searchCountry, page+=1);
     }
 }
