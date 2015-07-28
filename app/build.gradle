@@ -16,7 +16,7 @@ android {
 
     signingConfigs{
         release{
-            storeFile file("key")
+            storeFile file("D:/Android/SuiuuNewProject/Android-APP-Backup-/key.jks")
             storePassword "suiuu123"
             keyAlias "suiuu"
             keyPassword "suiuu456"
