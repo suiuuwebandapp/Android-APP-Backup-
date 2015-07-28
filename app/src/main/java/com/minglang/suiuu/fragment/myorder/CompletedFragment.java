@@ -20,6 +20,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.CompletedAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.CompletedOrder;
 import com.minglang.suiuu.utils.DeBugLog;
@@ -71,6 +72,8 @@ public class CompletedFragment extends BaseFragment {
     private ProgressDialog progressDialog;
 
     private List<CompletedOrder.CompletedOrderData> listAll = new ArrayList<>();
+
+    private CompletedAdapter adapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -124,18 +127,24 @@ public class CompletedFragment extends BaseFragment {
         progressDialog.setMessage(wait);
 
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        ListView listView = pullToRefreshListView.getRefreshableView();
+
+        adapter = new CompletedAdapter(getActivity(), listAll, R.layout.item_my_order_layout);
+        listView.setAdapter(adapter);
     }
 
     private void ViewAction() {
 
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                pullToRefreshListView.onRefreshComplete();
+                page = 1;
+                getCompletedOrderData4Service(buildRequestParams(page));
             }
 
             @Override
@@ -144,8 +153,10 @@ public class CompletedFragment extends BaseFragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                pullToRefreshListView.onRefreshComplete();
+                page = page + 1;
+                getCompletedOrderData4Service(buildRequestParams(page));
             }
+
         });
 
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -215,7 +226,10 @@ public class CompletedFragment extends BaseFragment {
                     if (list != null && list.size() > 0) {
                         clearListData();
                         listAll.addAll(list);
-                        DeBugLog.i(TAG, "获取到的数据数量:" + listAll.size());
+                        adapter.setList(listAll);
+                    } else {
+                        failureLessPage();
+                        Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
                     }
                 }
             } catch (Exception e) {
@@ -239,6 +253,7 @@ public class CompletedFragment extends BaseFragment {
         public void onSuccess(ResponseInfo<String> responseInfo) {
             String str = responseInfo.result;
             DeBugLog.i(TAG, "获取到的数据:" + str);
+            hideDialog();
             bindData2View(str);
         }
 

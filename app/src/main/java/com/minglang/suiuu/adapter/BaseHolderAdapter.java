@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
 import com.minglang.suiuu.utils.ViewHolder;
@@ -16,6 +17,14 @@ public abstract class BaseHolderAdapter<T> extends BaseAdapter {
     protected List<T> list;
     protected final int mItemLayoutId;
 
+    /**
+     * 控制是否修改Item的View的宽高
+     */
+    private boolean isAlter = false;
+
+    private int convertViewWidth;
+    private int convertViewHeight;
+
     public BaseHolderAdapter(Context context, List<T> list, int itemLayoutId) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(mContext);
@@ -26,6 +35,15 @@ public abstract class BaseHolderAdapter<T> extends BaseAdapter {
     public void setList(List<T> list) {
         this.list = list;
         notifyDataSetChanged();
+    }
+
+    public void setIsAlter(boolean isAlter) {
+        this.isAlter = isAlter;
+    }
+
+    public void setConvertViewParams(int convertViewWidth, int convertViewHeight) {
+        this.convertViewWidth = convertViewWidth;
+        this.convertViewHeight = convertViewHeight;
     }
 
     @Override
@@ -55,7 +73,12 @@ public abstract class BaseHolderAdapter<T> extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder = getViewHolder(position, convertView, parent);
         convert(viewHolder, getItem(position), position);
-        return viewHolder.getConvertView();
+        convertView = viewHolder.getConvertView();
+        if (isAlter) {
+            AbsListView.LayoutParams params = new AbsListView.LayoutParams(convertViewWidth, convertViewHeight);
+            convertView.setLayoutParams(params);
+        }
+        return convertView;
     }
 
     public abstract void convert(ViewHolder helper, T item, long position);

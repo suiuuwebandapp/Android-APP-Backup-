@@ -34,8 +34,6 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 
 import java.util.Map;
 
@@ -60,8 +58,6 @@ public class SuiuuApplication extends Application {
 
     private ImageLoader imageLoader;
 
-    private static RefWatcher refWatcher;
-
     public static SuiuuApplication getInstance() {
         if (instance == null) {
             instance = new SuiuuApplication();
@@ -75,7 +71,6 @@ public class SuiuuApplication extends Application {
         super.onCreate();
         applicationContext = this;
         instance = this;
-        refWatcher = LeakCanary.install(this);
         initHuanXin();
         initAboatOSS();
         initImageLoad();
@@ -142,10 +137,6 @@ public class SuiuuApplication extends Application {
         config.memoryCacheSize(50 * 1024 * 1024);
         config.tasksProcessingOrder(QueueProcessingType.LIFO);
         imageLoader.init(config.build());
-    }
-
-    public static RefWatcher getRefWatcher() {
-        return refWatcher;
     }
 
     /**

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5">
+
+        <ImageView
+            android:id="@+id/item_my_order_main_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_background_image"/>
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:padding="@dimen/layout_8dp">
+
+        <TextView
+            android:id="@+id/item_my_order_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:singleLine="true"
+            android:text="@string/TempOrderState"
+            android:textColor="@color/text_select_true"
+            android:textSize="@dimen/layout_16sp"/>
+
+        <TextView
+            android:id="@+id/item_my_order_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/item_my_order_status"
+            android:layout_marginTop="@dimen/layout_5dp"
+            android:singleLine="true"
+            android:text="@string/TempOrderTitle"
+            android:textSize="@dimen/layout_16sp"/>
+
+        <TextView
+            android:id="@+id/textView48"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/DepartureDate"
+            android:textSize="@dimen/layout_16sp"/>
+
+        <TextView
+            android:id="@+id/item_my_order_begin_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/layout_5dp"
+            android:layout_marginStart="@dimen/layout_5dp"
+            android:layout_toEndOf="@+id/textView48"
+            android:layout_toRightOf="@+id/textView48"
+            android:singleLine="true"
+            android:text="@string/tempDate"
+            android:textSize="@dimen/layout_16sp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

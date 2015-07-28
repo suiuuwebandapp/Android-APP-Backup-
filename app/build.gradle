@@ -16,7 +16,7 @@ android {
 
     signingConfigs{
         release{
-            storeFile file("D:/Android/SuiuuNewProject/Android-APP-Backup-/key.jks")
+            storeFile file("../key.jks")
             storePassword "suiuu123"
             keyAlias "suiuu"
             keyPassword "suiuu456"
@@ -43,8 +43,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'in.srain.cube:ultra-ptr:1.0.10'
     compile 'com.etsy.android.grid:library:1.0.5'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:cardview-v7:22.2.1'
     compile 'com.android.support:recyclerview-v7:22.2.1'

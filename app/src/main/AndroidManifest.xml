@@ -278,6 +278,7 @@
                 <data android:scheme="tencent1104557000" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -420,8 +421,8 @@
             android:theme="@style/AppCustomTheme" />
         <activity
             android:name=".activity.MyOrderListActivity"
-            android:label="@string/title_activity_my_order_list" >
-        </activity>
+            android:label="@string/title_activity_my_order_list"
+            android:theme="@style/AppCustomTheme"/>
     </application>
 
 </manifest>

@@ -27,7 +27,6 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuDetailActivity;
 import com.minglang.suiuu.activity.SuiuuSearchActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.ReFlashListView;
 import com.minglang.suiuu.customview.TextProgressDialog;
@@ -38,7 +37,6 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.squareup.leakcanary.RefWatcher;
 
 import org.json.JSONObject;
 
@@ -68,7 +66,6 @@ public class SuiuuFragment extends BaseFragment
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Light_NoTitleBar);
         inflater.cloneInContext(contextThemeWrapper);
         View rootView = inflater.inflate(R.layout.fragment_route, null);
@@ -111,8 +108,6 @@ public class SuiuuFragment extends BaseFragment
         });
     }
 
-
-
     /**
      * @param countryOrCity 国家或城市
      * @param peopleCount   人数
@@ -137,14 +132,6 @@ public class SuiuuFragment extends BaseFragment
                 HttpServicePath.getSuiuuList, new getSuiuuDateCallBack());
         suHttpRequest.setParams(params);
         suHttpRequest.requestNetworkData();
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        RefWatcher refWatcher = SuiuuApplication.getRefWatcher();
-        refWatcher.watch(this);
     }
 
     @Override
@@ -258,7 +245,6 @@ public class SuiuuFragment extends BaseFragment
             Toast.makeText(getActivity().getApplicationContext(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     @SuppressWarnings("deprecation")
     class MyOnclick implements View.OnClickListener {

@@ -300,6 +300,9 @@
     <string name="Completed" translatable="false">已完成</string>
     <string name="NotFinished" translatable="false">未完成</string>
 
+    <string name="TempOrderState" translatable="false">未付款</string>
+    <string name="TempOrderTitle" translatable="false">法国巴黎浪漫温馨之旅</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="title_activity_personal" translatable="false">PersonalActivity</string>

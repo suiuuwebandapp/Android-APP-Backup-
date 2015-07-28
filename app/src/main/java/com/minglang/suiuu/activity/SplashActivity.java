@@ -13,7 +13,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
 import com.amap.api.location.LocationProviderProxy;
-import com.amap.api.location.core.AMapLocException;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.chat.DemoHXSDKHelper;
@@ -118,21 +117,13 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
-        if (amapLocation != null) {
-            try {
-                AMapLocException aMapLocException = amapLocation.getAMapException();
-                DeBugLog.e(TAG, "ErrorCode1:" + aMapLocException.getErrorCode());
-                DeBugLog.e(TAG, "ErrorCode1.5:" + aMapLocException.getMessage());
-            } catch (Exception e) {
-                DeBugLog.e(TAG, "ErrorCOde2:" + e.getMessage());
-            }
-//            if (aMapLocException.getErrorCode() == 0) {
+        if (amapLocation != null && amapLocation.getAMapException().getErrorCode() == 0) {
+            DeBugLog.e(TAG, "ErrorCode1:" + amapLocation.getAMapException().getErrorCode());
             //获取位置信息
             Double geoLat = amapLocation.getLatitude();
             Double geoLng = amapLocation.getLongitude();
             DeBugLog.i(TAG, "当前用户位置lat=" + geoLat + ",lng=" + geoLng);
             SuiuuInfo.WriteUserLocation(this, geoLat, geoLng);
-//            }
         }
     }
 
