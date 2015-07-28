@@ -3,7 +3,6 @@ package com.minglang.suiuu.activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -14,15 +13,19 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
 import com.amap.api.location.LocationProviderProxy;
+import com.amap.api.location.core.AMapLocException;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.chat.DemoHXSDKHelper;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class SplashActivity extends BaseActivity implements AMapLocationListener {
+
+    private static final String TAG = SplashActivity.class.getSimpleName();
 
     @Bind(R.id.iv_background)
     ImageView iv_backGround;
@@ -45,7 +48,7 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
         animation.setDuration(1500);
         findViewById(R.id.root).startAnimation(animation);
 
-        final Animation transAnim = new TranslateAnimation(0,-50, 0, 0);
+        final Animation transAnim = new TranslateAnimation(0, -50, 0, 0);
         transAnim.setFillAfter(true);
         transAnim.setDuration(3500);
 
@@ -100,6 +103,7 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
 
         });
     }
+
     public void init() {
         mLocationManagerProxy = LocationManagerProxy.getInstance(this);
 
@@ -111,14 +115,24 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
                 LocationProviderProxy.AMapNetwork, 60 * 1000, 15, this);
         mLocationManagerProxy.setGpsEnable(false);
     }
+
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
-        if(amapLocation != null && amapLocation.getAMapException().getErrorCode() == 0){
+        if (amapLocation != null) {
+            try {
+                AMapLocException aMapLocException = amapLocation.getAMapException();
+                DeBugLog.e(TAG, "ErrorCode1:" + aMapLocException.getErrorCode());
+                DeBugLog.e(TAG, "ErrorCode1.5:" + aMapLocException.getMessage());
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "ErrorCOde2:" + e.getMessage());
+            }
+//            if (aMapLocException.getErrorCode() == 0) {
             //获取位置信息
             Double geoLat = amapLocation.getLatitude();
             Double geoLng = amapLocation.getLongitude();
-            Log.i("suiuu", "当前用户位置lat=" + geoLat + ",lng=" + geoLng);
-            SuiuuInfo.WriteUserLocation(this,geoLat,geoLng);
+            DeBugLog.i(TAG, "当前用户位置lat=" + geoLat + ",lng=" + geoLng);
+            SuiuuInfo.WriteUserLocation(this, geoLat, geoLng);
+//            }
         }
     }
 
@@ -147,6 +161,7 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
         super.onPause();
 //        stopLocation();
     }
+
     private void stopLocation() {
         if (mLocationManagerProxy != null) {
             mLocationManagerProxy.removeUpdates(this);
@@ -154,4 +169,5 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
         }
         mLocationManagerProxy = null;
     }
+
 }
