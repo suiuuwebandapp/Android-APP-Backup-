@@ -81,7 +81,7 @@
                 android:background="@color/white">
 
                 <com.minglang.suiuu.customview.CircleImageView
-                    android:id="@+id/view"
+                    android:id="@+id/order_details_head_image_view"
                     android:layout_width="@dimen/layout_60dp"
                     android:layout_height="@dimen/layout_60dp"
                     android:layout_centerVertical="true"
@@ -93,15 +93,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/view"
+                    android:layout_toEndOf="@+id/order_details_head_image_view"
                     android:layout_toLeftOf="@+id/textView6"
-                    android:layout_toRightOf="@+id/view"
+                    android:layout_toRightOf="@+id/order_details_head_image_view"
                     android:layout_toStartOf="@+id/textView6"
                     android:text="@string/app_name"
                     android:textSize="@dimen/layout_16sp"/>
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/order_details_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -253,11 +253,11 @@
                         android:textSize="@dimen/layout_16sp"/>
 
                     <TextView
-                        android:id="@+id/textView44"
+                        android:id="@+id/order_details_additional_service_prices"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/layout_5dp"
-                        android:text="New Text"
+                        android:text="@string/zero"
                         android:textSize="@dimen/layout_16sp"/>
 
                 </LinearLayout>
@@ -277,11 +277,11 @@
                         android:textSize="@dimen/layout_16sp"/>
 
                     <TextView
-                        android:id="@+id/textView46"
+                        android:id="@+id/order_details_airport_pick_up_prices"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/layout_5dp"
-                        android:text="New Text"
+                        android:text="@string/zero"
                         android:textSize="@dimen/layout_16sp"/>
 
                 </LinearLayout>
@@ -301,23 +301,26 @@
                         android:textSize="@dimen/layout_16sp"/>
 
                     <TextView
-                        android:id="@+id/textView48"
+                        android:id="@+id/order_details_tickets_prices"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/layout_5dp"
-                        android:text="New Text"
+                        android:text="@string/zero"
                         android:textSize="@dimen/layout_16sp"/>
 
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/textView49"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/order_details_total_prices"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_margin="@dimen/layout_5dp"
-                    android:text="Medium Text"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                    android:gravity="end"
+                    android:singleLine="true"
+                    android:text="@string/TotalPrices"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/text_select_true"/>
 
             </LinearLayout>
 

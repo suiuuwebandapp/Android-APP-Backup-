@@ -3,13 +3,14 @@ package com.minglang.suiuu.activity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.NewRemindAdapter;
+import com.minglang.suiuu.adapter.NewRemindPageAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.remind.NewAtFragment;
 import com.minglang.suiuu.fragment.remind.NewAttentionFragment;
@@ -122,11 +123,13 @@ public class NewRemindActivity extends BaseAppCompatActivity {
         fragmentList.add(newReplyFragment);
         fragmentList.add(newAttentionFragment);
 
-        NewRemindAdapter newRemindAdapter = new NewRemindAdapter(getSupportFragmentManager(), fragmentList, titleList);
-        newRemindPager.setAdapter(newRemindAdapter);
+        FragmentManager fm = getSupportFragmentManager();
+
+        NewRemindPageAdapter newRemindPageAdapter = new NewRemindPageAdapter(fm, fragmentList, titleList);
+        newRemindPager.setAdapter(newRemindPageAdapter);
 
         tabLayout.setupWithViewPager(newRemindPager);
-        tabLayout.setTabsFromPagerAdapter(newRemindAdapter);
+        tabLayout.setTabsFromPagerAdapter(newRemindPageAdapter);
     }
 
     private void CreateFragment() {

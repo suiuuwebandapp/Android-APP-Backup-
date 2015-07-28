@@ -63,7 +63,7 @@
     <string name="Confirm_password_cannot_be_empty">确认密码不能为空!</string>
     <string name="Connection_failure">建立连接失败！</string>
     <string name="Current_version">当前版本</string>
-    <string name="DataError">数据获取错误，请稍候再试！</string>
+    <string name="DataError">数据获取失败，请稍候再试！</string>
     <string name="Delete_failed">删除失败:</string>
     <string name="Delete_the_contact">删除联系人</string>
     <string name="Did_not_download">未下载</string>
@@ -161,10 +161,8 @@
     <string name="Move_into_blacklist_success">移入黑名单成功</string>
     <string name="Move_into_the_blacklist_new">移入黑名单</string>
     <string name="MyAttention">我的关注</string>
-    <string name="NetworkAnomaly">网络异常，请检查后再试！</string>
     <string name="Network_error">网络出错</string>
     <string name="NewRemind">新提醒</string>
-    <string name="NoData">暂无更多数据！</string>
     <string name="Not_Set">未设置</string>
     <string name="Open_group_chat">公开的群聊</string>
     <string name="Open_group_members_invited">开放群成员邀请</string>

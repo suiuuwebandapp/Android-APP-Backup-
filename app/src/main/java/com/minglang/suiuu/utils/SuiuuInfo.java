@@ -387,6 +387,7 @@ public class SuiuuInfo implements Serializable {
 
     /**
      * 读取当前用户的位置信息
+     *
      * @param context
      * @return
      */

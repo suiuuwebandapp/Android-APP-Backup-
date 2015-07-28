@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_50dp"
         android:layout_centerHorizontal="true"
-        android:background="@color/tr_black">
+        android:background="@color/mainColor">
 
         <ImageView
             android:id="@+id/AllAttentionBack"
@@ -32,9 +32,10 @@
             android:text="@string/all_attention"
             android:textColor="@color/white"
             android:textSize="20sp"/>
+
     </RelativeLayout>
 
-    <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView
+    <com.minglang.pulltorefreshlibrary.PullToRefreshListView
         android:id="@+id/all_attention_dynamic_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
