@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 
 public class JsonUtils {
 	public static final String TAG = JsonUtils.class.getName();
-	private static Object lock = new Object();
+	private static final Object lock = new Object();
 	private static JsonUtils jsonUtil;
 	private Gson gson;
 
@@ -20,18 +20,12 @@ public class JsonUtils {
 
 			@Override
 			public boolean shouldSkipField(FieldAttributes arg0) {
-				if (arg0.getAnnotation(ExcludeJSON.class) != null) {
-					return true;
-				}
-				return false;
+				return arg0.getAnnotation(ExcludeJSON.class) != null;
 			}
 
 			@Override
 			public boolean shouldSkipClass(Class<?> arg0) {
-				if (arg0.getAnnotation(ExcludeJSON.class) != null) {
-					return true;
-				}
-				return false;
+				return arg0.getAnnotation(ExcludeJSON.class) != null;
 			}
 		});
 		gson = gb.create();

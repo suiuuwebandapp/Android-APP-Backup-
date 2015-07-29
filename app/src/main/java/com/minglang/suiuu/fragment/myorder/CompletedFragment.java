@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.myorder;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.GeneralOrderDetailsActivity;
 import com.minglang.suiuu.adapter.CompletedAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.CompletedOrder;
@@ -49,6 +51,8 @@ public class CompletedFragment extends BaseFragment {
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
 
+    private static final String ORDER_NUMBER = "orderNumber";
+
     @Bind(R.id.completed_order_list_view)
     PullToRefreshListView pullToRefreshListView;
 
@@ -60,6 +64,8 @@ public class CompletedFragment extends BaseFragment {
 
     @BindString(R.string.DataError)
     String errorString;
+
+    private boolean isPullToRefresh = true;
 
     /**
      * 页码
@@ -143,6 +149,7 @@ public class CompletedFragment extends BaseFragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
+                isPullToRefresh = false;
                 page = 1;
                 getCompletedOrderData4Service(buildRequestParams(page));
             }
@@ -153,6 +160,7 @@ public class CompletedFragment extends BaseFragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
+                isPullToRefresh = false;
                 page = page + 1;
                 getCompletedOrderData4Service(buildRequestParams(page));
             }
@@ -162,7 +170,11 @@ public class CompletedFragment extends BaseFragment {
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                int location = position - 1;
+                String orderNumber = listAll.get(location).getOrderNumber();
+                Intent intent = new Intent(getActivity(), GeneralOrderDetailsActivity.class);
+                intent.putExtra(ORDER_NUMBER,orderNumber);
+                startActivity(intent);
             }
         });
 
@@ -244,9 +256,10 @@ public class CompletedFragment extends BaseFragment {
 
         @Override
         public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
+            if (isPullToRefresh)
+                if (progressDialog != null && !progressDialog.isShowing()) {
+                    progressDialog.show();
+                }
         }
 
         @Override

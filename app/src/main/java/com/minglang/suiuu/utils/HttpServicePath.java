@@ -358,4 +358,9 @@ public class HttpServicePath {
      */
     public static String getGeneralUserNotFinishOrderPath = RootPath + "/app-travel/get-un-finish-order";
 
+    /**
+     * 得到普通用户订单的详情
+     */
+    public static String getGeneralUserOrderDetailsPath = RootPath + "/app-travel/user-order-info";
+
 }

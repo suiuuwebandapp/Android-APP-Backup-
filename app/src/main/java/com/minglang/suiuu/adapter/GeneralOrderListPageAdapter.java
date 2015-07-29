@@ -7,17 +7,19 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.List;
 
 /**
- * LoopFragment中嵌套的ViewPager+Fragment的适配器
+ * Created by Administrator on 2015/7/27.
  * <p/>
- * Created by LZY on 2015/3/18 0018.
+ * 普通用户订单相关页面适配器
  */
-public class LoopFragmentPagerAdapter extends FragmentPagerAdapter {
+public class GeneralOrderListPageAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> list;
+    private List<String> titleList;
 
-    public LoopFragmentPagerAdapter(FragmentManager fm, List<Fragment> list) {
+    public GeneralOrderListPageAdapter(FragmentManager fm, List<Fragment> list, List<String> titleList) {
         super(fm);
         this.list = list;
+        this.titleList = titleList;
     }
 
     @Override
@@ -39,7 +41,8 @@ public class LoopFragmentPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public long getItemId(int position) {
-        return super.getItemId(position);
+    public CharSequence getPageTitle(int position) {
+        return titleList.get(position);
     }
+
 }

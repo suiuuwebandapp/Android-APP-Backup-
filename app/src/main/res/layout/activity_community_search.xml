@@ -1,10 +1,10 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/community_search_top_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_50dp"
         android:layout_gravity="center_horizontal"
@@ -24,12 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="@dimen/layout_5dp"
-            android:layout_marginEnd="@dimen/layout_5dp"
-            android:layout_marginLeft="@dimen/layout_5dp"
-            android:layout_marginRight="@dimen/layout_5dp"
-            android:layout_marginStart="@dimen/layout_5dp"
-            android:layout_marginTop="@dimen/layout_5dp"
+            android:layout_margin="@dimen/layout_5dp"
             android:layout_toEndOf="@+id/community_search_btn"
             android:layout_toLeftOf="@+id/community_search_btn"
             android:layout_toRightOf="@+id/community_search_layout_back"
@@ -52,9 +47,10 @@
 
     </RelativeLayout>
 
-    <com.minglang.suiuu.customview.pulltorefresh.PullToRefreshListView
+    <com.minglang.pulltorefreshlibrary.PullToRefreshListView
         android:id="@+id/community_search_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/community_search_top_layout"/>
 
-</LinearLayout>
+</RelativeLayout>

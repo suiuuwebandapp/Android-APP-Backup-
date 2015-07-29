@@ -67,7 +67,7 @@ public class NewAtFragment extends BaseFragment {
     private String verification;
 
     @BindString(R.string.load_wait)
-    String loadString;
+    String dialogMsg;
 
     @BindString(R.string.NoData)
     String noData;
@@ -141,7 +141,7 @@ public class NewAtFragment extends BaseFragment {
      */
     private void initView() {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(loadString);
+        progressDialog.setMessage(dialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         int paddingParams = Utils.newInstance().dip2px(15, getActivity());
@@ -184,6 +184,7 @@ public class NewAtFragment extends BaseFragment {
                 page = 1;
                 getNewAt4Service(page);
             }
+
         });
 
         newAtList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -61,6 +61,8 @@ public class NotFinishedFragment extends BaseFragment {
     @BindString(R.string.DataError)
     String errorString;
 
+    private boolean isPullToRefresh = true;
+
     /**
      * 页码
      */
@@ -143,6 +145,7 @@ public class NotFinishedFragment extends BaseFragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
+                isPullToRefresh = false;
                 page = 1;
                 getCompletedOrderData4Service(buildRequestParams(page));
             }
@@ -153,6 +156,7 @@ public class NotFinishedFragment extends BaseFragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
+                isPullToRefresh = false;
                 page = page + 1;
                 getCompletedOrderData4Service(buildRequestParams(page));
             }
@@ -244,9 +248,10 @@ public class NotFinishedFragment extends BaseFragment {
 
         @Override
         public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
+            if (isPullToRefresh)
+                if (progressDialog != null && !progressDialog.isShowing()) {
+                    progressDialog.show();
+                }
         }
 
         @Override

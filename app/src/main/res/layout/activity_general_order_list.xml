@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.minglang.suiuu.activity.MyOrderListActivity">
+    tools:context="com.minglang.suiuu.activity.GeneralOrderListActivity">
 
     <RelativeLayout
         android:id="@+id/my_order_list_title_layout"

@@ -475,7 +475,7 @@ public class MainActivity extends BaseActivity {
                 mDrawerLayout.closeDrawer(sliderView);
                 switch (position) {
                     case 0:
-                        Intent intent0 = new Intent(MainActivity.this, MyOrderListActivity.class);
+                        Intent intent0 = new Intent(MainActivity.this, GeneralOrderListActivity.class);
                         startActivity(intent0);
                         break;
 

@@ -89,7 +89,7 @@ public class NotFinishedOrder {
         private String orderId;
         private String totalPrice;
         private String travelCount;
-        private List<ServiceInfoEntity> serviceInfo;
+        private String serviceInfo;
         private String tripId;
         private String school;
         private String intro;
@@ -134,7 +134,7 @@ public class NotFinishedOrder {
             this.travelCount = travelCount;
         }
 
-        public void setServiceInfo(List<ServiceInfoEntity> serviceInfo) {
+        public void setServiceInfo(String serviceInfo) {
             this.serviceInfo = serviceInfo;
         }
 
@@ -250,7 +250,7 @@ public class NotFinishedOrder {
             return travelCount;
         }
 
-        public List<ServiceInfoEntity> getServiceInfo() {
+        public String getServiceInfo() {
             return serviceInfo;
         }
 

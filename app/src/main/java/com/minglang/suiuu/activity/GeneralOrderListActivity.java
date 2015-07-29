@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.MyOrderListPageAdapter;
+import com.minglang.suiuu.adapter.GeneralOrderListPageAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.myorder.CompletedFragment;
 import com.minglang.suiuu.fragment.myorder.NotFinishedFragment;
@@ -23,9 +23,12 @@ import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-public class MyOrderListActivity extends BaseAppCompatActivity {
+/**
+ * 普通用户查看订单的页面
+ */
+public class GeneralOrderListActivity extends BaseAppCompatActivity {
 
-    @BindColor(R.color.tr_black)
+    @BindColor(R.color.textColor)
     int normalColor;
 
     @BindColor(R.color.mainColor)
@@ -49,7 +52,7 @@ public class MyOrderListActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_order_list);
+        setContentView(R.layout.activity_general_order_list);
         ButterKnife.bind(this);
         initView();
         ViewAction();
@@ -77,11 +80,12 @@ public class MyOrderListActivity extends BaseAppCompatActivity {
         fragmentList.add(notFinishedFragment);
 
         FragmentManager fm = getSupportFragmentManager();
-        MyOrderListPageAdapter myOrderListPageAdapter = new MyOrderListPageAdapter(fm, fragmentList, titleList);
-        viewPager.setAdapter(myOrderListPageAdapter);
+        GeneralOrderListPageAdapter generalOrderListPageAdapter
+                = new GeneralOrderListPageAdapter(fm, fragmentList, titleList);
+        viewPager.setAdapter(generalOrderListPageAdapter);
 
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setAdapter(myOrderListPageAdapter);
+        viewPager.setAdapter(generalOrderListPageAdapter);
     }
 
     private void ViewAction() {
