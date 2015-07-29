@@ -2,8 +2,6 @@ package com.minglang.suiuu.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,10 +16,7 @@ import android.widget.Toast;
 
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.OSSServiceProvider;
-import com.alibaba.sdk.android.oss.callback.SaveCallback;
-import com.alibaba.sdk.android.oss.model.OSSException;
 import com.alibaba.sdk.android.oss.storage.OSSBucket;
-import com.alibaba.sdk.android.oss.storage.OSSFile;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -36,8 +31,8 @@ import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.entity.LoopBaseData;
+import com.minglang.suiuu.service.UpdateImageService;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.CompressImageUtil;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -48,7 +43,6 @@ import com.minglang.suiuu.utils.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,37 +131,37 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
     private String locationAddress;
     private String locationCountry;
     private String locationCity;
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case getData_Success:
-                    if (1 == status && picSuccessCount == picList.size()) {
-
-                        dialog.dismissDialog();
-                        Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(EasyTackPhotoActivity.this, LoopArticleActivity.class);
-//                        intent.putExtra("articleId", dataNum);
-//                        intent.putExtra("TAG", TAG);
-//                        startActivity(intent);
-                        finish();
-                    } else {
-                        dialog.dismissDialog();
-                        Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-
-                case getData_FAILURE:
-                    dialog.dismissDialog();
-                    Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
-                    break;
-
-                default:
-                    break;
-            }
-            return false;
-        }
-    });
+//    private Handler handler = new Handler(new Handler.Callback() {
+//        @Override
+//        public boolean handleMessage(Message msg) {
+//            switch (msg.what) {
+//                case getData_Success:
+//                    if (1 == status && picSuccessCount == picList.size()) {
+//
+//                        dialog.dismissDialog();
+//                        Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
+////                        Intent intent = new Intent(EasyTackPhotoActivity.this, LoopArticleActivity.class);
+////                        intent.putExtra("articleId", dataNum);
+////                        intent.putExtra("TAG", TAG);
+////                        startActivity(intent);
+//                        finish();
+//                    } else {
+//                        dialog.dismissDialog();
+//                        Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
+//                    }
+//                    break;
+//
+//                case getData_FAILURE:
+//                    dialog.dismissDialog();
+//                    Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
+//                    break;
+//
+//                default:
+//                    break;
+//            }
+//            return false;
+//        }
+//    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -304,11 +298,10 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         params.addBodyParameter("lon", String.valueOf(longitude));
         params.addBodyParameter("lat", String.valueOf(latitude));
         params.addBodyParameter("tags",tagText.replace(" ", ","));
-        Log.i("suiuu","传上去的tag="+tagText.replace(" ",","));
         params.addBodyParameter("address",locationAddress);
         List<String> picNameList = new ArrayList<>();
         for (String string : picList) {
-            updateDate(string);
+//            updateDate(string);
             String substring = string.substring(string.lastIndexOf("/"));
             picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
         }
@@ -345,7 +338,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
         List<String> picNameList = new ArrayList<>();
         if (isChangePic) {
             for (String string : picList) {
-                updateDate(string);
+//                updateDate(string);
                 String substring = string.substring(string.lastIndexOf("/"));
                 picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
             }
@@ -364,51 +357,46 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
     }
 
 
-    private void updateDate(final String path) {
-        Log.i("suiuu","上传的path="+path);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String type = path.substring(path.lastIndexOf("/"));
-                String name = type.substring(type.lastIndexOf(".") + 1);
-                String newPath = null;
-                try {
-                    newPath = CompressImageUtil.compressImage(path, name, 50);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                OSSFile bigFile = ossService.getOssFile(bucket, "suiuu_content" + type);
-                try {
-                    bigFile.setUploadFilePath(newPath, name);
-                    bigFile.ResumableUploadInBackground(new SaveCallback() {
-
-                        @Override
-                        public void onSuccess(String objectKey) {
-                            picSuccessCount += 1;
-                            if (picSuccessCount == picList.size()) {
-                                handler.sendEmptyMessage(getData_Success);
-                            }
-                        }
-                        @Override
-                        public void onProgress(String objectKey, int byteCount, int totalSize) {
-                            Log.i("suiuu", "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
-                        }
-
-                        @Override
-                        public void onFailure(String objectKey, OSSException ossException) {
-                            handler.sendEmptyMessage(getData_FAILURE);
-                            DeBugLog.i(TAG, "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
-                            ossException.printStackTrace();
-//                    ossException.getException().printStackTrace();
-                        }
-                    });
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
+//    private void updateDate(final String path) {
+//        Log.i("suiuu","上传的path="+path);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                String type = path.substring(path.lastIndexOf("/"));
+//                String name = type.substring(type.lastIndexOf(".") + 1);
+//                String newPath = null;
+////                try {
+////                    newPath = CompressImageUtil.compressImage(path, name, 50);
+////                } catch (FileNotFoundException e) {
+////                    e.printStackTrace();
+////                }
+//                OSSFile bigFile = ossService.getOssFile(bucket, "suiuu_content" + type);
+//                try {
+//                    bigFile.setUploadFilePath(path,name);
+//                    bigFile.ResumableUploadInBackground(new SaveCallback() {
+//                        @Override
+//                        public void onSuccess(String objectKey) {
+//                            picSuccessCount += 1;
+//                            if (picSuccessCount == picList.size()) {
+//                            }
+//                        }
+//                        @Override
+//                        public void onProgress(String objectKey, int byteCount, int totalSize) {
+//                            Log.i("suiuu", "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
+//                        }
+//                        @Override
+//                        public void onFailure(String objectKey, OSSException ossException) {
+//                            Log.i("suiuu", "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
+//                            ossException.printStackTrace();
+////                    ossException.getException().printStackTrace();
+//                        }
+//                    });
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//    }
     /**
      * 发布圈子文章回调接口
      */
@@ -422,6 +410,15 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
                 dataNum = (String) json.get("data");
+                if(status == 1) {
+                    Intent intent = new Intent(EasyTackPhotoActivity.this, UpdateImageService.class);
+                    intent.putExtra("imageList",jsonUtil.toJSON(picList));
+                    startService(intent);
+                    Toast.makeText(EasyTackPhotoActivity.this,"发布成功",Toast.LENGTH_SHORT).show();
+                    finish();
+                }else {
+                    Toast.makeText(EasyTackPhotoActivity.this,"发布没有成功,请重试",Toast.LENGTH_SHORT).show();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -429,7 +426,6 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
 
         @Override
         public void onFailure(HttpException e, String s) {
-            handler.sendEmptyMessage(getData_FAILURE);
             Log.i("suiuu", "请求失败------------------------------------" + s);
         }
     }
@@ -453,17 +449,14 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
                     intent.putExtra("TAG", TAG);
                     startActivity(intent);
                 } else {
-                    handler.sendEmptyMessage(getData_FAILURE);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                handler.sendEmptyMessage(getData_FAILURE);
             }
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            handler.sendEmptyMessage(getData_FAILURE);
             DeBugLog.e(TAG, "发布文章失败:" + s);
         }
     }
@@ -471,7 +464,7 @@ public class EasyTackPhotoActivity extends BaseActivity implements View.OnClickL
     public void setSuiuuTag() {
         fl_easy_take_photo.removeAllViews();
         LayoutInflater mInflater = LayoutInflater.from(this);
-        for (int i = 0; i < suiuuTag.length - 1; i++) {
+        for (int i = 0; i < suiuuTag.length; i++) {
             TextView tv = (TextView) mInflater.inflate(R.layout.tv,
                     fl_easy_take_photo, false);
             tv.setBackgroundResource(R.drawable.tag_shape_trip_gallery_publish);

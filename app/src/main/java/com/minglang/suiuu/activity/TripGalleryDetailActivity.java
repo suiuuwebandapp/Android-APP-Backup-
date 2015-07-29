@@ -58,6 +58,9 @@ public class TripGalleryDetailActivity extends BaseActivity {
     private AMap aMap;
     private ScrollView sv_trip_gallery_detail;
     private JsonUtils jsonUtil = JsonUtils.getInstance();
+    private TextView tv_top_center;
+    private ImageView tv_top_right_more;
+    private ImageView iv_top_back;
     /**
      * 详情数据
      */
@@ -156,6 +159,11 @@ public class TripGalleryDetailActivity extends BaseActivity {
         }
         sv_trip_gallery_detail = (ScrollView) findViewById(R.id.sv_trip_gallery_detail);
         sv_trip_gallery_detail.smoothScrollTo(0,0);
+        tv_top_center = (TextView) findViewById(R.id.tv_top_center);
+        tv_top_center.setText("旅图详情");
+        tv_top_right_more = (ImageView) findViewById(R.id.tv_top_right_more);
+        tv_top_right_more.setBackgroundResource(R.drawable.btn_suiuu_share_selector);
+        iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
         tv_trip_gallery_detail_name = (TextView) findViewById(R.id.tv_trip_gallery_detail_name);
         tv_trip_gallery_detail_tag = (TextView) findViewById(R.id.tv_trip_gallery_detail_tag);
         nsbv_trip_gallery_detail_content = (NoScrollBarListView) findViewById(R.id.nsbv_trip_gallery_detail_content);
@@ -175,6 +183,7 @@ public class TripGalleryDetailActivity extends BaseActivity {
     }
 
     private void viewAction() {
+        iv_top_back.setOnClickListener(new MyOnClickListener());
         et_suiuu_detail_comment.setOnClickListener(new MyOnClickListener());
         tv_to_commnet_activity.setOnClickListener(new MyOnClickListener());
         aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
@@ -338,6 +347,9 @@ public class TripGalleryDetailActivity extends BaseActivity {
 
                 case R.id.sdv_comment_head_img:
                     //跳到个人中心
+                    break;
+                case R.id.iv_top_back:
+                    finish();
                     break;
                 case R.id.et_suiuu_detail_comment:
                     //跳到评论页

@@ -1,5 +1,6 @@
 package com.minglang.suiuu.fragment.main;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -26,7 +27,6 @@ import com.minglang.suiuu.activity.TripGalleryDetailActivity;
 import com.minglang.suiuu.adapter.TripGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.NoScrollBarListView;
-import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.TripGallery;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -50,15 +50,18 @@ import java.util.List;
  */
 
 public class TripGalleryFragment extends BaseFragment {
-    private TextProgressDialog dialog;
+    private ProgressDialog dialog;
     private LinearLayout mGalleryLinearLayout;
     private TextView tv_trip_gallery_search;
     private NoScrollBarListView lv_trip_gallery;
     private TripGalleryAdapter adapter;
     private List<TripGallery.DataEntity.TripGalleryDataInfo> tripGalleryList;
     private int page = 1;
-    private String clickTag;
+    private String clickTag = "";
     private RelativeLayout rl_common_nodata;
+    private List<ImageView> clickImageList;
+    private List<ImageView> imageList;
+    private List<String> clickString;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,13 +69,17 @@ public class TripGalleryFragment extends BaseFragment {
         initView(rootView);
         initData();
         viewAction();
-        loadTripGalleryList(null, "0", null, page);
+//        loadTripGalleryList(null, "0", null, page);
         return rootView;
     }
 
     private void initView(View rootView) {
-        dialog = new TextProgressDialog(getActivity());
+        dialog = new ProgressDialog(getActivity());
+        dialog.setMessage("正在加载中,请稍候");
         tripGalleryList = new ArrayList<>();
+        clickImageList = new ArrayList<>();
+        clickString = new ArrayList<>();
+        imageList = new ArrayList<>();
 //        LayoutInflater inflater = LayoutInflater.from(getActivity());
         mGalleryLinearLayout = (LinearLayout) rootView.findViewById(R.id.galleryLinearLayout);
         tv_trip_gallery_search = (TextView) rootView.findViewById(R.id.tv_trip_grllery_search);
@@ -99,16 +106,29 @@ public class TripGalleryFragment extends BaseFragment {
             itemView.setTag(i);
             imageView = (ImageView) itemView.findViewById(R.id.iv_item_trip_gallery_tag);
             textView = (TextView) itemView.findViewById(R.id.tv_item_trip_gallery_tag);
+            imageList.add(imageView);
             imageView.setImageResource(mPhotosIntArray[i]);
             textView.setText(mTagIntArray[i]);
             itemView.setPadding(10, 0, 0, 0);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    clickTag = "";
                     page = 1;
                     tripGalleryList.clear();
                     int tag = (int) v.getTag();
-                    clickTag = mTagIntArray[tag];
+                    if (clickImageList.contains(imageList.get(tag))) {
+                        imageList.get(tag).setBackgroundResource(0);
+                        clickImageList.remove(imageList.get(tag));
+                        clickString.remove(mTagIntArray[tag]);
+                    } else {
+                        imageList.get(tag).setBackgroundResource(R.drawable.imageview_border_style);
+                        clickImageList.add(imageList.get(tag));
+                        clickString.add(mTagIntArray[tag]);
+                    }
+                    for (String clickstring : clickString) {
+                        clickTag += clickstring + ",";
+                    }
                     loadTripGalleryList(clickTag, "0", null, page);
                 }
             });
@@ -123,7 +143,6 @@ public class TripGalleryFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), SuiuuSearchActivity.class);
                 intent.putExtra("searchClass", 1);
                 startActivity(intent);
-
             }
         });
         lv_trip_gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -156,12 +175,16 @@ public class TripGalleryFragment extends BaseFragment {
     }
 
     private void loadTripGalleryList(String tags, String sortName, String search, int page) {
-        dialog.showDialog();
+        dialog.show();
         Log.i("suiuu","请求条件tags="+tags+"search="+search+",page="+page);
+        String tagnew = "";
+        if(tags != null && tags.length() >1) {
+            tagnew = tags.substring(0,tags.length()-1);
+        }
         String str = SuiuuInfo.ReadVerification(getActivity());
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
-        params.addBodyParameter("tags", tags);
+        params.addBodyParameter("tags", tagnew);
         params.addBodyParameter("sortName", sortName);
         params.addBodyParameter("search", search);
         params.addBodyParameter("page", Integer.toString(page));
@@ -179,7 +202,7 @@ public class TripGalleryFragment extends BaseFragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            dialog.dismissDialog();
+            dialog.dismiss();
             String result = stringResponseInfo.result;
             Log.i("suiuu", "result=" + result);
             try {
@@ -209,10 +232,17 @@ public class TripGalleryFragment extends BaseFragment {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            dialog.dismissDialog();
+            dialog.dismiss();
             Log.i("suiuu", "请求失败------------------------------------" + s);
         }
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        page = 1;
+        adapter = null;
+        tripGalleryList.clear();
+        loadTripGalleryList(null, "0", null, page);
+    }
 }

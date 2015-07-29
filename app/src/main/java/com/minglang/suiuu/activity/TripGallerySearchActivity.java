@@ -1,10 +1,12 @@
 package com.minglang.suiuu.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -55,6 +57,9 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
     private TripGalleryAdapter adapter;
     private ReFlashListView rfv_trip_gallery_search;
     private List<TripGallery.DataEntity.TripGalleryDataInfo> tripGalleryList;
+    private List<ImageView> clickImageList;
+    private List<ImageView> imageList;
+    private List<String> clickString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +74,9 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
     private void initView() {
         dialog = new TextProgressDialog(this);
         tripGalleryList = new ArrayList<>();
+        clickImageList = new ArrayList<>();
+        clickString = new ArrayList<>();
+        imageList = new ArrayList<>();
         rfv_trip_gallery_search = (ReFlashListView) findViewById(R.id.rfv_trip_gallery_search);
         rl_common_nodata = (RelativeLayout) findViewById(R.id.rl_common_nodata);
         ll_trip_gallery_search_tag = (LinearLayout) findViewById(R.id.ll_trip_gallery_search_tag);
@@ -88,6 +96,7 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
             itemView = LayoutInflater.from(this).inflate(R.layout.item_trip_gallery_tag, null);
             itemView.setTag(i);
             imageView = (ImageView) itemView.findViewById(R.id.iv_item_trip_gallery_tag);
+            imageList.add(imageView);
             textView = (TextView) itemView.findViewById(R.id.tv_item_trip_gallery_tag);
             imageView.setImageResource(mPhotosIntArray[i]);
             textView.setText(mTagIntArray[i]);
@@ -95,10 +104,23 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    clickTag = "";
                     int tag = (int) v.getTag();
                     page = 1;
                     tripGalleryList.clear();
-                    clickTag = mTagIntArray[tag];
+                    if (clickImageList.contains(imageList.get(tag))) {
+                        imageList.get(tag).setBackgroundResource(0);
+                        clickImageList.remove(imageList.get(tag));
+                        clickString.remove(mTagIntArray[tag]);
+                    } else {
+                        imageList.get(tag).setBackgroundResource(R.drawable.imageview_border_style);
+                        clickImageList.add(imageList.get(tag));
+                        clickString.add(mTagIntArray[tag]);
+                    }
+                    Log.i("suiuu","clickTag="+clickTag);
+                    for(String clickstring : clickString) {
+                        clickTag += clickstring+",";
+                    }
                     loadTripGalleryList(clickTag, "0", searchCountry, page);
                 }
             });
@@ -113,15 +135,27 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
                 finish();
             }
         });
+        rfv_trip_gallery_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(TripGallerySearchActivity.this, TripGalleryDetailActivity.class);
+                intent.putExtra("id", tripGalleryList.get(position).getId());
+                startActivity(intent);
+            }
+        });
     }
 
     private void loadTripGalleryList(String tags, String sortName, String search, int page) {
         dialog.showDialog();
         Log.i("suiuu", "请求条件tags=" + tags + "search=" + search + ",page=" + page);
+        String tagnew = "";
+        if(tags != null && tags.length() >1) {
+            tagnew = tags.substring(0,tags.length()-1);
+        }
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
-        params.addBodyParameter("tags", tags);
+        params.addBodyParameter("tags", tagnew);
         params.addBodyParameter("sortName", sortName);
         params.addBodyParameter("search", search);
         params.addBodyParameter("page", Integer.toString(page));
@@ -152,6 +186,9 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
                         if (!TextUtils.isEmpty(clickTag) && page == 1) {
                             rfv_trip_gallery_search.setVisibility(View.GONE);
                             rl_common_nodata.setVisibility(View.VISIBLE);
+                        } else if (page == 1) {
+                            rfv_trip_gallery_search.setVisibility(View.GONE);
+                            rl_common_nodata.setVisibility(View.VISIBLE);
                         } else {
                             Toast.makeText(TripGallerySearchActivity.this, "没有更多数据显示", Toast.LENGTH_SHORT).show();
                         }
@@ -176,6 +213,8 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
 
     private void showList(List<TripGallery.DataEntity.TripGalleryDataInfo> tripGalleryList) {
         if (adapter == null) {
+            rfv_trip_gallery_search.setInterface(this);
+            rfv_trip_gallery_search.setLoadMoreInterface(this);
             adapter = new TripGalleryAdapter(this, tripGalleryList);
             rfv_trip_gallery_search.setAdapter(adapter);
         } else {
@@ -185,12 +224,15 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
 
     @Override
     public void onLoadMoreData() {
-        page = 1;
-        loadTripGalleryList(null, "0", searchCountry, page);
+        loadTripGalleryList(TextUtils.isEmpty(clickTag) ? null : clickTag, "0", searchCountry, page += 1);
+        rfv_trip_gallery_search.loadComplete();
     }
 
     @Override
     public void onReflash() {
-        loadTripGalleryList(TextUtils.isEmpty(clickTag)?null:clickTag, "0", searchCountry, page+=1);
+        page = 1;
+        tripGalleryList.clear();
+        loadTripGalleryList(TextUtils.isEmpty(clickTag) ? null : clickTag, "0", searchCountry, page);
+        rfv_trip_gallery_search.reflashComplete();
     }
 }

@@ -5,14 +5,16 @@
     android:layout_height="80dip"
     android:layout_margin="@dimen/layout_5dp">
 
-    <com.minglang.suiuu.customview.RoundImageView
+    <ImageView
         android:id="@+id/iv_item_trip_gallery_tag"
         android:layout_width="80dip"
-        android:layout_height="fill_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/loading"
-        app:borderRadius="@dimen/layout_5dp"
-        app:type="round"/>
+        android:layout_height="80dip"
+        android:padding="@dimen/layout_3dp"/>
+        <!--android:scaleType="fitXY"-->
+        <!--android:src="@drawable/loading"-->
+        <!--app:borderRadius="@dimen/layout_5dp"-->
+        <!--app:type="round"/>-->
+
 
     <TextView
         android:id="@+id/tv_item_trip_gallery_tag"

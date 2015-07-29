@@ -150,7 +150,7 @@ public class CommonCommentActivity extends BaseActivity {
                 JSONObject json = new JSONObject(responseInfo.result);
                 int status = json.getInt("status");
                 String data = json.getString("data");
-                if (status == 1 && "success".equals(data)) {
+                if (status == 1) {
                     Intent intent = CommonCommentActivity.this.getIntent();
                     if(!TextUtils.isEmpty(rId)) {
                         intent.putExtra("content", "@"+rTitle+" "+commentContent);

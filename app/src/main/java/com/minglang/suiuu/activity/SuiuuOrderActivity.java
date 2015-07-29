@@ -127,6 +127,7 @@ public class SuiuuOrderActivity extends BaseActivity {
         params.addBodyParameter("peopleCount", Integer.toString(enjoy_peopleNumber));
         params.addBodyParameter("beginDate", tv_travel_date.getText().toString());
         params.addBodyParameter("startTime", tv_travel_time.getText().toString());
+        params.addBodyParameter("type", "2");
         params.addBodyParameter(HttpServicePath.key, verification);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.createOrderNumber, new createOrderCallBack());

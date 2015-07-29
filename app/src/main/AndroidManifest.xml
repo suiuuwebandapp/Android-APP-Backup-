@@ -414,6 +414,8 @@
             android:name=".activity.GeneralOrderListActivity"
             android:label="@string/title_activity_my_order_list"
             android:theme="@style/AppCustomTheme"/>
+
+        <service android:name="com.minglang.suiuu.service.UpdateImageService"/>
     </application>
 
 </manifest>
