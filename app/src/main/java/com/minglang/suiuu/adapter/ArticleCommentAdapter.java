@@ -38,7 +38,8 @@ public class ArticleCommentAdapter extends LinearLayoutBaseAdapter {
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
         }
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image)
+                .showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }

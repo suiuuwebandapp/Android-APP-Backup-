@@ -8,7 +8,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,6 +20,7 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.suiuu.JoinFragment;
 import com.minglang.suiuu.fragment.suiuu.NewApplyForFragment;
 import com.minglang.suiuu.utils.AppConstant;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
@@ -33,7 +33,6 @@ import butterknife.ButterKnife;
  * 我发布的随游页面
  */
 public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
-
     private static final String TAG = MySuiuuReleaseActivity.class.getSimpleName();
 
     /**
@@ -193,7 +192,7 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
                     String newInfo = data.getStringExtra("newInfo");
                     mySuiuuInfoText.setText(newInfo);
 
-                    Log.i(TAG, "newInfo:" + newInfo);
+                    DeBugLog.i(TAG, "newInfo:" + newInfo);
                 }
                 break;
 
@@ -203,7 +202,7 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
                     String newAdditionalPrice = data.getStringExtra("newAdditionalPrice");
                     String newOtherPrice = data.getStringExtra("newOtherPrice");
 
-                    Log.i(TAG, "newBasicPrice:" + newBasicPrice + ",newAdditionalPrice:" + newAdditionalPrice +
+                    DeBugLog.i(TAG, "newBasicPrice:" + newBasicPrice + ",newAdditionalPrice:" + newAdditionalPrice +
                             ",newOtherPrice:" + newOtherPrice);
 
                     String allPrice = String.valueOf(Double.valueOf(newBasicPrice) + Double.valueOf(newAdditionalPrice)
@@ -213,18 +212,6 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
                 break;
         }
 
-    }
-
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
 }

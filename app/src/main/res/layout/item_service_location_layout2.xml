@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    android:id="@+id/order_details_total_prices"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="end"
+    android:layout_margin="@dimen/layout_5dp"
+    android:gravity="end"
+    android:singleLine="true"
+    android:text="@string/TotalPrices"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:textColor="@color/text_select_true"/>
+

@@ -293,6 +293,8 @@
     <string name="Shuttle" translatable="false">机场接送:</string>
     <string name="ProvideTickets" translatable="false">提供景区门票:</string>
 
+    <string name="NoServiceName" translatable="false">服务无名称:</string>
+
     <string name="TotalPrices" translatable="false">总价:</string>
 
     <string name="MyOrder_general" translatable="false">我的订单</string>
@@ -302,6 +304,9 @@
 
     <string name="TempOrderState" translatable="false">未付款</string>
     <string name="TempOrderTitle" translatable="false">法国巴黎浪漫温馨之旅</string>
+
+    <string name="uploading">正在上传&#8230;</string>
+    <string name="uploading_data">"正在更新数据,请稍候&#8230;"</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>

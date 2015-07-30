@@ -1,5 +1,6 @@
 package com.minglang.suiuu.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
@@ -129,6 +130,7 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
                 finish();
                 break;
             case R.id.personal_center_setting:
+                startActivity(new Intent(PersonalCenterActivity.this, SettingActivity.class));
                 break;
             case R.id.personal_center_dialogue:
                 break;

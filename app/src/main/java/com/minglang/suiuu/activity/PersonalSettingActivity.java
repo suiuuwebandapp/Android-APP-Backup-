@@ -44,50 +44,69 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.io.File;
 
+import butterknife.Bind;
+import butterknife.BindString;
+import butterknife.ButterKnife;
+
 @SuppressWarnings("deprecation")
 public class PersonalSettingActivity extends BaseActivity {
 
     private static final String TAG = PersonalSettingActivity.class.getSimpleName();
 
     private static final int UP_LOAD_SUCCESS = 200;
-
+    private static final int UP_LOADING = 300;
     private static final int UP_LOAD_FAIL = 400;
 
-    private static final int UP_LOADING = 300;
+    @BindString(R.string.uploading)
+    String uploading;
+
+    @BindString(R.string.uploading_data)
+    String uploadingData;
 
     /**
      * 返回按钮
      */
-    private ImageView personalSettingBack;
+    @Bind(R.id.personalSettingBack)
+    ImageView personalSettingBack;
 
     /**
      * 保存按钮
      */
-    private TextView save;
+    @Bind(R.id.personal_save)
+    TextView save;
 
-    private TextView sex_man, sex_woman;
+    @Bind(R.id.personal_setting_man)
+    TextView sex_man;
+
+    @Bind(R.id.personal_setting_woman)
+    TextView sex_woman;
 
     /**
      * 头像ImageView
      */
-    private CircleImageView headImageView;
+    @Bind(R.id.headImageView)
+    CircleImageView headImageView;
 
     /**
      * 昵称编辑框
      */
-    private EditText editNickName;
+    @Bind(R.id.editNickName)
+    EditText editNickName;
 
-    private TextView localDetails;
+    @Bind(R.id.localDetails)
+    TextView localDetails;
 
     /**
      * 职业编辑框
      */
-    private EditText editTrade;
+    @Bind(R.id.editTrade)
+    EditText editTrade;
 
     /**
      * 签名编辑框
      */
-    private EditText editSign;
+    @Bind(R.id.editSign)
+    EditText editSign;
 
     private String strGender;
 
@@ -100,8 +119,6 @@ public class PersonalSettingActivity extends BaseActivity {
     private String nativeImagePath;
 
     private String netWorkImagePath;
-
-//    private boolean isSelectHeadImage;
 
     /**
      * 上传进度框
@@ -163,6 +180,7 @@ public class PersonalSettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_setting);
 
+        ButterKnife.bind(this);
         initView();
         initLoadDefaultData();
         ViewAction();
@@ -172,26 +190,18 @@ public class PersonalSettingActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-        personalSettingBack = (ImageView) findViewById(R.id.personalSettingBack);
-        save = (TextView) findViewById(R.id.personal_save);
-        headImageView = (CircleImageView) findViewById(R.id.headImageView);
-        sex_man = (TextView) findViewById(R.id.personal_setting_man);
-        sex_woman = (TextView) findViewById(R.id.personal_setting_woman);
-        localDetails = (TextView) findViewById(R.id.localDetails);
-        editNickName = (EditText) findViewById(R.id.editNickName);
-        editTrade = (EditText) findViewById(R.id.editTrade);
-        editSign = (EditText) findViewById(R.id.editSign);
-
         upLoadDialog = new ProgressDialog(this);
-        upLoadDialog.setMessage("正在上传...");
+        upLoadDialog.setMessage(uploading);
         upLoadDialog.setCanceledOnTouchOutside(false);
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("正在更新数据,请稍候...");
+        progressDialog.setMessage(uploadingData);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image)
+                .showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
@@ -221,11 +231,11 @@ public class PersonalSettingActivity extends BaseActivity {
         String strGender = data.getSex();
         if (!TextUtils.isEmpty(strGender)) {
             if (strGender.equals("1")) {
-                sex_man.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_man)),
+                sex_man.setCompoundDrawables(DrawableUtils.setBounds(this, R.drawable.sex_man),
                         null, null, null);
                 DeBugLog.i(TAG, "男");
             } else if (strGender.equals("0")) {
-                sex_woman.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_woman)),
+                sex_woman.setCompoundDrawables(DrawableUtils.setBounds(this, R.drawable.sex_woman),
                         null, null, null);
                 DeBugLog.i(TAG, "女");
             }

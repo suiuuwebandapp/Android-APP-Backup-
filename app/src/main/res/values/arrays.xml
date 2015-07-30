@@ -64,4 +64,13 @@
         <item>时间</item>
     </string-array>
 
+    <string-array name="personalList">
+        <item>个人设置</item>
+        <item>通用设置</item>
+        <item>检查更新</item>
+        <item>联系我们</item>
+        <item>反馈</item>
+        <item>去评分</item>
+    </string-array>
+
 </resources>

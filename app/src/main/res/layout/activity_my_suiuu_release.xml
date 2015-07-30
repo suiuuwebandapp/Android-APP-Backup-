@@ -91,7 +91,7 @@
                                 android:layout_marginStart="@dimen/layout_10dp"
                                 android:text="@string/title"
                                 android:textColor="@color/textColor"
-                                android:textSize="@dimen/layout_20sp"/>
+                                android:textSize="@dimen/layout_18sp"/>
 
                         </LinearLayout>
 
@@ -115,7 +115,7 @@
                                 android:layout_marginStart="@dimen/layout_10dp"
                                 android:text="@string/blankContent"
                                 android:textColor="@color/textColor"
-                                android:textSize="@dimen/layout_20sp"/>
+                                android:textSize="@dimen/layout_18sp"/>
 
                         </LinearLayout>
 
@@ -139,7 +139,7 @@
                                 android:layout_marginStart="@dimen/layout_10dp"
                                 android:text="@string/price"
                                 android:textColor="@color/textColor"
-                                android:textSize="@dimen/layout_20sp"/>
+                                android:textSize="@dimen/layout_18sp"/>
 
                         </LinearLayout>
 

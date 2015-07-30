@@ -17,34 +17,51 @@ import com.easemob.chat.EMChatManager;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.SettingAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import butterknife.Bind;
+import butterknife.BindString;
+import butterknife.ButterKnife;
 
 /**
  * 设置页面
  */
-public class SettingActivity extends BaseActivity {
+public class SettingActivity extends BaseAppCompatActivity {
 
     private static final String TAG = SettingActivity.class.getSimpleName();
 
-    private static final String[] SETTINGS = {"个人设置", "通用设置", "检查更新", "联系我们", "反馈", "去评分"};
+    @BindString(R.string.setting)
+    String strSetting;
 
-    private ImageView settingBack;
+    @BindString(R.string.button_logout)
+    String logoutButtonText;
 
-    private ListView settingList;
+    @BindString(R.string.Are_logged_out)
+    String logoutText;
 
-    private Button btn_logout;
+    @Bind(R.id.tv_top_center)
+    TextView tv_top_center;
+
+    @Bind(R.id.tv_top_right)
+    TextView tv_top_right;
+
+    @Bind(R.id.iv_top_back)
+    ImageView settingBack;
+
+    @Bind(R.id.settingList)
+    ListView settingList;
+
+    @Bind(R.id.btn_logout)
+    Button btn_logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        ButterKnife.bind(this);
         initView();
         ViewAction();
     }
@@ -53,24 +70,18 @@ public class SettingActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-        TextView tv_top_center = (TextView) findViewById(R.id.tv_top_center);
-        tv_top_center.setVisibility(View.VISIBLE);
-        tv_top_center.setText(R.string.setting);
+        String[] SETTINGS = getResources().getStringArray(R.array.personalList);
 
-        TextView tv_top_right = (TextView) findViewById(R.id.tv_top_right);
+        tv_top_center.setVisibility(View.VISIBLE);
+        tv_top_center.setText(strSetting);
+
         tv_top_right.setVisibility(View.INVISIBLE);
 
-        btn_logout = (Button) findViewById(R.id.btn_logout);
         if (!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())) {
-            btn_logout.setText(getString(R.string.button_logout));
+            btn_logout.setText(logoutButtonText);
         }
 
-        settingBack = (ImageView) findViewById(R.id.iv_top_back);
-        settingList = (ListView) findViewById(R.id.settingList);
-
-        List<String> stringList = new ArrayList<>();
-        Collections.addAll(stringList, SETTINGS);
-        SettingAdapter adapter = new SettingAdapter(this, stringList);
+        SettingAdapter adapter = new SettingAdapter(this, SETTINGS);
         settingList.setAdapter(adapter);
     }
 
@@ -87,9 +98,8 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
-
                     case 0:
-                        startActivity( new Intent(SettingActivity.this, PersonalSettingActivity.class));
+                        startActivity(new Intent(SettingActivity.this, PersonalSettingActivity.class));
                         break;
 
                     case 1:
@@ -127,18 +137,19 @@ public class SettingActivity extends BaseActivity {
     }
 
     public void logout() {
-        final ProgressDialog pd = new ProgressDialog(this);
-        String st = getResources().getString(R.string.Are_logged_out);
-        pd.setMessage(st);
-        pd.setCanceledOnTouchOutside(false);
-        pd.show();
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(logoutText);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         SuiuuApplication.getInstance().logout(new EMCallBack() {
 
             @Override
             public void onSuccess() {
                 SettingActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
-                        pd.dismiss();
+                        progressDialog.dismiss();
                         SuiuuInfo.ClearSuiuuInfo(SettingActivity.this);
                         SuiuuInfo.ClearSuiuuThird(SettingActivity.this);
 
@@ -163,7 +174,9 @@ public class SettingActivity extends BaseActivity {
                 DeBugLog.e(TAG, "code:" + String.valueOf(code));
                 DeBugLog.e(TAG, "message:" + message);
             }
+
         });
+
     }
 
 }

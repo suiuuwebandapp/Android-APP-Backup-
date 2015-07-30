@@ -28,6 +28,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/layout_5dp"
             android:layout_marginTop="@dimen/layout_10dp"
+            android:gravity="center_horizontal"
+            android:drawablePadding="@dimen/layout_3dp"
             android:drawableLeft="@drawable/icon_comment"
             android:drawableStart="@drawable/icon_comment"
             android:text="@string/zero"

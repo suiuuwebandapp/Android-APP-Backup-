@@ -46,11 +46,11 @@ import com.minglang.suiuu.adapter.MainSliderAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.chat.activity.ChatActivity;
-import com.minglang.suiuu.chat.activity.ChatAllHistoryFragment;
 import com.minglang.suiuu.chat.chat.Constant;
 import com.minglang.suiuu.chat.utils.CommonUtils;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.fragment.main.CommunityFragment;
+import com.minglang.suiuu.fragment.main.InformationFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
 import com.minglang.suiuu.fragment.main.TripGalleryFragment;
 import com.minglang.suiuu.utils.AppConstant;
@@ -141,16 +141,16 @@ public class MainActivity extends BaseActivity {
     private CommunityFragment communityFragment;
 
     /**
-     * 会话页面
+     * 消息提醒页面
      */
-    private ChatAllHistoryFragment chatFragment;
+    private InformationFragment informationFragment;
 
     /**
      * 账号在别处登录
      */
     public boolean isConflict = false;
 
-    private NewMessageReceiver msgReceiver;
+//    private NewMessageReceiver msgReceiver;
 
     /**
      * 当前为fragment的第几页
@@ -321,7 +321,7 @@ public class MainActivity extends BaseActivity {
         switchViewState(NUMBER1);
 
         tripGalleryFragment = new TripGalleryFragment();
-        chatFragment = new ChatAllHistoryFragment();
+        informationFragment = InformationFragment.newInstance(userSign, verification);
         communityFragment = CommunityFragment.newInstance(userSign, verification);
 
         LoadDefaultFragment();
@@ -340,10 +340,10 @@ public class MainActivity extends BaseActivity {
         MobclickAgent.updateOnlineConfig(this);
 
         // 注册一个接收消息的BroadcastReceiver
-        msgReceiver = new NewMessageReceiver();
-        IntentFilter intentFilter = new IntentFilter(chatManager.getNewMessageBroadcastAction());
-        intentFilter.setPriority(3);
-        registerReceiver(msgReceiver, intentFilter);
+//        msgReceiver = new NewMessageReceiver();
+//        IntentFilter intentFilter = new IntentFilter(chatManager.getNewMessageBroadcastAction());
+//        intentFilter.setPriority(3);
+//        registerReceiver(msgReceiver, intentFilter);
 
         // 注册一个ack回执消息的BroadcastReceiver
         IntentFilter ackMessageIntentFilter = new IntentFilter(chatManager.getAckMessageBroadcastAction());
@@ -374,7 +374,7 @@ public class MainActivity extends BaseActivity {
 
         exitReceiver = new ExitReceiver();
         IntentFilter intentFilter2 = new IntentFilter();
-        intentFilter.addAction(SettingActivity.class.getSimpleName());
+//        intentFilter.addAction(SettingActivity.class.getSimpleName());
         this.registerReceiver(exitReceiver, intentFilter2);
     }
 
@@ -521,9 +521,9 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if (chatFragment != null) {
-            if (chatFragment.isAdded()) {
-                ft.hide(chatFragment);
+        if (informationFragment != null) {
+            if (informationFragment.isAdded()) {
+                ft.hide(informationFragment);
             }
         }
 
@@ -558,9 +558,9 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if (chatFragment != null) {
-            if (chatFragment.isAdded()) {
-                ft.hide(chatFragment);
+        if (informationFragment != null) {
+            if (informationFragment.isAdded()) {
+                ft.hide(informationFragment);
             }
         }
 
@@ -594,9 +594,9 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if (chatFragment != null) {
-            if (chatFragment.isAdded()) {
-                ft.hide(chatFragment);
+        if (informationFragment != null) {
+            if (informationFragment.isAdded()) {
+                ft.hide(informationFragment);
             }
         }
 
@@ -635,10 +635,10 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if (chatFragment.isAdded()) {
-            ft.show(chatFragment);
+        if (informationFragment.isAdded()) {
+            ft.show(informationFragment);
         } else {
-            ft.add(R.id.showLayout, chatFragment);
+            ft.add(R.id.showLayout, informationFragment);
         }
 
         currentIndex = 3;
@@ -718,21 +718,6 @@ public class MainActivity extends BaseActivity {
 
         }
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK) {
-            DeBugLog.e(TAG, "return information is null");
-        } else if (data == null) {
-            DeBugLog.e(TAG, "back data is null!");
-        } else {
-            switch (requestCode) {
-                case AppConstant.COMMUNITY_SEARCH_SKIP:
-                    break;
-            }
-        }
     }
 
     //账号被移除
@@ -829,53 +814,72 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        DeBugLog.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
+        if (resultCode != Activity.RESULT_OK) {
+            DeBugLog.e(TAG, "return information is null");
+        } else if (data == null) {
+            DeBugLog.e(TAG, "back data is null!");
+        } else {
+            switch (requestCode) {
+                case AppConstant.COMMUNITY_SEARCH_SKIP:
+                    String searchString = data.getStringExtra("Search");
+                    DeBugLog.i(TAG, "Search Str:" + searchString);
+                    communityFragment.setSearchString(searchString);
+                    break;
+            }
+        }
+    }
+
     /**
      * 新消息广播接收者
      */
-    private class NewMessageReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // 主页面收到消息后，主要为了提示未读，实际消息内容需要到chat页面查看
-
-            String from = intent.getStringExtra("from");
-            // 消息id
-            String msgId = intent.getStringExtra("msgid");
-            EMMessage message = chatManager.getMessage(msgId);
-
-            // fix: logout crash， 如果正在接收大量消息
-            // 因为此时已经logout，消息队列已经被清空， broadcast延时收到，所以会出现message为空的情况
-            if (message == null) {
-                return;
-            }
-
-            // 2014-10-22 修复在某些机器上，在聊天页面对方发消息过来时不立即显示内容的bug
-            if (ChatActivity.activityInstance != null) {
-                if (message.getChatType() == ChatType.GroupChat) {
-                    if (message.getTo().equals(ChatActivity.activityInstance.getToChatUsername()))
-                        return;
-                } else {
-                    if (from.equals(ChatActivity.activityInstance.getToChatUsername()))
-                        return;
-                }
-            }
-
-            // 注销广播接收者，否则在ChatActivity中会收到这个广播
-            abortBroadcast();
-
-            notifyNewMessage(message);
-
-            // 刷新bottom bar消息未读数
-            updateUnreadLabel();
-            if (currentIndex == 3) {
-                // 当前页面如果为聊天历史页面，刷新此页面
-                if (chatFragment != null) {
-                    chatFragment.refresh();
-                    msgCount.setVisibility(View.INVISIBLE);
-                }
-            }
-
-        }
-    }
+//    private class NewMessageReceiver extends BroadcastReceiver {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            // 主页面收到消息后，主要为了提示未读，实际消息内容需要到chat页面查看
+//
+//            String from = intent.getStringExtra("from");
+//            // 消息id
+//            String msgId = intent.getStringExtra("msgid");
+//            EMMessage message = chatManager.getMessage(msgId);
+//
+//            // fix: logout crash， 如果正在接收大量消息
+//            // 因为此时已经logout，消息队列已经被清空， broadcast延时收到，所以会出现message为空的情况
+//            if (message == null) {
+//                return;
+//            }
+//
+//            // 2014-10-22 修复在某些机器上，在聊天页面对方发消息过来时不立即显示内容的bug
+//            if (ChatActivity.activityInstance != null) {
+//                if (message.getChatType() == ChatType.GroupChat) {
+//                    if (message.getTo().equals(ChatActivity.activityInstance.getToChatUsername()))
+//                        return;
+//                } else {
+//                    if (from.equals(ChatActivity.activityInstance.getToChatUsername()))
+//                        return;
+//                }
+//            }
+//
+//            // 注销广播接收者，否则在ChatActivity中会收到这个广播
+//            abortBroadcast();
+//
+//            notifyNewMessage(message);
+//
+//            // 刷新bottom bar消息未读数
+//            updateUnreadLabel();
+//            if (currentIndex == 3) {
+//                // 当前页面如果为聊天历史页面，刷新此页面
+//                if (chatFragment != null) {
+//                    chatFragment.refresh();
+//                    msgCount.setVisibility(View.INVISIBLE);
+//                }
+//            }
+//
+//        }
+//    }
 
     /**
      * 消息回执BroadcastReceiver
@@ -1096,12 +1100,6 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
 
         // 注销广播接收者
-        try {
-            unregisterReceiver(msgReceiver);
-        } catch (Exception ignored) {
-            DeBugLog.e(TAG, "msgReceiver:" + ignored.getMessage());
-        }
-
         try {
             unregisterReceiver(ackMessageReceiver);
         } catch (Exception ignored) {

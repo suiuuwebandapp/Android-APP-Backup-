@@ -47,10 +47,4 @@
 
     </RelativeLayout>
 
-    <com.minglang.pulltorefreshlibrary.PullToRefreshListView
-        android:id="@+id/community_search_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/community_search_top_layout"/>
-
 </RelativeLayout>

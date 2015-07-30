@@ -1,35 +1,34 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-
-import java.util.List;
+import com.minglang.suiuu.utils.ViewHolder;
 
 /**
  * Created by LZY on 2015/3/19 0019.
+ * <p/>
+ * 设置页面的数据适配器
  */
 public class SettingAdapter extends BaseAdapter {
 
     private Context context;
 
-    private List<String> list;
+    private String[] stringArray;
 
-    public SettingAdapter(Context context, List<String> list) {
+    public SettingAdapter(Context context, String[] stringArray) {
         this.context = context;
-        this.list = list;
+        this.stringArray = stringArray;
     }
 
     @Override
     public int getCount() {
-        if (list != null && list.size() > 0) {
-            return list.size();
+        if (stringArray != null && stringArray.length > 0) {
+            return stringArray.length;
         } else {
             return 0;
         }
@@ -42,8 +41,8 @@ public class SettingAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        if (list != null && list.size() > 0) {
-            return list.get(position);
+        if (stringArray != null && stringArray.length > 0) {
+            return stringArray[position];
         } else {
             return null;
         }
@@ -51,58 +50,11 @@ public class SettingAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        String str = list.get(position);
-
-        ViewHolder holder;
-        if(convertView==null){
-            holder = new ViewHolder();
-
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_setting,null);
-
-            holder.icon = (ImageView) convertView.findViewById(R.id.itemSettingIcon);
-            holder.text = (TextView) convertView.findViewById(R.id.itemSettingText);
-
-            convertView.setTag(holder);
-        }else{
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        switch (str){
-
-            case "个人设置":
-                holder.icon.setImageResource(R.drawable.item_setting_personal);
-                break;
-
-            case "通用设置":
-                holder.icon.setImageResource(R.drawable.item_setting_general);
-                break;
-
-            case "检查更新":
-                holder.icon.setImageResource(R.drawable.item_setting_update);
-                break;
-
-            case "联系我们":
-                holder.icon.setImageResource(R.drawable.item_setting_contact);
-                break;
-
-            case "反馈":
-                holder.icon.setImageResource(R.drawable.item_setting_feedback);
-                break;
-
-            case "去评分":
-                holder.icon.setImageResource(R.drawable.item_setting_score);
-                break;
-        }
-
-        holder.text.setText(str);
-
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_setting, position);
+        convertView = holder.getConvertView();
+        TextView textView = holder.getView(R.id.itemSettingText);
+        textView.setText(stringArray[position]);
         return convertView;
-    }
-
-    class ViewHolder {
-        ImageView icon;
-        TextView text;
     }
 
 }

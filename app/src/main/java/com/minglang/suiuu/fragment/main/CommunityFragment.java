@@ -60,6 +60,8 @@ public class CommunityFragment extends BaseFragment {
     private static final String COUNTRY_ID = "countryId";
     private static final String CITY_ID = "cityId";
 
+    private static final String SEARCH = "search";
+
     private String userSign;
     private String verification;
 
@@ -80,6 +82,17 @@ public class CommunityFragment extends BaseFragment {
     private String countryId = null;
 
     private String cityId = null;
+
+    private boolean isPullToRefresh = true;
+
+    private String searchString = null;
+
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
+        page = 1;
+        selectedState = 4;
+        getProblemList(buildRequestParams(selectedState, page));
+    }
 
     @BindString(R.string.NoData)
     String NoDataHint;
@@ -187,6 +200,7 @@ public class CommunityFragment extends BaseFragment {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page = 1;
+                isPullToRefresh = false;
                 getProblemList(buildRequestParams(selectedState, page));
             }
 
@@ -197,6 +211,7 @@ public class CommunityFragment extends BaseFragment {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page = page + 1;
+                isPullToRefresh = false;
                 getProblemList(buildRequestParams(selectedState, page));
             }
 
@@ -205,9 +220,9 @@ public class CommunityFragment extends BaseFragment {
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int index = position - 1;
+                int location = position - 1;
                 Intent intent = new Intent(getActivity(), CommunityItemActivity.class);
-                intent.putExtra("id", listAll.get(index).getQId());
+                intent.putExtra("id", listAll.get(location).getQId());
                 startActivity(intent);
             }
         });
@@ -261,6 +276,15 @@ public class CommunityFragment extends BaseFragment {
                 params.addBodyParameter(COUNTRY_ID, countryId);
                 params.addBodyParameter(CITY_ID, cityId);
                 break;
+            case 4:
+                params.addBodyParameter(HttpServicePath.key, verification);
+                params.addBodyParameter(NUMBER, String.valueOf(20));
+                params.addBodyParameter(PAGES, String.valueOf(page));
+                params.addBodyParameter(SORT_NAME, String.valueOf(1));
+                params.addBodyParameter(COUNTRY_ID, countryId);
+                params.addBodyParameter(CITY_ID, cityId);
+                params.addBodyParameter(SEARCH, searchString);
+                break;
         }
         return params;
     }
@@ -308,6 +332,16 @@ public class CommunityFragment extends BaseFragment {
         }
     }
 
+    private void clearOldDataList() {
+        if (page == 1) {
+            if (listAll != null && listAll.size() > 0) {
+                listAll.clear();
+                listViewAdapter.setList(listAll);
+            }
+        }
+        Toast.makeText(getActivity(), NoDataHint, Toast.LENGTH_SHORT).show();
+    }
+
     /**
      * 绑定数据到View上
      *
@@ -331,6 +365,7 @@ public class CommunityFragment extends BaseFragment {
                         } else {
                             DeBugLog.e(TAG, "返回列表数据为Null");
                             lessPageNumber();
+                            clearOldDataList();
                         }
                     } else {
                         DeBugLog.e(TAG, "返回二级数据为Null");
@@ -349,25 +384,29 @@ public class CommunityFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        DeBugLog.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
+
         if (resultCode != Activity.RESULT_OK) {
-            return;
+            DeBugLog.e(TAG, "return information is null");
+        } else if (data == null) {
+            DeBugLog.e(TAG, "back data is null!");
+        } else {
+            switch (requestCode) {
+                case AppConstant.SELECT_COUNTRY_OK:
+                    countryId = data.getStringExtra("countryId");
+                    cityId = data.getStringExtra("cityId");
+
+                    page = 1;
+                    selectedState = 3;
+                    getProblemList(buildRequestParams(selectedState, page));
+
+                    DeBugLog.i(TAG, "countryId:" + countryId);
+                    DeBugLog.i(TAG, "countryCNname:" + data.getStringExtra("countryCNname"));
+                    DeBugLog.i(TAG, "cityId:" + cityId);
+                    DeBugLog.i(TAG, "cityName:" + data.getStringExtra("cityName"));
+                    break;
+            }
         }
-
-        if (data != null) {
-            countryId = data.getStringExtra("countryId");
-            cityId = data.getStringExtra("cityId");
-
-            page = 1;
-            selectedState = 3;
-            getProblemList(buildRequestParams(selectedState, page));
-
-            DeBugLog.i(TAG, "countryId:" + countryId);
-            DeBugLog.i(TAG, "countryCNname:" + data.getStringExtra("countryCNname"));
-            DeBugLog.i(TAG, "cityId:" + cityId);
-            DeBugLog.i(TAG, "cityName:" + data.getStringExtra("cityName"));
-        }
-
     }
 
     /**
@@ -377,9 +416,10 @@ public class CommunityFragment extends BaseFragment {
 
         @Override
         public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
+            if (isPullToRefresh)
+                if (progressDialog != null && !progressDialog.isShowing()) {
+                    progressDialog.show();
+                }
         }
 
         @Override

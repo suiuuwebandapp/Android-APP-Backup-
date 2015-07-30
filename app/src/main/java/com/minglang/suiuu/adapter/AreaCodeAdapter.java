@@ -90,4 +90,5 @@ public class AreaCodeAdapter extends BaseAdapter {
 
         return convertView;
     }
+
 }

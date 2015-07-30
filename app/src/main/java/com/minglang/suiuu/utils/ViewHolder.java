@@ -27,12 +27,12 @@ public class ViewHolder {
     /**
      * 拿到一个ViewHolder对象
      *
-     * @param context
-     * @param convertView
-     * @param parent
-     * @param layoutId
-     * @param position
-     * @return
+     * @param context     上下文对象
+     * @param convertView item的根View
+     * @param parent      父View
+     * @param layoutId    布局ID
+     * @param position    位置
+     * @return VieHolder对象
      */
     public static ViewHolder get(Context context, View convertView, ViewGroup parent, int layoutId, int position) {
         ViewHolder holder;
@@ -52,7 +52,7 @@ public class ViewHolder {
     /**
      * 通过控件的Id获取对于的控件，如果没有则加入views
      *
-     * @param viewId
+     * @param viewId item内view的ID
      * @return
      */
     @SuppressWarnings("unchecked")

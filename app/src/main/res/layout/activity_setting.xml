@@ -1,9 +1,8 @@
-<LinearLayout
+<RelativeLayout
+    android:id="@+id/settingRootLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/settingRootLayout"
-    android:background="@color/bg_color"
     android:orientation="vertical">
 
     <include
@@ -13,18 +12,25 @@
     <ListView
         android:id="@+id/settingList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_bar"
+        android:background="@color/white"
+        android:divider="@color/backgroundColor"
+        android:dividerHeight="@dimen/layout_15dp"/>
 
     <Button
         android:id="@+id/btn_logout"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginLeft="10dip"
-        android:layout_marginRight="10dip"
-        android:layout_marginTop="20dp"
+        android:layout_height="@dimen/layout_50dp"
+        android:layout_below="@+id/settingList"
+        android:layout_marginEnd="@dimen/layout_10dp"
+        android:layout_marginLeft="@dimen/layout_10dp"
+        android:layout_marginRight="@dimen/layout_10dp"
+        android:layout_marginStart="@dimen/layout_10dp"
+        android:layout_marginTop="@dimen/layout_20dp"
         android:background="@drawable/btn_style_alert_dialog_special"
         android:text="@string/button_logout"
         android:textColor="@android:color/white"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/layout_18sp"/>
 
-</LinearLayout>
+</RelativeLayout>

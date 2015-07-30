@@ -2,7 +2,7 @@ package com.minglang.suiuu.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * <p/>
  * Created by LZY on 2015/3/24 0024.
  */
-public class NewRemindPageAdapter extends FragmentPagerAdapter {
+public class NewRemindPageAdapter extends FragmentStatePagerAdapter {
 
     private List<Fragment> list;
     private List<String> titleList;
