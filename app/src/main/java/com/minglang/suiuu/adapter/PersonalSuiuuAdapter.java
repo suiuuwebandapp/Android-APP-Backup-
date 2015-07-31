@@ -1,21 +1,23 @@
 package com.minglang.suiuu.adapter;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.TravelList;
-import com.minglang.suiuu.utils.ScreenUtils;
-import com.minglang.suiuu.utils.ViewHolder;
+import com.minglang.suiuu.entity.UserSuiuu.UserSuiuuData;
+import com.minglang.suiuu.interfaces.RecyclerOnItemClickListener;
+import com.minglang.suiuu.interfaces.RecyclerOnItemLongClickListener;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -24,36 +26,91 @@ import java.util.List;
  * <p/>
  * Created by Administrator on 2015/5/11.
  */
-public class PersonalSuiuuAdapter extends BaseAdapter {
-
-    private static final String TAG = PersonalSuiuuAdapter.class.getSimpleName();
+public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-
-    private List<TravelList> list;
+    private List<UserSuiuuData> list;
 
     private ImageLoader imageLoader;
+    private DisplayImageOptions options;
 
-    private int screenWidth;
+    private RecyclerOnItemClickListener onItemClickListener;
+    private RecyclerOnItemLongClickListener onItemLongClickListener;
 
     public PersonalSuiuuAdapter(Context context) {
         this.context = context;
 
         imageLoader = ImageLoader.getInstance();
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        }
-
-        screenWidth = new ScreenUtils((Activity) context).getScreenWidth();
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
+                .showImageForEmptyUri(R.drawable.loading)
+                .showImageOnFail(R.drawable.loading_error)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
-    public void setList(List<TravelList> list) {
+    public void setList(List<UserSuiuuData> list) {
         this.list = list;
         notifyDataSetChanged();
     }
 
+    public void setOnItemClickListener(RecyclerOnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public void setOnItemLongClickListener(RecyclerOnItemLongClickListener onItemLongClickListener) {
+        this.onItemLongClickListener = onItemLongClickListener;
+    }
+
     @Override
-    public int getCount() {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        @SuppressLint("InflateParams")
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_personal_suiuu, null);
+        return new PersonalSuiuuViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        final PersonalSuiuuViewHolder suiuuViewHolder = (PersonalSuiuuViewHolder) holder;
+
+        String imagePath = list.get(position).getHeadImg();
+        if (!TextUtils.isEmpty(imagePath)) {
+            imageLoader.displayImage(imagePath, suiuuViewHolder.mainImage, options);
+        }
+
+        String strTitle = list.get(position).getTitle();
+        if (!TextUtils.isEmpty(strTitle)) {
+            suiuuViewHolder.suiuuTitle.setText(strTitle);
+        } else {
+            suiuuViewHolder.suiuuTitle.setText("");
+        }
+
+
+        final View itemView = suiuuViewHolder.itemView;
+        final int location = suiuuViewHolder.getLayoutPosition();
+
+        if (onItemClickListener != null) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onItemClick(itemView, location);
+                }
+            });
+        }
+
+        if (onItemLongClickListener != null) {
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onItemLongClickListener.onItemLongClick(itemView, location);
+                    return false;
+                }
+            });
+        }
+
+    }
+
+    @Override
+    public int getItemCount() {
         if (list != null && list.size() > 0) {
             return list.size();
         } else {
@@ -61,46 +118,20 @@ public class PersonalSuiuuAdapter extends BaseAdapter {
         }
     }
 
-    @Override
-    public Object getItem(int position) {
-        if (list != null && list.size() > 0) {
-            return list.get(position);
-        } else {
-            return null;
+    private class PersonalSuiuuViewHolder extends RecyclerView.ViewHolder {
+
+        public ImageView mainImage;
+        public TextView suiuuTitle;
+        public TextView praiseCount;
+        public TextView commentCount;
+
+        public PersonalSuiuuViewHolder(View itemView) {
+            super(itemView);
+            mainImage = (ImageView) itemView.findViewById(R.id.item_personal_suiuu_image);
+            suiuuTitle = (TextView) itemView.findViewById(R.id.item_personal_suiuu_title);
+            praiseCount = (TextView) itemView.findViewById(R.id.item_personal_suiuu_praise);
+            commentCount = (TextView) itemView.findViewById(R.id.item_personal_suiuu_comment);
         }
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_personal_suiuu, position);
-        ImageView mainImageView = holder.getView(R.id.item_personal_suiuu_image);
-        TextView content = holder.getView(R.id.item_personal_suiuu_content);
-        TextView comment = holder.getView(R.id.item_personal_suiuu_comments);
-        TextView praise = holder.getView(R.id.item_personal_suiuu_praise);
-
-        String imagePath = list.get(position).getTitleImg();
-        if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, mainImageView);
-        }
-
-        String strContent = list.get(position).getTitle();
-        if (!TextUtils.isEmpty(strContent)) {
-            content.setText(strContent);
-        } else {
-            content.setText("");
-        }
-
-        convertView = holder.getConvertView();
-        int itemWidth = screenWidth / 2;
-        AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemWidth, itemWidth);
-        convertView.setLayoutParams(params);
-
-        return convertView;
-    }
 }

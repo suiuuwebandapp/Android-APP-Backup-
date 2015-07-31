@@ -78,7 +78,7 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
         clickString = new ArrayList<>();
         imageList = new ArrayList<>();
         rfv_trip_gallery_search = (ReFlashListView) findViewById(R.id.rfv_trip_gallery_search);
-        rl_common_nodata = (RelativeLayout) findViewById(R.id.rl_common_nodata);
+        rl_common_nodata = (RelativeLayout) findViewById(R.id.rl_common_no_data);
         ll_trip_gallery_search_tag = (LinearLayout) findViewById(R.id.ll_trip_gallery_search_tag);
         iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
         tv_top_right_more = (ImageView) findViewById(R.id.tv_top_right_more);

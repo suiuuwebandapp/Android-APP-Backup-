@@ -2,61 +2,62 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/layout_8dp">
+
+    <ImageView
+        android:id="@+id/item_personal_suiuu_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/default_background_image"/>
 
     <TextView
-        android:id="@+id/item_personal_suiuu_comments"
-        android:layout_width="wrap_content"
+        android:id="@+id/item_personal_suiuu_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:drawableLeft="@drawable/icon_reply"
-        android:drawablePadding="5dp"
-        android:drawableStart="@drawable/icon_reply"
-        android:text="@string/TwentyThree"
-        android:textSize="16sp"/>
+        android:layout_below="@+id/item_personal_suiuu_image"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/layout_8dp"
+        android:singleLine="true"
+        android:text="@string/app_name"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="@dimen/layout_1dp"
+        android:layout_height="@dimen/layout_1dp"
+        android:layout_below="@+id/item_personal_suiuu_title"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/item_personal_suiuu_praise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginRight="22dp"
-        android:layout_toLeftOf="@+id/item_personal_suiuu_comments"
-        android:layout_toStartOf="@+id/item_personal_suiuu_comments"
-        android:drawableLeft="@drawable/icon_praise"
-        android:drawablePadding="5dp"
-        android:drawableStart="@drawable/icon_praise"
-        android:text="@string/TwentyThree"
-        android:textSize="16sp"/>
+        android:layout_alignLeft="@+id/item_personal_suiuu_title"
+        android:layout_alignStart="@+id/item_personal_suiuu_title"
+        android:layout_below="@+id/item_personal_suiuu_title"
+        android:drawableLeft="@drawable/icon_heart"
+        android:drawablePadding="@dimen/layout_3dp"
+        android:drawableStart="@drawable/icon_heart"
+        android:gravity="center_vertical"
+        android:text="@string/zero"
+        android:textSize="@dimen/layout_18sp"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/item_personal_suiuu_comment"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/item_personal_suiuu_content"
-        android:singleLine="true"
-        android:textSize="18sp"
-        android:layout_margin="5dp"
-        android:layout_above="@+id/item_personal_suiuu_praise"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/item_personal_suiuu_image"
-        android:src="@drawable/user_background"
-        android:scaleType="fitXY"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/item_personal_suiuu_content"/>
+        android:layout_alignEnd="@+id/item_personal_suiuu_title"
+        android:layout_alignRight="@+id/item_personal_suiuu_title"
+        android:layout_below="@+id/item_personal_suiuu_title"
+        android:drawableLeft="@drawable/icon_small_comment"
+        android:drawablePadding="@dimen/layout_3dp"
+        android:drawableStart="@drawable/icon_small_comment"
+        android:gravity="center_vertical"
+        android:text="@string/zero"
+        android:textSize="@dimen/layout_18sp"/>
 
 </RelativeLayout>

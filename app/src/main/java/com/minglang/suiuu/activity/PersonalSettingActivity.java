@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,11 +31,11 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.CircleImageView;
+import com.minglang.suiuu.customview.pickerview.OptionsPopupWindow;
 import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.entity.UserBackData;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.DrawableUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -43,6 +45,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.BindString;
@@ -63,6 +66,24 @@ public class PersonalSettingActivity extends BaseActivity {
     @BindString(R.string.uploading_data)
     String uploadingData;
 
+    @BindString(R.string.NoData)
+    String noData;
+
+    @BindString(R.string.DataError)
+    String dataError;
+
+    @BindString(R.string.NetworkAnomaly)
+    String networkError;
+
+    @BindString(R.string.sex)
+    String strSex;
+
+    @BindString(R.string.man)
+    String strMan;
+
+    @BindString(R.string.woman)
+    String strWoman;
+
     /**
      * 返回按钮
      */
@@ -75,11 +96,17 @@ public class PersonalSettingActivity extends BaseActivity {
     @Bind(R.id.personal_save)
     TextView save;
 
-    @Bind(R.id.personal_setting_man)
-    TextView sex_man;
+//    @Bind(R.id.personal_setting_man)
+//    TextView sex_man;
+//
+//    @Bind(R.id.personal_setting_woman)
+//    TextView sex_woman;
 
-    @Bind(R.id.personal_setting_woman)
-    TextView sex_woman;
+    @Bind(R.id.personal_setting_scroll_view)
+    ScrollView scrollView;
+
+    @Bind(R.id.personal_sex)
+    TextView personalSex;
 
     /**
      * 头像ImageView
@@ -138,7 +165,6 @@ public class PersonalSettingActivity extends BaseActivity {
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
-
                 case UP_LOAD_SUCCESS:
                     String s = msg.obj.toString();
 
@@ -152,15 +178,13 @@ public class PersonalSettingActivity extends BaseActivity {
                     if (upLoadDialog.isShowing()) {
                         upLoadDialog.dismiss();
                     }
+
                     Toast.makeText(PersonalSettingActivity.this, "操作已完成！", Toast.LENGTH_SHORT).show();
                     break;
 
                 case UP_LOAD_FAIL:
-                    if (progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-                    Toast.makeText(PersonalSettingActivity.this,
-                            getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+                    hideDialog();
+                    Toast.makeText(PersonalSettingActivity.this, networkError, Toast.LENGTH_SHORT).show();
                     break;
 
                 case UP_LOADING:
@@ -174,6 +198,10 @@ public class PersonalSettingActivity extends BaseActivity {
     });
 
     private String countryId, cityId;
+
+    private OptionsPopupWindow optionsPopupWindow;
+
+    private ArrayList<String> optionsList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,6 +234,13 @@ public class PersonalSettingActivity extends BaseActivity {
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
         data = SuiuuInfo.ReadUserData(this);
+
+        optionsPopupWindow = new OptionsPopupWindow(this);
+
+        optionsList.add(strMan);
+        optionsList.add(strWoman);
+
+        optionsPopupWindow.setPicker(optionsList);
     }
 
     /**
@@ -213,7 +248,6 @@ public class PersonalSettingActivity extends BaseActivity {
      */
     private void initLoadDefaultData() {
         netWorkImagePath = data.getHeadImg();
-        //nativeImagePath = SuiuuInfo.ReadNativeHeadImagePath(this);
 
         if (!TextUtils.isEmpty(netWorkImagePath)) {
             imageLoader.displayImage(netWorkImagePath, headImageView, options);
@@ -231,13 +265,9 @@ public class PersonalSettingActivity extends BaseActivity {
         String strGender = data.getSex();
         if (!TextUtils.isEmpty(strGender)) {
             if (strGender.equals("1")) {
-                sex_man.setCompoundDrawables(DrawableUtils.setBounds(this, R.drawable.sex_man),
-                        null, null, null);
-                DeBugLog.i(TAG, "男");
+                personalSex.setText(strSex + " 男");
             } else if (strGender.equals("0")) {
-                sex_woman.setCompoundDrawables(DrawableUtils.setBounds(this, R.drawable.sex_woman),
-                        null, null, null);
-                DeBugLog.i(TAG, "女");
+                personalSex.setText(strSex + " 女");
             }
         }
 
@@ -290,9 +320,7 @@ public class PersonalSettingActivity extends BaseActivity {
                 } else if (TextUtils.isEmpty(str_Sign)) {
                     Toast.makeText(PersonalSettingActivity.this, "签名不能为空！", Toast.LENGTH_SHORT).show();
                 } else {
-//                    if (isSelectHeadImage) {
-                    setData();
-//                    }
+                    setPersonalMessage4Service();
                 }
             }
         });
@@ -304,25 +332,10 @@ public class PersonalSettingActivity extends BaseActivity {
             }
         });
 
-        sex_man.setOnClickListener(new View.OnClickListener() {
+        personalSex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sex_man.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_man)),
-                        null, null, null);
-                sex_woman.setCompoundDrawables(DrawableUtils.setBounds(getResources().getDrawable(R.drawable.sex_none)),
-                        null, null, null);
-                strGender = "1";
-            }
-        });
-
-        sex_woman.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sex_woman.setCompoundDrawables(DrawableUtils.setBounds(PersonalSettingActivity.this,
-                        R.drawable.sex_woman), null, null, null);
-                sex_man.setCompoundDrawables(DrawableUtils.setBounds(PersonalSettingActivity.this,
-                        R.drawable.sex_none), null, null, null);
-                strGender = "0";
+                optionsPopupWindow.showAtLocation(scrollView, Gravity.BOTTOM, 0, 0);
             }
         });
 
@@ -331,6 +344,19 @@ public class PersonalSettingActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PersonalSettingActivity.this, SelectCountryActivity.class);
                 startActivityForResult(intent, AppConstant.SELECT_COUNTRY_OK);
+            }
+        });
+
+        optionsPopupWindow.setOnoptionsSelectListener(new OptionsPopupWindow.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3) {
+                if (strMan.equals(optionsList.get(options1))) {
+                    strGender = "1";
+                    personalSex.setText(strSex + " 男");
+                } else if (strWoman.equals(optionsList.get(options1))) {
+                    strGender = "0";
+                    personalSex.setText(strSex + " 女");
+                }
             }
         });
 
@@ -372,15 +398,6 @@ public class PersonalSettingActivity extends BaseActivity {
         }
     }
 
-    private void setData() {
-
-        if (progressDialog != null) {
-            progressDialog.show();
-        }
-
-        setPersonalMessage4Service();
-    }
-
     private void setPersonalMessage4Service() {
         String verification = SuiuuInfo.ReadVerification(this);
 
@@ -402,6 +419,40 @@ public class PersonalSettingActivity extends BaseActivity {
                 HttpServicePath.upDatePersonalStatus, new PersonalSettingRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
+    }
+
+    private void hideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    private void bindData2View(String str) {
+        if (TextUtils.isEmpty(str)) {
+            Toast.makeText(PersonalSettingActivity.this, noData, Toast.LENGTH_SHORT).show();
+        } else {
+            DeBugLog.i(TAG, "更新成功:" + str);
+            try {
+                UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, str);
+                String status = userBack.getStatus();
+                if (!TextUtils.isEmpty(status)) {
+                    if (status.equals("1")) {
+                        UserBackData userBackData = userBack.getData();
+                        SuiuuInfo.WriteUserData(PersonalSettingActivity.this, userBackData);
+                        if (!TextUtils.isEmpty(nativeImagePath)) {
+                            upLoadImage();
+                        }
+                    } else {
+                        Toast.makeText(PersonalSettingActivity.this, dataError, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "更新个人资料的返回数据解析失败:" + e.getMessage());
+                Toast.makeText(PersonalSettingActivity.this, dataError, Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
     }
 
     @Override
@@ -432,21 +483,22 @@ public class PersonalSettingActivity extends BaseActivity {
                 break;
 
             case AppConstant.INTENT_CROP:
-//                Bitmap bitmap = data.getParcelableExtra("data");
-//                headImageView.setImageBitmap(bitmap);
                 imageLoader.displayImage("file://" + nativeImagePath, headImageView);
-//                isSelectHeadImage = true;
                 break;
 
             case AppConstant.SELECT_COUNTRY_OK:
                 countryId = data.getStringExtra("countryId");
                 cityId = data.getStringExtra("cityId");
+
                 String countryCNname = data.getStringExtra("countryCNname");
                 String cityName = data.getStringExtra("cityName");
+
+                SuiuuInfo.WriteDomicileInfo(this, countryCNname, cityName);
+
+                localDetails.setText(countryCNname + "," + cityName);
+
                 DeBugLog.i(TAG, "countryId:" + countryId + ",countryCNname:" + countryCNname + ",cityId:"
                         + cityId + ",cityName:" + cityName);
-                SuiuuInfo.WriteDomicileInfo(this, countryCNname, cityName);
-                localDetails.setText(countryCNname + "," + cityName);
                 break;
         }
     }
@@ -457,53 +509,26 @@ public class PersonalSettingActivity extends BaseActivity {
     private class PersonalSettingRequestCallBack extends RequestCallBack<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
-            String str = stringResponseInfo.result;
-            if (TextUtils.isEmpty(str)) {
-                Toast.makeText(PersonalSettingActivity.this,
-                        getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
-            } else {
-                DeBugLog.i(TAG, "更新成功:" + str);
-                try {
-                    UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, str);
-                    String status = userBack.getStatus();
-                    if (!TextUtils.isEmpty(status)) {
-                        if (status.equals("1")) {
-                            UserBackData userBackData = userBack.getData();
-                            SuiuuInfo.WriteUserData(PersonalSettingActivity.this, userBackData);
-
-                            if (!TextUtils.isEmpty(nativeImagePath)) {
-                                upLoadImage();
-                            }
-
-                        } else {
-                            Toast.makeText(PersonalSettingActivity.this,
-                                    getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    DeBugLog.e(TAG, "更新个人资料的返回数据解析失败:" + e.getMessage());
-                    Toast.makeText(PersonalSettingActivity.this,
-                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-                }
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
             }
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-
-            DeBugLog.i(TAG, "数据更新异常:" + e.getMessage());
-
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-            Toast.makeText(PersonalSettingActivity.this,
-                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            hideDialog();
+            String str = stringResponseInfo.result;
+            bindData2View(str);
         }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            DeBugLog.i(TAG, "数据更新异常:" + e.getMessage());
+            hideDialog();
+            Toast.makeText(PersonalSettingActivity.this, networkError, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 }

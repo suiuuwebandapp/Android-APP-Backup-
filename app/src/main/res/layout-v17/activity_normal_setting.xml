@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="RtlSymmetry">
 
     <include
         layout="@layout/common_top2_layout"/>
@@ -21,22 +23,23 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/layout_10dp"
-                android:layout_marginRight="@dimen/layout_10dp"
-                android:layout_marginTop="@dimen/layout_10dp"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="10dip"
                 android:orientation="vertical">
+
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/layout_30dp"
                     android:gravity="start|center_vertical"
-                    android:paddingLeft="@dimen/layout_10dp"
+                    android:paddingStart="@dimen/layout_10dp"
                     android:text="@string/notify"
                     android:textColor="@color/btn_gray_pressed"/>
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/layout_1dp"
+                    android:layout_height="1dip"
                     android:background="@color/btn_gray_normal"/>
 
             </LinearLayout>
@@ -57,17 +60,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:paddingLeft="@dimen/layout_10dp"
+                        android:paddingStart="@dimen/layout_10dp"
                         android:text="@string/newnotify"
                         android:textColor="@android:color/black"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/layout_14sp"
                         android:typeface="serif"/>
 
                     <ImageView
                         android:id="@+id/iv_switch_open_notification"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/open_icon"
@@ -77,7 +79,6 @@
                         android:id="@+id/iv_switch_close_notification"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/close_icon"
@@ -88,9 +89,9 @@
                 <TextView
                     android:id="@+id/dividing_line1"
                     android:layout_width="match_parent"
-                    android:layout_height="1dip"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
+                    android:layout_height="@dimen/layout_1dp"
+                    android:layout_marginLeft="@dimen/layout_10dp"
+                    android:layout_marginRight="@dimen/layout_10dp"
                     android:background="#E6E6E6"/>
 
                 <RelativeLayout
@@ -104,17 +105,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:paddingLeft="10dip"
+                        android:paddingStart="@dimen/layout_10dp"
                         android:text="@string/voice"
                         android:textColor="@android:color/black"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/layout_14sp"
                         android:typeface="serif"/>
 
                     <ImageView
                         android:id="@+id/iv_switch_open_sound"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/open_icon"
@@ -124,19 +124,19 @@
                         android:id="@+id/iv_switch_close_sound"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/close_icon"
                         android:visibility="invisible"/>
+
                 </RelativeLayout>
 
                 <TextView
                     android:id="@+id/dividing_line2"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/layout_1dp"
-                    android:layout_marginLeft="@dimen/layout_10dp"
-                    android:layout_marginRight="@dimen/layout_10dp"
+                    android:layout_height="1dip"
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginRight="10dip"
                     android:background="#E6E6E6"/>
 
                 <RelativeLayout
@@ -144,13 +144,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dip"
                     android:background="@drawable/btn_bottom_selector"
-                    android:padding="@dimen/layout_10dp">
+                    android:padding="10dip">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:paddingLeft="@dimen/layout_10dp"
+                        android:paddingStart="@dimen/layout_10dp"
                         android:text="@string/shake"
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
@@ -161,7 +161,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/open_icon"
                         android:visibility="visible"/>
@@ -171,7 +170,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/close_icon"
                         android:visibility="invisible"/>
@@ -188,15 +186,15 @@
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/layout_30dp"
+                        android:layout_height="30dip"
                         android:gravity="center_vertical|start"
-                        android:paddingLeft="@dimen/layout_10dp"
+                        android:paddingStart="@dimen/layout_10dp"
                         android:text="@string/chatset"
                         android:textColor="@color/btn_gray_pressed"/>
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/layout_1dp"
+                        android:layout_height="1dip"
                         android:background="@color/btn_gray_normal"/>
 
                 </LinearLayout>
@@ -206,13 +204,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/layout_50dp"
                     android:background="@drawable/btn_bottom_selector"
-                    android:padding="10dip">
+                    android:padding="@dimen/layout_10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:paddingLeft="@dimen/layout_10dp"
+                        android:paddingStart="@dimen/layout_10dp"
                         android:text="@string/yangshengqi"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/layout_14sp"
@@ -223,7 +221,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/open_icon"
                         android:visibility="visible"/>
@@ -233,7 +230,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/close_icon"
                         android:visibility="invisible"/>
@@ -242,9 +238,9 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/layout_1dp"
-                    android:layout_marginLeft="@dimen/layout_10dp"
-                    android:layout_marginRight="@dimen/layout_10dp"
+                    android:layout_height="1dip"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:background="@color/btn_gray_normal"/>
 
             </LinearLayout>

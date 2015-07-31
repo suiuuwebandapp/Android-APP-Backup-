@@ -104,12 +104,12 @@ public class SuiuuDetailActivity extends BaseActivity {
         mWebView = (WebView) findViewById(R.id.suiuu_detail_web_view);
         tv_suiuu_detail_comment_number = (TextView) findViewById(R.id.tv_suiuu_detail_comment_number);
         sdv_comment_head_img = (SimpleDraweeView) findViewById(R.id.sdv_comment_head_img);
-        et_suiuu_detail_comment = (EditText) findViewById(R.id.et_suiuu_detail_comment);
+        et_suiuu_detail_comment = (EditText) findViewById(R.id.et_suiuu_details_comment);
         lv_suiuu_detail_comment = (NoScrollBarListView) findViewById(R.id.lv_suiuu_detail_comment);
         bb_consult = (BootstrapButton) findViewById(R.id.bb_consult);
         bb_schedule = (BootstrapButton) findViewById(R.id.bb_schedule);
-        tv_to_commnet_activity = (TextView) findViewById(R.id.tv_to_commnet_activity);
-        ll_suiuu_detail_nocomment = (LinearLayout) findViewById(R.id.ll_suiuu_detail_nocomment);
+        tv_to_commnet_activity = (TextView) findViewById(R.id.tv_to_comment_activity);
+        ll_suiuu_detail_nocomment = (LinearLayout) findViewById(R.id.ll_suiuu_details_no_comment);
         ll_suiuu_detail_input_comment = (LinearLayout) findViewById(R.id.ll_suiuu_detail_input_comment);
     }
 
@@ -299,13 +299,13 @@ public class SuiuuDetailActivity extends BaseActivity {
                 case R.id.sdv_comment_head_img:
                     //跳到个人中心
                     break;
-                case R.id.et_suiuu_detail_comment:
+                case R.id.et_suiuu_details_comment:
                     //跳到评论页
                     Intent intent = new Intent(SuiuuDetailActivity.this, CommonCommentActivity.class);
                     intent.putExtra("tripId", tripId);
                     startActivityForResult(intent, COMMENT_SUCCESS);
                     break;
-                case R.id.tv_to_commnet_activity:
+                case R.id.tv_to_comment_activity:
                     //跳到评论页
                     Intent commentintent = new Intent(SuiuuDetailActivity.this, CommonCommentActivity.class);
                     commentintent.putExtra("tripId", tripId);

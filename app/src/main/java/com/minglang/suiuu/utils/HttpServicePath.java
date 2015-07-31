@@ -363,4 +363,9 @@ public class HttpServicePath {
      */
     public static String getGeneralUserOrderDetailsPath = RootPath + "/app-travel/user-order-info";
 
+    /**
+     * 得到指定用户的随游
+     */
+    public static String getPersonalSuiuuDataPath = RootPath + "/app-travel/my-trip-list";
+
 }

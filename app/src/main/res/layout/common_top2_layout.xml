@@ -2,34 +2,35 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="@dimen/layout_50dp"
     android:layout_alignParentTop="true"
-    android:background="@color/mainColor"
-    android:layout_centerHorizontal="true">
+    android:layout_centerHorizontal="true"
+    android:background="@color/mainColor">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/complete"
         android:id="@+id/tv_top_right"
-        android:textColor="@color/white"
-        android:layout_marginRight="10dp"
-        android:layout_marginEnd="10dp"
-        android:textSize="20sp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="gone"/>
-    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/high_search_normal"
-        android:id="@+id/tv_top_right_more"
-        android:layout_marginRight="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/layout_10dp"
+        android:layout_marginRight="@dimen/layout_10dp"
+        android:text="@string/complete"
+        android:textColor="@color/white"
+        android:textSize="@dimen/layout_20sp"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/tv_top_right_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/layout_10dp"
+        android:layout_marginRight="@dimen/layout_10dp"
+        android:background="@drawable/high_search_normal"/>
 
     <TextView
         android:id="@+id/tv_top_center"
@@ -37,35 +38,32 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:textSize="20sp"
-        android:textColor="@color/white"
         android:text="@string/suiuu"
+        android:textColor="@color/white"
+        android:textSize="@dimen/layout_20sp"
         android:visibility="visible"/>
 
     <ImageView
+        android:id="@+id/iv_top_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/iv_top_back"
-        android:src="@drawable/back"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/back"/>
 
     <TextView
         android:id="@+id/tv_top_cancel"
-        android:text="@string/cancel"
-        android:textSize="20sp"
-        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/layout_10dp"
+        android:layout_marginStart="@dimen/layout_10dp"
+        android:text="@android:string/cancel"
+        android:textColor="@color/white"
+        android:textSize="@dimen/layout_20sp"
         android:visibility="gone"/>
 
 </RelativeLayout>
-

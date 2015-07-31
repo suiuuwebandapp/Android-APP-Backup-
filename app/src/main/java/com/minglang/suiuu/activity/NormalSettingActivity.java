@@ -9,62 +9,106 @@ import android.widget.TextView;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.chat.controller.HXSDKHelper;
+
+import butterknife.Bind;
+import butterknife.BindString;
+import butterknife.ButterKnife;
 
 /**
  * 通用设置页面
  * <p/>
  * Created by Administrator on 2015/4/25.
  */
-public class NormalSettingActivity extends BaseActivity implements View.OnClickListener {
+public class NormalSettingActivity extends BaseAppCompatActivity implements View.OnClickListener {
+
+    @BindString(R.string.normalSetting)
+    String strTitle;
+
     /**
      * 设置声音布局
      */
-    private RelativeLayout rl_switch_sound;
+    @Bind(R.id.rl_switch_sound)
+    RelativeLayout switch_sound;
+
     /**
      * 设置震动布局
      */
-    private RelativeLayout rl_switch_vibrate;
+    @Bind(R.id.rl_switch_vibrate)
+    RelativeLayout switch_vibrate;
+
+    @Bind(R.id.rl_switch_notification)
+    RelativeLayout switch_notification;
 
     /**
      * 打开新消息通知imageView
      */
-    private ImageView iv_switch_open_notification;
+    @Bind(R.id.iv_switch_open_notification)
+    ImageView open_notification;
+
     /**
      * 关闭新消息通知imageView
      */
-    private ImageView iv_switch_close_notification;
+    @Bind(R.id.iv_switch_close_notification)
+    ImageView close_notification;
+
     /**
      * 打开声音提示imageView
      */
-    private ImageView iv_switch_open_sound;
+    @Bind(R.id.iv_switch_open_sound)
+    ImageView open_sound;
+
     /**
      * 关闭声音提示imageView
      */
-    private ImageView iv_switch_close_sound;
+    @Bind(R.id.iv_switch_close_sound)
+    ImageView close_sound;
+
     /**
      * 打开消息震动提示
      */
-    private ImageView iv_switch_open_vibrate;
+    @Bind(R.id.iv_switch_open_vibrate)
+    ImageView open_vibrate;
+
     /**
      * 关闭消息震动提示
      */
-    private ImageView iv_switch_close_vibrate;
+    @Bind(R.id.iv_switch_close_vibrate)
+    ImageView close_vibrate;
+
+    @Bind(R.id.rl_switch_speaker)
+    RelativeLayout switch_speaker;
+
     /**
      * 打开扬声器播放语音
      */
-    private ImageView iv_switch_open_speaker;
+    @Bind(R.id.iv_switch_open_speaker)
+    ImageView switch_open_speaker;
+
     /**
      * 关闭扬声器播放语音
      */
-    private ImageView iv_switch_close_speaker;
+    @Bind(R.id.iv_switch_close_speaker)
+    ImageView switch_close_speaker;
 
     /**
      * 声音和震动中间的那条线
      */
-    private TextView textView1, textView2;
+    @Bind(R.id.dividing_line1)
+    TextView dividing_line1;
 
+    @Bind(R.id.dividing_line2)
+    TextView dividing_line2;
+
+    @Bind(R.id.iv_top_back)
+    ImageView back;
+
+    @Bind(R.id.tv_top_center)
+    TextView title;
+
+    @Bind(R.id.tv_top_right_more)
+    ImageView more;
 
     private EMChatOptions chatOptions;
 
@@ -72,80 +116,62 @@ public class NormalSettingActivity extends BaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_normal_setting);
-        if (savedInstanceState != null && savedInstanceState.getBoolean("isConflict", false))
+
+        ButterKnife.bind(this);
+
+        if (savedInstanceState != null && savedInstanceState.getBoolean("isConflict", false)) {
             return;
+        }
+
         initView();
     }
 
     private void initView() {
-        ImageView iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
-        TextView tv_top_right = (TextView) findViewById(R.id.tv_top_right);
-        tv_top_right.setVisibility(View.INVISIBLE);
+        more.setVisibility(View.GONE);
 
-        TextView tv_top_center = (TextView) findViewById(R.id.tv_top_center);
-        tv_top_center.setVisibility(View.VISIBLE);
-        tv_top_center.setText(R.string.normalSetting);
+        title.setVisibility(View.VISIBLE);
+        title.setText(strTitle);
 
-        //设置新消息通知布局
-        RelativeLayout rl_switch_notification = (RelativeLayout) findViewById(R.id.rl_switch_notification);
-        rl_switch_sound = (RelativeLayout) findViewById(R.id.rl_switch_sound);
-        rl_switch_vibrate = (RelativeLayout) findViewById(R.id.rl_switch_vibrate);
-
-        //设置扬声器布局
-        RelativeLayout rl_switch_speaker = (RelativeLayout) findViewById(R.id.rl_switch_speaker);
-
-        iv_switch_open_notification = (ImageView) findViewById(R.id.iv_switch_open_notification);
-        iv_switch_close_notification = (ImageView) findViewById(R.id.iv_switch_close_notification);
-
-        iv_switch_open_sound = (ImageView) findViewById(R.id.iv_switch_open_sound);
-        iv_switch_close_sound = (ImageView) findViewById(R.id.iv_switch_close_sound);
-        iv_switch_open_vibrate = (ImageView) findViewById(R.id.iv_switch_open_vibrate);
-        iv_switch_close_vibrate = (ImageView) findViewById(R.id.iv_switch_close_vibrate);
-        iv_switch_open_speaker = (ImageView) findViewById(R.id.iv_switch_open_speaker);
-        iv_switch_close_speaker = (ImageView) findViewById(R.id.iv_switch_close_speaker);
-
-        textView1 = (TextView) findViewById(R.id.textview1);
-        textView2 = (TextView) findViewById(R.id.textview2);
-
-        iv_top_back.setOnClickListener(this);
-        rl_switch_notification.setOnClickListener(this);
-        rl_switch_sound.setOnClickListener(this);
-        rl_switch_vibrate.setOnClickListener(this);
-        rl_switch_speaker.setOnClickListener(this);
+        back.setOnClickListener(this);
+        switch_notification.setOnClickListener(this);
+        switch_sound.setOnClickListener(this);
+        switch_vibrate.setOnClickListener(this);
+        switch_speaker.setOnClickListener(this);
 
         chatOptions = EMChatManager.getInstance().getChatOptions();
 
         if (chatOptions.getNotificationEnable()) {
-            iv_switch_open_notification.setVisibility(View.VISIBLE);
-            iv_switch_close_notification.setVisibility(View.INVISIBLE);
+            open_notification.setVisibility(View.VISIBLE);
+            close_notification.setVisibility(View.INVISIBLE);
         } else {
-            iv_switch_open_notification.setVisibility(View.INVISIBLE);
-            iv_switch_close_notification.setVisibility(View.VISIBLE);
+            open_notification.setVisibility(View.INVISIBLE);
+            close_notification.setVisibility(View.VISIBLE);
         }
 
         if (chatOptions.getNoticedBySound()) {
-            iv_switch_open_sound.setVisibility(View.VISIBLE);
-            iv_switch_close_sound.setVisibility(View.INVISIBLE);
+            open_sound.setVisibility(View.VISIBLE);
+            close_sound.setVisibility(View.INVISIBLE);
         } else {
-            iv_switch_open_sound.setVisibility(View.INVISIBLE);
-            iv_switch_close_sound.setVisibility(View.VISIBLE);
+            open_sound.setVisibility(View.INVISIBLE);
+            close_sound.setVisibility(View.VISIBLE);
         }
 
         if (chatOptions.getNoticedByVibrate()) {
-            iv_switch_open_vibrate.setVisibility(View.VISIBLE);
-            iv_switch_close_vibrate.setVisibility(View.INVISIBLE);
+            open_vibrate.setVisibility(View.VISIBLE);
+            close_vibrate.setVisibility(View.INVISIBLE);
         } else {
-            iv_switch_open_vibrate.setVisibility(View.INVISIBLE);
-            iv_switch_close_vibrate.setVisibility(View.VISIBLE);
+            open_vibrate.setVisibility(View.INVISIBLE);
+            close_vibrate.setVisibility(View.VISIBLE);
         }
 
         if (chatOptions.getUseSpeaker()) {
-            iv_switch_open_speaker.setVisibility(View.VISIBLE);
-            iv_switch_close_speaker.setVisibility(View.INVISIBLE);
+            switch_open_speaker.setVisibility(View.VISIBLE);
+            switch_close_speaker.setVisibility(View.INVISIBLE);
         } else {
-            iv_switch_open_speaker.setVisibility(View.INVISIBLE);
-            iv_switch_close_speaker.setVisibility(View.VISIBLE);
+            switch_open_speaker.setVisibility(View.INVISIBLE);
+            switch_close_speaker.setVisibility(View.VISIBLE);
         }
+
     }
 
     @Override
@@ -154,23 +180,28 @@ public class NormalSettingActivity extends BaseActivity implements View.OnClickL
         switch (v.getId()) {
 
             case R.id.rl_switch_notification:
-                if (iv_switch_open_notification.getVisibility() == View.VISIBLE) {
-                    iv_switch_open_notification.setVisibility(View.INVISIBLE);
-                    iv_switch_close_notification.setVisibility(View.VISIBLE);
-                    rl_switch_sound.setVisibility(View.GONE);
-                    rl_switch_vibrate.setVisibility(View.GONE);
-                    textView1.setVisibility(View.GONE);
-                    textView2.setVisibility(View.GONE);
+                if (open_notification.getVisibility() == View.VISIBLE) {
+                    open_notification.setVisibility(View.INVISIBLE);
+                    close_notification.setVisibility(View.VISIBLE);
+
+                    switch_sound.setVisibility(View.GONE);
+                    switch_vibrate.setVisibility(View.GONE);
+                    dividing_line1.setVisibility(View.GONE);
+                    dividing_line2.setVisibility(View.GONE);
+
                     chatOptions.setNotificationEnable(false);
                     EMChatManager.getInstance().setChatOptions(chatOptions);
                     HXSDKHelper.getInstance().getModel().setSettingMsgNotification(false);
                 } else {
-                    iv_switch_open_notification.setVisibility(View.VISIBLE);
-                    iv_switch_close_notification.setVisibility(View.INVISIBLE);
-                    rl_switch_sound.setVisibility(View.VISIBLE);
-                    rl_switch_vibrate.setVisibility(View.VISIBLE);
-                    textView1.setVisibility(View.VISIBLE);
-                    textView2.setVisibility(View.VISIBLE);
+                    open_notification.setVisibility(View.VISIBLE);
+                    close_notification.setVisibility(View.INVISIBLE);
+
+                    switch_sound.setVisibility(View.VISIBLE);
+                    switch_vibrate.setVisibility(View.VISIBLE);
+
+                    dividing_line1.setVisibility(View.VISIBLE);
+                    dividing_line2.setVisibility(View.VISIBLE);
+
                     chatOptions.setNotificationEnable(true);
                     EMChatManager.getInstance().setChatOptions(chatOptions);
                     HXSDKHelper.getInstance().getModel().setSettingMsgNotification(true);
@@ -178,15 +209,17 @@ public class NormalSettingActivity extends BaseActivity implements View.OnClickL
                 break;
 
             case R.id.rl_switch_sound:
-                if (iv_switch_open_sound.getVisibility() == View.VISIBLE) {
-                    iv_switch_open_sound.setVisibility(View.INVISIBLE);
-                    iv_switch_close_sound.setVisibility(View.VISIBLE);
+                if (open_sound.getVisibility() == View.VISIBLE) {
+                    open_sound.setVisibility(View.INVISIBLE);
+                    close_sound.setVisibility(View.VISIBLE);
+
                     chatOptions.setNoticeBySound(false);
                     EMChatManager.getInstance().setChatOptions(chatOptions);
                     HXSDKHelper.getInstance().getModel().setSettingMsgSound(false);
                 } else {
-                    iv_switch_open_sound.setVisibility(View.VISIBLE);
-                    iv_switch_close_sound.setVisibility(View.INVISIBLE);
+                    open_sound.setVisibility(View.VISIBLE);
+                    close_sound.setVisibility(View.INVISIBLE);
+
                     chatOptions.setNoticeBySound(true);
                     EMChatManager.getInstance().setChatOptions(chatOptions);
                     HXSDKHelper.getInstance().getModel().setSettingMsgSound(true);
@@ -194,15 +227,17 @@ public class NormalSettingActivity extends BaseActivity implements View.OnClickL
                 break;
 
             case R.id.rl_switch_vibrate:
-                if (iv_switch_open_vibrate.getVisibility() == View.VISIBLE) {
-                    iv_switch_open_vibrate.setVisibility(View.INVISIBLE);
-                    iv_switch_close_vibrate.setVisibility(View.VISIBLE);
+                if (open_vibrate.getVisibility() == View.VISIBLE) {
+                    open_vibrate.setVisibility(View.INVISIBLE);
+                    close_vibrate.setVisibility(View.VISIBLE);
+
                     chatOptions.setNoticedByVibrate(false);
                     EMChatManager.getInstance().setChatOptions(chatOptions);
                     HXSDKHelper.getInstance().getModel().setSettingMsgVibrate(false);
                 } else {
-                    iv_switch_open_vibrate.setVisibility(View.VISIBLE);
-                    iv_switch_close_vibrate.setVisibility(View.INVISIBLE);
+                    open_vibrate.setVisibility(View.VISIBLE);
+                    close_vibrate.setVisibility(View.INVISIBLE);
+
                     chatOptions.setNoticedByVibrate(true);
                     EMChatManager.getInstance().setChatOptions(chatOptions);
                     HXSDKHelper.getInstance().getModel().setSettingMsgVibrate(true);
@@ -210,15 +245,17 @@ public class NormalSettingActivity extends BaseActivity implements View.OnClickL
                 break;
 
             case R.id.rl_switch_speaker:
-                if (iv_switch_open_speaker.getVisibility() == View.VISIBLE) {
-                    iv_switch_open_speaker.setVisibility(View.INVISIBLE);
-                    iv_switch_close_speaker.setVisibility(View.VISIBLE);
+                if (switch_open_speaker.getVisibility() == View.VISIBLE) {
+                    switch_open_speaker.setVisibility(View.INVISIBLE);
+                    switch_close_speaker.setVisibility(View.VISIBLE);
+
                     chatOptions.setUseSpeaker(false);
                     EMChatManager.getInstance().setChatOptions(chatOptions);
                     HXSDKHelper.getInstance().getModel().setSettingMsgSpeaker(false);
                 } else {
-                    iv_switch_open_speaker.setVisibility(View.VISIBLE);
-                    iv_switch_close_speaker.setVisibility(View.INVISIBLE);
+                    switch_open_speaker.setVisibility(View.VISIBLE);
+                    switch_close_speaker.setVisibility(View.INVISIBLE);
+
                     chatOptions.setUseSpeaker(true);
                     EMChatManager.getInstance().setChatOptions(chatOptions);
                     HXSDKHelper.getInstance().getModel().setSettingMsgVibrate(true);

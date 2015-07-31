@@ -28,6 +28,7 @@ import com.minglang.suiuu.adapter.TripGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.entity.TripGallery;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -90,7 +91,7 @@ public class TripGalleryFragment extends BaseFragment {
         ImageView ddd = new ImageView(getActivity());
         ddd.setImageResource(R.drawable.trip_gallery_loading_more);
         lv_trip_gallery.addFooterView(ddd);
-        rl_common_nodata = (RelativeLayout) rootView.findViewById(R.id.rl_common_nodata);
+        rl_common_nodata = (RelativeLayout) rootView.findViewById(R.id.rl_common_no_data);
     }
 
     private void initData() {
@@ -167,7 +168,7 @@ public class TripGalleryFragment extends BaseFragment {
 
     private void showList(List<TripGallery.DataEntity.TripGalleryDataInfo> tripGalleryList) {
         if (adapter == null) {
-            adapter = new TripGalleryAdapter(getActivity().getApplication(), tripGalleryList);
+            adapter = new TripGalleryAdapter(getActivity(), tripGalleryList);
             lv_trip_gallery.setAdapter(adapter);
         } else {
             adapter.onDateChange(tripGalleryList);
@@ -176,15 +177,15 @@ public class TripGalleryFragment extends BaseFragment {
 
     private void loadTripGalleryList(String tags, String sortName, String search, int page) {
         dialog.show();
-        Log.i("suiuu","请求条件tags="+tags+"search="+search+",page="+page);
-        String tagnew = "";
+        DeBugLog.i("suiuu", "请求条件tags=" + tags + "search=" + search + ",page=" + page);
+        String newTag = "";
         if(tags != null && tags.length() >1) {
-            tagnew = tags.substring(0,tags.length()-1);
+            newTag = tags.substring(0,tags.length()-1);
         }
         String str = SuiuuInfo.ReadVerification(getActivity());
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, str);
-        params.addBodyParameter("tags", tagnew);
+        params.addBodyParameter("tags", newTag);
         params.addBodyParameter("sortName", sortName);
         params.addBodyParameter("search", search);
         params.addBodyParameter("page", Integer.toString(page));
@@ -245,4 +246,5 @@ public class TripGalleryFragment extends BaseFragment {
         tripGalleryList.clear();
         loadTripGalleryList(null, "0", null, page);
     }
+
 }

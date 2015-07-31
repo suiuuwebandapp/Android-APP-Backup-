@@ -173,11 +173,11 @@ public class TripGalleryDetailActivity extends BaseActivity {
         iv_trip_gallery_detail_heart = (ImageView) findViewById(R.id.iv_trip_gallery_detail_heart);
         tv_suiuu_detail_comment_number = (TextView) findViewById(R.id.tv_suiuu_detail_comment_number);
         sdv_comment_head_img = (SimpleDraweeView) findViewById(R.id.sdv_comment_head_img);
-        et_suiuu_detail_comment = (EditText) findViewById(R.id.et_suiuu_detail_comment);
+        et_suiuu_detail_comment = (EditText) findViewById(R.id.et_suiuu_details_comment);
         ll_suiuu_detail_input_comment = (LinearLayout) findViewById(R.id.ll_suiuu_detail_input_comment);
         lv_suiuu_detail_comment = (NoScrollBarListView) findViewById(R.id.lv_suiuu_detail_comment);
-        ll_suiuu_detail_nocomment = (LinearLayout) findViewById(R.id.ll_suiuu_detail_nocomment);
-        tv_to_commnet_activity = (TextView) findViewById(R.id.tv_to_commnet_activity);
+        ll_suiuu_detail_nocomment = (LinearLayout) findViewById(R.id.ll_suiuu_details_no_comment);
+        tv_to_commnet_activity = (TextView) findViewById(R.id.tv_to_comment_activity);
         ll_trip_gallery_detail_guessyourlove = (LinearLayout) findViewById(R.id.ll_trip_gallery_detail_guessyourlove);
         dialog = new TextProgressDialog(this);
     }
@@ -351,13 +351,13 @@ public class TripGalleryDetailActivity extends BaseActivity {
                 case R.id.iv_top_back:
                     finish();
                     break;
-                case R.id.et_suiuu_detail_comment:
+                case R.id.et_suiuu_details_comment:
                     //跳到评论页
                     Intent intent = new Intent(TripGalleryDetailActivity.this, CommonCommentActivity.class);
                     intent.putExtra("articleId", id);
                     startActivityForResult(intent, COMMENT_SUCCESS);
                     break;
-                case R.id.tv_to_commnet_activity:
+                case R.id.tv_to_comment_activity:
                     //跳到评论页
                     Intent commentintent = new Intent(TripGalleryDetailActivity.this, CommonCommentActivity.class);
                     commentintent.putExtra("articleId", id);

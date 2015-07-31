@@ -42,13 +42,13 @@ public class SettingActivity extends BaseAppCompatActivity {
     String logoutText;
 
     @Bind(R.id.tv_top_center)
-    TextView tv_top_center;
-
-    @Bind(R.id.tv_top_right)
-    TextView tv_top_right;
+    TextView title;
 
     @Bind(R.id.iv_top_back)
     ImageView settingBack;
+
+    @Bind(R.id.tv_top_right_more)
+    ImageView more;
 
     @Bind(R.id.settingList)
     ListView settingList;
@@ -72,10 +72,10 @@ public class SettingActivity extends BaseAppCompatActivity {
     private void initView() {
         String[] SETTINGS = getResources().getStringArray(R.array.personalList);
 
-        tv_top_center.setVisibility(View.VISIBLE);
-        tv_top_center.setText(strSetting);
+        title.setVisibility(View.VISIBLE);
+        title.setText(strSetting);
 
-        tv_top_right.setVisibility(View.INVISIBLE);
+        more.setVisibility(View.GONE);
 
         if (!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())) {
             btn_logout.setText(logoutButtonText);

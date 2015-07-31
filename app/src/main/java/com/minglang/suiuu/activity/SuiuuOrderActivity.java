@@ -18,7 +18,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.utils.DateTimePickDialogUtil;
+import com.minglang.suiuu.utils.DateTimePickDialogUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
@@ -183,12 +183,12 @@ public class SuiuuOrderActivity extends BaseActivity {
             enjoy_peopleNumber = Integer.valueOf(String.valueOf(tv_enjoy_number.getText()));
             switch (v.getId()) {
                 case R.id.tv_travel_date:
-                    DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
+                    DateTimePickDialogUtils dateTimePicKDialog = new DateTimePickDialogUtils(
                             SuiuuOrderActivity.this, initTime, null);
                     dateTimePicKDialog.dateTimePicKDialog(1, tv_travel_date);
                     break;
                 case R.id.tv_travel_time:
-                    DateTimePickDialogUtil dateTimePicKDialog1 = new DateTimePickDialogUtil(
+                    DateTimePickDialogUtils dateTimePicKDialog1 = new DateTimePickDialogUtils(
                             SuiuuOrderActivity.this, initTime, tv_travel_date.getText().toString());
                     dateTimePicKDialog1.dateTimePicKDialog(2, tv_travel_time);
                     break;

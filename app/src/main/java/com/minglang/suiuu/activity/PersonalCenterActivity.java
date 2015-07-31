@@ -90,6 +90,7 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
         toolbarLayout.setTitle(titleText);
         toolbarLayout.setExpandedTitleColor(expandedTitleColor);
         toolbarLayout.setCollapsedTitleTextColor(collapsedTitleTextColor);
+        toolbarLayout.setExpandedTitleTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium);
 
         titleList.add(str1);
         titleList.add(str2);

@@ -748,7 +748,7 @@ public class MainActivity extends BaseActivity {
                     accountRemovedBuilder = new android.app.AlertDialog.Builder(MainActivity.this);
                 accountRemovedBuilder.setTitle(st5);
                 accountRemovedBuilder.setMessage(R.string.em_user_remove);
-                accountRemovedBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                accountRemovedBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

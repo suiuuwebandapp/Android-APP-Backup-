@@ -247,7 +247,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 			btnStop.setVisibility(View.INVISIBLE);
 			new AlertDialog.Builder(this)
 					.setMessage(R.string.Whether_to_send)
-					.setPositiveButton(R.string.ok,
+					.setPositiveButton(android.R.string.ok,
 							new DialogInterface.OnClickListener() {
 
 								@Override
@@ -258,7 +258,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 
 								}
 							})
-					.setNegativeButton(R.string.cancel,
+					.setNegativeButton(android.R.string.cancel,
 							new DialogInterface.OnClickListener() {
 
 								@Override
@@ -516,7 +516,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 			String st3 = getResources().getString(R.string.Whether_to_send);
 			new AlertDialog.Builder(this)
 					.setMessage(st3)
-					.setPositiveButton(R.string.ok,
+					.setPositiveButton(android.R.string.ok,
 							new DialogInterface.OnClickListener() {
 
 								@Override
@@ -526,7 +526,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 									sendVideo(null);
 
 								}
-							}).setNegativeButton(R.string.cancel, null)
+							}).setNegativeButton(android.R.string.cancel, null)
 					.setCancelable(false).show();
 		}
 
@@ -577,7 +577,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 		new AlertDialog.Builder(this)
 				.setTitle(R.string.prompt)
 				.setMessage(R.string.Open_the_equipment_failure)
-				.setPositiveButton(R.string.ok,
+				.setPositiveButton(android.R.string.ok,
 						new DialogInterface.OnClickListener() {
 
 							@Override
@@ -594,7 +594,7 @@ public class RecorderVideoActivity extends BaseActivity implements
 	    new AlertDialog.Builder(this)
         .setTitle(R.string.prompt)
         .setMessage("No sd card!")
-        .setPositiveButton(R.string.ok,
+        .setPositiveButton(android.R.string.ok,
                 new DialogInterface.OnClickListener() {
 
                     @Override

@@ -1,17 +1,19 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/personalRootLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="com.minglang.suiuu.activity.PersonalSettingActivity">
+<RelativeLayout
+    android:id="@+id/personalRootLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.minglang.suiuu.activity.PersonalSettingActivity">
 
     <RelativeLayout
         android:id="@+id/relativeLayout4"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/layout_50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/tr_black">
+        android:background="@color/mainColor">
 
         <TextView
             android:id="@+id/textView22"
@@ -21,7 +23,7 @@
             android:layout_centerVertical="true"
             android:text="@string/personalSetting"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="@dimen/layout_18sp"/>
 
         <ImageView
             android:id="@+id/personalSettingBack"
@@ -31,19 +33,21 @@
         <TextView
             android:id="@+id/personal_save"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/layout_5dp"
-            android:layout_marginRight="@dimen/layout_5dp"
+            android:layout_marginEnd="@dimen/layout_8dp"
+            android:layout_marginRight="@dimen/layout_8dp"
+            android:gravity="center_vertical"
+            android:text="@string/save"
             android:textColor="@color/text_color1"
-            android:textSize="18sp"
-            android:text="@string/save"/>
+            android:textSize="@dimen/layout_20sp"/>
+
     </RelativeLayout>
 
     <ScrollView
-        android:id="@+id/scrollView3"
+        android:id="@+id/personal_setting_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
@@ -60,16 +64,16 @@
                 android:id="@+id/personalSettingHeadLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginBottom="@dimen/layout_5dp"
+                android:layout_marginTop="@dimen/layout_5dp"
                 android:orientation="vertical">
 
                 <com.minglang.suiuu.customview.CircleImageView
                     android:id="@+id/headImageView"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="@dimen/layout_70dp"
+                    android:layout_height="@dimen/layout_70dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_margin="5dp"
+                    android:layout_margin="@dimen/layout_5dp"
                     android:src="@drawable/default_head_image3"/>
 
             </LinearLayout>
@@ -77,125 +81,93 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/layout_5dp"
                 android:layout_marginTop="@dimen/layout_5dp"
-                android:layout_marginBottom="@dimen/layout_5dp">
+                android:background="@color/backgroundColor">
 
                 <TextView
+                    android:id="@+id/personal_sex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/man"
-                    android:textSize="24sp"
-                    android:drawableLeft="@drawable/sex_none"
-                    android:drawableStart="@drawable/sex_none"
-                    android:drawablePadding="@dimen/layout_10dp"
-                    android:layout_marginRight="@dimen/layout_30dp"
-                    android:layout_marginEnd="@dimen/layout_30dp"
-                    android:id="@+id/personal_setting_man"
-                    android:layout_marginBottom="@dimen/layout_10dp"
-                    android:layout_marginTop="@dimen/layout_10dp"
-                    android:gravity="center_vertical"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/textView10"
-                    android:layout_toStartOf="@+id/textView10"/>
+                    android:padding="@dimen/layout_15dp"
+                    android:text="@string/sex"
+                    android:textSize="@dimen/layout_18sp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/woman"
-                    android:id="@+id/personal_setting_woman"
-                    android:textSize="24sp"
-                    android:gravity="center_vertical"
-                    android:drawableLeft="@drawable/sex_none"
-                    android:drawableStart="@drawable/sex_none"
-                    android:drawablePadding="@dimen/layout_10dp"
-                    android:layout_marginBottom="@dimen/layout_10dp"
-                    android:layout_marginTop="@dimen/layout_10dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/textView10"
-                    android:layout_toEndOf="@+id/textView10"
-                    android:layout_marginLeft="@dimen/layout_30dp"
-                    android:layout_marginStart="@dimen/layout_30dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:id="@+id/textView10"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/btn_white_pressed">
+                android:layout_marginBottom="@dimen/layout_10dp"
+                android:layout_marginTop="@dimen/layout_5dp"
+                android:background="@color/backgroundColor">
 
                 <EditText
                     android:id="@+id/editNickName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:hint="@string/nickname_hint"/>
+                    android:gravity="center_vertical"
+                    android:hint="@string/nickname_hint"
+                    android:padding="@dimen/layout_15dp"/>
+
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/btn_white_pressed">
-
+                android:layout_marginBottom="@dimen/layout_10dp"
+                android:layout_marginTop="@dimen/layout_10dp"
+                android:background="@color/backgroundColor">
 
                 <TextView
+                    android:id="@+id/localDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/local"
-                    android:id="@+id/localDetails"
-                    android:textSize="18sp"
-                    android:layout_marginTop="@dimen/layout_15dp"
-                    android:layout_marginBottom="@dimen/layout_15dp"
-                    android:layout_marginLeft="@dimen/layout_10dp"
-                    android:layout_marginStart="@dimen/layout_10dp"
-                    android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"/>
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:padding="@dimen/layout_15dp"
+                    android:text="@string/local"
+                    android:textSize="@dimen/layout_18sp"/>
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/btn_white_pressed">
+                android:layout_marginBottom="@dimen/layout_10dp"
+                android:layout_marginTop="@dimen/layout_10dp"
+                android:background="@color/backgroundColor">
 
                 <EditText
                     android:id="@+id/editTrade"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:ems="10"
-                    android:hint="@string/trade_hint"/>
+                    android:hint="@string/trade_hint"
+                    android:padding="@dimen/layout_15dp"/>
+
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/btn_white_pressed">
+                android:layout_marginBottom="@dimen/layout_5dp"
+                android:layout_marginTop="@dimen/layout_5dp"
+                android:background="@color/backgroundColor">
 
                 <EditText
                     android:id="@+id/editSign"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:ems="40"
-                    android:hint="@string/Signature_hint"/>
+                    android:hint="@string/Signature_hint"
+                    android:padding="@dimen/layout_15dp"/>
+
             </RelativeLayout>
+
         </LinearLayout>
+
     </ScrollView>
 
 </RelativeLayout>

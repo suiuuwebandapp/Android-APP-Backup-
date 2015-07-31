@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_suiuu_detail_comment_number"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/layout_5dp"
         android:drawableLeft="@drawable/icon_comment"
         android:drawablePadding="@dimen/layout_5dp"
-        android:text="全部评论 (共0条评论)" />
-    <include layout="@layout/view_line" />
+        android:drawableStart="@drawable/icon_comment"
+        android:text="全部评论 (共0条评论)"/>
+
+    <include layout="@layout/view_line"/>
 
     <LinearLayout
         android:id="@+id/ll_suiuu_detail_input_comment"
@@ -25,44 +28,48 @@
         android:visibility="visible">
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/sdv_comment_head_img"
-                fresco:roundAsCircle="true"
                 android:layout_width="@dimen/layout_45dp"
                 android:layout_height="@dimen/layout_45dp"
-                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/layout_10dp"
                 android:layout_marginLeft="@dimen/layout_10dp"
-                android:background="@drawable/default_head_image2" />
+                android:layout_marginStart="@dimen/layout_10dp"
+                android:background="@drawable/default_head_image2"
+                fresco:roundAsCircle="true"/>
 
             <EditText
-                android:id="@+id/et_suiuu_detail_comment"
-                android:layout_width="fill_parent"
+                android:id="@+id/et_suiuu_details_comment"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/layout_10dp"
                 android:layout_marginRight="@dimen/layout_10dp"
-                android:background="@drawable/suiuudetail_edit_bg"
+                android:background="@drawable/suiuu_details_edit_bg"
                 android:editable="false"
                 android:hint="请输入评论"
                 android:padding="@dimen/layout_6dp"
-                android:textColor="@color/textColor" />
+                android:textColor="@color/textColor"/>
+
         </LinearLayout>
 
-        <include layout="@layout/view_line" />
+        <include layout="@layout/view_line"/>
 
         <com.minglang.suiuu.customview.NoScrollBarListView
             android:id="@+id/lv_suiuu_detail_comment"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_suiuu_detail_nocomment"
-        android:layout_width="fill_parent"
+        android:id="@+id/ll_suiuu_details_no_comment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/layout_15dp"
         android:background="@color/white"
@@ -73,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/icon_main_4_green" />
+            android:background="@drawable/icon_main_4_green"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -81,10 +88,10 @@
             android:layout_gravity="center_horizontal"
             android:text="还没有随友评论,快来抢沙发"
             android:textColor="@color/textColor"
-            android:textSize="@dimen/layout_15sp" />
+            android:textSize="@dimen/layout_15sp"/>
 
         <TextView
-            android:id="@+id/tv_to_commnet_activity"
+            android:id="@+id/tv_to_comment_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -92,7 +99,8 @@
             android:background="@drawable/btn_white_bg"
             android:text="抢沙发"
             android:textColor="@color/textColor"
-            android:textSize="@dimen/layout_15sp" />
+            android:textSize="@dimen/layout_15sp"/>
+
     </LinearLayout>
 
 </LinearLayout>
