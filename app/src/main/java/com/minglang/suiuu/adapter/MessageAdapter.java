@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
-import com.minglang.suiuu.entity.SuiuuMessageData;
+import com.minglang.suiuu.entity.SuiuuMessage.SuiuuMessageBase.SuiuuMessageData;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;

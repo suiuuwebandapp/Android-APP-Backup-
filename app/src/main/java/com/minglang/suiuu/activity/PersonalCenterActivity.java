@@ -70,7 +70,6 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_center);
-
         ButterKnife.bind(this);
         initView();
     }
@@ -111,6 +110,7 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
         PersonalCenterAdapter personalCenterAdapter
                 = new PersonalCenterAdapter(getSupportFragmentManager(), fragmentList, titleList);
 
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(personalCenterAdapter);
 
         tabLayout.setTabsFromPagerAdapter(personalCenterAdapter);

@@ -525,4 +525,5 @@ public class TripGalleryDetail {
             }
         }
     }
+
 }

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/item_personal_problem_left_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/layout_8dp">
+
+        <com.minglang.suiuu.customview.CircleImageView
+            android:id="@+id/item_personal_problem_header_image"
+            android:layout_width="@dimen/layout_50dp"
+            android:layout_height="@dimen/layout_50dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_10dp"
+            android:src="@drawable/default_head_image"/>
+
+        <TextView
+            android:id="@+id/item_personal_problem_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_personal_problem_header_image"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/layout_5dp"
+            android:layout_marginTop="@dimen/layout_10dp"
+            android:drawableLeft="@drawable/icon_comment"
+            android:drawablePadding="@dimen/layout_3dp"
+            android:drawableStart="@drawable/icon_comment"
+            android:gravity="center_horizontal"
+            android:text="@string/zero"
+            android:textSize="@dimen/layout_18sp"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/item_personal_problem_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/item_personal_problem_left_layout"
+        android:layout_marginEnd="@dimen/layout_8dp"
+        android:layout_marginLeft="@dimen/layout_8dp"
+        android:layout_marginRight="@dimen/layout_8dp"
+        android:layout_marginStart="@dimen/layout_8dp"
+        android:layout_toEndOf="@+id/item_personal_problem_left_layout"
+        android:layout_toRightOf="@+id/item_personal_problem_left_layout"
+        android:maxEms="20"
+        android:singleLine="true"
+        android:text="@string/app_name"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/textColor"/>
+
+    <TextView
+        android:id="@+id/item_personal_problem_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/item_personal_problem_title"
+        android:layout_alignLeft="@+id/item_personal_problem_title"
+        android:layout_alignRight="@+id/item_personal_problem_title"
+        android:layout_alignStart="@+id/item_personal_problem_title"
+        android:layout_below="@+id/item_personal_problem_title"
+        android:layout_marginTop="@dimen/layout_5dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="@string/tempText"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+</RelativeLayout>

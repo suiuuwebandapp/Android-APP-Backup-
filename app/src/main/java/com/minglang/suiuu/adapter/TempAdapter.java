@@ -1,13 +1,12 @@
 package com.minglang.suiuu.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
 
 /**
  * 临时数据适配器
@@ -16,10 +15,10 @@ import com.minglang.suiuu.R;
  */
 public class TempAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context context;
+    private RecyclerViewOnItemClickListener onItemClickListener;
 
-    public TempAdapter(Context context) {
-        this.context = context;
+    public void setOnItemClickListener(RecyclerViewOnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -32,12 +31,15 @@ public class TempAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final View view = holder.itemView;
         final int index = position;
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "position:" + index, Toast.LENGTH_SHORT).show();
-            }
-        });
+
+        if (onItemClickListener != null) {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onItemClick(view, index);
+                }
+            });
+        }
     }
 
     @Override

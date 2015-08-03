@@ -22,7 +22,7 @@ import com.minglang.suiuu.adapter.MessageAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.SuiuuMessage;
-import com.minglang.suiuu.entity.SuiuuMessageData;
+import com.minglang.suiuu.entity.SuiuuMessage.SuiuuMessageBase.SuiuuMessageData;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;

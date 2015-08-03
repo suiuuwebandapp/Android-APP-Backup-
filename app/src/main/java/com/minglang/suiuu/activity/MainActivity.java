@@ -1038,7 +1038,7 @@ public class MainActivity extends BaseActivity {
                     break;
 
                 case R.id.nickName:
-                    Intent nickIntent = new Intent(MainActivity.this, PersonalActivity.class);
+                    Intent nickIntent = new Intent(MainActivity.this, PersonalCenterActivity.class);
                     startActivity(nickIntent);
                     mDrawerLayout.closeDrawer(sliderView);
                     break;

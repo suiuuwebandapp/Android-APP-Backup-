@@ -7,8 +7,6 @@ import android.view.View;
  * <p/>
  * RecyclerView的Item的点击回调接口
  */
-public interface RecyclerOnItemClickListener {
-
+public interface RecyclerViewOnItemClickListener {
     void onItemClick(View view, int position);
-
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -12,21 +13,21 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/rl_tripgallery_search"
-                android:layout_width="fill_parent"
+                android:id="@+id/layout_trip_gallery_search"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/layout_120dp"
-                    android:background="@drawable/trip_gallery_search_bg" />
+                    android:background="@drawable/trip_gallery_search_bg"/>
 
                 <TextView
-                    android:id="@+id/tv_trip_grllery_search"
+                    android:id="@+id/trip_gallery_search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -34,21 +35,24 @@
                     android:background="@drawable/tv_bg_trip_gallery_search"
                     android:drawableLeft="@drawable/main_search"
                     android:drawablePadding="@dimen/layout_2dp"
+                    android:drawableStart="@drawable/main_search"
                     android:text="去哪看看"
                     android:textColor="@color/mainColor"
-                    android:textSize="@dimen/layout_18sp" />
+                    android:textSize="@dimen/layout_18sp"/>
+
             </RelativeLayout>
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:drawableLeft="@drawable/small_tag"
                 android:drawablePadding="@dimen/layout_10dp"
+                android:drawableStart="@drawable/small_tag"
                 android:padding="@dimen/layout_5dp"
                 android:text="标签"
                 android:textColor="@color/mainColor"
-                android:textSize="@dimen/layout_18sp" />
+                android:textSize="@dimen/layout_18sp"/>
 
             <HorizontalScrollView
                 android:layout_width="wrap_content"
@@ -58,10 +62,11 @@
                 <LinearLayout
                     android:id="@+id/galleryLinearLayout"
                     android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
+                    android:layout_height="match_parent"
                     android:background="@color/white"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal"></LinearLayout>
+                    android:orientation="horizontal"/>
+
             </HorizontalScrollView>
 
             <com.minglang.suiuu.customview.NoScrollBarListView
@@ -71,9 +76,12 @@
                 android:layout_marginTop="@dimen/layout_4dp"
                 android:background="@color/white"
                 android:dividerHeight="@dimen/layout_5dp"
-                android:scrollbars="none" />
-            <include layout="@layout/common_no_data_layout"
-                />
+                android:scrollbars="none"/>
+
+            <include layout="@layout/common_no_data_layout"/>
+
         </LinearLayout>
+
     </ScrollView>
+
 </LinearLayout>

@@ -7,8 +7,6 @@ import android.view.View;
  * <p/>
  * RecyclerView的Item的长按点击回调接口
  */
-public interface RecyclerOnItemLongClickListener {
-
-    void onItemLongClick(View view , int position);
-
+public interface RecyclerViewOnItemLongClickListener {
+    void onItemLongClick(View view, int position);
 }

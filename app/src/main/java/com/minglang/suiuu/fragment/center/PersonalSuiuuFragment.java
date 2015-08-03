@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -15,10 +17,13 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.TempAdapter;
+import com.minglang.suiuu.adapter.PersonalSuiuuAdapter;
+import com.minglang.suiuu.entity.UserSuiuu;
 import com.minglang.suiuu.entity.UserSuiuu.UserSuiuuData;
+import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.Utils;
 
@@ -29,7 +34,9 @@ import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.header.MaterialHeader;
 
 /**
@@ -39,7 +46,7 @@ import in.srain.cube.views.ptr.header.MaterialHeader;
  */
 public class PersonalSuiuuFragment extends Fragment {
 
-    private static final String TAG = PersonalTravelFragment.class.getSimpleName();
+    private static final String TAG = PersonalSuiuuFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -57,20 +64,31 @@ public class PersonalSuiuuFragment extends Fragment {
     @BindString(R.string.NoData)
     String noData;
 
+    @BindString(R.string.DataError)
+    String dataError;
+
     @BindString(R.string.NetworkAnomaly)
     String netWorkError;
 
-    @Bind(R.id.personal_fragment_head_frame)
-    PtrClassicFrameLayout mPtrFrame;
-
-    @Bind(R.id.personal_suiuu_grid)
-    RecyclerView recyclerView;
+    private int lastVisibleItem;
 
     private int page = 1;
+
+    private boolean isPullToRefresh = true;
+
+    @Bind(R.id.personal_suiuu_head_frame)
+    PtrClassicFrameLayout mPtrFrame;
+
+    @Bind(R.id.personal_suiuu_recycler_view)
+    RecyclerView recyclerView;
+
+    private GridLayoutManager gridLayoutManager;
 
     private ProgressDialog progressDialog;
 
     private List<UserSuiuuData> listAll = new ArrayList<>();
+
+    private PersonalSuiuuAdapter adapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -108,6 +126,8 @@ public class PersonalSuiuuFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_personal_suiuu, container, false);
         ButterKnife.bind(this, rootView);
         initView();
+        ViewAction();
+        getPersonalSuiuuData(buildRequestParams(page));
         return rootView;
     }
 
@@ -135,8 +155,57 @@ public class PersonalSuiuuFragment extends Fragment {
         mPtrFrame.addPtrUIHandler(header);
         mPtrFrame.setPinContent(true);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 2));
-        recyclerView.setAdapter(new TempAdapter(getActivity()));
+        gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+
+        adapter = new PersonalSuiuuAdapter();
+
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void ViewAction() {
+
+        mPtrFrame.setPtrHandler(new PtrHandler() {
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View view, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, recyclerView, header);
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
+                isPullToRefresh = false;
+                page = 1;
+                getPersonalSuiuuData(buildRequestParams(page));
+            }
+
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
+                    isPullToRefresh = true;
+                    page = page + 1;
+                    getPersonalSuiuuData(buildRequestParams(page));
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
+            }
+
+        });
+
+        adapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+        });
+
     }
 
     private RequestParams buildRequestParams(int page) {
@@ -144,6 +213,7 @@ public class PersonalSuiuuFragment extends Fragment {
         params.addBodyParameter(PAGE, String.valueOf(page));
         params.addBodyParameter(NUMBER, String.valueOf(10));
         params.addBodyParameter(USERSIGN, userSign);
+        params.addBodyParameter(HttpServicePath.key,verification);
         return params;
     }
 
@@ -177,29 +247,59 @@ public class PersonalSuiuuFragment extends Fragment {
     }
 
     private void bindData2View(String str) {
-
+        if (TextUtils.isEmpty(str)) {
+            failureLessPage();
+            Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                UserSuiuu userSuiuu = JsonUtils.getInstance().fromJSON(UserSuiuu.class, str);
+                if (userSuiuu != null) {
+                    List<UserSuiuuData> list = userSuiuu.getData();
+                    if (list != null && list.size() > 0) {
+                        clearDataList();
+                        listAll.addAll(list);
+                        adapter.setList(listAll);
+                        DeBugLog.i(TAG, "当前页码:" + page + ",当前请求数据数量:" + list.size()
+                                + ",总数据数量:" + listAll.size());
+                    } else {
+                        failureLessPage();
+                        Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    failureLessPage();
+                    Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "数据绑定Error:" + e.getMessage());
+                failureLessPage();
+                Toast.makeText(getActivity(), dataError, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private class PersonalSuiuuRequestCallBack extends RequestCallBack<String> {
 
         @Override
         public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
+            if (isPullToRefresh)
+                if (progressDialog != null && !progressDialog.isShowing()) {
+                    progressDialog.show();
+                }
         }
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            hideDialog();
             String str = responseInfo.result;
+            hideDialog();
             bindData2View(str);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
+            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
             hideDialog();
             failureLessPage();
+            Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();
         }
 
     }

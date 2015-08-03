@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,11 +12,12 @@
         android:layout_alignParentTop="true"
         android:scaleType="centerCrop"
         fresco:placeholderImage="@drawable/loading"
-        fresco:placeholderImageScaleType="fitXY" />
+        fresco:placeholderImageScaleType="fitXY"/>
 
     <RelativeLayout
         android:layout_width="@dimen/layout_170dp"
         android:layout_height="@dimen/layout_50dp"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="@dimen/layout_20dp"
         android:background="@drawable/item_trip_gallery_back">
@@ -24,14 +26,18 @@
             android:id="@+id/tv_trip_gallery_location_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/layout_5dp"
+            android:layout_marginRight="@dimen/layout_5dp"
             android:drawableLeft="@drawable/trip_gallery_location"
             android:drawablePadding="@dimen/layout_10dp"
+            android:drawableStart="@drawable/trip_gallery_location"
             android:padding="@dimen/layout_5dp"
-            android:layout_marginRight="@dimen/layout_5dp"
             android:text="香榭丽大道\n11Km"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"/>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -42,23 +48,24 @@
         android:background="@color/white">
 
         <com.facebook.drawee.view.SimpleDraweeView
-            fresco:roundAsCircle="true"
-            android:id="@+id/civ_trip_gallery_headpotrait"
+            android:id="@+id/civ_trip_gallery_head_portrait"
             android:layout_width="@dimen/layout_50dp"
             android:layout_height="@dimen/layout_50dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/layout_10dp"
-            android:background="@drawable/user_head_image_bg"/>
+            android:layout_marginStart="@dimen/layout_10dp"
+            android:background="@drawable/user_head_image_bg"
+            fresco:roundAsCircle="true"/>
 
         <TextView
             android:id="@+id/tv_trip_gallery_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/civ_trip_gallery_headpotrait"
+            android:layout_toRightOf="@+id/civ_trip_gallery_head_portrait"
             android:padding="@dimen/layout_5dp"
             android:text="法国巴黎最浪漫温馨之路"
             android:textColor="@color/gray"
-            android:textSize="@dimen/layout_15sp" />
+            android:textSize="@dimen/layout_15sp"/>
 
         <TextView
             android:id="@+id/tv_trip_gallery_tag"
@@ -66,22 +73,24 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_trip_gallery_name"
             android:layout_marginLeft="@dimen/layout_5dp"
-            android:layout_toRightOf="@+id/civ_trip_gallery_headpotrait"
+            android:layout_toRightOf="@+id/civ_trip_gallery_head_portrait"
             android:drawableLeft="@drawable/small_tag"
             android:drawablePadding="@dimen/layout_10dp"
             android:text="吃货   购物   奇葩"
             android:textColor="@color/mainColor"
-            android:textSize="@dimen/layout_15sp" />
+            android:textSize="@dimen/layout_15sp"/>
 
         <TextView
             android:id="@+id/tv_trip_gallery_love_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/small_heat"
-            android:drawablePadding="@dimen/layout_5dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:text="50"
-            android:layout_margin="@dimen/layout_5dp"/>
+            android:layout_margin="@dimen/layout_5dp"
+            android:drawableLeft="@drawable/small_heat"
+            android:drawablePadding="@dimen/layout_5dp"
+            android:text="50"/>
+
     </RelativeLayout>
+
 </RelativeLayout>

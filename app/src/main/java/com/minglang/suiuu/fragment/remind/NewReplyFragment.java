@@ -18,12 +18,12 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.OtherUserActivity;
-import com.minglang.suiuu.activity.PersonalActivity;
+import com.minglang.suiuu.activity.PersonalCenterActivity;
 import com.minglang.suiuu.adapter.MessageAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.SuiuuMessage;
-import com.minglang.suiuu.entity.SuiuuMessageData;
+import com.minglang.suiuu.entity.SuiuuMessage.SuiuuMessageBase.SuiuuMessageData;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -192,7 +192,7 @@ public class NewReplyFragment extends BaseFragment {
                 String OtherUserSign = listAll.get(position).getCreateUserSign();
                 Intent intent;
                 if (OtherUserSign.equals(userSign)) {
-                    intent = new Intent(getActivity(), PersonalActivity.class);
+                    intent = new Intent(getActivity(), PersonalCenterActivity.class);
                 } else {
                     intent = new Intent(getActivity(), OtherUserActivity.class);
                     intent.putExtra(USER_SIGN, OtherUserSign);

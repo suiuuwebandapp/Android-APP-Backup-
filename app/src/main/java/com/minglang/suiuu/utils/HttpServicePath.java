@@ -368,4 +368,14 @@ public class HttpServicePath {
      */
     public static String getPersonalSuiuuDataPath = RootPath + "/app-travel/my-trip-list";
 
+    /**
+     * 得到指定用户的旅图
+     */
+    public static String getPersonalTripDataPath = RootPath + "/app-travel-picture/get-user-tp";
+
+    /**
+     * 得到指定用户的问答
+     */
+    public static String getPersonalProblemDataPath = RootPath + "/app-qa/get-user-qa";
+
 }

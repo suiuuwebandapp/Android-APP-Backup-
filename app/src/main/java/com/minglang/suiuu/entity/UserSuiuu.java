@@ -111,6 +111,8 @@ public class UserSuiuu {
         private String isHotel;
         private String basePriceType;
         private String status;
+        private String commentCount;
+        private String collectCount;
 
         public void setIsAirplane(String isAirplane) {
             this.isAirplane = isAirplane;
@@ -222,6 +224,14 @@ public class UserSuiuu {
 
         public void setStatus(String status) {
             this.status = status;
+        }
+
+        public void setCommentCount(String commentCount) {
+            this.commentCount = commentCount;
+        }
+
+        public void setCollectCount(String collectCount) {
+            this.collectCount = collectCount;
         }
 
         public String getIsAirplane() {
@@ -336,5 +346,13 @@ public class UserSuiuu {
             return status;
         }
 
+        public String getCommentCount() {
+            return commentCount;
+        }
+
+        public String getCollectCount() {
+            return collectCount;
+        }
     }
+
 }

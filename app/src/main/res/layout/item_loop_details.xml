@@ -18,7 +18,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginBottom="20dp"
         android:scaleType="fitXY"
-        android:src="@drawable/user_background"/>
+        android:src="@drawable/default_background_image"/>
 
     <com.minglang.suiuu.customview.CircleImageView
         android:id="@+id/item_loop_details_head_image"
@@ -42,7 +42,6 @@
         android:singleLine="true"
         android:text="@string/user_name"
         android:textSize="16sp"/>
-
 
     <TextView
         android:id="@+id/item_loop_details_comments"

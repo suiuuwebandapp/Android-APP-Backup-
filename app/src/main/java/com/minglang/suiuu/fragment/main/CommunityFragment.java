@@ -94,6 +94,9 @@ public class CommunityFragment extends BaseFragment {
         getProblemList(buildRequestParams(selectedState, page));
     }
 
+    @BindString(R.string.load_wait)
+    String dialogMsg;
+
     @BindString(R.string.NoData)
     String NoDataHint;
 
@@ -150,7 +153,7 @@ public class CommunityFragment extends BaseFragment {
         ListView listView = pullToRefreshListView.getRefreshableView();
 
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setMessage(dialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         stringArray = getResources().getStringArray(R.array.communitySort);

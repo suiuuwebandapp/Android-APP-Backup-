@@ -1,7 +1,6 @@
 package com.minglang.suiuu.adapter;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -13,8 +12,7 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.UserSuiuu.UserSuiuuData;
-import com.minglang.suiuu.interfaces.RecyclerOnItemClickListener;
-import com.minglang.suiuu.interfaces.RecyclerOnItemLongClickListener;
+import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -22,23 +20,20 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import java.util.List;
 
 /**
- * 用户个人主页随游列表数据适配器
- * <p/>
  * Created by Administrator on 2015/5/11.
+ * <p/>
+ * 用户个人主页随游列表数据适配器
  */
 public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context context;
     private List<UserSuiuuData> list;
 
     private ImageLoader imageLoader;
     private DisplayImageOptions options;
 
-    private RecyclerOnItemClickListener onItemClickListener;
-    private RecyclerOnItemLongClickListener onItemLongClickListener;
+    private RecyclerViewOnItemClickListener onItemClickListener;
 
-    public PersonalSuiuuAdapter(Context context) {
-        this.context = context;
+    public PersonalSuiuuAdapter() {
 
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
@@ -53,12 +48,8 @@ public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.View
         notifyDataSetChanged();
     }
 
-    public void setOnItemClickListener(RecyclerOnItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(RecyclerViewOnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
-    }
-
-    public void setOnItemLongClickListener(RecyclerOnItemLongClickListener onItemLongClickListener) {
-        this.onItemLongClickListener = onItemLongClickListener;
     }
 
     @Override
@@ -84,6 +75,20 @@ public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.View
             suiuuViewHolder.suiuuTitle.setText("");
         }
 
+        String collectCount = list.get(position).getCollectCount();
+        if (!TextUtils.isEmpty(collectCount)) {
+            suiuuViewHolder.praiseCount.setText(collectCount);
+        } else {
+            suiuuViewHolder.praiseCount.setText("");
+        }
+
+        String commentCount = list.get(position).getCommentCount();
+        if (!TextUtils.isEmpty(commentCount)) {
+            suiuuViewHolder.commentCount.setText(commentCount);
+        } else {
+            suiuuViewHolder.commentCount.setText("0");
+        }
+
 
         final View itemView = suiuuViewHolder.itemView;
         final int location = suiuuViewHolder.getLayoutPosition();
@@ -93,16 +98,6 @@ public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.View
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onItemClick(itemView, location);
-                }
-            });
-        }
-
-        if (onItemLongClickListener != null) {
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    onItemLongClickListener.onItemLongClick(itemView, location);
-                    return false;
                 }
             });
         }
@@ -132,6 +127,7 @@ public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.View
             praiseCount = (TextView) itemView.findViewById(R.id.item_personal_suiuu_praise);
             commentCount = (TextView) itemView.findViewById(R.id.item_personal_suiuu_comment);
         }
+
     }
 
 }

@@ -73,4 +73,14 @@
         <item>去评分</item>
     </string-array>
 
+    <string-array name="tripGalleryTagName">
+        <item>家庭</item>
+        <item>购物</item>
+        <item>自然</item>
+        <item>惊险</item>
+        <item>浪漫</item>
+        <item>物馆</item>
+        <item>猎奇</item>
+    </string-array>
+
 </resources>
