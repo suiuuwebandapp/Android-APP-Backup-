@@ -39,6 +39,8 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  * Use the {@link NotFinishedFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
+ * 普通用户->未完成的订单页面
  */
 public class NotFinishedFragment extends BaseFragment {
     private static final String TAG = NotFinishedFragment.class.getSimpleName();

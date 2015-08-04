@@ -214,8 +214,8 @@
     <string name="Money">Money</string>
 
     <string name="IndividualResume">Individual Resume</string>
-    <string name="phoneNumber">Phone Number:</string>
-    <string name="Email">E-mail:</string>
+    <string name="phoneNumber" translatable="false">电话号码:</string>
+    <string name="Email" translatable="false">电子邮箱:</string>
     <string name="tripCount">Escort Count:</string>
     <string name="hisSuiuu">His Suiuu</string>
     <string name="hisParticipationSuiuu">His Participation Suiuu</string>
@@ -307,6 +307,11 @@
     <string name="TempOrderState" translatable="false">未付款</string>
     <string name="TempOrderTitle" translatable="false">法国巴黎浪漫温馨之旅</string>
 
+    <string name="IndividualService">单项服务:</string>
+    <string name="pickup">接机</string>
+
+    <string name="orderPrice" translatable="false">订单总价:</string>
+
     <string name="uploading">正在上传&#8230;</string>
     <string name="uploading_data">"正在更新数据,请稍候&#8230;"</string>
 
@@ -318,6 +323,9 @@
     <string name="hours" translatable="false">时</string>
     <string name="minutes" translatable="false">分</string>
     <string name="seconds" translatable="false">秒</string>
+
+    <string name="tempPhoneNumber" translatable="false">1782066022</string>
+    <string name="tempEmail" translatable="false">123123123@qq.com</string>
 
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>

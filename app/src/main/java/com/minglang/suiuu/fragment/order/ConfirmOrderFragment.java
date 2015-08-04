@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.order;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.OrderDetailsActivity;
 import com.minglang.suiuu.adapter.OrderListManageAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.entity.OrderManage;
@@ -83,6 +85,8 @@ public class ConfirmOrderFragment extends Fragment {
      */
     private int page = 1;
 
+    private boolean isPullToRefresh = true;
+
     /**
      * 数据源
      */
@@ -145,10 +149,9 @@ public class ConfirmOrderFragment extends Fragment {
         progressDialog.setCanceledOnTouchOutside(false);
 
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
-        ListView listView = pullToRefreshListView.getRefreshableView();
 
         orderListManageAdapter = new OrderListManageAdapter(getActivity());
-        listView.setAdapter(orderListManageAdapter);
+        pullToRefreshListView.setAdapter(orderListManageAdapter);
     }
 
     /**
@@ -164,6 +167,7 @@ public class ConfirmOrderFragment extends Fragment {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page = 1;
+                isPullToRefresh = false;
                 getConfirmOrderData(page);
             }
 
@@ -174,6 +178,7 @@ public class ConfirmOrderFragment extends Fragment {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page = page + 1;
+                isPullToRefresh = false;
                 getConfirmOrderData(page);
             }
 
@@ -182,7 +187,12 @@ public class ConfirmOrderFragment extends Fragment {
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                int location = position - 1;
+                String strID = listAll.get(location).getOrderNumber();
+                Intent intent = new Intent(getActivity(), OrderDetailsActivity.class);
+                intent.putExtra("id", strID);
+                getActivity().startActivity(intent);
+                DeBugLog.i(TAG, "strID:" + strID);
             }
         });
 
@@ -265,9 +275,10 @@ public class ConfirmOrderFragment extends Fragment {
 
         @Override
         public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
+            if (isPullToRefresh)
+                if (progressDialog != null && !progressDialog.isShowing()) {
+                    progressDialog.show();
+                }
         }
 
         @Override

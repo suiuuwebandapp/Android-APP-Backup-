@@ -120,15 +120,6 @@ public class HttpServicePath {
     public static String CollectionArticleCancelPath = RootPath + "/attention/delete-attention";
 
     /**
-     * 得到详细关注动态数据
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:页码 page(0 得到全部、1—— +∞ 对应页码数)
-     */
-    public static String AllAttentionDynamicPath = RootPath + "/attention/get-user-dynamic";
-
-    /**
      * 发送国际电话区号和手机号到服务器
      * <p/>
      * 请求方式:POST
@@ -150,15 +141,6 @@ public class HttpServicePath {
      * 请求参数:手机号 phone、密码 password、确认密码 cPassword、昵称 nick、验证码 validateCode
      */
     public static String Register4SuiuuPath = RootPath + "/app-login/app-register";
-
-    /**
-     * 得到粉丝数据
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:统一参数key{@link #key}
-     */
-    public static String FansInformationPath = RootPath + "/attention/get-fans";
 
     /**
      * 得到其他用户个人主页数据
@@ -377,5 +359,10 @@ public class HttpServicePath {
      * 得到指定用户的问答
      */
     public static String getPersonalProblemDataPath = RootPath + "/app-qa/get-user-qa";
+
+    /**
+     * 得到随游的订单详情
+     */
+    public static String getOrderDetailsDataPath = RootPath + "/app-travel/trip-order-info";
 
 }

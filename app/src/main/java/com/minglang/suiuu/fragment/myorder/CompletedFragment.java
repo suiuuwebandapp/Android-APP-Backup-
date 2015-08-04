@@ -41,6 +41,8 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  * Use the {@link CompletedFragment#newInstance} factory method to
  * create an instance of this fragment.
+ * <p/>
+ * 普通用户->已完成的订单页面
  */
 public class CompletedFragment extends BaseFragment {
     private static final String TAG = CompletedFragment.class.getSimpleName();
@@ -173,7 +175,7 @@ public class CompletedFragment extends BaseFragment {
                 int location = position - 1;
                 String orderNumber = listAll.get(location).getOrderNumber();
                 Intent intent = new Intent(getActivity(), GeneralOrderDetailsActivity.class);
-                intent.putExtra(ORDER_NUMBER,orderNumber);
+                intent.putExtra(ORDER_NUMBER, orderNumber);
                 startActivity(intent);
             }
         });

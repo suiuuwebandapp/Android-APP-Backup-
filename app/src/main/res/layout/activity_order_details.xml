@@ -1,0 +1,348 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    tools:context="com.minglang.suiuu.activity.OrderDetailsActivity">
+
+    <in.srain.cube.views.ptr.PtrClassicFrameLayout
+        android:id="@+id/order_details_head_frame"
+        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundColor"
+        cube_ptr:ptr_duration_to_close="200"
+        cube_ptr:ptr_duration_to_close_header="1000"
+        cube_ptr:ptr_keep_header_when_refresh="true"
+        cube_ptr:ptr_pull_to_fresh="false"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
+        cube_ptr:ptr_resistance="1.7">
+
+        <ScrollView
+            android:id="@+id/suiuu_order_details_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/layout_250dp">
+
+                    <ImageView
+                        android:id="@+id/suiuu_order_details_background_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/default_background_image"/>
+
+                    <FrameLayout
+                        android:id="@+id/frameLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/background_head_frame"
+                        android:padding="@dimen/layout_2dp">
+
+                        <com.minglang.suiuu.customview.CircleImageView
+                            android:id="@+id/suiuu_order_details_head_image"
+                            android:layout_width="@dimen/layout_60dp"
+                            android:layout_height="@dimen/layout_60dp"
+                            android:src="@drawable/default_head_image2"/>
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/suiuu_order_details_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginBottom="@dimen/layout_8dp"
+                        android:layout_marginLeft="@dimen/layout_8dp"
+                        android:layout_marginStart="@dimen/layout_8dp"
+                        android:text="@string/app_name"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/layout_16sp"/>
+
+                    <TextView
+                        android:id="@+id/suiuu_order_details_user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/suiuu_order_details_status"
+                        android:layout_alignLeft="@+id/suiuu_order_details_status"
+                        android:layout_alignStart="@+id/suiuu_order_details_status"
+                        android:text="@string/app_name"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white"/>
+
+                    <ImageView
+                        android:id="@+id/suiuu_order_details_chat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:src="@drawable/icon_order_chat"/>
+
+                    <ImageView
+                        android:id="@+id/suiuu_order_details_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/suiuu_order_details_chat"
+                        android:layout_marginLeft="@dimen/layout_5dp"
+                        android:layout_marginRight="@dimen/layout_5dp"
+                        android:layout_marginTop="@dimen/layout_5dp"
+                        android:layout_toLeftOf="@+id/suiuu_order_details_chat"
+                        android:layout_toStartOf="@+id/suiuu_order_details_chat"
+                        android:src="@drawable/icon_order_details"/>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/suiuu_order_details_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_8dp"
+                        android:drawableEnd="@drawable/icon_right_arrow"
+                        android:drawableRight="@drawable/icon_right_arrow"
+                        android:text="@string/suiuu"
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suiuu_order_details_item_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/layout_2dp"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/layout_5dp"
+                            android:singleLine="true"
+                            android:text="@string/DepartureDate"
+                            android:textSize="@dimen/layout_16sp"/>
+
+                        <TextView
+                            android:id="@+id/suiuu_order_details_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tempDate"
+                            android:textSize="@dimen/layout_16sp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView27"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/layout_5dp"
+                            android:singleLine="true"
+                            android:text="@string/StartTime"
+                            android:textSize="@dimen/layout_16sp"/>
+
+                        <TextView
+                            android:id="@+id/suiuu_order_details_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tempTime"
+                            android:textSize="@dimen/layout_16sp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView42"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/layout_5dp"
+                            android:singleLine="true"
+                            android:text="@string/SuiuuNumber"
+                            android:textSize="@dimen/layout_16sp"/>
+
+                        <TextView
+                            android:id="@+id/suiuu_order_details_people_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:text="@string/tempNumber"
+                            android:textSize="@dimen/layout_16sp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView21"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/layout_5dp"
+                            android:singleLine="true"
+                            android:text="@string/IndividualService"
+                            android:textSize="@dimen/layout_16sp"/>
+
+                        <TextView
+                            android:id="@+id/suiuu_order_details_item_service"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pickup"
+                            android:textSize="@dimen/layout_16sp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+
+                        <TextView
+                            android:id="@+id/textView10"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/layout_5dp"
+                            android:singleLine="true"
+                            android:text="@string/orderPrice"
+                            android:textSize="@dimen/layout_16sp"/>
+
+                        <TextView
+                            android:id="@+id/suiuu_order_details_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:text="@string/zero"
+                            android:textSize="@dimen/layout_16sp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/layout_8dp"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView44"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:text="@string/phoneNumber"
+                        android:textSize="@dimen/layout_16sp"/>
+
+                    <TextView
+                        android:id="@+id/suiuu_order_details_phone_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/textView44"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/textView44"
+                        android:layout_toLeftOf="@+id/suiuu_order_details_call_phone"
+                        android:layout_toRightOf="@+id/textView44"
+                        android:layout_toStartOf="@+id/suiuu_order_details_call_phone"
+                        android:text="@string/tempPhoneNumber"/>
+
+                    <ImageView
+                        android:id="@+id/suiuu_order_details_call_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="end|center_vertical"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:src="@drawable/icon_call"/>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/layout_2dp"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView45"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:text="@string/Email"
+                        android:textSize="@dimen/layout_16sp"/>
+
+                    <TextView
+                        android:id="@+id/suiuu_order_details_email_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:text="@string/tempEmail"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </in.srain.cube.views.ptr.PtrClassicFrameLayout>
+
+    <ImageView
+        android:id="@+id/suiuu_order_details_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/back"/>
+
+</RelativeLayout>

@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.OrderManage;
+import com.minglang.suiuu.entity.TripJsonInfo;
+import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -24,6 +27,8 @@ import java.util.List;
  * Created by Administrator on 2015/6/23.
  */
 public class OrderListManageAdapter extends BaseAdapter {
+
+    private static final String TAG = OrderListManageAdapter.class.getSimpleName();
 
     private Context context;
 
@@ -41,7 +46,8 @@ public class OrderListManageAdapter extends BaseAdapter {
     private void init() {
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image)
+                .showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
@@ -102,11 +108,17 @@ public class OrderListManageAdapter extends BaseAdapter {
                 imageLoader.displayImage(headImagePath, headImageView, options);
             }
 
-            String title = newOrderData.getTripJsonInfo().getInfo().getTitle();
-            if (!TextUtils.isEmpty(title)) {
-                titleView.setText(title);
-            } else {
-                titleView.setText("暂无标题");
+            String tripJsonInfo = newOrderData.getTripJsonInfo();
+            try {
+                TripJsonInfo jsonInfo = JsonUtils.getInstance().fromJSON(TripJsonInfo.class, tripJsonInfo);
+                String title = jsonInfo.getInfo().getTitle();
+                if (!TextUtils.isEmpty(title)) {
+                    titleView.setText(title);
+                } else {
+                    titleView.setText("暂无标题");
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "数据绑定Error:" + e.getMessage());
             }
 
             String totalPrice = newOrderData.getTotalPrice();

@@ -109,6 +109,7 @@
                 android:layout_weight="0.3"
                 android:text="New Text"/>
         </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

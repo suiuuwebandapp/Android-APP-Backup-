@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 项目名称：Android-APP-Backup-
@@ -42,8 +43,7 @@ public class SuiuuOrderActivity extends BaseActivity {
     private TextView tv_travel_date;
     private TextView tv_travel_time;
     private String initTime; // 初始化结束时间
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
-    private String[] split;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.getDefault());
     private ImageView iv_release;
     private TextView tv_enjoy_number;
     private ImageView iv_plus;
@@ -57,7 +57,6 @@ public class SuiuuOrderActivity extends BaseActivity {
     private TextView tv_order_price;
     private String tripId;
 
-    private String orderNumber;
     private int enjoy_peopleNumber;
 
 
@@ -75,7 +74,7 @@ public class SuiuuOrderActivity extends BaseActivity {
 
     private void initView() {
         initTime = sdf.format(new Date());
-        split = initTime.split(" ");
+        String[] split = initTime.split(" ");
         tv_travel_date = (TextView) findViewById(R.id.tv_travel_date);
         tv_travel_time = (TextView) findViewById(R.id.tv_travel_time);
         tv_travel_date.setText(split[0].replace("年", "-").replace("月", "-").replace("日", ""));
@@ -102,26 +101,34 @@ public class SuiuuOrderActivity extends BaseActivity {
         suiuu_order_back.setOnClickListener(new MyClick());
         bb_suiuu_order_pay.setOnClickListener(new MyClick());
         tv_order_price.setText("总价: " + Float.toString(price));
-
     }
 
     //获取订单的接口
     private void createOrderNumber() {
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         String myString = tv_travel_date.getText().toString() + " " + tv_travel_time.getText().toString();
+
         Date d = null;
+
         try {
             d = sdf1.parse(myString);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        boolean flag = d.before(new Date());
+
+        boolean flag = false;
+
+        if (d != null) {
+            flag = d.before(new Date());
+        }
+
         if (flag) {
             Toast.makeText(this, "请选择出行日期", Toast.LENGTH_SHORT).show();
             return;
         } else {
             Toast.makeText(this, "晚于今天", Toast.LENGTH_SHORT).show();
         }
+
         RequestParams params = new RequestParams();
         params.addBodyParameter("tripId", tripId);
         params.addBodyParameter("peopleCount", Integer.toString(enjoy_peopleNumber));
@@ -129,6 +136,7 @@ public class SuiuuOrderActivity extends BaseActivity {
         params.addBodyParameter("startTime", tv_travel_time.getText().toString());
         params.addBodyParameter("type", "2");
         params.addBodyParameter(HttpServicePath.key, verification);
+
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.createOrderNumber, new createOrderCallBack());
         httpRequest.setParams(params);
@@ -148,6 +156,7 @@ public class SuiuuOrderActivity extends BaseActivity {
                 JSONObject message = new JSONObject(stringResponseInfo.result);
 
                 String status = message.getString("status");
+                String orderNumber;
                 if ("1".equals(status)) {
                     orderNumber = message.getString("data");
                     Intent intent = new Intent(SuiuuOrderActivity.this, SuiuuPayActivity.class);
