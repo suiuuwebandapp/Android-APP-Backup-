@@ -98,7 +98,7 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 			convertView.setTag(holder);
 		}
 		if (position % 2 == 0) {
-			holder.list_item_layout.setBackgroundResource(R.drawable.mm_listitem);
+			holder.list_item_layout.setBackgroundResource(R.drawable.mm_list_item);
 		} else {
 			holder.list_item_layout.setBackgroundResource(R.drawable.mm_listitem_grey);
 		}

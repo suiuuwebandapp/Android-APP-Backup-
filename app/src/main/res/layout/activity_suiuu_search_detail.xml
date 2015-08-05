@@ -117,7 +117,7 @@
                 android:layout_toRightOf="@+id/tv_price_show"
                 android:padding="@dimen/layout_5dp"
                 android:text="@string/zeroForTenKilo"
-                android:textColor="@color/login_bg_color"
+                android:textColor="@color/btn_1_bg_color"
                 android:textSize="@dimen/layout_15sp"/>
 
             <com.minglang.suiuu.customview.rangebar.RangeBar

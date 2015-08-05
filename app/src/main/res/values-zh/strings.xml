@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="please_input_confirm_password">请输入确认密码</string>
-    <string name="please_input_email_or_phone_number">请输入邮箱或手机号</string>
-    <string name="please_input_number">请输入手机号</string>
     <string name="please_check">key 验证出错! 请在 AndroidManifest.xml 文件中检查 key 设置</string>
     <string name="UMUpdateCheck">2.6.0.1.20150312</string>
-    <string name="UnknownArea">未知区域</string>
-    <string name="UnknownName">匿名</string>
     <string name="app_name">随游</string>
     <string name="china">中国</string>
     <string name="chinaCode">+86</string>
-    <string name="please_input_obtain_captcha">请输入验证码</string>
-    <string name="please_input_password">请输入密码</string>
-    <string name="register">注册</string>
-    <string name="login">登录</string>
-    <string name="obtain_captcha">获取验证码</string>
-    <string name="internationalCodeFailure">国际电话区号获取失败，请点击Logo重试</string>
 
     <string name="WeiboAuthorizedStart">微博开始授权&#8230;</string>
     <string name="WeiboAuthorizedComplete">微博授权完成！</string>
@@ -37,7 +26,6 @@
     <string name="QQAuthorizedStart">QQ正在授权&#8230;</string>
     <string name="all_attention_dynamic_content">内容</string>
     <string name="all_attention_dynamic_title">标题</string>
-    <string name="all_attention_dynamic_contentDescription">主要图片</string>
 
     <string name="pull_to_refresh_pull_label">下拉刷新</string>
     <string name="pull_to_refresh_release_label">松开后刷新</string>
@@ -159,9 +147,7 @@
     <string name="Move_into_blacklist_failure">移入黑名单失败</string>
     <string name="Move_into_blacklist_success">移入黑名单成功</string>
     <string name="Move_into_the_blacklist_new">移入黑名单</string>
-    <string name="MyAttention">我的关注</string>
     <string name="Network_error">网络出错</string>
-    <string name="NewRemind">新提醒</string>
     <string name="Not_Set">未设置</string>
     <string name="Open_group_chat">公开的群聊</string>
     <string name="Open_group_members_invited">开放群成员邀请</string>
@@ -217,16 +203,6 @@
     <string name="hisParticipationSuiuu">他参与的随游</string>
     <string name="route">路线</string>
     <string name="save">保存</string>
-    <string name="userName">用户名</string>
-    <string name="userLocation">用户位置</string>
-    <string name="userSignature">个人签名</string>
-    <string name="SuiuuAccount">随友帐号</string>
-    <string name="attention">关注</string>
-    <string name="answer_">回答</string>
-    <string name="ConfirmOrder">已接单</string>
-    <string name="NewOrder">新订单</string>
-    <string name="Participate">已参加</string>
-    <string name="Published">已发布</string>
     <string name="AddTag">添加标签</string>
     <string name="Problem">问题</string>
     <string name="AdditionalPrice">附加价格</string>
@@ -238,12 +214,8 @@
     <string name="action_settings">设置</string>
     <string name="city">城市</string>
     <string name="cityDetails">请选择城市</string>
-    <string name="confirm">确认</string>
     <string name="complete">完成</string>
     <string name="comment">评论</string>
-    <string name="Question">提问</string>
-    <string name="AnswerNoNull">答案不能为空！</string>
-    <string name="AnswerSuccess">回答成功！</string>
     <string name="Waiting">请稍候&#8230;</string>
     <string name="PersonalCenter">个人中心</string>
 </resources>

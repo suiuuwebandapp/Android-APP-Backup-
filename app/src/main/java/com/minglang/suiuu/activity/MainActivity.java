@@ -60,6 +60,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -77,6 +78,12 @@ public class MainActivity extends BaseActivity {
     private static final int NUMBER2 = 2;
     private static final int NUMBER3 = 3;
     private static final int NUMBER4 = 4;
+
+    @BindString(R.string.SuiuuAccount)
+    String SuiuuAccount;
+
+    @BindString(R.string.OrdinaryAccount)
+    String OrdinaryAccount;
 
     @Bind(R.id.drawerLayout)
     DrawerLayout mDrawerLayout;
@@ -300,6 +307,7 @@ public class MainActivity extends BaseActivity {
         }
 
         switchSuiuu.setChecked(true);
+        switchSuiuu.setText(SuiuuAccount);
 
         MainSliderAdapter adapter =
                 new MainSliderAdapter(this, getResources().getStringArray(R.array.sideList));
@@ -387,9 +395,11 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    switchSuiuu.setText(SuiuuAccount);
                     sideListView.setVisibility(View.VISIBLE);
                     sideListView2.setVisibility(View.GONE);
                 } else {
+                    switchSuiuu.setText(OrdinaryAccount);
                     sideListView.setVisibility(View.GONE);
                     sideListView2.setVisibility(View.VISIBLE);
                 }

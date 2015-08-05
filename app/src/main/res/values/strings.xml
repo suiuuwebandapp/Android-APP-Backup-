@@ -5,8 +5,8 @@
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
-    <string name="login">Login</string>
-    <string name="register">Register</string>
+    <string name="login" translatable="false">登录</string>
+    <string name="register" translatable="false">注册</string>
 
     <string name="title1" translatable="false">主页</string>
     <string name="title2" translatable="false">圈子</string>
@@ -18,31 +18,23 @@
     <string name="mainTitle3" translatable="false">问答社区</string>
     <string name="mainTitle4" translatable="false">收件箱</string>
 
+    <string name="SuiuuAccount" translatable="false">随友账户</string>
+    <string name="OrdinaryAccount" translatable="false">普通账户</string>
+
     <string name="QuestionsAndAnswers" translatable="false">问答</string>
-
-    <string name="sendMsg" translatable="false">M</string>
-    <string name="nickname" translatable="false">昵称</string>
-    <string name="sendNewPost" translatable="false">发布新帖子</string>
-
-    <string name="collection" translatable="false">收藏</string>
-
-    <string name="themes" translatable="false">主题</string>
-    <string name="areas" translatable="false">地区</string>
+    <string name="NickName" translatable="false">昵称</string>
+    <string name="Collection" translatable="false">收藏</string>
 
     <string name="blankNickName" translatable="false">暂无称呼</string>
-    <string name="blankArea" translatable="false">暂无地区</string>
-    <string name="signature" translatable="false">个性签名</string>
     <string name="blankSignature" translatable="false">暂无个性签名</string>
     <string name="blankContent" translatable="false">暂无详细信息</string>
-    <string name="footprint" translatable="false">我的足迹</string>
 
-    <string name="attention">Attention</string>
-    <string name="MyAttention">My Attention</string>
-    <string name="fans" translatable="false">粉丝</string>
+    <string name="Attention" translatable="false">关注</string>
+    <string name="MyAttention" translatable="false">我的关注</string>
     <string name="thirdParty" translatable="false">绑定的第三方账号</string>
-    <string name="setting" translatable="false">设置</string>
-    <string name="personalSetting" translatable="false">个人设置</string>
-    <string name="normalSetting" translatable="false">通用设置</string>
+    <string name="Setting" translatable="false">设置</string>
+    <string name="PersonalSetting" translatable="false">个人设置</string>
+    <string name="NormalSetting" translatable="false">通用设置</string>
     <string name="clickHead" translatable="false">点击修改头像</string>
     <string name="personalInfo" translatable="false">个人信息</string>
 
@@ -51,14 +43,21 @@
     <string name="trade_hint" translatable="false">职业</string>
     <string name="Signature_hint">Signature hint</string>
 
-    <string name="NewRemind">New Remind</string>
-    <string name="newAt" translatable="false">新@</string>
-    <string name="newComment" translatable="false">新评论</string>
-    <string name="newReply" translatable="false">新回复</string>
-    <string name="newAttention" translatable="false">新关注</string>
+    <string name="NewRemind" translatable="false">新提醒</string>
+    <string name="NewAt" translatable="false">新@</string>
+    <string name="NewComment" translatable="false">新评论</string>
+    <string name="NewReply" translatable="false">新回复</string>
+    <string name="NewAttention" translatable="false">新关注</string>
+
+    <string name="TripGalleryMsg" translatable="false">旅图消息</string>
+    <string name="QuestionAndAnswerMsg" translatable="false">问答消息</string>
+    <string name="OrderMsg" translatable="false">订单消息</string>
+    <string name="SystemMsg" translatable="false">系统消息</string>
+
     <string name="post" translatable="false">帖子</string>
     <string name="back" translatable="false">返回</string>
-    <string name="confirm">Confirm</string>
+
+    <string name="Confirm" translatable="false">确认</string>
     <string name="AllPicture">All pictures</string>
     <string name="gender" translatable="false">性别</string>
     <string name="location" translatable="false">所在地</string>
@@ -101,32 +100,37 @@
     <string name="article_publish_failure" translatable="false">文章发布失败</string>
     <string name="article_update_success" translatable="false">文章更新成功</string>
 
-    <string name="UnknownArea">UnknownArea</string>
+    <string name="UnknownArea" translatable="false">未知区域</string>
     <string name="title" translatable="false">标题</string>
     <string name="attentionDynamic" translatable="false">关注动态</string>
     <string name="more" translatable="false">更多</string>
     <string name="today_star" translatable="false">今日之星</string>
     <string name="loopDynamic" translatable="false">圈子动态</string>
-    <string name="UnknownName">UnknownName</string>
+    <string name="UnknownName" translatable="false">未知姓名</string>
     <string name="noInformation" translatable="false">暂无信息</string>
     <string name="popularRecommendation" translatable="false">热门推荐</string>
 
-    <string name="please_input_email_or_phone_number">Please enter a Email or phone number</string>
-    <string name="please_input_password">Please enter a password</string>
-    <string name="obtain_captcha">Get verification code</string>
-    <string name="please_input_number">Please enter a phone number</string>
-    <string name="please_input_confirm_password">Please enter a confirmation password</string>
-    <string name="please_input_obtain_captcha">Please enter the verification code</string>
+    <string name="please_input_email_or_phone_number" translatable="false">请输入邮箱或手机号</string>
+    <string name="please_input_password" translatable="false">请输入密码</string>
+    <string name="obtain_captcha" translatable="false">获取验证码</string>
+    <string name="please_input_number" translatable="false">请输入手机号</string>
+    <string name="please_input_confirm_password" translatable="false">请输入确认密码</string>
+    <string name="please_input_obtain_captcha" translatable="false">请输入验证码</string>
 
     <string name="DataError" translatable="false">数据获取失败，请稍候再试！</string>
     <string name="NetworkAnomaly" translatable="false">网络异常，请检查后再试！</string>
     <string name="NoData" translatable="false">暂无更多数据！</string>
+
+    <string name="systemException" translatable="false">系统异常</string>
+    <string name="DataException" translatable="false">数据异常</string>
+    <string name="unknownError" translatable="false">未知错误</string>
 
     <string name="all_attention" translatable="false">关注动态</string>
     <string name="thisArticNoComment" translatable="false">该文章暂时没有评论</string>
 
     <string name="addAttentionSuccess" translatable="false">添加关注成功!</string>
     <string name="addAttentionFail" translatable="false">添加关注失败！</string>
+
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
     <string name="pull_to_refresh_release_label">Release rear refresh</string>
     <string name="pull_to_refresh_refreshing_label">refresh\u2026</string>
@@ -157,7 +161,7 @@
     <string name="ChatPage" translatable="false">ChatPage</string>
     <string name="china">china</string>
     <string name="chinaCode">+86</string>
-    <string name="internationalCodeFailure">The code for international telephone access failed, please click Logo to retry</string>
+    <string name="internationalCodeFailure" translatable="false">国际电话区号获取失败，请点击Logo重试</string>
 
     <string name="WeiboAuthorizedStart">Weibo began to authorize&#8230;</string>
     <string name="WeiboAuthorizedComplete">Weibo authorization to complete</string>
@@ -179,7 +183,7 @@
 
     <string name="all_attention_dynamic_title">title</string>
     <string name="all_attention_dynamic_content">content</string>
-    <string name="all_attention_dynamic_contentDescription">main show image</string>
+    <string name="all_attention_dynamic_contentDescription" translatable="false">主要图片</string>
     <string name="noChatHistory" translatable="false">当前没有聊天信息</string>
 
     <string name="noData_AgainLoad" translatable="false">没有数据,请重新获取</string>
@@ -220,13 +224,11 @@
     <string name="hisSuiuu">His Suiuu</string>
     <string name="hisParticipationSuiuu">His Participation Suiuu</string>
 
-    <string name="userName">userName</string>
-    <string name="userLocation">userLocation</string>
-    <string name="userSignature">personality Signature</string>
+    <string name="userName" translatable="false">用户名</string>
+    <string name="userLocation" translatable="false">用户位置</string>
+    <string name="userSignature" translatable="false">个人签名</string>
 
-    <string name="SuiuuAccount">Suiuu Account</string>
-
-    <string name="answer_">Answer</string>
+    <string name="answer_" translatable="false">回答</string>
     <string name="suiuu" translatable="false">随游</string>
 
     <string name="inputProblemTitle" translatable="false">输入问题标题吧</string>
@@ -236,19 +238,16 @@
     <string name="ProblemHint">Enter your question</string>
     <string name="SelectDestination">Select Destination</string>
 
-    <string name="tempText" translatable="false">《未踏召唤://鲜血印记》是镰池和马创作，依河和希插画，并由电击文库发售的小说。第1卷于2014年9月10日发售。此作为《魔法禁书目录》作者镰池和马在“镰池和马十周年”网站的十大重大消息中宣布出版的正统派新作</string>
+    <string name="NewOrder" translatable="false">新订单</string>
+    <string name="ConfirmOrder" translatable="false">已接单</string>
 
-    <string name="NewOrder">New Order</string>
-    <string name="ConfirmOrder">Confirm Order</string>
+    <string name="Published" translatable="false">已发布</string>
+    <string name="Participate" translatable="false">已参加</string>
 
-    <string name="Published">Published</string>
-    <string name="Participate">Participate</string>
+    <string name="Question" translatable="false">提问</string>
 
-    <string name="Question">Question</string>
-
-    <string name="AnswerNoNull">The answer can not be empty!</string>
-
-    <string name="AnswerSuccess">Answer Success!</string>
+    <string name="AnswerNoNull" translatable="false">答案不能为空！</string>
+    <string name="AnswerSuccess" translatable="false">回答成功！</string>
 
     <string name="Waiting">please wait&#8230;</string>
 
@@ -263,11 +262,7 @@
 
     <string name="route">route</string>
     <string name="save">save</string>
-    <string name="title_activity_community_item" translatable="false">CommunityItemActivity</string>
-    <string name="title_activity_questions" translatable="false">QuestionsActivity</string>
-    <string name="title_activity_answer" translatable="false">AnswerActivity</string>
-    <string name="title_activity_community_search" translatable="false">CommunitySearchActivity</string>
-    <string name="title_activity_personal_center" translatable="false">PersonalCenterActivity</string>
+
     <string name="AddTag">Add Tag</string>
     <string name="Problem">Problem</string>
     <string name="OtherPrice">Other Price ￥：</string>
@@ -278,18 +273,10 @@
 
     <string name="PersonalCenter">Personal Center</string>
 
-    <string name="openAsk" translatable="false">打开随问</string>
-    <string name="openRemember" translatable="false">打开随记</string>
-    <string name="openShoot" translatable="false">打开随拍</string>
-
     <string name="ContactPhone" translatable="false">联系电话:</string>
     <string name="DepartureDate" translatable="false">出发日期:</string>
     <string name="StartTime" translatable="false">开始时间:</string>
     <string name="SuiuuNumber" translatable="false">随游人数:</string>
-
-    <string name="tempDate" translatable="false">15.08.15</string>
-    <string name="tempTime" translatable="false">9:00 AM</string>
-    <string name="tempNumber" translatable="false">2人</string>
 
     <string name="AdditionalServices" translatable="false">附加服务:</string>
     <string name="Shuttle" translatable="false">机场接送:</string>
@@ -304,9 +291,6 @@
     <string name="Completed" translatable="false">已完成</string>
     <string name="NotFinished" translatable="false">未完成</string>
 
-    <string name="TempOrderState" translatable="false">未付款</string>
-    <string name="TempOrderTitle" translatable="false">法国巴黎浪漫温馨之旅</string>
-
     <string name="IndividualService">单项服务:</string>
     <string name="pickup">接机</string>
 
@@ -315,8 +299,6 @@
     <string name="uploading">正在上传&#8230;</string>
     <string name="uploading_data">"正在更新数据,请稍候&#8230;"</string>
 
-    <string name="cancel" translatable="false">取消</string>
-    <string name="pwSubmit" translatable="false">确定</string>
     <string name="year" translatable="false">年</string>
     <string name="month" translatable="false">月</string>
     <string name="day" translatable="false">日</string>
@@ -324,6 +306,20 @@
     <string name="minutes" translatable="false">分</string>
     <string name="seconds" translatable="false">秒</string>
 
+    <string name="cancelOrder" translatable="false">取消订单</string>
+    <string name="inputRefundReason" translatable="false">请输入退款理由</string>
+    <string name="refundReasonNotNull">退款理由不能为空!</string>
+
+    <string name="CancelOrderSuccess" translatable="false">订单已取消</string>
+    <string name="ConfirmOrderSuccess" translatable="false">订单已确认</string>
+    <string name="IgnoreOrderSuccess" translatable="false">订单已忽略</string>
+
+    <string name="tempDate" translatable="false">15.08.15</string>
+    <string name="tempTime" translatable="false">9:00 AM</string>
+    <string name="tempNumber" translatable="false">2人</string>
+    <string name="tempText" translatable="false">《未踏召唤://鲜血印记》是镰池和马创作，依河和希插画，并由电击文库发售的小说。第1卷于2014年9月10日发售。此作为《魔法禁书目录》作者镰池和马在“镰池和马十周年”网站的十大重大消息中宣布出版的正统派新作</string>
+    <string name="tempOrderState" translatable="false">未付款</string>
+    <string name="tempOrderTitle" translatable="false">法国巴黎浪漫温馨之旅</string>
     <string name="tempPhoneNumber" translatable="false">1782066022</string>
     <string name="tempEmail" translatable="false">123123123@qq.com</string>
 
@@ -613,6 +609,11 @@
     <string name="title_activity_suiuu_search_detail" translatable="false">SuiuuSearchDetailActivity</string>
     <string name="title_activity_suiuu_search" translatable="false">SuiuuSearchActivity</string>
     <string name="title_activity_common_comment" translatable="false">CommonCommentActivity</string>
+    <string name="title_activity_community_item" translatable="false">CommunityItemActivity</string>
+    <string name="title_activity_questions" translatable="false">QuestionsActivity</string>
+    <string name="title_activity_answer" translatable="false">AnswerActivity</string>
+    <string name="title_activity_community_search" translatable="false">CommunitySearchActivity</string>
+    <string name="title_activity_personal_center" translatable="false">PersonalCenterActivity</string>
 
     <string name="title_section1" translatable="false">Section 1</string>
     <string name="title_section2" translatable="false">Section 2</string>

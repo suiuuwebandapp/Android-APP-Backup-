@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.myorder;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.GeneralOrderDetailsActivity;
 import com.minglang.suiuu.adapter.NotFinishedAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.NotFinishedOrder;
@@ -39,7 +41,7 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  * Use the {@link NotFinishedFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
+ * <p/>
  * 普通用户->未完成的订单页面
  */
 public class NotFinishedFragment extends BaseFragment {
@@ -51,6 +53,8 @@ public class NotFinishedFragment extends BaseFragment {
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
 
+    private static final String ORDER_NUMBER = "orderNumber";
+
     @Bind(R.id.not_finished_order_list_view)
     PullToRefreshListView pullToRefreshListView;
 
@@ -58,7 +62,7 @@ public class NotFinishedFragment extends BaseFragment {
     String wait;
 
     @BindString(R.string.NoData)
-    String noData;
+    String dataNull;
 
     @BindString(R.string.DataError)
     String errorString;
@@ -147,8 +151,8 @@ public class NotFinishedFragment extends BaseFragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                isPullToRefresh = false;
                 page = 1;
+                isPullToRefresh = false;
                 getCompletedOrderData4Service(buildRequestParams(page));
             }
 
@@ -158,8 +162,8 @@ public class NotFinishedFragment extends BaseFragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                isPullToRefresh = false;
                 page = page + 1;
+                isPullToRefresh = false;
                 getCompletedOrderData4Service(buildRequestParams(page));
             }
 
@@ -168,7 +172,11 @@ public class NotFinishedFragment extends BaseFragment {
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                int location = position - 1;
+                String strId = listAll.get(location).getOrderNumber();
+                Intent intent = new Intent(getActivity(), GeneralOrderDetailsActivity.class);
+                intent.putExtra(ORDER_NUMBER, strId);
+                startActivity(intent);
             }
         });
 
@@ -223,7 +231,7 @@ public class NotFinishedFragment extends BaseFragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), dataNull, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 NotFinishedOrder notFinishedOrder = JsonUtils.getInstance().fromJSON(NotFinishedOrder.class, str);

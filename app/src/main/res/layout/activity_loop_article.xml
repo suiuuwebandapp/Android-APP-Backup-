@@ -244,7 +244,7 @@
             android:drawableLeft="@drawable/icon_collection_white"
             android:drawablePadding="10dp"
             android:drawableStart="@drawable/icon_collection_white"
-            android:text="@string/collection"
+            android:text="@string/Collection"
             android:textColor="@color/white"
             android:textSize="20sp"/>
 

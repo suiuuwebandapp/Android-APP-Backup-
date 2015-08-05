@@ -55,7 +55,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/layout_8dp"
             android:gravity="center"
-            android:text="@string/nickname"
+            android:text="@string/NickName"
             android:textColor="@color/mainColor"
             android:textSize="@dimen/layout_20sp"/>
 

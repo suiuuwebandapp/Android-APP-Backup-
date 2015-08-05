@@ -15,7 +15,7 @@
         android:layout_marginLeft="@dimen/layout_20dp"
         android:layout_marginStart="@dimen/layout_20dp"
         android:text="@string/china"
-        android:textColor="@color/login_bg_color"
+        android:textColor="@color/btn_1_bg_color"
         android:textSize="18sp"/>
 
     <TextView
@@ -28,7 +28,7 @@
         android:layout_toEndOf="@+id/item_area_name"
         android:layout_toRightOf="@+id/item_area_name"
         android:text="@string/chinaCode"
-        android:textColor="@color/login_bg_color"
+        android:textColor="@color/btn_1_bg_color"
         android:textSize="18sp"/>
 
 </RelativeLayout>

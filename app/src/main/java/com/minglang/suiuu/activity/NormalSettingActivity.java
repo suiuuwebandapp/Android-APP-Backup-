@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
  */
 public class NormalSettingActivity extends BaseAppCompatActivity implements View.OnClickListener {
 
-    @BindString(R.string.normalSetting)
+    @BindString(R.string.NormalSetting)
     String strTitle;
 
     /**

@@ -365,4 +365,39 @@ public class HttpServicePath {
      */
     public static String getOrderDetailsDataPath = RootPath + "/app-travel/trip-order-info";
 
+    /**
+     * 忽略订单
+     */
+    public static String setIgnoreOrderDataPath = RootPath + "/app-travel/publisher-ignore-order";
+
+    /**
+     * 接受订单
+     */
+    public static String setConfirmOrderDataPath = RootPath + "/app-travel/publisher-confirm-order";
+
+    /**
+     * 取消订单
+     */
+    public static String setCancelOrderDataPath = RootPath + "/app-travel/publisher-cancel-order";
+
+    /**
+     * 得到旅途消息
+     */
+    public static String getTripGalleryMsgDataPath = RootPath + "/app-user-message/get-tp-messages";
+
+    /**
+     * 得到问答消息
+     */
+    public static String getQuestionAndAnswerMsgDataPath = RootPath + "/app-user-message/get-qa-messages";
+
+    /**
+     * 得到订单消息
+     */
+    public static String getOrderMsgDataPath = RootPath + "/app-user-message/get-order-messages";
+
+    /**
+     * 得到系统消息
+     */
+    public static String getSystemMsgDataPath = RootPath + "/app-user-message/get-sys-messages";
+
 }

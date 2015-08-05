@@ -55,6 +55,11 @@ public class ConfirmOrderFragment extends Fragment {
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
 
+    private static final String ID = "id";
+    private static final String ORDER_STATUS = "orderStatus";
+
+    private static final String CONFIRM = "Confirm";
+
     private String userSign;
     private String verification;
 
@@ -190,9 +195,9 @@ public class ConfirmOrderFragment extends Fragment {
                 int location = position - 1;
                 String strID = listAll.get(location).getOrderNumber();
                 Intent intent = new Intent(getActivity(), OrderDetailsActivity.class);
-                intent.putExtra("id", strID);
-                getActivity().startActivity(intent);
-                DeBugLog.i(TAG, "strID:" + strID);
+                intent.putExtra(ID, strID);
+                intent.putExtra(ORDER_STATUS, CONFIRM);
+                startActivity(intent);
             }
         });
 

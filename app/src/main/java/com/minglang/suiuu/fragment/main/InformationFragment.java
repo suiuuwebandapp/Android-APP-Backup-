@@ -31,6 +31,8 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  * Use the {@link InformationFragment#newInstance} factory method to
  * create an instance of this fragment.
+ * <p/>
+ * 消息页面
  */
 public class InformationFragment extends BaseFragment {
     private static final String TAG = InformationFragment.class.getSimpleName();
@@ -42,16 +44,16 @@ public class InformationFragment extends BaseFragment {
     private String userSign;
     private String verification;
 
-    @BindString(R.string.newAt)
+    @BindString(R.string.TripGalleryMsg)
     String str1;
 
-    @BindString(R.string.newComment)
+    @BindString(R.string.QuestionAndAnswerMsg)
     String str2;
 
-    @BindString(R.string.newReply)
+    @BindString(R.string.OrderMsg)
     String str3;
 
-    @BindString(R.string.newAttention)
+    @BindString(R.string.SystemMsg)
     String str4;
 
     @BindColor(R.color.tr_black)

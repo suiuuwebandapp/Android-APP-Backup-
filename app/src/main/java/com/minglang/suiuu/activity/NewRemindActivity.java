@@ -32,16 +32,16 @@ import butterknife.ButterKnife;
 
 public class NewRemindActivity extends BaseAppCompatActivity {
 
-    @BindString(R.string.newAt)
+    @BindString(R.string.NewAt)
     String str1;
 
-    @BindString(R.string.newComment)
+    @BindString(R.string.NewComment)
     String str2;
 
-    @BindString(R.string.newReply)
+    @BindString(R.string.NewReply)
     String str3;
 
-    @BindString(R.string.newAttention)
+    @BindString(R.string.NewAttention)
     String str4;
 
     @BindColor(R.color.tr_black)

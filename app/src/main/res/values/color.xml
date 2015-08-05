@@ -47,9 +47,9 @@
     <color name="textColor">#737373</color>
 
     <!--登陆按钮背景色-->
-    <color name="login_bg_color">#ffa91b</color>
+    <color name="btn_1_bg_color">#ffa91b</color>
     <!--注册按钮背景色-->
-    <color name="register_bg_color">#95cafe</color>
+    <color name="btn_2_bg_color">#95cafe</color>
 
     <!--文字颜色-->
     <color name="text_color1">#ffe986</color>

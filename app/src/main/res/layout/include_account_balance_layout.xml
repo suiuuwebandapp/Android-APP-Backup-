@@ -40,6 +40,6 @@
         android:layout_marginTop="@dimen/layout_10dp"
         android:text="@string/ClickWithdrawals"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/login_bg_color"/>
+        android:textColor="@color/btn_1_bg_color"/>
 
 </RelativeLayout>

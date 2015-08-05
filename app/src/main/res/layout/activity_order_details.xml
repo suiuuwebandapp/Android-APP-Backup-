@@ -31,7 +31,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/layout_250dp">
@@ -256,6 +255,7 @@
                             android:layout_height="wrap_content"
                             android:singleLine="true"
                             android:text="@string/zero"
+                            android:textColor="@color/text_select_true"
                             android:textSize="@dimen/layout_16sp"/>
 
                     </LinearLayout>
@@ -307,6 +307,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/layout_2dp"
+                    android:layout_marginBottom="@dimen/layout_15dp"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
@@ -329,6 +330,16 @@
                         android:text="@string/tempEmail"/>
 
                 </LinearLayout>
+
+                <include
+                    android:id="@+id/order_details_btn_layout_1"
+                    layout="@layout/layout_suiuu_order_details_bottom"
+                    android:visibility="gone"/>
+
+                <include
+                    android:id="@+id/order_details_btn_layout_2"
+                    layout="@layout/layout_suiuu_order_details_bottom_2"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

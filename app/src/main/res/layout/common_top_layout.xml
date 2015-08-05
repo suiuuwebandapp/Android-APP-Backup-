@@ -92,7 +92,6 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/main_3_questions"
             android:layout_toStartOf="@+id/main_3_questions"
-            android:contentDescription="@string/openShoot"
             android:src="@drawable/icon_search_selector"/>
 
         <ImageView
@@ -102,7 +101,6 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:contentDescription="@string/openAsk"
             android:src="@drawable/icon_questions_selector"/>
 
     </RelativeLayout>

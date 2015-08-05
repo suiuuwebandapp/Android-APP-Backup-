@@ -32,7 +32,7 @@ public class SettingActivity extends BaseAppCompatActivity {
 
     private static final String TAG = SettingActivity.class.getSimpleName();
 
-    @BindString(R.string.setting)
+    @BindString(R.string.Setting)
     String strSetting;
 
     @BindString(R.string.button_logout)
