@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.NewRemindPageAdapter;
 import com.minglang.suiuu.base.BaseFragment;
-import com.minglang.suiuu.fragment.remind.NewAtFragment;
-import com.minglang.suiuu.fragment.remind.NewAttentionFragment;
-import com.minglang.suiuu.fragment.remind.NewCommentFragment;
-import com.minglang.suiuu.fragment.remind.NewReplyFragment;
+import com.minglang.suiuu.fragment.remind.MsgOrderFragment;
+import com.minglang.suiuu.fragment.remind.MsgQuestionFragment;
+import com.minglang.suiuu.fragment.remind.MsgTripGalleryFragment;
+import com.minglang.suiuu.fragment.remind.MsgSystemFragment;
 import com.minglang.suiuu.utils.DeBugLog;
 
 import java.util.ArrayList;
@@ -122,20 +122,16 @@ public class InformationFragment extends BaseFragment {
         tabLayout.addTab(tabLayout.newTab().setText(str4), false);
         tabLayout.setTabTextColors(normalColor, selectedColor);
 
-        //新@页面
-        NewAtFragment newAtFragment = NewAtFragment.newInstance(userSign, verification);
-        //新评论页面
-        NewCommentFragment newCommentFragment = NewCommentFragment.newInstance(userSign, verification);
-        //新回复页面
-        NewReplyFragment newReplyFragment = NewReplyFragment.newInstance(userSign, verification);
-        //新关注页面
-        NewAttentionFragment newAttentionFragment = NewAttentionFragment.newInstance(userSign, verification);
+        MsgTripGalleryFragment msgTripGalleryFragment = MsgTripGalleryFragment.newInstance(userSign, verification);
+        MsgQuestionFragment msgQuestionFragment = MsgQuestionFragment.newInstance(userSign, verification);
+        MsgOrderFragment msgOrderFragment = MsgOrderFragment.newInstance(userSign, verification);
+        MsgSystemFragment msgSystemFragment = MsgSystemFragment.newInstance(userSign, verification);
 
         List<android.support.v4.app.Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(newAtFragment);
-        fragmentList.add(newCommentFragment);
-        fragmentList.add(newReplyFragment);
-        fragmentList.add(newAttentionFragment);
+        fragmentList.add(msgTripGalleryFragment);
+        fragmentList.add(msgQuestionFragment);
+        fragmentList.add(msgOrderFragment);
+        fragmentList.add(msgSystemFragment);
 
         FragmentManager fm = getChildFragmentManager();
 

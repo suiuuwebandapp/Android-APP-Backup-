@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.minglang.suiuu.fragment.remind.NewAtFragment">
+    tools:context="com.minglang.suiuu.fragment.remind.MsgTripGalleryFragment">
 
     <in.srain.cube.views.ptr.PtrClassicFrameLayout
         android:id="@+id/new_at_fragment_head_frame"

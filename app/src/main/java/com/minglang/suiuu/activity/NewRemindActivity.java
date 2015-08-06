@@ -12,10 +12,10 @@ import android.view.MenuItem;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.NewRemindPageAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.fragment.remind.NewAtFragment;
-import com.minglang.suiuu.fragment.remind.NewAttentionFragment;
-import com.minglang.suiuu.fragment.remind.NewCommentFragment;
-import com.minglang.suiuu.fragment.remind.NewReplyFragment;
+import com.minglang.suiuu.fragment.remind.MsgOrderFragment;
+import com.minglang.suiuu.fragment.remind.MsgTripGalleryFragment;
+import com.minglang.suiuu.fragment.remind.MsgSystemFragment;
+import com.minglang.suiuu.fragment.remind.MsgQuestionFragment;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
@@ -62,22 +62,22 @@ public class NewRemindActivity extends BaseAppCompatActivity {
     /**
      * 新@页面
      */
-    private NewAtFragment newAtFragment;
+    private MsgTripGalleryFragment msgTripGalleryFragment;
 
     /**
      * 新评论页面
      */
-    private NewCommentFragment newCommentFragment;
+    private MsgQuestionFragment msgQuestionFragment;
 
     /**
      * 新回复页面
      */
-    private NewReplyFragment newReplyFragment;
+    private MsgOrderFragment msgOrderFragment;
 
     /**
      * 新关注页面
      */
-    private NewAttentionFragment newAttentionFragment;
+    private MsgSystemFragment msgSystemFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,10 +118,10 @@ public class NewRemindActivity extends BaseAppCompatActivity {
         CreateFragment();
 
         List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(newAtFragment);
-        fragmentList.add(newCommentFragment);
-        fragmentList.add(newReplyFragment);
-        fragmentList.add(newAttentionFragment);
+        fragmentList.add(msgTripGalleryFragment);
+        fragmentList.add(msgQuestionFragment);
+        fragmentList.add(msgOrderFragment);
+        fragmentList.add(msgSystemFragment);
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -136,10 +136,10 @@ public class NewRemindActivity extends BaseAppCompatActivity {
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
 
-        newAtFragment = NewAtFragment.newInstance(userSign, verification);
-        newCommentFragment = NewCommentFragment.newInstance(userSign, verification);
-        newReplyFragment = NewReplyFragment.newInstance(userSign, verification);
-        newAttentionFragment = NewAttentionFragment.newInstance(userSign, verification);
+        msgTripGalleryFragment = MsgTripGalleryFragment.newInstance(userSign, verification);
+        msgQuestionFragment = MsgQuestionFragment.newInstance(userSign, verification);
+        msgOrderFragment = MsgOrderFragment.newInstance(userSign, verification);
+        msgSystemFragment = MsgSystemFragment.newInstance(userSign, verification);
     }
 
     @Override

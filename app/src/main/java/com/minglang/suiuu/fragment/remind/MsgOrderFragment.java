@@ -1,7 +1,6 @@
 package com.minglang.suiuu.fragment.remind;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,13 +16,11 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.OtherUserActivity;
-import com.minglang.suiuu.activity.PersonalCenterActivity;
-import com.minglang.suiuu.adapter.MessageAdapter;
+import com.minglang.suiuu.adapter.MsgOrderAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
-import com.minglang.suiuu.entity.SuiuuMessage;
-import com.minglang.suiuu.entity.SuiuuMessage.SuiuuMessageBase.SuiuuMessageData;
+import com.minglang.suiuu.entity.MsgOrder;
+import com.minglang.suiuu.entity.MsgOrder.MsgOrderData.OrderEntity.MsgOrderItemData;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -45,14 +42,12 @@ import in.srain.cube.views.ptr.header.MaterialHeader;
 /**
  * 新回复页面
  * <p/>
- * Use the {@link NewReplyFragment#newInstance} factory method to
+ * Use the {@link MsgOrderFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewReplyFragment extends BaseFragment {
+public class MsgOrderFragment extends BaseFragment {
 
-    private static final String TAG = NewReplyFragment.class.getSimpleName();
-
-    private static final String TYPE = "type";
+    private static final String TAG = MsgOrderFragment.class.getSimpleName();
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -81,11 +76,11 @@ public class NewReplyFragment extends BaseFragment {
     @Bind(R.id.newReplyList)
     ListView newReplyList;
 
-    private List<SuiuuMessageData> listAll = new ArrayList<>();
+    private List<MsgOrderItemData> listAll = new ArrayList<>();
 
     private ProgressDialog progressDialog;
 
-    private MessageAdapter adapter;
+    private MsgOrderAdapter adapter;
 
     private int page = 1;
 
@@ -95,10 +90,10 @@ public class NewReplyFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NewReplyFragment.
+     * @return A new instance of fragment MsgOrderFragment.
      */
-    public static NewReplyFragment newInstance(String param1, String param2) {
-        NewReplyFragment fragment = new NewReplyFragment();
+    public static MsgOrderFragment newInstance(String param1, String param2) {
+        MsgOrderFragment fragment = new MsgOrderFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -106,7 +101,7 @@ public class NewReplyFragment extends BaseFragment {
         return fragment;
     }
 
-    public NewReplyFragment() {
+    public MsgOrderFragment() {
         // Required empty public constructor
     }
 
@@ -121,11 +116,11 @@ public class NewReplyFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_new_reply, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_msg_order, container, false);
         ButterKnife.bind(this, rootView);
         initView();
         ViewAction();
-        getNewAt4Service(page);
+//        getNewAt4Service(page);
         DeBugLog.i(TAG, "userSign:" + userSign);
         return rootView;
     }
@@ -167,7 +162,7 @@ public class NewReplyFragment extends BaseFragment {
         // default is true
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
-        adapter = new MessageAdapter(getActivity(), "4");
+        adapter = new MsgOrderAdapter(getActivity(),listAll,R.layout.item_msg_order);
         newReplyList.setAdapter(adapter);
     }
 
@@ -189,15 +184,7 @@ public class NewReplyFragment extends BaseFragment {
         newReplyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String OtherUserSign = listAll.get(position).getCreateUserSign();
-                Intent intent;
-                if (OtherUserSign.equals(userSign)) {
-                    intent = new Intent(getActivity(), PersonalCenterActivity.class);
-                } else {
-                    intent = new Intent(getActivity(), OtherUserActivity.class);
-                    intent.putExtra(USER_SIGN, OtherUserSign);
-                }
-                startActivity(intent);
+
             }
         });
     }
@@ -207,7 +194,6 @@ public class NewReplyFragment extends BaseFragment {
      */
     private void getNewAt4Service(int page) {
         RequestParams params = new RequestParams();
-        params.addBodyParameter(TYPE, "2");
         params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter(PAGE, String.valueOf(page));
         params.addBodyParameter(NUMBER, String.valueOf(10));
@@ -246,8 +232,8 @@ public class NewReplyFragment extends BaseFragment {
             Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
         } else {
             try {
-                SuiuuMessage message = JsonUtils.getInstance().fromJSON(SuiuuMessage.class, str);
-                List<SuiuuMessageData> list = message.getData().getData();
+                MsgOrder message = JsonUtils.getInstance().fromJSON(MsgOrder.class, str);
+                List<MsgOrderItemData> list = message.getData().getOrder().getData();
                 if (list != null && list.size() > 0) {
                     clearDataList();
                     listAll.addAll(list);

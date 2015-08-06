@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.minglang.suiuu.fragment.remind.NewCommentFragment">
+    tools:context="com.minglang.suiuu.fragment.remind.MsgSystemFragment">
 
     <in.srain.cube.views.ptr.PtrClassicFrameLayout
-        android:id="@+id/new_comment_fragment_head_frame"
+        android:id="@+id/new_attention_fragment_head_frame"
         xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,7 +21,7 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/newCommentList"/>
+            android:id="@+id/newAttentionList"/>
 
     </in.srain.cube.views.ptr.PtrClassicFrameLayout>
 

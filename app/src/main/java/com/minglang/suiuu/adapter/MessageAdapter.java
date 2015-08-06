@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
+import com.minglang.suiuu.entity.MsgTripGallery.MsgTripGalleryData.MsgTripGalleryItemData;
 import com.minglang.suiuu.entity.SuiuuMessage.SuiuuMessageBase.SuiuuMessageData;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -27,7 +28,7 @@ import java.util.List;
 public class MessageAdapter extends BaseAdapter {
 
     private Context context;
-    private List<SuiuuMessageData> list;
+    private List<MsgTripGalleryItemData> list;
 
     private ImageLoader imageLoader;
 
@@ -35,19 +36,19 @@ public class MessageAdapter extends BaseAdapter {
 
     private DisplayImageOptions displayImageOptions;
 
-    public MessageAdapter(Context context, String type) {
+    public MessageAdapter(Context context) {
         this.context = context;
-        this.type = type;
 
         imageLoader = ImageLoader.getInstance();
 
         displayImageOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image)
+                .showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
-    public void setList(List<SuiuuMessageData> list) {
+    public void setList(List<MsgTripGalleryItemData> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -77,10 +78,9 @@ public class MessageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        SuiuuMessageData data = list.get(position);
-
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_message_layout, position);
         convertView = holder.getConvertView();
+        MsgTripGalleryItemData data = list.get(position);
 
         CircleImageView headImage = holder.getView(R.id.item_message_head_image);
         TextView info = holder.getView(R.id.item_message_info);
@@ -91,40 +91,6 @@ public class MessageAdapter extends BaseAdapter {
         }
 
         String strInfo = data.getNickname();
-        switch (type) {
-
-            case "1":
-                if (!TextUtils.isEmpty(strInfo)) {
-                    info.setText(strInfo + " @了你，快去看吧。");
-                } else {
-                    info.setText("匿名用户 @了你，快去看吧。");
-                }
-                break;
-
-            case "2":
-                if (!TextUtils.isEmpty(strInfo)) {
-                    info.setText(strInfo + " 评论了你，快去看吧。");
-                } else {
-                    info.setText("匿名用户 评论了你，快去看吧。");
-                }
-                break;
-
-            case "3":
-                if (!TextUtils.isEmpty(strInfo)) {
-                    info.setText(strInfo + " 回复了你，快去看吧。");
-                } else {
-                    info.setText("匿名用户 回复了你，快去看吧。");
-                }
-                break;
-
-            case "4":
-                if (!TextUtils.isEmpty(strInfo)) {
-                    info.setText(strInfo + " 关注了你，快去看吧。");
-                } else {
-                    info.setText("匿名用户 关注了你，快去看吧。");
-                }
-                break;
-        }
 
         return convertView;
     }

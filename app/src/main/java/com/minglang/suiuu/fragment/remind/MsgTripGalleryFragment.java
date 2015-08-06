@@ -1,7 +1,6 @@
 package com.minglang.suiuu.fragment.remind;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,12 +16,11 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.CommentsActivity;
 import com.minglang.suiuu.adapter.MessageAdapter;
-import com.minglang.suiuu.application.SuiuuApplication;
+import com.minglang.suiuu.adapter.MsgTripGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
-import com.minglang.suiuu.entity.SuiuuMessage;
-import com.minglang.suiuu.entity.SuiuuMessage.SuiuuMessageBase.SuiuuMessageData;
+import com.minglang.suiuu.entity.MsgTripGallery;
+import com.minglang.suiuu.entity.MsgTripGallery.MsgTripGalleryData.MsgTripGalleryItemData;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -42,16 +40,14 @@ import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.header.MaterialHeader;
 
 /**
- * 新关注页面
+ * 新@页面
  * <p/>
- * Use the {@link NewAttentionFragment#newInstance} factory method to
+ * Use the {@link MsgTripGalleryFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewAttentionFragment extends BaseFragment {
+public class MsgTripGalleryFragment extends BaseFragment {
 
-    private static final String TAG = NewAttentionFragment.class.getSimpleName();
-
-    private static final String TYPE = "type";
+    private static final String TAG = MsgTripGalleryFragment.class.getSimpleName();
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -60,14 +56,11 @@ public class NewAttentionFragment extends BaseFragment {
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
 
-    private static final String TRIP_ID = "tripId";
-    private static final String ARTICLE_ID = "articleId";
-
     private String userSign;
     private String verification;
 
     @BindString(R.string.load_wait)
-    String loadString;
+    String dialogMsg;
 
     @BindString(R.string.NoData)
     String noData;
@@ -75,17 +68,17 @@ public class NewAttentionFragment extends BaseFragment {
     @BindString(R.string.NetworkAnomaly)
     String netWorkError;
 
-    @Bind(R.id.new_attention_fragment_head_frame)
+    @Bind(R.id.new_at_fragment_head_frame)
     PtrClassicFrameLayout mPtrFrame;
 
-    @Bind(R.id.newAttentionList)
-    ListView newAttentionList;
+    @Bind(R.id.newAtList)
+    ListView msgTripGalleryList;
 
-    private List<SuiuuMessageData> listAll = new ArrayList<>();
+    private List<MsgTripGalleryItemData> listAll = new ArrayList<>();
 
     private ProgressDialog progressDialog;
 
-    private MessageAdapter adapter;
+    private MsgTripGalleryAdapter adapter;
 
     private int page = 1;
 
@@ -95,10 +88,10 @@ public class NewAttentionFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NewAttentionFragment.
+     * @return A new instance of fragment MsgTripGalleryFragment.
      */
-    public static NewAttentionFragment newInstance(String param1, String param2) {
-        NewAttentionFragment fragment = new NewAttentionFragment();
+    public static MsgTripGalleryFragment newInstance(String param1, String param2) {
+        MsgTripGalleryFragment fragment = new MsgTripGalleryFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -106,7 +99,7 @@ public class NewAttentionFragment extends BaseFragment {
         return fragment;
     }
 
-    public NewAttentionFragment() {
+    public MsgTripGalleryFragment() {
         // Required empty public constructor
     }
 
@@ -121,12 +114,12 @@ public class NewAttentionFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_new_attention, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_msg_trip_gallery, container, false);
         ButterKnife.bind(this, rootView);
         initView();
         ViewAction();
-        getNewAt4Service(page);
-        DeBugLog.i(TAG, "userSign:" + userSign);
+        //getData4Service(page);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 
@@ -141,7 +134,7 @@ public class NewAttentionFragment extends BaseFragment {
      */
     private void initView() {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(loadString);
+        progressDialog.setMessage(dialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         int paddingParams = Utils.newInstance().dip2px(15, getActivity());
@@ -167,39 +160,30 @@ public class NewAttentionFragment extends BaseFragment {
         // default is true
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
-        adapter = new MessageAdapter(getActivity(), "2");
-        newAttentionList.setAdapter(adapter);
+        adapter = new MsgTripGalleryAdapter(getActivity(), listAll, R.layout.item_msg_trip_gallery);
+        msgTripGalleryList.setAdapter(adapter);
     }
 
     private void ViewAction() {
 
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, newAttentionList, header);
+            public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View view, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, msgTripGalleryList, header);
             }
 
             @Override
-            public void onRefreshBegin(PtrFrameLayout frame) {
+            public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
                 page = 1;
-                getNewAt4Service(page);
+                getData4Service(page);
             }
+
         });
 
-        newAttentionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        msgTripGalleryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String rType = listAll.get(position).getRtype();
-                Intent intent = new Intent(getActivity(), CommentsActivity.class);
-                String relativeId = listAll.get(position).getRelativeId();
-                if (rType.equals("1")) {
-                    intent.putExtra(TRIP_ID, relativeId);
-                    intent.putExtra(ARTICLE_ID, "");
-                } else if (rType.equals("2")) {
-                    intent.putExtra(TRIP_ID, "");
-                    intent.putExtra(ARTICLE_ID, relativeId);
-                }
-                startActivity(intent);
+
             }
         });
     }
@@ -207,15 +191,14 @@ public class NewAttentionFragment extends BaseFragment {
     /**
      * 从网络获取数据
      */
-    private void getNewAt4Service(int page) {
+    private void getData4Service(int page) {
         RequestParams params = new RequestParams();
-        params.addBodyParameter(TYPE, "2");
         params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(10));
+        params.addBodyParameter(NUMBER, String.valueOf(15));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.GetMessageListPath, new NewAttentionRequestCallBack());
+                HttpServicePath.getTripGalleryMsgDataPath, new MsgTripGalleryRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
@@ -248,25 +231,25 @@ public class NewAttentionFragment extends BaseFragment {
             Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
         } else {
             try {
-                SuiuuMessage message = JsonUtils.getInstance().fromJSON(SuiuuMessage.class, str);
-                List<SuiuuMessageData> list = message.getData().getData();
+                MsgTripGallery msgTripGallery = JsonUtils.getInstance().fromJSON(MsgTripGallery.class, str);
+                List<MsgTripGalleryItemData> list = msgTripGallery.getData().getData();
                 if (list != null && list.size() > 0) {
                     clearDataList();
                     listAll.addAll(list);
                     adapter.setList(listAll);
                 } else {
                     failureLessPage();
-                    Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "新关注数据请求失败:" + e.getMessage());
+                DeBugLog.e(TAG, "旅途数据解析异常:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(SuiuuApplication.applicationContext, netWorkError, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private class NewAttentionRequestCallBack extends RequestCallBack<String> {
+    private class MsgTripGalleryRequestCallBack extends RequestCallBack<String> {
 
         @Override
         public void onStart() {
@@ -278,17 +261,16 @@ public class NewAttentionFragment extends BaseFragment {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
-            DeBugLog.i(TAG, "新关注返回的数据:" + str);
             hideDialog();
             bindData2View(str);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "新关注数据请求失败:" + s);
+            DeBugLog.e(TAG, "获取旅途数据失败:" + s);
             hideDialog();
             failureLessPage();
-            Toast.makeText(SuiuuApplication.applicationContext, netWorkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();
         }
 
     }
