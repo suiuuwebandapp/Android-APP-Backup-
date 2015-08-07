@@ -1,7 +1,6 @@
 package com.minglang.suiuu.fragment.remind;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -73,7 +72,7 @@ public class MsgQuestionFragment extends BaseFragment {
     PtrClassicFrameLayout mPtrFrame;
 
     @Bind(R.id.newCommentList)
-    ListView newCommentList;
+    ListView msgQuestionList;
 
     private List<MsgQuestionItemData> listAll = new ArrayList<>();
 
@@ -119,8 +118,8 @@ public class MsgQuestionFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         initView();
         ViewAction();
-        //getNewAt4Service(page);
-        DeBugLog.i(TAG, "userSign:" + userSign);
+        getData4Service(page);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 
@@ -162,7 +161,7 @@ public class MsgQuestionFragment extends BaseFragment {
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
         adapter = new MsgQuestionAdapter(getActivity(),listAll,R.layout.item_msg_question);
-        newCommentList.setAdapter(adapter);
+        msgQuestionList.setAdapter(adapter);
     }
 
     private void ViewAction() {
@@ -170,17 +169,17 @@ public class MsgQuestionFragment extends BaseFragment {
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, newCommentList, header);
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, msgQuestionList, header);
             }
 
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
                 page = 1;
-                getNewAt4Service(page);
+                getData4Service(page);
             }
         });
 
-        newCommentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        msgQuestionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -191,14 +190,14 @@ public class MsgQuestionFragment extends BaseFragment {
     /**
      * 从网络获取数据
      */
-    private void getNewAt4Service(int page) {
+    private void getData4Service(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(10));
+        params.addBodyParameter(NUMBER, String.valueOf(15));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.GetMessageListPath, new NewCommentRequestCallBack());
+                HttpServicePath.getQuestionAndAnswerMsgDataPath, new NewCommentRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
@@ -242,7 +241,7 @@ public class MsgQuestionFragment extends BaseFragment {
                     Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "新评论数据请求失败:" + e.getMessage());
+                DeBugLog.e(TAG, "问答消息数据请求失败:" + e.getMessage());
                 failureLessPage();
                 Toast.makeText(SuiuuApplication.applicationContext, netWorkError, Toast.LENGTH_SHORT).show();
             }
@@ -261,14 +260,14 @@ public class MsgQuestionFragment extends BaseFragment {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
-            DeBugLog.i(TAG, "新评论返回的数据:" + str);
+            DeBugLog.i(TAG, "问答消息返回的数据:" + str);
             hideDialog();
             bindData2View(str);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "新评论数据请求失败:" + s);
+            DeBugLog.e(TAG, "问答消息数据请求失败:" + s);
             hideDialog();
             failureLessPage();
             Toast.makeText(SuiuuApplication.applicationContext, netWorkError, Toast.LENGTH_SHORT).show();

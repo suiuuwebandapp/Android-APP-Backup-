@@ -472,7 +472,9 @@ public class MsgOrder {
                 public String getRelativeType() {
                     return relativeType;
                 }
+
             }
+
         }
 
     }

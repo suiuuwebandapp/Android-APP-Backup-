@@ -5,10 +5,53 @@
     android:layout_height="wrap_content">
 
     <com.minglang.suiuu.customview.CircleImageView
+        android:id="@+id/item_msg_trip_gallery_head_image_view"
         android:layout_width="@dimen/layout_50dp"
         android:layout_height="@dimen/layout_50dp"
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/layout_10dp"
         android:src="@drawable/default_head_image"/>
+
+    <TextView
+        android:id="@+id/item_msg_trip_gallery_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/item_msg_trip_gallery_head_image_view"
+        android:layout_toRightOf="@+id/item_msg_trip_gallery_head_image_view"
+        android:clickable="false"
+        android:text="@string/userName"
+        android:textSize="@dimen/layout_18sp"/>
+
+    <TextView
+        android:id="@+id/textView46"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/item_msg_trip_gallery_user_name"
+        android:layout_toRightOf="@+id/item_msg_trip_gallery_user_name"
+        android:text="@string/in"
+        android:textSize="@dimen/layout_18sp"/>
+
+    <TextView
+        android:id="@+id/item_msg_trip_gallery_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/textView46"
+        android:layout_toRightOf="@+id/textView46"
+        android:clickable="false"
+        android:text="@string/itemLocationInfo"
+        android:textSize="@dimen/layout_18sp"/>
+
+    <TextView
+        android:id="@+id/item_msg_trip_gallery_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/item_msg_trip_gallery_info"
+        android:layout_toRightOf="@+id/item_msg_trip_gallery_info"
+        android:text="@string/Action"
+        android:textSize="@dimen/layout_18sp"/>
 
 </RelativeLayout>

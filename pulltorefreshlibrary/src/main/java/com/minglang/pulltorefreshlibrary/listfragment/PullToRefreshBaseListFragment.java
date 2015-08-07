@@ -34,14 +34,23 @@ abstract class PullToRefreshBaseListFragment<T extends PullToRefreshBase<? exten
 	public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View layout = super.onCreateView(inflater, container, savedInstanceState);
 
-		ListView lv = (ListView) layout.findViewById(android.R.id.list);
-		ViewGroup parent = (ViewGroup) lv.getParent();
+		ListView lv = null;
+		if (layout != null) {
+			lv = (ListView) layout.findViewById(android.R.id.list);
+		}
+		ViewGroup parent = null;
+		if (lv != null) {
+			parent = (ViewGroup) lv.getParent();
+		}
 
 		// Remove ListView and add PullToRefreshListView in its place
-		int lvIndex = parent.indexOfChild(lv);
-		parent.removeViewAt(lvIndex);
-		mPullToRefreshListView = onCreatePullToRefreshListView(inflater, savedInstanceState);
-		parent.addView(mPullToRefreshListView, lvIndex, lv.getLayoutParams());
+		int lvIndex = 0;
+		if (parent != null) {
+			lvIndex = parent.indexOfChild(lv);
+			parent.removeViewAt(lvIndex);
+			mPullToRefreshListView = onCreatePullToRefreshListView(inflater, savedInstanceState);
+			parent.addView(mPullToRefreshListView, lvIndex, lv.getLayoutParams());
+		}
 
 		return layout;
 	}

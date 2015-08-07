@@ -17,7 +17,6 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MsgSystemAdapter;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MsgSystem;
 import com.minglang.suiuu.entity.MsgSystem.MsgSystemData.MsgSystemItemData;
@@ -72,7 +71,7 @@ public class MsgSystemFragment extends BaseFragment {
     PtrClassicFrameLayout mPtrFrame;
 
     @Bind(R.id.newAttentionList)
-    ListView newAttentionList;
+    ListView systemMsgList;
 
     private List<MsgSystemItemData> listAll = new ArrayList<>();
 
@@ -161,7 +160,7 @@ public class MsgSystemFragment extends BaseFragment {
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
         adapter = new MsgSystemAdapter(getActivity(), listAll, R.layout.item_msg_system);
-        newAttentionList.setAdapter(adapter);
+        systemMsgList.setAdapter(adapter);
     }
 
     private void ViewAction() {
@@ -169,7 +168,7 @@ public class MsgSystemFragment extends BaseFragment {
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, newAttentionList, header);
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, systemMsgList, header);
             }
 
             @Override
@@ -179,7 +178,7 @@ public class MsgSystemFragment extends BaseFragment {
             }
         });
 
-        newAttentionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        systemMsgList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -194,10 +193,10 @@ public class MsgSystemFragment extends BaseFragment {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(10));
+        params.addBodyParameter(NUMBER, String.valueOf(15));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.GetMessageListPath, new NewAttentionRequestCallBack());
+                HttpServicePath.getSystemMsgDataPath, new NewAttentionRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
@@ -238,12 +237,12 @@ public class MsgSystemFragment extends BaseFragment {
                     adapter.setList(listAll);
                 } else {
                     failureLessPage();
-                    Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "新关注数据请求失败:" + e.getMessage());
+                DeBugLog.e(TAG, "系统消息解析失败:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(SuiuuApplication.applicationContext, netWorkError, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -260,17 +259,17 @@ public class MsgSystemFragment extends BaseFragment {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
-            DeBugLog.i(TAG, "新关注返回的数据:" + str);
+            DeBugLog.i(TAG, "系统消息返回的数据:" + str);
             hideDialog();
             bindData2View(str);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "新关注数据请求失败:" + s);
+            DeBugLog.e(TAG, "系统消息数据请求失败:" + s);
             hideDialog();
             failureLessPage();
-            Toast.makeText(SuiuuApplication.applicationContext, netWorkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();
         }
 
     }

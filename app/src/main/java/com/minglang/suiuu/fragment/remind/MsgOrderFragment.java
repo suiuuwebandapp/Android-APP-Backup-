@@ -17,7 +17,6 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MsgOrderAdapter;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MsgOrder;
 import com.minglang.suiuu.entity.MsgOrder.MsgOrderData.OrderEntity.MsgOrderItemData;
@@ -55,8 +54,6 @@ public class MsgOrderFragment extends BaseFragment {
 
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
-
-    private static final String USER_SIGN = "userSign";
 
     private String userSign;
     private String verification;
@@ -120,8 +117,8 @@ public class MsgOrderFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         initView();
         ViewAction();
-//        getNewAt4Service(page);
-        DeBugLog.i(TAG, "userSign:" + userSign);
+        getNewAt4Service(page);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 
@@ -162,7 +159,7 @@ public class MsgOrderFragment extends BaseFragment {
         // default is true
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
-        adapter = new MsgOrderAdapter(getActivity(),listAll,R.layout.item_msg_order);
+        adapter = new MsgOrderAdapter(getActivity(), listAll, R.layout.item_msg_order);
         newReplyList.setAdapter(adapter);
     }
 
@@ -196,10 +193,10 @@ public class MsgOrderFragment extends BaseFragment {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(10));
+        params.addBodyParameter(NUMBER, String.valueOf(15));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.GetMessageListPath, new NewReplyRequestCallBack());
+                HttpServicePath.getOrderMsgDataPath, new NewReplyRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
@@ -229,7 +226,7 @@ public class MsgOrderFragment extends BaseFragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 MsgOrder message = JsonUtils.getInstance().fromJSON(MsgOrder.class, str);
@@ -240,12 +237,12 @@ public class MsgOrderFragment extends BaseFragment {
                     adapter.setList(listAll);
                 } else {
                     failureLessPage();
-                    Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "新回复数据请求失败:" + e.getMessage());
+                DeBugLog.e(TAG, "订单数据解析失败:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(SuiuuApplication.applicationContext, netWorkError, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -262,17 +259,17 @@ public class MsgOrderFragment extends BaseFragment {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
-            DeBugLog.i(TAG, "新回复返回的数据:" + str);
+            DeBugLog.i(TAG, "订单返回的数据:" + str);
             hideDialog();
             bindData2View(str);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "新回复数据请求失败:" + s);
+            DeBugLog.e(TAG, "订单数据请求失败:" + s);
             hideDialog();
             failureLessPage();
-            Toast.makeText(SuiuuApplication.applicationContext, netWorkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();
         }
 
     }

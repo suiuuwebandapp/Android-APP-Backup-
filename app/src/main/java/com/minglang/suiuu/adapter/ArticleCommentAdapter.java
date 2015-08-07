@@ -13,7 +13,6 @@ import com.minglang.suiuu.customview.LinearLayoutBaseAdapter;
 import com.minglang.suiuu.entity.LoopArticleCommentList;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
@@ -34,9 +33,7 @@ public class ArticleCommentAdapter extends LinearLayoutBaseAdapter {
         this.list = list;
 
         imageLoader = ImageLoader.getInstance();
-        if (imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        }
+
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
                 .showImageForEmptyUri(R.drawable.default_head_image)
                 .showImageOnFail(R.drawable.default_head_image)
@@ -45,14 +42,14 @@ public class ArticleCommentAdapter extends LinearLayoutBaseAdapter {
     }
 
     @Override
+    @SuppressLint("InflateParams")
     public View getView(int position) {
-        LoopArticleCommentList articleComment = list.get(position);
-
-        @SuppressLint("InflateParams")
         View view = getLayoutInflater().inflate(R.layout.item_comment, null);
         CircleImageView headImageView = (CircleImageView) view.findViewById(R.id.item_comment_head_image);
         TextView commentTitle = (TextView) view.findViewById(R.id.item_comment_title);
         TextView content = (TextView) view.findViewById(R.id.item_comment_content);
+
+        LoopArticleCommentList articleComment = list.get(position);
 
         String headImagePath = articleComment.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {

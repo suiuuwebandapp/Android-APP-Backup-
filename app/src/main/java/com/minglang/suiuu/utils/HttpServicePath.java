@@ -152,23 +152,6 @@ public class HttpServicePath {
     public static String userInformationPath = RootPath + "/app-main/get-homepage-info";
 
     /**
-     * 获取消息列表
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:请求的消息类型 type、统一参数key{@link #key}
-     * <p/>
-     * const TYPE_AT = 1;//类型为@我的
-     * <p/>
-     * const TYPE_COMMENT=2;//类型为评论的
-     * <p/>
-     * const  TYPE_REPLY=3;//类型为回复
-     * <p/>
-     * const  TYPE_ATTENTION=4;//类型为关注
-     */
-    public static String GetMessageListPath = RootPath + "/attention/get-messages-remind";
-
-    /**
      * 获取收藏的随游
      * <p/>
      * 请求方式:Post

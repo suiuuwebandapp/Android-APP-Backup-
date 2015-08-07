@@ -108,11 +108,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppCustomTheme"/>
         <activity
-            android:name=".activity.CollectionActivity"
-            android:label="@string/title_activity_collection"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppCustomTheme"/>
-        <activity
             android:name=".activity.SettingActivity"
             android:label="@string/title_activity_setting"
             android:screenOrientation="portrait"

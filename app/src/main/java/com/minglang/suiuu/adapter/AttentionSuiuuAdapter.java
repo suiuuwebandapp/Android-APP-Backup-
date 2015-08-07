@@ -43,7 +43,8 @@ public class AttentionSuiuuAdapter extends BaseAdapter {
         imageLoader = ImageLoader.getInstance();
 
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
-                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
+                .showImageForEmptyUri(R.drawable.loading)
+                .showImageOnFail(R.drawable.loading_error)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
@@ -121,6 +122,7 @@ public class AttentionSuiuuAdapter extends BaseAdapter {
         }
 
         return convertView;
+
     }
 
 }

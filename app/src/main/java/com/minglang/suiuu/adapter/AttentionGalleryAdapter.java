@@ -44,12 +44,14 @@ public class AttentionGalleryAdapter extends BaseAdapter {
         imageLoader = ImageLoader.getInstance();
 
         options1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
-                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
+                .showImageForEmptyUri(R.drawable.loading)
+                .showImageOnFail(R.drawable.loading_error)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
         options2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image2)
-                .showImageForEmptyUri(R.drawable.default_head_image2).showImageOnFail(R.drawable.default_head_image2)
+                .showImageForEmptyUri(R.drawable.default_head_image2)
+                .showImageOnFail(R.drawable.default_head_image2)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }

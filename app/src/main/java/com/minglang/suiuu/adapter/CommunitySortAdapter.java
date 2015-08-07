@@ -9,6 +9,9 @@ import android.widget.TextView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.utils.ViewHolder;
 
+/**
+ * 问答社区-下拉菜单数据适配器
+ */
 public class CommunitySortAdapter extends BaseAdapter {
 
     private String[] stringArray;

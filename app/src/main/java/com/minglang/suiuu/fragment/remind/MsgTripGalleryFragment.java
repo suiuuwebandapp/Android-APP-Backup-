@@ -16,7 +16,6 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.MessageAdapter;
 import com.minglang.suiuu.adapter.MsgTripGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MsgTripGallery;
@@ -118,7 +117,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         initView();
         ViewAction();
-        //getData4Service(page);
+        getData4Service(page);
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
@@ -261,6 +260,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
+            DeBugLog.i(TAG, "旅图返回的数据:" + str);
             hideDialog();
             bindData2View(str);
         }

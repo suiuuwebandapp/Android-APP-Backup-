@@ -49,10 +49,10 @@
     <string name="NewReply" translatable="false">新回复</string>
     <string name="NewAttention" translatable="false">新关注</string>
 
-    <string name="TripGalleryMsg" translatable="false">旅图消息</string>
-    <string name="QuestionAndAnswerMsg" translatable="false">问答消息</string>
-    <string name="OrderMsg" translatable="false">订单消息</string>
-    <string name="SystemMsg" translatable="false">系统消息</string>
+    <string name="TripGalleryMsg" translatable="false">旅图</string>
+    <string name="QuestionAndAnswerMsg" translatable="false">问答</string>
+    <string name="OrderMsg" translatable="false">订单</string>
+    <string name="SystemMsg" translatable="false">系统</string>
 
     <string name="post" translatable="false">帖子</string>
     <string name="back" translatable="false">返回</string>
@@ -314,6 +314,11 @@
     <string name="ConfirmOrderSuccess" translatable="false">订单已确认</string>
     <string name="IgnoreOrderSuccess" translatable="false">订单已忽略</string>
 
+    <string name="in" translatable="false">在</string>
+    <string name="itemLocationInfo" translatable="false">具体信息</string>
+    <string name="Action" translatable="false">行为</string>
+    <string name="PurchaseSuiuu" translatable="false">购买随游</string>
+
     <string name="tempDate" translatable="false">15.08.15</string>
     <string name="tempTime" translatable="false">9:00 AM</string>
     <string name="tempNumber" translatable="false">2人</string>
@@ -322,6 +327,7 @@
     <string name="tempOrderTitle" translatable="false">法国巴黎浪漫温馨之旅</string>
     <string name="tempPhoneNumber" translatable="false">1782066022</string>
     <string name="tempEmail" translatable="false">123123123@qq.com</string>
+    <string name="tempContent" translatable="false">临时内容</string>
 
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
