@@ -10,10 +10,10 @@ import java.util.List;
 public class CommunityItem {
 
     /**
-     * data : {"question":{"qTitle":"测试03","qCityId":"15","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"3","pvNumber":"0","qInviteAskUser":"085963dc0af031709b032725e3ef18f5","qAddr":"地址03","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-13 18:10:56","qContent":"内容03","qCountryId":"7","qTag":"1"},"answer":[{"headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","aContent":"回答内容01","aUserSign":"085963dc0af031709b032725e3ef18f5","aCreateTime":"2015-07-13 14:59:34","aId":"1","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg","aContent":"02","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-07-13 15:32:21","aId":"2","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg","aContent":"qq","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-07-13 18:14:45","aId":"3","qId":"3"}],"attention":[{"addTime":"2015-06-23 18:05:23","userSign":"085963dc0af031709b032725e3ef18f5","relativeId":"41","attentionId":"174","relativeType":"6","status":"1"}]}
+     * data : {"question":[{"qTitle":"测试03","qCityId":"15","attentionNumber":"4","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"3","pvNumber":"42","qInviteAskUser":"085963dc0af031709b032725e3ef18f5","qAddr":"地址03","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-13 18:10:56","qContent":"内容03","qCountryId":"7","qTag":"1"}],"answer":[{"headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","nickname":"✨yao","aContent":"回答内容01","aUserSign":"085963dc0af031709b032725e3ef18f5","aCreateTime":"2015-07-13 14:59:34","aId":"1","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150804085358_14724.png","nickname":"3dorlen","aContent":"02","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-07-13 15:32:21","aId":"2","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150804085358_14724.png","nickname":"3dorlen","aContent":"qq","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-07-13 18:14:45","aId":"3","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150804085358_14724.png","nickname":"3dorlen","aContent":"test","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-07-22 17:16:05","aId":"4","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150804085358_14724.png","nickname":"3dorlen","aContent":"回答测试","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-08-10 16:41:35","aId":"8","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150804085358_14724.png","nickname":"3dorlen","aContent":"回答测试","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-08-10 16:42:37","aId":"9","qId":"3"}],"attention":[{"addTime":"2015-07-23 10:44:21","userSign":"a4c1406ff4cc382389f19bf6ec3e55c1","relativeId":"3","attentionId":"196","relativeType":"13","status":"1"}]}
      * message :
      * status : 1
-     * token : fcae4ca13c62c3315eec7e257fda1fa6
+     * token : 221eaa518eb2bdf2e35e6b0d28411ffc
      */
     private CommunityItemData data;
     private String message;
@@ -54,15 +54,15 @@ public class CommunityItem {
 
     public static class CommunityItemData {
         /**
-         * question : {"qTitle":"测试03","qCityId":"15","attentionNumber":"0","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"3","pvNumber":"0","qInviteAskUser":"085963dc0af031709b032725e3ef18f5","qAddr":"地址03","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-13 18:10:56","qContent":"内容03","qCountryId":"7","qTag":"1"}
-         * answer : [{"headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","aContent":"回答内容01","aUserSign":"085963dc0af031709b032725e3ef18f5","aCreateTime":"2015-07-13 14:59:34","aId":"1","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg","aContent":"02","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-07-13 15:32:21","aId":"2","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg","aContent":"qq","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-07-13 18:14:45","aId":"3","qId":"3"}]
-         * attention : [{"addTime":"2015-06-23 18:05:23","userSign":"085963dc0af031709b032725e3ef18f5","relativeId":"41","attentionId":"174","relativeType":"6","status":"1"}]
+         * question : [{"qTitle":"测试03","qCityId":"15","attentionNumber":"4","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","qId":"3","pvNumber":"42","qInviteAskUser":"085963dc0af031709b032725e3ef18f5","qAddr":"地址03","qUserSign":"085963dc0af031709b032725e3ef18f5","qCreateTime":"2015-07-13 18:10:56","qContent":"内容03","qCountryId":"7","qTag":"1"}]
+         * answer : [{"headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","nickname":"✨yao","aContent":"回答内容01","aUserSign":"085963dc0af031709b032725e3ef18f5","aCreateTime":"2015-07-13 14:59:34","aId":"1","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150804085358_14724.png","nickname":"3dorlen","aContent":"02","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-07-13 15:32:21","aId":"2","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150804085358_14724.png","nickname":"3dorlen","aContent":"qq","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-07-13 18:14:45","aId":"3","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150804085358_14724.png","nickname":"3dorlen","aContent":"test","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-07-22 17:16:05","aId":"4","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150804085358_14724.png","nickname":"3dorlen","aContent":"回答测试","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-08-10 16:41:35","aId":"8","qId":"3"},{"headImg":"http://image.suiuu.com/suiuu_head/20150804085358_14724.png","nickname":"3dorlen","aContent":"回答测试","aUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","aCreateTime":"2015-08-10 16:42:37","aId":"9","qId":"3"}]
+         * attention : [{"addTime":"2015-07-23 10:44:21","userSign":"a4c1406ff4cc382389f19bf6ec3e55c1","relativeId":"3","attentionId":"196","relativeType":"13","status":"1"}]
          */
-        private QuestionEntity question;
+        private List<QuestionEntity> question;
         private List<AnswerEntity> answer;
         private List<AttentionEntity> attention;
 
-        public void setQuestion(QuestionEntity question) {
+        public void setQuestion(List<QuestionEntity> question) {
             this.question = question;
         }
 
@@ -74,7 +74,7 @@ public class CommunityItem {
             this.attention = attention;
         }
 
-        public QuestionEntity getQuestion() {
+        public List<QuestionEntity> getQuestion() {
             return question;
         }
 
@@ -90,10 +90,10 @@ public class CommunityItem {
             /**
              * qTitle : 测试03
              * qCityId : 15
-             * attentionNumber : 0
+             * attentionNumber : 4
              * headImg : http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg
              * qId : 3
-             * pvNumber : 0
+             * pvNumber : 42
              * qInviteAskUser : 085963dc0af031709b032725e3ef18f5
              * qAddr : 地址03
              * qUserSign : 085963dc0af031709b032725e3ef18f5
@@ -224,23 +224,27 @@ public class CommunityItem {
         public static class AnswerEntity {
             /**
              * headImg : http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg
+             * nickname : ✨yao
              * aContent : 回答内容01
              * aUserSign : 085963dc0af031709b032725e3ef18f5
              * aCreateTime : 2015-07-13 14:59:34
              * aId : 1
              * qId : 3
-             * nickname:ddada
              */
             private String headImg;
+            private String nickname;
             private String aContent;
             private String aUserSign;
             private String aCreateTime;
             private String aId;
             private String qId;
-            private String nickname;
 
             public void setHeadImg(String headImg) {
                 this.headImg = headImg;
+            }
+
+            public void setNickname(String nickname) {
+                this.nickname = nickname;
             }
 
             public void setAContent(String aContent) {
@@ -263,12 +267,12 @@ public class CommunityItem {
                 this.qId = qId;
             }
 
-            public void setNickname(String nickname) {
-                this.nickname = nickname;
-            }
-
             public String getHeadImg() {
                 return headImg;
+            }
+
+            public String getNickname() {
+                return nickname;
             }
 
             public String getAContent() {
@@ -290,19 +294,15 @@ public class CommunityItem {
             public String getQId() {
                 return qId;
             }
-
-            public String getNickname() {
-                return nickname;
-            }
         }
 
         public static class AttentionEntity {
             /**
-             * addTime : 2015-06-23 18:05:23
-             * userSign : 085963dc0af031709b032725e3ef18f5
-             * relativeId : 41
-             * attentionId : 174
-             * relativeType : 6
+             * addTime : 2015-07-23 10:44:21
+             * userSign : a4c1406ff4cc382389f19bf6ec3e55c1
+             * relativeId : 3
+             * attentionId : 196
+             * relativeType : 13
              * status : 1
              */
             private String addTime;
@@ -361,4 +361,5 @@ public class CommunityItem {
             }
         }
     }
+
 }

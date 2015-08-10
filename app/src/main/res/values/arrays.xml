@@ -83,4 +83,18 @@
         <item>猎奇</item>
     </string-array>
 
+    <string-array name="contactUsArray1">
+        <item>网站</item>
+        <item>邮箱</item>
+        <item>电话</item>
+        <item>地址</item>
+    </string-array>
+
+    <string-array name="contactUsArray2">
+        <item>www.suiuu.com</item>
+        <item>info@suiuu.com</item>
+        <item>010&#8211;58483692</item>
+        <item>北京市东城区雍和宫HeSpace</item>
+    </string-array>
+
 </resources>

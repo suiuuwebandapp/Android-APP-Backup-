@@ -19,7 +19,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MsgOrderAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MsgOrder;
-import com.minglang.suiuu.entity.MsgOrder.MsgOrderData.OrderEntity.MsgOrderItemData;
+import com.minglang.suiuu.entity.MsgOrder.MsgOrderData.MsgOrderItemData;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -117,7 +117,7 @@ public class MsgOrderFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         initView();
         ViewAction();
-        getNewAt4Service(page);
+        getData4Service(page);
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
@@ -174,7 +174,7 @@ public class MsgOrderFragment extends BaseFragment {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
                 page = 1;
-                getNewAt4Service(page);
+                getData4Service(page);
             }
         });
 
@@ -189,7 +189,7 @@ public class MsgOrderFragment extends BaseFragment {
     /**
      * 从网络获取数据
      */
-    private void getNewAt4Service(int page) {
+    private void getData4Service(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter(PAGE, String.valueOf(page));
@@ -230,7 +230,7 @@ public class MsgOrderFragment extends BaseFragment {
         } else {
             try {
                 MsgOrder message = JsonUtils.getInstance().fromJSON(MsgOrder.class, str);
-                List<MsgOrderItemData> list = message.getData().getOrder().getData();
+                List<MsgOrderItemData> list = message.getData().getData();
                 if (list != null && list.size() > 0) {
                     clearDataList();
                     listAll.addAll(list);

@@ -52,7 +52,7 @@
     <string name="TripGalleryMsg" translatable="false">旅图</string>
     <string name="QuestionAndAnswerMsg" translatable="false">问答</string>
     <string name="OrderMsg" translatable="false">订单</string>
-    <string name="SystemMsg" translatable="false">系统</string>
+    <string name="SystemMsg" translatable="false">通知</string>
 
     <string name="post" translatable="false">帖子</string>
     <string name="back" translatable="false">返回</string>
@@ -318,6 +318,12 @@
     <string name="itemLocationInfo" translatable="false">具体信息</string>
     <string name="Action" translatable="false">行为</string>
     <string name="PurchaseSuiuu" translatable="false">购买随游</string>
+    <string name="orderTitle" translatable="false">订单标题</string>
+    <string name="confirmationRefund" translatable="false">确认退款</string>
+
+    <string name="Join" translatable="false">加入</string>
+    <string name="ConsentJoin" translatable="false">同意加入</string>
+    <string name="RefusalJoin" translatable="false">拒绝加入</string>
 
     <string name="tempDate" translatable="false">15.08.15</string>
     <string name="tempTime" translatable="false">9:00 AM</string>

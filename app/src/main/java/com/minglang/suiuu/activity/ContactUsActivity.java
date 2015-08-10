@@ -22,15 +22,11 @@ import butterknife.ButterKnife;
  */
 public class ContactUsActivity extends BaseAppCompatActivity {
 
-    private static final String[] TITLES = {"网站","邮箱","电话","地址"};
-
-    private static final String[] INFO_ARRAY = {"www.suiuu.com","info@suiuu.com","010-58483692","北京市东城区银河SOHO"};
-
     @Bind(R.id.contactUsBack)
     ImageView contactUsBack;
 
     @Bind(R.id.contactUsInfoList)
-    private ListView contactUsInfoList;
+    ListView contactUsInfoList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,22 +41,22 @@ public class ContactUsActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
-        List<Contact> list = new ArrayList<>();
+        String[] TITLES = getResources().getStringArray(R.array.contactUsArray1);
+        String[] INFO_ARRAY = getResources().getStringArray(R.array.contactUsArray2);
 
-        for(int i=0;i<4;i++){
+        List<Contact> list = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
             Contact contact = new Contact();
             contact.setContactTitle(TITLES[i]);
             contact.setContactInfo(INFO_ARRAY[i]);
             list.add(contact);
         }
 
-        ContactUsAdapter contactUsAdapter = new ContactUsAdapter(this,list,R.layout.item_contact_us);
+        ContactUsAdapter contactUsAdapter = new ContactUsAdapter(this, list, R.layout.item_contact_us);
         contactUsInfoList.setAdapter(contactUsAdapter);
-
     }
 
     private void ViewAction() {
-
         contactUsBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

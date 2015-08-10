@@ -10,10 +10,10 @@ import java.util.List;
 public class MsgSystem {
 
     /**
-     * data : {"msg":{"sortName":null,"showAll":false,"startRow":0,"sortType":"asc","pageSize":10,"currentPage":1,"totalCount":"1"},"data":[{"rType":"6","remindId":"3","relativeId":"45","createUserSign":"22e64460c94f3b44bc0a8790ed146d3b","content":"","url":"","relativeType":"2"}]}
+     * data : {"msg":{"sortName":null,"showAll":false,"startRow":0,"sortType":"asc","pageSize":10,"currentPage":1,"totalCount":"2"},"data":[{"rType":"6","headImg":"http://www.suiuu.com/assets/images/user_default.png","remindId":"3","relativeId":"45","nickname":"15111993537","title":null,"createUserSign":"22e64460c94f3b44bc0a8790ed146d3b","content":"","url":"","relativeType":"2"}]}
      * message :
      * status : 1
-     * token : 74c87ed844eeb9b9c4efc7fb3369cd92
+     * token : 7dc21fae57639746043a627fa971a0a1
      */
     private MsgSystemData data;
     private String message;
@@ -53,10 +53,9 @@ public class MsgSystem {
     }
 
     public static class MsgSystemData {
-
         /**
-         * msg : {"sortName":null,"showAll":false,"startRow":0,"sortType":"asc","pageSize":10,"currentPage":1,"totalCount":"1"}
-         * data : [{"rType":"6","remindId":"3","relativeId":"45","createUserSign":"22e64460c94f3b44bc0a8790ed146d3b","content":"","url":"","relativeType":"2"}]
+         * msg : {"sortName":null,"showAll":false,"startRow":0,"sortType":"asc","pageSize":10,"currentPage":1,"totalCount":"2"}
+         * data : [{"rType":"6","headImg":"http://www.suiuu.com/assets/images/user_default.png","remindId":"3","relativeId":"45","nickname":"15111993537","title":null,"createUserSign":"22e64460c94f3b44bc0a8790ed146d3b","content":"","url":"","relativeType":"2"}]
          */
         private MsgEntity msg;
         private List<MsgSystemItemData> data;
@@ -85,7 +84,7 @@ public class MsgSystem {
              * sortType : asc
              * pageSize : 10
              * currentPage : 1
-             * totalCount : 1
+             * totalCount : 2
              */
             private String sortName;
             private boolean showAll;
@@ -155,16 +154,22 @@ public class MsgSystem {
         public static class MsgSystemItemData {
             /**
              * rType : 6
+             * headImg : http://www.suiuu.com/assets/images/user_default.png
              * remindId : 3
              * relativeId : 45
+             * nickname : 15111993537
+             * title : null
              * createUserSign : 22e64460c94f3b44bc0a8790ed146d3b
              * content :
              * url :
              * relativeType : 2
              */
             private String rType;
+            private String headImg;
             private String remindId;
             private String relativeId;
+            private String nickname;
+            private String title;
             private String createUserSign;
             private String content;
             private String url;
@@ -174,12 +179,24 @@ public class MsgSystem {
                 this.rType = rType;
             }
 
+            public void setHeadImg(String headImg) {
+                this.headImg = headImg;
+            }
+
             public void setRemindId(String remindId) {
                 this.remindId = remindId;
             }
 
             public void setRelativeId(String relativeId) {
                 this.relativeId = relativeId;
+            }
+
+            public void setNickname(String nickname) {
+                this.nickname = nickname;
+            }
+
+            public void setTitle(String title) {
+                this.title = title;
             }
 
             public void setCreateUserSign(String createUserSign) {
@@ -202,12 +219,24 @@ public class MsgSystem {
                 return rType;
             }
 
+            public String getHeadImg() {
+                return headImg;
+            }
+
             public String getRemindId() {
                 return remindId;
             }
 
             public String getRelativeId() {
                 return relativeId;
+            }
+
+            public String getNickname() {
+                return nickname;
+            }
+
+            public String getTitle() {
+                return title;
             }
 
             public String getCreateUserSign() {
@@ -226,7 +255,5 @@ public class MsgSystem {
                 return relativeType;
             }
         }
-
     }
-
 }

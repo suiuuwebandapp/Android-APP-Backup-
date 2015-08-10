@@ -31,6 +31,7 @@ import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.entity.CommunityItem;
+import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.QuestionEntity;
 import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.AnswerEntity;
 import com.minglang.suiuu.entity.Tag;
 import com.minglang.suiuu.utils.DeBugLog;
@@ -68,11 +69,19 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
 
     private String qID;
 
+    private String strID;
+
     @BindColor(R.color.white)
     int titleTextColor;
 
     @BindString(R.string.NoData)
     String NoData;
+
+    @BindString(R.string.DataError)
+    String DataError;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkError;
 
     @BindString(R.string.AttentionQuestion_SUC)
     String attention_suc;
@@ -120,13 +129,18 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_item);
 
-        String strID = getIntent().getStringExtra(ID);
+        strID = getIntent().getStringExtra(ID);
         DeBugLog.i(TAG, "strID:" + strID);
 
         ButterKnife.bind(this);
         initView();
         ViewAction();
         getTagList();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getCommunityItemDetails(buildRequestParams(strID));
     }
 
@@ -145,7 +159,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
 
         toolbar.setTitleTextColor(titleTextColor);
 
-        pullToRefreshScrollView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullToRefreshScrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getResources().getString(R.string.load_wait));
@@ -154,7 +168,8 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         imageLoader = ImageLoader.getInstance();
 
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image)
+                .showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
@@ -196,9 +211,9 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                DeBugLog.i(TAG, "firstVisibleItem:" + firstVisibleItem + ",visibleItemCount:" + visibleItemCount
-                        + ",totalItemCount:" + totalItemCount);
+
             }
+
         });
 
         pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
@@ -208,7 +223,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                pullToRefreshScrollView.onRefreshComplete();
+                getCommunityItemDetails(buildRequestParams(strID));
             }
 
             @Override
@@ -219,6 +234,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
 
                 pullToRefreshScrollView.onRefreshComplete();
             }
+
         });
 
     }
@@ -266,7 +282,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
     private RequestParams buildAttentionParams(String id) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
-        params.addBodyParameter("id", id);
+        params.addBodyParameter(ID, id);
         return params;
     }
 
@@ -306,28 +322,35 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
                 CommunityItem communityItem = JsonUtils.getInstance().fromJSON(CommunityItem.class, str);
                 if (communityItem != null) {
                     CommunityItem.CommunityItemData itemData = communityItem.getData();
+
                     if (itemData != null) {
-                        CommunityItem.CommunityItemData.QuestionEntity questionEntity = itemData.getQuestion();
+                        List<QuestionEntity> questionList = itemData.getQuestion();
 
-                        qID = questionEntity.getQId();
+                        if (questionList != null && questionList.size() > 0) {
+                            QuestionEntity questionEntity = questionList.get(0);
 
-                        String headImagePath = questionEntity.getHeadImg();
-                        if (!TextUtils.isEmpty(headImagePath)) {
-                            imageLoader.displayImage(headImagePath, headImageView, options);
-                        }
+                            qID = questionEntity.getQId();
 
-                        String strTitle = questionEntity.getQTitle();
-                        if (!TextUtils.isEmpty(strTitle)) {
-                            problemTitle.setText(strTitle);
-                        } else {
-                            problemTitle.setText("");
-                        }
+                            String headImagePath = questionEntity.getHeadImg();
+                            if (!TextUtils.isEmpty(headImagePath)) {
+                                imageLoader.displayImage(headImagePath, headImageView, options);
+                            }
 
-                        String strContent = questionEntity.getQContent();
-                        if (!TextUtils.isEmpty(strContent)) {
-                            problemContent.setText(strContent);
-                        } else {
-                            problemContent.setText("");
+                            String strTitle = questionEntity.getQTitle();
+                            if (!TextUtils.isEmpty(strTitle)) {
+                                problemTitle.setText(strTitle);
+                            } else {
+                                problemTitle.setText("");
+                            }
+                            DeBugLog.i(TAG, "title:" + strTitle);
+
+                            String strContent = questionEntity.getQContent();
+                            if (!TextUtils.isEmpty(strContent)) {
+                                problemContent.setText(strContent);
+                            } else {
+                                problemContent.setText("");
+                            }
+                            DeBugLog.i(TAG, "content:" + strContent);
                         }
 
                         List<AnswerEntity> list = itemData.getAnswer();
@@ -338,6 +361,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析错误:" + e.getMessage());
+                Toast.makeText(this, DataError, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -374,9 +398,9 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage());
-            DeBugLog.e(TAG, "Error:" + s);
+            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
             hideDialog();
+            Toast.makeText(CommunityItemActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -413,8 +437,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "get Tag HttpException:" + e.getMessage());
-            DeBugLog.e(TAG, "get Tag Error:" + s);
+            DeBugLog.e(TAG, "get Tag HttpException:" + e.getMessage() + ",get Tag Error:" + s);
         }
 
     }
@@ -439,9 +462,9 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "Attention HttpException:" + e.getMessage());
-            DeBugLog.e(TAG, "Attention Error:" + s);
+            DeBugLog.e(TAG, "Attention HttpException:" + e.getMessage() + ",Attention Error:" + s);
         }
+
     }
 
 }

@@ -2,6 +2,7 @@ package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -86,6 +87,12 @@ public class AnswerActivity extends BaseAppCompatActivity {
         toolbar.setTitle(title);
         toolbar.setTitleTextColor(titleTextColor);
         setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back);
+        }
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(wait);

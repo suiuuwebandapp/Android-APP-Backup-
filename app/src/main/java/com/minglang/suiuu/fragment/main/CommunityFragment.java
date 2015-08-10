@@ -62,6 +62,8 @@ public class CommunityFragment extends BaseFragment {
 
     private static final String SEARCH = "search";
 
+    private static final String ID = "id";
+
     private String userSign;
     private String verification;
 
@@ -100,6 +102,12 @@ public class CommunityFragment extends BaseFragment {
     @BindString(R.string.NoData)
     String NoDataHint;
 
+    @BindString(R.string.DataError)
+    String DataError;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkError;
+
     @Bind(R.id.spinner)
     Spinner spinner;
 
@@ -111,7 +119,7 @@ public class CommunityFragment extends BaseFragment {
 
     private List<MainCommunityItemData> listAll = new ArrayList<>();
 
-    private CommunityAdapter listViewAdapter;
+    private CommunityAdapter adapter;
 
     public static CommunityFragment newInstance(String param1, String param2) {
         CommunityFragment fragment = new CommunityFragment();
@@ -160,8 +168,8 @@ public class CommunityFragment extends BaseFragment {
         CommunitySortAdapter adapter = new CommunitySortAdapter(stringArray, getActivity());
         spinner.setAdapter(adapter);
 
-        listViewAdapter = new CommunityAdapter(getActivity());
-        listView.setAdapter(listViewAdapter);
+        this.adapter = new CommunityAdapter(getActivity());
+        listView.setAdapter(this.adapter);
     }
 
     /**
@@ -224,8 +232,11 @@ public class CommunityFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int location = position - 1;
+                String qID = listAll.get(location).getQId();
+                DeBugLog.i(TAG, "location:" + location + ",qID:" + qID);
+
                 Intent intent = new Intent(getActivity(), CommunityItemActivity.class);
-                intent.putExtra("id", listAll.get(location).getQId());
+                intent.putExtra(ID, qID);
                 startActivity(intent);
             }
         });
@@ -339,7 +350,7 @@ public class CommunityFragment extends BaseFragment {
         if (page == 1) {
             if (listAll != null && listAll.size() > 0) {
                 listAll.clear();
-                listViewAdapter.setList(listAll);
+                adapter.setList(listAll);
             }
         }
         Toast.makeText(getActivity(), NoDataHint, Toast.LENGTH_SHORT).show();
@@ -352,6 +363,7 @@ public class CommunityFragment extends BaseFragment {
      */
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
+            lessPageNumber();
             Toast.makeText(getActivity(), NoDataHint, Toast.LENGTH_SHORT).show();
         } else {
             try {
@@ -363,12 +375,12 @@ public class CommunityFragment extends BaseFragment {
                         if (list != null && list.size() > 0) {
                             clearDataList();
                             listAll.addAll(list);
-                            listViewAdapter.setList(listAll);
+                            adapter.setList(listAll);
                             DeBugLog.i(TAG, "当前数据数量:" + listAll.size());
                         } else {
                             DeBugLog.e(TAG, "返回列表数据为Null");
-                            lessPageNumber();
                             clearOldDataList();
+                            lessPageNumber();
                         }
                     } else {
                         DeBugLog.e(TAG, "返回二级数据为Null");
@@ -381,6 +393,7 @@ public class CommunityFragment extends BaseFragment {
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析异常:" + e.getMessage());
                 lessPageNumber();
+                Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -438,6 +451,7 @@ public class CommunityFragment extends BaseFragment {
             DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",error:" + s);
             lessPageNumber();
             hideDialog();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

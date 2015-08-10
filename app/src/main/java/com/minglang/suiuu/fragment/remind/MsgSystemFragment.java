@@ -117,7 +117,7 @@ public class MsgSystemFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         initView();
         ViewAction();
-        getNewAt4Service(page);
+        getData4Service(page);
         DeBugLog.i(TAG, "userSign:" + userSign);
         return rootView;
     }
@@ -174,7 +174,7 @@ public class MsgSystemFragment extends BaseFragment {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
                 page = 1;
-                getNewAt4Service(page);
+                getData4Service(page);
             }
         });
 
@@ -189,7 +189,7 @@ public class MsgSystemFragment extends BaseFragment {
     /**
      * 从网络获取数据
      */
-    private void getNewAt4Service(int page) {
+    private void getData4Service(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter(PAGE, String.valueOf(page));

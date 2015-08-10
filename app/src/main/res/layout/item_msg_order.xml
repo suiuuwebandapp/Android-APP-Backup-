@@ -45,10 +45,34 @@
             android:visibility="gone"/>
 
         <TextView
-            android:id="@+id/item_msg_order_info"
+            android:id="@+id/item_msg_order_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/itemLocationInfo"
+            android:text="@android:string/cancel"
+            android:textSize="@dimen/layout_18sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/item_msg_order_confirm_refund"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirmationRefund"
+            android:textSize="@dimen/layout_18sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/item_msg_order_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Confirm"
+            android:textSize="@dimen/layout_18sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/item_msg_order_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/orderTitle"
             android:textSize="@dimen/layout_18sp"/>
 
     </LinearLayout>
