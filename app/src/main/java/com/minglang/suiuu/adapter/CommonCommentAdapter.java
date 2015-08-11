@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity;
+import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity;
 import com.minglang.suiuu.entity.TripGalleryDetail.DataEntity.CommentEntity;
 import com.minglang.suiuu.utils.ViewHolder;
 

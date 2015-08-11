@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,12 +16,17 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import butterknife.Bind;
+import butterknife.BindString;
+import butterknife.ButterKnife;
 
 /**
  * 项目名称：Android-APP-Backup-
@@ -33,18 +37,54 @@ import org.json.JSONObject;
  * 修改时间：2015/7/21 14:06
  * 修改备注：
  */
-public class CommonCommentActivity extends BaseActivity {
+public class CommonCommentActivity extends BaseAppCompatActivity {
+
+    private static final String TAG = CommonCommentActivity.class.getSimpleName();
+
     private static final int COMMENT_SUCCESS = 20;
+
+    private static final String ARTICLE_ID = "articleId";
+    private static final String TRIP_ID = "tripId";
+    private static final String R_ID = "rId";
+    private static final String NICK_NAME = "nickName";
+
+    private static final String TP_ID = "tpId";
+    private static final String COMMENT = "comment";
+    private static final String R_TITLE = "rTitle";
+    private static final String CONTENT = "content";
+
+    private static final String STATUS = "status";
+
     private String articleId;
     private String tripId;
     private String rId;
     private String rTitle;
-    private ImageView iv_top_back;
-    private TextView tv_top_right;
-    private ImageView iv_top_right_more;
-    private TextView tv_top_center;
-    private ProgressDialog dialog;
-    private EditText et_input_comment;
+
+    @BindString(R.string.load_wait)
+    String wait;
+
+    @BindString(R.string.comment)
+    String strComment;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkError;
+
+    @Bind(R.id.tv_top_right_more)
+    ImageView iv_top_right_more;
+
+    @Bind(R.id.iv_top_back)
+    ImageView iv_top_back;
+
+    @Bind(R.id.tv_top_right)
+    TextView tv_top_right;
+
+    @Bind(R.id.tv_top_center)
+    TextView tv_top_center;
+
+    @Bind(R.id.et_comment_content)
+    EditText et_input_comment;
+
+    private ProgressDialog progressDialog;
 
     /**
      * 评论内容
@@ -55,26 +95,25 @@ public class CommonCommentActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_common_commnet);
-        articleId = this.getIntent().getStringExtra("articleId");
-        tripId = this.getIntent().getStringExtra("tripId");
-        rId = this.getIntent().getStringExtra("rId");
-        rTitle = this.getIntent().getStringExtra("nikeName");
+        ButterKnife.bind(this);
         initView();
         viewAction();
     }
 
     private void initView() {
-        dialog = new ProgressDialog(this);
-        dialog.setMessage(getResources().getString(R.string.load_wait));
-        dialog.setCanceledOnTouchOutside(false);
-        iv_top_right_more = (ImageView) findViewById(R.id.tv_top_right_more);
+        articleId = this.getIntent().getStringExtra(ARTICLE_ID);
+        tripId = this.getIntent().getStringExtra(TRIP_ID);
+        rId = this.getIntent().getStringExtra(R_ID);
+        rTitle = this.getIntent().getStringExtra(NICK_NAME);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(wait);
+        progressDialog.setCanceledOnTouchOutside(false);
+
         iv_top_right_more.setVisibility(View.GONE);
-        tv_top_right = (TextView) findViewById(R.id.tv_top_right);
         tv_top_right.setVisibility(View.VISIBLE);
-        iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
-        tv_top_center = (TextView) findViewById(R.id.tv_top_center);
-        tv_top_center.setText(R.string.comment);
-        et_input_comment = (EditText) findViewById(R.id.et_comment_content);
+
+        tv_top_center.setText(strComment);
     }
 
     private void viewAction() {
@@ -84,6 +123,7 @@ public class CommonCommentActivity extends BaseActivity {
                 finish();
             }
         });
+
         tv_top_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +131,7 @@ public class CommonCommentActivity extends BaseActivity {
                 if (TextUtils.isEmpty(commentContent)) {
                     Toast.makeText(CommonCommentActivity.this, "请输入评论内容", Toast.LENGTH_SHORT).show();
                 } else {
-                    dialog.show();
+                    progressDialog.show();
                     if (!TextUtils.isEmpty(articleId)) {
                         requestArticleCommentSend(commentContent, rId, rTitle);
                     } else {
@@ -104,15 +144,17 @@ public class CommonCommentActivity extends BaseActivity {
 
     //文章详情发送评论
     private void requestArticleCommentSend(String commentContent, String rId, String rTitle) {
-        Log.i("suiuu","commentId= " + articleId);
         RequestParams params = new RequestParams();
-        params.addBodyParameter("tpId", articleId);
-        params.addBodyParameter("comment", commentContent);
+        params.addBodyParameter(TP_ID, articleId);
+        params.addBodyParameter(COMMENT, commentContent);
+
         if (!TextUtils.isEmpty(rId)) {
-            params.addBodyParameter("rId", rId);
-            params.addBodyParameter("rTitle", rTitle);
+            params.addBodyParameter(R_ID, rId);
+            params.addBodyParameter(R_TITLE, rTitle);
         }
+
         params.addBodyParameter(HttpServicePath.key, verification);
+
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.articleCreateComment, new requestCommentSendCallBack());
         httpRequest.setParams(params);
@@ -123,11 +165,12 @@ public class CommonCommentActivity extends BaseActivity {
     //随游详情发送评论
     private void requestSuiuuCommentSend(String commentContent, String rId, String rTitle) {
         RequestParams params = new RequestParams();
-        params.addBodyParameter("tripId", tripId);
-        params.addBodyParameter("content", commentContent);
+        params.addBodyParameter(TRIP_ID, tripId);
+        params.addBodyParameter(CONTENT, commentContent);
+
         if (!TextUtils.isEmpty(rId)) {
-            params.addBodyParameter("rId", rId);
-            params.addBodyParameter("rTitle", rTitle);
+            params.addBodyParameter(R_ID, rId);
+            params.addBodyParameter(R_TITLE, rTitle);
         }
         params.addBodyParameter(HttpServicePath.key, verification);
 
@@ -138,41 +181,44 @@ public class CommonCommentActivity extends BaseActivity {
 
     }
 
+    private void hideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     class requestCommentSendCallBack extends RequestCallBack<String> {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            Log.i("suiuu", "评论结果" + responseInfo.result);
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
+            hideDialog();
+            String str = responseInfo.result;
             try {
-                JSONObject json = new JSONObject(responseInfo.result);
-                int status = json.getInt("status");
-                String data = json.getString("data");
+                JSONObject json = new JSONObject(str);
+                int status = json.getInt(STATUS);
                 if (status == 1) {
                     Intent intent = CommonCommentActivity.this.getIntent();
-                    if(!TextUtils.isEmpty(rId)) {
-                        intent.putExtra("content", "@"+rTitle+" "+commentContent);
-                    }else {
-                        intent.putExtra("content", commentContent);
+                    if (!TextUtils.isEmpty(rId)) {
+                        intent.putExtra(CONTENT, "@" + rTitle + " " + commentContent);
+                    } else {
+                        intent.putExtra(CONTENT, commentContent);
                     }
+
                     CommonCommentActivity.this.setResult(COMMENT_SUCCESS, intent);
                     Toast.makeText(CommonCommentActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(CommonCommentActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                Toast.makeText(CommonCommentActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onFailure(HttpException error, String msg) {
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-            Toast.makeText(CommonCommentActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+            hideDialog();
+            DeBugLog.e(TAG, "HttpException:" + error.getMessage() + ",Error:" + msg);
+            Toast.makeText(CommonCommentActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

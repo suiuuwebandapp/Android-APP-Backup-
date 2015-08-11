@@ -27,16 +27,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindColor;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
  * 我发布的随游页面
  */
 public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
+
     private static final String TAG = MySuiuuReleaseActivity.class.getSimpleName();
 
+    private static final String TITLE = "title";
+    private static final String INFO = "info";
+    private static final String PRICE = "price";
+    private static final String TRIP_ID = "tripId";
+
+    private static final String OLD_INFO = "oldInfo";
+    private static final String OLD_PRICE = "oldPrice";
+
+    private static final String NEW_INFO = "newInfo";
+
+    private static final String NEW_BASIC_PRICE = "newBasicPrice";
+    private static final String NEW_ADDITIONAL_PRICE = "newAdditionalPrice";
+    private static final String NEW_OTHER_PRICE = "newOtherPrice";
+
+    @BindString(R.string.Participate)
+    String join;
+
+    @BindString(R.string.NewApply)
+    String applyFor;
+
+    @BindColor(R.color.tr_black)
+    int normalColor;
+
+    @BindColor(R.color.mainColor)
+    int selectedColor;
+
+    @BindString(R.string.NewTitleNotNull)
+    String NewTitleNotNull;
+
     /**
-     * 返回键*
+     * 返回键
      */
     @Bind(R.id.my_suiuu_release_back)
     ImageView back;
@@ -63,9 +95,7 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_suiuu_release);
-
         ButterKnife.bind(this);
-
         initView();
         ViewAction();
     }
@@ -74,13 +104,12 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
-
         Intent oldIntent = getIntent();
 
-        String title = oldIntent.getStringExtra("title");
-        String info = oldIntent.getStringExtra("info");
-        String price = oldIntent.getStringExtra("price");
-        String tripId = oldIntent.getStringExtra("tripId");
+        String title = oldIntent.getStringExtra(TITLE);
+        String info = oldIntent.getStringExtra(INFO);
+        String price = oldIntent.getStringExtra(PRICE);
+        String tripId = oldIntent.getStringExtra(TRIP_ID);
 
         if (!TextUtils.isEmpty(title)) {
             mySuiuuTitle.setText(title);
@@ -100,16 +129,13 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
             mySuiuuPrice.setText("0.0");
         }
 
-        String join = "已参加";
-        String applyFor = "新申请";
-
         //可滑动的Tab头
         tabLayout.addTab(tabLayout.newTab().setText(join), true);
         tabLayout.addTab(tabLayout.newTab().setText(applyFor), false);
-        tabLayout.setTabTextColors(getResources().getColor(R.color.tr_black), getResources().getColor(R.color.text_select_true));
+        tabLayout.setTabTextColors(normalColor, selectedColor);
 
-        String userSign = SuiuuInfo.ReadUserSign(this);
-        String verification = SuiuuInfo.ReadVerification(this);
+        userSign = SuiuuInfo.ReadUserSign(this);
+        verification = SuiuuInfo.ReadVerification(this);
 
         JoinFragment joinFragment = JoinFragment.newInstance(userSign, verification, tripId);
         NewApplyForFragment newApplyForFragment = NewApplyForFragment.newInstance(userSign, verification, tripId);
@@ -122,7 +148,8 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
         titleList.add(join);
         titleList.add(applyFor);
 
-        MySuiuuReleaseAdapter releaseAdapter = new MySuiuuReleaseAdapter(getSupportFragmentManager(), fragments, titleList);
+        MySuiuuReleaseAdapter releaseAdapter
+                = new MySuiuuReleaseAdapter(getSupportFragmentManager(), fragments, titleList);
         releaseViewPager.setAdapter(releaseAdapter);
         tabLayout.setupWithViewPager(releaseViewPager);
         tabLayout.setTabsFromPagerAdapter(releaseAdapter);
@@ -132,7 +159,6 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
      * 控件动作
      */
     private void ViewAction() {
-
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,13 +170,15 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 final EditText editText = new EditText(MySuiuuReleaseActivity.this);
+
                 new AlertDialog.Builder(MySuiuuReleaseActivity.this).setTitle("请输入新标题").setView(editText)
                         .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String newTitle = editText.getText().toString().trim();
                                 if (TextUtils.isEmpty(newTitle)) {
-                                    Toast.makeText(MySuiuuReleaseActivity.this, "新标题不能为空！", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MySuiuuReleaseActivity.this, NewTitleNotNull,
+                                            Toast.LENGTH_SHORT).show();
                                 } else {
                                     mySuiuuTitle.setText(newTitle);
                                 }
@@ -166,7 +194,7 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
             public void onClick(View v) {
                 String infoText = mySuiuuInfoText.getText().toString().trim();
                 Intent intent = new Intent(MySuiuuReleaseActivity.this, EditSuiuuInfoActivity.class);
-                intent.putExtra("oldInfo", infoText);
+                intent.putExtra(OLD_INFO, infoText);
                 startActivityForResult(intent, AppConstant.EDIT_SUIUU_INFO_TEXT);
             }
         });
@@ -176,7 +204,7 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
             public void onClick(View v) {
                 String priceNumber = mySuiuuPrice.getText().toString().trim();
                 Intent intent = new Intent(MySuiuuReleaseActivity.this, EditSuiuuPriceActivity.class);
-                intent.putExtra("oldPrice", priceNumber);
+                intent.putExtra(OLD_PRICE, priceNumber);
                 startActivityForResult(intent, AppConstant.EDIT_SUIUU_PRICE);
             }
         });
@@ -189,7 +217,7 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
 
             case AppConstant.EDIT_SUIUU_INFO_TEXT:
                 if (resultCode == AppConstant.EDIT_SUIUU_INFO_TEXT_BACK) {
-                    String newInfo = data.getStringExtra("newInfo");
+                    String newInfo = data.getStringExtra(NEW_INFO);
                     mySuiuuInfoText.setText(newInfo);
 
                     DeBugLog.i(TAG, "newInfo:" + newInfo);
@@ -198,14 +226,17 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
 
             case AppConstant.EDIT_SUIUU_PRICE:
                 if (resultCode == AppConstant.EDIT_SUIUU_PRICE_BACK) {
-                    String newBasicPrice = data.getStringExtra("newBasicPrice");
-                    String newAdditionalPrice = data.getStringExtra("newAdditionalPrice");
-                    String newOtherPrice = data.getStringExtra("newOtherPrice");
+                    String newBasicPrice = data.getStringExtra(NEW_BASIC_PRICE);
+                    String newAdditionalPrice = data.getStringExtra(NEW_ADDITIONAL_PRICE);
+                    String newOtherPrice = data.getStringExtra(NEW_OTHER_PRICE);
 
-                    DeBugLog.i(TAG, "newBasicPrice:" + newBasicPrice + ",newAdditionalPrice:" + newAdditionalPrice +
-                            ",newOtherPrice:" + newOtherPrice);
+                    DeBugLog.i(TAG, "newBasicPrice:" + newBasicPrice
+                            + ",newAdditionalPrice:" + newAdditionalPrice
+                            + ",newOtherPrice:" + newOtherPrice);
 
-                    String allPrice = String.valueOf(Double.valueOf(newBasicPrice) + Double.valueOf(newAdditionalPrice)
+                    String allPrice
+                            = String.valueOf(Double.valueOf(newBasicPrice)
+                            + Double.valueOf(newAdditionalPrice)
                             + Double.valueOf(newAdditionalPrice));
                     mySuiuuPrice.setText(allPrice);
                 }

@@ -7,7 +7,7 @@
     <!-- 描边 -->
     <stroke
         android:width="1dp"
-        android:color="@color/text_select_true"/>
+        android:color="@color/mainColor"/>
 
     <!-- 设置矩形的四个角为弧形 -->
     <!-- android:radius 弧形的半径 -->

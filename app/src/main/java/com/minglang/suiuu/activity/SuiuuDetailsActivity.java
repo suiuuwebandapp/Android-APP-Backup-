@@ -29,11 +29,12 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.CommonCommentAdapter;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.chat.activity.ChatActivity;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.dbhelper.UserDbHelper;
-import com.minglang.suiuu.entity.SuiuuDeatailData;
+import com.minglang.suiuu.entity.SuiuuDetailsData;
+import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity;
 import com.minglang.suiuu.entity.UserBackData;
 import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
@@ -47,6 +48,10 @@ import org.json.JSONObject;
 import java.net.URLEncoder;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.BindString;
+import butterknife.ButterKnife;
+
 /**
  * 项目名称：Suiuu
  * 类描述：suiuu的详细列表
@@ -56,61 +61,102 @@ import java.util.List;
  * 修改时间：2015/5/4 19:13
  * 修改备注：
  */
-@SuppressWarnings("deprecation")
-public class SuiuuDetailActivity extends BaseActivity {
+public class SuiuuDetailsActivity extends BaseAppCompatActivity {
+
     private static final int COMMENT_SUCCESS = 20;
+
+    private static final String TRIP_ID = "tripId";
+    private static final String R_ID = "rId";
+    private static final String NICK_NAME = "nickName";
+
+    private static final String STATUS = "status";
+
+    private static final String CONTENT = "content";
+    private static final String HEAD_IMG = "headImg";
+    private static final String NICK_NAME_="nickname";
+
+    @BindString(R.string.LoginInvalid)
+    String LoginInvalid;
+
+    @BindString(R.string.DataReFai)
+    String DataReFai;
+
     private String tripId;
-    private WebView mWebView;
-    private ProgressDialog pd = null;
-    private ImageView suiuu_details_back;
+
+    @Bind(R.id.suiuu_detail_web_view)
+    WebView mWebView;
+
+    private ProgressDialog progressDialog = null;
+
+    @Bind(R.id.suiuu_details_back)
+    ImageView suiuu_details_back;
+
     //显示评论总数
-    private TextView tv_suiuu_detail_comment_number;
+    @Bind(R.id.tv_suiuu_detail_comment_number)
+    TextView tv_suiuu_detail_comment_number;
+
     //评论头像
-    private SimpleDraweeView sdv_comment_head_img;
+    @Bind(R.id.sdv_comment_head_img)
+    SimpleDraweeView sdv_comment_head_img;
+
     //评论输入框
-    private EditText et_suiuu_detail_comment;
+    @Bind(R.id.et_suiuu_details_comment)
+    EditText et_suiuu_detail_comment;
+
     //评论显示列表
-    private NoScrollBarListView lv_suiuu_detail_comment;
+    @Bind(R.id.lv_suiuu_detail_comment)
+    NoScrollBarListView lv_suiuu_detail_comment;
+
     //咨询按钮
-    private BootstrapButton bb_consult;
+    @Bind(R.id.bb_consult)
+    BootstrapButton bb_consult;
+
     //预定按钮
-    private BootstrapButton bb_schedule;
-    private SuiuuDeatailData detail;
-    private TextView tv_to_commnet_activity;
-    private LinearLayout ll_suiuu_detail_nocomment;
-    private LinearLayout ll_suiuu_detail_input_comment;
+    @Bind(R.id.bb_schedule)
+    BootstrapButton bb_schedule;
+
+    private SuiuuDetailsData detailsData;
+
+    @Bind(R.id.tv_to_comment_activity)
+    TextView tv_to_comment_activity;
+
+    @Bind(R.id.ll_suiuu_details_no_comment)
+    LinearLayout ll_suiuu_detail_no_comment;
+
+    @Bind(R.id.ll_suiuu_detail_input_comment)
+    LinearLayout ll_suiuu_detail_input_comment;
+
     private CommonCommentAdapter adapter;
+
+    WebSettings webSettings;
+
     /**
      * 评论集合
      */
-    private List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> commentDataList;
-
+    private List<SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity> commentDataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suiuu_details_activity);
-        tripId = this.getIntent().getStringExtra("tripId");
+
+        ButterKnife.bind(this);
         initView();
         loadDate(tripId);
         showWebView();
         viewAction();
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void initView() {
-        pd = new ProgressDialog(this);
-        pd.show();
-        suiuu_details_back = (ImageView) findViewById(R.id.suiuu_details_back);
-        mWebView = (WebView) findViewById(R.id.suiuu_detail_web_view);
-        tv_suiuu_detail_comment_number = (TextView) findViewById(R.id.tv_suiuu_detail_comment_number);
-        sdv_comment_head_img = (SimpleDraweeView) findViewById(R.id.sdv_comment_head_img);
-        et_suiuu_detail_comment = (EditText) findViewById(R.id.et_suiuu_details_comment);
-        lv_suiuu_detail_comment = (NoScrollBarListView) findViewById(R.id.lv_suiuu_detail_comment);
-        bb_consult = (BootstrapButton) findViewById(R.id.bb_consult);
-        bb_schedule = (BootstrapButton) findViewById(R.id.bb_schedule);
-        tv_to_commnet_activity = (TextView) findViewById(R.id.tv_to_comment_activity);
-        ll_suiuu_detail_nocomment = (LinearLayout) findViewById(R.id.ll_suiuu_details_no_comment);
-        ll_suiuu_detail_input_comment = (LinearLayout) findViewById(R.id.ll_suiuu_detail_input_comment);
+        tripId = getIntent().getStringExtra(TRIP_ID);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+
+        webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDefaultTextEncodingName("utf-8");
     }
 
     private void viewAction() {
@@ -120,36 +166,44 @@ public class SuiuuDetailActivity extends BaseActivity {
                 finish();
             }
         });
+
         sdv_comment_head_img.setOnClickListener(new MyOnClickListener());
+
         et_suiuu_detail_comment.setOnClickListener(new MyOnClickListener());
-        tv_to_commnet_activity.setOnClickListener(new MyOnClickListener());
+
+        tv_to_comment_activity.setOnClickListener(new MyOnClickListener());
+
         bb_consult.setOnClickListener(new MyOnClickListener());
+
         bb_schedule.setOnClickListener(new MyOnClickListener());
+
         lv_suiuu_detail_comment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(SuiuuDetailActivity.this, CommonCommentActivity.class);
-                intent.putExtra("tripId", tripId);
-                intent.putExtra("rId",commentDataList.get(position).getCommentId());
-                intent.putExtra("nikeName",commentDataList.get(position).getNickname());
+                Intent intent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
+                intent.putExtra(TRIP_ID, tripId);
+                intent.putExtra(R_ID, commentDataList.get(position).getCommentId());
+                intent.putExtra(NICK_NAME, commentDataList.get(position).getNickname());
                 startActivityForResult(intent, COMMENT_SUCCESS);
             }
         });
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    private void showWebView() {        // webView与js交互代码
+    @SuppressLint({"JavascriptInterface", "AddJavascriptInterface"})
+    private void showWebView() {
+        // webView与js交互代码
         try {
             mWebView.requestFocus();
             mWebView.setWebChromeClient(new WebChromeClient() {
                 @Override
                 public void onProgressChanged(WebView view, int progress) {
-                    pd.setMessage("已经加载" + progress + "%");
+                    progressDialog.setMessage("已经加载" + progress + "%");
                     if (progress >= 80) {
-                        pd.dismiss();
+                        progressDialog.dismiss();
                     }
                 }
             });
+
             mWebView.setOnKeyListener(new View.OnKeyListener() {        // webview can go back
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -160,12 +214,11 @@ public class SuiuuDetailActivity extends BaseActivity {
                     return false;
                 }
             });
-            WebSettings webSettings = mWebView.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-            webSettings.setDefaultTextEncodingName("utf-8");
 
             mWebView.addJavascriptInterface(getHtmlObject(), "jsObj");
-            mWebView.loadUrl("http://apptest.suiuu.com/app-travel/get-travel-info?app_suiuu_sign=" + URLEncoder.encode(SuiuuInfo.ReadVerification(this)) + "&trId=" + tripId);
+            mWebView.loadUrl("http://apptest.suiuu.com/app-travel/get-travel-info?app_suiuu_sign="
+                    + URLEncoder.encode(SuiuuInfo.ReadVerification(this)) + "&trId=" + tripId);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -175,12 +228,12 @@ public class SuiuuDetailActivity extends BaseActivity {
         Object insertObj = new Object() {
             @JavascriptInterface
             public void jsAlert(String s) {
-                Toast.makeText(SuiuuDetailActivity.this, s, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SuiuuDetailsActivity.this, s, Toast.LENGTH_SHORT).show();
             }
 
             @JavascriptInterface
             public void userHomePage(String user) {
-                Intent intent = new Intent(SuiuuDetailActivity.this, OtherUserActivity.class);
+                Intent intent = new Intent(SuiuuDetailsActivity.this, OtherUserActivity.class);
                 intent.putExtra("userSign", user);
                 startActivity(intent);
             }
@@ -189,6 +242,7 @@ public class SuiuuDetailActivity extends BaseActivity {
             public String HtmlcallJava2(final String param) {
                 return "Html call Java : " + param;
             }
+
         };
         return insertObj;
     }
@@ -201,32 +255,34 @@ public class SuiuuDetailActivity extends BaseActivity {
         //得到可读可写数据库
         SQLiteDatabase db = helper.getReadableDatabase();
         //执行sql语句
-        db.execSQL("insert into user (userid,nikename,titleimg) values (?,?,?)", new Object[]{detail.getData().getPublisherList().get(0).getUserSign(), detail.getData().getPublisherList().get(0).getNickname(), detail.getData().getPublisherList().get(0).getHeadImg()});
+        db.execSQL("insert into user (userId,nickName,titleImg) values (?,?,?)",
+                new Object[]{detailsData.getData().getPublisherList().get(0).getUserSign(),
+                        detailsData.getData().getPublisherList().get(0).getNickname(),
+                        detailsData.getData().getPublisherList().get(0).getHeadImg()});
         db.close();
-        Log.i("suiuu", "添加user成功");
     }
 
     public boolean isExistUser(String userId) {
-        boolean isexist = false;
+        boolean isExist = false;
         UserDbHelper helper = new UserDbHelper(this);
         //得到可读数据库
         SQLiteDatabase db = helper.getReadableDatabase();
         //得到数据库查询的结果集的游标（指针）
         Cursor cursor = db.rawQuery("select * from user where userid = ? ", new String[]{userId});
         while (cursor.moveToNext()) {
-            isexist = true;
+            isExist = true;
         }
         cursor.close();
         db.close();
-        return isexist;
+        return isExist;
     }
 
     //访问网络
     private void loadDate(String tripId) {
         RequestParams params = new RequestParams();
-        params.addBodyParameter("trId", tripId);
+        params.addBodyParameter(TRIP_ID, tripId);
         params.addBodyParameter(HttpServicePath.key, verification);
-        Log.i("suiuu", "vertification=" + verification);
+
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuItemInfo, new SuiuuItemInfoCallBack());
         httpRequest.setParams(params);
@@ -240,47 +296,48 @@ public class SuiuuDetailActivity extends BaseActivity {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            Log.i("suiuu", responseInfo.result);
             try {
                 JSONObject json = new JSONObject(responseInfo.result);
-                String status = json.getString("status");
+                String status = json.getString(STATUS);
+
                 if ("1".equals(status)) {
-                    detail = JsonUtils.getInstance().fromJSON(SuiuuDeatailData.class, responseInfo.result);
-                    commentDataList = detail.getData().getComment().getData();
+                    detailsData = JsonUtils.getInstance().fromJSON(SuiuuDetailsData.class, responseInfo.result);
+                    commentDataList = detailsData.getData().getComment().getData();
                     fullCommentList();
                 } else if ("-3".equals(status)) {
-                    Toast.makeText(getApplicationContext(), "登录信息过期,请重新登录", Toast.LENGTH_SHORT).show();
-                    AppUtils.intentLogin(getApplicationContext());
-                    SuiuuDetailActivity.this.finish();
+                    Toast.makeText(SuiuuDetailsActivity.this, LoginInvalid, Toast.LENGTH_SHORT).show();
+                    AppUtils.intentLogin(SuiuuDetailsActivity.this);
+                    SuiuuDetailsActivity.this.finish();
                 } else {
-                    Toast.makeText(SuiuuDetailActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SuiuuDetailsActivity.this, DataReFai, Toast.LENGTH_SHORT).show();
                 }
+
             } catch (Exception e) {
-                Toast.makeText(SuiuuDetailActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
-                Log.i("suiuu", "异常" + e.getMessage());
+                Toast.makeText(SuiuuDetailsActivity.this, DataReFai, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }
 
         @Override
         public void onFailure(HttpException error, String msg) {
-            Toast.makeText(SuiuuDetailActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SuiuuDetailsActivity.this, DataReFai, Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public void fullCommentList() {
-        if (commentDataList.size() >= 1) {
-            tv_suiuu_detail_comment_number.setText("全部评论 (共"+commentDataList.size()+"条评论)");
+        if (commentDataList != null && commentDataList.size() > 0) {
+            tv_suiuu_detail_comment_number.setText("全部评论 (共" + commentDataList.size() + "条评论)");
             ll_suiuu_detail_input_comment.setVisibility(View.VISIBLE);
-            ll_suiuu_detail_nocomment.setVisibility(View.GONE);
+            ll_suiuu_detail_no_comment.setVisibility(View.GONE);
             showList(commentDataList);
         } else {
-            ll_suiuu_detail_nocomment.setVisibility(View.VISIBLE);
+            ll_suiuu_detail_no_comment.setVisibility(View.VISIBLE);
             ll_suiuu_detail_input_comment.setVisibility(View.GONE);
         }
     }
 
-    private void showList(List<SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity> commentDataList) {
+    private void showList(List<CommentDataEntity> commentDataList) {
         if (adapter == null) {
             adapter = new CommonCommentAdapter(this, commentDataList);
             lv_suiuu_detail_comment.setAdapter(adapter);
@@ -288,7 +345,6 @@ public class SuiuuDetailActivity extends BaseActivity {
             adapter.onDateChange(commentDataList);
         }
     }
-
 
     private class MyOnClickListener implements View.OnClickListener {
 
@@ -301,35 +357,35 @@ public class SuiuuDetailActivity extends BaseActivity {
                     break;
                 case R.id.et_suiuu_details_comment:
                     //跳到评论页
-                    Intent intent = new Intent(SuiuuDetailActivity.this, CommonCommentActivity.class);
-                    intent.putExtra("tripId", tripId);
+                    Intent intent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
+                    intent.putExtra(TRIP_ID, tripId);
                     startActivityForResult(intent, COMMENT_SUCCESS);
                     break;
                 case R.id.tv_to_comment_activity:
                     //跳到评论页
-                    Intent commentintent = new Intent(SuiuuDetailActivity.this, CommonCommentActivity.class);
-                    commentintent.putExtra("tripId", tripId);
-                    startActivityForResult(commentintent,COMMENT_SUCCESS);
+                    Intent commentIntent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
+                    commentIntent.putExtra(TRIP_ID, tripId);
+                    startActivityForResult(commentIntent, COMMENT_SUCCESS);
                     break;
                 case R.id.bb_consult:
                     //跳到会话页面
-                    if (isExistUser(detail.getData().getPublisherList().get(0).getUserSign())) {
+                    if (isExistUser(detailsData.getData().getPublisherList().get(0).getUserSign())) {
                         //当前用户在数据库中已经存在;
                     } else {
                         addUser();
                         Log.i("suiuu", "不存在了");
                     }
-                    Intent intentConsult = new Intent(SuiuuDetailActivity.this, ChatActivity.class);
-                    intentConsult.putExtra("userId", detail.getData().getPublisherList().get(0).getUserSign());
+                    Intent intentConsult = new Intent(SuiuuDetailsActivity.this, ChatActivity.class);
+                    intentConsult.putExtra("userId", detailsData.getData().getPublisherList().get(0).getUserSign());
                     startActivity(intentConsult);
                     break;
                 case R.id.bb_schedule:
                     //跳到预定页面
-                    Intent intentSchedule = new Intent(SuiuuDetailActivity.this, SuiuuOrderActivity.class);
-                    intentSchedule.putExtra("titleInfo", detail.getData().getInfo().getTitle());
-                    intentSchedule.putExtra("titleImg", detail.getData().getInfo().getTitleImg());
-                    intentSchedule.putExtra("price", detail.getData().getInfo().getBasePrice());
-                    intentSchedule.putExtra("tripId", detail.getData().getInfo().getTripId());
+                    Intent intentSchedule = new Intent(SuiuuDetailsActivity.this, SuiuuOrderActivity.class);
+                    intentSchedule.putExtra("titleInfo", detailsData.getData().getInfo().getTitle());
+                    intentSchedule.putExtra("titleImg", detailsData.getData().getInfo().getTitleImg());
+                    intentSchedule.putExtra("price", detailsData.getData().getInfo().getBasePrice());
+                    intentSchedule.putExtra("tripId", detailsData.getData().getInfo().getTripId());
                     startActivity(intentSchedule);
                     break;
 
@@ -339,27 +395,28 @@ public class SuiuuDetailActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(data != null && resultCode == COMMENT_SUCCESS) {
+
+        if (data != null && resultCode == COMMENT_SUCCESS) {
             UserBackData userBackData = SuiuuInfo.ReadUserData(this);
-            String content = data.getStringExtra("content");
+            String content = data.getStringExtra(CONTENT);
+
             JSONObject json = new JSONObject();
             try {
-                json.put("headImg",userBackData.getHeadImg());
-                json.put("nickname",userBackData.getNickname());
-                json.put("content",content);
+                json.put(HEAD_IMG, userBackData.getHeadImg());
+                json.put(NICK_NAME_, userBackData.getNickname());
+                json.put(CONTENT, content);
+
+                CommentDataEntity newCommentData =
+                        JsonUtils.getInstance().fromJSON(CommentDataEntity.class, json.toString());
+                commentDataList.add(0, newCommentData);
+                fullCommentList();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity newCommentData = JsonUtils.getInstance().fromJSON(SuiuuDeatailData.DataEntity.CommentEntity.CommentDataEntity.class,  json.toString());
-            commentDataList.add(0,newCommentData);
-            fullCommentList();
+
         }
     }
+
 }

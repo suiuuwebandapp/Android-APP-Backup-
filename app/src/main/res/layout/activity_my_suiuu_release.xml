@@ -12,58 +12,16 @@
         android:layout_alignParentTop="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <!--随游封面图片-->
-                <ImageView
-                    android:id="@+id/my_suiuu_release_show_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:contentDescription="@string/app_name"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/user_background"/>
-
-                <!--我的随游页面标题头部-->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/layout_50dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:background="@color/tr_black">
-
-                    <!--返回键-->
-                    <ImageView
-                        android:id="@+id/my_suiuu_release_back"
-                        style="@style/backKeyStyle"
-                        android:contentDescription="@string/back"
-                        android:src="@drawable/back"/>
-
-                    <!--页面描述-->
-                    <TextView
-                        android:id="@+id/my_suiuu_release_tag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:text="@string/MyReleaseSuiuu"
-                        android:textAppearance="?android:attr/textAppearanceLarge"/>
-
-                </RelativeLayout>
-
-            </RelativeLayout>
+            <!--我的随游页面标题头部-->
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/layout_200dp"
-                android:padding="@dimen/layout_5dp">
+                android:layout_height="@dimen/layout_250dp">
 
                 <!--发布的随游信息Layout-->
                 <android.support.v7.widget.CardView
@@ -75,8 +33,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/white"
-                        android:orientation="vertical"
-                        android:padding="@dimen/layout_5dp">
+                        android:orientation="vertical">
+
+                        <!--随游封面图片-->
+                        <ImageView
+                            android:id="@+id/my_suiuu_release_show_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/layout_200dp"
+                            android:contentDescription="@string/app_name"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/default_background_image"/>
 
                         <!--随游标题-->
                         <LinearLayout
@@ -89,6 +55,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/layout_10dp"
                                 android:layout_marginStart="@dimen/layout_10dp"
+                                android:layout_marginTop="@dimen/layout_10dp"
                                 android:text="@string/title"
                                 android:textColor="@color/textColor"
                                 android:textSize="@dimen/layout_18sp"/>
@@ -149,7 +116,32 @@
 
             </ScrollView>
 
-        </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/layout_50dp"
+                android:background="@color/tr_black">
+
+                <!--返回键-->
+                <ImageView
+                    android:id="@+id/my_suiuu_release_back"
+                    style="@style/backKeyStyle"
+                    android:contentDescription="@string/back"
+                    android:src="@drawable/back"/>
+
+                <!--页面描述-->
+                <TextView
+                    android:id="@+id/my_suiuu_release_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/MyReleaseSuiuu"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
 
         <!--滑动头部-->
         <android.support.design.widget.TabLayout
@@ -157,8 +149,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            app:tabIndicatorColor="@color/slider_line_color"
-            app:tabIndicatorHeight="@dimen/layout_1dp"/>
+            app:tabIndicatorColor="@color/mainColor"
+            app:tabIndicatorHeight="@dimen/layout_2dp"
+            app:tabTextAppearance="?android:attr/textAppearanceMedium"/>
 
     </android.support.design.widget.AppBarLayout>
 

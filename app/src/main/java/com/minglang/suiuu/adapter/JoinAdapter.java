@@ -55,7 +55,8 @@ public class JoinAdapter extends BaseAdapter {
 
         imageLoader = ImageLoader.getInstance();
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image)
+                .showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
@@ -90,7 +91,6 @@ public class JoinAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_my_suiuu_join, position);
         convertView = holder.getConvertView();
 

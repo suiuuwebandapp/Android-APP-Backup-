@@ -11,7 +11,7 @@ import java.util.List;
  * 修改时间：2015/7/21 16:55
  * 修改备注：
  */
-public class SuiuuDeatailData {
+public class SuiuuDetailsData {
     private DataEntity data;
     private String message;
     private int status;

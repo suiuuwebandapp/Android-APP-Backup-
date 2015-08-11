@@ -132,7 +132,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
         lv_search_suiuu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(SuiuuSearchDetailActivity.this, SuiuuDetailActivity.class);
+                Intent intent = new Intent(SuiuuSearchDetailActivity.this, SuiuuDetailsActivity.class);
                 intent.putExtra("tripId", suiuuDataList.get(position - 1).getTripId());
                 startActivity(intent);
             }

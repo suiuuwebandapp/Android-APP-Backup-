@@ -42,7 +42,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/layout_5dp"
             android:layout_marginRight="@dimen/layout_5dp"
-            android:text="@string/next"
+            android:text="@string/Next"
             android:textColor="@color/text_color1"
             android:visibility="invisible"
             android:textSize="16sp" />

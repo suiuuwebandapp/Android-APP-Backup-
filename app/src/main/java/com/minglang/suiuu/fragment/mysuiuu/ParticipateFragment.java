@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -19,15 +19,17 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
+import com.minglang.pulltorefreshlibrary.PullToRefreshBase.OnRefreshListener2;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.MySuiuuReleaseActivity;
 import com.minglang.suiuu.adapter.ParticipateAdapter;
+import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.Participate;
+import com.minglang.suiuu.entity.Participate.ParticipateData;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
 import java.util.ArrayList;
@@ -44,18 +46,36 @@ import butterknife.ButterKnife;
  * Use the {@link ParticipateFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ParticipateFragment extends Fragment {
+public class ParticipateFragment extends BaseFragment {
 
     private static final String TAG = ParticipateFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private static final String USER_SIGN = "userSign";
+    private static final String PAGE = "page";
+    private static final String NUMBER = "number";
+
+    private static final String TITLE = "title";
+    private static final String INFO = "info";
+    private static final String PRICE = "price";
+    private static final String TRIP_ID = "tripId";
+
     private String userSign;
     private String verification;
 
     @BindString(R.string.load_wait)
     String wait;
+
+    @BindString(R.string.NoData)
+    String NoData;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkError;
+
+    @BindString(R.string.DataException)
+    String DataException;
 
     private int page = 1;
 
@@ -64,7 +84,7 @@ public class ParticipateFragment extends Fragment {
 
     private ProgressDialog progressDialog;
 
-    private List<Participate.ParticipateData> listAll = new ArrayList<>();
+    private List<ParticipateData> listAll = new ArrayList<>();
 
     private ParticipateAdapter participateAdapter;
 
@@ -105,6 +125,7 @@ public class ParticipateFragment extends Fragment {
         initView();
         ViewAction();
         getMyParticipateSuiuuData(page);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 
@@ -118,22 +139,18 @@ public class ParticipateFragment extends Fragment {
      * 初始化方法
      */
     private void initView() {
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
-
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(wait);
 
         participateAdapter = new ParticipateAdapter(getActivity());
-        participateAdapter.setScreenHeight(new ScreenUtils(getActivity()).getScreenHeight());
         pullToRefreshListView.setAdapter(participateAdapter);
 
     }
 
     private void ViewAction() {
-
-        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+        pullToRefreshListView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
 
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -151,7 +168,8 @@ public class ParticipateFragment extends Fragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                pullToRefreshListView.onRefreshComplete();
+                page++;
+                getMyParticipateSuiuuData(page);
             }
 
         });
@@ -159,11 +177,12 @@ public class ParticipateFragment extends Fragment {
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int location = position - 1;
                 Intent intent = new Intent(getActivity(), MySuiuuReleaseActivity.class);
-                intent.putExtra("title", listAll.get(position).getTitle());
-                intent.putExtra("info", listAll.get(position).getInfo());
-                intent.putExtra("price", listAll.get(position).getBasePrice());
-                intent.putExtra("tripId", listAll.get(position).getTripId());
+                intent.putExtra(TITLE, listAll.get(location).getTitle());
+                intent.putExtra(INFO, listAll.get(location).getInfo());
+                intent.putExtra(PRICE, listAll.get(location).getBasePrice());
+                intent.putExtra(TRIP_ID, listAll.get(location).getTripId());
                 startActivity(intent);
             }
         });
@@ -177,10 +196,10 @@ public class ParticipateFragment extends Fragment {
      */
     private void getMyParticipateSuiuuData(int page) {
         RequestParams params = new RequestParams();
-        params.addBodyParameter("userSign", userSign);
+        params.addBodyParameter(USER_SIGN, userSign);
         params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter("page", String.valueOf(page));
-        params.addBodyParameter("number", String.valueOf(10));
+        params.addBodyParameter(PAGE, String.valueOf(page));
+        params.addBodyParameter(NUMBER, String.valueOf(10));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.MyParticipateSuiuuPath, new MyParticipateRequestCallBack());
@@ -200,6 +219,15 @@ public class ParticipateFragment extends Fragment {
     }
 
     /**
+     * 请求失败,页码减1
+     */
+    private void failureLessPage() {
+        if (page > 1) {
+            page = page - 1;
+        }
+    }
+
+    /**
      * 如果页码为1，就清空数据
      */
     private void clearListData() {
@@ -211,20 +239,29 @@ public class ParticipateFragment extends Fragment {
     }
 
     private void bindData2View(String str) {
-        if (!TextUtils.isEmpty(str)) {
+        if (TextUtils.isEmpty(str)) {
+            failureLessPage();
+            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
+        } else {
             try {
                 Participate participate = JsonUtils.getInstance().fromJSON(Participate.class, str);
-                List<Participate.ParticipateData> list = participate.getData();
+                List<ParticipateData> list = participate.getData();
                 if (list != null && list.size() > 0) {
                     clearListData();
                     listAll.addAll(list);
                     participateAdapter.setList(listAll);
+                } else {
+                    failureLessPage();
+                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
-
             } catch (Exception e) {
-                Log.e(TAG, "Published Load Error:" + e.getMessage());
+                failureLessPage();
+                DeBugLog.e(TAG, "解析错误:" + e.getMessage());
+                Toast.makeText(getActivity(), DataException, Toast.LENGTH_SHORT).show();
             }
+
         }
+
     }
 
     private class MyParticipateRequestCallBack extends RequestCallBack<String> {
@@ -238,19 +275,17 @@ public class ParticipateFragment extends Fragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            hideDialog();
-
             String str = responseInfo.result;
+            hideDialog();
             bindData2View(str);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "我发布的随游请求失败(1):" + e.getMessage());
-            DeBugLog.e(TAG, "我发布的随游请求失败(2):" + e.getExceptionCode());
-            DeBugLog.e(TAG, "我发布的随游请求失败(3):" + s);
-
+            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
+            failureLessPage();
             hideDialog();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

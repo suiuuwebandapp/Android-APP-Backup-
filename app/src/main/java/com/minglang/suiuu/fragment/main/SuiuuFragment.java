@@ -24,7 +24,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.SuiuuDetailActivity;
+import com.minglang.suiuu.activity.SuiuuDetailsActivity;
 import com.minglang.suiuu.activity.SuiuuSearchActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.base.BaseFragment;
@@ -92,7 +92,7 @@ public class SuiuuFragment extends BaseFragment
         suiuuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), SuiuuDetailActivity.class);
+                Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
                 intent.putExtra("tripId", suiuuDataList.get(position - 1).getTripId());
                 startActivity(intent);
             }

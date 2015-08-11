@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -39,17 +38,25 @@ public class showPicDescriptionAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return imageList.size();
+        if (imageList != null && imageList.size() > 0) {
+            return imageList.size();
+        } else {
+            return 0;
+        }
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        if (imageList != null && imageList.size() > 0) {
+            return imageList.get(position);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
@@ -66,7 +73,7 @@ public class showPicDescriptionAdapter extends BaseAdapter {
             holder.textContent = (TextView) view.findViewById(R.id.tv_show_text_description);
             view.setTag(holder);
         }
-        Log.i("suiuu",imageList.get(position));
+
         Uri uri = Uri.parse(imageList.get(position));
         holder.picContent.setImageURI(uri);
         if (contentList.size() >= 1) {
@@ -78,7 +85,6 @@ public class showPicDescriptionAdapter extends BaseAdapter {
             }
         }
 
-
         holder.picContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,9 +94,9 @@ public class showPicDescriptionAdapter extends BaseAdapter {
                 context.startActivity(showPic);
             }
         });
+
         return view;
     }
-
 
     static class ViewHolder {
         SimpleDraweeView picContent;

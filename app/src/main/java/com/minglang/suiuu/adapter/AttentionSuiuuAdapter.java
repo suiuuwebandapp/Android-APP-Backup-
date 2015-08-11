@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.AttentionSuiuu.AttentionSuiuuData.AttentionSuiuuItemData;
-import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -26,6 +25,8 @@ import java.util.List;
  * Created by Administrator on 2015/4/27.
  */
 public class AttentionSuiuuAdapter extends BaseAdapter {
+
+    private static final String TAG = AttentionSuiuuAdapter.class.getSimpleName();
 
     private Context context;
 
@@ -86,8 +87,8 @@ public class AttentionSuiuuAdapter extends BaseAdapter {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_attention_suiuu, position);
         convertView = holder.getConvertView();
 
-        int itemParams = screenWidth / 3 - Utils.newInstance().dip2px(10, context);
-        AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemParams, itemParams);
+        int itemWidth = screenWidth / 2;
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
         convertView.setLayoutParams(params);
 
         ImageView imageView = holder.getView(R.id.item_attention_suiuu_image);
@@ -104,7 +105,7 @@ public class AttentionSuiuuAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(strTitle)) {
             titleView.setText(strTitle);
         } else {
-            titleView.setText("");
+            titleView.setText("暂无标题");
         }
 
         String collectCount = list.get(position).getCollectCount();

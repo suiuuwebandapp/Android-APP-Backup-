@@ -89,13 +89,13 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     @BindString(R.string.NetworkAnomaly)
     String networkError;
 
-    @BindString(R.string.systemException)
+    @BindString(R.string.SystemException)
     String systemException;
 
     @BindString(R.string.DataException)
     String dataException;
 
-    @BindString(R.string.unknownError)
+    @BindString(R.string.UnknownError)
     String unknownError;
 
     @BindString(R.string.CancelOrderSuccess)

@@ -65,11 +65,7 @@ public class AttentionActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
-
-        tabLayout.setTabTextColors(normalColor, selectedColor);
-
         List<String> titleList = new ArrayList<>();
-
         titleList.add(str1);
         titleList.add(str2);
         titleList.add(str3);
@@ -77,6 +73,7 @@ public class AttentionActivity extends BaseAppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText(str1), true);
         tabLayout.addTab(tabLayout.newTab().setText(str2), false);
         tabLayout.addTab(tabLayout.newTab().setText(str3), false);
+        tabLayout.setTabTextColors(normalColor, selectedColor);
 
         //关注的旅图
         AttentionGalleryFragment attentionGalleryFragment = AttentionGalleryFragment.newInstance(userSign, verification);
@@ -102,7 +99,6 @@ public class AttentionActivity extends BaseAppCompatActivity {
      * 控件动作
      */
     private void ViewAction() {
-
         attentionBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

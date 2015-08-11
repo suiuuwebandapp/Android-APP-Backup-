@@ -30,6 +30,7 @@ import com.minglang.suiuu.entity.AttentionSuiuu.AttentionSuiuuData.AttentionSuiu
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
     @BindString(R.string.DataError)
     String errorString;
 
-    @Bind(R.id.attention_user_ListView)
+    @Bind(R.id.attention_user_GridView)
     PullToRefreshGridView pullToRefreshGridView;
 
     private int page = 1;
@@ -126,8 +127,13 @@ public class AttentionSuiuuFragment extends BaseFragment {
         pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
         GridView girdView = pullToRefreshGridView.getRefreshableView();
         girdView.setNumColumns(2);
+        girdView.setHorizontalSpacing(4);
+        girdView.setVerticalSpacing(4);
+
+        ScreenUtils screenUtils = new ScreenUtils(getActivity());
 
         adapter = new AttentionSuiuuAdapter(getActivity());
+        adapter.setScreenWidth(screenUtils.getScreenWidth());
         girdView.setAdapter(adapter);
 
         DeBugLog.i(TAG, "userSign:" + userSign);
@@ -163,7 +169,8 @@ public class AttentionSuiuuFragment extends BaseFragment {
         pullToRefreshGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String otherUserSign = listAll.get(position).getUserSign();
+                int location = position - 1;
+                String otherUserSign = listAll.get(location).getUserSign();
                 Intent intent = new Intent(getActivity(), OtherUserActivity.class);
                 intent.putExtra("userSign", otherUserSign);
                 startActivity(intent);
@@ -190,7 +197,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
     /**
      * 隐藏Dialog与刷新View
      */
-    private void hideDialogAndRefreshView() {
+    private void hideDialog() {
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
@@ -274,7 +281,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            hideDialogAndRefreshView();
+            hideDialog();
             bindData2View(stringResponseInfo.result);
         }
 
@@ -282,7 +289,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, "关注的用户数据请求失败:" + s);
 
-            hideDialogAndRefreshView();
+            hideDialog();
             failureLessPage();
 
             Toast.makeText(SuiuuApplication.applicationContext,

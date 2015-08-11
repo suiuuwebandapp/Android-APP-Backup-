@@ -121,9 +121,12 @@
     <string name="NetworkAnomaly" translatable="false">网络异常，请检查后再试！</string>
     <string name="NoData" translatable="false">暂无更多数据！</string>
 
-    <string name="systemException" translatable="false">系统异常</string>
-    <string name="DataException" translatable="false">数据异常</string>
-    <string name="unknownError" translatable="false">未知错误</string>
+    <string name="SystemException" translatable="false">系统异常</string>
+    <string name="DataException" translatable="false">数据异常,请检查后再试！</string>
+    <string name="UnknownError" translatable="false">未知错误</string>
+    <string name="DataReFai" ranslatable="false">数据请求失败，请稍候再试！</string>
+
+    <string name="LoginInvalid" translatable="false">登录信息过期,请重新登录!</string>
 
     <string name="all_attention" translatable="false">关注动态</string>
     <string name="thisArticNoComment" translatable="false">该文章暂时没有评论</string>
@@ -148,7 +151,7 @@
     <string name="local" translatable="false">请选择所在地</string>
     <string name="countryDetails" translatable="false">请选择国家</string>
 
-    <string name="next" translatable="false">下一步</string>
+    <string name="Next" translatable="false">下一步</string>
     <string name="a" translatable="false">A</string>
     <string name="people_number" translatable="false">人数</string>
     <string name="type" translatable="false">类型</string>
@@ -244,6 +247,10 @@
     <string name="Published" translatable="false">已发布</string>
     <string name="Participate" translatable="false">已参加</string>
 
+    <string name="NewApply" translatable="false">新申请</string>
+
+    <string name="NewTitleNotNull" translatable="false">新标题不能为空！</string>
+
     <string name="Question" translatable="false">提问</string>
 
     <string name="AnswerNoNull" translatable="false">答案不能为空！</string>
@@ -269,7 +276,7 @@
     <string name="SelectLocation">Select Location</string>
     <string name="city">City</string>
     <string name="cityDetails">Please select city</string>
-    <string name="comment">Comment</string>
+    <string name="comment" translatable="false">评论</string>
 
     <string name="PersonalCenter">Personal Center</string>
 

@@ -30,6 +30,7 @@ import com.minglang.suiuu.utils.SuHttpRequest;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -46,9 +47,17 @@ public class JoinFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
 
+    private static final String USER_SIGN = "userSign";
+    private static final String PAGE = "page";
+    private static final String NUMBER = "number";
+    private static final String TRIP_ID = "tripId";
+
     private String userSign;
     private String verification;
     private String tripId;
+
+    @BindString(R.string.load_wait)
+    String wait;
 
     @Bind(R.id.JoinListView)
     PullToRefreshListView pullToRefreshListView;
@@ -96,6 +105,7 @@ public class JoinFragment extends Fragment {
         initView();
         ViewAction();
         getJoinSuiuuData(1);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
         return rootView;
     }
 
@@ -103,13 +113,11 @@ public class JoinFragment extends Fragment {
      * 初始化方法
      */
     private void initView() {
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
-
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         ListView listView = pullToRefreshListView.getRefreshableView();
 
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setMessage(wait);
         progressDialog.setCanceledOnTouchOutside(false);
 
         joinAdapter = new JoinAdapter(getActivity());
@@ -141,11 +149,11 @@ public class JoinFragment extends Fragment {
 
     private void getJoinSuiuuData(int page) {
         RequestParams params = new RequestParams();
-        params.addBodyParameter("userSign", userSign);
+        params.addBodyParameter(USER_SIGN, userSign);
         params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter("page", String.valueOf(page));
-        params.addBodyParameter("number", String.valueOf(10));
-        params.addBodyParameter("trId", tripId);
+        params.addBodyParameter(PAGE, String.valueOf(page));
+        params.addBodyParameter(NUMBER, String.valueOf(10));
+        params.addBodyParameter(TRIP_ID, tripId);
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuItemInfo, new JoinSuiuuRequestCallBack());
@@ -156,7 +164,7 @@ public class JoinFragment extends Fragment {
     /**
      * 隐藏进度框和ListView加载进度View
      */
-    private void showOrHideDialog() {
+    private void hideDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
@@ -193,7 +201,7 @@ public class JoinFragment extends Fragment {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-            showOrHideDialog();
+            hideDialog();
             String str = responseInfo.result;
             bindData2View(str);
         }
@@ -201,7 +209,7 @@ public class JoinFragment extends Fragment {
         @Override
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",error:" + s);
-            showOrHideDialog();
+            hideDialog();
             Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
 

@@ -51,7 +51,6 @@
     <string name="Confirm_password_cannot_be_empty">确认密码不能为空!</string>
     <string name="Connection_failure">建立连接失败！</string>
     <string name="Current_version">当前版本</string>
-    <string name="DataError">数据获取失败，请稍候再试！</string>
     <string name="Delete_failed">删除失败:</string>
     <string name="Delete_the_contact">删除联系人</string>
     <string name="Did_not_download">未下载</string>
@@ -215,7 +214,6 @@
     <string name="city">城市</string>
     <string name="cityDetails">请选择城市</string>
     <string name="complete">完成</string>
-    <string name="comment">评论</string>
     <string name="Waiting">请稍候&#8230;</string>
     <string name="PersonalCenter">个人中心</string>
 </resources>

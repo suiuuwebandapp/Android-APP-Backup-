@@ -42,6 +42,7 @@
             android:id="@+id/mySuiuuTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             app:tabIndicatorColor="@color/mainColor"
             app:tabIndicatorHeight="@dimen/layout_2dp"
             app:tabTextAppearance="?android:attr/textAppearanceMedium"/>

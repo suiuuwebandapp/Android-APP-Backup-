@@ -1,22 +1,18 @@
 package com.minglang.suiuu.adapter;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.UserTravel.UserTravelData.UserTravelItemData;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -29,28 +25,11 @@ public class PersonalTravelAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private List<UserTravelItemData> list;
 
-    private ImageLoader imageLoader;
-    private DisplayImageOptions options1;
-    private DisplayImageOptions options2;
-
     private RecyclerViewOnItemClickListener onItemClickListener;
 
     public PersonalTravelAdapter() {
-        imageLoader = ImageLoader.getInstance();
 
-        options1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading_error)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
-
-        options2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image)
-                .showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
-
 
     public void setList(List<UserTravelItemData> list) {
         this.list = list;
@@ -74,12 +53,14 @@ public class PersonalTravelAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         String mainImagePath = list.get(position).getTitleImg();
         if (!TextUtils.isEmpty(mainImagePath)) {
-            imageLoader.displayImage(mainImagePath, travelViewHolder.mainImageView, options1);
+            Uri uri = Uri.parse(mainImagePath);
+            travelViewHolder.mainImageView.setImageURI(uri);
         }
 
         String headImagePath = list.get(position).getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            imageLoader.displayImage(headImagePath, travelViewHolder.headImageView, options2);
+            Uri uri = Uri.parse(headImagePath);
+            travelViewHolder.headImageView.setImageURI(uri);
         }
 
         String title = list.get(position).getTitle();
@@ -113,14 +94,14 @@ public class PersonalTravelAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private class PersonalTravelViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView mainImageView;
-        private CircleImageView headImageView;
+        private SimpleDraweeView mainImageView;
+        private SimpleDraweeView headImageView;
         private TextView titleView;
 
         public PersonalTravelViewHolder(View itemView) {
             super(itemView);
-            mainImageView = (ImageView) itemView.findViewById(R.id.item_personal_travel_main_image);
-            headImageView = (CircleImageView) itemView.findViewById(R.id.item_personal_travel_head_image);
+            mainImageView = (SimpleDraweeView) itemView.findViewById(R.id.item_personal_travel_main_image);
+            headImageView = (SimpleDraweeView) itemView.findViewById(R.id.item_personal_travel_head_image);
             titleView = (TextView) itemView.findViewById(R.id.item_personal_travel_title);
         }
     }
