@@ -31,6 +31,7 @@ import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
@@ -224,6 +225,14 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         }
 
         verification = SuiuuInfo.ReadVerification(this);
+
+        int layout100dp = (int) getResources().getDimension(R.dimen.layout_100dp);
+        int layout16dp = (int) getResources().getDimension(R.dimen.layout_16dp);
+        int itemRemoveBtnWidth = Utils.newInstance().px2dip(layout100dp, this);
+        int screenWidth = new ScreenUtils(this).getScreenWidth();
+        DeBugLog.i(TAG, "layout100DpToPx=" + layout100dp + ",layout16Dp:" + layout16dp
+                + ",itemRemoveBtnWidthPx=" + itemRemoveBtnWidth + ",screenWidth=" + screenWidth);
+        lv_pic_description.setOffsetLeft(screenWidth - layout100dp - layout16dp * 2);
 
     }
 

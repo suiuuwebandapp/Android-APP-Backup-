@@ -65,7 +65,6 @@
                 swipe:swipeCloseAllItemsWhenMoveList="true"
                 swipe:swipeFrontView="@+id/item_tack_info_layout"
                 swipe:swipeMode="left"
-                swipe:swipeOffsetLeft="@dimen/layout_200dp"
                 swipe:swipeOpenOnLongPress="false"/>
 
             <TextView

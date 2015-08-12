@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -47,6 +48,12 @@ public class Utils {
     public int px2dip(float pxValue, Context context) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
+    }
+
+    public int Dp2Px(float dp, Context context) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        float px = dp * (metrics.densityDpi / 160f);
+        return (int) px;
     }
 
     /**
@@ -270,6 +277,7 @@ public class Utils {
 
     /**
      * 根据两点经纬度计算两点之间的距离  返回的是千米
+     *
      * @param lng1
      * @param lat1
      * @param lng2
@@ -285,7 +293,7 @@ public class Utils {
                 * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
         s = s * 6378137.0;// 取WGS84标准参考椭球中的地球长半径(单位:m)
         s = Math.round(s * 10000) / 10000;
-        return s/100000;
+        return s / 100000;
     }
 
 }

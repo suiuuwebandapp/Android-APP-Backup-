@@ -4,10 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/layout_100dp">
 
+    <FrameLayout
+        android:id="@+id/item_tack_remove_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/item_tack_remove"
+            android:layout_width="@dimen/layout_100dp"
+            android:layout_height="@dimen/layout_100dp"
+            android:layout_gravity="end"
+            android:background="@color/swipe_remove_color"
+            android:text="@string/Remove"
+            android:textColor="@color/white"/>
+
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/item_tack_info_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/layout_100dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -28,22 +44,6 @@
             android:textColor="@color/textColor"
             android:textColorHighlight="@color/textColor"
             android:textSize="@dimen/layout_16sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/item_tack_remove_layout"
-        android:layout_width="@dimen/layout_100dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="end">
-
-        <Button
-            android:id="@+id/item_tack_remove"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/swipe_remove_color"
-            android:text="@string/Remove"
-            android:textColor="@color/white"/>
 
     </LinearLayout>
 
