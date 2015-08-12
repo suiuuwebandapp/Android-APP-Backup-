@@ -72,6 +72,8 @@
     <color name="text_select_false">#b8b6c1</color>
     <color name="btn_content_send">#97caff</color>
 
+    <color name="swipe_remove_color">#FFB100</color>
+
     <!--关于chat-->
     <color name="common_top_bar_blue">#4ebcd3</color>
     <color name="btn_login_normal">#007086</color>

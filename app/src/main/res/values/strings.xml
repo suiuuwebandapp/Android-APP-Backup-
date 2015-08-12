@@ -332,6 +332,8 @@
     <string name="ConsentJoin" translatable="false">同意加入</string>
     <string name="RefusalJoin" translatable="false">拒绝加入</string>
 
+    <string name="SelectTag" translatable="false">选择标签</string>
+
     <string name="tempDate" translatable="false">15.08.15</string>
     <string name="tempTime" translatable="false">9:00 AM</string>
     <string name="tempNumber" translatable="false">2人</string>

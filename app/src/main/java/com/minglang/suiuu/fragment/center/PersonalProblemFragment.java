@@ -25,7 +25,6 @@ import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
-import com.minglang.suiuu.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +32,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.header.MaterialHeader;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,14 +64,7 @@ public class PersonalProblemFragment extends Fragment {
     @BindString(R.string.NetworkAnomaly)
     String netWorkError;
 
-    private int lastVisibleItem;
-
     private int page = 1;
-
-    private boolean isPullToRefresh = true;
-
-    @Bind(R.id.personal_problem_head_frame)
-    PtrClassicFrameLayout mPtrFrame;
 
     @Bind(R.id.personal_problem_recycler_view)
     RecyclerView recyclerView;
@@ -142,19 +129,6 @@ public class PersonalProblemFragment extends Fragment {
         progressDialog.setMessage(dialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        int paddingParams = Utils.newInstance().dip2px(15, getActivity());
-
-        MaterialHeader header = new MaterialHeader(getActivity());
-        int[] colors = getResources().getIntArray(R.array.google_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, paddingParams, 0, paddingParams);
-        header.setPtrFrameLayout(mPtrFrame);
-
-        mPtrFrame.setHeaderView(header);
-        mPtrFrame.addPtrUIHandler(header);
-        mPtrFrame.setPinContent(true);
-
         linearLayoutManager = new LinearLayoutManager(getActivity());
 
         adapter = new PersonalProblemAdapter();
@@ -164,40 +138,25 @@ public class PersonalProblemFragment extends Fragment {
     }
 
     private void ViewAction() {
-
-        mPtrFrame.setPtrHandler(new PtrHandler() {
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View view, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, recyclerView, header);
-            }
-
-            @Override
-            public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
-                isPullToRefresh = false;
-                page = 1;
-                getPersonalSuiuuData(buildRequestParams(page));
-            }
-
-        });
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
-                    isPullToRefresh = true;
-                    page = page + 1;
-                    getPersonalSuiuuData(buildRequestParams(page));
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-            }
-
-        });
+        //        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        //            @Override
+        //            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        //                super.onScrollStateChanged(recyclerView, newState);
+        //            }
+        //
+        //            @Override
+        //            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        //                super.onScrolled(recyclerView, dx, dy);
+        //                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+        //                int totalItemCount = adapter.getItemCount();
+        //                if (lastVisibleItem >= totalItemCount && dy > 0) {
+        //                    DeBugLog.i(TAG, "准备加载数据");
+        //                    page = page + 1;
+        //                    getPersonalSuiuuData(buildRequestParams(page));
+        //                }
+        //            }
+        //
+        //        });
 
         adapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
             @Override
@@ -208,11 +167,18 @@ public class PersonalProblemFragment extends Fragment {
 
     }
 
+    /**
+     * 构造网络请求参数
+     *
+     * @param page 页码
+     * @return 网络请求参数
+     */
     private RequestParams buildRequestParams(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(PAGE, String.valueOf(page));
         params.addBodyParameter(NUMBER, String.valueOf(10));
         params.addBodyParameter(USERSIGN, userSign);
+        params.addBodyParameter(HttpServicePath.key, verification);
         return params;
     }
 
@@ -227,8 +193,6 @@ public class PersonalProblemFragment extends Fragment {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-
-        mPtrFrame.refreshComplete();
     }
 
     private void failureLessPage() {
@@ -278,10 +242,9 @@ public class PersonalProblemFragment extends Fragment {
 
         @Override
         public void onStart() {
-            if (isPullToRefresh)
-                if (progressDialog != null && !progressDialog.isShowing()) {
-                    progressDialog.show();
-                }
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
         }
 
         @Override

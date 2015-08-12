@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:id="@+id/tack_photo_root_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:swipe="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/tack_photo_root_layout">
+    android:orientation="vertical">
 
-    <include
-        layout="@layout/common_top2_layout"/>
+    <include layout="@layout/common_top2_layout"/>
 
     <ScrollView
         android:id="@+id/sll"
@@ -16,67 +16,74 @@
         android:fillViewport="true">
 
         <LinearLayout
-            android:background="@color/backgroundColor"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/backgroundColor"
             android:orientation="vertical">
 
             <EditText
                 android:id="@+id/search_question"
-                android:layout_marginTop="@dimen/layout_12dp"
-                android:background="@color/white"
-                android:hint="@string/image_theme"
-                android:layout_width="fill_parent"
-                android:padding="@dimen/layout_8dp"
-                android:textColorHighlight="@color/textColor"
-                android:gravity="start"
-                android:textSize="@dimen/layout_15sp"
-                android:textColor="@color/black"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/layout_16dp"
-                android:layout_marginRight="@dimen/layout_16dp"/>
+                android:layout_marginRight="@dimen/layout_16dp"
+                android:layout_marginTop="@dimen/layout_12dp"
+                android:background="@color/white"
+                android:gravity="start"
+                android:hint="@string/image_theme"
+                android:padding="@dimen/layout_8dp"
+                android:textColor="@color/black"
+                android:textColorHighlight="@color/textColor"
+                android:textSize="@dimen/layout_15sp"/>
 
             <TextView
                 android:id="@+id/tv_show_your_location"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_5dp"
                 android:layout_marginLeft="@dimen/layout_16dp"
                 android:layout_marginRight="@dimen/layout_16dp"
-                android:textColor="@color/textColor"
-                android:text="@string/show_location"
-                android:padding="@dimen/layout_8dp"
+                android:layout_marginTop="@dimen/layout_5dp"
                 android:background="@color/white"
-                android:textSize="@dimen/layout_15sp"
-                android:gravity="center_vertical"/>
+                android:gravity="center_vertical"
+                android:padding="@dimen/layout_8dp"
+                android:text="@string/show_location"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_15sp"/>
 
-          <!--  <com.minglang.suiuu.customview.ListViewForScrollView-->
-            <ListView
+            <com.minglang.suiuu.customview.swipelistview.SwipeListView
                 android:id="@+id/lv_picture_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_10dp"
                 android:layout_marginLeft="@dimen/layout_16dp"
                 android:layout_marginRight="@dimen/layout_16dp"
-                android:scrollbars="none"
+                android:layout_marginTop="@dimen/layout_10dp"
                 android:divider="@null"
-                android:dividerHeight="@dimen/layout_10dp"/>
+                android:dividerHeight="@dimen/layout_10dp"
+                android:scrollbars="none"
+                swipe:swipeActionLeft="reveal"
+                swipe:swipeBackView="@+id/item_tack_remove_layout"
+                swipe:swipeCloseAllItemsWhenMoveList="true"
+                swipe:swipeFrontView="@+id/item_tack_info_layout"
+                swipe:swipeMode="left"
+                swipe:swipeOffsetLeft="@dimen/layout_200dp"
+                swipe:swipeOpenOnLongPress="false"/>
 
             <TextView
                 android:id="@+id/tv_show_tag"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_5dp"
                 android:layout_marginLeft="@dimen/layout_16dp"
                 android:layout_marginRight="@dimen/layout_16dp"
-                android:textColor="@color/mainColor"
+                android:layout_marginTop="@dimen/layout_5dp"
+                android:background="@color/white"
                 android:drawableLeft="@drawable/small_tag"
                 android:drawablePadding="@dimen/layout_5dp"
-                android:text="选择标签"
+                android:drawableStart="@drawable/small_tag"
+                android:gravity="center_vertical"
                 android:padding="@dimen/layout_8dp"
-                android:background="@color/white"
-                android:textSize="@dimen/layout_15sp"
-                android:gravity="center_vertical"/>
+                android:text="@string/SelectTag"
+                android:textColor="@color/mainColor"
+                android:textSize="@dimen/layout_15sp"/>
 
             <com.minglang.suiuu.customview.FlowLayout
                 android:id="@+id/fl_easy_take_photo"

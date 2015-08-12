@@ -1,21 +1,18 @@
 package com.minglang.suiuu.adapter;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.UserSuiuu.UserSuiuuData;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -28,19 +25,9 @@ public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private List<UserSuiuuData> list;
 
-    private ImageLoader imageLoader;
-    private DisplayImageOptions options;
-
     private RecyclerViewOnItemClickListener onItemClickListener;
 
     public PersonalSuiuuAdapter() {
-
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading_error)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     public void setList(List<UserSuiuuData> list) {
@@ -62,10 +49,10 @@ public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final PersonalSuiuuViewHolder suiuuViewHolder = (PersonalSuiuuViewHolder) holder;
-
         String imagePath = list.get(position).getHeadImg();
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, suiuuViewHolder.mainImage, options);
+            Uri uri = Uri.parse(imagePath);
+            suiuuViewHolder.mainImage.setImageURI(uri);
         }
 
         String strTitle = list.get(position).getTitle();
@@ -89,10 +76,8 @@ public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.View
             suiuuViewHolder.commentCount.setText("0");
         }
 
-
         final View itemView = suiuuViewHolder.itemView;
         final int location = suiuuViewHolder.getLayoutPosition();
-
         if (onItemClickListener != null) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -115,14 +100,14 @@ public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private class PersonalSuiuuViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView mainImage;
+        public SimpleDraweeView mainImage;
         public TextView suiuuTitle;
         public TextView praiseCount;
         public TextView commentCount;
 
         public PersonalSuiuuViewHolder(View itemView) {
             super(itemView);
-            mainImage = (ImageView) itemView.findViewById(R.id.item_personal_suiuu_image);
+            mainImage = (SimpleDraweeView) itemView.findViewById(R.id.item_personal_suiuu_image);
             suiuuTitle = (TextView) itemView.findViewById(R.id.item_personal_suiuu_title);
             praiseCount = (TextView) itemView.findViewById(R.id.item_personal_suiuu_praise);
             commentCount = (TextView) itemView.findViewById(R.id.item_personal_suiuu_comment);

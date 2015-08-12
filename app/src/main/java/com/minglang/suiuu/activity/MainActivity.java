@@ -191,6 +191,7 @@ public class MainActivity extends BaseActivity {
      */
     @Bind(R.id.InboxButtonLayout)
     FrameLayout InboxBtnLayout;
+
     /**
      * 旅图页面相册按钮
      */

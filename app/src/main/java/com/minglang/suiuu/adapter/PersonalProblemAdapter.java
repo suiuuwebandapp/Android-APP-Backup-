@@ -1,7 +1,7 @@
 package com.minglang.suiuu.adapter;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -9,13 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.UserProblem.UserProblemData.UserProblemItemData;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -28,18 +25,9 @@ public class PersonalProblemAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private List<UserProblemItemData> list;
 
-    private ImageLoader imageLoader;
-    private DisplayImageOptions options;
-
     private RecyclerViewOnItemClickListener onItemClickListener;
 
     public PersonalProblemAdapter() {
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image)
-                .showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     public void setList(List<UserProblemItemData> list) {
@@ -64,7 +52,8 @@ public class PersonalProblemAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         String headImagePath = list.get(position).getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            imageLoader.displayImage(headImagePath, problemViewHolder.headImageView, options);
+            Uri uri = Uri.parse(headImagePath);
+            problemViewHolder.headImageView.setImageURI(uri);
         }
 
         String strCount = list.get(position).getAttentionNumber();
@@ -114,14 +103,14 @@ public class PersonalProblemAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private class PersonalProblemViewHolder extends RecyclerView.ViewHolder {
 
-        private CircleImageView headImageView;
+        private SimpleDraweeView headImageView;
         private TextView problemCountView;
         private TextView problemTitleView;
         private TextView problemContentView;
 
         public PersonalProblemViewHolder(View itemView) {
             super(itemView);
-            headImageView = (CircleImageView) itemView.findViewById(R.id.item_personal_problem_header_image);
+            headImageView = (SimpleDraweeView) itemView.findViewById(R.id.item_personal_problem_header_image);
             problemCountView = (TextView) itemView.findViewById(R.id.item_personal_problem_count);
             problemTitleView = (TextView) itemView.findViewById(R.id.item_personal_problem_title);
             problemContentView = (TextView) itemView.findViewById(R.id.item_personal_problem_content);

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/layout_100dp">
+
+    <LinearLayout
+        android:id="@+id/item_tack_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/item_tack_photo"
+            android:layout_width="@dimen/layout_100dp"
+            android:layout_height="@dimen/layout_100dp"
+            android:background="@color/white"
+            android:scaleType="centerCrop"/>
+
+        <EditText
+            android:id="@+id/item_tack_description"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/layout_100dp"
+            android:layout_marginLeft="@dimen/layout_16dp"
+            android:layout_marginStart="@dimen/layout_16dp"
+            android:background="@color/white"
+            android:gravity="start"
+            android:textColor="@color/textColor"
+            android:textColorHighlight="@color/textColor"
+            android:textSize="@dimen/layout_16sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/item_tack_remove_layout"
+        android:layout_width="@dimen/layout_100dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end">
+
+        <Button
+            android:id="@+id/item_tack_remove"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/swipe_remove_color"
+            android:text="@string/Remove"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+</FrameLayout>

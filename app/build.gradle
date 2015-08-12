@@ -14,8 +14,8 @@ android {
         multiDexEnabled false
     }
 
-    signingConfigs{
-        release{
+    signingConfigs {
+        release {
             storeFile file("../key.jks")
             storePassword "suiuu123"
             keyAlias "suiuu"
@@ -24,7 +24,7 @@ android {
     }
 
     buildTypes {
-        debug{
+        debug {
             signingConfig signingConfigs.release
         }
 
@@ -38,6 +38,7 @@ android {
         exclude 'AndroidManifest.xml'
     }
 }
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.1'
@@ -68,6 +69,6 @@ dependencies {
     compile files('libs/alipaysdk.jar')
     compile files('libs/Android_Map_V2.5.0.jar')
     compile files('libs/Android_Location_V1.3.2.jar')
-    compile project(':pulltorefreshlibrary')
     compile files('libs/universal-image-loader-1.9.4.jar')
+    compile project(':pulltorefreshlibrary')
 }

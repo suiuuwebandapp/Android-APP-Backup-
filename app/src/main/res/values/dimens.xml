@@ -56,6 +56,9 @@
     <dimen name="layout_220dp">220dp</dimen>
     <dimen name="layout_250dp">250dp</dimen>
     <dimen name="layout_300dp">300dp</dimen>
+    <dimen name="layout_350dp">350dp</dimen>
+    <dimen name="layout_380dp">380dp</dimen>
+    <dimen name="layout_400dp">400dp</dimen>
     <dimen name="layout_510dp">510dp</dimen>
 
 
