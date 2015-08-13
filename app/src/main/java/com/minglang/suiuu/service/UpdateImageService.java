@@ -2,6 +2,7 @@ package com.minglang.suiuu.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -12,8 +13,10 @@ import com.alibaba.sdk.android.oss.model.OSSException;
 import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSFile;
 import com.google.gson.reflect.TypeToken;
+import com.minglang.suiuu.utils.CompressImageUtil;
 import com.minglang.suiuu.utils.JsonUtils;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,17 +88,21 @@ public class UpdateImageService extends Service {
                 String type = path.substring(path.lastIndexOf("/"));
                 String name = type.substring(type.lastIndexOf(".") + 1);
                 String newPath = null;
-//                try {
-//                    newPath = CompressImageUtil.compressImage(path, name, 50);
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
+                try {
+                    newPath = CompressImageUtil.compressImage(path, type, 50);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
                 OSSFile bigFile = ossService.getOssFile(bucket, "suiuu_content" + type);
                 try {
-                    bigFile.setUploadFilePath(path,name);
+                    bigFile.setUploadFilePath(newPath,name);
                     bigFile.ResumableUploadInBackground(new SaveCallback() {
                         @Override
                         public void onSuccess(String objectKey) {
+                            //上传成功删除本地文件
+                            File imageDir = Environment.getExternalStorageDirectory();
+                            File outputFile = new File(imageDir,path.substring(path.lastIndexOf("/")));
+                            deleteFile(outputFile);
                             successNumber += 1;
                             if(successNumber == imageList.size()) {
                                 stopSelf();
@@ -117,5 +124,20 @@ public class UpdateImageService extends Service {
                 }
             }
         }).start();
+    }
+    public void deleteFile(File file) {
+        if (file.exists()) { // 判断文件是否存在
+            if (file.isFile()) { // 判断是否是文件
+                file.delete(); // delete()方法 你应该知道 是删除的意思;
+            } else if (file.isDirectory()) { // 否则如果它是一个目录
+                File files[] = file.listFiles(); // 声明目录下所有的文件 files[];
+                for (int i = 0; i < files.length; i++) { // 遍历目录下所有的文件
+                    this.deleteFile(files[i]); // 把每个文件 用这个方法进行迭代
+                }
+            }
+            file.delete();
+        } else {
+           //文件不存在
+        }
     }
 }

@@ -16,7 +16,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseAppCompatActivity;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
  * 修改时间：2015/7/21 14:06
  * 修改备注：
  */
-public class CommonCommentActivity extends BaseAppCompatActivity {
+public class CommonCommentActivity extends BaseActivity {
 
     private static final String TAG = CommonCommentActivity.class.getSimpleName();
 

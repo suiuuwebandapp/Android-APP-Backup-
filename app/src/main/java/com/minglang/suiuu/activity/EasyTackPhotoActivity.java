@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -313,7 +314,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
 
     private void loadDate() {
         for (int i = 0; i < lv_pic_description.getChildCount() - 1; i++) {
-            LinearLayout layout = (LinearLayout) lv_pic_description.getChildAt(i);// 获得子item的layout
+            FrameLayout layout = (FrameLayout) lv_pic_description.getChildAt(i);// 获得子item的layout
             EditText et = (EditText) layout.findViewById(R.id.item_tack_description);// 从layout中获得控件,根据其id
             // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
             picDescriptionList.add(et.getText().toString());

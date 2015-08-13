@@ -10,7 +10,12 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.chat.activity.ShowBigImage;
 
@@ -75,7 +80,17 @@ public class showPicDescriptionAdapter extends BaseAdapter {
         }
 
         Uri uri = Uri.parse(imageList.get(position));
-        holder.picContent.setImageURI(uri);
+//        holder.picContent.setImageURI(uri);
+
+        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
+        };
+
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(uri)
+                .setTapToRetryEnabled(true)
+                .setOldController(holder.picContent.getController())
+                .build();
+        holder.picContent.setController(controller);
         if (contentList.size() >= 1) {
             if (TextUtils.isEmpty(contentList.get(position))) {
                 holder.textContent.setVisibility(View.GONE);
