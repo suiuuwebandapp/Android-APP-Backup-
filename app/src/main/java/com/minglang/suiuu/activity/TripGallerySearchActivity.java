@@ -138,7 +138,7 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
         rfv_trip_gallery_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(TripGallerySearchActivity.this, TripGalleryDetailActivity.class);
+                Intent intent = new Intent(TripGallerySearchActivity.this, TripGalleryDetailsActivity.class);
                 intent.putExtra("id", tripGalleryList.get(position).getId());
                 startActivity(intent);
             }

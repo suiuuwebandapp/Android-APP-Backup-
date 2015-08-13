@@ -56,9 +56,9 @@ import butterknife.ButterKnife;
 /**
  * 问题详情页
  */
-public class CommunityItemActivity extends BaseAppCompatActivity {
+public class CommunityDetailsActivity extends BaseAppCompatActivity {
 
-    private static final String TAG = CommunityItemActivity.class.getSimpleName();
+    private static final String TAG = CommunityDetailsActivity.class.getSimpleName();
 
     private static final String ID = "id";
 
@@ -196,7 +196,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(qID)) {
-                    Intent intent = new Intent(CommunityItemActivity.this, AnswerActivity.class);
+                    Intent intent = new Intent(CommunityDetailsActivity.this, AnswerActivity.class);
                     intent.putExtra(Q_ID, qID);
                     startActivity(intent);
                 }
@@ -219,7 +219,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-                String label = DateUtils.formatDateTime(CommunityItemActivity.this, System.currentTimeMillis(),
+                String label = DateUtils.formatDateTime(CommunityDetailsActivity.this, System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
@@ -228,7 +228,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
-                String label = DateUtils.formatDateTime(CommunityItemActivity.this, System.currentTimeMillis(),
+                String label = DateUtils.formatDateTime(CommunityDetailsActivity.this, System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
@@ -400,7 +400,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
             hideDialog();
-            Toast.makeText(CommunityItemActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(CommunityDetailsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -424,7 +424,7 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
                     List<Tag.TagData> list = tagInfo.getData();
                     if (list != null && list.size() > 0) {
                         for (Tag.TagData data : list) {
-                            TextView tagView = (TextView) LayoutInflater.from(CommunityItemActivity.this)
+                            TextView tagView = (TextView) LayoutInflater.from(CommunityDetailsActivity.this)
                                     .inflate(R.layout.layout_text_tag, tagLayout, false);
                             tagView.setText(data.getTName());
                             tagLayout.addView(tagView);
@@ -451,9 +451,9 @@ public class CommunityItemActivity extends BaseAppCompatActivity {
                 JSONObject object = new JSONObject(str);
                 String stats = object.getString(STATUS);
                 if (stats.equals(SUC_VALUE)) {
-                    Toast.makeText(CommunityItemActivity.this, attention_suc, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CommunityDetailsActivity.this, attention_suc, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(CommunityItemActivity.this, attention_fai, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CommunityDetailsActivity.this, attention_fai, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析失败:" + e.getMessage());

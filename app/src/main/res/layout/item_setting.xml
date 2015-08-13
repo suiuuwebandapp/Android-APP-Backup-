@@ -14,6 +14,6 @@
         android:layout_marginStart="@dimen/layout_20dp"
         android:layout_marginTop="@dimen/layout_20dp"
         android:text="@string/app_name"
-        android:textSize="@dimen/layout_22sp"/>
+        android:textSize="@dimen/layout_20sp"/>
 
 </RelativeLayout>

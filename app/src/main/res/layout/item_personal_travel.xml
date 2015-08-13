@@ -12,9 +12,9 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/item_personal_travel_main_image"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/layout_150dp"
-            android:scaleType="fitXY"
+            android:layout_height="@dimen/layout_200dp"
             fresco:actualImageScaleType="fitXY"
+            fresco:failureImage="@drawable/loading_error"
             fresco:placeholderImage="@drawable/loading"/>
 
         <RelativeLayout

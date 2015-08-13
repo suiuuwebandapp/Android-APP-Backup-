@@ -24,7 +24,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuSearchActivity;
-import com.minglang.suiuu.activity.TripGalleryDetailActivity;
+import com.minglang.suiuu.activity.TripGalleryDetailsActivity;
 import com.minglang.suiuu.adapter.TripGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.NoScrollBarListView;
@@ -192,7 +192,7 @@ public class TripGalleryFragment extends BaseFragment {
                         loadTripGalleryList(buildRequestParams(null, "0", null, page += 1));
                     }
                 } else {
-                    Intent intent = new Intent(getActivity(), TripGalleryDetailActivity.class);
+                    Intent intent = new Intent(getActivity(), TripGalleryDetailsActivity.class);
                     intent.putExtra("id", tripGalleryList.get(position).getId());
                     startActivity(intent);
                 }

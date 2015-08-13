@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.center;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.CommunityDetailsActivity;
 import com.minglang.suiuu.adapter.PersonalProblemAdapter;
 import com.minglang.suiuu.entity.UserProblem;
 import com.minglang.suiuu.entity.UserProblem.UserProblemData.UserProblemItemData;
@@ -48,6 +50,8 @@ public class PersonalProblemFragment extends Fragment {
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
     private static final String USERSIGN = "userSign";
+
+    private static final String ID = "id";
 
     private String userSign;
     private String verification;
@@ -161,7 +165,10 @@ public class PersonalProblemFragment extends Fragment {
         adapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                String id = listAll.get(position).getQId();
+                Intent intent = new Intent(getActivity(), CommunityDetailsActivity.class);
+                intent.putExtra(ID, id);
+                startActivity(intent);
             }
         });
 
@@ -173,7 +180,7 @@ public class PersonalProblemFragment extends Fragment {
      * @param page 页码
      * @return 网络请求参数
      */
-    private RequestParams buildRequestParams(int page) {
+    public RequestParams buildRequestParams(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(PAGE, String.valueOf(page));
         params.addBodyParameter(NUMBER, String.valueOf(10));
@@ -182,7 +189,7 @@ public class PersonalProblemFragment extends Fragment {
         return params;
     }
 
-    private void getPersonalSuiuuData(RequestParams params) {
+    public void getPersonalSuiuuData(RequestParams params) {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getPersonalProblemDataPath, new PersonalProblemRequestCallBack());
         httpRequest.setParams(params);

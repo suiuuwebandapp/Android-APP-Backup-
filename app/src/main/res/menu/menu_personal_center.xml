@@ -14,4 +14,9 @@
         android:title=""
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/personal_center_refresh"
+        android:title="@string/Refresh"
+        app:showAsAction="never"/>
+
 </menu>

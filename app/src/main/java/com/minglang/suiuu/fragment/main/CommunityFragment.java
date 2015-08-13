@@ -23,7 +23,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.CommunityItemActivity;
+import com.minglang.suiuu.activity.CommunityDetailsActivity;
 import com.minglang.suiuu.activity.SelectCountryActivity;
 import com.minglang.suiuu.adapter.CommunityAdapter;
 import com.minglang.suiuu.adapter.CommunitySortAdapter;
@@ -235,7 +235,7 @@ public class CommunityFragment extends BaseFragment {
                 String qID = listAll.get(location).getQId();
                 DeBugLog.i(TAG, "location:" + location + ",qID:" + qID);
 
-                Intent intent = new Intent(getActivity(), CommunityItemActivity.class);
+                Intent intent = new Intent(getActivity(), CommunityDetailsActivity.class);
                 intent.putExtra(ID, qID);
                 startActivity(intent);
             }

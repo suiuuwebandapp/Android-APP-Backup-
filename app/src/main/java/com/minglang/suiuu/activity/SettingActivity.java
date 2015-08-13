@@ -98,30 +98,30 @@ public class SettingActivity extends BaseAppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
-                    case 0:
+                    case 0://个人设置
                         startActivity(new Intent(SettingActivity.this, PersonalSettingActivity.class));
                         break;
 
-                    case 1:
+                    case 1://通用设置
                         startActivity(new Intent(SettingActivity.this, NormalSettingActivity.class));
                         break;
 
-                    case 2:
+                    case 2://检查更新
                         break;
 
-                    case 3:
-                        startActivity(new Intent(SettingActivity.this, ContactUsActivity.class));
-                        break;
-
-                    case 4:
-                        startActivity(new Intent(SettingActivity.this, FeedbackActivity.class));
-                        break;
-
-                    case 5:
+                    case 3://去评分
                         String mAddress = "market://details?id=" + getPackageName();
                         Intent marketIntent = new Intent("android.intent.action.VIEW");
                         marketIntent.setData(Uri.parse(mAddress));
                         startActivity(marketIntent);
+                        break;
+
+                    case 4://联系我们
+                        startActivity(new Intent(SettingActivity.this, ContactUsActivity.class));
+                        break;
+
+                    case 5:
+                        startActivity(new Intent(SettingActivity.this, AboutUsActivity.class));
                         break;
                 }
             }

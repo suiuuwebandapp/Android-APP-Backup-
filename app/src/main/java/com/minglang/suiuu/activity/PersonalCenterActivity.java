@@ -66,12 +66,21 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
 
     private List<String> titleList = new ArrayList<>();
 
+    private PersonalTravelFragment travelFragment;
+
+    private PersonalSuiuuFragment suiuuFragment;
+
+    private PersonalProblemFragment problemFragment;
+
+    private int ViewPagerIndex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_center);
         ButterKnife.bind(this);
         initView();
+        viewAction();
     }
 
     private void initView() {
@@ -99,9 +108,9 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText(str2), false);
         tabLayout.addTab(tabLayout.newTab().setText(str3), false);
 
-        PersonalTravelFragment travelFragment = PersonalTravelFragment.newInstance(userSign, verification);
-        PersonalSuiuuFragment suiuuFragment = PersonalSuiuuFragment.newInstance(userSign, verification);
-        PersonalProblemFragment problemFragment = PersonalProblemFragment.newInstance(userSign, verification);
+        travelFragment = PersonalTravelFragment.newInstance(userSign, verification);
+        suiuuFragment = PersonalSuiuuFragment.newInstance(userSign, verification);
+        problemFragment = PersonalProblemFragment.newInstance(userSign, verification);
 
         fragmentList.add(travelFragment);
         fragmentList.add(suiuuFragment);
@@ -115,6 +124,27 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
 
         tabLayout.setTabsFromPagerAdapter(personalCenterAdapter);
         tabLayout.setupWithViewPager(viewPager);
+
+        toolbar.showOverflowMenu();
+    }
+
+    private void viewAction() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                ViewPagerIndex = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
@@ -134,6 +164,19 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
                 startActivity(new Intent(PersonalCenterActivity.this, SettingActivity.class));
                 break;
             case R.id.personal_center_dialogue:
+                break;
+            case R.id.personal_center_refresh:
+                switch (ViewPagerIndex) {
+                    case 0:
+                        travelFragment.getPersonalSuiuuData(travelFragment.buildRequestParams(1));
+                        break;
+                    case 1:
+                        suiuuFragment.getPersonalSuiuuData(suiuuFragment.buildRequestParams(1));
+                        break;
+                    case 2:
+                        problemFragment.getPersonalSuiuuData(problemFragment.buildRequestParams(1));
+                        break;
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

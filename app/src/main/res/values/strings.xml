@@ -344,6 +344,13 @@
     <string name="tempEmail" translatable="false">123123123@qq.com</string>
     <string name="tempContent" translatable="false">临时内容</string>
 
+    <string name="Refresh" translatable="false">刷新</string>
+    <string name="AboutUs" translatable="false">联系我们</string>
+
+    <string name="VersionNumber" translatable="false">版本号:</string>
+    <string name="UpdateInfo" translatable="false">更新信息</string>
+    <string name="FeedbackInfo" translatable="false">反馈信息</string>
+
     <!--关于聊天-->
     <string name="show_comments">显示评论</string>
     <string name="article_temp">文章内容在此显示</string>
@@ -643,5 +650,6 @@
     <string name="title_activity_suiuu_user_info" translatable="false">SuiuuUserInfoActivity</string>
     <string name="title_activity_order_details">OrderDetailsActivity</string>
     <string name="title_activity_my_order_list">MyOrderListActivity</string>
+    <string name="title_activity_about_us">AboutUsActivity</string>
 
 </resources>

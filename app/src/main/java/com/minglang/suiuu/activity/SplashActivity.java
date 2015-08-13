@@ -34,15 +34,14 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
 
     @Bind(R.id.im_splash)
     ImageView iv_showInCenter;
-    private LocationManagerProxy mLocationManagerProxy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
         ButterKnife.bind(this);
         init();
+
         AlphaAnimation animation = new AlphaAnimation(0.2f, 1.0f);
         animation.setDuration(1500);
         findViewById(R.id.root).startAnimation(animation);
@@ -87,11 +86,9 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
                     boolean autoLogin = true;
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 } else {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                     finish();
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
             }
 
@@ -104,7 +101,7 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
     }
 
     public void init() {
-        mLocationManagerProxy = LocationManagerProxy.getInstance(this);
+        LocationManagerProxy mLocationManagerProxy = LocationManagerProxy.getInstance(this);
 
         //此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
         //注意设置合适的定位时间的间隔，并且在合适时间调用removeUpdates()方法来取消定位请求
@@ -150,15 +147,15 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
     @Override
     protected void onPause() {
         super.onPause();
-//        stopLocation();
+        //stopLocation();
     }
 
-    private void stopLocation() {
-        if (mLocationManagerProxy != null) {
-            mLocationManagerProxy.removeUpdates(this);
-            mLocationManagerProxy.destory();
-        }
-        mLocationManagerProxy = null;
-    }
+    //    private void stopLocation() {
+    //        if (mLocationManagerProxy != null) {
+    //            mLocationManagerProxy.removeUpdates(this);
+    //            mLocationManagerProxy.destory();
+    //        }
+    //        mLocationManagerProxy = null;
+    //    }
 
 }
