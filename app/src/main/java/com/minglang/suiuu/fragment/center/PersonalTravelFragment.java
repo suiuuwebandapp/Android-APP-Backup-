@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.center;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.TripGalleryDetailsActivity;
 import com.minglang.suiuu.adapter.PersonalTravelAdapter;
 import com.minglang.suiuu.entity.UserTravel;
 import com.minglang.suiuu.entity.UserTravel.UserTravelData.UserTravelItemData;
@@ -48,6 +50,8 @@ public class PersonalTravelFragment extends Fragment {
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
     private static final String USERSIGN = "userSign";
+
+    private static final String ID = "id";
 
     private String userSign;
     private String verification;
@@ -159,13 +163,16 @@ public class PersonalTravelFragment extends Fragment {
         adapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                String id = listAll.get(position).getId();
+                Intent intent = new Intent(getActivity(), TripGalleryDetailsActivity.class);
+                intent.putExtra(ID, id);
+                startActivity(intent);
             }
         });
 
     }
 
-    private RequestParams buildRequestParams(int page) {
+    public RequestParams buildRequestParams(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(PAGE, String.valueOf(page));
         params.addBodyParameter(NUMBER, String.valueOf(10));
@@ -174,7 +181,7 @@ public class PersonalTravelFragment extends Fragment {
         return params;
     }
 
-    private void getPersonalSuiuuData(RequestParams params) {
+    public void getPersonalSuiuuData(RequestParams params) {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getPersonalTripDataPath, new PersonalTravelRequestCallBack());
         httpRequest.setParams(params);

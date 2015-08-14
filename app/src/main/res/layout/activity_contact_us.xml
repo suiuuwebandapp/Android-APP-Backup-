@@ -1,23 +1,23 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
     android:id="@+id/contactUsRootLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.minglang.suiuu.activity.ContactUsActivity">
 
-
     <RelativeLayout
+        android:id="@+id/relativeLayout8"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/tr_black"
-        android:id="@+id/relativeLayout8">
+        android:background="@color/mainColor">
 
         <ImageView
             android:id="@+id/contactUsBack"
             style="@style/backKeyStyle"
-            android:src="@drawable/back" />
+            android:src="@drawable/back"/>
 
         <TextView
             android:id="@+id/textView16"
@@ -27,13 +27,14 @@
             android:layout_centerVertical="true"
             android:text="@string/contactUs"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
     </RelativeLayout>
 
     <ListView
+        android:id="@+id/contactUsInfoList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/contactUsInfoList"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/relativeLayout8" />
+        android:layout_below="@+id/relativeLayout8"
+        android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

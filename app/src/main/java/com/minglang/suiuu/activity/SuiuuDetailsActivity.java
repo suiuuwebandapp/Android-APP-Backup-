@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -73,7 +72,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
     private static final String CONTENT = "content";
     private static final String HEAD_IMG = "headImg";
-    private static final String NICK_NAME_="nickname";
+    private static final String NICK_NAME_ = "nickname";
 
     @BindString(R.string.LoginInvalid)
     String LoginInvalid;
@@ -369,12 +368,10 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                     break;
                 case R.id.bb_consult:
                     //跳到会话页面
-                    if (isExistUser(detailsData.getData().getPublisherList().get(0).getUserSign())) {
-                        //当前用户在数据库中已经存在;
-                    } else {
+                    if (!isExistUser(detailsData.getData().getPublisherList().get(0).getUserSign())) {
                         addUser();
-                        Log.i("suiuu", "不存在了");
                     }
+
                     Intent intentConsult = new Intent(SuiuuDetailsActivity.this, ChatActivity.class);
                     intentConsult.putExtra("userId", detailsData.getData().getPublisherList().get(0).getUserSign());
                     startActivity(intentConsult);

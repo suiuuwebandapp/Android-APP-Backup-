@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.center;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +18,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.SuiuuDetailsActivity;
 import com.minglang.suiuu.adapter.PersonalSuiuuAdapter;
 import com.minglang.suiuu.entity.UserSuiuu;
 import com.minglang.suiuu.entity.UserSuiuu.UserSuiuuData;
@@ -48,6 +50,8 @@ public class PersonalSuiuuFragment extends Fragment {
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
     private static final String USERSIGN = "userSign";
+
+    private static final String TRIP_ID = "tripId";
 
     private String userSign;
     private String verification;
@@ -160,13 +164,16 @@ public class PersonalSuiuuFragment extends Fragment {
         adapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                String tripId = listAll.get(position).getTripId();
+                Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
+                intent.putExtra(TRIP_ID, tripId);
+                startActivity(intent);
             }
         });
 
     }
 
-    private RequestParams buildRequestParams(int page) {
+    public RequestParams buildRequestParams(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(PAGE, String.valueOf(page));
         params.addBodyParameter(NUMBER, String.valueOf(10));
@@ -175,7 +182,7 @@ public class PersonalSuiuuFragment extends Fragment {
         return params;
     }
 
-    private void getPersonalSuiuuData(RequestParams params) {
+    public void getPersonalSuiuuData(RequestParams params) {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getPersonalSuiuuDataPath, new PersonalSuiuuRequestCallBack());
         httpRequest.setParams(params);
