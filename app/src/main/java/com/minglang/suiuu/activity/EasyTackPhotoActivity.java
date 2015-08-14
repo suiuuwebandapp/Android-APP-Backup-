@@ -303,9 +303,6 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
             } else {
                 loadDate();
             }
-        } else if (mId == R.id.tv_show_your_location) {
-            startActivityForResult(new Intent(EasyTackPhotoActivity.this,
-                    BaiduMapActivity.class), REQUEST_CODE_MAP);
         } else if (mId == R.id.iv_top_back) {
             finish();
         }

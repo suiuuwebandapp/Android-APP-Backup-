@@ -38,14 +38,12 @@ public class SuiuuApplication extends Application {
 
     public static Context applicationContext;
     private static SuiuuApplication instance;
-    // login user name
-    public final String PREF_USERNAME = "username";
 
     /**
      * 当前用户nickname,为了苹果推送不是userid而是昵称
      */
-    public static String currentUserNick = "";
     public static OSSService ossService = OSSServiceProvider.getService();
+
     static final String accessKey = "LaKLZHyL2Dmy8Qqq"; // 测试代码没有考虑AK/SK的安全性
     static final String screctKey = "c7xPteQRqjV8nNB8xGFIZoFijzjDLX";
 
@@ -75,6 +73,7 @@ public class SuiuuApplication extends Application {
         super.onLowMemory();
         imageLoader.clearMemoryCache();
     }
+
     /**
      * 初始化阿里OSS上传图片相关
      */
@@ -117,4 +116,5 @@ public class SuiuuApplication extends Application {
         config.tasksProcessingOrder(QueueProcessingType.LIFO);
         imageLoader.init(config.build());
     }
+
 }

@@ -85,7 +85,7 @@
                                 android:layout_height="0dp"
                                 android:layout_weight="0.5"
                                 android:gravity="center_vertical"
-                                android:text="@string/user_name"
+                                android:text="@string/userName"
                                 android:textColor="@color/tr_black"
                                 android:textSize="18sp"/>
 
@@ -133,7 +133,7 @@
                             android:layout_toRightOf="@+id/loop_article_editor"
                             android:drawableLeft="@drawable/icon_delete_selector"
                             android:drawableStart="@drawable/icon_delete_selector"
-                            android:text="@string/delete"
+                            android:text="@string/Delete"
                             android:textColor="@drawable/text_color_selector"
                             android:visibility="invisible"
                             android:textSize="18sp"/>

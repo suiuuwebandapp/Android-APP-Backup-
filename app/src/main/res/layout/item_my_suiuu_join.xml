@@ -32,7 +32,7 @@
         android:layout_toLeftOf="@+id/item_my_suiuu_join_remove"
         android:layout_toRightOf="@+id/item_my_suiuu_join_head_image"
         android:layout_toStartOf="@+id/item_my_suiuu_join_remove"
-        android:text="@string/user_name"
+        android:text="@string/userName"
         android:textSize="@dimen/layout_18sp"/>
 
     <TextView

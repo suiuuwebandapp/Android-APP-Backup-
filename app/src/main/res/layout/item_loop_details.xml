@@ -40,7 +40,7 @@
         android:layout_toEndOf="@+id/item_loop_details_head_image"
         android:layout_toRightOf="@+id/item_loop_details_head_image"
         android:singleLine="true"
-        android:text="@string/user_name"
+        android:text="@string/userName"
         android:textSize="16sp"/>
 
     <TextView

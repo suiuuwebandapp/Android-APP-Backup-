@@ -1,8 +1,6 @@
 package com.minglang.suiuu.activity;
 
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -45,10 +43,6 @@ import butterknife.ButterKnife;
  */
 public class MainActivity extends BaseActivity {
 
-    protected NotificationManager notificationManager;
-
-    private static final int notificationId = 11;
-
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int NUMBER1 = 1;
@@ -90,7 +84,6 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.sideListView2)
     ListView sideListView2;
 
-    //标题
     @Bind(R.id.titleInfo)
     TextView titleInfo;
 
@@ -129,12 +122,6 @@ public class MainActivity extends BaseActivity {
      */
     private InformationFragment informationFragment;
 
-
-
-    /**
-     * 当前为fragment的第几页
-     */
-    private int currentIndex = 0;
     /**
      * 旅图页面按钮布局
      */
@@ -189,14 +176,10 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.img4)
     ImageView iv_tab4;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         setContentView(R.layout.activity_main);
-
         UmengUpdateAgent.update(this);
         ButterKnife.bind(this);
         initView();
@@ -218,7 +201,6 @@ public class MainActivity extends BaseActivity {
         }
 
     }
-
 
     /**
      * 初始化方法
@@ -271,6 +253,7 @@ public class MainActivity extends BaseActivity {
 
         LoadDefaultFragment();
     }
+
     /**
      * 控件相关事件
      */
@@ -432,7 +415,6 @@ public class MainActivity extends BaseActivity {
             ft.add(R.id.showLayout, tripGalleryFragment);
         }
 
-        currentIndex = 0;
         ft.commit();
     }
 
@@ -468,7 +450,6 @@ public class MainActivity extends BaseActivity {
         } else {
             ft.add(R.id.showLayout, suiuuFragment);
         }
-        currentIndex = 1;
         ft.commit();
     }
 
@@ -505,7 +486,6 @@ public class MainActivity extends BaseActivity {
             ft.add(R.id.showLayout, communityFragment);
         }
 
-        currentIndex = 2;
         ft.commit();
     }
 
@@ -536,7 +516,6 @@ public class MainActivity extends BaseActivity {
             ft.add(R.id.showLayout, informationFragment);
         }
 
-        currentIndex = 3;
         ft.commit();
     }
 
@@ -687,7 +666,6 @@ public class MainActivity extends BaseActivity {
         }
 
     }
-
 
     @Override
     public void finish() {
