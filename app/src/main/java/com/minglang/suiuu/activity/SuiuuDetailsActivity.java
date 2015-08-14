@@ -29,7 +29,6 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.CommonCommentAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.chat.activity.ChatActivity;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.dbhelper.UserDbHelper;
 import com.minglang.suiuu.entity.SuiuuDetailsData;
@@ -372,9 +371,9 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                         addUser();
                     }
 
-                    Intent intentConsult = new Intent(SuiuuDetailsActivity.this, ChatActivity.class);
-                    intentConsult.putExtra("userId", detailsData.getData().getPublisherList().get(0).getUserSign());
-                    startActivity(intentConsult);
+//                    Intent intentConsult = new Intent(SuiuuDetailsActivity.this, ChatActivity.class);
+//                    intentConsult.putExtra("userId", detailsData.getData().getPublisherList().get(0).getUserSign());
+//                    startActivity(intentConsult);
                     break;
                 case R.id.bb_schedule:
                     //跳到预定页面

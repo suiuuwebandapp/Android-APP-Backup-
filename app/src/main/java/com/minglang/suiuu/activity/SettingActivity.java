@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -12,13 +11,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.easemob.EMCallBack;
-import com.easemob.chat.EMChatManager;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.SettingAdapter;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import butterknife.Bind;
@@ -77,10 +72,6 @@ public class SettingActivity extends BaseAppCompatActivity {
 
         more.setVisibility(View.GONE);
 
-        if (!TextUtils.isEmpty(EMChatManager.getInstance().getCurrentUser())) {
-            btn_logout.setText(logoutButtonText);
-        }
-
         SettingAdapter adapter = new SettingAdapter(this, SETTINGS);
         settingList.setAdapter(adapter);
     }
@@ -137,46 +128,16 @@ public class SettingActivity extends BaseAppCompatActivity {
     }
 
     public void logout() {
-
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(logoutText);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
-
-        SuiuuApplication.getInstance().logout(new EMCallBack() {
-
-            @Override
-            public void onSuccess() {
-                SettingActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        progressDialog.dismiss();
-                        SuiuuInfo.ClearSuiuuInfo(SettingActivity.this);
-                        SuiuuInfo.ClearSuiuuThird(SettingActivity.this);
-
-                        Intent intent = new Intent();
-                        intent.setAction(TAG);
-                        sendBroadcast(intent);
-
-                        SettingActivity.this.finish(); // 重新显示登陆页面
-                        startActivity(new Intent(SettingActivity.this, LoginActivity.class));
-                    }
-                });
-            }
-
-            @Override
-            public void onProgress(int progress, String status) {
-                DeBugLog.i(TAG, "progress:" + String.valueOf(progress));
-                DeBugLog.i(TAG, "status:" + status);
-            }
-
-            @Override
-            public void onError(int code, String message) {
-                DeBugLog.e(TAG, "code:" + String.valueOf(code));
-                DeBugLog.e(TAG, "message:" + message);
-            }
-
-        });
-
+        SuiuuInfo.ClearSuiuuInfo(SettingActivity.this);
+        SuiuuInfo.ClearSuiuuThird(SettingActivity.this);
+        Intent intent = new Intent();
+        intent.setAction(TAG);
+        sendBroadcast(intent);
+        SettingActivity.this.finish(); // 重新显示登陆页面
+        startActivity(new Intent(SettingActivity.this, LoginActivity.class));
     }
-
 }

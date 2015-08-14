@@ -11,12 +11,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.minglang.suiuu.chat.chat;
+package com.minglang.suiuu.activity;
 
-public class Constant {
-	public static final String NEW_FRIENDS_USERNAME = "item_new_friends";
-	public static final String GROUP_USERNAME = "item_groups";
-	public static final String MESSAGE_ATTR_IS_VOICE_CALL = "is_voice_call";
-	public static final String MESSAGE_ATTR_IS_VIDEO_CALL = "is_video_call";
-	public static final String ACCOUNT_REMOVED = "account_removed";
+import android.os.Bundle;
+
+import com.minglang.suiuu.R;
+import com.minglang.suiuu.base.BaseActivity;
+
+/**
+ * 下载显示大图
+ */
+public class ShowBigImage extends BaseActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_show_big_image);
+        super.onCreate(savedInstanceState);
+
+    }
 }

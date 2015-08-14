@@ -14,7 +14,6 @@
         android:layout_height="@dimen/layout_200dp"
         android:scaleType="centerCrop"
         fresco:placeholderImage="@drawable/loading"
-        fresco:failureImage="@drawable/loading_error"
         />
     <TextView
         android:id="@+id/tv_show_text_description"

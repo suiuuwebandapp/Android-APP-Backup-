@@ -16,26 +16,22 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.chat.activity.ShowBigImage;
+import com.minglang.suiuu.activity.ShowBigImage;
 
 import java.util.List;
 
 
 public class RollViewPager extends ViewPager {
-
     public RollViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-
     public RollViewPager(Context context) {
         super(context);
     }
-
     /**
      * 计算图片所占用的内存： 长 * 宽 * 图片字节数； eg ： 800 * 480 * 4 = 图片== 位图 Config.ARGB_8888
      * = 32/8=4； Config.ARGB_4444 = 16/8=2 Config.RGB_565 =2 Config.ALPHA_8 = 1
      */
-
     /**
      * 初始化有几个点
      */
@@ -113,7 +109,6 @@ public class RollViewPager extends ViewPager {
 
             ViewPagerAdapter adater = new ViewPagerAdapter();
             RollViewPager.this.setAdapter(adater);
-
         }
         handler.postDelayed(viewPagerTask, 4000);
     }

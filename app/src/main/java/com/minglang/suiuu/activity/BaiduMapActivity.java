@@ -1,5 +1,5 @@
 
-package com.minglang.suiuu.chat.activity;
+package com.minglang.suiuu.activity;
 
 import android.content.Intent;
 import android.location.Location;
@@ -17,6 +17,7 @@ import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.base.BaseActivity;
 
 
 public class BaiduMapActivity extends BaseActivity implements LocationSource,

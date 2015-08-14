@@ -10,14 +10,9 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.controller.ControllerListener;
-import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.image.ImageInfo;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.chat.activity.ShowBigImage;
+import com.minglang.suiuu.activity.ShowBigImage;
 
 import java.util.List;
 
@@ -58,12 +53,10 @@ public class showPicDescriptionAdapter extends BaseAdapter {
             return null;
         }
     }
-
     @Override
     public long getItemId(int position) {
         return position;
     }
-
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -78,19 +71,8 @@ public class showPicDescriptionAdapter extends BaseAdapter {
             holder.textContent = (TextView) view.findViewById(R.id.tv_show_text_description);
             view.setTag(holder);
         }
-
         Uri uri = Uri.parse(imageList.get(position));
-//        holder.picContent.setImageURI(uri);
-
-        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
-        };
-
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setUri(uri)
-                .setTapToRetryEnabled(true)
-                .setOldController(holder.picContent.getController())
-                .build();
-        holder.picContent.setController(controller);
+        holder.picContent.setImageURI(uri);
         if (contentList.size() >= 1) {
             if (TextUtils.isEmpty(contentList.get(position))) {
                 holder.textContent.setVisibility(View.GONE);
@@ -99,7 +81,6 @@ public class showPicDescriptionAdapter extends BaseAdapter {
                 holder.textContent.setText(contentList.get(position));
             }
         }
-
         holder.picContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +90,6 @@ public class showPicDescriptionAdapter extends BaseAdapter {
                 context.startActivity(showPic);
             }
         });
-
         return view;
     }
 

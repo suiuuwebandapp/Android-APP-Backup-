@@ -27,7 +27,6 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshGridView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.OtherUserArticleAdapter;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.chat.activity.ChatActivity;
 import com.minglang.suiuu.dbhelper.UserDbHelper;
 import com.minglang.suiuu.entity.OtherUser;
 import com.minglang.suiuu.entity.OtherUserDataArticle;
@@ -287,15 +286,13 @@ public class OtherUserActivity extends BaseActivity {
                         addUser();
                         Log.i("suiuu", "不存在了");
                     }
-                    Intent intent = new Intent(OtherUserActivity.this, ChatActivity.class);
-                    intent.putExtra("userId", userId);
-                    startActivity(intent);
+                    //跳转到聊天页面
+//                    Intent intent = new Intent(OtherUserActivity.this, ChatActivity.class);
+//                    intent.putExtra("userId", userId);
+//                    startActivity(intent);
                     break;
-
             }
-
         }
-
     }
 
     /**

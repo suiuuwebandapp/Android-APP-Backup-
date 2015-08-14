@@ -22,7 +22,6 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.EasyTackPhotoAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.chat.activity.BaiduMapActivity;
 import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.customview.swipelistview.SwipeListView;

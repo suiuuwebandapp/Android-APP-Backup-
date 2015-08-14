@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SelectPictureActivity;
-import com.minglang.suiuu.chat.activity.ShowBigImage;
+import com.minglang.suiuu.activity.ShowBigImage;
 import com.minglang.suiuu.customview.swipelistview.SwipeListView;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;

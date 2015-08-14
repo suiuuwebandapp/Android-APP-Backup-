@@ -2,8 +2,6 @@ package com.minglang.suiuu.activity;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -21,14 +19,6 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.easemob.EMCallBack;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMContactManager;
-import com.easemob.chat.EMGroupManager;
-import com.easemob.exceptions.EaseMobException;
-import com.easemob.util.EMLog;
-import com.easemob.util.HanziToPinyin;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -36,12 +26,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.AreaCodeAdapter;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.chat.bean.User;
-import com.minglang.suiuu.chat.chat.Constant;
-import com.minglang.suiuu.chat.dao.UserDao;
-import com.minglang.suiuu.chat.utils.CommonUtils;
 import com.minglang.suiuu.entity.AreaCode;
 import com.minglang.suiuu.entity.AreaCodeData;
 import com.minglang.suiuu.entity.RequestData;
@@ -71,8 +56,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -399,11 +382,6 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if (!CommonUtils.isNetWorkConnected(LoginActivity.this)) {
-                    Toast.makeText(LoginActivity.this, R.string.network_isnot_available, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
                 suiuuLoginUserName = popupLoginUserName.getText().toString().trim();
                 suiuuLoginPassword = popupLoginPassword.getText().toString().trim();
 
@@ -646,7 +624,6 @@ public class LoginActivity extends BaseActivity {
                     SuiuuInfo.WriteVerification(LoginActivity.this, user.getMessage());
                     SuiuuInfo.WriteUserSign(LoginActivity.this, user.getData().getUserSign());
                     huanXinUsername = user.getData().getUserSign();
-                    huanXinLogin();
                 } else {
                     Toast.makeText(LoginActivity.this, "注册失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }
@@ -708,7 +685,6 @@ public class LoginActivity extends BaseActivity {
                     SuiuuInfo.WriteUserSign(LoginActivity.this, data.getUserSign());
                     SuiuuInfo.WriteUserData(LoginActivity.this, data);
                     huanXinUsername = user.getData().getUserSign();
-                    huanXinLogin();
                 } else {
                     Toast.makeText(LoginActivity.this, "登录失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }
@@ -731,187 +707,8 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 环信登录方法
-     */
-    public void huanXinLogin() {
-        progressShow = true;
-        final ProgressDialog pd = new ProgressDialog(LoginActivity.this);
-        pd.setCanceledOnTouchOutside(false);
-        pd.setOnCancelListener(new OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                progressShow = false;
-            }
-        });
-        pd.setMessage(getResources().getString(R.string.Is_landing));
-        pd.show();
 
-        final long start = System.currentTimeMillis();
-        // 调用sdk登陆方法登陆聊天服务器
-        EMChatManager.getInstance().login(huanXinUsername, HUANXINPASSWORD, new suiuuEmCallback(pd, start));
 
-    }
-
-    /**
-     * 重写环信回调接口
-     */
-    private class suiuuEmCallback implements EMCallBack {
-
-        private ProgressDialog pd;
-        private long start;
-
-        private suiuuEmCallback(ProgressDialog pd, long start) {
-            this.pd = pd;
-            this.start = start;
-        }
-
-        @Override
-        public void onSuccess() {
-            if (!progressShow) {
-                return;
-            }
-            // 登陆成功，保存用户名密码
-            SuiuuApplication.getInstance().setUserName(huanXinUsername);
-            SuiuuApplication.getInstance().setPassword(HUANXINPASSWORD);
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    pd.setMessage(getResources().getString(R.string.list_is_for));
-                }
-            });
-            try {
-                // ** 第一次登录或者之前logout后再登录，加载所有本地群和回话
-                // ** manually load all local groups and
-                // conversations in case we are auto login
-//                    EMGroupManager.getInstance().loadAllGroups();
-                EMChatManager.getInstance().loadAllConversations();
-                //处理好友和群组
-//					processContactsAndGroups();
-                //处理好友和群组
-                processContactsAndGroups();
-            } catch (Exception e) {
-                e.printStackTrace();
-                //取好友或者群聊失败，不让进入主页面
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        pd.dismiss();
-                        SuiuuApplication.getInstance().logout(null);
-                        Toast.makeText(getApplicationContext(),
-                                getResources().getString(R.string.login_failure_failed), Toast.LENGTH_LONG).show();
-                    }
-                });
-                return;
-            }
-            //更新当前用户的nickname 此方法的作用是在ios离线推送时能够显示用户nick
-            EMChatManager.getInstance().updateCurrentUserNick(SuiuuApplication.currentUserNick.trim());
-            if (!LoginActivity.this.isFinishing()) {
-                pd.dismiss();
-            }
-            // 进入主页面
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        }
-
-        @Override
-        public void onError(int code, final String message) {
-
-            loginFailure2Umeng(start, code, message);
-
-            if (!progressShow) {
-                return;
-            }
-
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    pd.dismiss();
-                    Toast.makeText(LoginActivity.this,
-                            getResources().getString(R.string.Login_failed) + message, Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
-
-        @Override
-        public void onProgress(int i, String s) {
-
-        }
-
-    }
-
-    /**
-     * 环信相关方法
-     *
-     * @throws EaseMobException
-     */
-    private void processContactsAndGroups() throws EaseMobException {
-        // demo中简单的处理成每次登陆都去获取好友username，开发者自己根据情况而定
-        List<String> userNameList = EMContactManager.getInstance().getContactUserNames();
-        EMLog.d("roster", "contacts size: " + userNameList.size());
-        Map<String, User> userList = new HashMap<>();
-        for (String username : userNameList) {
-            User user = new User();
-            user.setUsername(username);
-            setUserHeader(username, user);
-            userList.put(username, user);
-        }
-        // 添加user"申请与通知"
-        User newFriends = new User();
-        newFriends.setUsername(Constant.NEW_FRIENDS_USERNAME);
-        String strChat = getResources().getString(R.string.Application_and_notify);
-        newFriends.setNick(strChat);
-
-        userList.put(Constant.NEW_FRIENDS_USERNAME, newFriends);
-        // 添加"群聊"
-        User groupUser = new User();
-        String strGroup = getResources().getString(R.string.group_chat);
-        groupUser.setUsername(Constant.GROUP_USERNAME);
-        groupUser.setNick(strGroup);
-        groupUser.setHeader("");
-        userList.put(Constant.GROUP_USERNAME, groupUser);
-
-        // 存入内存
-        SuiuuApplication.getInstance().setContactList(userList);
-        // 存入db
-        UserDao dao = new UserDao(LoginActivity.this);
-        Collection<User> userCollection = userList.values();
-        List<User> users = new ArrayList<>(userCollection);
-        dao.saveContactList(users);
-
-        //获取黑名单列表
-        List<String> blackList = EMContactManager.getInstance().getBlackListUsernamesFromServer();
-        //保存黑名单
-        EMContactManager.getInstance().saveBlackList(blackList);
-
-        // 获取群聊列表(群聊里只有groupid和groupname等简单信息，不包含members),sdk会把群组存入到内存和db中
-        EMGroupManager.getInstance().getGroupsFromServer();
-    }
-
-    /**
-     * 设置header属性，方便通讯中对联系人按header分类显示，以及通过右侧ABCD...字母栏快速定位联系人
-     *
-     * @param username 用户名
-     * @param user     用户
-     */
-    protected void setUserHeader(String username, User user) {
-        String headerName;
-        if (!TextUtils.isEmpty(user.getNick())) {
-            headerName = user.getNick();
-        } else {
-            headerName = user.getUsername();
-        }
-        if (username.equals(Constant.NEW_FRIENDS_USERNAME)) {
-            user.setHeader("");
-        } else if (Character.isDigit(headerName.charAt(0))) {
-            user.setHeader("#");
-        } else {
-            user.setHeader(HanziToPinyin.getInstance().get(headerName.substring(0, 1)).get(0).target.substring(0, 1).toUpperCase());
-            char header = user.getHeader().toLowerCase().charAt(0);
-            if (header < 'a' || header > 'z') {
-                user.setHeader("#");
-            }
-        }
-    }
 
     private void loginFailure2Umeng(final long start, final int code, final String message) {
         runOnUiThread(new Runnable() {
@@ -1087,7 +884,6 @@ public class LoginActivity extends BaseActivity {
                     SuiuuInfo.WriteUserData(LoginActivity.this, userBack.getData());
 
                     huanXinUsername = userBack.getData().getUserSign();
-                    huanXinLogin();
                 } else {
                     DeBugLog.e(TAG, "QQRequestCallBack:返回数据有误！");
                     Toast.makeText(LoginActivity.this,
@@ -1260,7 +1056,6 @@ public class LoginActivity extends BaseActivity {
                     SuiuuInfo.WriteUserData(LoginActivity.this, userBack.getData());
 
                     huanXinUsername = userBack.getData().getUserSign();
-                    huanXinLogin();
                 } else {
 
                     if (weChatLoadDialog.isShowing()) {
@@ -1468,7 +1263,6 @@ public class LoginActivity extends BaseActivity {
                     SuiuuInfo.WriteVerification(LoginActivity.this, userBack.getMessage());
                     SuiuuInfo.WriteUserSign(LoginActivity.this, userBack.getData().getUserSign());
                     huanXinUsername = userBack.getData().getUserSign();
-                    huanXinLogin();
                 } else {
                     Toast.makeText(LoginActivity.this, "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }

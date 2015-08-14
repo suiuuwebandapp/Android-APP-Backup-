@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.ShowGVPictureAdapter;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.chat.activity.ShowBigImage;
 
 import java.util.ArrayList;
 

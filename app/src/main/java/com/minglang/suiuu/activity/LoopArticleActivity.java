@@ -27,7 +27,6 @@ import com.minglang.suiuu.adapter.ArticleCommentAdapter;
 import com.minglang.suiuu.adapter.LoopArticleImageAdapter;
 import com.minglang.suiuu.adapter.showPicDescriptionAdapter;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.chat.activity.ShowBigImage;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.LinearLayoutForListView;
 import com.minglang.suiuu.customview.NoScrollBarGridView;

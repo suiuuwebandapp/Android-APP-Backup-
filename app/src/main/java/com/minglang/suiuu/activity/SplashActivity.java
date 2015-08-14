@@ -3,6 +3,7 @@ package com.minglang.suiuu.activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -15,7 +16,6 @@ import com.amap.api.location.LocationManagerProxy;
 import com.amap.api.location.LocationProviderProxy;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.chat.chat.DemoHXSDKHelper;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
@@ -78,12 +78,10 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
             public void onAnimationStart(Animation animation) {
 
             }
-
             @Override
             public void onAnimationEnd(Animation animation) {
                 //		 如果用户名密码都有，直接进入主页面
-                if (DemoHXSDKHelper.getInstance().isLogined()) {
-                    boolean autoLogin = true;
+                if (!TextUtils.isEmpty(SuiuuInfo.ReadUserData(SplashActivity.this).getNickname())) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
                 } else {
