@@ -109,7 +109,6 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
                 LocationProviderProxy.AMapNetwork, 60 * 1000, 15, this);
         mLocationManagerProxy.setGpsEnable(false);
     }
-
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
         if (amapLocation != null && amapLocation.getAMapException().getErrorCode() == 0) {

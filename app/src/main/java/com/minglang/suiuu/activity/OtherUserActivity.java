@@ -406,7 +406,6 @@ public class OtherUserActivity extends BaseActivity {
                 Toast.makeText(OtherUserActivity.this, "关注失败！", Toast.LENGTH_SHORT).show();
             }
         }
-
         @Override
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, "添加关注网络异常信息:" + s);
