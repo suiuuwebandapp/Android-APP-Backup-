@@ -1,7 +1,6 @@
 package com.minglang.suiuu.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.view.MenuItem;
@@ -13,7 +12,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 
 import butterknife.Bind;
-import butterknife.BindString;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 /**
@@ -21,20 +20,19 @@ import butterknife.ButterKnife;
  */
 public class AccountManageActivity extends BaseAppCompatActivity {
 
-    @BindString(R.string.AccountManage)
-    String titleText;
-
-    @Bind(R.id.account_balance_list_view)
-    PullToRefreshListView pullToRefreshListView;
+    @BindColor(R.color.white)
+    int titleColor;
 
     @Bind(R.id.account_balance_toolbar)
     Toolbar toolbar;
+
+    @Bind(R.id.account_balance_list_view)
+    PullToRefreshListView pullToRefreshListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_manage);
-
         ButterKnife.bind(this);
         initView();
         ViewAction();
@@ -44,14 +42,8 @@ public class AccountManageActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
-        toolbar.setTitle(titleText);
+        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
-
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.back);
-        }
 
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
     }

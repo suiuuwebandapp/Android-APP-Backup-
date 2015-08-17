@@ -24,6 +24,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.OrderDetailsActivity;
 import com.minglang.suiuu.adapter.OrderListManageAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
+import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.OrderManage;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
@@ -44,7 +45,7 @@ import butterknife.ButterKnife;
  * Use the {@link NewOrderFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewOrderFragment extends Fragment {
+public class NewOrderFragment extends BaseFragment {
 
     private static final String TAG = NewOrderFragment.class.getSimpleName();
 

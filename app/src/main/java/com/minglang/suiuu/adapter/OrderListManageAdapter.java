@@ -90,7 +90,7 @@ public class OrderListManageAdapter extends BaseAdapter {
         //标题
         TextView titleView = holder.getView(R.id.new_order_title);
         //价格
-        TextView moneyView = holder.getView(R.id.new_oder_money_number);
+        TextView moneyView = holder.getView(R.id.new_oder_money_price);
         //简介
         TextView introView = holder.getView(R.id.new_oder_intro);
         //开始日期
@@ -151,7 +151,7 @@ public class OrderListManageAdapter extends BaseAdapter {
 
             String personCount = newOrderData.getPersonCount();
             if (!TextUtils.isEmpty(personCount)) {
-                personCountView.setText(personCount);
+                personCountView.setText("出行人数:"+personCount);
             } else {
                 personCountView.setText("0");
             }

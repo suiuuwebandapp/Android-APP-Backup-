@@ -65,7 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/layout_8dp"
-                    android:text="@string/location"
+                    android:text="@string/Location"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             </FrameLayout>

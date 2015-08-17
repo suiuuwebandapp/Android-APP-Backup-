@@ -337,7 +337,7 @@ public class LoopArticleActivity extends BaseActivity {
                         commentListView.setAdapter(new ArticleCommentAdapter(LoopArticleActivity.this, commentList));
                         loop_article_scrollView.smoothScrollBy(0, 100);
                     } else {
-                        Toast.makeText(LoopArticleActivity.this, R.string.thisArticNoComment, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoopArticleActivity.this, R.string.ThisArticNoComment, Toast.LENGTH_SHORT).show();
                     }
                     isClickComment = true;
                 }

@@ -640,25 +640,25 @@ public class MainActivity extends BaseActivity {
                     break;
 
                 case R.id.tab1:
-                    titleInfo.setText(getResources().getString(R.string.mainTitle1));
+                    titleInfo.setText(getResources().getString(R.string.MainTitle1));
                     switchViewState(NUMBER1);
                     LoadMainFragment();
                     break;
 
                 case R.id.tab2:
-                    titleInfo.setText(getResources().getString(R.string.mainTitle2));
+                    titleInfo.setText(getResources().getString(R.string.MainTitle2));
                     switchViewState(NUMBER2);
                     LoadSuiuuFragment();
                     break;
 
                 case R.id.tab3:
-                    titleInfo.setText(getResources().getString(R.string.mainTitle3));
+                    titleInfo.setText(getResources().getString(R.string.MainTitle3));
                     switchViewState(NUMBER3);
                     LoadCommunityFragment();
                     break;
 
                 case R.id.tab4:
-                    titleInfo.setText(getResources().getString(R.string.mainTitle4));
+                    titleInfo.setText(getResources().getString(R.string.MainTitle4));
                     switchViewState(NUMBER4);
                     LoadConversationFragment();
                     break;

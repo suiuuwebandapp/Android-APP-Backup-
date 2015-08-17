@@ -45,7 +45,7 @@
         <ImageView
             android:id="@+id/suiuu_order_back"
             style="@style/backKeyStyle"
-            android:contentDescription="@string/back"
+            android:contentDescription="@string/Back"
             android:src="@drawable/back" />
 
         <TextView

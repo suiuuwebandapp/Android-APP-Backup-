@@ -5,18 +5,18 @@
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
-    <string name="login" translatable="false">登录</string>
-    <string name="register" translatable="false">注册</string>
+    <string name="Login" translatable="false">登录</string>
+    <string name="Register" translatable="false">注册</string>
 
-    <string name="title1" translatable="false">主页</string>
-    <string name="title2" translatable="false">圈子</string>
-    <string name="title3" translatable="false">随游</string>
-    <string name="title4" translatable="false">会话</string>
+    <string name="Title1" translatable="false">主页</string>
+    <string name="Title2" translatable="false">圈子</string>
+    <string name="Title3" translatable="false">随游</string>
+    <string name="Title4" translatable="false">会话</string>
 
-    <string name="mainTitle1" translatable="false">旅图</string>
-    <string name="mainTitle2" translatable="false">随游</string>
-    <string name="mainTitle3" translatable="false">问答社区</string>
-    <string name="mainTitle4" translatable="false">收件箱</string>
+    <string name="MainTitle1" translatable="false">旅图</string>
+    <string name="MainTitle2" translatable="false">随游</string>
+    <string name="MainTitle3" translatable="false">问答社区</string>
+    <string name="MainTitle4" translatable="false">收件箱</string>
 
     <string name="SuiuuAccount" translatable="false">随友账户</string>
     <string name="OrdinaryAccount" translatable="false">普通账户</string>
@@ -30,18 +30,16 @@
     <string name="blankContent" translatable="false">暂无详细信息</string>
 
     <string name="Attention" translatable="false">关注</string>
-    <string name="MyAttention" translatable="false">我的关注</string>
+
     <string name="thirdParty" translatable="false">绑定的第三方账号</string>
+
     <string name="Setting" translatable="false">设置</string>
     <string name="PersonalSetting" translatable="false">个人设置</string>
     <string name="NormalSetting" translatable="false">通用设置</string>
-    <string name="clickHead" translatable="false">点击修改头像</string>
-    <string name="personalInfo" translatable="false">个人信息</string>
 
-    <string name="nickname_hint" translatable="false">昵称</string>
-    <string name="Location_hint">The location</string>
-    <string name="trade_hint" translatable="false">职业</string>
-    <string name="Signature_hint">Signature hint</string>
+    <string name="NickNameHint" translatable="false">昵称</string>
+    <string name="TradeHint" translatable="false">职业</string>
+    <string name="SignatureHint">个性签名</string>
 
     <string name="NewRemind" translatable="false">新提醒</string>
     <string name="NewAt" translatable="false">新@</string>
@@ -54,29 +52,23 @@
     <string name="OrderMsg" translatable="false">订单</string>
     <string name="SystemMsg" translatable="false">通知</string>
 
-    <string name="post" translatable="false">帖子</string>
-    <string name="back" translatable="false">返回</string>
+    <string name="Post" translatable="false">帖子</string>
+    <string name="Back" translatable="false">返回</string>
 
     <string name="Confirm" translatable="false">确认</string>
     <string name="AllPicture">All pictures</string>
-    <string name="gender" translatable="false">性别</string>
-    <string name="location" translatable="false">所在地</string>
-    <string name="signature2" translatable="false">签名</string>
-    <string name="feedback" translatable="false">反馈</string>
-    <string name="send" translatable="false">发送</string>
-    <string name="feedback_hint" translatable="false">请输入要反馈的内容</string>
-    <string name="contactUs" translatable="false">联系我们</string>
-    <string name="footprint0" translatable="false">足迹 0</string>
-    <string name="attention_other" translatable="false">关注TA</string>
+    <string name="Location" translatable="false">所在地</string>
+
+    <string name="AttentionThat" translatable="false">关注TA</string>
     <string name="TwentyThree" translatable="false">23</string>
-    <string name="clickPraise" translatable="false">点赞</string>
+    <string name="ClickPraise" translatable="false">点赞</string>
 
-    <string name="user" translatable="false">用户</string>
+    <string name="Complete" translatable="false">完成</string>
 
-    <string name="complete">Complete</string>
     <string name="Singapore_n">aaaaaaaaaaaaaaaaaaa</string>
-    <string name="Jeju_Island">Jeju Island</string>
-    <string name="editor" translatable="false">修改</string>
+    <string name="JejuIsland" translatable="false">济州岛</string>
+    <string name="Editor" translatable="false">修改</string>
+
     <string name="search_question" translatable="false">写下你的问题</string>
     <string name="question_description" translatable="false">问题的描述</string>
     <string name="show_location" translatable="false">显示你的位置</string>
@@ -129,8 +121,7 @@
 
     <string name="LoginInvalid" translatable="false">登录信息过期,请重新登录!</string>
 
-    <string name="all_attention" translatable="false">关注动态</string>
-    <string name="thisArticNoComment" translatable="false">该文章暂时没有评论</string>
+    <string name="ThisArticNoComment" translatable="false">该文章暂时没有评论</string>
 
     <string name="addAttentionSuccess" translatable="false">添加关注成功!</string>
     <string name="addAttentionFail" translatable="false">添加关注失败！</string>
@@ -195,26 +186,25 @@
     <string name="zeroForTenKilo" translatable="false">0 &#8211; 10000</string>
     <string name="suiuu_order_sure" translatable="false">订单确认</string>
 
-    <string name="MySuiuu">My Suiuu</string>
-    <string name="MyReleaseSuiuu">My Release Suiuu</string>
+    <string name="MySuiuu" translatable="false">我的随游</string>
+    <string name="MyReleaseSuiuu" translatable="false">我发布的随游</string>
 
     <string name="Remove">Remove</string>
     <string name="Ignore">Ignore</string>
 
-    <string name="showReleaseSuiuuInfo">Show</string>
-    <string name="hideReleaseSuiuuInfo">Hide</string>
+    <string name="EditSuiuuInfo" translatable="false">编辑随游信息</string>
+    <string name="HintEditSuiuuInfo" translatable="false">请输入随游信息</string>
 
-    <string name="editSuiuuInfo">Edit Suiuu Info</string>
-    <string name="hintEditSuiuuInfo">Please Input Suiuu Info</string>
+    <string name="EditSuiuuPrice" translatable="false">编辑随游价格</string>
+    <string name="BasicPrice" translatable="false">基本价格 ￥：</string>
+    <string name="OtherPrice" translatable="false">其他价格 ￥：</string>
+    <string name="AdditionalPrice" translatable="false">附加价格 ￥:</string>
 
-    <string name="editSuiuuPrice">Edit Suiuu Price</string>
-    <string name="BasicPrice">Basic Price ￥：</string>
-    <string name="AdditionalPrice">Additional Price ￥:</string>
-    <string name="OrderManage">Order Manage</string>
+    <string name="OrderManage" translatable="false">订单管理</string>
 
-    <string name="AccountManage">Account Management</string>
-    <string name="RMB">￥</string>
-    <string name="AccountBalance">Balance</string>
+    <string name="AccountManage" translatable="false">账户管理</string>
+    <string name="RMB" translatable="false">￥</string>
+    <string name="AccountBalance" translatable="false">账户余额</string>
     <string name="ClickWithdrawals" translatable="false">点击提现</string>
 
     <string name="Date">Date</string>
@@ -265,15 +255,16 @@
     <string name="app_name">Suiuu</string>
     <string name="message">Message</string>
     <string name="my_suiuu">My Suiuu</string>
-    <string name="orderManager">Order Management</string>
-    <string name="accountManager">Account Management</string>
+
+    <string name="orderManager" translatable="false">订单管理</string>
+    <string name="accountManager" translatable="false">账号管理</string>
 
     <string name="route">route</string>
     <string name="save">save</string>
 
     <string name="AddTag">Add Tag</string>
     <string name="Problem">Problem</string>
-    <string name="OtherPrice">Other Price ￥：</string>
+
     <string name="SelectLocation">Select Location</string>
     <string name="city">City</string>
     <string name="cityDetails">Please select city</string>
@@ -326,8 +317,8 @@
     <string name="itemLocationInfo" translatable="false">具体信息</string>
     <string name="Action" translatable="false">行为</string>
     <string name="PurchaseSuiuu" translatable="false">购买随游</string>
-    <string name="orderTitle" translatable="false">订单标题</string>
-    <string name="confirmationRefund" translatable="false">确认退款</string>
+    <string name="OrderTitle" translatable="false">订单标题</string>
+    <string name="ConfirmationRefund" translatable="false">确认退款</string>
 
     <string name="Join" translatable="false">加入</string>
     <string name="ConsentJoin" translatable="false">同意加入</string>
@@ -343,10 +334,19 @@
     <string name="tempOrderTitle" translatable="false">法国巴黎浪漫温馨之旅</string>
     <string name="tempPhoneNumber" translatable="false">1782066022</string>
     <string name="tempEmail" translatable="false">123123123@qq.com</string>
-    <string name="tempContent" translatable="false">临时内容</string>
+    <string name="tempContent" translatable="false">(临时)内容</string>
+    <string name="tempPrice" translatable="false">(临时)价格</string>
+    <string name="tempIntro" translatable="false">简介</string>
+    <string name="tempBeginDate" translatable="false">开始日期</string>
+    <string name="tempStartTime" translatable="false">开始时间</string>
+    <string name="tempPersonalNumber" translatable="false">人数</string>
+    <string name="tempFranceTrip" translatable="false">法国最浪漫的温馨之旅</string>
+    <string name="tempMuseumTag" translatable="false">吃货,博物馆</string>
+    <string name="tempStreet" translatable="false">香榭丽大道</string>
+    <string name="tempLove" translatable="false">猜你喜欢</string>
 
     <string name="Refresh" translatable="false">刷新</string>
-    <string name="AboutUs" translatable="false">联系我们</string>
+    <string name="ContactUs" translatable="false">联系我们</string>
 
     <string name="VersionNumber" translatable="false">版本号:</string>
     <string name="UpdateInfo" translatable="false">更新信息</string>
@@ -361,7 +361,6 @@
     <string name="logout">退出登录</string>
     <string name="unable_to_get_location">未知位置</string>
     <string name="User_name_cannot_be_empty">用户名不能为空！</string>
-
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>

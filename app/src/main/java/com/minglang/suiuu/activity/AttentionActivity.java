@@ -4,8 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.widget.ImageView;
+import android.support.v7.widget.Toolbar;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.AttentionPagerAdapter;
@@ -13,6 +12,7 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.attention.AttentionGalleryFragment;
 import com.minglang.suiuu.fragment.attention.AttentionProblemFragment;
 import com.minglang.suiuu.fragment.attention.AttentionSuiuuFragment;
+import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,35 +27,37 @@ import butterknife.ButterKnife;
  */
 public class AttentionActivity extends BaseAppCompatActivity {
 
+    @BindColor(R.color.white)
+    int titleColor;
+
     @BindColor(R.color.tr_black)
     int normalColor;
 
     @BindColor(R.color.mainColor)
     int selectedColor;
 
-    @BindString(R.string.mainTitle1)
+    @BindString(R.string.MainTitle1)
     String str1;
 
-    @BindString(R.string.mainTitle2)
+    @BindString(R.string.MainTitle2)
     String str2;
 
     @BindString(R.string.QuestionsAndAnswers)
     String str3;
 
-    @Bind(R.id.attentionBack)
-    ImageView attentionBack;
+    @Bind(R.id.attention_tool_bar)
+    Toolbar toolbar;
 
-    @Bind(R.id.attentionPager)
+    @Bind(R.id.attention_view_pager)
     ViewPager attentionPager;
 
-    @Bind(R.id.attentionTabLayout)
+    @Bind(R.id.attention_tab_layout)
     TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attention);
-
         ButterKnife.bind(this);
         initView();
         ViewAction();
@@ -65,6 +67,9 @@ public class AttentionActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
+        toolbar.setTitleTextColor(titleColor);
+        setSupportActionBar(toolbar);
+
         List<String> titleList = new ArrayList<>();
         titleList.add(str1);
         titleList.add(str2);
@@ -74,6 +79,9 @@ public class AttentionActivity extends BaseAppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText(str2), false);
         tabLayout.addTab(tabLayout.newTab().setText(str3), false);
         tabLayout.setTabTextColors(normalColor, selectedColor);
+
+        userSign = SuiuuInfo.ReadUserSign(this);
+        verification = SuiuuInfo.ReadVerification(this);
 
         //关注的旅图
         AttentionGalleryFragment attentionGalleryFragment = AttentionGalleryFragment.newInstance(userSign, verification);
@@ -99,13 +107,6 @@ public class AttentionActivity extends BaseAppCompatActivity {
      * 控件动作
      */
     private void ViewAction() {
-        attentionBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         attentionPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

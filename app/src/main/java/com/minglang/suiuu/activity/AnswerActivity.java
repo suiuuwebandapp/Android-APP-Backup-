@@ -2,7 +2,6 @@ package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -45,9 +44,6 @@ public class AnswerActivity extends BaseAppCompatActivity {
 
     private String qID;
 
-    @BindString(R.string.answer_)
-    String title;
-
     @BindString(R.string.Waiting)
     String wait;
 
@@ -84,15 +80,8 @@ public class AnswerActivity extends BaseAppCompatActivity {
     }
 
     private void initView() {
-        toolbar.setTitle(title);
         toolbar.setTitleTextColor(titleTextColor);
         setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.back);
-        }
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(wait);
@@ -157,6 +146,7 @@ public class AnswerActivity extends BaseAppCompatActivity {
         public void onSuccess(ResponseInfo<String> responseInfo) {
             String str = responseInfo.result;
             DeBugLog.i(TAG, "回答问题返回结果:" + str);
+            hideDialog();
             try {
                 JSONObject object = new JSONObject(str);
                 String status = object.getString(STATUS);
@@ -168,16 +158,14 @@ public class AnswerActivity extends BaseAppCompatActivity {
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析数据异常:" + e.getMessage());
-            } finally {
-                hideDialog();
             }
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage());
-            DeBugLog.e(TAG, "Error:" + s);
+            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
             hideDialog();
+            Toast.makeText(AnswerActivity.this, netWorkError, Toast.LENGTH_SHORT).show();
         }
 
     }

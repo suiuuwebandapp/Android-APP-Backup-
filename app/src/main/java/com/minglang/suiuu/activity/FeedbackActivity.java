@@ -118,4 +118,5 @@ public class FeedbackActivity extends BaseActivity {
             gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture, "0"));
         }
     }
+
 }

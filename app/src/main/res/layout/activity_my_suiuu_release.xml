@@ -125,7 +125,7 @@
                 <ImageView
                     android:id="@+id/my_suiuu_release_back"
                     style="@style/backKeyStyle"
-                    android:contentDescription="@string/back"
+                    android:contentDescription="@string/Back"
                     android:src="@drawable/back"/>
 
                 <!--页面描述-->

@@ -96,12 +96,6 @@ public class PersonalSettingActivity extends BaseActivity {
     @Bind(R.id.personal_save)
     TextView save;
 
-//    @Bind(R.id.personal_setting_man)
-//    TextView sex_man;
-//
-//    @Bind(R.id.personal_setting_woman)
-//    TextView sex_woman;
-
     @Bind(R.id.personal_setting_scroll_view)
     ScrollView scrollView;
 

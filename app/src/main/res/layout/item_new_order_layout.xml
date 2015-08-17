@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/relativeLayout7"
@@ -25,29 +26,29 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/new_oder_user_head_image"
-            android:layout_toLeftOf="@+id/new_oder_money_number"
+            android:layout_toLeftOf="@+id/new_oder_money_price"
             android:layout_toRightOf="@+id/new_oder_user_head_image"
-            android:layout_toStartOf="@+id/new_oder_money_number"
+            android:layout_toStartOf="@+id/new_oder_money_price"
             android:singleLine="true"
-            android:text="New Text"
+            android:text="@string/title"
             android:textSize="@dimen/layout_18sp"/>
 
         <TextView
-            android:id="@+id/new_oder_money_number"
+            android:id="@+id/new_oder_money_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/new_oder_user_head_image"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/new_oder_user_head_image"
             android:layout_marginLeft="@dimen/layout_5dp"
             android:layout_marginStart="@dimen/layout_5dp"
             android:paddingEnd="@dimen/layout_5dp"
-            android:paddingLeft="0dp"
+            android:paddingLeft="@dimen/layout_5dp"
             android:paddingRight="@dimen/layout_5dp"
             android:paddingTop="@dimen/layout_8dp"
-            android:text="New Text"
-            android:textSize="@dimen/layout_16sp"
-            android:layout_alignTop="@+id/new_oder_user_head_image"/>
+            android:text="@string/tempPrice"
+            android:textSize="@dimen/layout_16sp"/>
 
     </RelativeLayout>
 
@@ -80,7 +81,7 @@
             android:layout_marginEnd="@dimen/layout_5dp"
             android:layout_marginRight="@dimen/layout_5dp"
             android:singleLine="true"
-            android:text="Medium Text"
+            android:text="@string/tempIntro"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <LinearLayout
@@ -93,21 +94,22 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
-                android:text="New Text"/>
+                android:text="@string/tempBeginDate"/>
 
             <TextView
                 android:id="@+id/new_oder_start_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
-                android:text="New Text"/>
+                android:text="@string/tempStartTime"/>
 
             <TextView
                 android:id="@+id/new_order_people_number"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
-                android:text="New Text"/>
+                android:text="@string/tempPersonalNumber"/>
+
         </LinearLayout>
 
     </LinearLayout>

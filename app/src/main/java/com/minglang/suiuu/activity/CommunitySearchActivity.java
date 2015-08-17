@@ -31,7 +31,6 @@ public class CommunitySearchActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_search);
-
         ButterKnife.bind(this);
         ViewAction();
     }

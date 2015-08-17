@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,41 +31,68 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * 评论列表
  */
 public class CommentsActivity extends BaseActivity {
 
+    private static final String ARTICLE_ID = "articleId";
+    private static final String TRIP_ID = "tripId";
+
+    private static final String NUMB = "numb";
+    private static final String C_PAGE = "cPage";
+
+    private String articleId;
+    private String tripId;
+
     /**
      * 返回键
      */
-    private ImageView back;
+    @Bind(R.id.iv_top_back)
+    ImageView back;
 
     /**
      * 评论列表
      */
-    private ListView mListView;
+    @Bind(R.id.lv_activity_commentlist)
+    ListView mListView;
+
+    @Bind(R.id.et_input_comment)
+    EditText et_input_comment;
+
+    @Bind(R.id.bt_send_comment)
+    Button bt_send_comment;
+
+    @Bind(R.id.tv_top_center)
+    TextView tv_top_center;
+
+    @Bind(R.id.tv_top_right)
+    TextView tv_top_right;
+
     private CommentAdapter adapter;
-    private EditText et_input_comment;
-    private Button bt_send_comment;
-    private String articleId;
-    private String tripId;
-    private JsonUtils jsonUtil = JsonUtils.getInstance();
+
     private List<LoopArticleCommentList> commentLists;
+
     private ProgressDialog dialog;
+
     private String rId;
     private String rTitle;
+
+    private JsonUtils jsonUtil = JsonUtils.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
 
-        articleId = this.getIntent().getStringExtra("articleId");
-        tripId = this.getIntent().getStringExtra("tripId");
+        articleId = this.getIntent().getStringExtra(ARTICLE_ID);
+        tripId = this.getIntent().getStringExtra(TRIP_ID);
 
+        ButterKnife.bind(this);
         initView();
-
         ViewAction();
 
         if (!TextUtils.isEmpty(articleId))
@@ -79,24 +105,12 @@ public class CommentsActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-        if (isKITKAT) {
-            RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.CommentRootLayout);
-            rootLayout.setPadding(0, statusBarHeight, 0, 0);
-        }
-
-        back = (ImageView) findViewById(R.id.iv_top_back);
-        mListView = (ListView) findViewById(R.id.lv_activity_commentlist);
-        et_input_comment = (EditText) findViewById(R.id.et_input_comment);
-        bt_send_comment = (Button) findViewById(R.id.bt_send_comment);
-
         adapter = new CommentAdapter(this);
         mListView.setAdapter(adapter);
 
-        TextView tv_top_center = (TextView) findViewById(R.id.tv_top_center);
         tv_top_center.setVisibility(View.VISIBLE);
         tv_top_center.setText("评论");
 
-        TextView tv_top_right = (TextView) findViewById(R.id.tv_top_right);
         tv_top_right.setVisibility(View.GONE);
 
         dialog = new ProgressDialog(this);
@@ -120,9 +134,9 @@ public class CommentsActivity extends BaseActivity {
     private void requestDataSuiuu(String tripId, String pageNumber) {
         dialog.show();
         RequestParams params = new RequestParams();
-        params.addBodyParameter("tripId", tripId);
-        params.addBodyParameter("numb", "20");
-        params.addBodyParameter("cPage", pageNumber);
+        params.addBodyParameter(TRIP_ID, tripId);
+        params.addBodyParameter(NUMB, "20");
+        params.addBodyParameter(C_PAGE, pageNumber);
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getCommentListByTripId, new getCommentListCallBack());
         httpRequest.setParams(params);
@@ -130,7 +144,6 @@ public class CommentsActivity extends BaseActivity {
     }
 
     private void ViewAction() {
-
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,6 +209,7 @@ public class CommentsActivity extends BaseActivity {
         httpRequest.setParams(params);
         httpRequest.requestNetworkData();
     }
+
     class requestCommentSendCallBack extends RequestCallBack<String> {
 
         @Override
@@ -230,6 +244,7 @@ public class CommentsActivity extends BaseActivity {
                 et_input_comment.setText("");
             }
         }
+
         @Override
         public void onFailure(HttpException error, String msg) {
             if (dialog.isShowing()) {
@@ -260,6 +275,7 @@ public class CommentsActivity extends BaseActivity {
                 Toast.makeText(CommentsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
         }
+
         @Override
         public void onFailure(HttpException error, String msg) {
             if (dialog.isShowing()) {

@@ -58,14 +58,14 @@
     <!--登陆按钮style-->
     <style name="loginButtonStyle">
         <item name="android:background">@color/btn_1_bg_color</item>
-        <item name="android:text">@string/login</item>
+        <item name="android:text">@string/Login</item>
         <item name="android:textColor">@color/text_color1</item>
     </style>
 
     <!--注册按钮style-->
     <style name="registerButtonStyle">
         <item name="android:background">@color/btn_2_bg_color</item>
-        <item name="android:text">@string/register</item>
+        <item name="android:text">@string/Register</item>
         <item name="android:textColor">@color/text_color1</item>
     </style>
 

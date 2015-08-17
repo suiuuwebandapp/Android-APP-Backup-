@@ -34,7 +34,7 @@ public class OptionsPopupWindow extends PopupWindow implements OnClickListener {
         this.setHeight(LayoutParams.WRAP_CONTENT);
         this.setBackgroundDrawable(new BitmapDrawable());// 这样设置才能点击屏幕外dismiss窗口
         this.setOutsideTouchable(true);
-        this.setAnimationStyle(R.style.timepopwindow_anim_style);
+        this.setAnimationStyle(R.style.time_popup_window_anim_style);
 
         LayoutInflater mLayoutInflater = LayoutInflater.from(context);
         @SuppressLint("InflateParams")

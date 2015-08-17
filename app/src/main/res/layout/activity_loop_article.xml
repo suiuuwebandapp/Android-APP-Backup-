@@ -39,7 +39,7 @@
                     android:layout_marginBottom="20dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginStart="15dp"
-                    android:text="@string/Jeju_Island"
+                    android:text="@string/JejuIsland"
                     android:textColor="@color/white"
                     android:textSize="20sp"/>
 
@@ -95,7 +95,7 @@
                                 android:layout_height="0dp"
                                 android:layout_weight="0.5"
                                 android:gravity="center_vertical"
-                                android:text="@string/location"
+                                android:text="@string/Location"
                                 android:textColor="@color/tr_black"
                                 android:textSize="18sp"/>
 
@@ -116,7 +116,7 @@
                             android:drawableLeft="@drawable/icon_edit_selector"
                             android:drawableStart="@drawable/icon_edit_selector"
                             android:gravity="center"
-                            android:text="@string/editor"
+                            android:text="@string/Editor"
                             android:textColor="@drawable/text_color_selector"
                             android:visibility="invisible"
                             android:textSize="18sp"/>
@@ -229,7 +229,7 @@
         <ImageView
             android:id="@+id/loop_article_back"
             style="@style/backKeyStyle"
-            android:contentDescription="@string/back"
+            android:contentDescription="@string/Back"
             android:src="@drawable/back"/>
 
         <TextView
@@ -260,7 +260,7 @@
             android:drawableLeft="@drawable/icon_praise_white"
             android:drawablePadding="10dp"
             android:drawableStart="@drawable/icon_praise_white"
-            android:text="@string/clickPraise"
+            android:text="@string/ClickPraise"
             android:textColor="@color/white"
             android:textSize="20sp"/>
 
@@ -303,7 +303,7 @@
             android:drawableLeft="@drawable/icon_share2"
             android:drawableStart="@drawable/share_select"
             android:gravity="center_vertical"
-            android:text="@string/share"
+            android:text="@string/Share"
             android:textColor="@drawable/text_select_color"
             android:textSize="20sp"/>
     </RelativeLayout>
