@@ -263,7 +263,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getTripGalleryDetailById, new loadTripGalleryDetailDateCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**

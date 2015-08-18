@@ -193,7 +193,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.AttentionUserPath, new AttentionSuiuuRequestCallback());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**

@@ -383,4 +383,9 @@ public class HttpServicePath {
      */
     public static String getSystemMsgDataPath = RootPath + "/app-user-message/get-sys-messages";
 
+    /**
+     * 得到邀请的用户列表
+     */
+    public static String getInvitationAnswerUserPath = RootPath + "/app-qa/get-invite-user";
+
 }

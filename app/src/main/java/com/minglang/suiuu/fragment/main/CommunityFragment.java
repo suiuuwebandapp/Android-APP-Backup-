@@ -135,6 +135,14 @@ public class CommunityFragment extends BaseFragment {
 
     }
 
+    public String getCountryId() {
+        return countryId;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -315,7 +323,7 @@ public class CommunityFragment extends BaseFragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getMainProblemListPath, new CommunityRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**

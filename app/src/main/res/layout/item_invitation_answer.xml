@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/invitation_answer_user_head_view"
+        android:layout_width="@dimen/layout_60dp"
+        android:layout_height="@dimen/layout_60dp"
+        android:layout_margin="@dimen/layout_8dp"
+        fresco:placeholderImage="@drawable/default_head_image2"
+        fresco:roundAsCircle="true"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/invitation_answer_user_head_view"
+        android:layout_alignTop="@+id/invitation_answer_user_head_view"
+        android:layout_toEndOf="@+id/invitation_answer_user_head_view"
+        android:layout_toRightOf="@+id/invitation_answer_user_head_view">
+
+        <TextView
+            android:id="@+id/invitation_answer_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/layout_5dp"
+            android:layout_toLeftOf="@+id/invitation_answer_user_add"
+            android:layout_toStartOf="@+id/invitation_answer_user_add"
+            android:singleLine="true"
+            android:text="@string/userName"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <TextView
+            android:id="@+id/invitation_answer_user_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:layout_toLeftOf="@+id/invitation_answer_user_add"
+            android:layout_toStartOf="@+id/invitation_answer_user_add"
+            android:singleLine="true"
+            android:text="@string/tempContent"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <ImageButton
+            android:id="@+id/invitation_answer_user_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_add"
+            android:clickable="false"
+            android:contentDescription="@string/Add"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

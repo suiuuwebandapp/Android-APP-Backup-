@@ -497,7 +497,7 @@ public class LoginActivity extends BaseActivity {
     private void getInternationalAreaCode() {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.GET,
                 HttpServicePath.GetInternationalAreaCode, new AreaCodeRequestCallBack());
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -515,12 +515,12 @@ public class LoginActivity extends BaseActivity {
                 if (areaCodeDataList != null && areaCodeDataList.size() > 0) {
                     areaCodeAdapter.setList(areaCodeDataList);
                 } else {
-                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.internationalCodeFailure),
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.InternationalCodeFailure),
                             Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "国际电话区号数据解析异常:" + e.getMessage());
-                Toast.makeText(LoginActivity.this, getResources().getString(R.string.internationalCodeFailure),
+                Toast.makeText(LoginActivity.this, getResources().getString(R.string.InternationalCodeFailure),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -528,7 +528,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onFailure(HttpException httpException, String s) {
             DeBugLog.e(TAG, "国际电话区号数据请求失败:" + s);
-            Toast.makeText(LoginActivity.this, getResources().getString(R.string.internationalCodeFailure),
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.InternationalCodeFailure),
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -545,7 +545,7 @@ public class LoginActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.SendInternationalAreaCodeAndPhoneNumber, new PhoneNumberRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -601,7 +601,7 @@ public class LoginActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.Register4SuiuuPath, new RegisterRequestCallback());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -661,7 +661,7 @@ public class LoginActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.SelfLoginPath, new LoginRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -850,7 +850,7 @@ public class LoginActivity extends BaseActivity {
         params.addBodyParameter("sign", sign);
 
         http.setParams(params);
-        http.requestNetworkData();
+        http.executive();
     }
 
     /**
@@ -1024,7 +1024,7 @@ public class LoginActivity extends BaseActivity {
         SuHttpRequest http = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.ThirdPartyPath, new WXRequestCallBack());
         http.setParams(params);
-        http.requestNetworkData();
+        http.executive();
     }
 
     /**
@@ -1240,7 +1240,7 @@ public class LoginActivity extends BaseActivity {
                 code, headImagePath, type));
 
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**

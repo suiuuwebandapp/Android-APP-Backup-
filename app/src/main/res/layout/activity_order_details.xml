@@ -254,7 +254,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:text="@string/zero"
+                            android:text="@string/Zero"
                             android:textColor="@color/text_select_true"
                             android:textSize="@dimen/layout_16sp"/>
 
@@ -276,7 +276,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/layout_5dp"
-                        android:text="@string/phoneNumber"
+                        android:text="@string/PhoneNumber"
                         android:textSize="@dimen/layout_16sp"/>
 
                     <TextView

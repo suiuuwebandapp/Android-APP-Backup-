@@ -100,7 +100,7 @@ public class AnswerActivity extends BaseAppCompatActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.setAnswerToQuestionPath, new AnswerRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     private void hideDialog() {

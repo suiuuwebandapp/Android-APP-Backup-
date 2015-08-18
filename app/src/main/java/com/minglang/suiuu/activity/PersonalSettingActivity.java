@@ -166,7 +166,6 @@ public class PersonalSettingActivity extends BaseActivity {
                     netWorkImagePath = AppConstant.IMG_FROM_SUIUU + s;
                     DeBugLog.i(TAG, "NetworkImagePath:" + netWorkImagePath);
 
-                    SuiuuInfo.WriteNativeHeadImagePath(PersonalSettingActivity.this, nativeImagePath);
                     SuiuuInfo.WriteUserHeadImagePath(PersonalSettingActivity.this, netWorkImagePath);
 
                     if (upLoadDialog.isShowing()) {
@@ -412,7 +411,7 @@ public class PersonalSettingActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.upDatePersonalStatus, new PersonalSettingRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     private void hideDialog() {

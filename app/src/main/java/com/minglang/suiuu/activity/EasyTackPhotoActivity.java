@@ -344,7 +344,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.createTripGallery, new CreateLoopCallBack());
         suHttpRequest.setParams(params);
-        suHttpRequest.requestNetworkData();
+        suHttpRequest.executive();
     }
 
     private void changeLoadDate() {
@@ -388,7 +388,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.updateLoop, new UpdateLoopCallBack());
         suHttpRequest.setParams(params);
-        suHttpRequest.requestNetworkData();
+        suHttpRequest.executive();
     }
 
     //    private void updateDate(final String path) {

@@ -163,7 +163,7 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getTripGalleryList, new loadTripGalleryListCallBack());
         suHttpRequest.setParams(params);
-        suHttpRequest.requestNetworkData();
+        suHttpRequest.executive();
     }
 
     /**

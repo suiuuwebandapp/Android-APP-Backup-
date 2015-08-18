@@ -90,7 +90,7 @@ public class DateTimePickDialogUtils implements OnDateChangedListener, OnTimeCha
      */
     public AlertDialog dateTimePicKDialog(final int dateOrTime, final TextView inputDate) {
         LinearLayout dateTimeLayout = (LinearLayout) activity
-                .getLayoutInflater().inflate(R.layout.common_datetime, null);
+                .getLayoutInflater().inflate(R.layout.common_date_time, null);
         datePicker = (DatePicker) dateTimeLayout.findViewById(R.id.date_picker);
         timePicker = (TimePicker) dateTimeLayout.findViewById(R.id.time_picker);
         if (dateOrTime == 1) {

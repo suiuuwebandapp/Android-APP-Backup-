@@ -153,7 +153,7 @@ public class JoinAdapter extends BaseAdapter {
             SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                     HttpServicePath.removeSuiuuUserPath, new RemoveRequestCallBack(index));
             httpRequest.setParams(params);
-            httpRequest.requestNetworkData();
+            httpRequest.executive();
         }
 
     }
@@ -194,7 +194,7 @@ public class JoinAdapter extends BaseAdapter {
                     list.remove(index);
                     setList(list);
                 } else {
-                    Toast.makeText(context, context.getResources().getString(R.string.Network_error),
+                    Toast.makeText(context, context.getResources().getString(R.string.NetworkError),
                             Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {

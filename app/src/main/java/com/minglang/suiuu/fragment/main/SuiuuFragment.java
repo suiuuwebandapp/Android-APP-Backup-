@@ -131,7 +131,7 @@ public class SuiuuFragment extends BaseFragment
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuList, new getSuiuuDateCallBack());
         suHttpRequest.setParams(params);
-        suHttpRequest.requestNetworkData();
+        suHttpRequest.executive();
     }
 
     @Override

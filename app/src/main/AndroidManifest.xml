@@ -326,7 +326,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <activity
-            android:name=".activity.QuestionsActivity"
+            android:name=".activity.PutQuestionsActivity"
             android:label="@string/title_activity_questions"
             android:theme="@style/AppMainTheme"/>
 

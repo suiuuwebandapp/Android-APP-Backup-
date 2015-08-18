@@ -203,7 +203,7 @@ public class PublishedFragment extends BaseFragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpMethod.POST,
                 HttpServicePath.MyPublishedSuiuuPath, new MyPublishedRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**

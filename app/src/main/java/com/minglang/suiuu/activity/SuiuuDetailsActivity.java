@@ -80,7 +80,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     @BindString(R.string.LoginInvalid)
     String LoginInvalid;
 
-    @BindString(R.string.DataReFai)
+    @BindString(R.string.DataRequestFailure)
     String DataRequestFailure;
 
     private String tripId;
@@ -289,7 +289,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuItemInfo, new SuiuuItemInfoCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**

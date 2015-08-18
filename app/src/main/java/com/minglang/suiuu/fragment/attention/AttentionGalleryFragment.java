@@ -53,6 +53,8 @@ public class AttentionGalleryFragment extends BaseFragment {
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
 
+    private static final String ID = "id";
+
     private String userSign;
     private String verification;
 
@@ -164,7 +166,10 @@ public class AttentionGalleryFragment extends BaseFragment {
         pullToRefreshGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String strId = listAll.get(position).getId();
                 Intent intent = new Intent(getActivity(), TripGalleryDetailsActivity.class);
+                intent.putExtra(ID, strId);
+                startActivity(intent);
             }
         });
     }
@@ -181,7 +186,7 @@ public class AttentionGalleryFragment extends BaseFragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getAttentionTripPath, new AttentionGalleryRequestCallback());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**

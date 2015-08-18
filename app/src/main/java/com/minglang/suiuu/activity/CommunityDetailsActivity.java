@@ -249,7 +249,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
     private void getTagList() {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.GET,
                 HttpServicePath.getDefaultTagListPath, new TagRequestCallBack());
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -274,7 +274,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getProblemDetailsPath, new CommunityItemRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -299,7 +299,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getAttentionQuestionPath, new AttentionQuestionRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**

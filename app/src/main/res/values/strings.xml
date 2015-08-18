@@ -1,9 +1,11 @@
 <resources>
 
     <string name="hello_world" translatable="false">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings" translatable="false">设置</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+
+    <string name="app_name" translatable="false">随游</string>
 
     <string name="Login" translatable="false">登录</string>
     <string name="Register" translatable="false">注册</string>
@@ -39,7 +41,7 @@
 
     <string name="NickNameHint" translatable="false">昵称</string>
     <string name="TradeHint" translatable="false">职业</string>
-    <string name="SignatureHint">个性签名</string>
+    <string name="SignatureHint" translatable="false">个性签名</string>
 
     <string name="NewRemind" translatable="false">新提醒</string>
     <string name="NewAt" translatable="false">新@</string>
@@ -56,7 +58,7 @@
     <string name="Back" translatable="false">返回</string>
 
     <string name="Confirm" translatable="false">确认</string>
-    <string name="AllPicture">All pictures</string>
+    <string name="AllPicture" translatable="false">所有图片</string>
     <string name="Location" translatable="false">所在地</string>
 
     <string name="AttentionThat" translatable="false">关注TA</string>
@@ -110,14 +112,22 @@
     <string name="please_input_confirm_password" translatable="false">请输入确认密码</string>
     <string name="please_input_obtain_captcha" translatable="false">请输入验证码</string>
 
-    <string name="DataError" translatable="false">数据获取失败，请稍候再试！</string>
-    <string name="NetworkAnomaly" translatable="false">网络异常，请检查后再试！</string>
+    <!--请求数据为空-->
     <string name="NoData" translatable="false">暂无更多数据！</string>
+    <!--请求失败-->
+    <string name="DataError" translatable="false">数据获取失败，请稍候再试！</string>
+    <!--请求数据异常-->
+    <string name="DataException" translatable="false">数据异常,请稍候再试！</string>
+    <!--请求数据失败-->
+    <string name="DataRequestFailure" ranslatable="false" translatable="false">数据请求失败，请稍候再试！</string>
+
+    <!--请求失败1-->
+    <string name="NetworkAnomaly" translatable="false">网络异常，请检查后再试！</string>
+    <!--请求失败2-->
+    <string name="NetworkError" translatable="false">网络错误，请检查网络设置后再试！</string>
 
     <string name="SystemException" translatable="false">系统异常</string>
-    <string name="DataException" translatable="false">数据异常,请检查后再试！</string>
     <string name="UnknownError" translatable="false">未知错误</string>
-    <string name="DataReFai" ranslatable="false">数据请求失败，请稍候再试！</string>
 
     <string name="LoginInvalid" translatable="false">登录信息过期,请重新登录!</string>
 
@@ -126,13 +136,7 @@
     <string name="addAttentionSuccess" translatable="false">添加关注成功!</string>
     <string name="addAttentionFail" translatable="false">添加关注失败！</string>
 
-    <string name="pull_to_refresh_pull_label">Drop down refresh</string>
-    <string name="pull_to_refresh_release_label">Release rear refresh</string>
-    <string name="pull_to_refresh_refreshing_label">refresh\u2026</string>
-    <string name="pull_to_refresh_footer_release_label">Release rear loading</string>
-    <string name="pull_to_refresh_footer_pull_label">Pull on more</string>
-    <string name="pull_to_refresh_footer_refreshing_label">loading\u2026</string>
-    <string name="loadDataComplete" translatable="false">Data load, click refresh</string>
+    <string name="Share" translatable="false">分享</string>
 
     <string name="man" translatable="false">男</string>
     <string name="woman" translatable="false">女</string>
@@ -150,13 +154,15 @@
     <string name="price" translatable="false">价格</string>
     <string name="refreshData" translatable="false">点击重新加载数据</string>
     <string name="please_enter_search_content" translatable="false">请输入搜索内容</string>
-    <string name="TripGallery" translatable="false">TripGallery</string>
-    <string name="SuiuuPage" translatable="false">SuiuuPage</string>
-    <string name="CommunityPage" translatable="false">CommunityPage</string>
-    <string name="ChatPage" translatable="false">ChatPage</string>
-    <string name="china">china</string>
-    <string name="chinaCode">+86</string>
-    <string name="internationalCodeFailure" translatable="false">国际电话区号获取失败，请点击Logo重试</string>
+
+    <string name="TripGallery" translatable="false">旅图</string>
+    <string name="SuiuuPage" translatable="false">随游</string>
+    <string name="CommunityPage" translatable="false">问答社区</string>
+    <string name="ChatPage" translatable="false">消息</string>
+
+    <string name="China" translatable="false">中国</string>
+    <string name="ChinaCode" translatable="false">+86</string>
+    <string name="InternationalCodeFailure" translatable="false">国际电话区号获取失败，请点击Logo重试</string>
 
     <string name="WeiboAuthorizedStart">Weibo began to authorize&#8230;</string>
     <string name="WeiboAuthorizedComplete">Weibo authorization to complete</string>
@@ -176,21 +182,15 @@
     <string name="QQAuthorizedError">QQ authorization to error</string>
     <string name="QQAuthorizedCancel">QQ authorization to cancel</string>
 
-    <string name="all_attention_dynamic_title">title</string>
-    <string name="all_attention_dynamic_content">content</string>
-    <string name="all_attention_dynamic_contentDescription" translatable="false">主要图片</string>
-    <string name="noChatHistory" translatable="false">当前没有聊天信息</string>
-
-    <string name="noData_AgainLoad" translatable="false">没有数据,请重新获取</string>
-    <string name="zero" translatable="false">0</string>
+    <string name="Zero" translatable="false">0</string>
     <string name="zeroForTenKilo" translatable="false">0 &#8211; 10000</string>
     <string name="suiuu_order_sure" translatable="false">订单确认</string>
 
     <string name="MySuiuu" translatable="false">我的随游</string>
     <string name="MyReleaseSuiuu" translatable="false">我发布的随游</string>
 
-    <string name="Remove">Remove</string>
-    <string name="Ignore">Ignore</string>
+    <string name="Remove" translatable="false">移除</string>
+    <string name="Ignore" translatable="false">忽略</string>
 
     <string name="EditSuiuuInfo" translatable="false">编辑随游信息</string>
     <string name="HintEditSuiuuInfo" translatable="false">请输入随游信息</string>
@@ -207,16 +207,17 @@
     <string name="AccountBalance" translatable="false">账户余额</string>
     <string name="ClickWithdrawals" translatable="false">点击提现</string>
 
-    <string name="Date">Date</string>
-    <string name="TransferAccount">Transfer Account</string>
-    <string name="Money">Money</string>
+    <string name="Date" translatable="false">日期</string>
+    <string name="TransferAccount" translatable="false">转账账户</string>
+    <string name="Money" translatable="false">金额</string>
 
-    <string name="IndividualResume">Individual Resume</string>
-    <string name="phoneNumber" translatable="false">电话号码:</string>
+    <string name="IndividualResume" translatable="false">个人简介</string>
+    <string name="PhoneNumber" translatable="false">电话号码:</string>
     <string name="Email" translatable="false">电子邮箱:</string>
-    <string name="tripCount">Escort Count:</string>
-    <string name="hisSuiuu">His Suiuu</string>
-    <string name="hisParticipationSuiuu">His Participation Suiuu</string>
+
+    <string name="TripCount" translatable="false">伴游次数:</string>
+    <string name="HisSuiuu">他的随游</string>
+    <string name="HisParticipationSuiuu">他参与的随游</string>
 
     <string name="userName" translatable="false">用户名</string>
     <string name="userLocation" translatable="false">用户位置</string>
@@ -229,8 +230,8 @@
     <string name="inputProblemContent" translatable="false">输入问题内容吧</string>
 
     <string name="answerQuestion" translatable="false">请填写答案</string>
-    <string name="ProblemHint">Enter your question</string>
-    <string name="SelectDestination">Select Destination</string>
+    <string name="ProblemHint" translatable="false">输入你想问的问题吧</string>
+    <string name="SelectDestination" translatable="false">选择目的地</string>
 
     <string name="NewOrder" translatable="false">新订单</string>
     <string name="ConfirmOrder" translatable="false">已接单</string>
@@ -247,30 +248,29 @@
     <string name="AnswerNoNull" translatable="false">答案不能为空！</string>
     <string name="AnswerSuccess" translatable="false">回答成功！</string>
 
-    <string name="Waiting">please wait&#8230;</string>
+    <string name="Waiting" translatable="false">请稍候&#8230;</string>
 
     <string name="AttentionQuestion_SUC" translatable="false">关注成功！</string>
     <string name="AttentionQuestion_FAI" translatable="false">关注失败,请稍候再试！</string>
 
-    <string name="app_name">Suiuu</string>
-    <string name="message">Message</string>
-    <string name="my_suiuu">My Suiuu</string>
 
     <string name="orderManager" translatable="false">订单管理</string>
     <string name="accountManager" translatable="false">账号管理</string>
 
-    <string name="route">route</string>
-    <string name="save">save</string>
+    <string name="route" translatable="false">路线</string>
+    <string name="save" translatable="false">保存</string>
 
-    <string name="AddTag">Add Tag</string>
-    <string name="Problem">Problem</string>
+    <string name="AddTag" translatable="false">添加标签</string>
+    <string name="Problem" translatable="false">问题</string>
 
-    <string name="SelectLocation">Select Location</string>
-    <string name="city">City</string>
-    <string name="cityDetails">Please select city</string>
+    <string name="InvitationAnswer" translatable="false">邀请回答</string>
+
+    <string name="SelectLocation" translatable="false">选择位置</string>
+    <string name="City" translatable="false">城市</string>
+    <string name="PleaseSelectCity" translatable="false">请选择城市</string>
     <string name="comment" translatable="false">评论</string>
 
-    <string name="PersonalCenter">Personal Center</string>
+    <string name="PersonalCenter" translatable="false">个人中心</string>
 
     <string name="ContactPhone" translatable="false">联系电话:</string>
     <string name="DepartureDate" translatable="false">出发日期:</string>
@@ -295,19 +295,13 @@
 
     <string name="orderPrice" translatable="false">订单总价:</string>
 
-    <string name="uploading">正在上传&#8230;</string>
-    <string name="uploading_data">"正在更新数据,请稍候&#8230;"</string>
+    <string name="uploading" translatable="false">正在上传&#8230;</string>
+    <string name="uploading_data" translatable="false">"正在更新数据,请稍候&#8230;"</string>
 
-    <string name="year" translatable="false">年</string>
-    <string name="month" translatable="false">月</string>
-    <string name="day" translatable="false">日</string>
-    <string name="hours" translatable="false">时</string>
-    <string name="minutes" translatable="false">分</string>
-    <string name="seconds" translatable="false">秒</string>
 
     <string name="cancelOrder" translatable="false">取消订单</string>
     <string name="inputRefundReason" translatable="false">请输入退款理由</string>
-    <string name="refundReasonNotNull">退款理由不能为空!</string>
+    <string name="refundReasonNotNull" translatable="false">退款理由不能为空!</string>
 
     <string name="CancelOrderSuccess" translatable="false">订单已取消</string>
     <string name="ConfirmOrderSuccess" translatable="false">订单已确认</string>
@@ -325,6 +319,30 @@
     <string name="RefusalJoin" translatable="false">拒绝加入</string>
 
     <string name="SelectTag" translatable="false">选择标签</string>
+
+    <string name="Refresh" translatable="false">刷新</string>
+    <string name="ContactUs" translatable="false">联系我们</string>
+
+    <string name="VersionNumber" translatable="false">版本号:</string>
+    <string name="UpdateInfo" translatable="false">更新信息</string>
+    <string name="FeedbackInfo" translatable="false">反馈信息</string>
+
+    <string name="notify" translatable="false">新消息提醒</string>
+    <string name="newnotify" translatable="false">接收新消息</string>
+    <string name="voice" translatable="false">声音</string>
+    <string name="shake" translatable="false">震动</string>
+    <string name="chatset" translatable="false">聊天设置</string>
+    <string name="yangshengqi">使用扬声器播放语音</string>
+    <string name="logout">退出登录</string>
+    <string name="unable_to_get_location" translatable="false">未知位置</string>
+    <string name="User_name_cannot_be_empty" translatable="false">用户名不能为空！</string>
+    <string name="button_logout" translatable="false">退出登录</string>
+
+    <string name="show_comments" translatable="false">显示评论</string>
+
+    <string name="Add" translatable="false">Add</string>
+
+    <string name="PleaseSelectCountry" translatable="false">请选择国家</string>
 
     <string name="tempDate" translatable="false">15.08.15</string>
     <string name="tempTime" translatable="false">9:00 AM</string>
@@ -345,22 +363,20 @@
     <string name="tempStreet" translatable="false">香榭丽大道</string>
     <string name="tempLove" translatable="false">猜你喜欢</string>
 
-    <string name="Refresh" translatable="false">刷新</string>
-    <string name="ContactUs" translatable="false">联系我们</string>
+    <string name="pull_to_refresh_pull_label">Drop down refresh</string>
+    <string name="pull_to_refresh_release_label">Release rear refresh</string>
+    <string name="pull_to_refresh_refreshing_label">refresh\u2026</string>
+    <string name="pull_to_refresh_footer_release_label">Release rear loading</string>
+    <string name="pull_to_refresh_footer_pull_label">Pull on more</string>
+    <string name="pull_to_refresh_footer_refreshing_label">loading\u2026</string>
+    <string name="loadDataComplete" translatable="false">Data load, click refresh</string>
 
-    <string name="VersionNumber" translatable="false">版本号:</string>
-    <string name="UpdateInfo" translatable="false">更新信息</string>
-    <string name="FeedbackInfo" translatable="false">反馈信息</string>
-
-    <string name="notify" translatable="false">新消息提醒</string>
-    <string name="newnotify" translatable="false">接收新消息</string>
-    <string name="voice">声音</string>
-    <string name="shake">震动</string>
-    <string name="chatset">聊天设置</string>
-    <string name="yangshengqi">使用扬声器播放语音</string>
-    <string name="logout">退出登录</string>
-    <string name="unable_to_get_location">未知位置</string>
-    <string name="User_name_cannot_be_empty">用户名不能为空！</string>
+    <string name="year" translatable="false">年</string>
+    <string name="month" translatable="false">月</string>
+    <string name="day" translatable="false">日</string>
+    <string name="hours" translatable="false">时</string>
+    <string name="minutes" translatable="false">分</string>
+    <string name="seconds" translatable="false">秒</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
@@ -410,8 +426,9 @@
     <string name="title_section3" translatable="false">Section 3</string>
     <string name="title_activity_account_manage" translatable="false">AccountManageActivity</string>
     <string name="title_activity_suiuu_user_info" translatable="false">SuiuuUserInfoActivity</string>
-    <string name="title_activity_order_details">OrderDetailsActivity</string>
-    <string name="title_activity_my_order_list">MyOrderListActivity</string>
+    <string name="title_activity_order_details" translatable="false">OrderDetailsActivity</string>
+    <string name="title_activity_my_order_list" translatable="false">MyOrderListActivity</string>
     <string name="title_activity_about_us">AboutUsActivity</string>
+    <string name="Agree" translatable="false">同意</string>
 
 </resources>

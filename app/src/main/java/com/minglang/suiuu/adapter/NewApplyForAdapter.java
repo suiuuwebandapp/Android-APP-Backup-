@@ -139,7 +139,7 @@ public class NewApplyForAdapter extends BaseAdapter {
             SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                     HttpServicePath.ignoreDataPath, new IgnoreRequestCallBack(index));
             httpRequest.setParams(params);
-            httpRequest.requestNetworkData();
+            httpRequest.executive();
         }
 
     }
@@ -166,7 +166,7 @@ public class NewApplyForAdapter extends BaseAdapter {
             SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                     HttpServicePath.agreeDataPath, new AgreeRequestCallBack(index));
             httpRequest.setParams(params);
-            httpRequest.requestNetworkData();
+            httpRequest.executive();
         }
 
     }
@@ -206,7 +206,7 @@ public class NewApplyForAdapter extends BaseAdapter {
                     list.remove(index);
                     setList(list);
                 } else {
-                    Toast.makeText(context, context.getResources().getString(R.string.Network_error),
+                    Toast.makeText(context, context.getResources().getString(R.string.NetworkError),
                             Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
@@ -260,7 +260,7 @@ public class NewApplyForAdapter extends BaseAdapter {
                     list.remove(index);
                     setList(list);
                 } else {
-                    Toast.makeText(context, context.getResources().getString(R.string.Network_error),
+                    Toast.makeText(context, context.getResources().getString(R.string.NetworkError),
                             Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
