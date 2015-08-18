@@ -157,7 +157,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuList, new getSuiuuDateCallBack());
         suHttpRequest.setParams(params);
-        suHttpRequest.requestNetworkData();
+        suHttpRequest.executive();
     }
 
 
@@ -168,7 +168,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuSearchTag, new getSuiuuSearchTagCallBack());
         suHttpRequest.setParams(params);
-        suHttpRequest.requestNetworkData();
+        suHttpRequest.executive();
     }
 
     private void showList(List<SuiuuDataList> suiuuDataList) {

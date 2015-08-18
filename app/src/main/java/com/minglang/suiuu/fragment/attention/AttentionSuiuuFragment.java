@@ -20,9 +20,8 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshGridView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.OtherUserActivity;
+import com.minglang.suiuu.activity.SuiuuDetailsActivity;
 import com.minglang.suiuu.adapter.AttentionSuiuuAdapter;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.AttentionSuiuu;
 import com.minglang.suiuu.entity.AttentionSuiuu.AttentionSuiuuData;
@@ -52,6 +51,8 @@ public class AttentionSuiuuFragment extends BaseFragment {
 
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
+
+    private static final String TRIP_ID = "tripId";
 
     private String userSign;
     private String verification;
@@ -147,7 +148,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
         pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
-                String label = DateUtils.formatDateTime(SuiuuApplication.applicationContext, System.currentTimeMillis(),
+                String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
@@ -157,7 +158,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
-                String label = DateUtils.formatDateTime(SuiuuApplication.applicationContext, System.currentTimeMillis(),
+                String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
@@ -169,11 +170,12 @@ public class AttentionSuiuuFragment extends BaseFragment {
         pullToRefreshGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int location = position - 1;
-                String otherUserSign = listAll.get(location).getUserSign();
-                Intent intent = new Intent(getActivity(), OtherUserActivity.class);
-                intent.putExtra("userSign", otherUserSign);
-                startActivity(intent);
+                String tripId = listAll.get(position).getTripId();
+                DeBugLog.i(TAG, "position:" + position + ",tripId:" + tripId);
+
+                Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
+                intent.putExtra(TRIP_ID, tripId);
+                getActivity().startActivity(intent);
             }
         });
 
@@ -191,7 +193,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.AttentionUserPath, new AttentionSuiuuRequestCallback());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -232,7 +234,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 AttentionSuiuu attentionSuiuu = JsonUtils.getInstance().fromJSON(AttentionSuiuu.class, str);
@@ -245,24 +247,24 @@ public class AttentionSuiuuFragment extends BaseFragment {
                             listAll.addAll(list);
                             adapter.setList(listAll);
                         } else {
-                            DeBugLog.e(TAG, "；列表为Null");
+                            DeBugLog.e(TAG, "列表数据为空！");
                             failureLessPage();
-                            Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         DeBugLog.e(TAG, "第二层为Null");
                         failureLessPage();
-                        Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     DeBugLog.e(TAG, "第一层为Null");
                     failureLessPage();
-                    Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 failureLessPage();
                 DeBugLog.e(TAG, "关注的用户的数据解析失败:" + e.getMessage());
-                Toast.makeText(SuiuuApplication.applicationContext, errorString, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -292,7 +294,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
             hideDialog();
             failureLessPage();
 
-            Toast.makeText(SuiuuApplication.applicationContext,
+            Toast.makeText(getActivity(),
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
 

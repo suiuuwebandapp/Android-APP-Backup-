@@ -337,7 +337,7 @@ public class LoopArticleActivity extends BaseActivity {
                         commentListView.setAdapter(new ArticleCommentAdapter(LoopArticleActivity.this, commentList));
                         loop_article_scrollView.smoothScrollBy(0, 100);
                     } else {
-                        Toast.makeText(LoopArticleActivity.this, R.string.thisArticNoComment, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoopArticleActivity.this, R.string.ThisArticNoComment, Toast.LENGTH_SHORT).show();
                     }
                     isClickComment = true;
                 }
@@ -397,7 +397,7 @@ public class LoopArticleActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.articleAddPraise, new addPraiseRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -410,7 +410,7 @@ public class LoopArticleActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionArticlePath, new CollectionArticleRequestCallback());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -423,7 +423,7 @@ public class LoopArticleActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionArticleCancelPath, new CollectionArticleCancelRequestCallback());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -439,7 +439,7 @@ public class LoopArticleActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.DeleteArticlePath, new DeleteArticleRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -455,7 +455,7 @@ public class LoopArticleActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.LoopArticlePath, new LoopArticleRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
 
     }
 

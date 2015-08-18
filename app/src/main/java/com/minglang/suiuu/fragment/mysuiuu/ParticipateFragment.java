@@ -204,7 +204,7 @@ public class ParticipateFragment extends BaseFragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.MyParticipateSuiuuPath, new MyParticipateRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**

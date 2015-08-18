@@ -206,7 +206,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getGeneralUserOrderDetailsPath, new GeneralUserOrderDetailsRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     private void hideDialog() {

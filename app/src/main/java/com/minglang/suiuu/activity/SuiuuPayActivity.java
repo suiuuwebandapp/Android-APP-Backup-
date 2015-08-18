@@ -109,7 +109,7 @@ public class SuiuuPayActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getCharge, new getChargeCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**

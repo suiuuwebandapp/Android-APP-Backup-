@@ -6,44 +6,20 @@
     android:layout_height="match_parent"
     tools:context="com.minglang.suiuu.activity.GeneralOrderListActivity">
 
-    <RelativeLayout
-        android:id="@+id/my_order_list_title_layout"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_order_list_tool_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_50dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/mainColor"
-        tools:ignore="UselessParent">
-
-        <ImageView
-            android:id="@+id/my_order_list_page_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:contentDescription="@string/back"
-            android:src="@drawable/back"/>
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/MyOrder_general"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/white"/>
-
-    </RelativeLayout>
+        android:background="@color/mainColor"/>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/my_order_list_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_50dp"
-        android:layout_below="@+id/my_order_list_title_layout"
+        android:layout_below="@+id/my_order_list_tool_bar"
         android:background="@color/white"
         app:tabIndicatorColor="@color/mainColor"
-        app:tabIndicatorHeight="@dimen/layout_1dp"
+        app:tabIndicatorHeight="@dimen/layout_2dp"
         app:tabTextAppearance="?android:attr/textAppearanceMedium"/>
 
     <android.support.v4.view.ViewPager

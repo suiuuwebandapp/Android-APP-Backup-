@@ -28,7 +28,7 @@
                 <ImageView
                     android:id="@+id/suiuu_details_back"
                     style="@style/backKeyStyle"
-                    android:contentDescription="@string/back"
+                    android:contentDescription="@string/Back"
                     android:src="@drawable/back" />
 
                 <ImageView

@@ -1,20 +1,17 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.text.TextUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.CompletedOrder;
 import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ViewHolder;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -24,23 +21,16 @@ import java.util.List;
  * 普通用户-已完成的订单数据适配器
  */
 public class CompletedAdapter extends BaseHolderAdapter<CompletedOrder.CompletedOrderData> {
-    private static final String TAG = CompletedAdapter.class.getSimpleName();
 
-    private ImageLoader imageLoader;
-    private DisplayImageOptions options;
+    private static final String TAG = CompletedAdapter.class.getSimpleName();
 
     public CompletedAdapter(Context context, List<CompletedOrder.CompletedOrderData> list, int itemLayoutId) {
         super(context, list, itemLayoutId);
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
-                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     @Override
     public void convert(ViewHolder helper, CompletedOrder.CompletedOrderData item, long position) {
-        ImageView mainImageView = helper.getView(R.id.item_my_order_main_image);
+        SimpleDraweeView mainImageView = helper.getView(R.id.item_my_order_main_image);
         TextView orderStatus = helper.getView(R.id.item_my_order_status);
         TextView orderTitle = helper.getView(R.id.item_my_order_title);
         TextView orderBeginDate = helper.getView(R.id.item_my_order_begin_date);
@@ -62,7 +52,8 @@ public class CompletedAdapter extends BaseHolderAdapter<CompletedOrder.Completed
             DeBugLog.e(TAG, "已完成的订单第" + position + "条的数据解析异常:" + e.getMessage());
         } finally {
             if (!TextUtils.isEmpty(mainImagePath)) {
-                imageLoader.displayImage(mainImagePath, mainImageView, options);
+                Uri uri = Uri.parse(mainImagePath);
+                mainImageView.setImageURI(uri);
             }
 
             if (!TextUtils.isEmpty(status)) {

@@ -17,7 +17,7 @@
             android:background="@color/mainColor"
             app:layout_scrollFlags="scroll|enterAlways"
             app:title="@string/NewRemind"
-            app:popupTheme="@style/AppCustomTheme"/>
+            app:popupTheme="@style/AppMainTheme"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/new_remind_tab_layout"

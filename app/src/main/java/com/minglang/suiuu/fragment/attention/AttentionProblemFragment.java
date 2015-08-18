@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.attention;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -20,8 +21,8 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.CommunityDetailsActivity;
 import com.minglang.suiuu.adapter.AttentionProblemAdapter;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.AttentionProblem;
 import com.minglang.suiuu.entity.AttentionProblem.AttentionProblemData;
@@ -52,6 +53,9 @@ public class AttentionProblemFragment extends BaseFragment {
 
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
+
+    private static final String ID = "id";
+    private static final String TITLE = "title";
 
     private String userSign;
     private String verification;
@@ -137,7 +141,7 @@ public class AttentionProblemFragment extends BaseFragment {
 
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label = DateUtils.formatDateTime(SuiuuApplication.applicationContext, System.currentTimeMillis(),
+                String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
@@ -147,7 +151,7 @@ public class AttentionProblemFragment extends BaseFragment {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label = DateUtils.formatDateTime(SuiuuApplication.applicationContext, System.currentTimeMillis(),
+                String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
@@ -160,6 +164,14 @@ public class AttentionProblemFragment extends BaseFragment {
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int location = position - 1;
+                String strId = listAll.get(location).getQId();
+                String strTitle = listAll.get(location).getQTitle();
+
+                Intent intent = new Intent(getActivity(), CommunityDetailsActivity.class);
+                intent.putExtra(ID, strId);
+                intent.putExtra(TITLE, strTitle);
+                startActivity(intent);
 
             }
         });
@@ -188,7 +200,7 @@ public class AttentionProblemFragment extends BaseFragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getAttentionProblemInfoPath, new AttentionProblemRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     private void hideDialog() {

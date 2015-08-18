@@ -36,11 +36,18 @@ import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class SelectCityActivity extends BaseActivity {
 
     private static final String TAG = SelectCityActivity.class.getSimpleName();
+
+    private static final String COUNTRY_ID = "countryId";
+    private static final String COUNTRY_C_NAME = "countryCNname";
+
+    @BindString(R.string.load_wait)
+    String wait;
 
     @Bind(R.id.select_city_back)
     ImageView back;
@@ -74,13 +81,11 @@ public class SelectCityActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_city);
 
-        ButterKnife.bind(this);
-
         Intent intent = getIntent();
+        countryId = intent.getStringExtra(COUNTRY_ID);
+        countryCNname = intent.getStringExtra(COUNTRY_C_NAME);
 
-        countryId = intent.getStringExtra("countryId");
-        countryCNname = intent.getStringExtra("countryCNname");
-
+        ButterKnife.bind(this);
         initView();
         getSelectCity4Service();
         ViewAction();
@@ -91,7 +96,7 @@ public class SelectCityActivity extends BaseActivity {
      */
     private void initView() {
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setMessage(wait);
         progressDialog.setCanceledOnTouchOutside(false);
 
         characterParser = CharacterParser.getInstance();
@@ -151,7 +156,7 @@ public class SelectCityActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getCityListPath, new SelectCityRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     private List<CityAssistData> TransformationData(List<CityData> countryDataList) {

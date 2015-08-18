@@ -34,9 +34,6 @@ public class AboutUsActivity extends BaseAppCompatActivity {
     @Bind(R.id.about_us_list_view)
     ListView listView;
 
-    @BindString(R.string.AboutUs)
-    String title;
-
     @BindColor(R.color.white)
     int titleColor;
 
@@ -61,7 +58,6 @@ public class AboutUsActivity extends BaseAppCompatActivity {
     }
 
     private void init() {
-        toolbar.setTitle(title);
         toolbar.setTitleTextColor(titleColor);
 
         setSupportActionBar(toolbar);
@@ -140,4 +136,5 @@ public class AboutUsActivity extends BaseAppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

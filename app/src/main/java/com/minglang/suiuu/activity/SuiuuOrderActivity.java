@@ -140,7 +140,7 @@ public class SuiuuOrderActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.createOrderNumber, new createOrderCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
 

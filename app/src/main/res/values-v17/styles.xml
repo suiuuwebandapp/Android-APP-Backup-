@@ -10,7 +10,7 @@
         <item name="android:layout_marginLeft">5dp</item>
     </style>
 
-    <style name="AppCustomTheme" parent="AppNewBaseTheme">
+    <style name="AppMainTheme" parent="AppNewBaseTheme">
         <item name="colorPrimaryDark">@color/topColor</item>
         <item name="colorPrimary">@color/mainColor</item>
     </style>

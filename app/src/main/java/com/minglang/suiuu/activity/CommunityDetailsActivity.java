@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -31,8 +30,8 @@ import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.entity.CommunityItem;
-import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.QuestionEntity;
 import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.AnswerEntity;
+import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.QuestionEntity;
 import com.minglang.suiuu.entity.Tag;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
@@ -61,6 +60,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
     private static final String TAG = CommunityDetailsActivity.class.getSimpleName();
 
     private static final String ID = "id";
+    private static final String TITLE = "title";
 
     private static final String Q_ID = "qId";
 
@@ -70,6 +70,11 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
     private String qID;
 
     private String strID;
+
+    private String title;
+
+    @BindString(R.string.Problem)
+    String Problem;
 
     @BindColor(R.color.white)
     int titleTextColor;
@@ -89,13 +94,13 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
     @BindString(R.string.AttentionQuestion_FAI)
     String attention_fai;
 
-    @Bind(R.id.community_item_refresh_scroll_view)
+    @Bind(R.id.community_details_refresh_scroll_view)
     PullToRefreshScrollView pullToRefreshScrollView;
 
-    @Bind(R.id.noScrollListView)
+    @Bind(R.id.community_details_no_scroll_list_view)
     NoScrollBarListView noScrollBarListView;
 
-    @Bind(R.id.community_item_toolbar)
+    @Bind(R.id.community_details_toolbar)
     Toolbar toolbar;
 
     @Bind(R.id.item_community_layout_1_head_view)
@@ -130,6 +135,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_community_item);
 
         strID = getIntent().getStringExtra(ID);
+        title = getIntent().getStringExtra(TITLE);
         DeBugLog.i(TAG, "strID:" + strID);
 
         ButterKnife.bind(this);
@@ -148,16 +154,14 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle("问题");
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.back);
+        if (!TextUtils.isEmpty(title)) {
+            toolbar.setTitle(title);
+        } else {
+            toolbar.setTitle(Problem);
         }
 
         toolbar.setTitleTextColor(titleTextColor);
+        setSupportActionBar(toolbar);
 
         pullToRefreshScrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 
@@ -245,7 +249,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
     private void getTagList() {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.GET,
                 HttpServicePath.getDefaultTagListPath, new TagRequestCallBack());
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -270,7 +274,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getProblemDetailsPath, new CommunityItemRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -295,7 +299,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getAttentionQuestionPath, new AttentionQuestionRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -364,6 +368,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
                 Toast.makeText(this, DataError, Toast.LENGTH_SHORT).show();
             }
         }
+
     }
 
     @Override

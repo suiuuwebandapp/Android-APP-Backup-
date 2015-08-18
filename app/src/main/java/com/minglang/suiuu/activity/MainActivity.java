@@ -50,6 +50,11 @@ public class MainActivity extends BaseActivity {
     private static final int NUMBER3 = 3;
     private static final int NUMBER4 = 4;
 
+    private static final String STATE = "state";
+
+    private static final String COUNTRY_ID = "countryId";
+    private static final String CITY_ID = "cityId";
+
     @BindString(R.string.SuiuuAccount)
     String SuiuuAccount;
 
@@ -278,7 +283,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SelectPictureActivity.class);
-                intent.putExtra("state", 1);
+                intent.putExtra(STATE, 1);
                 startActivity(intent);
             }
         });
@@ -301,7 +306,9 @@ public class MainActivity extends BaseActivity {
         Main_3_Questions.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, QuestionsActivity.class);
+                Intent intent = new Intent(MainActivity.this, PutQuestionsActivity.class);
+                intent.putExtra(COUNTRY_ID, communityFragment.getCountryId());
+                intent.putExtra(CITY_ID, communityFragment.getCityId());
                 startActivity(intent);
             }
         });
@@ -454,7 +461,7 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * 加载路线页面
+     * 加载问答社区页面
      */
     private void LoadCommunityFragment() {
         FragmentTransaction ft = fm.beginTransaction();
@@ -639,25 +646,25 @@ public class MainActivity extends BaseActivity {
                     break;
 
                 case R.id.tab1:
-                    titleInfo.setText(getResources().getString(R.string.mainTitle1));
+                    titleInfo.setText(getResources().getString(R.string.MainTitle1));
                     switchViewState(NUMBER1);
                     LoadMainFragment();
                     break;
 
                 case R.id.tab2:
-                    titleInfo.setText(getResources().getString(R.string.mainTitle2));
+                    titleInfo.setText(getResources().getString(R.string.MainTitle2));
                     switchViewState(NUMBER2);
                     LoadSuiuuFragment();
                     break;
 
                 case R.id.tab3:
-                    titleInfo.setText(getResources().getString(R.string.mainTitle3));
+                    titleInfo.setText(getResources().getString(R.string.MainTitle3));
                     switchViewState(NUMBER3);
                     LoadCommunityFragment();
                     break;
 
                 case R.id.tab4:
-                    titleInfo.setText(getResources().getString(R.string.mainTitle4));
+                    titleInfo.setText(getResources().getString(R.string.MainTitle4));
                     switchViewState(NUMBER4);
                     LoadConversationFragment();
                     break;

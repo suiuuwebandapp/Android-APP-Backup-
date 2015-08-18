@@ -185,7 +185,7 @@ public class PersonalTravelFragment extends Fragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getPersonalTripDataPath, new PersonalTravelRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     private void hideDialog() {

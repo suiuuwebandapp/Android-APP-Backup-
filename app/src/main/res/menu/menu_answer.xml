@@ -1,7 +1,8 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context="com.minglang.suiuu.activity.AnswerActivity">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.minglang.suiuu.activity.AnswerActivity">
 
     <item
         android:id="@+id/answer_confirm"
@@ -9,6 +10,5 @@
         android:orderInCategory="100"
         android:title=""
         app:showAsAction="ifRoom"/>
-
 
 </menu>

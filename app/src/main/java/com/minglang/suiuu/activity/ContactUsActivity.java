@@ -1,9 +1,10 @@
 package com.minglang.suiuu.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.minglang.suiuu.R;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 /**
@@ -22,10 +24,13 @@ import butterknife.ButterKnife;
  */
 public class ContactUsActivity extends BaseAppCompatActivity {
 
-    @Bind(R.id.contactUsBack)
-    ImageView contactUsBack;
+    @BindColor(R.color.white)
+    int titleColor;
 
-    @Bind(R.id.contactUsInfoList)
+    @Bind(R.id.contact_us_tool_bar)
+    Toolbar toolbar;
+
+    @Bind(R.id.contact_us_info_list)
     ListView contactUsInfoList;
 
     @Override
@@ -41,6 +46,9 @@ public class ContactUsActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
+        toolbar.setTitleTextColor(titleColor);
+        setSupportActionBar(toolbar);
+
         String[] TITLES = getResources().getStringArray(R.array.contactUsArray1);
         String[] INFO_ARRAY = getResources().getStringArray(R.array.contactUsArray2);
 
@@ -57,12 +65,6 @@ public class ContactUsActivity extends BaseAppCompatActivity {
     }
 
     private void ViewAction() {
-        contactUsBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
         contactUsInfoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -73,4 +75,14 @@ public class ContactUsActivity extends BaseAppCompatActivity {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

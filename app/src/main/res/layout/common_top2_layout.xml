@@ -16,7 +16,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/layout_10dp"
         android:layout_marginRight="@dimen/layout_10dp"
-        android:text="@string/complete"
+        android:text="@string/Complete"
         android:textColor="@color/white"
         android:textSize="@dimen/layout_20sp"
         android:visibility="gone"/>

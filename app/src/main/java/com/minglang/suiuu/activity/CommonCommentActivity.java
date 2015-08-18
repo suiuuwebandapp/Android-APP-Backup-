@@ -158,7 +158,7 @@ public class CommonCommentActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.articleCreateComment, new requestCommentSendCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
 
     }
 
@@ -177,7 +177,7 @@ public class CommonCommentActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.suiuuCreateComment, new requestCommentSendCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
 
     }
 
@@ -222,4 +222,5 @@ public class CommonCommentActivity extends BaseActivity {
         }
 
     }
+
 }

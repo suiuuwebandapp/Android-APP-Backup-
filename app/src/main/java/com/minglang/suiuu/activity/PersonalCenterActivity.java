@@ -41,10 +41,10 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
     @BindColor(R.color.white)
     int collapsedTitleTextColor;
 
-    @BindString(R.string.mainTitle1)
+    @BindString(R.string.MainTitle1)
     String str1;
 
-    @BindString(R.string.mainTitle2)
+    @BindString(R.string.MainTitle2)
     String str2;
 
     @BindString(R.string.Problem)

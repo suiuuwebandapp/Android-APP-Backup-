@@ -48,7 +48,7 @@
         android:layout_toLeftOf="@+id/item_my_suiuu_join_remove"
         android:layout_toRightOf="@+id/item_my_suiuu_join_head_image"
         android:layout_toStartOf="@+id/item_my_suiuu_join_remove"
-        android:text="@string/location"
+        android:text="@string/Location"
         android:textSize="@dimen/layout_16sp"/>
 
     <Button

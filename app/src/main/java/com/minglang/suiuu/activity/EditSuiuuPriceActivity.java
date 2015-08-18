@@ -2,33 +2,36 @@ package com.minglang.suiuu.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.AppConstant;
+import com.minglang.suiuu.utils.DeBugLog;
 
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 /**
  * 编辑随游价格
  */
-public class EditSuiuuPriceActivity extends BaseActivity {
+public class EditSuiuuPriceActivity extends BaseAppCompatActivity {
 
     private static final String TAG = EditSuiuuPriceActivity.class.getSimpleName();
 
-    @Bind(R.id.edit_suiuu_price_back)
-    ImageView back;
+    private static final String OLD_PRICE = "oldPrice";
 
-    @Bind(R.id.edit_suiuu_price_ok)
-    TextView ok;
+    @BindColor(R.color.white)
+    int titleColor;
+
+    @Bind(R.id.edit_suiuu_price_tool_bar)
+    Toolbar toolbar;
 
     @Bind(R.id.edit_suiuu_basic_price)
     EditText editBasicPrice;
@@ -45,29 +48,34 @@ public class EditSuiuuPriceActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_suiuu_price);
-
-        ButterKnife.bind(this);
-
         oldIntent = getIntent();
-
-        ViewAction();
+        ButterKnife.bind(this);
+        initView();
     }
 
-    private void ViewAction() {
+    private void initView() {
+        String oldPrice = oldIntent.getStringExtra(OLD_PRICE);
+        DeBugLog.i(TAG, "Old Price:" + oldPrice);
 
-        String oldPrice = oldIntent.getStringExtra("oldPrice");
-        Log.i(TAG, "oldPrice:" + oldPrice);
+        toolbar.setTitleTextColor(titleColor);
+        setSupportActionBar(toolbar);
+    }
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_edit_suiuu_price, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
                 finish();
-            }
-        });
+                break;
 
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            case R.id.edit_suiuu_price_ok:
                 String textBasicPrice = editBasicPrice.getText().toString().trim();
                 String textAdditionalPrice = editAdditionalPrice.getText().toString().trim();
                 String textOtherPrice = editOtherPrice.getText().toString().trim();
@@ -86,10 +94,8 @@ public class EditSuiuuPriceActivity extends BaseActivity {
                     setResult(AppConstant.EDIT_SUIUU_PRICE_BACK, intent);
                     finish();
                 }
-
-            }
-        });
-
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
-
 }

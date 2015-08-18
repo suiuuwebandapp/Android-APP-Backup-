@@ -35,6 +35,7 @@ import com.minglang.suiuu.entity.SuiuuDetailsData;
 import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity;
 import com.minglang.suiuu.entity.UserBackData;
 import com.minglang.suiuu.utils.AppUtils;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -44,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -61,6 +63,8 @@ import butterknife.ButterKnife;
  */
 public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
+    private static final String TAG = SuiuuDetailsActivity.class.getSimpleName();
+
     private static final int COMMENT_SUCCESS = 20;
 
     private static final String TRIP_ID = "tripId";
@@ -76,8 +80,8 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     @BindString(R.string.LoginInvalid)
     String LoginInvalid;
 
-    @BindString(R.string.DataReFai)
-    String DataReFai;
+    @BindString(R.string.DataRequestFailure)
+    String DataRequestFailure;
 
     private String tripId;
 
@@ -87,10 +91,10 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     private ProgressDialog progressDialog = null;
 
     @Bind(R.id.suiuu_details_back)
-    ImageView suiuu_details_back;
+    ImageView back;
 
     //显示评论总数
-    @Bind(R.id.tv_suiuu_detail_comment_number)
+    @Bind(R.id.tv_suiuu_details_comment_number)
     TextView tv_suiuu_detail_comment_number;
 
     //评论头像
@@ -102,27 +106,27 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     EditText et_suiuu_detail_comment;
 
     //评论显示列表
-    @Bind(R.id.lv_suiuu_detail_comment)
-    NoScrollBarListView lv_suiuu_detail_comment;
+    @Bind(R.id.lv_suiuu_details_comment)
+    NoScrollBarListView suiuu_detail_comment;
 
     //咨询按钮
     @Bind(R.id.bb_consult)
-    BootstrapButton bb_consult;
+    BootstrapButton consult;
 
     //预定按钮
     @Bind(R.id.bb_schedule)
-    BootstrapButton bb_schedule;
+    BootstrapButton schedule;
 
     private SuiuuDetailsData detailsData;
 
     @Bind(R.id.tv_to_comment_activity)
-    TextView tv_to_comment_activity;
+    TextView to_comment_activity;
 
     @Bind(R.id.ll_suiuu_details_no_comment)
-    LinearLayout ll_suiuu_detail_no_comment;
+    LinearLayout suiuu_detail_no_comment;
 
-    @Bind(R.id.ll_suiuu_detail_input_comment)
-    LinearLayout ll_suiuu_detail_input_comment;
+    @Bind(R.id.ll_suiuu_details_input_comment)
+    LinearLayout suiuu_detail_input_comment;
 
     private CommonCommentAdapter adapter;
 
@@ -131,16 +135,15 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     /**
      * 评论集合
      */
-    private List<SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity> commentDataList;
+    private List<CommentDataEntity> listAll = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suiuu_details_activity);
-
         ButterKnife.bind(this);
         initView();
-        loadDate(tripId);
+        getSuiuuDetailsData(tripId);
         showWebView();
         viewAction();
     }
@@ -155,10 +158,12 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDefaultTextEncodingName("utf-8");
+
+        verification = SuiuuInfo.ReadVerification(this);
     }
 
     private void viewAction() {
-        suiuu_details_back.setOnClickListener(new View.OnClickListener() {
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -169,19 +174,19 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
         et_suiuu_detail_comment.setOnClickListener(new MyOnClickListener());
 
-        tv_to_comment_activity.setOnClickListener(new MyOnClickListener());
+        to_comment_activity.setOnClickListener(new MyOnClickListener());
 
-        bb_consult.setOnClickListener(new MyOnClickListener());
+        consult.setOnClickListener(new MyOnClickListener());
 
-        bb_schedule.setOnClickListener(new MyOnClickListener());
+        schedule.setOnClickListener(new MyOnClickListener());
 
-        lv_suiuu_detail_comment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        suiuu_detail_comment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
                 intent.putExtra(TRIP_ID, tripId);
-                intent.putExtra(R_ID, commentDataList.get(position).getCommentId());
-                intent.putExtra(NICK_NAME, commentDataList.get(position).getNickname());
+                intent.putExtra(R_ID, listAll.get(position).getCommentId());
+                intent.putExtra(NICK_NAME, listAll.get(position).getNickname());
                 startActivityForResult(intent, COMMENT_SUCCESS);
             }
         });
@@ -202,7 +207,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                 }
             });
 
-            mWebView.setOnKeyListener(new View.OnKeyListener() {        // webview can go back
+            mWebView.setOnKeyListener(new View.OnKeyListener() {// webView can go back
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_BACK && mWebView.canGoBack()) {
@@ -276,7 +281,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     }
 
     //访问网络
-    private void loadDate(String tripId) {
+    private void getSuiuuDetailsData(String tripId) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(TRIP_ID, tripId);
         params.addBodyParameter(HttpServicePath.key, verification);
@@ -284,7 +289,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuItemInfo, new SuiuuItemInfoCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -294,51 +299,55 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
+            String str = responseInfo.result;
+            DeBugLog.i(TAG, "请求的数据:" + str);
             try {
-                JSONObject json = new JSONObject(responseInfo.result);
-                String status = json.getString(STATUS);
+                JSONObject jsonObject = new JSONObject(str);
+                String status = jsonObject.getString(STATUS);
 
                 if ("1".equals(status)) {
                     detailsData = JsonUtils.getInstance().fromJSON(SuiuuDetailsData.class, responseInfo.result);
-                    commentDataList = detailsData.getData().getComment().getData();
+                    listAll = detailsData.getData().getComment().getData();
                     fullCommentList();
                 } else if ("-3".equals(status)) {
                     Toast.makeText(SuiuuDetailsActivity.this, LoginInvalid, Toast.LENGTH_SHORT).show();
                     AppUtils.intentLogin(SuiuuDetailsActivity.this);
                     SuiuuDetailsActivity.this.finish();
                 } else {
-                    Toast.makeText(SuiuuDetailsActivity.this, DataReFai, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SuiuuDetailsActivity.this, DataRequestFailure, Toast.LENGTH_SHORT).show();
                 }
 
             } catch (Exception e) {
-                Toast.makeText(SuiuuDetailsActivity.this, DataReFai, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
+                Toast.makeText(SuiuuDetailsActivity.this, DataRequestFailure, Toast.LENGTH_SHORT).show();
             }
+
         }
 
         @Override
         public void onFailure(HttpException error, String msg) {
-            Toast.makeText(SuiuuDetailsActivity.this, DataReFai, Toast.LENGTH_SHORT).show();
+            DeBugLog.e(TAG, "HttpException:" + error + ",msg:" + msg);
+            Toast.makeText(SuiuuDetailsActivity.this, DataRequestFailure, Toast.LENGTH_SHORT).show();
         }
 
     }
 
     public void fullCommentList() {
-        if (commentDataList != null && commentDataList.size() > 0) {
-            tv_suiuu_detail_comment_number.setText("全部评论 (共" + commentDataList.size() + "条评论)");
-            ll_suiuu_detail_input_comment.setVisibility(View.VISIBLE);
-            ll_suiuu_detail_no_comment.setVisibility(View.GONE);
-            showList(commentDataList);
+        if (listAll != null && listAll.size() > 0) {
+            tv_suiuu_detail_comment_number.setText("全部评论 (共" + listAll.size() + "条评论)");
+            suiuu_detail_input_comment.setVisibility(View.VISIBLE);
+            suiuu_detail_no_comment.setVisibility(View.GONE);
+            showList(listAll);
         } else {
-            ll_suiuu_detail_no_comment.setVisibility(View.VISIBLE);
-            ll_suiuu_detail_input_comment.setVisibility(View.GONE);
+            suiuu_detail_no_comment.setVisibility(View.VISIBLE);
+            suiuu_detail_input_comment.setVisibility(View.GONE);
         }
     }
 
     private void showList(List<CommentDataEntity> commentDataList) {
         if (adapter == null) {
             adapter = new CommonCommentAdapter(this, commentDataList);
-            lv_suiuu_detail_comment.setAdapter(adapter);
+            suiuu_detail_comment.setAdapter(adapter);
         } else {
             adapter.onDateChange(commentDataList);
         }
@@ -370,10 +379,6 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                     if (!isExistUser(detailsData.getData().getPublisherList().get(0).getUserSign())) {
                         addUser();
                     }
-
-//                    Intent intentConsult = new Intent(SuiuuDetailsActivity.this, ChatActivity.class);
-//                    intentConsult.putExtra("userId", detailsData.getData().getPublisherList().get(0).getUserSign());
-//                    startActivity(intentConsult);
                     break;
                 case R.id.bb_schedule:
                     //跳到预定页面
@@ -406,7 +411,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
                 CommentDataEntity newCommentData =
                         JsonUtils.getInstance().fromJSON(CommentDataEntity.class, json.toString());
-                commentDataList.add(0, newCommentData);
+                listAll.add(0, newCommentData);
                 fullCommentList();
             } catch (JSONException e) {
                 e.printStackTrace();

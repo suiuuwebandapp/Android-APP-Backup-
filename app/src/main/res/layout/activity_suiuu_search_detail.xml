@@ -63,7 +63,7 @@
                 android:background="@color/white"
                 android:gravity="center"
                 android:inputType="number"
-                android:text="@string/zero"
+                android:text="@string/Zero"
                 android:textColor="@color/black"/>
 
             <ImageButton

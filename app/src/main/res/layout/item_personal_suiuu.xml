@@ -49,7 +49,7 @@
             android:drawablePadding="@dimen/layout_3dp"
             android:drawableStart="@drawable/icon_heart"
             android:gravity="center_vertical"
-            android:text="@string/zero"
+            android:text="@string/Zero"
             android:textSize="@dimen/layout_18sp"/>
 
         <TextView
@@ -63,7 +63,7 @@
             android:drawablePadding="@dimen/layout_3dp"
             android:drawableStart="@drawable/icon_small_comment"
             android:gravity="center_vertical"
-            android:text="@string/zero"
+            android:text="@string/Zero"
             android:textSize="@dimen/layout_18sp"/>
 
     </RelativeLayout>

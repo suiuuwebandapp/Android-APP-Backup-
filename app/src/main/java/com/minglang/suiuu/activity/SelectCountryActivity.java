@@ -37,11 +37,15 @@ import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class SelectCountryActivity extends BaseActivity {
 
     private static final String TAG = SelectCountryActivity.class.getSimpleName();
+
+    @BindString(R.string.load_wait)
+    String wait;
 
     @Bind(R.id.select_country_back)
     ImageView back;
@@ -75,7 +79,6 @@ public class SelectCountryActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_country);
-
         ButterKnife.bind(this);
         initView();
         ViewAction();
@@ -86,9 +89,8 @@ public class SelectCountryActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
-
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setMessage(wait);
         progressDialog.setCanceledOnTouchOutside(false);
 
         characterParser = CharacterParser.getInstance();
@@ -144,7 +146,7 @@ public class SelectCountryActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getCountryData, new SelectCountryRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     @Override
@@ -154,6 +156,7 @@ public class SelectCountryActivity extends BaseActivity {
             String countryCNname = data.getStringExtra("countryCNname");
             String cityId = data.getStringExtra("cityId");
             String cityName = data.getStringExtra("cityName");
+
             DeBugLog.i(TAG, "countryId:" + countryId);
             DeBugLog.i(TAG, "countryCNname:" + countryCNname);
             DeBugLog.i(TAG, "cityId:" + cityId);

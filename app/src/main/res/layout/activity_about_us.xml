@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:background="@color/mainColor"
         app:navigationIcon="@drawable/back"
-        app:title="@string/AboutUs"/>
+        app:title="@string/ContactUs"/>
 
     <ListView
         android:id="@+id/about_us_list_view"

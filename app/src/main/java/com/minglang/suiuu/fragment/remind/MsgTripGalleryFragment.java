@@ -199,7 +199,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getTripGalleryMsgDataPath, new MsgTripGalleryRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     private void hideDialog() {

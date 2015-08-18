@@ -87,7 +87,7 @@
 
                 <TextView
                     android:id="@+id/personal_sex"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/layout_15dp"
                     android:text="@string/sex"
@@ -107,7 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:hint="@string/nickname_hint"
+                    android:hint="@string/NickNameHint"
                     android:padding="@dimen/layout_15dp"/>
 
             </RelativeLayout>
@@ -144,7 +144,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:hint="@string/trade_hint"
+                    android:hint="@string/TradeHint"
                     android:padding="@dimen/layout_15dp"/>
 
             </RelativeLayout>
@@ -161,7 +161,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="40"
-                    android:hint="@string/Signature_hint"
+                    android:hint="@string/SignatureHint"
                     android:padding="@dimen/layout_15dp"/>
 
             </RelativeLayout>

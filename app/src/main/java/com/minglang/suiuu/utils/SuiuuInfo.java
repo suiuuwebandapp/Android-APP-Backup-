@@ -146,30 +146,6 @@ public class SuiuuInfo implements Serializable {
     }
 
     /**
-     * 读取本地的头像地址
-     *
-     * @param context 上下文对象
-     * @return 本地的头像地址
-     */
-    public static String ReadNativeHeadImagePath(Context context) {
-        return context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).getString(NATIVE_HEAD_IMG, "");
-    }
-
-    /**
-     * 保存本地的头像地址
-     *
-     * @param context             上下文对象
-     * @param nativeHeadImagePath 本地头像地址
-     */
-    public static void WriteNativeHeadImagePath(Context context, String nativeHeadImagePath) {
-        if (context == null) {
-            return;
-        }
-        context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).edit()
-                .putString(NATIVE_HEAD_IMG, nativeHeadImagePath).apply();
-    }
-
-    /**
      * 保存用户头像URL
      *
      * @param context       上下文对象

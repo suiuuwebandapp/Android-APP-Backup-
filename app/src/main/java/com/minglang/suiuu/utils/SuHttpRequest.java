@@ -78,7 +78,7 @@ public class SuHttpRequest {
         return httpHandler;
     }
 
-    public void requestNetworkData() {
+    public void executive() {
         if (httpMethod == null) {
             throw new NullPointerException("HttpMethod can not be empty!");
         }

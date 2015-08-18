@@ -63,6 +63,7 @@ public class CommunityFragment extends BaseFragment {
     private static final String SEARCH = "search";
 
     private static final String ID = "id";
+    private static final String TITLE = "title";
 
     private String userSign;
     private String verification;
@@ -132,6 +133,14 @@ public class CommunityFragment extends BaseFragment {
 
     public CommunityFragment() {
 
+    }
+
+    public String getCountryId() {
+        return countryId;
+    }
+
+    public String getCityId() {
+        return cityId;
     }
 
     @Override
@@ -233,10 +242,12 @@ public class CommunityFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int location = position - 1;
                 String qID = listAll.get(location).getQId();
-                DeBugLog.i(TAG, "location:" + location + ",qID:" + qID);
+                String qTitle = listAll.get(location).getQTitle();
+                DeBugLog.i(TAG, "location:" + location + ",qID:" + qID + ",qTitle:" + qTitle);
 
                 Intent intent = new Intent(getActivity(), CommunityDetailsActivity.class);
                 intent.putExtra(ID, qID);
+                intent.putExtra(TITLE, qTitle);
                 startActivity(intent);
             }
         });
@@ -312,7 +323,7 @@ public class CommunityFragment extends BaseFragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getMainProblemListPath, new CommunityRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**

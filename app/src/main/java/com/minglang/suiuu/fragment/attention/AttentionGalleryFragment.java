@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.attention;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -19,6 +20,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshGridView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.TripGalleryDetailsActivity;
 import com.minglang.suiuu.adapter.AttentionGalleryAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
@@ -50,6 +52,8 @@ public class AttentionGalleryFragment extends BaseFragment {
 
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
+
+    private static final String ID = "id";
 
     private String userSign;
     private String verification;
@@ -162,7 +166,10 @@ public class AttentionGalleryFragment extends BaseFragment {
         pullToRefreshGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                String strId = listAll.get(position).getId();
+                Intent intent = new Intent(getActivity(), TripGalleryDetailsActivity.class);
+                intent.putExtra(ID, strId);
+                startActivity(intent);
             }
         });
     }
@@ -179,7 +186,7 @@ public class AttentionGalleryFragment extends BaseFragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getAttentionTripPath, new AttentionGalleryRequestCallback());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**

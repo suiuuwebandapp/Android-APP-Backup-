@@ -26,7 +26,7 @@
             android:drawableLeft="@drawable/icon_praise"
             android:drawablePadding="5dp"
             android:drawableStart="@drawable/icon_praise"
-            android:text="@string/zero"
+            android:text="@string/Zero"
             android:textColor="@color/white"
             android:textSize="20sp"/>
 
@@ -40,7 +40,7 @@
             android:drawableLeft="@drawable/other_user_click3"
             android:drawablePadding="5dp"
             android:drawableStart="@drawable/other_user_click3"
-            android:text="@string/attention_other"
+            android:text="@string/AttentionThat"
             android:textColor="@drawable/other_user_click1"
             android:textSize="20sp"/>
 
@@ -60,7 +60,7 @@
             android:drawablePadding="5dp"
             android:drawableRight="@drawable/other_user_click2"
             android:gravity="end"
-            android:text="@string/title4"
+            android:text="@string/Title4"
             android:textColor="@drawable/other_user_click1"
             android:textSize="20sp"/>
 
@@ -96,7 +96,7 @@
                 <TextView
                     android:id="@+id/otherUserLocation"
                     style="@style/otherUserInfo"
-                    android:text="@string/location"
+                    android:text="@string/Location"
                     android:textColor="@color/white"/>
 
                 <TextView

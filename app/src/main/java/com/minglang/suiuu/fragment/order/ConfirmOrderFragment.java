@@ -24,7 +24,9 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.OrderDetailsActivity;
 import com.minglang.suiuu.adapter.OrderListManageAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
+import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.OrderManage;
+import com.minglang.suiuu.entity.OrderManage.OrderManageData;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -44,7 +46,7 @@ import butterknife.ButterKnife;
  * Use the {@link ConfirmOrderFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ConfirmOrderFragment extends Fragment {
+public class ConfirmOrderFragment extends BaseFragment {
 
     private static final String TAG = ConfirmOrderFragment.class.getSimpleName();
 
@@ -95,7 +97,7 @@ public class ConfirmOrderFragment extends Fragment {
     /**
      * 数据源
      */
-    private List<OrderManage.OrderManageData> listAll = new ArrayList<>();
+    private List<OrderManageData> listAll = new ArrayList<>();
 
     /**
      * Use this factory method to create a new instance of
@@ -213,7 +215,7 @@ public class ConfirmOrderFragment extends Fragment {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getConfirmOrderDataPath, new ConfirmOrderManageRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -255,7 +257,7 @@ public class ConfirmOrderFragment extends Fragment {
             try {
                 OrderManage orderManage = JsonUtils.getInstance().fromJSON(OrderManage.class, str);
                 if (orderManage != null) {
-                    List<OrderManage.OrderManageData> list = orderManage.getData();
+                    List<OrderManageData> list = orderManage.getData();
                     if (list != null && list.size() > 0) {
                         clearListData();
                         listAll.addAll(list);

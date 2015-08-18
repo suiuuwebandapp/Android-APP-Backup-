@@ -30,7 +30,7 @@
             android:drawablePadding="@dimen/layout_5dp"
             android:drawableStart="@drawable/icon_comment"
             android:gravity="center_vertical"
-            android:text="@string/zero"
+            android:text="@string/Zero"
             android:textSize="@dimen/layout_20sp"/>
 
     </RelativeLayout>

@@ -1,6 +1,7 @@
 package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -32,6 +32,7 @@ import com.minglang.suiuu.entity.OtherUser;
 import com.minglang.suiuu.entity.OtherUserDataArticle;
 import com.minglang.suiuu.entity.OtherUserDataInfo;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.DrawableUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
@@ -44,6 +45,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.BindString;
+import butterknife.ButterKnife;
+
 /**
  * 其他用户的个人主页
  * <p/>
@@ -55,32 +60,44 @@ public class OtherUserActivity extends BaseActivity {
 
     private static final String USERSIGNKEY = "userSign";
 
+    private static final String NUMBER = "number";
+    private static final String PAGE = "page";
+
+    @BindString(R.string.NoData)
+    String NoData;
+
     /**
      * 返回键
      */
-    private ImageView otherUserBack;
+    @Bind(R.id.OtherUserBack)
+    ImageView otherUserBack;
 
     /**
      * 收藏
      */
-    private TextView collection;
+    @Bind(R.id.otherUserCollection)
+    TextView collection;
 
     /**
      * 头像
      */
-    private ImageView headImage;
+    @Bind(R.id.otherUserHeadImage)
+    ImageView headImage;
 
     /**
      * 关注
      */
-    private TextView attention;
+    @Bind(R.id.otherUserAttention)
+    TextView attention;
 
     /**
      * 会话
      */
-    private TextView conversation;
+    @Bind(R.id.otherUserConversation)
+    TextView conversation;
 
-    private PullToRefreshGridView otherUserLoopGridView;
+    @Bind(R.id.otherUserLoop)
+    PullToRefreshGridView otherUserLoopGridView;
 
     private OtherUserClick otherUserClick = new OtherUserClick();
 
@@ -90,9 +107,16 @@ public class OtherUserActivity extends BaseActivity {
 
     private List<OtherUserDataArticle> articleListAll = new ArrayList<>();
 
-    private ProgressDialog dialog;
+    private ProgressDialog progressDialog;
 
-    private TextView otherUserName, otherUserLocation, otherUserSignature;
+    @Bind(R.id.otherUserName)
+    TextView otherUserName;
+
+    @Bind(R.id.otherUserLocation)
+    TextView otherUserLocation;
+
+    @Bind(R.id.otherUserSignature)
+    TextView otherUserSignature;
 
     private String attentionId;
 
@@ -102,6 +126,8 @@ public class OtherUserActivity extends BaseActivity {
 
     private int page = 1;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,29 +135,45 @@ public class OtherUserActivity extends BaseActivity {
 
         userSign = getIntent().getStringExtra(USERSIGNKEY);
         DeBugLog.i(TAG, "其他页面传递的userSign:" + userSign);
+
+        ButterKnife.bind(this);
         initView();
         ViewAction();
-        getData();
+        getUserInfo2Service(page);
     }
 
-    private void getData() {
-        if (dialog != null) {
-            dialog.show();
-        }
-        getUserInfo2Service(page);
+    /**
+     * 初始化方法
+     */
+    private void initView() {
+        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
+                .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
+                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
+                .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        otherUserLoopGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+
+        adapter = new OtherUserArticleAdapter(this, screenWidth);
+        otherUserLoopGridView.setAdapter(adapter);
+
+        context = OtherUserActivity.this;
     }
 
     private void getUserInfo2Service(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(USERSIGNKEY, userSign);
         params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter("number", String.valueOf(10));
-        params.addBodyParameter("page", String.valueOf(page));
+        params.addBodyParameter(NUMBER, String.valueOf(10));
+        params.addBodyParameter(PAGE, String.valueOf(page));
 
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.userInformationPath, new GetOtherUserInformationRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -145,7 +187,7 @@ public class OtherUserActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.AddAttentionUserPath, new AddAttentionRequestCallBack());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -158,7 +200,7 @@ public class OtherUserActivity extends BaseActivity {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionArticleCancelPath, new CollectionArticleCancelRequestCallback());
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     /**
@@ -193,7 +235,7 @@ public class OtherUserActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String articleId = articleListAll.get(position).getArticleId();
-                Intent intent = new Intent(OtherUserActivity.this, LoopArticleActivity.class);
+                Intent intent = new Intent(context, LoopArticleActivity.class);
                 intent.putExtra("articleId", articleId);
                 intent.putExtra("TAG", TAG);
                 startActivity(intent);
@@ -203,39 +245,9 @@ public class OtherUserActivity extends BaseActivity {
     }
 
     /**
-     * 初始化方法
-     */
-    private void initView() {
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_suiuu_image)
-                .showImageForEmptyUri(R.drawable.default_suiuu_image).showImageOnFail(R.drawable.default_suiuu_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
-
-        dialog = new ProgressDialog(this);
-        dialog.setMessage(getResources().getString(R.string.load_wait));
-        dialog.setCanceledOnTouchOutside(false);
-
-        otherUserBack = (ImageView) findViewById(R.id.OtherUserBack);
-        collection = (TextView) findViewById(R.id.otherUserCollection);
-        headImage = (ImageView) findViewById(R.id.otherUserHeadImage);
-        attention = (TextView) findViewById(R.id.otherUserAttention);
-        conversation = (TextView) findViewById(R.id.otherUserConversation);
-
-        otherUserLoopGridView = (PullToRefreshGridView) findViewById(R.id.otherUserLoop);
-        otherUserLoopGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-
-        otherUserName = (TextView) findViewById(R.id.otherUserName);
-        otherUserLocation = (TextView) findViewById(R.id.otherUserLocation);
-        otherUserSignature = (TextView) findViewById(R.id.otherUserSignature);
-
-        adapter = new OtherUserArticleAdapter(this, screenWidth);
-        otherUserLoopGridView.setAdapter(adapter);
-    }
-
-    /**
      * 填充数据
      */
-    private void fullData() {
+    private void fillData2View() {
         OtherUserDataInfo user = otherUser.getData().getUser();
         imageLoader.displayImage(user.getHeadImg(), headImage, options);
         otherUserName.setText(user.getNickname());
@@ -246,7 +258,7 @@ public class OtherUserActivity extends BaseActivity {
         }
         if (!TextUtils.isEmpty(attentionId)) {
             attention.setTextColor(getResources().getColor(R.color.text_select_true));
-            attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_light), null, null, null);
+            attention.setCompoundDrawables(DrawableUtils.setBounds(context, R.drawable.icon_attention_light), null, null, null);
         }
     }
 
@@ -279,17 +291,10 @@ public class OtherUserActivity extends BaseActivity {
 
                 case R.id.otherUserConversation:
                     String userId = otherUser.getData().getUser().getUserId();
-                    Log.i("suiuu", "userId=" + userId);
-                    if (isExistUser(userId)) {
-                        //当前用户在数据库中已经存在;
-                    } else {
+                    if (!isExistUser(userId)) {
                         addUser();
-                        Log.i("suiuu", "不存在了");
                     }
-                    //跳转到聊天页面
-//                    Intent intent = new Intent(OtherUserActivity.this, ChatActivity.class);
-//                    intent.putExtra("userId", userId);
-//                    startActivity(intent);
+
                     break;
             }
         }
@@ -305,79 +310,88 @@ public class OtherUserActivity extends BaseActivity {
         //执行sql语句
         db.execSQL("insert into user (userid,nikename,titleimg) values (?,?,?)", new Object[]{otherUser.getData().getUser().getUserId(), otherUser.getData().getUser().getNickname(), otherUser.getData().getUser().getHeadImg()});
         db.close();
-        Log.i("suiuu", "添加user成功");
     }
 
     public boolean isExistUser(String userId) {
-        boolean isexist = false;
+        boolean isExist = false;
         UserDbHelper helper = new UserDbHelper(this);
         //得到可读数据库
         SQLiteDatabase db = helper.getReadableDatabase();
         //得到数据库查询的结果集的游标（指针）
         Cursor cursor = db.rawQuery("select * from user where userid = ? ", new String[]{userId});
         while (cursor.moveToNext()) {
-            isexist = true;
+            isExist = true;
         }
         cursor.close();
         db.close();
-        return isexist;
+        return isExist;
+    }
+
+    private void hideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+
+        otherUserLoopGridView.onRefreshComplete();
+    }
+
+    /**
+     * 请求失败or无数据，请求页数减1
+     */
+    private void failureLessPage() {
+        if (page > 1) {
+            page = page - 1;
+        }
+    }
+
+    private void bindData2View(String str) {
+        if (TextUtils.isEmpty(str)) {
+            failureLessPage();
+            Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                otherUser = JsonUtils.getInstance().fromJSON(OtherUser.class, str);
+                fillData2View();
+                List<OtherUserDataArticle> list = otherUser.getData().getArticleList();
+                if (list != null && list.size() > 0) {
+                    articleListAll.addAll(list);
+                    adapter.setList(articleListAll);
+                } else {
+                    failureLessPage();
+                    Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "用户数据解析失败异常信息:" + e.getMessage());
+                failureLessPage();
+                Toast.makeText(context, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     //获取用户信息
     private class GetOtherUserInformationRequestCallBack extends RequestCallBack<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-
-            if (dialog.isShowing()) {
-                dialog.dismiss();
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
             }
+        }
 
-            otherUserLoopGridView.onRefreshComplete();
-
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
             DeBugLog.i(TAG, "用户信息:" + str);
-            try {
-                otherUser = JsonUtils.getInstance().fromJSON(OtherUser.class, str);
-                fullData();
-                List<OtherUserDataArticle> list = otherUser.getData().getArticleList();
-                if (list != null && list.size() > 0) {
-                    articleListAll.addAll(list);
-                    adapter.setList(articleListAll);
-                } else {
-                    if (page > 1) {
-                        page = page - 1;
-                    }
-                    Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                DeBugLog.e(TAG, "用户数据解析失败异常信息:" + e.getMessage());
-
-                if (page > 1) {
-                    page = page - 1;
-                }
-
-                Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
-            }
-            DeBugLog.i(TAG, "当前页码:" + page);
+            hideDialog();
+            bindData2View(str);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "获取用户数据失败异常信息:" + s);
-            DeBugLog.i(TAG, "当前页码:" + page);
-
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-
-            if (page > 1) {
-                page = page - 1;
-            }
-
-            otherUserLoopGridView.onRefreshComplete();
-
-            Toast.makeText(OtherUserActivity.this, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            DeBugLog.e(TAG, "HttpException:" + e + ",Error:" + s);
+            hideDialog();
+            failureLessPage();
+            Toast.makeText(context, getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -397,19 +411,19 @@ public class OtherUserActivity extends BaseActivity {
                     attentionId = object.getString("data");
                     attention.setTextColor(getResources().getColor(R.color.text_select_true));
                     attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_light), null, null, null);
-                    Toast.makeText(OtherUserActivity.this, "关注成功！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "关注成功！", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(OtherUserActivity.this, "关注失败！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "关注失败！", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(OtherUserActivity.this, "关注失败！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "关注失败！", Toast.LENGTH_SHORT).show();
             }
         }
         @Override
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, "添加关注网络异常信息:" + s);
-            Toast.makeText(OtherUserActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -427,13 +441,14 @@ public class OtherUserActivity extends BaseActivity {
                 if ("1".equals(status) && "success".equals(data)) {
                     attentionId = null;
                     attention.setTextColor(getResources().getColor(R.color.white));
-                    attention.setCompoundDrawables(setImgDrawTextPosition(R.drawable.icon_attention_dark), null, null, null);
-                    Toast.makeText(OtherUserActivity.this, "取消关注用户成功", Toast.LENGTH_SHORT).show();
+                    attention.setCompoundDrawables(
+                            DrawableUtils.setBounds(context, R.drawable.icon_attention_dark), null, null, null);
+                    Toast.makeText(context, "取消关注用户成功", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "取消关注用户失败", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
-                Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "取消关注用户失败", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -441,7 +456,7 @@ public class OtherUserActivity extends BaseActivity {
         @Override
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, s);
-            Toast.makeText(OtherUserActivity.this, "取消关注用户失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "取消关注用户失败", Toast.LENGTH_SHORT).show();
         }
 
     }

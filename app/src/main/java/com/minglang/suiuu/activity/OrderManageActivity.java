@@ -30,9 +30,6 @@ import butterknife.ButterKnife;
  */
 public class OrderManageActivity extends BaseAppCompatActivity {
 
-    @BindString(R.string.orderManager)
-    String titleText;
-
     @BindColor(R.color.white)
     int titleTextColor;
 
@@ -61,7 +58,6 @@ public class OrderManageActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_manage);
-
         ButterKnife.bind(this);
         initView();
         ViewAction();
@@ -71,8 +67,8 @@ public class OrderManageActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
-        toolbar.setTitle(titleText);
         toolbar.setTitleTextColor(titleTextColor);
+        setSupportActionBar(toolbar);
 
         tabLayout.addTab(tabLayout.newTab().setText(newOrder), true);
         tabLayout.addTab(tabLayout.newTab().setText(confirmOrder), false);

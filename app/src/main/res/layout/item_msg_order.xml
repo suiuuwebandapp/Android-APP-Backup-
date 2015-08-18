@@ -56,7 +56,7 @@
             android:id="@+id/item_msg_order_confirm_refund"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/confirmationRefund"
+            android:text="@string/ConfirmationRefund"
             android:textSize="@dimen/layout_18sp"
             android:visibility="gone"/>
 
@@ -72,7 +72,7 @@
             android:id="@+id/item_msg_order_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/orderTitle"
+            android:text="@string/OrderTitle"
             android:textSize="@dimen/layout_18sp"/>
 
     </LinearLayout>

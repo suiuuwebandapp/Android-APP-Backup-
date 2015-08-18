@@ -384,7 +384,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     private void getData4Service(RequestParams params, String path, RequestCallBack<String> requestCallBack) {
         SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST, path, requestCallBack);
         httpRequest.setParams(params);
-        httpRequest.requestNetworkData();
+        httpRequest.executive();
     }
 
     private void hideDialog() {

@@ -14,7 +14,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/layout_20dp"
         android:layout_marginStart="@dimen/layout_20dp"
-        android:text="@string/china"
+        android:text="@string/China"
         android:textColor="@color/btn_1_bg_color"
         android:textSize="18sp"/>
 
@@ -27,7 +27,7 @@
         android:layout_marginStart="@dimen/layout_20dp"
         android:layout_toEndOf="@+id/item_area_name"
         android:layout_toRightOf="@+id/item_area_name"
-        android:text="@string/chinaCode"
+        android:text="@string/ChinaCode"
         android:textColor="@color/btn_1_bg_color"
         android:textSize="18sp"/>
 

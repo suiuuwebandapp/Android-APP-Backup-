@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_suiuu_detail_comment_number"
+        android:id="@+id/tv_suiuu_details_comment_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/layout_5dp"
@@ -20,7 +20,7 @@
     <include layout="@layout/view_line"/>
 
     <LinearLayout
-        android:id="@+id/ll_suiuu_detail_input_comment"
+        android:id="@+id/ll_suiuu_details_input_comment"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginBottom="@dimen/layout_15dp"
@@ -61,7 +61,7 @@
         <include layout="@layout/view_line"/>
 
         <com.minglang.suiuu.customview.NoScrollBarListView
-            android:id="@+id/lv_suiuu_detail_comment"
+            android:id="@+id/lv_suiuu_details_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="@string/my_suiuu"
+                android:text="@string/MySuiuu"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/white"/>
         </RelativeLayout>
@@ -173,7 +173,7 @@
                             android:layout_marginLeft="@dimen/layout_5dp"
                             android:layout_marginStart="@dimen/layout_5dp"
                             android:layout_weight="0.2"
-                            android:text="@string/phoneNumber"
+                            android:text="@string/PhoneNumber"
                             android:textSize="@dimen/layout_16sp"/>
 
                         <TextView
@@ -259,7 +259,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/layout_5dp"
                             android:layout_marginStart="@dimen/layout_5dp"
-                            android:text="@string/tripCount"
+                            android:text="@string/TripCount"
                             android:textSize="@dimen/layout_16sp"/>
 
                         <TextView
@@ -299,7 +299,7 @@
                         android:layout_marginStart="@dimen/layout_5dp"
                         android:layout_marginTop="@dimen/layout_8dp"
                         android:singleLine="true"
-                        android:text="@string/hisSuiuu"
+                        android:text="@string/HisSuiuu"
                         android:textSize="@dimen/layout_16sp"/>
 
                     <TextView
@@ -317,7 +317,7 @@
                         android:layout_marginStart="@dimen/layout_5dp"
                         android:layout_marginTop="@dimen/layout_5dp"
                         android:singleLine="true"
-                        android:text="@string/hisParticipationSuiuu"
+                        android:text="@string/HisParticipationSuiuu"
                         android:textSize="@dimen/layout_16sp"/>
 
                 </LinearLayout>

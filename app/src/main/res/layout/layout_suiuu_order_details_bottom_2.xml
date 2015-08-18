@@ -18,7 +18,9 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="@color/mainColor"
-            android:text="@android:string/ok"/>
+            android:text="@android:string/ok"
+            android:textColor="@color/white"/>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -33,7 +35,8 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="@color/btn_1_bg_color"
-            android:text="@android:string/cancel"/>
+            android:text="@string/Ignore"
+            android:textColor="@color/white"/>
 
     </RelativeLayout>
 
