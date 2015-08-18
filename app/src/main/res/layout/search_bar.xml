@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:background="#ededed"
     android:paddingBottom="7dp"
-    android:paddingLeft="@dimen/padding_search_bar"
-    android:paddingRight="@dimen/padding_search_bar"
+    android:paddingLeft="@dimen/layout_50dp"
+    android:paddingRight="@dimen/layout_50dp"
     android:paddingTop="7dp">
 
     <EditText

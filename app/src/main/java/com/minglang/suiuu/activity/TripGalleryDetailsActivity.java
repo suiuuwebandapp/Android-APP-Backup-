@@ -15,7 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.MarkerOptions;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.exception.HttpException;
@@ -30,8 +36,8 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.TripGalleryDetail;
-import com.minglang.suiuu.entity.TripGalleryDetail.DataEntity.InfoEntity;
 import com.minglang.suiuu.entity.TripGalleryDetail.DataEntity.CommentEntity;
+import com.minglang.suiuu.entity.TripGalleryDetail.DataEntity.InfoEntity;
 import com.minglang.suiuu.entity.TripGalleryDetail.DataEntity.LikeEntity;
 import com.minglang.suiuu.entity.UserBackData;
 import com.minglang.suiuu.utils.HttpServicePath;
@@ -318,7 +324,16 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         List<String> picDescription = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>() {
         }.getType(), tripGalleryDetailInfo.getContents());
         nsbv_trip_gallery_detail_content.setAdapter(new showPicDescriptionAdapter(this, picList, picDescription));
+        LatLng lngLat = new LatLng(Double.valueOf(tripGalleryDetailInfo.getLat()), Double.valueOf(tripGalleryDetailInfo.getLon()));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(
+                lngLat, 16, 30, 0));
+        aMap.moveCamera(cameraUpdate);
+        aMap.addMarker(new MarkerOptions()
+                .position(lngLat)
+                .icon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
         fullGuessYourLove();
+        sv_trip_gallery_detail.smoothScrollTo(0, 0);
     }
 
     @SuppressLint("InflateParams")
@@ -375,7 +390,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-
                 case R.id.sdv_comment_head_img:
                     //跳到个人中心
                     break;
@@ -412,7 +426,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             CommentEntity newCommentData =
                     JsonUtils.getInstance().fromJSON(CommentEntity.class, json.toString());
             commentContentList.add(0, newCommentData);

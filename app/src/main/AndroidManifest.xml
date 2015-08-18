@@ -177,15 +177,13 @@
             android:name=".activity.TripGallerySearchActivity"
             android:label="TripGallerySearchActivity"
             android:theme="@style/FullBleedTheme" />
+        <activity
+            android:name=".activity.AMapActivity"
+            android:label="AMapActivity"
+            android:theme="@style/AppCustomTheme" />
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="suiuu#suiuu" />
-        <!-- <meta-data android:name="EASEMOB_APPKEY"  android:value="easemob-demo#chatdemoui" /> -->
-
-
-        <!-- 声明sdk所需的service SDK核心功能 -->
-        <service android:name="com.easemob.chat.EMChatService" />
-
         <!-- QQ SDK所需的Activity -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
@@ -193,10 +191,8 @@
             android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="tencent1104557000" />
             </intent-filter>
         </activity>

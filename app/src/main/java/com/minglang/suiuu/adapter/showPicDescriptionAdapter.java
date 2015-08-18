@@ -77,8 +77,8 @@ public class showPicDescriptionAdapter extends BaseAdapter {
             if (TextUtils.isEmpty(contentList.get(position))) {
                 holder.textContent.setVisibility(View.GONE);
             } else {
-                holder.picContent.setVisibility(View.VISIBLE);
-                holder.textContent.setText(contentList.get(position));
+                holder.textContent.setVisibility(View.VISIBLE);
+                holder.textContent.setText(contentList.get(position).toString());
             }
         }
         holder.picContent.setOnClickListener(new View.OnClickListener() {

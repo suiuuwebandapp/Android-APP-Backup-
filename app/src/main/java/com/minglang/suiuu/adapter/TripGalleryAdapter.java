@@ -77,36 +77,28 @@ public class TripGalleryAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_trip_gallery, position);
         convertView = holder.getConvertView();
-
         SimpleDraweeView picContent = holder.getView(R.id.sdv_trip_gallery_item_picture);
         SimpleDraweeView headPortrait = holder.getView(R.id.civ_trip_gallery_head_portrait);
         TextView tv_location_distance = holder.getView(R.id.tv_trip_gallery_location_distance);
         TextView trip_gallery_name = holder.getView(R.id.tv_trip_gallery_name);
         TextView trip_gallery_tag = holder.getView(R.id.tv_trip_gallery_tag);
         TextView trip_gallery_loveNumber = holder.getView(R.id.tv_trip_gallery_love_number);
-
         LatLng lngLat = new LatLng(Double.valueOf(list.get(position).getLon()),
                 Double.valueOf(list.get(position).getLat()));
         LatLng lngLat1 = new LatLng(Double.valueOf(lng), Double.valueOf(lat));
-
         float v1 = AMapUtils.calculateLineDistance(lngLat, lngLat1);
         tv_location_distance.setText(String.valueOf(v1).length() >= 4 ?
                 String.valueOf(v1).substring(0, 4) : String.valueOf(v1));
-
         trip_gallery_name.setText(list.get(position).getTitle());
         trip_gallery_tag.setText(list.get(position).getTags().replace(",", " "));
         trip_gallery_loveNumber.setText(list.get(position).getAttentionCount());
-
         Uri uri = Uri.parse(list.get(position).getTitleImg());
         picContent.setImageURI(uri);
-
         if (!TextUtils.isEmpty(list.get(position).getHeadImg())) {
             Uri uri1 = Uri.parse(list.get(position).getHeadImg());
             headPortrait.setImageURI(uri1);
         }
-
         return convertView;
-
     }
 
 }

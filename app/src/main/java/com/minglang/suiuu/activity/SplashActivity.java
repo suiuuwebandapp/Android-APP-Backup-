@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -16,7 +17,6 @@ import com.amap.api.location.LocationManagerProxy;
 import com.amap.api.location.LocationProviderProxy;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import butterknife.Bind;
@@ -106,17 +106,16 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
         //在定位结束后，在合适的生命周期调用destroy()方法
         //其中如果间隔时间为-1，则定位只定一次
         mLocationManagerProxy.requestLocationData(
-                LocationProviderProxy.AMapNetwork, 60 * 1000, 15, this);
+                LocationProviderProxy.AMapNetwork, -1, 15, this);
         mLocationManagerProxy.setGpsEnable(false);
     }
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
         if (amapLocation != null && amapLocation.getAMapException().getErrorCode() == 0) {
-            DeBugLog.e(TAG, "ErrorCode1:" + amapLocation.getAMapException().getErrorCode());
             //获取位置信息
             Double geoLat = amapLocation.getLatitude();
             Double geoLng = amapLocation.getLongitude();
-            DeBugLog.i(TAG, "当前用户位置lat=" + geoLat + ",lng=" + geoLng);
+            Log.i("suiuu", "当前用户位置lat=" + geoLat + ",lng=" + geoLng);
             SuiuuInfo.WriteUserLocation(this, geoLat, geoLng);
         }
     }

@@ -1,10 +1,13 @@
 package com.minglang.suiuu.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -115,6 +118,8 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
 
     private TextProgressDialog dialog;
 
+    private AlertDialog setTagDialog;
+
     @Bind(R.id.iv_top_back)
     ImageView iv_top_back;
 
@@ -151,38 +156,8 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
     private String locationAddress;
     private String locationCountry;
     private String locationCity;
+    private String setTag = "";
 
-    //    private Handler handler = new Handler(new Handler.Callback() {
-    //        @Override
-    //        public boolean handleMessage(Message msg) {
-    //            switch (msg.what) {
-    //                case getData_Success:
-    //                    if (1 == status && picSuccessCount == picList.size()) {
-    //
-    //                        dialog.dismissDialog();
-    //                        Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_success, Toast.LENGTH_SHORT).show();
-    //                          Intent intent = new Intent(EasyTackPhotoActivity.this, LoopArticleActivity.class);
-    //                          intent.putExtra("articleId", dataNum);
-    //                          intent.putExtra("TAG", TAG);
-    //                          startActivity(intent);
-    //                        finish();
-    //                    } else {
-    //                        dialog.dismissDialog();
-    //                        Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
-    //                    }
-    //                    break;
-    //
-    //                case getData_FAILURE:
-    //                    dialog.dismissDialog();
-    //                    Toast.makeText(EasyTackPhotoActivity.this, R.string.article_publish_failure, Toast.LENGTH_SHORT).show();
-    //                    break;
-    //
-    //                default:
-    //                    break;
-    //            }
-    //            return false;
-    //        }
-    //    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,7 +208,6 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         DeBugLog.i(TAG, "layout100DpToPx=" + layout100dp + ",layout16Dp:" + layout16dp
                 + ",itemRemoveBtnWidthPx=" + itemRemoveBtnWidth + ",screenWidth=" + screenWidth);
         lv_pic_description.setOffsetLeft(screenWidth - layout100dp - layout16dp * 2);
-
     }
 
     private void ViewAction() {
@@ -303,26 +277,28 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
             } else {
                 loadDate();
             }
+        } else if (mId == R.id.tv_show_your_location) {
+            startActivityForResult(new Intent(EasyTackPhotoActivity.this,
+                    AMapActivity.class), REQUEST_CODE_MAP);
         } else if (mId == R.id.iv_top_back) {
             finish();
         }
     }
 
     private void loadDate() {
-        for (int i = 0; i < lv_pic_description.getChildCount() - 1; i++) {
+        for (int i = 0; i < lv_pic_description.getChildCount(); i++) {
             FrameLayout layout = (FrameLayout) lv_pic_description.getChildAt(i);// 获得子item的layout
             EditText et = (EditText) layout.findViewById(R.id.item_tack_description);// 从layout中获得控件,根据其id
             // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
             picDescriptionList.add(et.getText().toString());
         }
+        Log.i("suiuu", "contentLength=" + picDescriptionList.size());
         if (TextUtils.isEmpty(locationAddress)) {
             Toast.makeText(this, "请选择位置", Toast.LENGTH_SHORT).show();
             return;
         }
-
         //访问网络相关
         dialog.showDialog();
-
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter("title", search_question.getText().toString().trim());
@@ -335,7 +311,6 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         params.addBodyParameter("address", locationAddress);
         List<String> picNameList = new ArrayList<>();
         for (String string : picList) {
-//            updateDate(string);
             String substring = string.substring(string.lastIndexOf("/"));
             picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
         }
@@ -355,14 +330,11 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
             // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
             picDescriptionList.add(et.getText().toString());
         }
-
         if (TextUtils.isEmpty(search_question.getText().toString().trim())) {
             Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
             return;
         }
-
         dialog.showDialog();
-
         params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter("articleId", articleDetail.getArticleId());
         params.addBodyParameter("title", search_question.getText().toString().trim());
@@ -390,46 +362,6 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         suHttpRequest.setParams(params);
         suHttpRequest.requestNetworkData();
     }
-
-    //    private void updateDate(final String path) {
-    //        new Thread(new Runnable() {
-    //            @Override
-    //            public void run() {
-    //                String type = path.substring(path.lastIndexOf("/"));
-    //                String name = type.substring(type.lastIndexOf(".") + 1);
-    //                String newPath = null;
-    //                  try {
-    //                      newPath = CompressImageUtil.compressImage(path, name, 50);
-    //                  } catch (FileNotFoundException e) {
-    //                      e.printStackTrace();
-    //                  }
-    //                OSSFile bigFile = ossService.getOssFile(bucket, "suiuu_content" + type);
-    //                try {
-    //                    bigFile.setUploadFilePath(path,name);
-    //                    bigFile.ResumableUploadInBackground(new SaveCallback() {
-    //                        @Override
-    //                        public void onSuccess(String objectKey) {
-    //                            picSuccessCount += 1;
-    //                            if (picSuccessCount == picList.size()) {
-    //                            }
-    //                        }
-    //                        @Override
-    //                        public void onProgress(String objectKey, int byteCount, int totalSize) {
-    //                            Log.i("suiuu", "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
-    //                        }
-    //                        @Override
-    //                        public void onFailure(String objectKey, OSSException ossException) {
-    //                            Log.i("suiuu", "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
-    //                            ossException.printStackTrace();
-    //                            ossException.getException().printStackTrace();
-    //                        }
-    //                    });
-    //                } catch (FileNotFoundException e) {
-    //                    e.printStackTrace();
-    //                }
-    //            }
-    //        }).start();
-    //    }
 
     /**
      * 发布圈子文章回调接口
@@ -496,48 +428,92 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
 
     public void setSuiuuTag() {
         fl_easy_take_photo.removeAllViews();
-
         LayoutInflater mInflater = LayoutInflater.from(this);
-
-        for (int i = 0; i < suiuuTag.length; i++) {
+        for (int i = 0; i < suiuuTag.length + 1; i++) {
             TextView tv = (TextView) mInflater.inflate(R.layout.tv,
                     fl_easy_take_photo, false);
-
-            tv.setBackgroundResource(R.drawable.tag_shape_trip_gallery_publish);
-            tv.setText(suiuuTag[i]);
+            if (suiuuTag.length == i) {
+                tv.setBackgroundResource(R.drawable.icon_plus);
+            } else {
+                tv.setBackgroundResource(R.drawable.tag_shape_trip_gallery_publish);
+                tv.setText(suiuuTag[i]);
+            }
             tv.setTag(i);
-
             suiuuTagList.add(tv);
-
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     tagText = "";
                     int tagNumber = (int) v.getTag();
-                    if (suiuuTagClick.contains(suiuuTagList.get(tagNumber))) {
-                        suiuuTagList.get(tagNumber).setBackgroundResource(R.drawable.tag_shape_trip_gallery_publish);
-                        suiuuTagList.get(tagNumber).setTextColor(getResources().getColor(R.color.gray));
-                        suiuuTagClick.remove(suiuuTagList.get(tagNumber));
+                    if (suiuuTag.length == tagNumber) {
+                        showSetTagDialog();
                     } else {
-                        suiuuTagList.get(tagNumber).setBackgroundResource(R.drawable.tag_shape_trip_gallery_publish_press);
-                        suiuuTagList.get(tagNumber).setTextColor(getResources().getColor(R.color.white));
-                        suiuuTagClick.add(suiuuTagList.get(tagNumber));
-                    }
-                    for (TextView tv : suiuuTagClick) {
-                        tagText += tv.getText() + " ";
-                    }
-                    if ("".equals(tagText)) {
-                        tv_show_tag.setText("选择标签");
-                    } else {
-                        tv_show_tag.setText(tagText);
-
+                        if (suiuuTagClick.contains(suiuuTagList.get(tagNumber))) {
+                            suiuuTagList.get(tagNumber).setBackgroundResource(R.drawable.tag_shape_trip_gallery_publish);
+                            suiuuTagList.get(tagNumber).setTextColor(getResources().getColor(R.color.gray));
+                            suiuuTagClick.remove(suiuuTagList.get(tagNumber));
+                        } else {
+                            suiuuTagList.get(tagNumber).setBackgroundResource(R.drawable.tag_shape_trip_gallery_publish_press);
+                            suiuuTagList.get(tagNumber).setTextColor(getResources().getColor(R.color.white));
+                            suiuuTagClick.add(suiuuTagList.get(tagNumber));
+                        }
+                        showTag();
                     }
                 }
             });
-
             fl_easy_take_photo.addView(tv);
         }
-
     }
 
+    public void showTag() {
+        for (TextView tv : suiuuTagClick) {
+            tagText += tv.getText() + " ";
+        }
+        if ("".equals(tagText)) {
+            if("".equals(setTag)) {
+                tv_show_tag.setText("选择标签");
+            }else {
+                tv_show_tag.setText(setTag);
+            }
+        } else {
+            tv_show_tag.setText(tagText + " " + setTag);
+
+        }
+    }
+
+    /**
+     * 设置自定义标签弹出框
+     */
+    protected void showSetTagDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = View.inflate(this, R.layout.dialog_set_customer_tag, null);
+        final EditText et_input_customer_tag = (EditText) view.findViewById(R.id.et_input_customer_tag);
+
+        Button ok = (Button) view.findViewById(R.id.bt_conffirm_button);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newsetTag = et_input_customer_tag.getText().toString().trim();
+                if (TextUtils.isEmpty(newsetTag)) {
+                    Toast.makeText(EasyTackPhotoActivity.this, "你的输入不能为空,请重新输入", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                setTag += newsetTag + " ";
+                //输入的密码相等
+                showTag();
+                setTagDialog.dismiss();
+            }
+        });
+        Button cancel = (Button) view.findViewById(R.id.bt_cancel_button);
+        //点击取消
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setTagDialog.dismiss();
+            }
+        });
+        setTagDialog = builder.create();
+        setTagDialog.setView(view, 0, 0, 0, 0);
+        setTagDialog.show();
+    }
 }

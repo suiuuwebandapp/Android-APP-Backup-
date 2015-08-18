@@ -1,0 +1,26 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_trip_gallery_search"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_120dp"
+        android:background="@drawable/trip_gallery_search_bg"/>
+
+    <TextView
+        android:id="@+id/trip_gallery_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/tv_bg_trip_gallery_search"
+        android:drawableLeft="@drawable/main_search"
+        android:drawablePadding="@dimen/layout_2dp"
+        android:drawableStart="@drawable/main_search"
+        android:text="去哪看看"
+        android:textColor="@color/mainColor"
+        android:textSize="@dimen/layout_18sp"/>
+
+</RelativeLayout>

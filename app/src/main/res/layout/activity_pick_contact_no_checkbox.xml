@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/rl_title_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_top_bar"
+        android:layout_height="@dimen/layout_50dp"
         android:background="@color/top_bar_normal_bg"
         android:gravity="center_vertical" >
 

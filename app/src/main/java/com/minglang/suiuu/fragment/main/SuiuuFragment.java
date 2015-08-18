@@ -9,9 +9,6 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,7 +44,7 @@ import java.util.List;
  * 随游页面
  */
 public class SuiuuFragment extends BaseFragment
-        implements ReFlashListView.IReflashListener, ReFlashListView.ILoadMoreDataListener, ReFlashListView.IScrollListener {
+        implements ReFlashListView.IReflashListener, ReFlashListView.ILoadMoreDataListener {
     private ReFlashListView suiuuListView;
     private JsonUtils jsonUtil = JsonUtils.getInstance();
     private List<SuiuuDataList> suiuuDataList;
@@ -78,7 +75,6 @@ public class SuiuuFragment extends BaseFragment
     private void initView(View rootView) {
         suiuuDataList = new ArrayList<>();
         suiuuListView = (ReFlashListView) rootView.findViewById(R.id.lv_suiuu);
-        suiuuListView.setIScrollListener(this);
         noDataLoad = (TextView) rootView.findViewById(R.id.tv_noDataLoad);
         View topView = getActivity().findViewById(R.id.mainShowLayout);
         tabSelect = (LinearLayout) topView.findViewById(R.id.tabSelectCardLayout);
@@ -164,47 +160,6 @@ public class SuiuuFragment extends BaseFragment
             adapter.onDateChange(suiuuDataList);
         }
     }
-
-
-    @Override
-    public void onScroll() {
-        Log.i("suiuu","tabselect="+tabSelect.getHeight());
-        final Animation transAnim = new TranslateAnimation(0, 0, tabSelect.getHeight(), 0);
-        transAnim.setFillAfter(true);
-        transAnim.setDuration(500);
-
-        final Animation transAnimTo = new TranslateAnimation(0, 0, 0, tabSelect.getHeight());
-        transAnimTo.setFillAfter(true);
-        transAnimTo.setDuration(300);
-
-
-        if (suiuuListView.getFirstVisiblePosition() > lastVisibleItemPosition) {// 上滑
-            transAnim.cancel();
-            tabSelect.startAnimation(transAnim);
-            tabSelect.setVisibility(View.VISIBLE);
-        } else if (suiuuListView.getFirstVisiblePosition() < lastVisibleItemPosition) {// 下滑
-            tabSelect.setVisibility(View.GONE);
-        }
-        lastVisibleItemPosition = suiuuListView.getFirstVisiblePosition();
-
-    }
-
-
-    @Override
-    public void onScrollStateChanged(int state) {
-        switch (state) {
-            case AbsListView.OnScrollListener.SCROLL_STATE_IDLE://空闲状态
-                tabSelect.setVisibility(View.VISIBLE);
-                break;
-            case AbsListView.OnScrollListener.SCROLL_STATE_FLING://滚动状态
-                tabSelect.setVisibility(View.GONE);
-                break;
-            case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL://触摸后滚动
-                tabSelect.setVisibility(View.GONE);
-                break;
-        }
-    }
-
     /**
      * 获取随游列表的回调接口
      */

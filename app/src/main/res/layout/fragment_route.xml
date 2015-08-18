@@ -10,7 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:scrollbars="none"/>
+        android:scrollbars="none"
+        android:scrollbarStyle="outsideOverlay"
+        android:transcriptMode="normal"
+        />
 
     <TextView
         android:id="@+id/tv_noDataLoad"

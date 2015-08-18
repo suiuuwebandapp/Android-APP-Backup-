@@ -38,7 +38,6 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 	final int REFLASHING = 3;// 刷新状态；
 	IReflashListener iReflashListener;//刷新数据的接口
 	ILoadMoreDataListener iLoadMoreDataListener;//加载更多数据接口
-	IScrollListener iScrollListener;
 	private int mTouchSlop, downX, spaceMove, tempCount;
 	private boolean isFirshMeasure = true;
 
@@ -176,9 +175,7 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 		this.firstVisibleItem = firstVisibleItem;
 		this.lastVisibleItem = firstVisibleItem + visibleItemCount;
 		this.totalItemCount = totalItemCount;
-		if(iScrollListener != null) {
-			iScrollListener.onScroll();
-		}
+
 	}
 
 	@Override
@@ -192,9 +189,6 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 				footer.findViewById(R.id.footer_layout).setVisibility(View.VISIBLE);
 				iLoadMoreDataListener.onLoadMoreData();
 			}
-		}
-		if(iScrollListener != null) {
-			iScrollListener.onScrollStateChanged(scrollState);
 		}
 	}
 //	@Override
@@ -391,9 +385,7 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 	public void setLoadMoreInterface(ILoadMoreDataListener iLoadMoreDataListener){
 		this.iLoadMoreDataListener = iLoadMoreDataListener;
 	}
-	public void setIScrollListener(IScrollListener iScrollListener){
-		this.iScrollListener = iScrollListener;
-	}
+
 	/**
 	 * 刷新数据接口
 	 * @author Administrator
@@ -404,8 +396,5 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 	public interface ILoadMoreDataListener{
 		void onLoadMoreData();
 	}
-	public interface IScrollListener{
-		void onScroll();
-		void onScrollStateChanged(int state);
-	}
+
 }

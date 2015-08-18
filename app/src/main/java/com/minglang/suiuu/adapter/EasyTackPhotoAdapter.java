@@ -10,6 +10,9 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
@@ -72,13 +75,18 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
                 .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
+    public void onDateChange(List<String> list) {
+        this.list = list;
+        this.notifyDataSetChanged();
+    }
+
     public void setSwipeListView(SwipeListView swipeListView) {
         this.swipeListView = swipeListView;
     }
 
     @Override
     public int getCount() {
-        return list.size() + 1;
+        return list.size();
     }
 
     @Override
@@ -102,27 +110,20 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
         EditText picDescriptionView = holder.getView(R.id.item_tack_description);
         Button picRemoveView = holder.getView(R.id.item_tack_remove);
 
-        if (position >= list.size()) {
-            pictureView.setImageResource(R.drawable.btn_add_picture2);
+
+        if ("1".equals(type)) {
+            picDescriptionView.setText(changeContentList.get(position));
+            imageLoader.displayImage(list.get(position), pictureView, options);
         } else {
-            if ("1".equals(type)) {
-                picDescriptionView.setText(changeContentList.get(position));
-                imageLoader.displayImage(list.get(position), pictureView, options);
-            } else {
-                bitmapUtils.display(pictureView, list.get(position));
-            }
+            bitmapUtils.display(pictureView, list.get(position));
         }
-
         picDescriptionView.setHint(R.string.picture_description);
-
         pictureView.setOnClickListener(new pictureViewClick(position));
-
-        picRemoveView.setOnClickListener(new picRemoveViewClick(position));
-
+        picRemoveView.setOnClickListener(new picRemoveViewClick(position, this));
         return convertView;
     }
 
-    private class pictureViewClick implements View.OnClickListener{
+    private class pictureViewClick implements View.OnClickListener {
 
         private int position;
 
@@ -144,21 +145,43 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
         }
     }
 
-    private class picRemoveViewClick implements View.OnClickListener{
+    private class picRemoveViewClick implements View.OnClickListener {
 
         private int position;
+        private EasyTackPhotoAdapter easyTackPhotoAdapter;
 
-        private picRemoveViewClick(int position) {
+        private picRemoveViewClick(int position, EasyTackPhotoAdapter easyTackPhotoAdapter) {
             this.position = position;
+            this.easyTackPhotoAdapter = easyTackPhotoAdapter;
         }
 
         @Override
         public void onClick(View v) {
-            list.remove(position);
-            notifyDataSetChanged();
-
-            swipeListView.closeOpenedItems();
+            if (list.size() <= 1) {
+                Toast.makeText(context, "至少选择一张图片", Toast.LENGTH_SHORT).show();
+            } else {
+                list.remove(position);
+                swipeListView.closeOpenedItems();
+                setListViewHeight(swipeListView);
+            }
         }
+    }
+
+    // 重新计算子listview的高度
+    public void setListViewHeight(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + 10;
+        listView.setLayoutParams(params);
     }
 
 }
