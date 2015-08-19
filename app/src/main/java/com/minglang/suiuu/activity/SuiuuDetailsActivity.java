@@ -201,7 +201,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                 @Override
                 public void onProgressChanged(WebView view, int progress) {
                     progressDialog.setMessage("已经加载" + progress + "%");
-                    if (progress >= 80) {
+                    if (progress >= 90) {
                         progressDialog.dismiss();
                     }
                 }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -132,24 +131,21 @@ public class SuiuuFragment extends BaseFragment
 
     @Override
     public void onLoadMoreData() {
-        Log.i("suiuu", "加载更多数据了");
         if (!dialog.isShow()) {
             page += 1;
             loadDate(null, null, null, null, null, page);
         }
-
         suiuuListView.loadComplete();
     }
 
     @Override
     public void onReflash() {
-        Log.i("suiuu", "下拉刷新了");
         suiuuDataList.clear();
         page = 1;
+        adapter = null;
         loadDate(null, null, null, null, null, page);
         suiuuListView.reflashComplete();
     }
-
     private void showList(List<SuiuuDataList> suiuuDataList) {
         if (adapter == null) {
             suiuuListView.setInterface(this);
@@ -164,13 +160,11 @@ public class SuiuuFragment extends BaseFragment
      * 获取随游列表的回调接口
      */
     class getSuiuuDateCallBack extends RequestCallBack<String> {
-
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             dialog.dismissDialog();
             try {
                 JSONObject json = new JSONObject(stringResponseInfo.result);
-                Log.i("suiuu","suiuu="+stringResponseInfo.result);
                 String status = json.getString("status");
                 if ("1".equals(status)) {
                     SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class,stringResponseInfo.result);
@@ -187,7 +181,6 @@ public class SuiuuFragment extends BaseFragment
                     getActivity().finish();
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -203,17 +196,14 @@ public class SuiuuFragment extends BaseFragment
 
     @SuppressWarnings("deprecation")
     class MyOnclick implements View.OnClickListener {
-
         @Override
         public void onClick(View v) {
-
-
             switch (v.getId()) {
                 case R.id.main_2_search:
                     //跳转到搜索页面
                     Intent intent = new Intent(getActivity(),SuiuuSearchActivity.class);
                     intent.putExtra("searchClass",2);
-                   startActivity(intent);
+                    startActivity(intent);
                     break;
             }
         }

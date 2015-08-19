@@ -222,7 +222,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         iv_top_back.setOnClickListener(new MyOnClickListener());
         suiuu_details_comment.setOnClickListener(new MyOnClickListener());
         tv_to_comment_activity.setOnClickListener(new MyOnClickListener());
-
+        trip_gallery_details_portrait.setOnClickListener(new MyOnClickListener());
         aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
 
             @Override
@@ -312,7 +312,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         }.getType(), tripGalleryDetailInfo.getPicList());
         List<String> picDescription = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>() {
         }.getType(), tripGalleryDetailInfo.getContents());
-
         LatLng lngLat = new LatLng(Double.valueOf(tripGalleryDetailInfo.getLat()), Double.valueOf(tripGalleryDetailInfo.getLon()));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(
                 lngLat, 16, 30, 0));
@@ -397,6 +396,11 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
                     Intent commentIntent = new Intent(TripGalleryDetailsActivity.this, CommonCommentActivity.class);
                     commentIntent.putExtra("articleId", id);
                     startActivityForResult(commentIntent, COMMENT_SUCCESS);
+                    break;
+                case R.id.sdv_trip_gallery_details_portrait:
+                    Intent intent2UserActivity = new Intent(TripGalleryDetailsActivity.this, OtherUserActivity.class);
+                    intent2UserActivity.putExtra("userSign", tripGalleryDetailInfo.getUserSign());
+                    startActivity(intent2UserActivity);
                     break;
             }
         }

@@ -28,7 +28,7 @@ import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.fragment.main.CommunityFragment;
 import com.minglang.suiuu.fragment.main.InformationFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
-import com.minglang.suiuu.fragment.main.TripGalleryFragment1;
+import com.minglang.suiuu.fragment.main.TripGalleryFragment;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -110,7 +110,7 @@ public class MainActivity extends BaseActivity {
     /**
      * 旅图页面
      */
-    private TripGalleryFragment1 tripGalleryFragment;
+    private TripGalleryFragment tripGalleryFragment;
 
     /**
      * 随游页面
@@ -252,7 +252,7 @@ public class MainActivity extends BaseActivity {
 
         switchViewState(NUMBER1);
 
-        tripGalleryFragment = new TripGalleryFragment1();
+        tripGalleryFragment = new TripGalleryFragment();
         informationFragment = InformationFragment.newInstance(userSign, verification);
         communityFragment = CommunityFragment.newInstance(userSign, verification);
 
@@ -413,7 +413,7 @@ public class MainActivity extends BaseActivity {
         }
 
         if (tripGalleryFragment == null) {
-            tripGalleryFragment = new TripGalleryFragment1();
+            tripGalleryFragment = new TripGalleryFragment();
         }
 
         if (tripGalleryFragment.isAdded()) {
@@ -532,7 +532,7 @@ public class MainActivity extends BaseActivity {
     private void LoadDefaultFragment() {
         FragmentTransaction ft = fm.beginTransaction();
         if (tripGalleryFragment == null) {
-            tripGalleryFragment = new TripGalleryFragment1();
+            tripGalleryFragment = new TripGalleryFragment();
             ft.add(R.id.showLayout, tripGalleryFragment);
         } else {
             ft.add(R.id.showLayout, tripGalleryFragment);

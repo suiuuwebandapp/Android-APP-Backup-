@@ -33,7 +33,7 @@ public class SettingActivity extends BaseAppCompatActivity {
     @BindString(R.string.button_logout)
     String logoutButtonText;
 
-    @BindString(R.string.Are_logged_out)
+    @BindString(R.string.button_logout)
     String logoutText;
 
     @Bind(R.id.tv_top_center)

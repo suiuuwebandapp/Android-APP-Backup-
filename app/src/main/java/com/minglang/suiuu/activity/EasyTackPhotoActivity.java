@@ -292,7 +292,9 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
             // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
             picDescriptionList.add(et.getText().toString());
         }
-        Log.i("suiuu", "contentLength=" + picDescriptionList.size());
+        for(String s : picDescriptionList) {
+            Log.i("suiuu", "fabu="+s);
+        }
         if (TextUtils.isEmpty(locationAddress)) {
             Toast.makeText(this, "请选择位置", Toast.LENGTH_SHORT).show();
             return;

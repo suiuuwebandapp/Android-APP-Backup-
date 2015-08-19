@@ -183,19 +183,6 @@ public class LoginActivity extends BaseActivity {
      * 确认密码
      */
     private String registerPassword2;
-
-    /**
-     * ***************************分割线***************************
-     */
-
-    //判断是否登录
-//    private boolean autoLogin = false;
-    /**
-     * 环信用户名
-     */
-    private String huanXinUsername;
-    private boolean progressShow;
-
     /**
      * 第三方登陆按钮
      */
@@ -623,7 +610,6 @@ public class LoginActivity extends BaseActivity {
                     popupWindowRegister2.dismiss();
                     SuiuuInfo.WriteVerification(LoginActivity.this, user.getMessage());
                     SuiuuInfo.WriteUserSign(LoginActivity.this, user.getData().getUserSign());
-                    huanXinUsername = user.getData().getUserSign();
                 } else {
                     Toast.makeText(LoginActivity.this, "注册失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }
@@ -684,7 +670,7 @@ public class LoginActivity extends BaseActivity {
                     SuiuuInfo.WriteVerification(LoginActivity.this, user.getMessage());
                     SuiuuInfo.WriteUserSign(LoginActivity.this, data.getUserSign());
                     SuiuuInfo.WriteUserData(LoginActivity.this, data);
-                    huanXinUsername = user.getData().getUserSign();
+                    startActivity(new Intent(LoginActivity.this,MainActivity.class));
                 } else {
                     Toast.makeText(LoginActivity.this, "登录失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }
@@ -882,8 +868,6 @@ public class LoginActivity extends BaseActivity {
 
                     SuiuuInfo.WriteUserSign(LoginActivity.this, userBack.getData().getIntro());
                     SuiuuInfo.WriteUserData(LoginActivity.this, userBack.getData());
-
-                    huanXinUsername = userBack.getData().getUserSign();
                 } else {
                     DeBugLog.e(TAG, "QQRequestCallBack:返回数据有误！");
                     Toast.makeText(LoginActivity.this,
@@ -1054,8 +1038,6 @@ public class LoginActivity extends BaseActivity {
 
                     SuiuuInfo.WriteUserSign(LoginActivity.this, userBack.getData().getIntro());
                     SuiuuInfo.WriteUserData(LoginActivity.this, userBack.getData());
-
-                    huanXinUsername = userBack.getData().getUserSign();
                 } else {
 
                     if (weChatLoadDialog.isShowing()) {
@@ -1262,7 +1244,6 @@ public class LoginActivity extends BaseActivity {
                 if (userBack.status.equals("1")) {
                     SuiuuInfo.WriteVerification(LoginActivity.this, userBack.getMessage());
                     SuiuuInfo.WriteUserSign(LoginActivity.this, userBack.getData().getUserSign());
-                    huanXinUsername = userBack.getData().getUserSign();
                 } else {
                     Toast.makeText(LoginActivity.this, "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }

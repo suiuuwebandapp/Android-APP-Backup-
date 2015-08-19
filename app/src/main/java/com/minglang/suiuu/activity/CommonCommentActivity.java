@@ -203,7 +203,6 @@ public class CommonCommentActivity extends BaseActivity {
                     } else {
                         intent.putExtra(CONTENT, commentContent);
                     }
-
                     CommonCommentActivity.this.setResult(COMMENT_SUCCESS, intent);
                     Toast.makeText(CommonCommentActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
                     finish();

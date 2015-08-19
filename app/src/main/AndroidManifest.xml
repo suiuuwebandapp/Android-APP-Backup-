@@ -180,7 +180,7 @@
         <activity
             android:name=".activity.AMapActivity"
             android:label="AMapActivity"
-            android:theme="@style/AppCustomTheme" />
+            android:theme="@style/AppMainTheme" />
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="suiuu#suiuu" />

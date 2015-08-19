@@ -117,7 +117,6 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
                         clickImageList.add(imageList.get(tag));
                         clickString.add(mTagIntArray[tag]);
                     }
-                    Log.i("suiuu","clickTag="+clickTag);
                     for(String clickstring : clickString) {
                         clickTag += clickstring+",";
                     }
@@ -147,7 +146,6 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
 
     private void loadTripGalleryList(String tags, String sortName, String search, int page) {
         dialog.showDialog();
-        Log.i("suiuu", "请求条件tags=" + tags + "search=" + search + ",page=" + page);
         String tagnew = "";
         if(tags != null && tags.length() >1) {
             tagnew = tags.substring(0,tags.length()-1);
@@ -175,7 +173,6 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             dialog.dismissDialog();
             String result = stringResponseInfo.result;
-            Log.i("suiuu", "result=" + result);
             try {
                 JSONObject json = new JSONObject(result);
                 int status = (int) json.get("status");
@@ -215,10 +212,10 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
         if (adapter == null) {
             rfv_trip_gallery_search.setInterface(this);
             rfv_trip_gallery_search.setLoadMoreInterface(this);
-            adapter = new TripGalleryAdapter(this, tripGalleryList);
+            adapter = new TripGalleryAdapter(this, tripGalleryList,"",null);
             rfv_trip_gallery_search.setAdapter(adapter);
         } else {
-            adapter.onDateChange(tripGalleryList);
+            adapter.onDateChange(tripGalleryList,"",null);
         }
     }
 
