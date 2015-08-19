@@ -11,8 +11,7 @@
         android:id="@+id/sv_suiuu_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/layout_50dp"
-        >
+        android:layout_marginBottom="@dimen/layout_50dp">
 
         <RelativeLayout
             android:id="@+id/rl_suiuu_detail"
@@ -47,6 +46,7 @@
                     android:text="随游详情"
                     android:textColor="@color/white"
                     android:textSize="@dimen/layout_22sp" />
+
             </RelativeLayout>
 
             <WebView
@@ -68,9 +68,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/suiuu_detail_web_view"
-                android:layout_marginTop="@dimen/layout_5dp"
-                />
+                android:layout_marginTop="@dimen/layout_5dp"/>
+
         </RelativeLayout>
+
     </ScrollView>
 
     <RelativeLayout

@@ -398,7 +398,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
                     startActivityForResult(commentIntent, COMMENT_SUCCESS);
                     break;
                 case R.id.sdv_trip_gallery_details_portrait:
-                    Intent intent2UserActivity = new Intent(TripGalleryDetailsActivity.this, OtherUserActivity.class);
+                    Intent intent2UserActivity = new Intent(TripGalleryDetailsActivity.this, PersonalCenterActivity.class);
                     intent2UserActivity.putExtra("userSign", tripGalleryDetailInfo.getUserSign());
                     startActivity(intent2UserActivity);
                     break;

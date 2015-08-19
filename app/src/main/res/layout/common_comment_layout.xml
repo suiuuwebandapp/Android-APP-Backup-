@@ -40,7 +40,7 @@
                 android:layout_margin="@dimen/layout_10dp"
                 android:layout_marginLeft="@dimen/layout_10dp"
                 android:layout_marginStart="@dimen/layout_10dp"
-                android:background="@drawable/default_head_image2"
+                android:background="@drawable/default_head_image"
                 fresco:roundAsCircle="true"/>
 
             <EditText

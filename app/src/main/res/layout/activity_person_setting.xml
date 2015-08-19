@@ -74,7 +74,7 @@
                     android:layout_height="@dimen/layout_70dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="@dimen/layout_5dp"
-                    android:src="@drawable/default_head_image3"/>
+                    android:src="@drawable/default_head_image"/>
 
             </LinearLayout>
 

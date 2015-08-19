@@ -25,6 +25,7 @@ import com.minglang.suiuu.activity.GeneralOrderDetailsActivity;
 import com.minglang.suiuu.adapter.CompletedAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.CompletedOrder;
+import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -54,6 +55,7 @@ public class CompletedFragment extends BaseFragment {
     private static final String NUMBER = "number";
 
     private static final String ORDER_NUMBER = "orderNumber";
+    private static final String TITLE_IMG = "titleImg";
 
     @Bind(R.id.completed_order_list_view)
     PullToRefreshListView pullToRefreshListView;
@@ -82,6 +84,8 @@ public class CompletedFragment extends BaseFragment {
     private List<CompletedOrder.CompletedOrderData> listAll = new ArrayList<>();
 
     private CompletedAdapter adapter;
+
+    private JsonUtils jsonUtils;
 
     /**
      * Use this factory method to create a new instance of
@@ -133,12 +137,15 @@ public class CompletedFragment extends BaseFragment {
     private void initView() {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(wait);
+        progressDialog.setCanceledOnTouchOutside(false);
 
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         ListView listView = pullToRefreshListView.getRefreshableView();
 
         adapter = new CompletedAdapter(getActivity(), listAll, R.layout.item_my_order_layout);
         listView.setAdapter(adapter);
+
+        jsonUtils = JsonUtils.getInstance();
     }
 
     private void ViewAction() {
@@ -173,9 +180,19 @@ public class CompletedFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int location = position - 1;
+
                 String orderNumber = listAll.get(location).getOrderNumber();
+                String titleImg = null;
+                try {
+                    titleImg = jsonUtils.fromJSON(TripJsonInfo.class, listAll.get(location)
+                            .getTripJsonInfo()).getInfo().getTitleImg();
+                } catch (Exception e) {
+                    DeBugLog.e(TAG, "获取图片地址失败:");
+                }
+
                 Intent intent = new Intent(getActivity(), GeneralOrderDetailsActivity.class);
                 intent.putExtra(ORDER_NUMBER, orderNumber);
+                intent.putExtra(TITLE_IMG, titleImg);
                 startActivity(intent);
             }
         });
@@ -234,7 +251,7 @@ public class CompletedFragment extends BaseFragment {
             Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
         } else {
             try {
-                CompletedOrder completedOrder = JsonUtils.getInstance().fromJSON(CompletedOrder.class, str);
+                CompletedOrder completedOrder = jsonUtils.fromJSON(CompletedOrder.class, str);
                 if (completedOrder != null) {
                     List<CompletedOrder.CompletedOrderData> list = completedOrder.getData();
                     if (list != null && list.size() > 0) {

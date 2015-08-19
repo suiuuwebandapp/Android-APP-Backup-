@@ -61,6 +61,7 @@ public class ParticipateFragment extends BaseFragment {
     private static final String INFO = "info";
     private static final String PRICE = "price";
     private static final String TRIP_ID = "tripId";
+    private static final String TITLE_IMG = "titleImg";
 
     private String userSign;
     private String verification;
@@ -183,6 +184,7 @@ public class ParticipateFragment extends BaseFragment {
                 intent.putExtra(INFO, listAll.get(location).getInfo());
                 intent.putExtra(PRICE, listAll.get(location).getBasePrice());
                 intent.putExtra(TRIP_ID, listAll.get(location).getTripId());
+                intent.putExtra(TITLE_IMG, listAll.get(location).getTitleImg());
                 startActivity(intent);
             }
         });

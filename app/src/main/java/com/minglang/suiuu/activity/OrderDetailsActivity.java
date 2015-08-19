@@ -72,6 +72,8 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     private static final String NEW = "new";
     private static final String CONFIRM = "Confirm";
 
+    private static final String TRIP_ID = "tripId";
+
     /**
      * 订单ID
      */
@@ -216,13 +218,13 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
     private OrderDetailsRequestCallBack orderDetailsRequestCallBack;
 
+    private InfoEntity infoEntity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
         ButterKnife.bind(this);
-
-
         initView();
         viewAction();
         getData4Service(buildRequestParams(), orderDetailsDataPath, orderDetailsRequestCallBack);
@@ -312,6 +314,16 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+
+        titleView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tripId = infoEntity.getTripId();
+                Intent intent = new Intent(OrderDetailsActivity.this, SuiuuDetailsActivity.class);
+                intent.putExtra(TRIP_ID, tripId);
+                startActivity(intent);
             }
         });
 
@@ -407,7 +419,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
             JsonUtils jsonUtils = JsonUtils.getInstance();
             try {
                 OrderDetails orderDetails = jsonUtils.fromJSON(OrderDetails.class, str);
-                InfoEntity infoEntity = orderDetails.getData().getInfo();
+                infoEntity = orderDetails.getData().getInfo();
                 UserInfoEntity userInfo = orderDetails.getData().getUserInfo();
 
                 String headImagePath = userInfo.getHeadImg();

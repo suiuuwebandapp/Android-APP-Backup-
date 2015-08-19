@@ -25,6 +25,7 @@ import com.minglang.suiuu.activity.GeneralOrderDetailsActivity;
 import com.minglang.suiuu.adapter.NotFinishedAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.NotFinishedOrder;
+import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -54,6 +55,7 @@ public class NotFinishedFragment extends BaseFragment {
     private static final String NUMBER = "number";
 
     private static final String ORDER_NUMBER = "orderNumber";
+    private static final String TITLE_IMG = "titleImg";
 
     @Bind(R.id.not_finished_order_list_view)
     PullToRefreshListView pullToRefreshListView;
@@ -82,6 +84,8 @@ public class NotFinishedFragment extends BaseFragment {
     private List<NotFinishedOrder.NotFinishedOrderData> listAll = new ArrayList<>();
 
     private NotFinishedAdapter adapter;
+
+    private JsonUtils jsonUtils;
 
     /**
      * Use this factory method to create a new instance of
@@ -133,12 +137,15 @@ public class NotFinishedFragment extends BaseFragment {
     private void initView() {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(wait);
+        progressDialog.setCanceledOnTouchOutside(false);
 
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         ListView listView = pullToRefreshListView.getRefreshableView();
 
         adapter = new NotFinishedAdapter(getActivity(), listAll, R.layout.item_my_order_layout);
         listView.setAdapter(adapter);
+
+        jsonUtils = JsonUtils.getInstance();
     }
 
     private void ViewAction() {
@@ -173,9 +180,19 @@ public class NotFinishedFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int location = position - 1;
-                String strId = listAll.get(location).getOrderNumber();
+
+                String orderNumber = listAll.get(location).getOrderNumber();
+                String titleImg = null;
+                try {
+                    titleImg = jsonUtils.fromJSON(TripJsonInfo.class, listAll.get(location)
+                            .getTripJsonInfo()).getInfo().getTitleImg();
+                } catch (Exception e) {
+                    DeBugLog.e(TAG, "获取图片地址失败:");
+                }
+
                 Intent intent = new Intent(getActivity(), GeneralOrderDetailsActivity.class);
-                intent.putExtra(ORDER_NUMBER, strId);
+                intent.putExtra(ORDER_NUMBER, orderNumber);
+                intent.putExtra(TITLE_IMG, titleImg);
                 startActivity(intent);
             }
         });
@@ -234,7 +251,7 @@ public class NotFinishedFragment extends BaseFragment {
             Toast.makeText(getActivity(), dataNull, Toast.LENGTH_SHORT).show();
         } else {
             try {
-                NotFinishedOrder notFinishedOrder = JsonUtils.getInstance().fromJSON(NotFinishedOrder.class, str);
+                NotFinishedOrder notFinishedOrder = jsonUtils.fromJSON(NotFinishedOrder.class, str);
                 if (notFinishedOrder != null) {
                     List<NotFinishedOrder.NotFinishedOrderData> list = notFinishedOrder.getData();
                     if (list != null && list.size() > 0) {

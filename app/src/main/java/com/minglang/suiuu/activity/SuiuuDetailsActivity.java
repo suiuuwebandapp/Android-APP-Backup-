@@ -236,9 +236,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
             @JavascriptInterface
             public void userHomePage(String user) {
-                Intent intent = new Intent(SuiuuDetailsActivity.this, OtherUserActivity.class);
-                intent.putExtra("userSign", user);
-                startActivity(intent);
+
             }
 
             @JavascriptInterface

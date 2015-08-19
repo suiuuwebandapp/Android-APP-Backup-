@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -128,10 +127,6 @@ public class SettingActivity extends BaseAppCompatActivity {
     }
 
     public void logout() {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(logoutText);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
         SuiuuInfo.ClearSuiuuInfo(SettingActivity.this);
         SuiuuInfo.ClearSuiuuThird(SettingActivity.this);
         Intent intent = new Intent();

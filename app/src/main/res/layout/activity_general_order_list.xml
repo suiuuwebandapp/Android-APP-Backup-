@@ -10,6 +10,8 @@
         android:id="@+id/my_order_list_tool_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_50dp"
+        app:title="@string/MyOrder_general"
+        app:navigationIcon="@drawable/back"
         android:background="@color/mainColor"/>
 
     <android.support.design.widget.TabLayout

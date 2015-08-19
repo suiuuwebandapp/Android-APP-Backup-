@@ -26,7 +26,7 @@
             android:layout_height="@dimen/layout_50dp"
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/layout_8dp"
-            android:src="@drawable/default_head_image2"/>
+            android:src="@drawable/default_head_image"/>
 
         <TextView
             android:id="@+id/item_attention_gallery_title"

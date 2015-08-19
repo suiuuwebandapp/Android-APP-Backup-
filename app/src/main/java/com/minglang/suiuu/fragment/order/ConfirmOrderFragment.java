@@ -134,7 +134,7 @@ public class ConfirmOrderFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_confirm_order, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
+        viewAction();
         getConfirmOrderData(page);
         return rootView;
     }
@@ -164,7 +164,7 @@ public class ConfirmOrderFragment extends BaseFragment {
     /**
      * 控件动作
      */
-    private void ViewAction() {
+    private void viewAction() {
 
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override

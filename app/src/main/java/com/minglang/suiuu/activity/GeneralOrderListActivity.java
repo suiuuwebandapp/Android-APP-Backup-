@@ -30,9 +30,6 @@ import butterknife.ButterKnife;
  */
 public class GeneralOrderListActivity extends BaseAppCompatActivity {
 
-    @BindString(R.string.MyOrder_general)
-    String title;
-
     @BindColor(R.color.white)
     int titleColor;
 
@@ -69,10 +66,7 @@ public class GeneralOrderListActivity extends BaseAppCompatActivity {
     }
 
     private void initView() {
-        toolbar.setTitle(title);
         toolbar.setTitleTextColor(titleColor);
-        toolbar.setNavigationIcon(navigationIcon);
-
         setSupportActionBar(toolbar);
 
         tabLayout.setTabTextColors(normalColor, selectedColor);

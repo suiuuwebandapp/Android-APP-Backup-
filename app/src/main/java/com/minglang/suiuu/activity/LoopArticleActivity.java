@@ -380,9 +380,7 @@ public class LoopArticleActivity extends BaseActivity {
         headImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoopArticleActivity.this, OtherUserActivity.class);
-                intent.putExtra("userSign", loopArticleData.getaCreateUserSign());
-                startActivity(intent);
+
             }
         });
     }

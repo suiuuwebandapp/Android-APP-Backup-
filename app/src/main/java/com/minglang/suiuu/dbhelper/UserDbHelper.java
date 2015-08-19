@@ -37,4 +37,5 @@ public class UserDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         System.out.println("onupgrade 数据库被升级了");
     }
+
 }

@@ -1,6 +1,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -18,7 +19,6 @@
             android:orientation="vertical">
 
             <!--我的随游页面标题头部-->
-
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/layout_250dp">
@@ -36,13 +36,13 @@
                         android:orientation="vertical">
 
                         <!--随游封面图片-->
-                        <ImageView
+                        <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/my_suiuu_release_show_image"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/layout_200dp"
                             android:contentDescription="@string/app_name"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/default_background_image"/>
+                            fresco:actualImageScaleType="centerInside"
+                            fresco:placeholderImage="@drawable/loading"/>
 
                         <!--随游标题-->
                         <LinearLayout
@@ -119,23 +119,29 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/layout_50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:background="@color/tr_black">
 
                 <!--返回键-->
                 <ImageView
                     android:id="@+id/my_suiuu_release_back"
                     style="@style/backKeyStyle"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
                     android:contentDescription="@string/Back"
                     android:src="@drawable/back"/>
 
-                <!--页面描述-->
                 <TextView
-                    android:id="@+id/my_suiuu_release_tag"
+                    android:id="@+id/my_suiuu_release_main_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:text="@string/MyReleaseSuiuu"
+                    android:layout_toEndOf="@+id/my_suiuu_release_back"
+                    android:layout_toRightOf="@+id/my_suiuu_release_back"
+                    android:text="@string/title"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/white"/>
 
