@@ -54,7 +54,6 @@ public class MySuiuuInfoActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_suiuu_info);
-
         ButterKnife.bind(this);
         initView();
         ViewAction();

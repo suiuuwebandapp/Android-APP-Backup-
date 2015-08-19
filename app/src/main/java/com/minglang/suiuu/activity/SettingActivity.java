@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,12 +28,6 @@ public class SettingActivity extends BaseAppCompatActivity {
 
     @BindString(R.string.Setting)
     String strSetting;
-
-    @BindString(R.string.button_logout)
-    String logoutButtonText;
-
-    @BindString(R.string.Are_logged_out)
-    String logoutText;
 
     @Bind(R.id.tv_top_center)
     TextView title;
@@ -128,10 +121,6 @@ public class SettingActivity extends BaseAppCompatActivity {
     }
 
     public void logout() {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(logoutText);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
         SuiuuInfo.ClearSuiuuInfo(SettingActivity.this);
         SuiuuInfo.ClearSuiuuThird(SettingActivity.this);
         Intent intent = new Intent();

@@ -1,7 +1,7 @@
 package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -21,7 +22,6 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.GeneralOrderDetails;
 import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData;
 import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.InfoEntity;
@@ -34,9 +34,6 @@ import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuHttpRequest;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -56,6 +53,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     private static final String TAG = GeneralOrderDetailsActivity.class.getSimpleName();
 
     private static final String ORDER_NUMBER = "orderNumber";
+    private static final String TITLE_IMG = "titleImg";
 
     private static final float DEFAULT_SCORE = 0f;
 
@@ -74,59 +72,104 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     @Bind(R.id.general_order_details_parent_view)
     ScrollView scrollView;
 
-    @Bind(R.id.order_details_base_price)
-    TextView orderBasePrice;
+    @Bind(R.id.order_details_title_image_view)
+    SimpleDraweeView titleImageView;
 
+    /**
+     * 订单标题
+     */
     @Bind(R.id.order_details_title)
     TextView orderDetailsTitle;
 
+    /**
+     * 订单基础价格
+     */
+    @Bind(R.id.order_details_base_price)
+    TextView baseOrderPriceView;
+
+    /**
+     * 订单星级评价指示器
+     */
     @Bind(R.id.order_details_indicator)
     RatingBar orderStarIndicator;
 
+    /**
+     * 头像
+     */
     @Bind(R.id.order_details_head_image_view)
-    CircleImageView headImageView;
+    SimpleDraweeView headImageView;
 
+    /**
+     * 用户名
+     */
     @Bind(R.id.order_details_name)
     TextView userName;
 
+    /**
+     * 订单状态
+     */
     @Bind(R.id.order_details_status)
     TextView orderStatus;
 
+    /**
+     * 联系电话
+     */
     @Bind(R.id.order_details_phone)
     TextView orderDetailsPhone;
 
+    /**
+     * 出发日期
+     */
     @Bind(R.id.order_details_date)
     TextView orderDetailsDate;
 
+    /**
+     * 开始时间
+     */
     @Bind(R.id.order_details_time)
     TextView orderDetailsTime;
 
+    /**
+     * 最大随游人数
+     */
     @Bind(R.id.order_details_suiuu_number)
     TextView orderDetailsSuiuuNumber;
 
+    /**
+     * 附加服务Layout
+     */
     @Bind(R.id.order_details_service_layout)
     LinearLayout serviceLayout;
 
+    @Bind(R.id.order_details_additional_service_layout)
+    LinearLayout serviceTitleLayout;
+
+    /**
+     * 附加服务数量
+     */
     @Bind(R.id.order_details_additional_service_prices)
     TextView orderDetailsService;
 
     @Bind(R.id.order_details_back)
     ImageView orderDetailsBack;
 
-    private ImageLoader imageLoader;
-    private DisplayImageOptions options;
-
     private boolean isPullToRefresh = true;
 
     private String orderNumber;
-
-    private String verification;
 
     private ProgressDialog progressDialog;
 
     private LayoutInflater inflater;
 
-    private float orderTotalPrice = 0f;
+    /**
+     * 订单基础价格
+     */
+    private float baseOrderPrice = 0f;
+
+    /**
+     * 订单总价
+     */
+    private float totalOrderPrice = 0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,20 +177,14 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_general_order_details);
         ButterKnife.bind(this);
         initView();
-        ViewAction();
+        viewAction();
         getGeneralUserOrderData4Service(buildRequestParams());
     }
 
     private void initView() {
         orderNumber = getIntent().getStringExtra(ORDER_NUMBER);
-        DeBugLog.i(TAG, "OrderID:" + orderNumber);
-
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image2)
-                .showImageForEmptyUri(R.drawable.default_head_image2)
-                .showImageOnFail(R.drawable.default_head_image2).cacheInMemory(true)
-                .cacheOnDisk(true).considerExifParams(true).imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .bitmapConfig(Bitmap.Config.RGB_565).build();
+        String titleImg = getIntent().getStringExtra(TITLE_IMG);
+        DeBugLog.i(TAG, "OrderID:" + orderNumber + ",titleImg:" + titleImg);
 
         verification = SuiuuInfo.ReadVerification(this);
 
@@ -169,9 +206,14 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         mPtrFrame.setPinContent(true);
 
         inflater = LayoutInflater.from(this);
+
+        if (!TextUtils.isEmpty(titleImg)) {
+            titleImageView.setImageURI(Uri.parse(titleImg));
+        }
+
     }
 
-    private void ViewAction() {
+    private void viewAction() {
 
         orderDetailsBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,6 +264,12 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             Toast.makeText(this, dataNull, Toast.LENGTH_SHORT).show();
         } else {
             JsonUtils jsonUtils = JsonUtils.getInstance();
+
+            if (serviceLayout.getChildCount() > 0) {
+                serviceLayout.removeAllViews();
+                serviceLayout.addView(serviceTitleLayout);
+            }
+
             try {
                 GeneralOrderDetails details = jsonUtils.fromJSON(GeneralOrderDetails.class, str);
                 if (details != null) {
@@ -238,6 +286,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             if (!TextUtils.isEmpty(jsonInfo)) {
                                 tripJsonInfo = jsonUtils.fromJSON(TripJsonInfo.class, jsonInfo);
                                 if (tripJsonInfo != null) {
+
                                     //标题
                                     String title = tripJsonInfo.getInfo().getTitle();
                                     if (!TextUtils.isEmpty(title)) {
@@ -245,7 +294,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                                     } else {
                                         orderDetailsTitle.setText("");
                                     }
-                                    DeBugLog.i(TAG, "Title:" + title);
 
                                     //星级评价
                                     String strOrderScore = tripJsonInfo.getInfo().getScore();
@@ -255,7 +303,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                                     } else {
                                         orderStarIndicator.setRating(DEFAULT_SCORE);
                                     }
-                                    DeBugLog.i(TAG, "Score:" + strOrderScore);
 
                                 }
                             } else {
@@ -266,13 +313,11 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             //订单基础金额
                             String basePrice = infoEntity.getBasePrice();
                             if (!TextUtils.isEmpty(basePrice)) {
-                                float basePriceNumber = Float.valueOf(basePrice);
-                                orderTotalPrice = orderTotalPrice + basePriceNumber;
-                                orderBasePrice.setText(basePrice);
+                                baseOrderPrice = Float.valueOf(basePrice);
+                                baseOrderPriceView.setText(basePrice);
                             } else {
-                                orderBasePrice.setText("");
+                                baseOrderPriceView.setText("");
                             }
-                            DeBugLog.i(TAG, "basePrice:" + basePrice);
 
                             //开始日期
                             String beginDate = infoEntity.getBeginDate();
@@ -281,7 +326,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             } else {
                                 orderDetailsDate.setText("");
                             }
-                            DeBugLog.i(TAG, "beginDate:" + beginDate);
 
                             //开始时间
                             String startTime = infoEntity.getStartTime();
@@ -290,7 +334,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             } else {
                                 orderDetailsTime.setText("");
                             }
-                            DeBugLog.i(TAG, "startTime:" + startTime);
 
                             //随游人数
                             String personCount = infoEntity.getPersonCount();
@@ -299,11 +342,9 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             } else {
                                 orderDetailsSuiuuNumber.setText("0人");
                             }
-                            DeBugLog.i(TAG, "personCount:" + personCount);
 
                             //附加服务列表
                             String strServiceInfo = infoEntity.getServiceInfo();
-                            DeBugLog.i(TAG, "附加服务数据:" + strServiceInfo);
                             if (!TextUtils.isEmpty(strServiceInfo)) {
 
                                 if (!strServiceInfo.equals("[]")) {
@@ -314,6 +355,9 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                                     if (serviceInfoList != null && serviceInfoList.size() > 0) {
                                         orderDetailsService.setText(String.valueOf(serviceInfoList.size()));
 
+                                        //所有附加服务的总价
+                                        float allServicePrice = 0f;
+
                                         for (int i = 0; i < serviceInfoList.size(); i++) {
                                             View serviceItemLayout = inflater.inflate
                                                     (R.layout.item_service_location_layout, serviceLayout, false);
@@ -322,36 +366,43 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                                             TextView servicePriceView = (TextView) serviceItemLayout
                                                     .findViewById(R.id.order_details_service_prices);
 
-                                            String serviceTitle = serviceInfoList.get(i).getTitle();
-                                            if (!TextUtils.isEmpty(serviceTitle)) {
-                                                serviceNameView.setText(serviceTitle);
+                                            //单项附加服务名称
+                                            String serviceItemTitle = serviceInfoList.get(i).getTitle();
+                                            if (!TextUtils.isEmpty(serviceItemTitle)) {
+                                                serviceNameView.setText(serviceItemTitle);
                                             }
 
-                                            String servicePrice = serviceInfoList.get(i).getMoney();
+                                            //单项附加服务价格
+                                            String strServiceItemPrice = serviceInfoList.get(i).getMoney();
                                             float serviceItemPrice = 0f;
-                                            if (!TextUtils.isEmpty(servicePrice)) {
-                                                serviceItemPrice = Float.valueOf(servicePrice);
-                                                servicePriceView.setText(servicePrice);
+                                            if (!TextUtils.isEmpty(strServiceItemPrice)) {
+                                                serviceItemPrice = Float.valueOf(strServiceItemPrice);
+                                                servicePriceView.setText(strServiceItemPrice);
                                             }
 
-                                            orderTotalPrice = orderTotalPrice + serviceItemPrice;
+                                            allServicePrice = allServicePrice + serviceItemPrice;
                                             serviceLayout.addView(serviceItemLayout);
                                         }
+
+                                        totalOrderPrice = baseOrderPrice + allServicePrice;
+
                                     } else {
+                                        totalOrderPrice = baseOrderPrice;
                                         orderDetailsService.setText("0");
                                     }
                                 } else {
+                                    totalOrderPrice = baseOrderPrice;
                                     orderDetailsService.setText("0");
                                 }
 
                             }
 
                             //订单总价
-                            TextView orderTotalPriceView = (TextView) inflater
+                            TextView totalOrderPriceView = (TextView) inflater
                                     .inflate(R.layout.item_service_location_layout2, serviceLayout, false);
-                            orderTotalPriceView.setText("总价:" + orderTotalPrice);
-                            serviceLayout.addView(orderTotalPriceView);
-                            DeBugLog.i(TAG, "TotalPrice:" + orderTotalPrice);
+                            totalOrderPriceView.setText("总价:" + totalOrderPrice);
+
+                            serviceLayout.addView(totalOrderPriceView);
 
                             //订单状态
                             String status = infoEntity.getStatus();
@@ -394,7 +445,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                                         orderStatus.setText("订单状态未知");
                                         break;
                                 }
-                                DeBugLog.i(TAG, "status:" + status);
                             } else {
                                 orderStatus.setText("订单状态未知");
                             }
@@ -402,7 +452,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                         } else {
                             orderDetailsTitle.setText("");
                             orderStarIndicator.setRating(DEFAULT_SCORE);
-                            orderBasePrice.setText("");
+                            baseOrderPriceView.setText("");
                             orderDetailsDate.setText("");
                             orderDetailsTime.setText("");
                             orderDetailsSuiuuNumber.setText("0人");
@@ -413,10 +463,12 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                         if (publisherBaseEntity != null) {
                             //用户头像
                             String headImagePath = publisherBaseEntity.getHeadImg();
-                            if (TextUtils.isEmpty(headImagePath)) {
-                                imageLoader.displayImage(headImagePath, headImageView, options);
+                            if (!TextUtils.isEmpty(headImagePath)) {
+                                headImageView.setImageURI(Uri.parse(headImagePath));
+                            } else {
+                                String failureImagePath = "res://com.minglang.suiuu" + R.drawable.default_head_image;
+                                headImageView.setImageURI(Uri.parse(failureImagePath));
                             }
-                            DeBugLog.i(TAG, "headImagePath:" + headImagePath);
 
                             //用户昵称
                             String nickName = publisherBaseEntity.getNickname();
@@ -425,7 +477,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             } else {
                                 userName.setText("");
                             }
-                            DeBugLog.i(TAG, "nickName:" + nickName);
 
                             //电话号码
                             String phoneNumber = publisherBaseEntity.getPhone();
@@ -434,10 +485,12 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             } else {
                                 orderDetailsPhone.setText("");
                             }
-                            DeBugLog.i(TAG, "phoneNumber:" + phoneNumber);
+
                         } else {
                             userName.setText("");
                             orderDetailsPhone.setText("");
+                            String failureImagePath = "res://com.minglang.suiuu" + R.drawable.default_head_image;
+                            headImageView.setImageURI(Uri.parse(failureImagePath));
                         }
 
                     }

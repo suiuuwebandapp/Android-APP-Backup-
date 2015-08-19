@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.AnswerEntity;
+import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -24,6 +25,8 @@ import java.util.List;
  * Created by Administrator on 2015/7/3.
  */
 public class CommunityItemAdapter extends BaseAdapter {
+
+    private static final String TAG = CommunityItemAdapter.class.getSimpleName();
 
     private Context context;
 
@@ -39,7 +42,8 @@ public class CommunityItemAdapter extends BaseAdapter {
         imageLoader = ImageLoader.getInstance();
 
         options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image).showImageOnFail(R.drawable.default_head_image)
+                .showImageForEmptyUri(R.drawable.default_head_image)
+                .showImageOnFail(R.drawable.default_head_image)
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
@@ -110,7 +114,25 @@ public class CommunityItemAdapter extends BaseAdapter {
             detailsView.setText("");
         }
 
+        headImageView.setOnClickListener(new HeadViewClickListener(position));
+
         return convertView;
+    }
+
+    private class HeadViewClickListener implements View.OnClickListener {
+
+        private int position;
+
+        private HeadViewClickListener(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void onClick(View v) {
+            String userSign = list.get(position).getAUserSign();
+            DeBugLog.i(TAG, "userSign:" + userSign);
+        }
+
     }
 
 }

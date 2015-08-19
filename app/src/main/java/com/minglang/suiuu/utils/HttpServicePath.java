@@ -84,15 +84,6 @@ public class HttpServicePath {
     public static String updateLoop = RootPath + "/circle/up-date-article";
 
     /**
-     * 获取收藏的圈子
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:页码 page(0 得到全部、1—— +∞ 对应页码数)
-     */
-    public static String CollectionLoopPath = RootPath + "/attention/get-collection-article";
-
-    /**
      * 添加关注(用户)
      * <p/>
      * 请求方式:POST
@@ -141,24 +132,6 @@ public class HttpServicePath {
      * 请求参数:手机号 phone、密码 password、确认密码 cPassword、昵称 nick、验证码 validateCode
      */
     public static String Register4SuiuuPath = RootPath + "/app-login/app-register";
-
-    /**
-     * 得到其他用户个人主页数据
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:用户标识 userSign、统一参数key{@link #key}
-     */
-    public static String userInformationPath = RootPath + "/app-main/get-homepage-info";
-
-    /**
-     * 获取收藏的随游
-     * <p/>
-     * 请求方式:Post
-     * <p/>
-     * 请求参数:
-     */
-    public static String GetCollectionSuiuuPath = RootPath + "/attention/get-collection-travel";
 
     /**
      * 得到随游列表

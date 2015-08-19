@@ -57,7 +57,7 @@
                             android:id="@+id/suiuu_order_details_head_image"
                             android:layout_width="@dimen/layout_60dp"
                             android:layout_height="@dimen/layout_60dp"
-                            android:src="@drawable/default_head_image2"/>
+                            android:src="@drawable/default_head_image"/>
 
                     </FrameLayout>
 
@@ -123,6 +123,7 @@
                         android:layout_margin="@dimen/layout_8dp"
                         android:drawableEnd="@drawable/icon_right_arrow"
                         android:drawableRight="@drawable/icon_right_arrow"
+                        android:padding="@dimen/layout_8dp"
                         android:text="@string/suiuu"
                         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
@@ -306,8 +307,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/layout_2dp"
                     android:layout_marginBottom="@dimen/layout_15dp"
+                    android:layout_marginTop="@dimen/layout_2dp"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">

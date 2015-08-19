@@ -3,6 +3,7 @@ package com.minglang.suiuu.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MySuiuuReleaseAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
@@ -42,6 +44,7 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
     private static final String INFO = "info";
     private static final String PRICE = "price";
     private static final String TRIP_ID = "tripId";
+    private static final String TITLE_IMG = "titleImg";
 
     private static final String OLD_INFO = "oldInfo";
     private static final String OLD_PRICE = "oldPrice";
@@ -64,6 +67,12 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
     @BindColor(R.color.mainColor)
     int selectedColor;
 
+    @BindString(R.string.NoTitle)
+    String NoTitle;
+
+    @BindString(R.string.NoInfo)
+    String NoInfo;
+
     @BindString(R.string.NewTitleNotNull)
     String NewTitleNotNull;
 
@@ -73,8 +82,14 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
     @Bind(R.id.my_suiuu_release_back)
     ImageView back;
 
+    @Bind(R.id.my_suiuu_release_show_image)
+    SimpleDraweeView titleImageView;
+
     @Bind(R.id.my_suiuu_release_viewPager)
     ViewPager releaseViewPager;
+
+    @Bind(R.id.my_suiuu_release_main_title)
+    TextView mainTitleView;
 
     /**
      * 我发布的随游标题，详细信息，价格
@@ -110,17 +125,20 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
         String info = oldIntent.getStringExtra(INFO);
         String price = oldIntent.getStringExtra(PRICE);
         String tripId = oldIntent.getStringExtra(TRIP_ID);
+        String titleImg = oldIntent.getStringExtra(TITLE_IMG);
 
         if (!TextUtils.isEmpty(title)) {
             mySuiuuTitle.setText(title);
+            mainTitleView.setText(title);
         } else {
-            mySuiuuTitle.setText("暂无标题");
+            mySuiuuTitle.setText(NoTitle);
+            mainTitleView.setText(NoTitle);
         }
 
         if (!TextUtils.isEmpty(info)) {
             mySuiuuInfoText.setText(info);
         } else {
-            mySuiuuInfoText.setText("暂无详细信息");
+            mySuiuuInfoText.setText(NoInfo);
         }
 
         if (!TextUtils.isEmpty(price)) {
@@ -153,6 +171,9 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
         releaseViewPager.setAdapter(releaseAdapter);
         tabLayout.setupWithViewPager(releaseViewPager);
         tabLayout.setTabsFromPagerAdapter(releaseAdapter);
+
+        if (!TextUtils.isEmpty(titleImg))
+            titleImageView.setImageURI(Uri.parse(titleImg));
     }
 
     /**

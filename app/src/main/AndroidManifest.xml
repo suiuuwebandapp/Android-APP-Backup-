@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.minglang.suiuu"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest
+    package="com.minglang.suiuu"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- 内置SD卡的写入权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -68,9 +69,11 @@
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
+
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="554c2a0567e58e074f00054e"/>
+
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="e305ef7850d9f5d2e8f7b0c3c3fbb16c"/>
@@ -101,53 +104,57 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.AttentionActivity"
             android:label="@string/title_activity_attention"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/title_activity_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.PersonalSettingActivity"
             android:label="@string/title_activity_person_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"/>
-        <activity
-            android:name=".activity.OtherUserActivity"
-            android:label="@string/title_activity_other_user"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.NewRemindActivity"
             android:label="@string/title_activity_new_remind"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.OtherUserTraceActivity"
             android:label="@string/title_activity_other_user_trace"
             android:screenOrientation="portrait"/>
+
         <activity
             android:name=".activity.FeedbackActivity"
             android:label="@string/title_activity_feedback"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.ContactUsActivity"
             android:label="@string/title_activity_contact_us"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.SuiuuDetailsActivity"
             android:label="@string/title_activity_suiuu_details"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.CommentsActivity"
             android:label="@string/title_activity_comments"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustResize"/>
+
         <activity
             android:name=".activity.SelectPictureActivity"
             android:label="@string/title_activity_select_picture"
@@ -160,46 +167,39 @@
             android:label="NormalSettingActivity"
             android:theme="@style/AppMainTheme"/>
 
-        <!-- 通用设置的页面 -->
-
-
         <!-- 随拍的展示页面 -->
         <activity
             android:name=".activity.EasyTackPhotoActivity"
             android:label="EasyTackPhotoActivity"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="stateHidden"/>
+
         <activity
             android:name=".activity.TripGalleryDetailsActivity"
             android:label="TripGalleryActivity"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.TripGallerySearchActivity"
             android:label="TripGallerySearchActivity"
-            android:theme="@style/FullBleedTheme" />
+            android:theme="@style/FullBleedTheme"/>
+
         <activity
             android:name=".activity.AMapActivity"
             android:label="AMapActivity"
-            android:theme="@style/AppCustomTheme" />
-        <meta-data
-            android:name="EASEMOB_APPKEY"
-            android:value="suiuu#suiuu" />
-
-
-        <meta-data
-            android:name="EASEMOB_APPKEY"
-            android:value="suiuu#suiuu"/>
-
+            android:theme="@style/AppMainTheme"/>
 
         <!-- QQ SDK所需的Activity -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true" >
+            android:noHistory="true">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
                 <data android:scheme="tencent1104557000"/>
             </intent-filter>
         </activity>
@@ -222,22 +222,27 @@
             android:exported="true"
             android:label="@string/title_activity_wxentry"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.SelectCountryActivity"
             android:label="@string/title_activity_select_country"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.SelectCityActivity"
             android:label="@string/title_activity_select_city"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.SuiuuOrderActivity"
             android:label="@string/title_activity_suiuu_order"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.SuiuuPayActivity"
             android:label="@string/title_activity_suiuu_pay"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
         <activity
             android:name=".base.BaseActivity"
             android:label="@string/title_activity_base"/>
@@ -290,7 +295,7 @@
             android:name=".activity.CommonCommentActivity"
             android:label="@string/title_activity_common_comment"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
-        android:windowSoftInputMode="stateVisible"/>
+
         <!-- 支付相关 -->
         <!-- Ping++ SDK 注册 -->
         <activity

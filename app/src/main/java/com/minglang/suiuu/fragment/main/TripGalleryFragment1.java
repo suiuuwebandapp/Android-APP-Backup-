@@ -146,7 +146,7 @@ public class TripGalleryFragment1 extends BaseFragment {
         SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getTripGalleryList, new loadTripGalleryListCallBack());
         suHttpRequest.setParams(params);
-        suHttpRequest.requestNetworkData();
+        suHttpRequest.executive();
     }
 
     /**

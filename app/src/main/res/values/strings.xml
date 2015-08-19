@@ -327,6 +327,9 @@
     <string name="UpdateInfo" translatable="false">更新信息</string>
     <string name="FeedbackInfo" translatable="false">反馈信息</string>
 
+    <string name="NoTitle" translatable="false">暂无标题</string>
+    <string name="NoInfo" translatable="false">暂无详细信息</string>
+
     <string name="notify" translatable="false">新消息提醒</string>
     <string name="newnotify" translatable="false">接收新消息</string>
     <string name="voice" translatable="false">声音</string>
@@ -336,6 +339,7 @@
     <string name="logout">退出登录</string>
     <string name="unable_to_get_location" translatable="false">未知位置</string>
     <string name="User_name_cannot_be_empty" translatable="false">用户名不能为空！</string>
+    <string name="Password_cannot_be_empty" translatable="false">密码不能为空！</string>
     <string name="button_logout" translatable="false">退出登录</string>
 
     <string name="show_comments" translatable="false">显示评论</string>
@@ -363,6 +367,8 @@
     <string name="tempStreet" translatable="false">香榭丽大道</string>
     <string name="tempLove" translatable="false">猜你喜欢</string>
 
+    <string name="article_temp">文章内容在此显示</string>
+
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
     <string name="pull_to_refresh_release_label">Release rear refresh</string>
     <string name="pull_to_refresh_refreshing_label">refresh\u2026</string>
@@ -379,16 +385,10 @@
     <string name="seconds" translatable="false">秒</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
-    <string name="title_activity_personal" translatable="false">PersonalActivity</string>
     <string name="title_activity_attention" translatable="false">AttentionActivity</string>
-    <string name="title_activity_collection" translatable="false">CollectionActivity</string>
-    <string name="title_activity_fans" translatable="false">FansActivity</string>
     <string name="title_activity_setting" translatable="false">SettingActivity</string>
     <string name="title_activity_person_setting" translatable="false">PersonSettingActivity</string>
     <string name="title_activity_login" translatable="false">LoginActivity</string>
-    <string name="title_activity_my_attention" translatable="false">MyAttentionActivity</string>
-    <string name="title_activity_other_user" translatable="false">OtherUserActivity</string>
     <string name="title_activity_new_remind" translatable="false">NewRemindActivity</string>
     <string name="title_activity_other_user_trace" translatable="false">OtherUserTraceActivity</string>
     <string name="title_activity_picture_select" translatable="false">PictureSelectActivity</string>
@@ -399,9 +399,7 @@
     <string name="title_activity_comments" translatable="false">CommentsActivity</string>
     <string name="title_activity_select_image" translatable="false">SelectImageActivity</string>
     <string name="title_activity_select_picture" translatable="false">SelectPictureActivity</string>
-    <string name="title_activity_loop_details" translatable="false">LoopDetailsActivity</string>
     <string name="title_activity_loop_article" translatable="false">LoopArticleActivity</string>
-    <string name="title_activity_all_attention_dynamic" translatable="false">AllAttentionDynamicActivity</string>
     <string name="title_activity_wxentry" translatable="false">WXEntryActivity</string>
     <string name="title_activity_select_country" translatable="false">SelectCountryActivity</string>
     <string name="title_activity_select_city" translatable="false">SelectCityActivity</string>
