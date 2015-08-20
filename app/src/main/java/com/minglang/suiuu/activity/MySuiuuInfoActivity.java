@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.widget.ImageView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MySuiuuInfoAdapter;
@@ -29,6 +29,9 @@ import butterknife.ButterKnife;
  */
 public class MySuiuuInfoActivity extends BaseAppCompatActivity {
 
+    @BindColor(R.color.white)
+    int titleColor;
+
     @BindString(R.string.Published)
     String Published;
 
@@ -41,8 +44,8 @@ public class MySuiuuInfoActivity extends BaseAppCompatActivity {
     @BindColor(R.color.mainColor)
     int selectedColor;
 
-    @Bind(R.id.mySuiuuBack)
-    ImageView back;
+    @Bind(R.id.mySuiuuToolbar)
+    Toolbar toolbar;
 
     @Bind(R.id.mySuiuuTabLayout)
     TabLayout tabLayout;
@@ -63,6 +66,8 @@ public class MySuiuuInfoActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
+        toolbar.setTitleTextColor(titleColor);
+        setSupportActionBar(toolbar);
 
         tabLayout.addTab(tabLayout.newTab().setText(Published), true);
         tabLayout.addTab(tabLayout.newTab().setText(Participate), false);
@@ -93,13 +98,6 @@ public class MySuiuuInfoActivity extends BaseAppCompatActivity {
      */
     private void ViewAction() {
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -119,6 +117,17 @@ public class MySuiuuInfoActivity extends BaseAppCompatActivity {
 
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

@@ -1,37 +1,70 @@
 <RelativeLayout
     android:id="@+id/settingRootLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/top_bar"
-        layout="@layout/common_top2_layout"/>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/setting_tool_bar"
+        style="@style/AppToolBar"
+        app:navigationIcon="@drawable/back"
+        app:title="@string/Setting"/>
 
-    <ListView
-        android:id="@+id/settingList"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/top_bar"
-        android:background="@color/white"
-        android:divider="@color/backgroundColor"
-        android:dividerHeight="@dimen/layout_15dp"
-        android:layout_marginTop="@dimen/layout_15dp"/>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/login_out_button"
+        android:layout_below="@+id/setting_tool_bar">
+
+        <LinearLayout
+            android:id="@+id/setting_all_item_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/normal_item_view"
+                style="@style/settingTextView"
+                android:text="@string/NormalSetting"/>
+
+            <TextView style="@style/settingDividingLine"/>
+
+            <TextView
+                android:id="@+id/collect_item_view"
+                style="@style/settingTextView"
+                android:text="@string/CollectMode"/>
+
+            <TextView style="@style/settingDividingLine"/>
+
+            <TextView
+                android:id="@+id/about_item_view"
+                style="@style/settingTextView"
+                android:text="@string/AboutSuiuu"/>
+
+            <TextView style="@style/settingDividingLine"/>
+
+            <TextView
+                android:id="@+id/contact_item_view"
+                style="@style/settingTextView"
+                android:text="@string/ContactUs"/>
+
+            <TextView style="@style/settingDividingLine"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <Button
-        android:id="@+id/btn_logout"
+        android:id="@+id/login_out_button"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_50dp"
-        android:layout_below="@+id/settingList"
-        android:layout_marginEnd="@dimen/layout_10dp"
-        android:layout_marginLeft="@dimen/layout_10dp"
-        android:layout_marginRight="@dimen/layout_10dp"
-        android:layout_marginStart="@dimen/layout_10dp"
-        android:layout_marginTop="@dimen/layout_20dp"
-        android:background="@drawable/btn_style_alert_dialog_special"
-        android:text="@string/button_logout"
-        android:textColor="@android:color/white"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/layout_10dp"
+        android:background="@drawable/setting_relevant_btn_selector"
+        android:text="@string/LoginOut"
+        android:textColor="@drawable/setting_relevant_btn_text_color_selector"
         android:textSize="@dimen/layout_18sp"/>
 
 </RelativeLayout>

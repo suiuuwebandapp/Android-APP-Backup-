@@ -2,7 +2,7 @@ package com.minglang.suiuu.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.List;
 
@@ -11,13 +11,12 @@ import java.util.List;
  * <p/>
  * Created by Administrator on 2015/6/12.
  */
-public class MySuiuuReleaseAdapter extends FragmentStatePagerAdapter {
+public class MySuiuuReleasePagerAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> fragmentList;
-
     private List<String> titleList;
 
-    public MySuiuuReleaseAdapter(FragmentManager fm, List<Fragment> fragmentList, List<String> titleList) {
+    public MySuiuuReleasePagerAdapter(FragmentManager fm, List<Fragment> fragmentList, List<String> titleList) {
         super(fm);
         this.fragmentList = fragmentList;
         this.titleList = titleList;

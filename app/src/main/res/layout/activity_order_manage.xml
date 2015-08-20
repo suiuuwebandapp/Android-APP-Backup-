@@ -15,9 +15,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/orderManageToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/mainColor"
+            style="@style/AppToolBar"
             app:layout_scrollFlags="scroll|enterAlways"
             app:navigationIcon="@drawable/back"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"

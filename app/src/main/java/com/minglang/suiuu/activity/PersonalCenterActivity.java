@@ -12,7 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.PersonalCenterAdapter;
+import com.minglang.suiuu.adapter.PersonalCenterPagerAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.center.PersonalProblemFragment;
 import com.minglang.suiuu.fragment.center.PersonalSuiuuFragment;
@@ -111,13 +111,12 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
         fragmentList.add(suiuuFragment);
         fragmentList.add(problemFragment);
 
-        PersonalCenterAdapter personalCenterAdapter
-                = new PersonalCenterAdapter(getSupportFragmentManager(), fragmentList, titleList);
+        PersonalCenterPagerAdapter personalCenterPagerAdapter
+                = new PersonalCenterPagerAdapter(getSupportFragmentManager(), fragmentList, titleList);
 
-        viewPager.setOffscreenPageLimit(3);
-        viewPager.setAdapter(personalCenterAdapter);
+        viewPager.setAdapter(personalCenterPagerAdapter);
 
-        tabLayout.setTabsFromPagerAdapter(personalCenterAdapter);
+        tabLayout.setTabsFromPagerAdapter(personalCenterPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
         toolbar.showOverflowMenu();

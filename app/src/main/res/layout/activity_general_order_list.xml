@@ -8,11 +8,9 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_order_list_tool_bar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_50dp"
-        app:title="@string/MyOrder_general"
+        style="@style/AppToolBar"
         app:navigationIcon="@drawable/back"
-        android:background="@color/mainColor"/>
+        app:title="@string/MyOrder_general"/>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/my_order_list_tab_layout"

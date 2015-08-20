@@ -7,7 +7,7 @@
     android:background="@color/mainColor">
 
     <com.minglang.suiuu.customview.CircleImageView
-        android:id="@+id/drawerSwitch"
+        android:id="@+id/drawer_switch"
         android:layout_width="@dimen/layout_40dp"
         android:layout_height="@dimen/layout_40dp"
         android:layout_alignParentLeft="true"
@@ -31,7 +31,7 @@
 
     <!--旅图页面相关按钮-->
     <RelativeLayout
-        android:id="@+id/TravelImageLayout"
+        android:id="@+id/travel_image_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_50dp"
         android:layout_alignParentEnd="true"
@@ -56,7 +56,7 @@
 
     <!--随游页面相关按钮-->
     <FrameLayout
-        android:id="@+id/SuiuuButtonLayout"
+        android:id="@+id/suiuu_button_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_50dp"
         android:layout_centerVertical="true"
@@ -75,7 +75,7 @@
 
     <!--问答页面按钮布局-->
     <RelativeLayout
-        android:id="@+id/CommunityLayout"
+        android:id="@+id/community_layout"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/layout_50dp"
         android:layout_alignParentEnd="true"
@@ -107,7 +107,7 @@
 
     <!--收件箱搜索-->
     <FrameLayout
-        android:id="@+id/InboxButtonLayout"
+        android:id="@+id/inbox_button_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_50dp"
         android:layout_centerVertical="true"

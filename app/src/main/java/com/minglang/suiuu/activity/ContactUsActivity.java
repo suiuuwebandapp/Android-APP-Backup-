@@ -1,19 +1,14 @@
 package com.minglang.suiuu.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.Button;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.ContactUsAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.entity.Contact;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -30,8 +25,8 @@ public class ContactUsActivity extends BaseAppCompatActivity {
     @Bind(R.id.contact_us_tool_bar)
     Toolbar toolbar;
 
-    @Bind(R.id.contact_us_info_list)
-    ListView contactUsInfoList;
+    @Bind(R.id.contact_us_feed_back)
+    Button feedback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +34,7 @@ public class ContactUsActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_contact_us);
         ButterKnife.bind(this);
         initView();
-        ViewAction();
+        viewAction();
     }
 
     /**
@@ -49,30 +44,15 @@ public class ContactUsActivity extends BaseAppCompatActivity {
         toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
-        String[] TITLES = getResources().getStringArray(R.array.contactUsArray1);
-        String[] INFO_ARRAY = getResources().getStringArray(R.array.contactUsArray2);
-
-        List<Contact> list = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            Contact contact = new Contact();
-            contact.setContactTitle(TITLES[i]);
-            contact.setContactInfo(INFO_ARRAY[i]);
-            list.add(contact);
-        }
-
-        ContactUsAdapter contactUsAdapter = new ContactUsAdapter(this, list, R.layout.item_contact_us);
-        contactUsInfoList.setAdapter(contactUsAdapter);
     }
 
-    private void ViewAction() {
-
-        contactUsInfoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    private void viewAction() {
+        feedback.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+            public void onClick(View v) {
+                startActivity(new Intent(ContactUsActivity.this, FeedbackActivity.class));
             }
         });
-
     }
 
     @Override

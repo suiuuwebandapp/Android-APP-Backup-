@@ -1,122 +1,95 @@
 package com.minglang.suiuu.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.ShowGVPictureAdapter;
-import com.minglang.suiuu.base.BaseActivity;
-
-import java.util.ArrayList;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
+import com.minglang.suiuu.utils.DeBugLog;
 
 import butterknife.Bind;
+import butterknife.BindColor;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
  * 反馈页面
+ * <p/>
+ * 待添加网络方法
  */
+public class FeedbackActivity extends BaseAppCompatActivity {
+    private static final String TAG = FeedbackActivity.class.getSimpleName();
 
-public class FeedbackActivity extends BaseActivity {
+    @BindColor(R.color.white)
+    int titleColor;
 
-    @Bind(R.id.iv_top_back)
-    ImageView back;
+    @Bind(R.id.feed_back_tool_bar)
+    Toolbar toolbar;
 
-    @Bind(R.id.tv_top_right)
-    TextView sendText;
+    @BindString(R.string.FeedbackInfoNotNull)
+    String FeedbackInfoNotNull;
 
-    @Bind(R.id.et_question_description)
-    EditText feedbackText;
+    @BindString(R.string.ContactWayNotNull)
+    String ContactWayNotNull;
 
-    @Bind(R.id.gv_show_picture)
-    GridView gv_show_picture;
+    @Bind(R.id.feed_back_information)
+    EditText feedBackInformation;
 
-    private ArrayList<String> listPicture = new ArrayList<>();
+    @Bind(R.id.feed_back_contact_way)
+    EditText feedBackContactWay;
+
+    @Bind(R.id.feed_back_commit)
+    Button commit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
-
         ButterKnife.bind(this);
-        ViewAction();
+        initView();
+        viewAction();
+    }
+
+    private void initView() {
+        toolbar.setTitleTextColor(titleColor);
+        setSupportActionBar(toolbar);
     }
 
     /**
      * 控件动作
      */
-    private void ViewAction() {
-        back.setOnClickListener(new View.OnClickListener() {
+    private void viewAction() {
+        commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-            }
-        });
-
-        sendText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String str = feedbackText.getText().toString();
-                Toast.makeText(FeedbackActivity.this, str, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        feedbackText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                if (!TextUtils.isEmpty(s)) {
-                    sendText.setTextColor(getResources().getColor(R.color.remindColor));
+                String feedbackInfo = feedBackInformation.getText().toString();
+                String contactWay = feedBackContactWay.getText().toString();
+                if (TextUtils.isEmpty(feedbackInfo)) {
+                    Toast.makeText(FeedbackActivity.this, FeedbackInfoNotNull, Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(contactWay)) {
+                    Toast.makeText(FeedbackActivity.this, ContactWayNotNull, Toast.LENGTH_SHORT).show();
                 } else {
-                    sendText.setTextColor(getResources().getColor(R.color.titleColor));
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture, "0"));
-
-        gv_show_picture.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                if (position == listPicture.size()) {
-                    Intent intent = new Intent(FeedbackActivity.this, SelectPictureActivity.class);
-                    startActivityForResult(intent, 1);
-                } else {
-                    Intent showPicture = new Intent(FeedbackActivity.this, ShowBigImage.class);
-                    showPicture.putExtra("path", listPicture.get(position));
-                    startActivity(showPicture);
+                    DeBugLog.i(TAG, "反馈信息:" + feedbackInfo + ",联系方式:" + contactWay);
                 }
             }
         });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && resultCode == 9) {
-            listPicture = data.getStringArrayListExtra("pictureMessage");
-            gv_show_picture.setAdapter(new ShowGVPictureAdapter(this, listPicture, "0"));
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
         }
+        return super.onOptionsItemSelected(item);
     }
 
 }

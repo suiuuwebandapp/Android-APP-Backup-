@@ -14,7 +14,7 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/item_personal_suiuu_image"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/layout_150dp"
+            android:layout_height="@dimen/layout_200dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             fresco:actualImageScaleType="fitXY"

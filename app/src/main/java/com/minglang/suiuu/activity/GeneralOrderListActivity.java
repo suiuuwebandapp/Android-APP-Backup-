@@ -1,6 +1,5 @@
 package com.minglang.suiuu.activity;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -10,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.GeneralOrderListPageAdapter;
+import com.minglang.suiuu.adapter.GeneralOrderPagerAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.myorder.CompletedFragment;
 import com.minglang.suiuu.fragment.myorder.NotFinishedFragment;
@@ -21,7 +20,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.BindColor;
-import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -33,10 +31,7 @@ public class GeneralOrderListActivity extends BaseAppCompatActivity {
     @BindColor(R.color.white)
     int titleColor;
 
-    @BindDrawable(R.drawable.back)
-    Drawable navigationIcon;
-
-    @BindColor(R.color.textColor)
+    @BindColor(R.color.tr_black)
     int normalColor;
 
     @BindColor(R.color.mainColor)
@@ -90,12 +85,12 @@ public class GeneralOrderListActivity extends BaseAppCompatActivity {
         fragmentList.add(notFinishedFragment);
 
         FragmentManager fm = getSupportFragmentManager();
-        GeneralOrderListPageAdapter generalOrderListPageAdapter
-                = new GeneralOrderListPageAdapter(fm, fragmentList, titleList);
-        viewPager.setAdapter(generalOrderListPageAdapter);
+        GeneralOrderPagerAdapter generalOrderPagerAdapter
+                = new GeneralOrderPagerAdapter(fm, fragmentList, titleList);
+        viewPager.setAdapter(generalOrderPagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setAdapter(generalOrderListPageAdapter);
+        viewPager.setAdapter(generalOrderPagerAdapter);
     }
 
     @Override

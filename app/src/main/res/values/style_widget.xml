@@ -2,12 +2,10 @@
 <!--控件/布局使用的Style-->
 <resources>
 
-    <!-- 主页面Tab页TextView控件样式 -->
-    <style name="titleText">
-        <item name="android:textSize">16sp</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/textColor</item>
+    <style name="AppToolBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/layout_50dp</item>
+        <item name="android:background">@color/mainColor</item>
     </style>
 
     <!--主页底栏图片Style-->
@@ -27,34 +25,6 @@
         <item name="android:orientation">vertical</item>
     </style>
 
-    <style name="personalInfoStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:layout_weight">0.5</item>
-    </style>
-
-    <style name="collectionInfoStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:layout_weight">0.5</item>
-    </style>
-
-    <!--新提醒-->
-    <style name="newRemind">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">0.25</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">18sp</item>
-    </style>
-
     <!--登陆按钮style-->
     <style name="loginButtonStyle">
         <item name="android:background">@color/btn_1_bg_color</item>
@@ -69,6 +39,7 @@
         <item name="android:textColor">@color/text_color1</item>
     </style>
 
+    <!--注册页面-编辑框-->
     <style name="registerEditStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -85,34 +56,55 @@
         <item name="android:layout_marginLeft">5dp</item>
     </style>
 
-    <!--个人信息Item-->
-    <style name="personalItemStyle">
+    <!--设置相关页面-文字-->
+    <style name="settingTextView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_margin">10dp</item>
-        <item name="android:background">#eeeeee</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:orientation">horizontal</item>
-    </style>
-
-    <!--个人信息文字-->
-    <style name="personalTextStyle">
-        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">5dp</item>
-        <item name="android:layout_marginLeft">20dp</item>
-        <item name="android:layout_marginTop">5dp</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:drawableEnd">@drawable/icon_right_arrow</item>
+        <item name="android:drawableRight">@drawable/icon_right_arrow</item>
+        <item name="android:padding">@dimen/layout_15dp</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
 
-    <!--其他用户资料-->
-    <style name="otherUserInfo">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:layout_weight">0.2</item>
+    <!--设置相关页面-分割线-->
+    <style name="settingDividingLine">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/layout_1dp</item>
+        <item name="android:background">@color/backgroundColor</item>
+        <item name="android:layout_marginTop">0.5dp</item>
+        <item name="android:layout_marginBottom">0.5dp</item>
+        <item name="android:layout_marginLeft">@dimen/layout_3dp</item>
+        <item name="android:layout_marginRight">@dimen/layout_3dp</item>
+    </style>
+
+    <!--联系我们页面的Item-->
+    <style name="contactUsItemLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:weightSum">1</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <!--联系我们页面的左侧文字-->
+    <style name="contactUsLeftTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.3</item>
+        <item name="android:padding">@dimen/layout_15dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+    <!--联系我们页面的右侧文字-->
+    <style name="contactUsRightTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">0.7</item>
+        <item name="android:padding">@dimen/layout_15dp</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
 
 </resources>

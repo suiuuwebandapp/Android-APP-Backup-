@@ -1,56 +1,60 @@
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/feedbackRootLayout"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
-    tools:context="com.minglang.suiuu.activity.FeedbackActivity">
-    <include
-        android:id="@+id/top"
-        layout="@layout/common_top2_layout"/>
+    android:background="@color/backgroundColor">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/feed_back_tool_bar"
+        style="@style/AppToolBar"
+        app:navigationIcon="@drawable/back"
+        app:title="@string/FeedbackInfo"/>
+
     <LinearLayout
-        android:layout_below="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/feed_back_commit"
+        android:layout_below="@+id/feed_back_tool_bar"
         android:background="@color/backgroundColor"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
+        android:orientation="vertical">
 
-        >
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:layout_marginTop="@dimen/layout_10dp"
-        android:layout_marginLeft="@dimen/layout_16dp"
-        android:layout_marginRight="@dimen/layout_16dp"
-        >
         <EditText
-            android:id="@+id/et_question_description"
-            android:padding="@dimen/layout_8dp"
-            android:layout_width="fill_parent"
+            android:id="@+id/feed_back_information"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/layout_150dp"
+            android:layout_margin="@dimen/layout_15dp"
             android:background="@color/white"
-            android:gravity="left"
+            android:gravity="start"
+            android:hint="@string/feed_back_information"
+            android:padding="@dimen/layout_8dp"
             android:textColor="@color/textColor"
-            android:hint="@string/question_description"
-            android:textSize="@dimen/layout_15sp"
-            />
+            android:textSize="@dimen/layout_16sp"/>
 
-    </RelativeLayout>
-    <GridView
-        android:padding="@dimen/layout_10dp"
-        android:layout_marginLeft="@dimen/layout_16dp"
-        android:layout_marginRight="@dimen/layout_16dp"
-        android:gravity="center"
-        android:verticalSpacing="@dimen/layout_10dp"
-        android:horizontalSpacing="@dimen/layout_10dp"
-        android:id="@+id/gv_show_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numColumns="3"
-        android:scrollbars="none"
-        android:background="@color/white"
-        android:layout_alignBottom="@id/et_question_description"></GridView>
+        <EditText
+            android:id="@+id/feed_back_contact_way"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/layout_15dp"
+            android:background="@color/white"
+            android:gravity="start"
+            android:hint="@string/feed_back_contact_way"
+            android:padding="@dimen/layout_8dp"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/layout_16sp"/>
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/feed_back_commit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/layout_10dp"
+        android:background="@drawable/setting_relevant_btn_selector"
+        android:text="@string/Commit"
+        android:textColor="@drawable/setting_relevant_btn_text_color_selector"
+        android:textSize="@dimen/layout_18sp"/>
+
 </RelativeLayout>

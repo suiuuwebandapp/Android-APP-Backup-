@@ -1,7 +1,10 @@
 package com.minglang.suiuu.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -61,38 +64,37 @@ public class MainActivity extends BaseActivity {
     @BindString(R.string.OrdinaryAccount)
     String OrdinaryAccount;
 
-    @Bind(R.id.drawerLayout)
+    @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
-    //侧滑布局
-    @Bind(R.id.sliderLayout)
+    @Bind(R.id.slider_layout)
     RelativeLayout sliderView;
 
     /**
      * 点击修改昵称
      */
-    @Bind(R.id.nickName)
+    @Bind(R.id.nick_name)
     TextView nickNameView;
 
     /**
      * 点击修改头像
      */
-    @Bind(R.id.headImage)
+    @Bind(R.id.head_image)
     CircleImageView headImageView;
 
-    @Bind(R.id.switchSuiuu)
+    @Bind(R.id.switch_suiuu)
     Switch switchSuiuu;
 
-    @Bind(R.id.sideListView)
+    @Bind(R.id.side_list_view)
     ListView sideListView;
 
-    @Bind(R.id.sideListView2)
+    @Bind(R.id.side_list_view_2)
     ListView sideListView2;
 
     @Bind(R.id.titleInfo)
     TextView titleInfo;
 
-    @Bind(R.id.drawerSwitch)
+    @Bind(R.id.drawer_switch)
     CircleImageView drawerSwitch;
 
     @Bind(R.id.tab1)
@@ -130,22 +132,22 @@ public class MainActivity extends BaseActivity {
     /**
      * 旅图页面按钮布局
      */
-    @Bind(R.id.TravelImageLayout)
+    @Bind(R.id.travel_image_layout)
     RelativeLayout TravelImageLayout;
 
     /**
      * 随游页面按钮布局
      */
-    @Bind(R.id.SuiuuButtonLayout)
+    @Bind(R.id.suiuu_button_layout)
     FrameLayout SuiuuButtonLayout;
 
-    @Bind(R.id.CommunityLayout)
+    @Bind(R.id.community_layout)
     RelativeLayout CommunityLayout;
 
     /**
      * 收件箱页面按钮布局
      */
-    @Bind(R.id.InboxButtonLayout)
+    @Bind(R.id.inbox_button_layout)
     FrameLayout InboxBtnLayout;
 
     /**
@@ -180,6 +182,8 @@ public class MainActivity extends BaseActivity {
 
     @Bind(R.id.img4)
     ImageView iv_tab4;
+
+    private ExitReceiver exitReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,6 +248,11 @@ public class MainActivity extends BaseActivity {
         sideListView2.setAdapter(adapter2);
 
         initFragment();
+
+        exitReceiver = new ExitReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SettingActivity.class.getSimpleName());
+        this.registerReceiver(exitReceiver, intentFilter);
     }
 
     private void initFragment() {
@@ -332,23 +341,23 @@ public class MainActivity extends BaseActivity {
                 mDrawerLayout.closeDrawer(sliderView);
                 switch (position) {
                     case 0:
-                        Intent intent0 = new Intent(MainActivity.this, NewRemindActivity.class);
-                        startActivity(intent0);
+                        startActivity(new Intent(MainActivity.this, NewRemindActivity.class));
                         break;
 
                     case 1:
-                        Intent intent1 = new Intent(MainActivity.this, MySuiuuInfoActivity.class);
-                        startActivity(intent1);
+                        startActivity(new Intent(MainActivity.this, MySuiuuInfoActivity.class));
                         break;
 
                     case 2:
-                        Intent intent2 = new Intent(MainActivity.this, OrderManageActivity.class);
-                        startActivity(intent2);
+                        startActivity(new Intent(MainActivity.this, OrderManageActivity.class));
                         break;
 
                     case 3:
-                        Intent intent3 = new Intent(MainActivity.this, AccountManageActivity.class);
-                        startActivity(intent3);
+                        startActivity(new Intent(MainActivity.this, AccountManageActivity.class));
+                        break;
+
+                    case 4:
+                        startActivity(new Intent(MainActivity.this, SettingActivity.class));
                         break;
                 }
             }
@@ -360,21 +369,22 @@ public class MainActivity extends BaseActivity {
                 mDrawerLayout.closeDrawer(sliderView);
                 switch (position) {
                     case 0:
-                        Intent intent0 = new Intent(MainActivity.this, GeneralOrderListActivity.class);
-                        startActivity(intent0);
+                        startActivity(new Intent(MainActivity.this, GeneralOrderListActivity.class));
                         break;
 
                     case 1:
-                        Intent intent1 = new Intent(MainActivity.this, AttentionActivity.class);
-                        startActivity(intent1);
+                        startActivity(new Intent(MainActivity.this, AttentionActivity.class));
                         break;
 
                     case 2:
-                        Intent intent2 = new Intent(MainActivity.this, NewRemindActivity.class);
-                        startActivity(intent2);
+                        startActivity(new Intent(MainActivity.this, NewRemindActivity.class));
                         break;
 
                     case 3:
+                        startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                        break;
+
+                    case 4:
                         finish();
                         break;
 
@@ -419,7 +429,7 @@ public class MainActivity extends BaseActivity {
         if (tripGalleryFragment.isAdded()) {
             ft.show(tripGalleryFragment);
         } else {
-            ft.add(R.id.showLayout, tripGalleryFragment);
+            ft.add(R.id.show_layout, tripGalleryFragment);
         }
 
         ft.commit();
@@ -455,7 +465,7 @@ public class MainActivity extends BaseActivity {
         if (suiuuFragment.isAdded()) {
             ft.show(suiuuFragment);
         } else {
-            ft.add(R.id.showLayout, suiuuFragment);
+            ft.add(R.id.show_layout, suiuuFragment);
         }
         ft.commit();
     }
@@ -490,7 +500,7 @@ public class MainActivity extends BaseActivity {
         if (communityFragment.isAdded()) {
             ft.show(communityFragment);
         } else {
-            ft.add(R.id.showLayout, communityFragment);
+            ft.add(R.id.show_layout, communityFragment);
         }
 
         ft.commit();
@@ -520,7 +530,7 @@ public class MainActivity extends BaseActivity {
         if (informationFragment.isAdded()) {
             ft.show(informationFragment);
         } else {
-            ft.add(R.id.showLayout, informationFragment);
+            ft.add(R.id.show_layout, informationFragment);
         }
 
         ft.commit();
@@ -533,9 +543,9 @@ public class MainActivity extends BaseActivity {
         FragmentTransaction ft = fm.beginTransaction();
         if (tripGalleryFragment == null) {
             tripGalleryFragment = new TripGalleryFragment();
-            ft.add(R.id.showLayout, tripGalleryFragment);
+            ft.add(R.id.show_layout, tripGalleryFragment);
         } else {
-            ft.add(R.id.showLayout, tripGalleryFragment);
+            ft.add(R.id.show_layout, tripGalleryFragment);
         }
 
         ft.commit();
@@ -622,13 +632,25 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private class ExitReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            DeBugLog.i(TAG, "action:" + action);
+            if (action.equals(SettingActivity.class.getSimpleName())) {
+                MainActivity.this.finish();
+            }
+        }
+    }
+
     private class MyOnClickListener implements OnClickListener {
 
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
 
-                case R.id.drawerSwitch:
+                case R.id.drawer_switch:
                     if (mDrawerLayout.isDrawerVisible(sliderView)) {
                         mDrawerLayout.closeDrawer(sliderView);
                     } else {
@@ -636,13 +658,13 @@ public class MainActivity extends BaseActivity {
                     }
                     break;
 
-                case R.id.headImage:
+                case R.id.head_image:
                     Intent headIntent = new Intent(MainActivity.this, PersonalCenterActivity.class);
                     startActivity(headIntent);
                     mDrawerLayout.closeDrawer(sliderView);
                     break;
 
-                case R.id.nickName:
+                case R.id.nick_name:
                     Intent nickIntent = new Intent(MainActivity.this, PersonalCenterActivity.class);
                     startActivity(nickIntent);
                     mDrawerLayout.closeDrawer(sliderView);
@@ -676,12 +698,6 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @Override
-    public void finish() {
-        imageLoader.clearMemoryCache();
-        super.finish();
-    }
-
     private long exitTime;
 
     @Override
@@ -700,6 +716,18 @@ public class MainActivity extends BaseActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        try {
+            unregisterReceiver(exitReceiver);
+        } catch (Exception e) {
+            DeBugLog.e(TAG, "反注册ExitBroadcastReceiver失败:" + e.getMessage());
+        }
+
     }
 
 }

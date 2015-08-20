@@ -173,7 +173,7 @@
                             android:layout_marginLeft="@dimen/layout_5dp"
                             android:layout_marginStart="@dimen/layout_5dp"
                             android:layout_weight="0.2"
-                            android:text="@string/PhoneNumber"
+                            android:text="@string/PhoneNumber_"
                             android:textSize="@dimen/layout_16sp"/>
 
                         <TextView

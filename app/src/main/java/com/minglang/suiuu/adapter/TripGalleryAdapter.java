@@ -16,6 +16,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuSearchActivity;
 import com.minglang.suiuu.entity.TripGallery;
+import com.minglang.suiuu.entity.TripGallery.DataEntity.TripGalleryDataInfo;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
@@ -49,7 +50,7 @@ public class TripGalleryAdapter extends BaseAdapter {
     private String type;
     private LoadChoiceTag loadChoiceTag;
 
-    public TripGalleryAdapter(Context context, List<TripGallery.DataEntity.TripGalleryDataInfo> list, String type,List<String> clickString) {
+    public TripGalleryAdapter(Context context, List<TripGalleryDataInfo> list, String type,List<String> clickString) {
         this.context = context;
         this.list = list;
         Map map = SuiuuInfo.ReadUserLocation(context);
@@ -60,7 +61,7 @@ public class TripGalleryAdapter extends BaseAdapter {
 
     }
 
-    public void onDateChange(List<TripGallery.DataEntity.TripGalleryDataInfo> list, String type,List<String> clickString) {
+    public void onDateChange(List<TripGalleryDataInfo> list, String type,List<String> clickString) {
         this.list = list;
         this.notifyDataSetChanged();
         this.type = type;

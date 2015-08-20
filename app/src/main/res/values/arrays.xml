@@ -49,12 +49,14 @@
         <item>我的随游</item>
         <item>订单管理</item>
         <item>账户管理</item>
+        <item>设置</item>
     </string-array>
 
     <string-array name="sideList2">
         <item>我的预定</item>
         <item>关注</item>
         <item>收件箱</item>
+        <item>设置</item>
         <item>退出</item>
     </string-array>
 
@@ -81,20 +83,6 @@
         <item>浪漫</item>
         <item>博物馆</item>
         <item>猎奇</item>
-    </string-array>
-
-    <string-array name="contactUsArray1">
-        <item>网站</item>
-        <item>邮箱</item>
-        <item>电话</item>
-        <item>地址</item>
-    </string-array>
-
-    <string-array name="contactUsArray2">
-        <item>www.suiuu.com</item>
-        <item>info@suiuu.com</item>
-        <item>010&#8211;58483692</item>
-        <item>北京市东城区雍和宫HeSpace</item>
     </string-array>
 
 </resources>
