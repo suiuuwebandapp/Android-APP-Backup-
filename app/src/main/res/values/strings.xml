@@ -38,10 +38,30 @@
     <string name="Setting" translatable="false">设置</string>
     <string name="PersonalSetting" translatable="false">个人设置</string>
     <string name="NormalSetting" translatable="false">通用设置</string>
+    <string name="CollectMode" translatable="false">收款方式</string>
+    <string name="AboutSuiuu" translatable="false">关于随游</string>
+    <string name="ContactUs" translatable="false">联系我们</string>
+    <string name="LoginOut" translatable="false">退出登录</string>
+
+    <string name="VersionName" translatable="false">版本号:</string>
+    <string name="VersionNameFailure" translatable="false">版本号获取失败</string>
+    <string name="Evaluation" translatable="false">去评分</string>
+    <string name="UseHelp" translatable="false">使用帮助</string>
+    <string name="CheckUpdate" translatable="false">检查更新</string>
+
+    <string name="WebSite" translatable="false">网址</string>
+    <string name="Phone" translatable="false">电话</string>
+    <string name="Address" translatable="false">地址</string>
+
+    <string name="WebsitePath" translatable="false">www.suiuu.com</string>
+    <string name="PhoneNumber" translatable="false">010&#8211;58483692</string>
+    <string name="AddressDetails" translatable="false">北京市东城区青龙胡同甲1号heSpace</string>
 
     <string name="NickNameHint" translatable="false">昵称</string>
     <string name="TradeHint" translatable="false">职业</string>
     <string name="SignatureHint" translatable="false">个性签名</string>
+
+    <string name="FeedbackInfo" translatable="false">意见反馈</string>
 
     <string name="NewRemind" translatable="false">新提醒</string>
     <string name="NewAt" translatable="false">新@</string>
@@ -212,7 +232,7 @@
     <string name="Money" translatable="false">金额</string>
 
     <string name="IndividualResume" translatable="false">个人简介</string>
-    <string name="PhoneNumber" translatable="false">电话号码:</string>
+    <string name="PhoneNumber_" translatable="false">电话号码:</string>
     <string name="Email" translatable="false">电子邮箱:</string>
 
     <string name="TripCount" translatable="false">伴游次数:</string>
@@ -253,7 +273,6 @@
     <string name="AttentionQuestion_SUC" translatable="false">关注成功！</string>
     <string name="AttentionQuestion_FAI" translatable="false">关注失败,请稍候再试！</string>
 
-
     <string name="orderManager" translatable="false">订单管理</string>
     <string name="accountManager" translatable="false">账号管理</string>
 
@@ -285,7 +304,7 @@
 
     <string name="TotalPrices" translatable="false">总价:</string>
 
-    <string name="MyOrder_general" translatable="false">我的订单</string>
+    <string name="MyOrder_general" translatable="false">我的预定</string>
 
     <string name="Completed" translatable="false">已完成</string>
     <string name="NotFinished" translatable="false">未完成</string>
@@ -321,11 +340,9 @@
     <string name="SelectTag" translatable="false">选择标签</string>
 
     <string name="Refresh" translatable="false">刷新</string>
-    <string name="ContactUs" translatable="false">联系我们</string>
 
     <string name="VersionNumber" translatable="false">版本号:</string>
     <string name="UpdateInfo" translatable="false">更新信息</string>
-    <string name="FeedbackInfo" translatable="false">反馈信息</string>
 
     <string name="NoTitle" translatable="false">暂无标题</string>
     <string name="NoInfo" translatable="false">暂无详细信息</string>
@@ -336,14 +353,13 @@
     <string name="shake" translatable="false">震动</string>
     <string name="chatset" translatable="false">聊天设置</string>
     <string name="yangshengqi">使用扬声器播放语音</string>
-    <string name="logout">退出登录</string>
+
     <string name="unable_to_get_location" translatable="false">未知位置</string>
     <string name="User_name_cannot_be_empty" translatable="false">用户名不能为空！</string>
     <string name="Password_cannot_be_empty" translatable="false">密码不能为空！</string>
     <string name="button_logout" translatable="false">退出登录</string>
 
     <string name="show_comments" translatable="false">显示评论</string>
-    <string name="Password_cannot_be_empty" translatable="false">密码不能为空</string>
 
     <string name="Add" translatable="false">Add</string>
 
@@ -368,7 +384,19 @@
     <string name="tempStreet" translatable="false">香榭丽大道</string>
     <string name="tempLove" translatable="false">猜你喜欢</string>
 
-    <string name="article_temp">文章内容在此显示</string>
+    <string name="logo" translatable="false">logo</string>
+
+    <string name="article_temp" translatable="false">文章内容在此显示</string>
+
+    <string name="feed_back_information" translatable="false">留下您的宝贵意见</string>
+    <string name="feed_back_contact_way" translatable="false">留下您的联系方式</string>
+
+    <string name="Commit" translatable="false">提交</string>
+
+    <string name="FeedbackInfoNotNull" translatable="false">反馈意见不能为空！</string>
+    <string name="ContactWayNotNull" translatable="false">联系方式不能为空！</string>
+
+    <string name="Agree" translatable="false">同意</string>
 
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
     <string name="pull_to_refresh_release_label">Release rear refresh</string>
@@ -428,6 +456,5 @@
     <string name="title_activity_order_details" translatable="false">OrderDetailsActivity</string>
     <string name="title_activity_my_order_list" translatable="false">MyOrderListActivity</string>
     <string name="title_activity_about_us">AboutUsActivity</string>
-    <string name="Agree" translatable="false">同意</string>
 
 </resources>

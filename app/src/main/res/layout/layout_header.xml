@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/headLayout"
+    android:id="@+id/head_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,14 +14,14 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/dividingLine"
+            android:layout_above="@+id/dividing_line"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="@color/white">
         </FrameLayout>
 
         <TextView
-            android:id="@+id/dividingLine"
+            android:id="@+id/dividing_line"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_2dp"
             android:layout_alignParentLeft="true"
@@ -30,7 +30,7 @@
             android:background="@color/mainColor"/>
 
         <FrameLayout
-            android:id="@+id/headImageLayout"
+            android:id="@+id/head_image_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -39,7 +39,7 @@
             android:padding="@dimen/layout_2dp">
 
             <com.minglang.suiuu.customview.CircleImageView
-                android:id="@+id/headImage"
+                android:id="@+id/head_image"
                 android:layout_width="@dimen/layout_65dp"
                 android:layout_height="@dimen/layout_65dp"
                 android:layout_gravity="center_horizontal"
@@ -48,10 +48,10 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/nickName"
+            android:id="@+id/nick_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/headImageLayout"
+            android:layout_above="@+id/head_image_layout"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/layout_8dp"
             android:gravity="center"
@@ -62,7 +62,7 @@
     </RelativeLayout>
 
     <Switch
-        android:id="@+id/switchSuiuu"
+        android:id="@+id/switch_suiuu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

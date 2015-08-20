@@ -130,11 +130,6 @@
             android:theme="@style/AppMainTheme"/>
 
         <activity
-            android:name=".activity.OtherUserTraceActivity"
-            android:label="@string/title_activity_other_user_trace"
-            android:screenOrientation="portrait"/>
-
-        <activity
             android:name=".activity.FeedbackActivity"
             android:label="@string/title_activity_feedback"
             android:theme="@style/AppMainTheme"/>
@@ -188,15 +183,6 @@
             android:name=".activity.AMapActivity"
             android:label="AMapActivity"
             android:theme="@style/AppMainTheme" />
-        <meta-data
-            android:name="EASEMOB_APPKEY"
-            android:value="suiuu#suiuu" />
-
-
-        <meta-data
-            android:name="EASEMOB_APPKEY"
-            android:value="suiuu#suiuu"/>
-
 
         <!-- QQ SDK所需的Activity -->
         <activity
@@ -384,7 +370,7 @@
             android:theme="@style/AppMainTheme"/>
 
         <activity
-            android:name=".activity.AboutUsActivity"
+            android:name=".activity.AboutSuiuuActivity"
             android:label="@string/title_activity_about_us"
             android:theme="@style/AppMainTheme"/>
 

@@ -13,9 +13,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/account_balance_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/layout_50dp"
-            android:background="@color/mainColor"
+            style="@style/AppToolBar"
             app:layout_collapseMode="pin"
             app:navigationIcon="@drawable/back"
             app:title="@string/ContactUs"

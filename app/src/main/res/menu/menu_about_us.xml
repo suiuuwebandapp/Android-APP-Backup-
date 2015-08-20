@@ -1,4 +1,4 @@
 <menu
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.minglang.suiuu.activity.AboutUsActivity">
+    tools:context="com.minglang.suiuu.activity.AboutSuiuuActivity">
 </menu>

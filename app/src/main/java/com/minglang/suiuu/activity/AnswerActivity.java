@@ -56,10 +56,10 @@ public class AnswerActivity extends BaseAppCompatActivity {
     @BindString(R.string.AnswerNoNull)
     String AnswerNoNull;
 
-    @Bind(R.id.answerToolbar)
+    @Bind(R.id.answer_tool_bar)
     Toolbar toolbar;
 
-    @Bind(R.id.answerEditText)
+    @Bind(R.id.answer_edit_text)
     EditText editText;
 
     @BindColor(R.color.white)

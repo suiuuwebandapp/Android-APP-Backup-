@@ -11,30 +11,30 @@ import java.util.List;
  * <p/>
  * 普通用户订单相关页面适配器
  */
-public class GeneralOrderListPageAdapter extends FragmentPagerAdapter {
+public class GeneralOrderPagerAdapter extends FragmentPagerAdapter {
 
-    private List<Fragment> list;
+    private List<Fragment> fragmentList;
     private List<String> titleList;
 
-    public GeneralOrderListPageAdapter(FragmentManager fm, List<Fragment> list, List<String> titleList) {
+    public GeneralOrderPagerAdapter(FragmentManager fm, List<Fragment> fragmentList, List<String> titleList) {
         super(fm);
-        this.list = list;
+        this.fragmentList = fragmentList;
         this.titleList = titleList;
     }
 
     @Override
     public int getCount() {
-        if (list != null && list.size() > 0) {
-            return list.size();
+        if (fragmentList != null && fragmentList.size() > 0) {
+            return fragmentList.size();
         } else {
             return 0;
         }
     }
 
     @Override
-    public Fragment getItem(int i) {
-        if (list != null && list.size() > 0) {
-            return list.get(i);
+    public Fragment getItem(int position) {
+        if (fragmentList != null && fragmentList.size() > 0) {
+            return fragmentList.get(position);
         } else {
             return null;
         }

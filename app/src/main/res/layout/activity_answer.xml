@@ -5,19 +5,16 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/answerToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_50dp"
-        android:layout_alignParentTop="true"
-        android:background="@color/mainColor"
+        android:id="@+id/answer_tool_bar"
+        style="@style/AppToolBar"
         app:navigationIcon="@drawable/back"
         app:title="@string/answer_"/>
 
     <EditText
-        android:id="@+id/answerEditText"
+        android:id="@+id/answer_edit_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/answerToolbar"
+        android:layout_below="@+id/answer_tool_bar"
         android:layout_centerHorizontal="true"
         android:gravity="top"
         android:hint="@string/answerQuestion"/>

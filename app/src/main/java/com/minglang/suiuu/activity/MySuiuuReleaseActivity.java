@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.MySuiuuReleaseAdapter;
+import com.minglang.suiuu.adapter.MySuiuuReleasePagerAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.suiuu.JoinFragment;
 import com.minglang.suiuu.fragment.suiuu.NewApplyForFragment;
@@ -166,8 +166,8 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
         titleList.add(join);
         titleList.add(applyFor);
 
-        MySuiuuReleaseAdapter releaseAdapter
-                = new MySuiuuReleaseAdapter(getSupportFragmentManager(), fragments, titleList);
+        MySuiuuReleasePagerAdapter releaseAdapter
+                = new MySuiuuReleasePagerAdapter(getSupportFragmentManager(), fragments, titleList);
         releaseViewPager.setAdapter(releaseAdapter);
         tabLayout.setupWithViewPager(releaseViewPager);
         tabLayout.setTabsFromPagerAdapter(releaseAdapter);

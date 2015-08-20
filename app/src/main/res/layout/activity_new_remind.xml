@@ -12,12 +12,10 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/new_remind_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/layout_50dp"
-            android:background="@color/mainColor"
+            style="@style/AppToolBar"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:title="@string/NewRemind"
-            app:popupTheme="@style/AppMainTheme"/>
+            app:popupTheme="@style/AppMainTheme"
+            app:title="@string/NewRemind"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/new_remind_tab_layout"

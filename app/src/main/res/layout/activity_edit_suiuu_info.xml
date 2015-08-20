@@ -7,9 +7,7 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/edit_suiuu_info_tool_bar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_50dp"
-        android:background="@color/mainColor"
+        style="@style/AppToolBar"
         app:navigationIcon="@drawable/back"
         app:title="@string/EditSuiuuInfo"/>
 

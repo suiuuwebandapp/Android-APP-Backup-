@@ -18,8 +18,8 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/item_personal_problem_header_image"
-                android:layout_width="@dimen/layout_50dp"
-                android:layout_height="@dimen/layout_50dp"
+                android:layout_width="@dimen/layout_60dp"
+                android:layout_height="@dimen/layout_60dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="@dimen/layout_10dp"

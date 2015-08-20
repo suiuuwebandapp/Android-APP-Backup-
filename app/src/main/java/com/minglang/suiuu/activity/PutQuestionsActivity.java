@@ -252,7 +252,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
                 if (!TextUtils.isEmpty(countryCNname)) {
                     if (!TextUtils.isEmpty(cityName)) {
-                        questionLocation.setText(countryCNname + "," + countryCNname);
+                        questionLocation.setText(countryCNname + "," + cityName);
                     } else {
                         questionLocation.setText(countryCNname);
                     }

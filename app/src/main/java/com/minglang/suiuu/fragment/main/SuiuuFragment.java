@@ -75,8 +75,8 @@ public class SuiuuFragment extends BaseFragment
         suiuuDataList = new ArrayList<>();
         suiuuListView = (ReFlashListView) rootView.findViewById(R.id.lv_suiuu);
         noDataLoad = (TextView) rootView.findViewById(R.id.tv_noDataLoad);
-        View topView = getActivity().findViewById(R.id.mainShowLayout);
-        tabSelect = (LinearLayout) topView.findViewById(R.id.tabSelectCardLayout);
+        View topView = getActivity().findViewById(R.id.main_show_layout);
+        tabSelect = (LinearLayout) topView.findViewById(R.id.tab_select_card_layout);
         dialog = new TextProgressDialog(getActivity());
         //处理头部控件
         et_suiuu = (ImageView) topView.findViewById(R.id.main_2_search);

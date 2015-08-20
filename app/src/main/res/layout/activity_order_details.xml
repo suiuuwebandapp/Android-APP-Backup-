@@ -277,7 +277,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/layout_5dp"
-                        android:text="@string/PhoneNumber"
+                        android:text="@string/PhoneNumber_"
                         android:textSize="@dimen/layout_16sp"/>
 
                     <TextView
