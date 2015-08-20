@@ -343,8 +343,6 @@
     <string name="button_logout" translatable="false">退出登录</string>
 
     <string name="show_comments" translatable="false">显示评论</string>
-    <string name="Password_cannot_be_empty" translatable="false">密码不能为空</string>
-
     <string name="Add" translatable="false">Add</string>
 
     <string name="PleaseSelectCountry" translatable="false">请选择国家</string>

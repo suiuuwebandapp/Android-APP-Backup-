@@ -64,7 +64,7 @@ public class TripGalleryDetail {
          * info : {"country":"中国","titleImg":"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037235_7476.jpg","address":"","headImg":"http://www.suiuu.com/assets/images/user_default.png","city":"北京市","lon":"116.423511","attentionCount":"0","title":"如此的美","tags":"购物  惊险  浪漫  ","commentCount":"1","contents":null,"userSign":"22e64460c94f3b44bc0a8790ed146d3b","createTime":"2015-07-23 16:22:01","picList":"[\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037235_7476.jpg\",\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037235_9280.jpg\",\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037234_3539.jpg\"]","nickname":"15111993537","id":"4","lat":"39.949467"}
          */
         private List<LikeEntity> like;
-        private List<?> attention;
+        private List<AttentionEntity> attention;
         private List<CommentEntity> comment;
         private InfoEntity info;
 
@@ -72,7 +72,7 @@ public class TripGalleryDetail {
             this.like = like;
         }
 
-        public void setAttention(List<?> attention) {
+        public void setAttention(List<AttentionEntity> attention) {
             this.attention = attention;
         }
 
@@ -88,7 +88,7 @@ public class TripGalleryDetail {
             return like;
         }
 
-        public List<?> getAttention() {
+        public List<AttentionEntity> getAttention() {
             return attention;
         }
 
@@ -98,6 +98,73 @@ public class TripGalleryDetail {
 
         public InfoEntity getInfo() {
             return info;
+        }
+
+        public class AttentionEntity{
+            /**
+             *  "attention": {
+             "attentionId": "219",
+             "relativeId": "52",
+             "relativeType": "14",
+             "status": "1",
+             "addTime": "2015-08-20 14:58:17",
+             "userSign": "22e64460c94f3b44bc0a8790ed146d3b"
+             },
+             */
+            private String attentionId;
+            private String relativeId;
+            private String relativeType;
+            private String status;
+            private String addTime;
+            private String userSign;
+
+            public String getAttentionId() {
+                return attentionId;
+            }
+
+            public void setAttentionId(String attentionId) {
+                this.attentionId = attentionId;
+            }
+
+            public String getRelativeId() {
+                return relativeId;
+            }
+
+            public void setRelativeId(String relativeId) {
+                this.relativeId = relativeId;
+            }
+
+            public String getRelativeType() {
+                return relativeType;
+            }
+
+            public void setRelativeType(String relativeType) {
+                this.relativeType = relativeType;
+            }
+
+            public String getStatus() {
+                return status;
+            }
+
+            public void setStatus(String status) {
+                this.status = status;
+            }
+
+            public String getAddTime() {
+                return addTime;
+            }
+
+            public void setAddTime(String addTime) {
+                this.addTime = addTime;
+            }
+
+            public String getUserSign() {
+                return userSign;
+            }
+
+            public void setUserSign(String userSign) {
+                this.userSign = userSign;
+            }
         }
 
         public class LikeEntity {

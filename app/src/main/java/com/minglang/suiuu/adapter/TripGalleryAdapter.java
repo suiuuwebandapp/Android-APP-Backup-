@@ -12,13 +12,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.amap.api.maps.AMapUtils;
-import com.amap.api.maps.model.LatLng;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuSearchActivity;
 import com.minglang.suiuu.entity.TripGallery;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.ArrayList;
@@ -129,12 +128,8 @@ public class TripGalleryAdapter extends BaseAdapter {
                     TextView trip_gallery_name = holderData.getView(R.id.tv_trip_gallery_name);
                     TextView trip_gallery_tag = holderData.getView(R.id.tv_trip_gallery_tag);
                     TextView trip_gallery_loveNumber = holderData.getView(R.id.tv_trip_gallery_love_number);
-                    LatLng lngLat = new LatLng(Double.valueOf(list.get(position - 2).getLon()),
-                            Double.valueOf(list.get(position - 2).getLat()));
-                    LatLng lngLat1 = new LatLng(Double.valueOf(lng), Double.valueOf(lat));
-                    float v1 = AMapUtils.calculateLineDistance(lngLat, lngLat1);
-                    tv_location_distance.setText(String.valueOf((double) v1).length() >= 4 ?
-                            String.valueOf(v1).substring(0, 4) : String.valueOf(v1));
+                    double distance = Utils.distanceByLngLat(Double.valueOf(lng), Double.valueOf(lat), Double.valueOf(list.get(position-2).getLon()), Double.valueOf(list.get(position-2).getLat()));
+                    tv_location_distance.setText(list.get(position-2).getCity()+"\n"+distance+"KM");
                     trip_gallery_name.setText(list.get(position - 2).getTitle());
                     trip_gallery_tag.setText(list.get(position - 2).getTags().replace(",", " "));
                     trip_gallery_loveNumber.setText(list.get(position - 2).getAttentionCount());
@@ -158,12 +153,14 @@ public class TripGalleryAdapter extends BaseAdapter {
             TextView trip_gallery_name = holderData.getView(R.id.tv_trip_gallery_name);
             TextView trip_gallery_tag = holderData.getView(R.id.tv_trip_gallery_tag);
             TextView trip_gallery_loveNumber = holderData.getView(R.id.tv_trip_gallery_love_number);
-            LatLng lngLat = new LatLng(Double.valueOf(list.get(position).getLon()),
-                    Double.valueOf(list.get(position).getLat()));
-            LatLng lngLat1 = new LatLng(Double.valueOf(lng), Double.valueOf(lat));
-            float v1 = AMapUtils.calculateLineDistance(lngLat, lngLat1);
-            tv_location_distance.setText(String.valueOf((double) v1).length() >= 4 ?
-                    String.valueOf(v1).substring(0, 4) : String.valueOf(v1));
+//            LatLng lngLat = new LatLng(Double.valueOf(list.get(position).getLon()),
+//                    Double.valueOf(list.get(position).getLat()));
+//            LatLng lngLat1 = new LatLng(Double.valueOf(lng), Double.valueOf(lat));
+//            float v1 = AMapUtils.calculateLineDistance(lngLat, lngLat1);
+//            tv_location_distance.setText(String.valueOf((double) v1).length() >= 4 ?
+//                    String.valueOf(v1).substring(0, 4) : String.valueOf(v1));
+            double distance = Utils.distanceByLngLat(Double.valueOf(lng), Double.valueOf(lat),Double.valueOf(list.get(position).getLon()),Double.valueOf(list.get(position).getLat()));
+            tv_location_distance.setText(list.get(position).getCity()+"\n"+distance+"KM");
             trip_gallery_name.setText(list.get(position).getTitle());
             trip_gallery_tag.setText(list.get(position).getTags().replace(",", " "));
             trip_gallery_loveNumber.setText(list.get(position).getAttentionCount());

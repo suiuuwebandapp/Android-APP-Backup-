@@ -375,7 +375,7 @@
             android:name=".activity.GeneralOrderListActivity"
             android:label="@string/title_activity_my_order_list"
             android:theme="@style/AppMainTheme"/>
-
+        <!--上传图片的服务-->
         <service android:name=".service.UpdateImageService"/>
 
         <activity

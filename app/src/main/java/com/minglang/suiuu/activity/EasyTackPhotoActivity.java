@@ -147,7 +147,6 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
 
     @Bind(R.id.sll)
     ScrollView scrollView;
-
     /**
      * 位置相关
      */
@@ -156,7 +155,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
     private String locationAddress;
     private String locationCountry;
     private String locationCity;
-    private String setTag = "";
+    private String setCustomerTag = "";
 
 
     @Override
@@ -244,11 +243,9 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
                 isChangePic = true;
             }
             picList = data.getStringArrayListExtra("pictureMessage");
-
             EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, picList, "0");
             adapter.setSwipeListView(lv_pic_description);
             lv_pic_description.setAdapter(adapter);
-
             Utils.setListViewHeightBasedOnChildren(lv_pic_description);
 
         } else if (data != null && requestCode == REQUEST_CODE_MAP) {
@@ -291,9 +288,6 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
             EditText et = (EditText) layout.findViewById(R.id.item_tack_description);// 从layout中获得控件,根据其id
             // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
             picDescriptionList.add(et.getText().toString());
-        }
-        for(String s : picDescriptionList) {
-            Log.i("suiuu", "fabu="+s);
         }
         if (TextUtils.isEmpty(locationAddress)) {
             Toast.makeText(this, "请选择位置", Toast.LENGTH_SHORT).show();
@@ -373,6 +367,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String result = stringResponseInfo.result;
+            Log.i("suiuu", result);
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
@@ -471,14 +466,15 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         for (TextView tv : suiuuTagClick) {
             tagText += tv.getText() + " ";
         }
+        tagText += setCustomerTag;
         if ("".equals(tagText)) {
-            if("".equals(setTag)) {
+            if("".equals(setCustomerTag)) {
                 tv_show_tag.setText("选择标签");
             }else {
-                tv_show_tag.setText(setTag);
+                tv_show_tag.setText(setCustomerTag);
             }
         } else {
-            tv_show_tag.setText(tagText + " " + setTag);
+            tv_show_tag.setText(tagText);
 
         }
     }
@@ -495,12 +491,12 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String newsetTag = et_input_customer_tag.getText().toString().trim();
-                if (TextUtils.isEmpty(newsetTag)) {
+                String newSetTag = et_input_customer_tag.getText().toString().trim();
+                if (TextUtils.isEmpty(newSetTag)) {
                     Toast.makeText(EasyTackPhotoActivity.this, "你的输入不能为空,请重新输入", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                setTag += newsetTag + " ";
+                setCustomerTag += newSetTag + " ";
                 //输入的密码相等
                 showTag();
                 setTagDialog.dismiss();

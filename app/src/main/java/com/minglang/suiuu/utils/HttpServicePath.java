@@ -100,6 +100,10 @@ public class HttpServicePath {
      * 请求参数:需要收藏文章的id:articleId
      */
     public static String CollectionArticlePath = RootPath + "/attention/add-collection-article";
+    /**
+     * 收藏旅图
+     */
+    public static String CollectionTripGalleryPath = RootPath + "/attention/attention-tp";
 
     /**
      * 取消收藏文章

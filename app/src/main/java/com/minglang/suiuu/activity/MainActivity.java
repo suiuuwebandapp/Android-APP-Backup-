@@ -284,7 +284,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SelectPictureActivity.class);
                 intent.putExtra(STATE, 1);
-                startActivity(intent);
+                startActivityForResult(intent, AppConstant.PUBLISTH_TRIP_GALLERY_SUCCESS);
             }
         });
 
@@ -616,6 +616,9 @@ public class MainActivity extends BaseActivity {
                     communityFragment.setSearchString(searchString);
                     break;
             }
+        }
+        if(requestCode == AppConstant.PUBLISTH_TRIP_GALLERY_SUCCESS) {
+            tripGalleryFragment.onReflash();
         }
     }
 

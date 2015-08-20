@@ -38,8 +38,13 @@ public class AppConstant {
 
     public static final int EDIT_SUIUU_INFO_TEXT_BACK = 101;
 
-    public static final int EDIT_SUIUU_PRICE_BACK = 110;
+    public static final int EDIT_SUIUU_PRICE_BACK = 1;
 
     public static final int COMMUNITY_SEARCH_SKIP = 300;
+    /**
+     * 发布旅图成功
+     */
+    public static final int PUBLISTH_TRIP_GALLERY_SUCCESS = 301;
+
 
 }

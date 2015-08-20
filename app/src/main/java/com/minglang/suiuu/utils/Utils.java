@@ -295,7 +295,8 @@ public class Utils {
                 * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
         s = s * 6378137.0;// 取WGS84标准参考椭球中的地球长半径(单位:m)
         s = Math.round(s * 10000) / 10000;
-        return s / 100000;
+//        return s / 100000;
+        return Math.round((int)s/100d)/10d;
     }
 
     /**

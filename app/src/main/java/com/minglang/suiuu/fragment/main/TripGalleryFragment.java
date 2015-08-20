@@ -89,6 +89,7 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
 
     private void initView() {
         progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMessage(dialogMsg);
     }
 
@@ -208,5 +209,4 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
             progressDialog.dismiss();
         }
     }
-
 }

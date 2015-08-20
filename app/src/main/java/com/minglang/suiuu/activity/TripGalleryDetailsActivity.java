@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -157,6 +158,11 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
      */
     @Bind(R.id.lv_suiuu_details_comment)
     NoScrollBarListView suiuu_details_comment_view;
+    /**
+     * 是否关注
+     */
+    @Bind(R.id.iv_trip_gallery_detail_heart)
+    ImageView trip_gallery_detail_heart;
 
     /**
      * 还没有评论布局
@@ -186,6 +192,15 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
      * 猜你喜欢的数据集合
      */
     private List<LikeEntity> likeList;
+
+    /**
+     * 关注的集合
+     */
+    private List<TripGalleryDetail.DataEntity.AttentionEntity> attentionList;
+    /**
+     * 关注ID
+     */
+    private String attentionId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,6 +238,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         suiuu_details_comment.setOnClickListener(new MyOnClickListener());
         tv_to_comment_activity.setOnClickListener(new MyOnClickListener());
         trip_gallery_details_portrait.setOnClickListener(new MyOnClickListener());
+        trip_gallery_detail_heart.setOnClickListener(new MyOnClickListener());
         aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
 
             @Override
@@ -273,6 +289,32 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
     }
 
     /**
+     * 收藏旅图
+     */
+    private void collectionTripGallery() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("id", id);
+        params.addBodyParameter(HttpServicePath.key, verification);
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.CollectionTripGalleryPath, new CollectionTripGalleryRequestCallback());
+        httpRequest.setParams(params);
+        httpRequest.executive();
+    }
+
+    /**
+     * 取消旅图取消
+     */
+    private void collectionTripGalleryCancel(String cancelId) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("attentionId", cancelId);
+        params.addBodyParameter(HttpServicePath.key, verification);
+        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+                HttpServicePath.CollectionArticleCancelPath, new CollectionGalleryCancelRequestCallback());
+        httpRequest.setParams(params);
+        httpRequest.executive();
+    }
+
+    /**
      * 请求数据网络接口回调
      */
     class loadTripGalleryDetailDateCallBack extends RequestCallBack<String> {
@@ -285,6 +327,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
             if (tripGalleryDetail.getStatus() == 1) {
                 tripGalleryDetailInfo = tripGalleryDetail.getData().getInfo();
                 commentContentList = tripGalleryDetail.getData().getComment();
+                attentionList = tripGalleryDetail.getData().getAttention();
                 likeList = tripGalleryDetail.getData().getLike();
                 fullData();
             } else {
@@ -300,6 +343,62 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         }
     }
 
+    /**
+     * 收藏文章回调接口
+     */
+    class CollectionTripGalleryRequestCallback extends RequestCallBack<String> {
+
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            try {
+                JSONObject json = new JSONObject(stringResponseInfo.result);
+                String status = json.getString("status");
+                String data = json.getString("data");
+                if ("1".equals(status)) {
+                    attentionId = data;
+                    trip_gallery_detail_heart.setBackgroundResource(R.drawable.attention_heart_press);
+                    Toast.makeText(TripGalleryDetailsActivity.this, "收藏文章成功", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(TripGalleryDetailsActivity.this, "收藏失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            Toast.makeText(TripGalleryDetailsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 取消收藏文章回调接口
+     */
+    class CollectionGalleryCancelRequestCallback extends RequestCallBack<String> {
+        @Override
+        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+            try {
+                JSONObject json = new JSONObject(stringResponseInfo.result);
+                String status = json.getString("status");
+                String data = json.getString("data");
+                if ("1".equals(status) && "success".equals(data)) {
+                    attentionId = null;
+                    trip_gallery_detail_heart.setBackgroundResource(R.drawable.attention_heart_normal);
+                    Toast.makeText(TripGalleryDetailsActivity.this, "取消收藏成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(TripGalleryDetailsActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                Toast.makeText(TripGalleryDetailsActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
+            }
+        }
+        @Override
+        public void onFailure(HttpException e, String s) {
+            Toast.makeText(TripGalleryDetailsActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
     private void fullData() {
         fullCommentList();
         trip_gallery_details_name.setText(tripGalleryDetailInfo.getTitle());
@@ -312,6 +411,14 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         }.getType(), tripGalleryDetailInfo.getPicList());
         List<String> picDescription = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>() {
         }.getType(), tripGalleryDetailInfo.getContents());
+        //判断是否关注
+        if (attentionList.size() < 1) {
+            trip_gallery_detail_heart.setBackgroundResource(R.drawable.attention_heart_normal);
+        } else {
+            trip_gallery_detail_heart.setBackgroundResource(R.drawable.attention_heart_press);
+            attentionId = attentionList.get(0).getAttentionId();
+        }
+        //初始化地图
         LatLng lngLat = new LatLng(Double.valueOf(tripGalleryDetailInfo.getLat()), Double.valueOf(tripGalleryDetailInfo.getLon()));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(
                 lngLat, 16, 30, 0));
@@ -324,7 +431,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         fullGuessYourLove();
         sv_trip_gallery_detail.smoothScrollTo(0, 0);
     }
-
     @SuppressLint("InflateParams")
     private void fullGuessYourLove() {
         View itemView;
@@ -401,6 +507,14 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
                     Intent intent2UserActivity = new Intent(TripGalleryDetailsActivity.this, PersonalCenterActivity.class);
                     intent2UserActivity.putExtra("userSign", tripGalleryDetailInfo.getUserSign());
                     startActivity(intent2UserActivity);
+                    break;
+                case R.id.iv_trip_gallery_detail_heart:
+                    //关注按钮
+                    if (TextUtils.isEmpty(attentionId)) {
+                        collectionTripGallery();
+                    }else {
+                        collectionTripGalleryCancel(attentionId);
+                    }
                     break;
             }
         }

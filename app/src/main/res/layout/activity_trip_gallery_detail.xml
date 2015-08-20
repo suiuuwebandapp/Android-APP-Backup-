@@ -100,7 +100,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_margin="@dimen/layout_10dp"
-                    android:background="@drawable/small_heat"/>
+                    />
 
             </RelativeLayout>
 

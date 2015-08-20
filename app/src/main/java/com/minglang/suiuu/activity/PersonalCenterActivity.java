@@ -86,24 +86,19 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
     private void initView() {
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
-
         setSupportActionBar(toolbar);
-
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
-
         toolbarLayout.setTitle(titleText);
         toolbarLayout.setExpandedTitleColor(expandedTitleColor);
         toolbarLayout.setCollapsedTitleTextColor(collapsedTitleTextColor);
         toolbarLayout.setExpandedTitleTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium);
-
         titleList.add(str1);
         titleList.add(str2);
         titleList.add(str3);
-
         tabLayout.addTab(tabLayout.newTab().setText(str1), true);
         tabLayout.addTab(tabLayout.newTab().setText(str2), false);
         tabLayout.addTab(tabLayout.newTab().setText(str3), false);
