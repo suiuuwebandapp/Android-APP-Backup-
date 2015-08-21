@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,11 +49,6 @@ public class SuiuuFragment extends BaseFragment
     private int page = 1;
     private TextView noDataLoad;
     private TextProgressDialog dialog;
-    /**
-     * 主页面底部导航栏
-     */
-    private LinearLayout tabSelect;
-    private int lastVisibleItemPosition = 0;// 标记上次滑动位置
     //头部空间
     private ImageView et_suiuu;
     private ShowSuiuuAdapter adapter;
@@ -76,7 +70,6 @@ public class SuiuuFragment extends BaseFragment
         suiuuListView = (ReFlashListView) rootView.findViewById(R.id.lv_suiuu);
         noDataLoad = (TextView) rootView.findViewById(R.id.tv_noDataLoad);
         View topView = getActivity().findViewById(R.id.main_show_layout);
-        tabSelect = (LinearLayout) topView.findViewById(R.id.tab_select_card_layout);
         dialog = new TextProgressDialog(getActivity());
         //处理头部控件
         et_suiuu = (ImageView) topView.findViewById(R.id.main_2_search);
@@ -174,7 +167,6 @@ public class SuiuuFragment extends BaseFragment
                     }
                     suiuuDataList.addAll(suiuuDataListNew);
                     showList(suiuuDataList);
-                    tabSelect.setVisibility(View.VISIBLE);
                 } else if ("-3".equals(status)) {
                     Toast.makeText(getActivity().getApplicationContext(), "登录信息过期,请重新登录", Toast.LENGTH_SHORT).show();
                     AppUtils.intentLogin(getActivity());
