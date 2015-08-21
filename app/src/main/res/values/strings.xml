@@ -38,7 +38,7 @@
     <string name="Setting" translatable="false">设置</string>
     <string name="PersonalSetting" translatable="false">个人设置</string>
     <string name="NormalSetting" translatable="false">通用设置</string>
-    <string name="CollectMode" translatable="false">收款方式</string>
+    <string name="ReceivablesMode" translatable="false">收款方式</string>
     <string name="AboutSuiuu" translatable="false">关于随游</string>
     <string name="ContactUs" translatable="false">联系我们</string>
     <string name="LoginOut" translatable="false">退出登录</string>
@@ -68,6 +68,21 @@
     <string name="NewComment" translatable="false">新评论</string>
     <string name="NewReply" translatable="false">新回复</string>
     <string name="NewAttention" translatable="false">新关注</string>
+
+    <string name="AddReceivables" translatable="false">添加收款方式</string>
+
+    <string name="AliPay" translatable="false">支付宝</string>
+    <string name="WeChatPay" translatable="false">微信支付</string>
+
+    <string name="AddReceivablesMode" translatable="false">添加收款方式</string>
+
+    <string name="PleaseInputAccount" translatable="false">请输入您的账户</string>
+    <string name="PleaseInputYourName" translatable="false">请输入您的真实姓名</string>
+
+    <string name="PleaseInputInfoHint" translatable="false">请填写您的帐号和真实姓名用于打款核对</string>
+
+    <string name="AccountNotNull" translatable="false">账户不能为空！</string>
+    <string name="YourNameNotNull" translatable="false">请输入您的姓名！</string>
 
     <string name="TripGalleryMsg" translatable="false">旅图</string>
     <string name="QuestionAndAnswerMsg" translatable="false">问答</string>
@@ -454,5 +469,7 @@
     <string name="title_activity_order_details" translatable="false">OrderDetailsActivity</string>
     <string name="title_activity_my_order_list" translatable="false">MyOrderListActivity</string>
     <string name="title_activity_about_us">AboutUsActivity</string>
+    <string name="title_activity_receivables_way">ReceivablesWayActivity</string>
+    <string name="title_activity_add_receivables_way">AddReceivablesWayActivity</string>
 
 </resources>

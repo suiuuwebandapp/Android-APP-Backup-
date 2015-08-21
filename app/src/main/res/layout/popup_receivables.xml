@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/backgroundColor"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/popup_receivables_alipay"
+        android:layout_width="@dimen/layout_200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/layout_10dp"
+        android:background="@color/btn_2_bg_color"
+        android:text="@string/AliPay"
+        android:textSize="@dimen/layout_20sp"/>
+
+    <Button
+        android:id="@+id/popup_receivables_wechat"
+        android:layout_width="@dimen/layout_200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/layout_10dp"
+        android:layout_marginTop="@dimen/layout_10dp"
+        android:background="@color/we_chat_color"
+        android:text="@string/WeChatPay"
+        android:textSize="@dimen/layout_20sp"/>
+
+</LinearLayout>

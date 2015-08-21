@@ -32,9 +32,9 @@
             <TextView style="@style/settingDividingLine"/>
 
             <TextView
-                android:id="@+id/collect_item_view"
+                android:id="@+id/receivables_item_view"
                 style="@style/settingTextView"
-                android:text="@string/CollectMode"/>
+                android:text="@string/ReceivablesMode"/>
 
             <TextView style="@style/settingDividingLine"/>
 

@@ -6,7 +6,7 @@
 
     <!--边框宽度and颜色-->
     <stroke
-        android:width="@dimen/layout_2dp"
+        android:width="@dimen/layout_1dp"
         android:color="@color/mainColor"/>
 
     <!--边角弧度-->

@@ -32,8 +32,8 @@ public class SettingActivity extends BaseAppCompatActivity {
     @Bind(R.id.normal_item_view)
     TextView normalItemView;
 
-    @Bind(R.id.collect_item_view)
-    TextView collectItemView;
+    @Bind(R.id.receivables_item_view)
+    TextView receivablesItemView;
 
     @Bind(R.id.about_item_view)
     TextView aboutItemView;
@@ -66,10 +66,10 @@ public class SettingActivity extends BaseAppCompatActivity {
             }
         });
 
-        collectItemView.setOnClickListener(new View.OnClickListener() {
+        receivablesItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(SettingActivity.this, ReceivablesWayActivity.class));
             }
         });
 
@@ -112,4 +112,5 @@ public class SettingActivity extends BaseAppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

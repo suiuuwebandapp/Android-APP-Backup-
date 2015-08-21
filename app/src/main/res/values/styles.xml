@@ -38,7 +38,7 @@
 
     <style name="AppNewBaseTheme2" parent="Theme.AppCompat.NoActionBar" />
 
-    <style name="AppMainTheme2" parent="AppMainTheme2">
+    <style name="AppMainTheme2" parent="AppNewBaseTheme2">
         <item name="colorPrimaryDark">@color/topColor</item>
         <item name="colorPrimary">@color/mainColor</item>
     </style>

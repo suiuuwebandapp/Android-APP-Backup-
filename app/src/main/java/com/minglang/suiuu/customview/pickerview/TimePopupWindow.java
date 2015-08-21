@@ -45,7 +45,7 @@ public class TimePopupWindow extends PopupWindow implements OnClickListener {
 
         LayoutInflater mLayoutInflater = LayoutInflater.from(context);
         @SuppressLint("InflateParams")
-        View rootView = mLayoutInflater.inflate(R.layout.pw_time, null);
+        View rootView = mLayoutInflater.inflate(R.layout.popup_time, null);
 
         // -----确定和取消按钮
         View btnSubmit = rootView.findViewById(R.id.btnSubmit);

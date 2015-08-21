@@ -26,15 +26,11 @@
             android:textColor="#ffffff"
             android:textSize="@dimen/layout_18sp" />
 
-
     </RelativeLayout>
+
     <com.minglang.suiuu.customview.ReFlashListView
         android:id="@+id/lv_location_message"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        />
-
-
-
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

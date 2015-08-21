@@ -1,0 +1,61 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/add_receivables_tool_bar"
+        style="@style/AppToolBar"
+        app:navigationIcon="@drawable/back"
+        app:title="@string/AddReceivablesMode"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_receivables_tool_bar"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/add_receivables_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_8dp"
+            android:background="@color/white"
+            android:hint="@string/PleaseInputAccount"
+            android:padding="@dimen/layout_15dp"/>
+
+        <EditText
+            android:id="@+id/add_receivables_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_8dp"
+            android:background="@color/white"
+            android:hint="@string/PleaseInputYourName"
+            android:padding="@dimen/layout_15dp"/>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_8dp"
+            android:paddingEnd="0dp"
+            android:paddingStart="@dimen/layout_15dp"
+            android:text="@string/PleaseInputInfoHint"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/add_receivables_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/layout_10dp"
+        android:background="@drawable/setting_relevant_btn_selector"
+        android:text="@android:string/ok"
+        android:textColor="@drawable/setting_relevant_btn_text_color_selector"
+        android:textSize="@dimen/layout_20sp"/>
+
+</RelativeLayout>

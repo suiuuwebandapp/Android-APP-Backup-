@@ -36,6 +36,8 @@
     <color name="mask">#40000000</color>
     <color name="slow_blue">#7088FF</color>
 
+    <color name="we_chat_color">#2DBA00</color>
+
     <!--分割线-->
     <color name="topColor">#55d4bf</color>
     <color name="mainColor">#62d6c3</color>

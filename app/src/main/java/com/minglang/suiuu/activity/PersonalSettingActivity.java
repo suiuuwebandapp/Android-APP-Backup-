@@ -60,6 +60,8 @@ public class PersonalSettingActivity extends BaseActivity {
     private static final int UP_LOADING = 300;
     private static final int UP_LOAD_FAIL = 400;
 
+    private static final String SUIUU = "suiuu";
+
     @BindString(R.string.uploading)
     String uploading;
 
@@ -140,10 +142,7 @@ public class PersonalSettingActivity extends BaseActivity {
     private String nativeImagePath;
 
     private String netWorkImagePath;
-
-    /**
-     * 上传进度框
-     */
+    
     private ProgressDialog upLoadDialog;
 
     private DisplayImageOptions options;
@@ -153,7 +152,7 @@ public class PersonalSettingActivity extends BaseActivity {
     private ProgressDialog progressDialog;
 
     private static OSSService ossService = OSSServiceProvider.getService();
-    private static OSSBucket bucket = ossService.getOssBucket("suiuu");
+    private static OSSBucket bucket = ossService.getOssBucket(SUIUU);
 
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -340,7 +339,7 @@ public class PersonalSettingActivity extends BaseActivity {
             }
         });
 
-        optionsPopupWindow.setOnoptionsSelectListener(new OptionsPopupWindow.OnOptionsSelectListener() {
+        optionsPopupWindow.setOnOptionsSelectListener(new OptionsPopupWindow.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3) {
                 if (strMan.equals(optionsList.get(options1))) {

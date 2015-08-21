@@ -38,7 +38,7 @@ public class OptionsPopupWindow extends PopupWindow implements OnClickListener {
 
         LayoutInflater mLayoutInflater = LayoutInflater.from(context);
         @SuppressLint("InflateParams")
-        View rootView = mLayoutInflater.inflate(R.layout.pw_options, null);
+        View rootView = mLayoutInflater.inflate(R.layout.popup_options, null);
 
         // -----确定和取消按钮
         View btnSubmit = rootView.findViewById(R.id.btnSubmit);
@@ -163,7 +163,7 @@ public class OptionsPopupWindow extends PopupWindow implements OnClickListener {
         void onOptionsSelect(int options1, int option2, int options3);
     }
 
-    public void setOnoptionsSelectListener(
+    public void setOnOptionsSelectListener(
             OnOptionsSelectListener optionsSelectListener) {
         this.optionsSelectListener = optionsSelectListener;
     }

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/layout_10dp"
     android:paddingRight="@dimen/layout_10dp">
+
    <TextView
        android:id="@+id/tv_main_location_name"
        android:layout_width="wrap_content"
@@ -12,6 +14,7 @@
        android:text="歌华大厦"
        android:paddingTop="@dimen/layout_8dp"
        android:textColor="@color/help_view"/>
+
     <TextView
         android:id="@+id/tv_main_address_name"
         android:layout_width="wrap_content"
@@ -23,4 +26,5 @@
         android:textSize="@dimen/layout_15sp"
         android:singleLine="true"
         android:paddingBottom="@dimen/layout_5dp"/>
+
 </RelativeLayout>

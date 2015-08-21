@@ -21,8 +21,8 @@
 
     <LinearLayout
         android:id="@+id/ll_suiuu_details_input_comment"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/layout_8dp"
         android:orientation="vertical"
         android:visibility="visible">

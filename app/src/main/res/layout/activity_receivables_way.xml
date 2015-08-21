@@ -1,0 +1,57 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/receivables_way_tool_bar"
+        style="@style/AppToolBar"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        app:navigationIcon="@drawable/back"
+        app:title="@string/ReceivablesMode"/>
+
+    <ListView
+        android:id="@+id/receivables_way_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/receivables_way_tool_bar"
+        android:layout_centerHorizontal="true"
+        android:choiceMode="singleChoice"/>
+
+    <LinearLayout
+        android:id="@+id/receivables_way_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_150dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/receivables_way_alipay"
+            android:layout_width="@dimen/layout_200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/layout_10dp"
+            android:background="@color/btn_2_bg_color"
+            android:text="@string/AliPay"
+            android:textSize="@dimen/layout_20sp"/>
+
+        <Button
+            android:id="@+id/receivables_way_wechat"
+            android:layout_width="@dimen/layout_200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/layout_10dp"
+            android:layout_marginTop="@dimen/layout_10dp"
+            android:background="@color/we_chat_color"
+            android:text="@string/WeChatPay"
+            android:textSize="@dimen/layout_20sp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

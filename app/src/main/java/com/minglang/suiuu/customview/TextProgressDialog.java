@@ -36,7 +36,7 @@ public class TextProgressDialog {
      */
     @SuppressLint("InflateParams")
     private void createLoadingDialog(String msg) {
-        View view = LayoutInflater.from(context).inflate(R.layout.progressdialog, null);// 得到加载view
+        View view = LayoutInflater.from(context).inflate(R.layout.progress_dialog, null);// 得到加载view
 
         LinearLayout layout = (LinearLayout) view.findViewById(R.id.dialog_view);// 加载布局
 
