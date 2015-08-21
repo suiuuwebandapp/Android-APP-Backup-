@@ -21,6 +21,7 @@ import com.minglang.suiuu.activity.TripGalleryDetailsActivity;
 import com.minglang.suiuu.adapter.TripGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.ReFlashListView;
+import com.minglang.suiuu.dbhelper.TripGalleryCacheUtils;
 import com.minglang.suiuu.entity.TripGallery;
 import com.minglang.suiuu.entity.TripGallery.DataEntity.TripGalleryDataInfo;
 import com.minglang.suiuu.utils.HttpServicePath;
@@ -31,7 +32,9 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -129,7 +132,6 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
 
     @Override
     public void onReflash() {
-        Log.i("suiuu", "刷新了吗");
         page = 1;
         tagList.clear();
         adapter = null;
@@ -141,13 +143,13 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
     public void getClickTagList(List<String> tagList) {
         this.tagList = tagList;
         clickTag = "";
+        adapter = null;
         tripGalleryList.clear();
         for (String clickString :tagList) {
             clickTag += clickString + ",";
         }
         page = 1;
         loadTripGalleryList(clickTag, "0", null, page);
-
     }
     private void loadTripGalleryList(String tags, String sortName, String search, int page) {
         progressDialog.show();
@@ -185,6 +187,10 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             progressDialog.dismiss();
             String result = stringResponseInfo.result;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:ss");
+            Date date = new Date();
+            String format = simpleDateFormat.format(date);
+            TripGalleryCacheUtils.insertTripGalleryCache(getActivity(), format, result);
             try {
                 JSONObject json = new JSONObject(result);
                 int status = (int) json.get("status");
@@ -205,8 +211,11 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
         }
         @Override
         public void onFailure(HttpException e, String s) {
+            tripGalleryList.addAll(JsonUtils.getInstance().fromJSON(TripGallery.class, TripGalleryCacheUtils.getTripGalleryCacheData(getActivity())).getData().getData());
+            showList(tripGalleryList);
             Log.i("suiuu","请求失败");
             progressDialog.dismiss();
         }
     }
+
 }

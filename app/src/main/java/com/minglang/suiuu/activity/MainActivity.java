@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -32,6 +33,7 @@ import com.minglang.suiuu.fragment.main.CommunityFragment;
 import com.minglang.suiuu.fragment.main.InformationFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
 import com.minglang.suiuu.fragment.main.TripGalleryFragment;
+import com.minglang.suiuu.receiver.ConnectionNetChangeReceiver;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -183,6 +185,10 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.img4)
     ImageView iv_tab4;
 
+
+    TextView rl_net_error;
+
+
     private ExitReceiver exitReceiver;
 
     @Override
@@ -192,23 +198,21 @@ public class MainActivity extends BaseActivity {
         UmengUpdateAgent.update(this);
         ButterKnife.bind(this);
         initView();
+        registerReceiver();
         ViewAction();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         String network_headImage_path = SuiuuInfo.ReadUserData(this).getHeadImg();
         if (!TextUtils.isEmpty(network_headImage_path)) {
             imageLoader.displayImage(network_headImage_path, headImageView);
         }
-
         String user_name = SuiuuInfo.ReadUserData(this).getNickname();
         if (!TextUtils.isEmpty(user_name)) {
             nickNameView.setText(user_name);
         }
-
     }
 
     /**
@@ -253,18 +257,16 @@ public class MainActivity extends BaseActivity {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SettingActivity.class.getSimpleName());
         this.registerReceiver(exitReceiver, intentFilter);
+        rl_net_error = (TextView) findViewById(R.id.rl_net_error);
     }
 
     private void initFragment() {
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
-
         switchViewState(NUMBER1);
-
         tripGalleryFragment = new TripGalleryFragment();
         informationFragment = InformationFragment.newInstance(userSign, verification);
         communityFragment = CommunityFragment.newInstance(userSign, verification);
-
         LoadDefaultFragment();
     }
 
@@ -396,6 +398,20 @@ public class MainActivity extends BaseActivity {
         tab2.setOnClickListener(onClickListener);
         tab3.setOnClickListener(onClickListener);
         tab4.setOnClickListener(onClickListener);
+        //广播监听
+        myReceiver.setConnectionChangeListener(new ConnectionNetChangeReceiver.ConnectionChangeListener() {
+            @Override
+            public void conectionBreakOff(Context b) {
+                rl_net_error.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void conectionResume(Context b) {
+                if(rl_net_error.isEnabled()) {
+                    rl_net_error.setVisibility(View.GONE);
+                }
+            }
+        });
 
     }
 
@@ -627,10 +643,11 @@ public class MainActivity extends BaseActivity {
                     break;
             }
         }
-        if(requestCode == AppConstant.PUBLISTH_TRIP_GALLERY_SUCCESS) {
+        if (requestCode == AppConstant.PUBLISTH_TRIP_GALLERY_SUCCESS) {
             tripGalleryFragment.onReflash();
         }
     }
+
 
     private class ExitReceiver extends BroadcastReceiver {
 
@@ -727,7 +744,19 @@ public class MainActivity extends BaseActivity {
         } catch (Exception e) {
             DeBugLog.e(TAG, "反注册ExitBroadcastReceiver失败:" + e.getMessage());
         }
+        unregisterReceiver();
 
     }
 
+    private ConnectionNetChangeReceiver myReceiver;
+
+    private void registerReceiver() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        myReceiver = new ConnectionNetChangeReceiver();
+        this.registerReceiver(myReceiver, filter);
+    }
+
+    private void unregisterReceiver() {
+        this.unregisterReceiver(myReceiver);
+    }
 }

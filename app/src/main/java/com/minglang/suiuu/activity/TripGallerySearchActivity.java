@@ -138,7 +138,7 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(TripGallerySearchActivity.this, TripGalleryDetailsActivity.class);
-                intent.putExtra("id", tripGalleryList.get(position).getId());
+                intent.putExtra("id", tripGalleryList.get(position-1).getId());
                 startActivity(intent);
             }
         });
@@ -209,13 +209,14 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
     }
 
     private void showList(List<TripGallery.DataEntity.TripGalleryDataInfo> tripGalleryList) {
+        List<String> templeList = new ArrayList<>();
         if (adapter == null) {
             rfv_trip_gallery_search.setInterface(this);
             rfv_trip_gallery_search.setLoadMoreInterface(this);
-            adapter = new TripGalleryAdapter(this, tripGalleryList,"",null);
+            adapter = new TripGalleryAdapter(this, tripGalleryList,"",templeList);
             rfv_trip_gallery_search.setAdapter(adapter);
         } else {
-            adapter.onDateChange(tripGalleryList,"",null);
+            adapter.onDateChange(tripGalleryList,"",templeList);
         }
     }
 

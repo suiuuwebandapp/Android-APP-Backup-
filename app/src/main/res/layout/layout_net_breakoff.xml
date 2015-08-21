@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/login_bg"
+    android:id="@+id/rl_net_error"
+    >
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/layout_50dp"
+        android:text="@string/NetworkError"
+        android:gravity="center"
+        android:textSize="@dimen/layout_16sp"
+        android:textColor="@color/bbutton_warning"
+        android:drawableLeft="@drawable/icon_main_2_green"
+        />
+</RelativeLayout>
