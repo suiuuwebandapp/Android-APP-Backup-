@@ -3,8 +3,6 @@ package com.minglang.suiuu.dbhelper;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import android.widget.Toast;
 
 /**
  * 项目名称：Android-APP-Backup-
@@ -25,7 +23,6 @@ public class TripGalleryCacheUtils {
 
             data = cursor.getString(0);
         }
-        Log.i("suiuu", "Toast.makeText(context, \"添加成功\", Toast.LENGTH_SHORT).show();" + data);
         cursor.close();
         db.close();
         return data;
@@ -36,8 +33,6 @@ public class TripGalleryCacheUtils {
         SQLiteDatabase  db =  helper.getReadableDatabase();
         //执行sql语句
         db.execSQL("insert into tripgallerycache (time,data) values (?,?)", new Object[]{time,data});
-        Toast.makeText(context, "添加成功", Toast.LENGTH_SHORT).show();
-        Log.i("suiuu","Toast.makeText(context, \"添加成功\", Toast.LENGTH_SHORT).show();");
         db.close();
     }
 }
