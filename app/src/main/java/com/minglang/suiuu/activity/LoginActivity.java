@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -670,7 +671,8 @@ public class LoginActivity extends BaseActivity {
                     SuiuuInfo.WriteVerification(LoginActivity.this, user.getMessage());
                     SuiuuInfo.WriteUserSign(LoginActivity.this, data.getUserSign());
                     SuiuuInfo.WriteUserData(LoginActivity.this, data);
-                    startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "登录失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }
@@ -692,9 +694,6 @@ public class LoginActivity extends BaseActivity {
             Toast.makeText(LoginActivity.this, "登录失败，请稍候再试", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
 
     private void loginFailure2Umeng(final long start, final int code, final String message) {
         runOnUiThread(new Runnable() {
