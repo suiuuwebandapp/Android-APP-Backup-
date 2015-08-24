@@ -30,7 +30,7 @@ import com.minglang.suiuu.entity.Published.PublishedData;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -202,7 +202,7 @@ public class PublishedFragment extends BaseFragment {
         params.addBodyParameter(PAGE, String.valueOf(page));
         params.addBodyParameter(NUMBER, String.valueOf(10));
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpMethod.POST,
                 HttpServicePath.MyPublishedSuiuuPath, new MyPublishedRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();

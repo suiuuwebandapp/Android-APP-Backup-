@@ -31,7 +31,7 @@ import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
 
@@ -245,7 +245,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     }
 
     private void getGeneralUserOrderData4Service(RequestParams params) {
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getGeneralUserOrderDetailsPath, new GeneralUserOrderDetailsRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();

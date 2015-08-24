@@ -19,7 +19,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.pingplusplus.android.PaymentActivity;
 
 /**
@@ -106,7 +106,7 @@ public class SuiuuPayActivity extends BaseActivity {
         params.addBodyParameter("orderNumber", orderNumber);
         params.addBodyParameter("channel", payWay);
         params.addBodyParameter(HttpServicePath.key, verification);
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getCharge, new getChargeCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();

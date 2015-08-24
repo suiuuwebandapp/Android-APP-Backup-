@@ -36,7 +36,7 @@ import com.minglang.suiuu.entity.Tag;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -247,7 +247,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
      * 获取系统标签
      */
     private void getTagList() {
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.GET,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.GET,
                 HttpServicePath.getDefaultTagListPath, new TagRequestCallBack());
         httpRequest.executive();
     }
@@ -271,7 +271,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
      * @param params 网络请求参数
      */
     private void getCommunityItemDetails(RequestParams params) {
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getProblemDetailsPath, new CommunityItemRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
@@ -296,7 +296,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
      * @param params 请求参数
      */
     private void getAttentionRequest(RequestParams params) {
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getAttentionQuestionPath, new AttentionQuestionRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();

@@ -74,12 +74,18 @@
     <string name="AliPay" translatable="false">支付宝</string>
     <string name="WeChatPay" translatable="false">微信支付</string>
 
+
     <string name="AddReceivablesMode" translatable="false">添加收款方式</string>
 
     <string name="PleaseInputAccount" translatable="false">请输入您的账户</string>
     <string name="PleaseInputYourName" translatable="false">请输入您的真实姓名</string>
 
     <string name="PleaseInputInfoHint" translatable="false">请填写您的帐号和真实姓名用于打款核对</string>
+
+    <string name="AliPay_" translatable="false">支付宝：</string>
+    <string name="WeChatPay_" translatable="false">微信：</string>
+
+    <string name="YouNoHavingReceivableWay" translatable="false">你还没有收款方式</string>
 
     <string name="AccountNotNull" translatable="false">账户不能为空！</string>
     <string name="YourNameNotNull" translatable="false">请输入您的姓名！</string>
@@ -410,6 +416,8 @@
     <string name="ContactWayNotNull" translatable="false">联系方式不能为空！</string>
 
     <string name="Agree" translatable="false">同意</string>
+
+    <string name="Loading" translatable="false">请稍候&#8230;</string>
 
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
     <string name="pull_to_refresh_release_label">Release rear refresh</string>

@@ -30,7 +30,7 @@ import com.minglang.suiuu.entity.AttentionProblem.AttentionProblemData.Attention
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -197,7 +197,7 @@ public class AttentionProblemFragment extends BaseFragment {
      * @param params 网络请求参数
      */
     private void getProblemData4Service(RequestParams params) {
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getAttentionProblemInfoPath, new AttentionProblemRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();

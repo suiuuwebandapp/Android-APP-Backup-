@@ -19,7 +19,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -155,7 +155,7 @@ public class CommonCommentActivity extends BaseActivity {
 
         params.addBodyParameter(HttpServicePath.key, verification);
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.articleCreateComment, new requestCommentSendCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
@@ -174,7 +174,7 @@ public class CommonCommentActivity extends BaseActivity {
         }
         params.addBodyParameter(HttpServicePath.key, verification);
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.suiuuCreateComment, new requestCommentSendCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();

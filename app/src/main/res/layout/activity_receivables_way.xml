@@ -11,6 +11,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         app:navigationIcon="@drawable/back"
+        app:popupTheme="@style/AppMainTheme2"
         app:title="@string/ReceivablesMode"/>
 
     <ListView
@@ -21,37 +22,36 @@
         android:layout_centerHorizontal="true"
         android:choiceMode="singleChoice"/>
 
-    <LinearLayout
-        android:id="@+id/receivables_way_layout"
+    <RelativeLayout
+        android:id="@+id/receivables_way_hint_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_150dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/receivables_way_tool_bar"
+        android:layout_centerHorizontal="true"
+        android:padding="@dimen/layout_10dp"
         android:visibility="gone">
 
-        <Button
-            android:id="@+id/receivables_way_alipay"
-            android:layout_width="@dimen/layout_200dp"
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/layout_10dp"
-            android:background="@color/btn_2_bg_color"
-            android:text="@string/AliPay"
-            android:textSize="@dimen/layout_20sp"/>
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/layout_10dp"
+            android:src="@drawable/icon_no_receivables_hint"/>
 
-        <Button
-            android:id="@+id/receivables_way_wechat"
-            android:layout_width="@dimen/layout_200dp"
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/layout_10dp"
-            android:layout_marginTop="@dimen/layout_10dp"
-            android:background="@color/we_chat_color"
-            android:text="@string/WeChatPay"
-            android:textSize="@dimen/layout_20sp"/>
+            android:layout_below="@+id/imageView"
+            android:layout_centerHorizontal="true"
+            android:text="@string/YouNoHavingReceivableWay"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/textColor"/>
 
-    </LinearLayout>
+    </RelativeLayout>
+
 
 </RelativeLayout>

@@ -18,7 +18,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import org.json.JSONObject;
@@ -97,7 +97,7 @@ public class AnswerActivity extends BaseAppCompatActivity {
     }
 
     private void setAnswerContent2Service(RequestParams params) {
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.setAnswerToQuestionPath, new AnswerRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();

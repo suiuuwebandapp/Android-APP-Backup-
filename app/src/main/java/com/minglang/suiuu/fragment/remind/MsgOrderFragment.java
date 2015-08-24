@@ -23,7 +23,7 @@ import com.minglang.suiuu.entity.MsgOrder.MsgOrderData.MsgOrderItemData;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.Utils;
 
 import java.util.ArrayList;
@@ -195,7 +195,7 @@ public class MsgOrderFragment extends BaseFragment {
         params.addBodyParameter(PAGE, String.valueOf(page));
         params.addBodyParameter(NUMBER, String.valueOf(15));
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getOrderMsgDataPath, new NewReplyRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();

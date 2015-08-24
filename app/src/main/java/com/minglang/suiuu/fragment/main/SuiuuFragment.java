@@ -30,7 +30,7 @@ import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import org.json.JSONObject;
@@ -116,10 +116,10 @@ public class SuiuuFragment extends BaseFragment
         params.addBodyParameter("endPrice", endPrice);
         params.addBodyParameter("page", Integer.toString(page));
         params.addBodyParameter("number", "10");
-        SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp suiuuHttp = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuList, new getSuiuuDateCallBack());
-        suHttpRequest.setParams(params);
-        suHttpRequest.executive();
+        suiuuHttp.setParams(params);
+        suiuuHttp.executive();
     }
 
     @Override

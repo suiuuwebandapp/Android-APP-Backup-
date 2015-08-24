@@ -1,23 +1,44 @@
 package com.minglang.suiuu.activity;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.ReceivablesWayAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
+import com.minglang.suiuu.entity.AccountInfo;
+import com.minglang.suiuu.entity.AccountInfo.AccountInfoData;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.SuiuuHttp;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.BindColor;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -32,6 +53,18 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
     private static final String ALIPAY = "alipay";
     private static final String WECHAT = "weChat";
 
+    @BindString(R.string.load_wait)
+    String dialogMessage;
+
+    @BindString(R.string.NetworkAnomaly)
+    String networkError;
+
+    @BindString(R.string.NoData)
+    String DataNull;
+
+    @BindString(R.string.DataError)
+    String DataError;
+
     @BindColor(R.color.white)
     int titleColor;
 
@@ -41,19 +74,37 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
     @Bind(R.id.receivables_way_list_view)
     ListView receivablesWayListView;
 
-    @Bind(R.id.receivables_way_layout)
-    LinearLayout linearLayout;
+    @Bind(R.id.receivables_way_hint_layout)
+    RelativeLayout relativeLayout;
 
-    @Bind(R.id.receivables_way_alipay)
-    Button alipayButton;
+    private PopupWindow addPopupWindow;
 
-    @Bind(R.id.receivables_way_wechat)
-    Button weChatButton;
+    private View addRootView;
 
-    private Animation animationEnter;
-    private Animation animationExit;
+    private Button alipayButton;
 
-    private boolean isClick = true;
+    private Button weChatButton;
+
+    private PopupWindow deletePopupWindow;
+
+    private View deleteRootView;
+
+    private Button okButton;
+
+    private Button cancelButton;
+
+    /**
+     * 按钮点击选择
+     */
+    private boolean isSelected = true;
+
+    private ProgressDialog progressDialog;
+
+    private List<AccountInfoData> listAll = new ArrayList<>();
+
+    private ReceivablesWayAdapter adapter;
+
+    private long index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,79 +119,140 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
         toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
-        float layoutHeight = getResources().getDimension(R.dimen.layout_150dp);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(dialogMessage);
+        progressDialog.setCanceledOnTouchOutside(false);
 
-        animationEnter = new TranslateAnimation(0, 0, layoutHeight, 0);
-        animationEnter.setDuration(1000);
+        initPopupWindow();
 
-        animationExit = new TranslateAnimation(0, 0, 0, layoutHeight);
-        animationExit.setDuration(500);
+        adapter = new ReceivablesWayAdapter(this, listAll, R.layout.item_receivables_way);
+        receivablesWayListView.setAdapter(adapter);
+    }
+
+    @SuppressLint("InflateParams")
+    @SuppressWarnings("deprecation")
+    private void initPopupWindow() {
+        addRootView = LayoutInflater.from(this).inflate(R.layout.popup_add_receivables, null);
+        alipayButton = (Button) addRootView.findViewById(R.id.popup_add_receivables_alipay);
+        weChatButton = (Button) addRootView.findViewById(R.id.popup_add_receivables_wechat);
+
+        addPopupWindow = new PopupWindow(addRootView, ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        addPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+        addPopupWindow.setAnimationStyle(R.style.time_popup_window_anim_style);
+        addPopupWindow.setOutsideTouchable(true);
+
+        deleteRootView = LayoutInflater.from(this).inflate(R.layout.popup_delete_receivables, null);
+        okButton = (Button) deleteRootView.findViewById(R.id.popup_delete_receivables_ok);
+        cancelButton = (Button) deleteRootView.findViewById(R.id.popup_delete_receivables_cancel);
+
+        deletePopupWindow = new PopupWindow(deleteRootView, ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        deletePopupWindow.setBackgroundDrawable(new BitmapDrawable());
+        deletePopupWindow.setAnimationStyle(R.style.time_popup_window_anim_style);
+        deletePopupWindow.setOutsideTouchable(true);
     }
 
     private void viewAction() {
 
-        animationEnter.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                linearLayout.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        animationExit.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                linearLayout.clearAnimation();
-                linearLayout.setVisibility(View.GONE);
-                if (isClick) {
-                    Intent intent0 = new Intent(ReceivablesWayActivity.this, AddReceivablesWayActivity.class);
-                    intent0.putExtra(KEY, ALIPAY);
-                    startActivity(intent0);
-                } else {
-                    Intent intent1 = new Intent(ReceivablesWayActivity.this, AddReceivablesWayActivity.class);
-                    intent1.putExtra(KEY, WECHAT);
-                    startActivity(intent1);
-                }
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
         alipayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isClick = true;
-                linearLayout.clearAnimation();
-                linearLayout.setAnimation(animationExit);
+                isSelected = true;
+                addPopupWindow.dismiss();
             }
         });
 
         weChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isClick = false;
-                linearLayout.clearAnimation();
-                linearLayout.setAnimation(animationExit);
+                isSelected = false;
+                addPopupWindow.dismiss();
             }
         });
 
+        addPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                Intent intent = new Intent(ReceivablesWayActivity.this, AddReceivablesWayActivity.class);
+                if (isSelected) {
+                    intent.putExtra(KEY, ALIPAY);
+                } else {
+                    intent.putExtra(KEY, WECHAT);
+                }
+                startActivity(intent);
+            }
+        });
+
+        adapter.setOnDeleteReceivablesItemListener(new ReceivablesWayAdapter.OnDeleteReceivablesItemListener() {
+            @Override
+            public void onDeleteReceivablesItem(long position) {
+                index = position;
+                deletePopupWindow.showAtLocation(deleteRootView, Gravity.BOTTOM, 0, 0);
+            }
+        });
+
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getUserBindAccountList4Service();
+            }
+        });
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listAll.remove(Long.bitCount(index));
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deletePopupWindow.dismiss();
+            }
+        });
+
+    }
+
+    private void getUserBindAccountList4Service() {
+        new SuiuuHttp(HttpRequest.HttpMethod.GET, HttpServicePath.getUserBindAccountListData,
+                new ReceivablesWayCallBack()).executive();
+    }
+
+    private void hideDialog() {
+        if (progressDialog != null && progressDialog.isShowing())
+            progressDialog.dismiss();
+    }
+
+    private void bindData2View(String str) {
+        if (TextUtils.isEmpty(str)) {
+            relativeLayout.setVisibility(View.VISIBLE);
+            Toast.makeText(ReceivablesWayActivity.this, DataNull, Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                AccountInfo accountInfo = JsonUtils.getInstance().fromJSON(AccountInfo.class, str);
+                List<AccountInfoData> list = accountInfo.getData();
+                if (list != null && list.size() > 0) {
+                    listAll.addAll(list);
+                    adapter.setList(listAll);
+                } else {
+                    relativeLayout.setVisibility(View.VISIBLE);
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "数据解析错误:" + e.getMessage());
+                relativeLayout.setVisibility(View.VISIBLE);
+                Toast.makeText(ReceivablesWayActivity.this, DataError, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getUserBindAccountList4Service();
     }
 
     @Override
@@ -158,11 +270,37 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
                 break;
 
             case R.id.add_receivables:
-                DeBugLog.i(TAG, "click add_receivables");
-                linearLayout.setAnimation(animationEnter);
+                addPopupWindow.showAtLocation(addRootView, Gravity.BOTTOM, 0, 0);
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class ReceivablesWayCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing())
+                progressDialog.show();
+            relativeLayout.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+            hideDialog();
+            String str = responseInfo.result;
+            bindData2View(str);
+            DeBugLog.i(TAG, "返回的数据:" + str);
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            hideDialog();
+            relativeLayout.setVisibility(View.VISIBLE);
+            DeBugLog.i(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
+            Toast.makeText(ReceivablesWayActivity.this, networkError, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 }

@@ -43,7 +43,7 @@ import com.minglang.suiuu.entity.TripGalleryDetail.DataEntity.LikeEntity;
 import com.minglang.suiuu.entity.UserBackData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import org.json.JSONException;
@@ -282,7 +282,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("id", id);
         params.addBodyParameter(HttpServicePath.key, verification);
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getTripGalleryDetailById, new loadTripGalleryDetailDateCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
@@ -295,7 +295,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("id", id);
         params.addBodyParameter(HttpServicePath.key, verification);
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionTripGalleryPath, new CollectionTripGalleryRequestCallback());
         httpRequest.setParams(params);
         httpRequest.executive();
@@ -308,7 +308,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("attentionId", cancelId);
         params.addBodyParameter(HttpServicePath.key, verification);
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionArticleCancelPath, new CollectionGalleryCancelRequestCallback());
         httpRequest.setParams(params);
         httpRequest.executive();

@@ -26,7 +26,7 @@ import com.minglang.suiuu.entity.TripGallery;
 import com.minglang.suiuu.entity.TripGallery.DataEntity.TripGalleryDataInfo;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import org.json.JSONException;
@@ -165,10 +165,10 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
         params.addBodyParameter(SEARCH, search);
         params.addBodyParameter(PAGES, Integer.toString(page));
         params.addBodyParameter(NUMBER, "10");
-        SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp suiuuHttp = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getTripGalleryList, new loadTripGalleryListCallBack());
-        suHttpRequest.setParams(params);
-        suHttpRequest.executive();
+        suiuuHttp.setParams(params);
+        suiuuHttp.executive();
     }
 
 

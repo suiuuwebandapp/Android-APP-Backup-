@@ -26,7 +26,7 @@ import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.TripGallery;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import org.json.JSONException;
@@ -158,10 +158,10 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
         params.addBodyParameter("search", search);
         params.addBodyParameter("page", Integer.toString(page));
         params.addBodyParameter("number", "10");
-        SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp suiuuHttp = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getTripGalleryList, new loadTripGalleryListCallBack());
-        suHttpRequest.setParams(params);
-        suHttpRequest.executive();
+        suiuuHttp.setParams(params);
+        suiuuHttp.executive();
     }
 
     /**

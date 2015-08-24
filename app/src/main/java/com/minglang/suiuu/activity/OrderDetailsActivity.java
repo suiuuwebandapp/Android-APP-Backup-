@@ -34,7 +34,7 @@ import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -394,7 +394,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     }
 
     private void getData4Service(RequestParams params, String path, RequestCallBack<String> requestCallBack) {
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST, path, requestCallBack);
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST, path, requestCallBack);
         httpRequest.setParams(params);
         httpRequest.executive();
     }

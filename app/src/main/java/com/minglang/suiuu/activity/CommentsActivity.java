@@ -24,7 +24,7 @@ import com.minglang.suiuu.entity.CommentList;
 import com.minglang.suiuu.entity.LoopArticleCommentList;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -124,7 +124,7 @@ public class CommentsActivity extends BaseActivity {
         dialog.show();
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getCommentListByArticleId, new getCommentListCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
@@ -137,7 +137,7 @@ public class CommentsActivity extends BaseActivity {
         params.addBodyParameter(TRIP_ID, tripId);
         params.addBodyParameter(NUMB, "20");
         params.addBodyParameter(C_PAGE, pageNumber);
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getCommentListByTripId, new getCommentListCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
@@ -188,7 +188,7 @@ public class CommentsActivity extends BaseActivity {
         params.addBodyParameter("rId", rId);
         params.addBodyParameter("rTitle", rTitle);
         params.addBodyParameter(HttpServicePath.key, verification);
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.articleCreateComment, new requestCommentSendCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
@@ -204,7 +204,7 @@ public class CommentsActivity extends BaseActivity {
         params.addBodyParameter("rTitle", rTitle);
         params.addBodyParameter(HttpServicePath.key, verification);
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.suiuuCreateComment, new requestCommentSendCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
