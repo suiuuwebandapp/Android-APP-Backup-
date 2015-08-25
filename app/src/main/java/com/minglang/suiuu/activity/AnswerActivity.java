@@ -9,19 +9,17 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -86,23 +84,47 @@ public class AnswerActivity extends BaseAppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(wait);
         progressDialog.setCanceledOnTouchOutside(false);
+
+        verification = SuiuuInfo.ReadVerification(this);
     }
 
-    private RequestParams buildRequestParams(String id, String content) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
-        params.addBodyParameter(Q_ID, id);
-        params.addBodyParameter(CONTENT, content);
-        return params;
+    /**
+     * 构建网络请求参数
+     *
+     * @param id      问题ID
+     * @param content 答案
+     * @return 参数
+     */
+    private OkHttpManager.Params[] buildNewParams(String id, String content) {
+        OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[3];
+        paramsArray[0] = new OkHttpManager.Params(HttpServicePath.key, verification);
+        paramsArray[1] = new OkHttpManager.Params(Q_ID, id);
+        paramsArray[2] = new OkHttpManager.Params(CONTENT, content);
+        return paramsArray;
     }
 
-    private void setAnswerContent2Service(RequestParams params) {
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.setAnswerToQuestionPath, new AnswerRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+    /**
+     * 发起网络请求
+     *
+     * @param content 答案内容
+     */
+    private void sendRequest(String content) {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
+
+        try {
+            OkHttpManager.onPostAsynRequest(HttpServicePath.setAnswerToQuestionPath,
+                    new AnswerResultCallback(), buildNewParams(qID, content));
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+        }
     }
 
+    /**
+     * 隐藏Dialog
+     */
     private void hideDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -124,7 +146,8 @@ public class AnswerActivity extends BaseAppCompatActivity {
             case R.id.answer_confirm:
                 String str = editText.getText().toString().trim();
                 if (!TextUtils.isEmpty(str)) {
-                    setAnswerContent2Service(buildRequestParams(qID, str));
+                    //setAnswerContent2Service(buildRequestParams(qID, str));
+                    sendRequest(str);
                 } else {
                     Toast.makeText(this, AnswerNoNull, Toast.LENGTH_SHORT).show();
                 }
@@ -133,22 +156,20 @@ public class AnswerActivity extends BaseAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class AnswerRequestCallBack extends RequestCallBack<String> {
+    private class AnswerResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
+        public void onError(Request request, Exception e) {
+            hideDialog();
+            DeBugLog.e(TAG, "request:" + request.toString() + ",Exception:" + e.getMessage());
         }
 
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            DeBugLog.i(TAG, "回答问题返回结果:" + str);
+        public void onResponse(String response) {
             hideDialog();
+            DeBugLog.i(TAG, "response:" + response);
             try {
-                JSONObject object = new JSONObject(str);
+                JSONObject object = new JSONObject(response);
                 String status = object.getString(STATUS);
                 if (status.equals(SUC_VALUE)) {
                     Toast.makeText(AnswerActivity.this, success, Toast.LENGTH_SHORT).show();
@@ -159,13 +180,6 @@ public class AnswerActivity extends BaseAppCompatActivity {
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析数据异常:" + e.getMessage());
             }
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
-            hideDialog();
-            Toast.makeText(AnswerActivity.this, netWorkError, Toast.LENGTH_SHORT).show();
         }
 
     }

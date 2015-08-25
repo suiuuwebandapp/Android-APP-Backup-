@@ -43,11 +43,6 @@ public class SuiuuInfo implements Serializable {
      */
     private static final String HEAD_IMG = "headImg";
 
-    /**
-     * 本地头像地址
-     */
-    private static final String NATIVE_HEAD_IMG = "NativeHeadImage";
-
     private static final String TYPE = "Type";
 
     /**
@@ -74,10 +69,27 @@ public class SuiuuInfo implements Serializable {
      */
     private static final String DomicileCity = "domicileCity";
 
+    private static final String APP_TIME_SIGN = "AppTimeSign";
+
+    public static void WriteAppTimeSign(Context context, String value) {
+        if (context == null) {
+            return;
+        }
+
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).edit();
+        editor.putString(APP_TIME_SIGN, value);
+        editor.apply();
+    }
+
+    public static String ReadAppTimeSign(Context context){
+        return context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).getString(APP_TIME_SIGN, "");
+    }
+
     public static void WriteAnyInfo(Context context, String key, String value) {
         if (context == null) {
             return;
         }
+
         SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).edit();
         editor.putString(key, value);
         editor.apply();
@@ -114,11 +126,11 @@ public class SuiuuInfo implements Serializable {
         if (context == null) {
             return;
         }
+
         SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).edit();
         editor.putString(DomicileCountry, domicileCountry);
         editor.putString(DomicileCity, domicileCity);
         editor.apply();
-
     }
 
     /**

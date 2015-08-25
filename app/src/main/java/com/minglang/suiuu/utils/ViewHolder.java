@@ -1,6 +1,5 @@
 package com.minglang.suiuu.utils;
 
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.SparseArray;
@@ -11,12 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ViewHolder {
+
     private final SparseArray<View> mViews;
     private int mPosition;
     private View mConvertView;
 
-    private ViewHolder(Context context, ViewGroup parent, int layoutId,
-                       int position) {
+    private ViewHolder(Context context, ViewGroup parent, int layoutId, int position) {
         this.mPosition = position;
         this.mViews = new SparseArray<>();
         mConvertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
@@ -53,7 +52,7 @@ public class ViewHolder {
      * 通过控件的Id获取对于的控件，如果没有则加入views
      *
      * @param viewId item内view的ID
-     * @return
+     * @return 返回View实例
      */
     @SuppressWarnings("unchecked")
     public <T extends View> T getView(int viewId) {
@@ -68,9 +67,9 @@ public class ViewHolder {
     /**
      * 为TextView设置字符串
      *
-     * @param viewId
-     * @param text
-     * @return
+     * @param viewId 控件ID
+     * @param text   文本内容
+     * @return ViewHolder实例
      */
     public ViewHolder setText(int viewId, String text) {
         TextView view = getView(viewId);
@@ -81,9 +80,9 @@ public class ViewHolder {
     /**
      * 为ImageView设置图片
      *
-     * @param viewId
-     * @param drawableId
-     * @return
+     * @param viewId     控件ID
+     * @param drawableId 资源ID
+     * @return ViewHolder实例
      */
     public ViewHolder setImageResource(int viewId, int drawableId) {
         ImageView view = getView(viewId);
@@ -95,9 +94,9 @@ public class ViewHolder {
     /**
      * 为ImageView设置图片
      *
-     * @param viewId
-     * @param bm
-     * @return
+     * @param viewId 控件ID
+     * @param bm     Bitmap
+     * @return ViewHolder实例
      */
     public ViewHolder setImageBitmap(int viewId, Bitmap bm) {
         ImageView view = getView(viewId);
@@ -108,9 +107,9 @@ public class ViewHolder {
     /**
      * 为ImageView设置图片
      *
-     * @param viewId
-     * @param url
-     * @return
+     * @param viewId 控件ID
+     * @param url    图片网络地址
+     * @return ViewHolder实例
      */
     public ViewHolder setImageByUrl(int viewId, String url) {
         ImageLoaderUtils.getInstance(3, ImageLoaderUtils.Type.LIFO).loadImage(url,

@@ -15,11 +15,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
@@ -33,10 +28,13 @@ import com.minglang.suiuu.entity.MainCommunity.MainCommunityData;
 import com.minglang.suiuu.entity.MainCommunity.MainCommunityData.MainCommunityItemData;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.SuiuuInfo;
+import com.squareup.okhttp.Request;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +46,7 @@ import butterknife.ButterKnife;
  * 问答社区页面
  */
 public class CommunityFragment extends BaseFragment {
+
     private static final String TAG = CommunityFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
@@ -64,6 +63,8 @@ public class CommunityFragment extends BaseFragment {
 
     private static final String ID = "id";
     private static final String TITLE = "title";
+
+    private static final String TOKEN = "token";
 
     private String userSign;
     private String verification;
@@ -94,7 +95,7 @@ public class CommunityFragment extends BaseFragment {
         this.searchString = searchString;
         page = 1;
         selectedState = 4;
-        getProblemList(buildRequestParams(selectedState, page));
+        sendRequest();
     }
 
     @BindString(R.string.load_wait)
@@ -143,6 +144,8 @@ public class CommunityFragment extends BaseFragment {
         return cityId;
     }
 
+    String url;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,6 +182,8 @@ public class CommunityFragment extends BaseFragment {
 
         this.adapter = new CommunityAdapter(getActivity());
         listView.setAdapter(this.adapter);
+
+        token = SuiuuInfo.ReadAppTimeSign(getActivity());
     }
 
     /**
@@ -201,7 +206,7 @@ public class CommunityFragment extends BaseFragment {
                         break;
                 }
                 page = 1;
-                getProblemList(buildRequestParams(selectedState, page));
+                sendRequest();
             }
 
             @Override
@@ -221,7 +226,8 @@ public class CommunityFragment extends BaseFragment {
 
                 page = 1;
                 isPullToRefresh = false;
-                getProblemList(buildRequestParams(selectedState, page));
+                //                getProblemList(buildRequestParams(selectedState, page));
+                sendRequest();
             }
 
             @Override
@@ -232,7 +238,8 @@ public class CommunityFragment extends BaseFragment {
 
                 page = page + 1;
                 isPullToRefresh = false;
-                getProblemList(buildRequestParams(selectedState, page));
+                //                getProblemList(buildRequestParams(selectedState, page));
+                sendRequest();
             }
 
         });
@@ -269,61 +276,60 @@ public class CommunityFragment extends BaseFragment {
      * @param page     页码
      * @return 网络请求参数
      */
-    private RequestParams buildRequestParams(int selected, int page) {
-        DeBugLog.i(TAG, "当前页码:" + page);
-        RequestParams params = new RequestParams();
+    private String buildUrl(int selected, int page) {
         switch (selected) {
             case 0:
-                params.addBodyParameter(HttpServicePath.key, verification);
-                params.addBodyParameter(NUMBER, String.valueOf(20));
-                params.addBodyParameter(PAGES, String.valueOf(page));
+                String[] keyArray0 = new String[]{HttpNewServicePath.key, NUMBER, PAGES, TOKEN};
+                String[] valueArray0 = new String[]{verification, String.valueOf(20), String.valueOf(page), token};
+                url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray0, valueArray0);
                 break;
 
             case 1:
-                params.addBodyParameter(HttpServicePath.key, verification);
-                params.addBodyParameter(NUMBER, String.valueOf(20));
-                params.addBodyParameter(PAGES, String.valueOf(page));
-                params.addBodyParameter(SORT_NAME, String.valueOf(0));
+                String[] keyArray1 = new String[]{HttpNewServicePath.key, NUMBER, PAGES, SORT_NAME, TOKEN};
+                String[] valueArray1 = new String[]{verification, String.valueOf(20), String.valueOf(page), String.valueOf(0), token};
+                url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray1, valueArray1);
                 break;
 
             case 2:
-                params.addBodyParameter(HttpServicePath.key, verification);
-                params.addBodyParameter(NUMBER, String.valueOf(20));
-                params.addBodyParameter(PAGES, String.valueOf(page));
-                params.addBodyParameter(SORT_NAME, String.valueOf(1));
+                String[] keyArray2 = new String[]{HttpNewServicePath.key, NUMBER, PAGES, SORT_NAME, TOKEN};
+                String[] valueArray2 = new String[]{verification, String.valueOf(20),
+                        String.valueOf(page), String.valueOf(1), token};
+                url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray2, valueArray2);
                 break;
 
             case 3:
-                params.addBodyParameter(HttpServicePath.key, verification);
-                params.addBodyParameter(NUMBER, String.valueOf(20));
-                params.addBodyParameter(PAGES, String.valueOf(page));
-                params.addBodyParameter(SORT_NAME, String.valueOf(1));
-                params.addBodyParameter(COUNTRY_ID, countryId);
-                params.addBodyParameter(CITY_ID, cityId);
+                String[] keyArray3 = new String[]{HttpNewServicePath.key, NUMBER, PAGES, SORT_NAME, COUNTRY_ID, CITY_ID, TOKEN};
+                String[] valueArray3 = new String[]{verification, String.valueOf(20),
+                        String.valueOf(page), String.valueOf(1), countryId, cityId, token};
+                url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray3, valueArray3);
                 break;
+
             case 4:
-                params.addBodyParameter(HttpServicePath.key, verification);
-                params.addBodyParameter(NUMBER, String.valueOf(20));
-                params.addBodyParameter(PAGES, String.valueOf(page));
-                params.addBodyParameter(SORT_NAME, String.valueOf(1));
-                params.addBodyParameter(COUNTRY_ID, countryId);
-                params.addBodyParameter(CITY_ID, cityId);
-                params.addBodyParameter(SEARCH, searchString);
+                String[] keyArray4 = new String[]{HttpNewServicePath.key, NUMBER, PAGES,
+                        SORT_NAME, COUNTRY_ID, CITY_ID, SEARCH, TOKEN};
+                String[] valueArray4 = new String[]{verification, String.valueOf(20),
+                        String.valueOf(page), String.valueOf(1), countryId, cityId, searchString, token};
+                url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray4, valueArray4);
                 break;
         }
-        return params;
+        return url;
     }
 
-    /**
-     * 网络请求方法
-     *
-     * @param params 请求参数
-     */
-    private void getProblemList(RequestParams params) {
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getMainProblemListPath, new CommunityRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+    private void sendRequest() {
+        if (isPullToRefresh) {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
+
+        try {
+            OkHttpManager.onGetAsynRequest(buildUrl(selectedState, page), new CommunityResultCallBack());
+        } catch (IOException e) {
+            e.printStackTrace();
+            lessPageNumber();
+            hideDialog();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -411,8 +417,6 @@ public class CommunityFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        DeBugLog.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
-
         if (resultCode != Activity.RESULT_OK) {
             DeBugLog.e(TAG, "return information is null");
         } else if (data == null) {
@@ -420,12 +424,12 @@ public class CommunityFragment extends BaseFragment {
         } else {
             switch (requestCode) {
                 case AppConstant.SELECT_COUNTRY_OK:
-                    countryId = data.getStringExtra("countryId");
-                    cityId = data.getStringExtra("cityId");
+                    countryId = data.getStringExtra(COUNTRY_ID);
+                    cityId = data.getStringExtra(CITY_ID);
 
                     page = 1;
                     selectedState = 3;
-                    getProblemList(buildRequestParams(selectedState, page));
+                    sendRequest();
 
                     DeBugLog.i(TAG, "countryId:" + countryId);
                     DeBugLog.i(TAG, "countryCNname:" + data.getStringExtra("countryCNname"));
@@ -436,33 +440,21 @@ public class CommunityFragment extends BaseFragment {
         }
     }
 
-    /**
-     * 网络请求回调接口
-     */
-    private class CommunityRequestCallBack extends RequestCallBack<String> {
+    private class CommunityResultCallBack extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (isPullToRefresh)
-                if (progressDialog != null && !progressDialog.isShowing()) {
-                    progressDialog.show();
-                }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            DeBugLog.i(TAG, "问答社区返回的数据:" + str);
-            hideDialog();
-            bindData2View(str);
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",error:" + s);
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
             lessPageNumber();
             hideDialog();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "问答社区返回的数据:" + response);
+            hideDialog();
+            bindData2View(response);
         }
 
     }

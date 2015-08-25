@@ -24,6 +24,7 @@ import com.alibaba.sdk.android.oss.model.ClientConfiguration;
 import com.alibaba.sdk.android.oss.model.TokenGenerator;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.minglang.suiuu.crash.GlobalCrashHandler;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -65,7 +66,7 @@ public class SuiuuApplication extends Application {
         initAboatOSS();
         initImageLoad();
         Fresco.initialize(this);
-//        GlobalCrashHandler.getInstance().init(this);
+        GlobalCrashHandler.getInstance().init(this);
     }
 
     @Override

@@ -98,7 +98,6 @@ public class BaseActivity extends FragmentActivity {
         isZhCnLanguage = isCNLanguage();
 
         BaseFragment baseFragment = new BaseFragment();
-        baseFragment.setContext(this);
 
         baseFragment.setKITKAT(isKITKAT);
         baseFragment.setNavigationBar(isNavigationBar);
