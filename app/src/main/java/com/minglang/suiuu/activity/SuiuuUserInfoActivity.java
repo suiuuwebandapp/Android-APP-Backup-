@@ -24,7 +24,7 @@ import com.minglang.suiuu.entity.SuiuuUser;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -186,7 +186,7 @@ public class SuiuuUserInfoActivity extends BaseAppCompatActivity {
         params.addBodyParameter("userSign", userSign);
         params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuUserInfoPath, new SuiuuUserDataInfoRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();

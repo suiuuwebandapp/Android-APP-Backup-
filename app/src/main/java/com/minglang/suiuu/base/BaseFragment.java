@@ -1,11 +1,12 @@
 package com.minglang.suiuu.base;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 public class BaseFragment extends Fragment {
 
@@ -13,6 +14,7 @@ public class BaseFragment extends Fragment {
 
     public String userSign;
     public String verification;
+    public String token;
 
     /**
      * 状态栏高度
@@ -44,13 +46,6 @@ public class BaseFragment extends Fragment {
      * 屏幕高度
      */
     public int screenHeight;
-
-    public void setContext(Context context) {
-        if (!imageLoader.isInited()) {
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context.getApplicationContext()));
-        }
-        imageLoader.clearMemoryCache();
-    }
 
     public void setScreenWidth(int screenWidth) {
         this.screenWidth = screenWidth;
@@ -86,6 +81,23 @@ public class BaseFragment extends Fragment {
 
     public void setKITKAT(boolean isKITKAT) {
         this.isKITKAT = isKITKAT;
+    }
+
+    public String addUrlAndParams(String url, String[] keyArray, String[] valueArray) {
+        String _url = url + "?";
+        for (int i = 0; i < keyArray.length; i++) {
+            if (valueArray.length >= i) {
+                _url = _url + keyArray[i] + "=" + valueArray[i] + "&";
+            } else {
+                _url = _url + keyArray[i] + "=&";
+            }
+        }
+        try {
+            _url = URLDecoder.decode(_url, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return _url;
     }
 
     @Override

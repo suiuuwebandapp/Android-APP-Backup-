@@ -384,7 +384,7 @@
         <activity
             android:name=".activity.ReceivablesWayActivity"
             android:label="@string/title_activity_receivables_way"
-            android:theme="@style/AppMainTheme2"/>
+            android:theme="@style/AppMainTheme"/>
 
         <activity
             android:name=".activity.AddReceivablesWayActivity"

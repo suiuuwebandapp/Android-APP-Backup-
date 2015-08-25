@@ -35,7 +35,7 @@ import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ScreenUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
 
@@ -312,10 +312,10 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         }
         params.addBodyParameter("picList", jsonUtil.toJSON(picNameList));
         params.addBodyParameter("titleImg", picNameList.get(0));
-        SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp suiuuHttp = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.createTripGallery, new CreateLoopCallBack());
-        suHttpRequest.setParams(params);
-        suHttpRequest.executive();
+        suiuuHttp.setParams(params);
+        suiuuHttp.executive();
     }
 
     private void changeLoadDate() {
@@ -353,10 +353,10 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
             params.addBodyParameter("img", articleDetail.getaImg());
         }
 
-        SuHttpRequest suHttpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp suiuuHttp = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.updateLoop, new UpdateLoopCallBack());
-        suHttpRequest.setParams(params);
-        suHttpRequest.executive();
+        suiuuHttp.setParams(params);
+        suiuuHttp.executive();
     }
 
     /**

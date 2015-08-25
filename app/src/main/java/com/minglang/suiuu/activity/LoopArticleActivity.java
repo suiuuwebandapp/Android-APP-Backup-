@@ -38,7 +38,7 @@ import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.DrawableUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.qq.TencentConstant;
 import com.minglang.suiuu.utils.wechat.WeChatConstant;
@@ -392,7 +392,7 @@ public class LoopArticleActivity extends BaseActivity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter(HttpServicePath.key, verification);
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.articleAddPraise, new addPraiseRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
@@ -405,7 +405,7 @@ public class LoopArticleActivity extends BaseActivity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter(HttpServicePath.key, verification);
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionArticlePath, new CollectionArticleRequestCallback());
         httpRequest.setParams(params);
         httpRequest.executive();
@@ -418,7 +418,7 @@ public class LoopArticleActivity extends BaseActivity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("attentionId", cancelId);
         params.addBodyParameter(HttpServicePath.key, verification);
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.CollectionArticleCancelPath, new CollectionArticleCancelRequestCallback());
         httpRequest.setParams(params);
         httpRequest.executive();
@@ -434,7 +434,7 @@ public class LoopArticleActivity extends BaseActivity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter(HttpServicePath.key, verification);
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.DeleteArticlePath, new DeleteArticleRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
@@ -450,7 +450,7 @@ public class LoopArticleActivity extends BaseActivity {
         RequestParams params = new RequestParams();
         params.addBodyParameter("articleId", articleId);
         params.addBodyParameter(HttpServicePath.key, verification);
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.LoopArticlePath, new LoopArticleRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();

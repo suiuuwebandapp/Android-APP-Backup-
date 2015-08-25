@@ -38,7 +38,7 @@ import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -407,7 +407,7 @@ public class PersonalSettingActivity extends BaseActivity {
         params.addBodyParameter("profession", str_Trade);
         params.addBodyParameter(HttpServicePath.key, verification);
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.upDatePersonalStatus, new PersonalSettingRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();

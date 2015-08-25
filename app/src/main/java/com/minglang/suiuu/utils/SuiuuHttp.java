@@ -1,20 +1,16 @@
 package com.minglang.suiuu.utils;
 
 import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
-
+import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 
 /**
  * 封装网络请求方法
  * <p/>
  * Created by Administrator on 2015/4/23.
  */
-public class SuHttpRequest {
-
-    private static final String TAG = SuHttpRequest.class.getSimpleName();
+public class SuiuuHttp {
 
     /**
      * 网络请求核心类
@@ -26,7 +22,7 @@ public class SuHttpRequest {
      * <p/>
      * GET、POST等
      */
-    private HttpRequest.HttpMethod httpMethod;
+    private HttpMethod httpMethod;
 
     /**
      * 请求参数
@@ -43,39 +39,30 @@ public class SuHttpRequest {
      */
     private RequestCallBack<String> requestCallBack;
 
-    private HttpHandler<String> httpHandler;
+    public SuiuuHttp(){}
 
-    public SuHttpRequest(HttpRequest.HttpMethod httpMethod, String httpPath, RequestCallBack<String> requestCallBack) {
+    public SuiuuHttp(HttpMethod httpMethod, String httpPath, RequestCallBack<String> requestCallBack) {
         this.httpMethod = httpMethod;
         this.httpPath = httpPath;
         this.requestCallBack = requestCallBack;
 
         httpUtils = new HttpUtils();
-        httpUtils.configRequestRetryCount(0);
-    }
-
-    public HttpRequest.HttpMethod getHttpMethod() {
-        return httpMethod;
     }
 
     public void setParams(RequestParams params) {
         this.params = params;
     }
 
-    public RequestParams getParams() {
-        return params;
+    public void setHttpMethod(HttpMethod httpMethod) {
+        this.httpMethod = httpMethod;
     }
 
-    public RequestCallBack<String> getRequestCallBack() {
-        return requestCallBack;
+    public void setHttpPath(String httpPath) {
+        this.httpPath = httpPath;
     }
 
-    public String getHttpPath() {
-        return httpPath;
-    }
-
-    public HttpHandler<String> getHttpHandler() {
-        return httpHandler;
+    public void setRequestCallBack(RequestCallBack<String> requestCallBack) {
+        this.requestCallBack = requestCallBack;
     }
 
     public void executive() {
@@ -92,9 +79,9 @@ public class SuHttpRequest {
         }
 
         if (params == null) {
-            httpHandler = httpUtils.send(httpMethod, httpPath, requestCallBack);
+            httpUtils.send(httpMethod, httpPath, requestCallBack);
         } else {
-            httpHandler = httpUtils.send(httpMethod, httpPath, params, requestCallBack);
+            httpUtils.send(httpMethod, httpPath, params, requestCallBack);
         }
     }
 

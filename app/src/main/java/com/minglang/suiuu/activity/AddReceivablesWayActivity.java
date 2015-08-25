@@ -1,5 +1,6 @@
 package com.minglang.suiuu.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,9 +12,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.SuiuuHttp;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -29,6 +37,9 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
     private static final String ALIPAY = "alipay";
     private static final String WECHAT = "weChat";
 
+    private static final String ACCOUNT = "account";
+    private static final String NAME = "name";
+
     private String strKey;
 
     @BindColor(R.color.white)
@@ -39,6 +50,9 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
 
     @BindString(R.string.YourNameNotNull)
     String YourNameNotNull;
+
+    @BindString(R.string.Loading)
+    String loading;
 
     @Bind(R.id.add_receivables_tool_bar)
     Toolbar toolbar;
@@ -53,6 +67,10 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
     Button addReceivablesOk;
 
     private Context context;
+
+    private boolean isAccount = true;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +89,19 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
         setSupportActionBar(toolbar);
 
         context = AddReceivablesWayActivity.this;
+
+        if (!TextUtils.isEmpty(strKey)) {
+            if (strKey.equals(ALIPAY)) {
+                isAccount = true;
+            } else if (strKey.equals(WECHAT)) {
+                isAccount = false;
+            }
+        }
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(loading);
+        progressDialog.setCanceledOnTouchOutside(false);
+
     }
 
     private void viewAction() {
@@ -84,14 +115,44 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
                 } else if (TextUtils.isEmpty(strUserName)) {
                     Toast.makeText(context, YourNameNotNull, Toast.LENGTH_SHORT).show();
                 } else {
-                    if (strKey.equals(ALIPAY)) {
-                        DeBugLog.i(TAG, strKey + ",strAccount=" + strAccount + ",strUserName=" + strUserName);
-                    } else if (strKey.equals(WECHAT)) {
-                        DeBugLog.i(TAG, strKey + ",strAccount=" + strAccount + ",strUserName=" + strUserName);
-                    }
+                    setAccountInfo4Service(buildRequestParams(strAccount, strUserName));
                 }
             }
         });
+    }
+
+    private RequestParams buildRequestParams(String account, String userName) {
+        RequestParams params = new RequestParams();
+        if (isAccount) {
+            params.addBodyParameter(ACCOUNT, account);
+        } else {
+            params.addBodyParameter(ACCOUNT, account);
+        }
+        params.addBodyParameter(NAME, userName);
+        return params;
+    }
+
+    private void setAccountInfo4Service(RequestParams params) {
+        SuiuuHttp suiuuHttp = new SuiuuHttp();
+        suiuuHttp.setHttpMethod(HttpRequest.HttpMethod.POST);
+        if (isAccount) {
+            suiuuHttp.setHttpPath(HttpServicePath.addAliPayUserInfo);
+        } else {
+            suiuuHttp.setHttpPath(HttpServicePath.addWeChatAUserInfo);
+        }
+        suiuuHttp.setParams(params);
+        suiuuHttp.setRequestCallBack(new AddReceivablesWayCallBack());
+    }
+
+    private void hideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -109,6 +170,30 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class AddReceivablesWayCallBack extends RequestCallBack<String> {
+
+        @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
+
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+            hideDialog();
+            String str = responseInfo.result;
+            DeBugLog.i(TAG, "返回信息:" + str);
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
+            hideDialog();
+        }
+
     }
 
 }

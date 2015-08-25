@@ -36,8 +36,18 @@ import com.minglang.suiuu.fragment.main.TripGalleryFragment;
 import com.minglang.suiuu.receiver.ConnectionNetChangeReceiver;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.MD5Utils;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.squareup.okhttp.Request;
 import com.umeng.update.UmengUpdateAgent;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 import butterknife.Bind;
 import butterknife.BindString;
@@ -59,6 +69,13 @@ public class MainActivity extends BaseActivity {
 
     private static final String COUNTRY_ID = "countryId";
     private static final String CITY_ID = "cityId";
+
+    private static final String TIME_STAMP = "timestamp";
+    private static final String APP_SIGN = "appSign";
+    private static final String SIGN = "sign";
+
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
 
     @BindString(R.string.SuiuuAccount)
     String SuiuuAccount;
@@ -185,9 +202,7 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.img4)
     ImageView iv_tab4;
 
-
     TextView rl_net_error;
-
 
     private ExitReceiver exitReceiver;
 
@@ -197,9 +212,10 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         UmengUpdateAgent.update(this);
         ButterKnife.bind(this);
+        getAppTimeSign();
         initView();
         registerReceiver();
-        ViewAction();
+        viewAction();
     }
 
     @Override
@@ -209,6 +225,7 @@ public class MainActivity extends BaseActivity {
         if (!TextUtils.isEmpty(network_headImage_path)) {
             imageLoader.displayImage(network_headImage_path, headImageView);
         }
+
         String user_name = SuiuuInfo.ReadUserData(this).getNickname();
         if (!TextUtils.isEmpty(user_name)) {
             nickNameView.setText(user_name);
@@ -273,7 +290,7 @@ public class MainActivity extends BaseActivity {
     /**
      * 控件相关事件
      */
-    private void ViewAction() {
+    private void viewAction() {
 
         switchSuiuu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -407,7 +424,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void conectionResume(Context b) {
-                if(rl_net_error.isEnabled()) {
+                if (rl_net_error.isEnabled()) {
                     rl_net_error.setVisibility(View.GONE);
                 }
             }
@@ -626,10 +643,55 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    private void getAppTimeSign() {
+        OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[3];
+        String time = String.valueOf(System.currentTimeMillis() / 1000);
+
+        paramsArray[0] = new OkHttpManager.Params(TIME_STAMP, time);
+        paramsArray[1] = new OkHttpManager.Params(APP_SIGN, verification);
+        try {
+            String sign = MD5Utils.getMD5(time + verification + HttpNewServicePath.ConfusedCode);
+            DeBugLog.i(TAG, "Sign:" + sign);
+            paramsArray[2] = new OkHttpManager.Params(SIGN, sign);
+        } catch (NoSuchAlgorithmException e) {
+            DeBugLog.e(TAG, "NoSuchAlgorithmException:" + e.getMessage());
+        }
+
+        try {
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.getToken,
+                    new OkHttpManager.ResultCallback<String>() {
+                        @Override
+                        public void onError(Request request, Exception e) {
+                            DeBugLog.e(TAG, "Network Exception:" + e.getMessage());
+                        }
+
+                        @Override
+                        public void onResponse(String response) {
+                            DeBugLog.i(TAG, "response:" + response);
+                            try {
+                                JSONObject object = new JSONObject(response);
+                                String status = object.getString(STATUS);
+                                if (status.equals("1")) {
+                                    String appTimeSign = object.getString(DATA);
+                                    DeBugLog.i(TAG, "appTimeSign:" + appTimeSign);
+                                    SuiuuInfo.WriteAppTimeSign(MainActivity.this, appTimeSign);
+                                } else {
+                                    DeBugLog.e(TAG, "获取失败");
+                                }
+                            } catch (JSONException e) {
+                                DeBugLog.e(TAG, "JSONException:" + e.getMessage());
+                            }
+                        }
+
+                    }, paramsArray);
+        } catch (IOException e) {
+            DeBugLog.e(TAG, "IOException:" + e.getMessage());
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        DeBugLog.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
         if (resultCode != Activity.RESULT_OK) {
             DeBugLog.e(TAG, "return information is null");
         } else if (data == null) {
@@ -647,7 +709,6 @@ public class MainActivity extends BaseActivity {
             tripGalleryFragment.onReflash();
         }
     }
-
 
     private class ExitReceiver extends BroadcastReceiver {
 
@@ -759,4 +820,5 @@ public class MainActivity extends BaseActivity {
     private void unregisterReceiver() {
         this.unregisterReceiver(myReceiver);
     }
+
 }

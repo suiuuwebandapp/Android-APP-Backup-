@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,13 +36,12 @@ import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.MD5Utils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.qq.TencentConstant;
 import com.minglang.suiuu.utils.wechat.WeChatConstant;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
@@ -57,11 +55,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -72,7 +70,32 @@ public class LoginActivity extends BaseActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
-    private static final String HUANXINPASSWORD = "suIuu9Q5E2T7";
+    private static final String AREA_CODE = "areaCode";
+
+    private static final String PHONE = "phone";
+    private static final String PASSWORD = "password";
+    private static final String C_PASSWORD = "cPassword";
+    private static final String NICK = "nick";
+    private static final String VALIDATE_CODE = "validateCode";
+
+    private static final String STATUS = "status";
+
+    private static final String USER_NAME = "username";
+
+    @BindString(R.string.login_wait)
+    String loginMessage;
+
+    @BindString(R.string.register_wait)
+    String registerMessage;
+
+    @BindString(R.string.User_name_cannot_be_empty)
+    String userNameNotNull;
+
+    @BindString(R.string.Password_cannot_be_empty)
+    String passwordNotNull;
+
+    @BindString(R.string.InternationalCodeFailure)
+    String repeatAreaCode;
 
     @Bind(R.id.loginBtn)
     Button loginBtn;
@@ -80,13 +103,8 @@ public class LoginActivity extends BaseActivity {
     @Bind(R.id.registerBtn)
     Button registerBtn;
 
-    /**
-     * ***************************分割线***************************
-     */
-
     //登陆PopupWindow
-
-    private View popupLoginRootView;
+    private View loginRootView;
 
     private PopupWindow popupWindowLogin;
 
@@ -96,12 +114,7 @@ public class LoginActivity extends BaseActivity {
 
     private Button popupLoginBtn;
 
-    /**
-     * ***************************分割线***************************
-     */
-
     //注册PopupWindow1
-
     private View popupRegisterView1;
 
     private PopupWindow popupWindowRegister1;
@@ -114,12 +127,7 @@ public class LoginActivity extends BaseActivity {
 
     private AreaCodeAdapter areaCodeAdapter;
 
-    /**
-     * **************************分割线***************************
-     */
-
     //注册PopupWindow2
-
     private View popupRegisterView2;
 
     private PopupWindow popupWindowRegister2;
@@ -131,10 +139,6 @@ public class LoginActivity extends BaseActivity {
     private EditText editConfirmPassWord;
 
     private Button registerButton;
-
-    /**
-     * **************************分割线***************************
-     */
 
     /**
      * 国际电话区号数据集合
@@ -149,7 +153,7 @@ public class LoginActivity extends BaseActivity {
     /**
      * 国际电话区号
      */
-    private String internationalAreaCode;
+    private String areaCode;
 
     /**
      * 手机号
@@ -157,18 +161,14 @@ public class LoginActivity extends BaseActivity {
     private String phoneNumber;
 
     /**
-     * ***************************分割线***************************
-     */
-
-    /**
      * 登陆用户名
      */
-    private String suiuuLoginUserName;
+    private String loginUserName;
 
     /**
      * 登陆密码
      */
-    private String suiuuLoginPassword;
+    private String loginPassword;
 
     /**
      * 验证码
@@ -227,11 +227,9 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         ButterKnife.bind(this);
-
         initView();
-        getInternationalAreaCode();
+        getAreaCode();
         ViewAction();
     }
 
@@ -252,24 +250,24 @@ public class LoginActivity extends BaseActivity {
         loginDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         loginDialog.setCanceledOnTouchOutside(false);
         loginDialog.setCancelable(true);
-        loginDialog.setMessage(getResources().getString(R.string.login_wait));
+        loginDialog.setMessage(loginMessage);
 
         registerDialog = new ProgressDialog(this);
         registerDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         registerDialog.setCanceledOnTouchOutside(false);
         registerDialog.setCancelable(true);
-        registerDialog.setMessage(getResources().getString(R.string.register_wait));
+        registerDialog.setMessage(registerMessage);
 
         tencentLoginDialog = new ProgressDialog(this);
         tencentLoginDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         tencentLoginDialog.setCanceledOnTouchOutside(false);
-        tencentLoginDialog.setMessage(getResources().getString(R.string.login_wait));
+        tencentLoginDialog.setMessage(loginMessage);
 
         weChatLoadDialog = new ProgressDialog(this);
         weChatLoadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         weChatLoadDialog.setCanceledOnTouchOutside(false);
         weChatLoadDialog.setCancelable(true);
-        weChatLoadDialog.setMessage(getResources().getString(R.string.login_wait));
+        weChatLoadDialog.setMessage(loginMessage);
     }
 
     /**
@@ -285,21 +283,20 @@ public class LoginActivity extends BaseActivity {
      */
     @SuppressLint("InflateParams")
     private void initPopupWindow() {
-        popupLoginRootView = LayoutInflater.from(this).inflate(R.layout.popup_login, null);
+        loginRootView = LayoutInflater.from(this).inflate(R.layout.popup_login, null);
 
-        popupLoginUserName = (EditText) popupLoginRootView.findViewById(R.id.userName);
-        popupLoginPassword = (EditText) popupLoginRootView.findViewById(R.id.userPassword);
-        popupLoginBtn = (Button) popupLoginRootView.findViewById(R.id.popupLoginBtn);
+        popupLoginUserName = (EditText) loginRootView.findViewById(R.id.userName);
+        popupLoginPassword = (EditText) loginRootView.findViewById(R.id.userPassword);
+        popupLoginBtn = (Button) loginRootView.findViewById(R.id.popupLoginBtn);
 
         ViewGroup.LayoutParams loginParams = popupLoginBtn.getLayoutParams();
         loginParams.width = screenWidth / 3;
         popupLoginBtn.setLayoutParams(loginParams);
 
-        popupWindowLogin = new PopupWindow(popupLoginRootView, ViewGroup.LayoutParams.MATCH_PARENT,
+        popupWindowLogin = new PopupWindow(loginRootView, ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT, true);
         popupWindowLogin.setBackgroundDrawable(new BitmapDrawable());
 
-        //****************************分割线***************************\\
 
         popupRegisterView1 = LayoutInflater.from(this).inflate(R.layout.popup_register1, null);
 
@@ -319,7 +316,6 @@ public class LoginActivity extends BaseActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT, true);
         popupWindowRegister1.setBackgroundDrawable(new BitmapDrawable());
 
-        //* ***************************分割线***************************\\
 
         popupRegisterView2 = LayoutInflater.from(this).inflate(R.layout.popup_register2, null);
 
@@ -346,7 +342,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (areaCodeDataList == null || areaCodeDataList.size() <= 0) {
-                    getInternationalAreaCode();
+                    getAreaCode();
                 }
             }
         });
@@ -354,7 +350,7 @@ public class LoginActivity extends BaseActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popupWindowLogin.showAtLocation(popupLoginRootView,
+                popupWindowLogin.showAtLocation(loginRootView,
                         Gravity.CENTER_HORIZONTAL, 0, 0);
             }
         });
@@ -370,35 +366,34 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                suiuuLoginUserName = popupLoginUserName.getText().toString().trim();
-                suiuuLoginPassword = popupLoginPassword.getText().toString().trim();
+                loginUserName = popupLoginUserName.getText().toString().trim();
+                loginPassword = popupLoginPassword.getText().toString().trim();
 
-                if (TextUtils.isEmpty(suiuuLoginUserName)) {
-                    Toast.makeText(LoginActivity.this,
-                            getResources().getString(R.string.User_name_cannot_be_empty), Toast.LENGTH_SHORT).show();
-                } else if (TextUtils.isEmpty(suiuuLoginPassword)) {
-                    Toast.makeText(LoginActivity.this,
-                            getResources().getString(R.string.Password_cannot_be_empty), Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(loginUserName)) {
+                    Toast.makeText(LoginActivity.this, userNameNotNull, Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(loginPassword)) {
+                    Toast.makeText(LoginActivity.this, passwordNotNull, Toast.LENGTH_SHORT).show();
                 } else {
-                    suiuuLogin(suiuuLoginUserName, suiuuLoginPassword);
+                    suiuuLogin(loginUserName, loginPassword);
                 }
             }
         });
 
         popupRegister1Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (areaCodeDataList != null && areaCodeDataList.size() > 0) {
                     AreaCodeData data = areaCodeDataList.get(position);
                     areaName = data.getCname();
-                    internationalAreaCode = data.getAreaCode();
+                    areaCode = data.getAreaCode();
                     String usAreaName = data.getEname();
                     if (isZhCnLanguage) {
                         Toast.makeText(LoginActivity.this,
-                                "您已选择:" + areaName + "   " + internationalAreaCode, Toast.LENGTH_SHORT).show();
+                                "您已选择:" + areaName + "   " + areaCode, Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(LoginActivity.this,
-                                "You have chosen:" + usAreaName + "   " + internationalAreaCode, Toast.LENGTH_SHORT).show();
+                                "You have chosen:" + usAreaName + "   " + areaCode, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -482,8 +477,8 @@ public class LoginActivity extends BaseActivity {
     /**
      * 获取国际电话区号
      */
-    private void getInternationalAreaCode() {
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.GET,
+    private void getAreaCode() {
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.GET,
                 HttpServicePath.GetInternationalAreaCode, new AreaCodeRequestCallBack());
         httpRequest.executive();
     }
@@ -496,28 +491,24 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             String str = stringResponseInfo.result;
-            DeBugLog.i(TAG, "返回的国际电话区号数据:" + str);
             try {
                 AreaCode areaCode = JsonUtils.getInstance().fromJSON(AreaCode.class, str);
                 areaCodeDataList = areaCode.getData();
                 if (areaCodeDataList != null && areaCodeDataList.size() > 0) {
                     areaCodeAdapter.setList(areaCodeDataList);
                 } else {
-                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.InternationalCodeFailure),
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, repeatAreaCode, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "国际电话区号数据解析异常:" + e.getMessage());
-                Toast.makeText(LoginActivity.this, getResources().getString(R.string.InternationalCodeFailure),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, repeatAreaCode, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onFailure(HttpException httpException, String s) {
             DeBugLog.e(TAG, "国际电话区号数据请求失败:" + s);
-            Toast.makeText(LoginActivity.this, getResources().getString(R.string.InternationalCodeFailure),
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, repeatAreaCode, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -527,11 +518,11 @@ public class LoginActivity extends BaseActivity {
      */
     private void setPhoneNumber4Service() {
         RequestParams params = new RequestParams();
-        params.addBodyParameter("areaCode", internationalAreaCode);
-        params.addBodyParameter("phone", phoneNumber);
+        params.addBodyParameter(AREA_CODE, areaCode);
+        params.addBodyParameter(PHONE, phoneNumber);
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
-                HttpServicePath.SendInternationalAreaCodeAndPhoneNumber, new PhoneNumberRequestCallBack());
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
+                HttpServicePath.SendAreaCodeAndPhoneNumber, new PhoneNumberRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
     }
@@ -542,11 +533,11 @@ public class LoginActivity extends BaseActivity {
     private class PhoneNumberRequestCallBack extends RequestCallBack<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            String str = stringResponseInfo.result;
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+            String str = responseInfo.result;
             try {
                 JSONObject object = new JSONObject(str);
-                String status = object.getString("status");
+                String status = object.getString(STATUS);
                 if ("1".equals(status.trim())) {
                     popupWindowRegister1.dismiss();
                     popupWindowRegister2.showAtLocation(popupRegisterView2, Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -562,34 +553,33 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "发送区号手机号到服务器的请求失败1:" + s);
-            DeBugLog.e(TAG, "发送区号手机号到服务器的请求失败2:" + e.getMessage());
-            DeBugLog.e(TAG, "发送区号手机号到服务器的请求失败3:" + e.getExceptionCode());
-            DeBugLog.e(TAG, "发送区号手机号到服务器的请求失败4:" + e.toString());
+            DeBugLog.e(TAG, "发送手机号错误:" + e.getMessage() + ",Error:" + s);
             Toast.makeText(LoginActivity.this, "发送失败，请重试！", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     /**
      * 注册方法
      */
     private void register4Suiuu() {
-
-        if (registerDialog != null) {
-            registerDialog.show();
-        }
-
         RequestParams params = new RequestParams();
-        params.addBodyParameter("phone", phoneNumber);
-        params.addBodyParameter("password", registerPassword1);
-        params.addBodyParameter("cPassword", registerPassword2);
-        params.addBodyParameter("nick", phoneNumber);
-        params.addBodyParameter("validateCode", VerificationCode);
+        params.addBodyParameter(PHONE, phoneNumber);
+        params.addBodyParameter(PASSWORD, registerPassword1);
+        params.addBodyParameter(C_PASSWORD, registerPassword2);
+        params.addBodyParameter(NICK, phoneNumber);
+        params.addBodyParameter(VALIDATE_CODE, VerificationCode);
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.Register4SuiuuPath, new RegisterRequestCallback());
         httpRequest.setParams(params);
         httpRequest.executive();
+    }
+
+    private void hideRegisterDialog() {
+        if (registerDialog != null && registerDialog.isShowing()) {
+            registerDialog.dismiss();
+        }
     }
 
     /**
@@ -598,19 +588,23 @@ public class LoginActivity extends BaseActivity {
     private class RegisterRequestCallback extends RequestCallBack<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-
-            if (registerDialog.isShowing()) {
-                registerDialog.dismiss();
+        public void onStart() {
+            if (registerDialog != null && !registerDialog.isShowing()) {
+                registerDialog.show();
             }
+        }
 
-            String str = stringResponseInfo.result;
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+            hideRegisterDialog();
+            String str = responseInfo.result;
             try {
                 UserBack user = JsonUtils.getInstance().fromJSON(UserBack.class, str);
                 if (user.getStatus().equals("1")) {
                     popupWindowRegister2.dismiss();
                     SuiuuInfo.WriteVerification(LoginActivity.this, user.getMessage());
                     SuiuuInfo.WriteUserSign(LoginActivity.this, user.getData().getUserSign());
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 } else {
                     Toast.makeText(LoginActivity.this, "注册失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }
@@ -621,10 +615,8 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onFailure(HttpException e, String s) {
-            if (registerDialog.isShowing()) {
-                registerDialog.dismiss();
-            }
             DeBugLog.e(TAG, "注册网络请求失败的异常信息:" + s);
+            hideRegisterDialog();
             Toast.makeText(LoginActivity.this, "注册失败，请检查网络后再试！", Toast.LENGTH_SHORT).show();
         }
     }
@@ -636,19 +628,20 @@ public class LoginActivity extends BaseActivity {
      * @param password 密码
      */
     private void suiuuLogin(String userName, String password) {
-
-        if (loginDialog != null) {
-            loginDialog.show();
-        }
-
         RequestParams params = new RequestParams();
-        params.addBodyParameter("username", userName);
-        params.addBodyParameter("password", password);
+        params.addBodyParameter(USER_NAME, userName);
+        params.addBodyParameter(PASSWORD, password);
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.SelfLoginPath, new LoginRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
+    }
+
+    private void hideLoginDialog() {
+        if (loginDialog != null && loginDialog.isShowing()) {
+            loginDialog.dismiss();
+        }
     }
 
     /**
@@ -657,12 +650,15 @@ public class LoginActivity extends BaseActivity {
     private class LoginRequestCallBack extends RequestCallBack<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-
-            if (loginDialog.isShowing()) {
-                loginDialog.dismiss();
+        public void onStart() {
+            if (loginDialog != null && !loginDialog.isShowing()) {
+                loginDialog.show();
             }
+        }
 
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+            hideLoginDialog();
             String str = responseInfo.result;
             try {
                 UserBack user = JsonUtils.getInstance().fromJSON(UserBack.class, str);
@@ -686,28 +682,25 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onFailure(HttpException error, String msg) {
             DeBugLog.e(TAG, "登录网络请求失败返回的异常信息:" + msg);
-
-            if (loginDialog.isShowing()) {
-                loginDialog.dismiss();
-            }
-
+            hideLoginDialog();
             Toast.makeText(LoginActivity.this, "登录失败，请稍候再试", Toast.LENGTH_SHORT).show();
         }
+
     }
 
-    private void loginFailure2Umeng(final long start, final int code, final String message) {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                long costTime = System.currentTimeMillis() - start;
-                Map<String, String> params = new HashMap<>();
-                params.put("status", "failure");
-                params.put("error_code", code + "");
-                params.put("error_description", message);
-                MobclickAgent.onEventValue(LoginActivity.this, "login1", params, (int) costTime);
-                MobclickAgent.onEventDuration(LoginActivity.this, "login1", (int) costTime);
-            }
-        });
-    }
+    //    private void loginFailure2Umeng(final long start, final int code, final String message) {
+    //        runOnUiThread(new Runnable() {
+    //            public void run() {
+    //                long costTime = System.currentTimeMillis() - start;
+    //                Map<String, String> params = new HashMap<>();
+    //                params.put("status", "failure");
+    //                params.put("error_code", code + "");
+    //                params.put("error_description", message);
+    //                MobclickAgent.onEventValue(LoginActivity.this, "login1", params, (int) costTime);
+    //                MobclickAgent.onEventDuration(LoginActivity.this, "login1", (int) costTime);
+    //            }
+    //        });
+    //    }
 
     /**
      * QQ的openId,昵称,性别,头像URL
@@ -802,7 +795,7 @@ public class LoginActivity extends BaseActivity {
                 qq_nick_Name = info.get("screen_name").toString();
                 qq_head_image_path = info.get("profile_image_url").toString();
 
-                setQQData2Service();
+                setQQInfo2Service();
             } else {
                 DeBugLog.e(TAG, "QQ数据获取失败");
                 Toast.makeText(LoginActivity.this, "数据获取失败,请重试！", Toast.LENGTH_SHORT).show();
@@ -814,9 +807,9 @@ public class LoginActivity extends BaseActivity {
     /**
      * 发送QQ相关信息到服务器
      */
-    private void setQQData2Service() {
+    private void setQQInfo2Service() {
 
-        SuHttpRequest http = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp http = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.ThirdPartyPath, new QQRequestCallBack());
 
         RequestParams params = new RequestParams();
@@ -845,11 +838,7 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onSuccess(ResponseInfo<String> responseInfo) {
-
-            if (loginDialog != null && loginDialog.isShowing()) {
-                loginDialog.dismiss();
-            }
-
+            hideLoginDialog();
             String str = responseInfo.result;
             try {
                 UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, str);
@@ -882,19 +871,13 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onFailure(HttpException error, String msg) {
-            DeBugLog.e(TAG, msg);
-
-            if (loginDialog != null && loginDialog.isShowing()) {
-                loginDialog.dismiss();
-            }
-
+            DeBugLog.e(TAG, "QQ>>HttpException:" + error.getMessage() + ",QQ>>Error:" + msg);
+            hideLoginDialog();
             Toast.makeText(LoginActivity.this,
                     getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
 
     }
-
-    //*********************************************************************************\\
 
     /**
      * 微信token，微信用户昵称，微信用户性别，微信用户openID，微信用户uID，微信用户头像URL
@@ -1004,7 +987,7 @@ public class LoginActivity extends BaseActivity {
         }
         params.addBodyParameter("sign", sign);
 
-        SuHttpRequest http = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp http = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.ThirdPartyPath, new WXRequestCallBack());
         http.setParams(params);
         http.executive();
@@ -1073,8 +1056,6 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    //*********************************************************************************\\
-
     /**
      * 友盟for微博第三方登陆授权回调接口
      */
@@ -1140,36 +1121,36 @@ public class LoginActivity extends BaseActivity {
                 String openid = null;
                 try {
                     openid = info.get("openid").toString();
-                    Log.i(TAG, "openid:" + openid);
+                    DeBugLog.i(TAG, "openid:" + openid);
                 } catch (Exception e) {
-                    Log.e(TAG, "获取openid失败:" + e.getMessage());
+                    DeBugLog.e(TAG, "获取openid失败:" + e.getMessage());
                 }
 
                 String screenName = null;
                 try {
                     screenName = info.get("screen_name").toString();
-                    Log.i(TAG, "获取screenName失败:" + screenName);
+                    DeBugLog.i(TAG, "获取screenName失败:" + screenName);
                 } catch (Exception e) {
-                    Log.e(TAG, "获取screenName失败:" + e.getMessage());
+                    DeBugLog.e(TAG, "获取screenName失败:" + e.getMessage());
                 }
 
                 String gender = null;
                 try {
                     gender = info.get("gender").toString();
-                    Log.i(TAG, "gender:" + gender);
+                    DeBugLog.i(TAG, "gender:" + gender);
                 } catch (Exception e) {
-                    Log.e(TAG, "获取gender失败:" + e.getMessage());
+                    DeBugLog.e(TAG, "获取gender失败:" + e.getMessage());
                 }
 
                 String image_url = null;
                 try {
                     image_url = info.get("profile_image_url").toString();
-                    Log.i(TAG, "image_url:" + image_url);
+                    DeBugLog.i(TAG, "image_url:" + image_url);
                 } catch (Exception e) {
-                    Log.e(TAG, "获取image_url失败:" + e.getMessage());
+                    DeBugLog.e(TAG, "获取image_url失败:" + e.getMessage());
                 }
 
-                setWeiBoData2Service(openid, screenName, gender, image_url);
+                setWeiBoInfo2Service(openid, screenName, gender, image_url);
             } else {
                 DeBugLog.e(TAG, "发生错误，未接收到数据！");
             }
@@ -1180,12 +1161,12 @@ public class LoginActivity extends BaseActivity {
     /**
      * 发送微博相关数据到服务器
      */
-    private void setWeiBoData2Service(String openid, String screenName, String gender, String headImagePath) {
+    private void setWeiBoInfo2Service(String openid, String screenName, String gender, String headImagePath) {
         if (loginDialog != null) {
             loginDialog.show();
         }
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.ThirdPartyPath, new WeiBoRequestCallBack());
 
         String code;
@@ -1283,14 +1264,6 @@ public class LoginActivity extends BaseActivity {
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        if (autoLogin) {
-//            return;
-//        }
     }
 
     @Override

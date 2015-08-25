@@ -84,15 +84,6 @@ public class HttpServicePath {
     public static String updateLoop = RootPath + "/circle/up-date-article";
 
     /**
-     * 添加关注(用户)
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:需要关注用户标示 userSign
-     */
-    public static String AddAttentionUserPath = RootPath + "/attention/add-attention-user";
-
-    /**
      * 收藏文章
      * <p/>
      * 请求方式:POST
@@ -121,7 +112,7 @@ public class HttpServicePath {
      * <p/>
      * 请求参数:国际电话区号 areaCode、手机号 phone
      */
-    public static String SendInternationalAreaCodeAndPhoneNumber = RootPath + "/app-login/get-phone-code";
+    public static String SendAreaCodeAndPhoneNumber = RootPath + "/app-login/get-phone-code";
 
     /**
      * 得到国际电话区号
@@ -364,5 +355,20 @@ public class HttpServicePath {
      * 得到邀请的用户列表
      */
     public static String getInvitationAnswerUserPath = RootPath + "/app-qa/get-invite-user";
+
+    /**
+     * 添加支付宝账户
+     */
+    public static String addAliPayUserInfo = RootPath + "/app-account/bind-alipay";
+
+    /**
+     * 添加微信账户
+     */
+    public static String addWeChatAUserInfo = RootPath + "/app-account/bind-wechat";
+
+    /**
+     * 得到绑定的账户列表
+     */
+    public static String getUserBindAccountListData = RootPath + "/app-account/get-user-account-list";
 
 }

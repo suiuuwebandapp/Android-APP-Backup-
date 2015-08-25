@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -54,12 +53,6 @@ public class Utils {
     public int px2dip(float pxValue, Context context) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
-    }
-
-    public int Dp2Px(float dp, Context context) {
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        float px = dp * (metrics.densityDpi / 160f);
-        return (int) px;
     }
 
     /**
@@ -200,8 +193,7 @@ public class Utils {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
+    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
@@ -300,11 +292,12 @@ public class Utils {
         s = s * 6378137.0;// 取WGS84标准参考椭球中的地球长半径(单位:m)
         s = Math.round(s * 10000) / 10000;
 //        return s / 100000;
-        return Math.round((int)s/100d)/10d;
+        return Math.round((int) s / 100d) / 10d;
     }
 
     /**
      * 判断网络是否连接
+     *
      * @param context
      * @return
      */
@@ -345,3 +338,4 @@ public class Utils {
     }
 
 }
+

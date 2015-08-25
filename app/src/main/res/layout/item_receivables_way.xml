@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/item_receivables_way_title_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/layout_15dp"
+        android:singleLine="true"
+        android:text="@string/app_name"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/textColor"/>
+
+    <TextView
+        android:id="@+id/item_receivables_way_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/item_receivables_way_delete"
+        android:layout_toRightOf="@+id/item_receivables_way_title_head"
+        android:layout_toStartOf="@+id/item_receivables_way_delete"
+        android:text="@string/userName"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/textColor"/>
+
+    <ImageView
+        android:id="@+id/item_receivables_way_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/layout_20dp"
+        android:layout_marginRight="@dimen/layout_20dp"
+        android:clickable="false"
+        android:contentDescription="@string/Delete"
+        android:src="@drawable/icon_delete_receivables_way_selector"/>
+
+</RelativeLayout>

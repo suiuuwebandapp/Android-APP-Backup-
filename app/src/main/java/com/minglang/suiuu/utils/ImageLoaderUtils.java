@@ -21,23 +21,28 @@ public class ImageLoaderUtils {
      * 图片缓存的核心类
      */
     private LruCache<String, Bitmap> mLruCache;
+
     /**
      * 线程池
      */
     private ExecutorService mThreadPool;
+
     /**
      * 线程池的线程数量，默认为1
      */
     @SuppressWarnings("unused")
     private int mThreadCount = 1;
+
     /**
      * 队列的调度方式
      */
     private Type mType = Type.LIFO;
+
     /**
      * 任务队列
      */
     private LinkedList<Runnable> mTasks;
+
     private Handler mPoolThreadHandler;
 
     /**
@@ -306,8 +311,7 @@ public class ImageLoaderUtils {
      * @param reqHeight
      * @return
      */
-    private int calculateInSampleSize(BitmapFactory.Options options,
-                                      int reqWidth, int reqHeight) {
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // 源图片的宽度
         int width = options.outWidth;
         int height = options.outHeight;
@@ -330,8 +334,7 @@ public class ImageLoaderUtils {
      * @param reqHeight
      * @return
      */
-    private Bitmap decodeSampledBitmapFromResource(String pathName,
-                                                   int reqWidth, int reqHeight) {
+    private Bitmap decodeSampledBitmapFromResource(String pathName, int reqWidth, int reqHeight) {
         // 第一次解析将inJustDecodeBounds设置为true，来获取图片大小
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;

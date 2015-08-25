@@ -22,7 +22,7 @@ import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.ConfirmJoinSuiuu;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -150,7 +150,7 @@ public class JoinAdapter extends BaseAdapter {
             params.addBodyParameter("tripId", tripId);
             params.addBodyParameter("tripPublisherId", tripPublisherId);
 
-            SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+            SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                     HttpServicePath.removeSuiuuUserPath, new RemoveRequestCallBack(index));
             httpRequest.setParams(params);
             httpRequest.executive();

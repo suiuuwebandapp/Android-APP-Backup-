@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/layout_100dp"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/textView11"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="0.5">
+
+        <Button
+            android:id="@+id/popup_delete_receivables_ok"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/layout_50dp"
+            android:layout_weight="0.4"
+            android:background="@color/btn_1_bg_color"
+            android:text="@android:string/ok"
+            android:textSize="@dimen/layout_16sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView11"
+        android:layout_toRightOf="@+id/textView11"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="0.5">
+
+        <Button
+            android:id="@+id/popup_delete_receivables_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:background="@color/btn_2_bg_color"
+            android:text="@android:string/cancel"
+            android:textSize="@dimen/layout_16sp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>

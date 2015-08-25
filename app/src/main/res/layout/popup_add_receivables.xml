@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/backgroundColor"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/popup_receivables_alipay"
+        android:id="@+id/popup_add_receivables_alipay"
         android:layout_width="@dimen/layout_200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -17,7 +17,7 @@
         android:textSize="@dimen/layout_20sp"/>
 
     <Button
-        android:id="@+id/popup_receivables_wechat"
+        android:id="@+id/popup_add_receivables_wechat"
         android:layout_width="@dimen/layout_200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

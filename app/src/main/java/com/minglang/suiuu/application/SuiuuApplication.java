@@ -23,6 +23,7 @@ import com.alibaba.sdk.android.oss.model.ClientConfiguration;
 import com.alibaba.sdk.android.oss.model.TokenGenerator;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.minglang.suiuu.crash.GlobalCrashHandler;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -66,12 +67,15 @@ public class SuiuuApplication extends TuSdkApplication {
         initImageLoad();
         //fresco图片加载初始化
         Fresco.initialize(this);
+
 //        GlobalCrashHandler.getInstance().init(this);
         // 设置输出状态
         this.setEnableLog(true);
         // 初始化SDK (请前往 http://tusdk.com 获取您的APP 开发秘钥)
         this.initPreLoader(this.getApplicationContext(),
                 "745f61271fd7f7f7-00-04gxn1");
+        GlobalCrashHandler.getInstance().init(this);
+
     }
 
     @Override

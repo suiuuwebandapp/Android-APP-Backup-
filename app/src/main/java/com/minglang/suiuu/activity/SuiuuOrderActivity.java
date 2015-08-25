@@ -20,7 +20,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.utils.DateTimePickDialogUtils;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 
 import org.json.JSONObject;
 
@@ -137,7 +137,7 @@ public class SuiuuOrderActivity extends BaseActivity {
         params.addBodyParameter("type", "2");
         params.addBodyParameter(HttpServicePath.key, verification);
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.createOrderNumber, new createOrderCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();

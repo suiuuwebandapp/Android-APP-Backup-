@@ -38,7 +38,7 @@ import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -221,7 +221,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
      * @param params 参数
      */
     private void getInvitationAnswerData(RequestParams params) {
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getInvitationAnswerUserPath, new InvitationRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();

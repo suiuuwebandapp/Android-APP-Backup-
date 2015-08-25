@@ -25,7 +25,7 @@ import com.minglang.suiuu.entity.NewApply;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuHttpRequest;
+import com.minglang.suiuu.utils.SuiuuHttp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -166,7 +166,7 @@ public class NewApplyForFragment extends Fragment {
         params.addBodyParameter("number", String.valueOf(10));
         params.addBodyParameter("trId", tripId);
 
-        SuHttpRequest httpRequest = new SuHttpRequest(HttpRequest.HttpMethod.POST,
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getNewApplyForDataPath, new NewApplyForRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
