@@ -4,7 +4,6 @@ android {
 
     compileSdkVersion 22
     buildToolsVersion '22.0.1'
-
     defaultConfig {
         applicationId "com.minglang.suiuu"
         minSdkVersion 16
@@ -13,7 +12,11 @@ android {
         versionName "1.0.1"
         multiDexEnabled false
     }
-
+    sourceSets {
+        main {
+            assets.srcDirs = ['assets']
+        }
+    }
     signingConfigs {
         release {
             storeFile file("../key.jks")
@@ -71,4 +74,7 @@ dependencies {
     compile files('libs/universal-image-loader-1.9.4.jar')
     compile project(':pulltorefreshlibrary')
     compile files('libs/AMap_Services_V2.4.0.jar')
+    compile project(':TuSDK-for-Android-1.8.11')
 }
+
+

@@ -41,7 +41,7 @@ public class CompressImageUtil {
         File outputFile = new File(imageDir, fileName);
 
         FileOutputStream out = new FileOutputStream(outputFile);
-        bm.compress(Bitmap.CompressFormat.JPEG, q, out);
+        bm.compress(Bitmap.CompressFormat.JPEG, q,out);
         Log.i("suiuu","保存的路劲是"+out.toString() +"fileName="+fileName +"路径="+outputFile.getPath() );
         return outputFile.getPath();
     }

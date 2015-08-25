@@ -6,20 +6,21 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * 项目名称：Android-APP-Backup-
- * 类描述：
+ * 类描述：用户信息保存
  * 创建人：Administrator
- * 创建时间：2015/8/21 18:03
+ * 创建时间：2015/6/23 13:37
  * 修改人：Administrator
- * 修改时间：2015/8/21 18:03
+ * 修改时间：2015/6/23 13:37
  * 修改备注：
  */
-public class TripGalleryCacheDbHelper extends SQLiteOpenHelper {
-    public TripGalleryCacheDbHelper(Context context) {
+public class DbHelper extends SQLiteOpenHelper {
+
+    public DbHelper(Context context) {
         //context 上下文
         //name 数据库的名称
         //factory 游标（指针）工厂 null默认工厂
         //version 从1开始的
-        super(context, "suiuu1.db", null, 1);
+        super(context, "suiuu.db", null, 1);
     }
 
     //数据库第一次被创建的时候调用的方法。适合数据库表结构的初始化
@@ -28,7 +29,8 @@ public class TripGalleryCacheDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         System.out.println("oncreate 数据库被第一次创建了");
         //执行sql语句
-        db.execSQL("create table tripgallerycache (time varchar(30), data varchar(5000))");
+        db.execSQL("create table user (userid varchar(30), nikename varchar(50), titleimg varchar(50))");
+        db.execSQL("create table tripgallerycache (id varchar(30),time varchar(30), data varchar(5000))");
     }
 
     //数据库升级调用的方法。数据库的版本号增加的时候调用。
@@ -36,4 +38,5 @@ public class TripGalleryCacheDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         System.out.println("onupgrade 数据库被升级了");
     }
+
 }

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.ShowBigImage;
+import com.minglang.suiuu.activity.ShowBigPictureActivity;
 
 import java.util.List;
 
@@ -84,10 +84,11 @@ public class showPicDescriptionAdapter extends BaseAdapter {
         holder.picContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent showPic = new Intent(context, ShowBigImage.class);
-                showPic.putExtra("remotepath", imageList.get(position));
-                showPic.putExtra("isHuanXin", false);
-                context.startActivity(showPic);
+                context.startActivity(new Intent(context, ShowBigPictureActivity.class));
+//                Intent showPic = new Intent(context, ShowBigImage.class);
+//                showPic.putExtra("remotepath", imageList.get(position));
+//                showPic.putExtra("isHuanXin", false);
+//                context.startActivity(showPic);
             }
         });
         return view;

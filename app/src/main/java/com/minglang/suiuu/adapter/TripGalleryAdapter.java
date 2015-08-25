@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +58,6 @@ public class TripGalleryAdapter extends BaseAdapter {
         this.lng = (String) map.get("lng");
         this.type = type;
         this.clickString = clickString;
-        Log.i("suiuu", clickString.size()+"--new");
 
     }
 
@@ -68,7 +66,6 @@ public class TripGalleryAdapter extends BaseAdapter {
         this.notifyDataSetChanged();
         this.type = type;
         this.clickString = clickString;
-        Log.i("suiuu", clickString.size()+"--old");
     }
 
     @Override

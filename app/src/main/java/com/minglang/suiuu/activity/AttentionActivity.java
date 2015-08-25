@@ -104,9 +104,9 @@ public class AttentionActivity extends BaseAppCompatActivity {
         tabLayout.setTabsFromPagerAdapter(attentionPagerAdapter);
     }
 
-    /**
-     * 控件动作
-     */
+//    /**
+//     * 控件动作
+//     */
     private void ViewAction() {
         attentionPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

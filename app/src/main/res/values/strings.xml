@@ -471,5 +471,6 @@
     <string name="title_activity_about_us">AboutUsActivity</string>
     <string name="title_activity_receivables_way">ReceivablesWayActivity</string>
     <string name="title_activity_add_receivables_way">AddReceivablesWayActivity</string>
+    <string name="show_big_picture_activity">ShowBigPictureActivity</string>
 
 </resources>

@@ -13,7 +13,6 @@
  */
 package com.minglang.suiuu.application;
 
-import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
 
@@ -30,9 +29,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+import org.lasque.tusdk.core.TuSdkApplication;
 
 
-public class SuiuuApplication extends Application {
+public class SuiuuApplication extends TuSdkApplication {
 
     private static final String TAG = SuiuuApplication.class.getSimpleName();
 
@@ -64,8 +64,14 @@ public class SuiuuApplication extends Application {
         instance = this;
         initAboatOSS();
         initImageLoad();
+        //fresco图片加载初始化
         Fresco.initialize(this);
 //        GlobalCrashHandler.getInstance().init(this);
+        // 设置输出状态
+        this.setEnableLog(true);
+        // 初始化SDK (请前往 http://tusdk.com 获取您的APP 开发秘钥)
+        this.initPreLoader(this.getApplicationContext(),
+                "745f61271fd7f7f7-00-04gxn1");
     }
 
     @Override

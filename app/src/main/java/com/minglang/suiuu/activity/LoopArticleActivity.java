@@ -315,10 +315,10 @@ public class LoopArticleActivity extends BaseActivity {
         noScrollBarGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent showPic = new Intent(LoopArticleActivity.this, ShowBigImage.class);
-                showPic.putExtra("remotepath", imageList.get(position));
-                showPic.putExtra("isHuanXin", false);
-                startActivity(showPic);
+//                Intent showPic = new Intent(LoopArticleActivity.this, ShowBigImage.class);
+//                showPic.putExtra("remotepath", imageList.get(position));
+//                showPic.putExtra("isHuanXin", false);
+//                startActivity(showPic);
             }
         });
 

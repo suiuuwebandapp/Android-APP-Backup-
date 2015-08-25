@@ -1,7 +1,6 @@
 package com.minglang.suiuu.customview;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap.Config;
 import android.net.Uri;
 import android.os.Handler;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.ShowBigImage;
 
 import java.util.List;
 
@@ -204,10 +202,10 @@ public class RollViewPager extends ViewPager {
             image.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent showPic = new Intent(ct, ShowBigImage.class);
-                    showPic.putExtra("remotepath", imageUrlLists.get(position));
-                    showPic.putExtra("isHuanXin", false);
-                    ct.startActivity(showPic);
+//                    Intent showPic = new Intent(ct, ShowBigImage.class);
+//                    showPic.putExtra("remotepath", imageUrlLists.get(position));
+//                    showPic.putExtra("isHuanXin", false);
+//                    ct.startActivity(showPic);
                 }
             });
             return view;

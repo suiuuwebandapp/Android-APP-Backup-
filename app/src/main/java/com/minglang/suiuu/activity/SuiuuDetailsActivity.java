@@ -30,7 +30,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.CommonCommentAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.NoScrollBarListView;
-import com.minglang.suiuu.dbhelper.UserDbHelper;
+import com.minglang.suiuu.dbhelper.DbHelper;
 import com.minglang.suiuu.entity.SuiuuDetailsData;
 import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity;
 import com.minglang.suiuu.entity.UserBackData;
@@ -252,7 +252,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
      * 添加一条记录
      */
     public void addUser() {
-        UserDbHelper helper = new UserDbHelper(this);
+        DbHelper helper = new DbHelper(this);
         //得到可读可写数据库
         SQLiteDatabase db = helper.getReadableDatabase();
         //执行sql语句
@@ -265,7 +265,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
     public boolean isExistUser(String userId) {
         boolean isExist = false;
-        UserDbHelper helper = new UserDbHelper(this);
+        DbHelper helper = new DbHelper(this);
         //得到可读数据库
         SQLiteDatabase db = helper.getReadableDatabase();
         //得到数据库查询的结果集的游标（指针）
