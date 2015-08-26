@@ -58,13 +58,16 @@ public class AttentionSuiuuFragment extends BaseFragment {
     private String verification;
 
     @BindString(R.string.load_wait)
-    String progressString;
+    String dialogMessage;
 
     @BindString(R.string.NoData)
-    String noData;
+    String NoData;
 
     @BindString(R.string.DataError)
-    String errorString;
+    String DataError;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkError;
 
     @Bind(R.id.attention_user_GridView)
     PullToRefreshGridView pullToRefreshGridView;
@@ -112,8 +115,8 @@ public class AttentionSuiuuFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_attention_user, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
-        getAttentionData4Service(page);
+        viewAction();
+        getData4Service(page);
         return rootView;
     }
 
@@ -122,7 +125,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
      */
     private void initView() {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(progressString);
+        progressDialog.setMessage(dialogMessage);
         progressDialog.setCanceledOnTouchOutside(false);
 
         pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -143,7 +146,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
     /**
      * 控件动作
      */
-    private void ViewAction() {
+    private void viewAction() {
 
         pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
             @Override
@@ -153,7 +156,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page = 1;
-                getAttentionData4Service(page);
+                getData4Service(page);
             }
 
             @Override
@@ -163,7 +166,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page = page + 1;
-                getAttentionData4Service(page);
+                getData4Service(page);
             }
         });
 
@@ -184,7 +187,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
     /**
      * 从服务获取关注用户的数据
      */
-    private void getAttentionData4Service(int page) {
+    private void getData4Service(int page) {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter(PAGE, String.valueOf(page));
@@ -234,7 +237,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 AttentionSuiuu attentionSuiuu = JsonUtils.getInstance().fromJSON(AttentionSuiuu.class, str);
@@ -249,22 +252,22 @@ public class AttentionSuiuuFragment extends BaseFragment {
                         } else {
                             DeBugLog.e(TAG, "列表数据为空！");
                             failureLessPage();
-                            Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         DeBugLog.e(TAG, "第二层为Null");
                         failureLessPage();
-                        Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     DeBugLog.e(TAG, "第一层为Null");
                     failureLessPage();
-                    Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 failureLessPage();
                 DeBugLog.e(TAG, "关注的用户的数据解析失败:" + e.getMessage());
-                Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -282,20 +285,19 @@ public class AttentionSuiuuFragment extends BaseFragment {
         }
 
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+        public void onSuccess(ResponseInfo<String> response) {
+            String str = response.result;
+            DeBugLog.i(TAG, "关注的随游数据:" + str);
             hideDialog();
-            bindData2View(stringResponseInfo.result);
+            bindData2View(str);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, "关注的用户数据请求失败:" + s);
-
             hideDialog();
             failureLessPage();
-
-            Toast.makeText(getActivity(),
-                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

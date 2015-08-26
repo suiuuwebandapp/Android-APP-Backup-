@@ -62,11 +62,17 @@ public class AttentionProblemFragment extends BaseFragment {
 
     private int page = 1;
 
+    @BindString(R.string.load_wait)
+    String dialogMessage;
+
     @BindString(R.string.NoData)
     String NoData;
 
-    @BindString(R.string.load_wait)
-    String loadingString;
+    @BindString(R.string.DataError)
+    String DataError;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkError;
 
     @Bind(R.id.attention_problem_list_view)
     PullToRefreshListView pullToRefreshListView;
@@ -123,7 +129,7 @@ public class AttentionProblemFragment extends BaseFragment {
      */
     private void initView() {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(loadingString);
+        progressDialog.setMessage(dialogMessage);
         progressDialog.setCanceledOnTouchOutside(false);
 
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -227,6 +233,7 @@ public class AttentionProblemFragment extends BaseFragment {
 
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
+            failureLessPage();
             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
@@ -254,7 +261,7 @@ public class AttentionProblemFragment extends BaseFragment {
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析错误:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -269,17 +276,19 @@ public class AttentionProblemFragment extends BaseFragment {
         }
 
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
+        public void onSuccess(ResponseInfo<String> response) {
+            String str = response.result;
+            DeBugLog.i(TAG, "关注的问答数据:" + str);
             hideDialog();
-            bindData2View(responseInfo.result);
+            bindData2View(str);
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException Error:" + e.getMessage());
-            DeBugLog.e(TAG, "Error:" + s);
+            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
             hideDialog();
             failureLessPage();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

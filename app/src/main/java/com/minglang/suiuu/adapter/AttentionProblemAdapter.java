@@ -58,7 +58,7 @@ public class AttentionProblemAdapter extends BaseHolderAdapter<AttentionProblemI
         }
 
         String strTitle = item.getQTitle();
-        if (TextUtils.isEmpty(strTitle)) {
+        if (!TextUtils.isEmpty(strTitle)) {
             titleView.setText(strTitle);
         } else {
             titleView.setText("");

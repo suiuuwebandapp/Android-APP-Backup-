@@ -50,7 +50,7 @@ public class AttentionActivity extends BaseAppCompatActivity {
     Toolbar toolbar;
 
     @Bind(R.id.attention_view_pager)
-    ViewPager attentionPager;
+    ViewPager viewPager;
 
     @Bind(R.id.attention_tab_layout)
     TabLayout tabLayout;
@@ -83,6 +83,9 @@ public class AttentionActivity extends BaseAppCompatActivity {
 
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
+        token = SuiuuInfo.ReadAppTimeSign(this);
+
+        viewPager.setOffscreenPageLimit(3);
 
         //关注的旅图
         AttentionGalleryFragment attentionGalleryFragment = AttentionGalleryFragment.newInstance(userSign, verification);
@@ -98,9 +101,9 @@ public class AttentionActivity extends BaseAppCompatActivity {
 
         AttentionPagerAdapter attentionPagerAdapter
                 = new AttentionPagerAdapter(getSupportFragmentManager(), fragmentList, titleList);
-        attentionPager.setAdapter(attentionPagerAdapter);
+        viewPager.setAdapter(attentionPagerAdapter);
 
-        tabLayout.setupWithViewPager(attentionPager);
+        tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabsFromPagerAdapter(attentionPagerAdapter);
     }
 
@@ -108,7 +111,7 @@ public class AttentionActivity extends BaseAppCompatActivity {
 //     * 控件动作
 //     */
     private void ViewAction() {
-        attentionPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
