@@ -56,7 +56,7 @@
                                 android:layout_marginLeft="@dimen/layout_10dp"
                                 android:layout_marginStart="@dimen/layout_10dp"
                                 android:layout_marginTop="@dimen/layout_10dp"
-                                android:text="@string/title"
+                                android:text="@string/Title"
                                 android:textColor="@color/textColor"
                                 android:textSize="@dimen/layout_18sp"/>
 
@@ -141,7 +141,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toEndOf="@+id/my_suiuu_release_back"
                     android:layout_toRightOf="@+id/my_suiuu_release_back"
-                    android:text="@string/title"
+                    android:text="@string/Title"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/white"/>
 

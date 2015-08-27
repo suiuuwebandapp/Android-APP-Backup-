@@ -60,7 +60,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/layout_10dp"
         android:layout_marginRight="@dimen/layout_10dp"
-        android:background="@drawable/item_my_suiuu_selector"
+        android:background="@drawable/item_my_suiuu_pressed"
         android:focusable="false"
         android:text="@string/Remove"
         android:textColor="@drawable/item_my_suiuu_text_selector"/>

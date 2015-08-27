@@ -212,7 +212,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         UmengUpdateAgent.update(this);
         ButterKnife.bind(this);
-        getAppTimeSign();
         initView();
         registerReceiver();
         viewAction();
@@ -221,6 +220,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         String network_headImage_path = SuiuuInfo.ReadUserData(this).getHeadImg();
         if (!TextUtils.isEmpty(network_headImage_path)) {
             imageLoader.displayImage(network_headImage_path, headImageView);
@@ -230,6 +230,8 @@ public class MainActivity extends BaseActivity {
         if (!TextUtils.isEmpty(user_name)) {
             nickNameView.setText(user_name);
         }
+
+        getAppTimeSign();
     }
 
     /**

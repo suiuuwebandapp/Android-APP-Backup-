@@ -1,10 +1,9 @@
 package com.minglang.suiuu.fragment.main;
 
-
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,22 +34,22 @@ import butterknife.ButterKnife;
  * 消息页面
  */
 public class InformationFragment extends BaseFragment {
+
     private static final String TAG = InformationFragment.class.getSimpleName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private String userSign;
     private String verification;
 
-    @BindString(R.string.TripGalleryMsg)
+    @BindString(R.string.OrderMsg)
     String str1;
 
     @BindString(R.string.QuestionAndAnswerMsg)
     String str2;
 
-    @BindString(R.string.OrderMsg)
+    @BindString(R.string.TripGalleryMsg)
     String str3;
 
     @BindString(R.string.SystemMsg)
@@ -127,19 +126,19 @@ public class InformationFragment extends BaseFragment {
         MsgOrderFragment msgOrderFragment = MsgOrderFragment.newInstance(userSign, verification);
         MsgSystemFragment msgSystemFragment = MsgSystemFragment.newInstance(userSign, verification);
 
-        List<android.support.v4.app.Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(msgTripGalleryFragment);
-        fragmentList.add(msgQuestionFragment);
+        List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(msgOrderFragment);
+        fragmentList.add(msgQuestionFragment);
+        fragmentList.add(msgTripGalleryFragment);
         fragmentList.add(msgSystemFragment);
 
         FragmentManager fm = getChildFragmentManager();
 
-        NewRemindPageAdapter newRemindPageAdapter = new NewRemindPageAdapter(fm, fragmentList, titleList);
-        viewPager.setAdapter(newRemindPageAdapter);
+        NewRemindPageAdapter adapter = new NewRemindPageAdapter(fm, fragmentList, titleList);
+        viewPager.setAdapter(adapter);
 
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabsFromPagerAdapter(newRemindPageAdapter);
+        tabLayout.setTabsFromPagerAdapter(adapter);
     }
 
 }

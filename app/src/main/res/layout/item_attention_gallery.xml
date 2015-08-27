@@ -40,7 +40,7 @@
             android:layout_toRightOf="@+id/item_attention_gallery_head_image_view"
             android:padding="@dimen/layout_5dp"
             android:singleLine="true"
-            android:text="@string/title"
+            android:text="@string/Title"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     </RelativeLayout>

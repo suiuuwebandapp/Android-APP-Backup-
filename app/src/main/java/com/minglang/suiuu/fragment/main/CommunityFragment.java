@@ -160,7 +160,7 @@ public class CommunityFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_community, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
+        viewAction();
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
@@ -184,12 +184,13 @@ public class CommunityFragment extends BaseFragment {
         listView.setAdapter(this.adapter);
 
         token = SuiuuInfo.ReadAppTimeSign(getActivity());
+        DeBugLog.i(TAG, "Token:" + token);
     }
 
     /**
      * 各种控件的相关事件
      */
-    private void ViewAction() {
+    private void viewAction() {
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -323,7 +324,9 @@ public class CommunityFragment extends BaseFragment {
         }
 
         try {
-            OkHttpManager.onGetAsynRequest(buildUrl(selectedState, page), new CommunityResultCallBack());
+            String _url = buildUrl(selectedState, page);
+            DeBugLog.i(TAG, "build Url:" + _url);
+            OkHttpManager.onGetAsynRequest(_url, new CommunityResultCallBack());
         } catch (IOException e) {
             e.printStackTrace();
             lessPageNumber();

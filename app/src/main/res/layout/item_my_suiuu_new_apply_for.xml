@@ -46,7 +46,7 @@
         android:layout_marginRight="@dimen/layout_5dp"
         android:layout_toLeftOf="@+id/item_my_suiuu_new_apply_for_agree"
         android:layout_toStartOf="@+id/item_my_suiuu_new_apply_for_agree"
-        android:background="@drawable/item_my_suiuu_selector"
+        android:background="@drawable/item_my_suiuu_pressed"
         android:focusable="false"
         android:text="@string/Ignore"
         android:textColor="@drawable/item_my_suiuu_text_selector"/>
@@ -61,7 +61,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/layout_5dp"
         android:layout_marginRight="@dimen/layout_5dp"
-        android:background="@drawable/item_my_suiuu_selector"
+        android:background="@drawable/item_my_suiuu_pressed"
         android:focusable="false"
         android:text="@string/Agree"
         android:textColor="@drawable/item_my_suiuu_text_selector"/>

@@ -32,7 +32,7 @@
             android:layout_alignRight="@+id/item_published_intro"
             android:layout_alignStart="@+id/item_published_intro"
             android:singleLine="true"
-            android:text="@string/title"
+            android:text="@string/Title"
             android:textColor="@color/white"
             android:textSize="20sp"/>
 

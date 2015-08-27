@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/layout_10dp"
         android:padding="@dimen/layout_5dp"
-        android:text="@string/title"
+        android:text="@string/Title"
         android:textSize="@dimen/layout_18sp"/>
 
     <TextView

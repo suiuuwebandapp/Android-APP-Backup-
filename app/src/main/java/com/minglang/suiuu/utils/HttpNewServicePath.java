@@ -44,4 +44,14 @@ public class HttpNewServicePath {
      */
     public static String getPersonalProblemDataPath = RootPath + "/app-qa/get-user-qa";
 
+    /**
+     * 添加标签
+     */
+    public static String addTagInterFacePath = RootPath + "/app-qa/add-tag";
+
+    /**
+     * 添加新问题
+     */
+    public static String addNewProblemInterFacePath = RootPath + "/app-qa/add-question";
+
 }

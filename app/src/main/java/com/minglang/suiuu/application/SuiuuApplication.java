@@ -63,17 +63,19 @@ public class SuiuuApplication extends TuSdkApplication {
         super.onCreate();
         applicationContext = this;
         instance = this;
+
         initAboatOSS();
         initImageLoad();
+
+        // 设置输出状态
+        this.setEnableLog(true);
+
         //fresco图片加载初始化
         Fresco.initialize(this);
 
-//        GlobalCrashHandler.getInstance().init(this);
-        // 设置输出状态
-        this.setEnableLog(true);
-        // 初始化SDK (请前往 http://tusdk.com 获取您的APP 开发秘钥)
-        this.initPreLoader(this.getApplicationContext(),
-                "745f61271fd7f7f7-00-04gxn1");
+        //初始化TuSDK
+        this.initPreLoader(this.getApplicationContext(), "745f61271fd7f7f7-00-04gxn1");
+
         GlobalCrashHandler.getInstance().init(this);
 
     }

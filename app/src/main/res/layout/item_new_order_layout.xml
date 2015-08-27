@@ -30,7 +30,7 @@
             android:layout_toRightOf="@+id/new_oder_user_head_image"
             android:layout_toStartOf="@+id/new_oder_money_price"
             android:singleLine="true"
-            android:text="@string/title"
+            android:text="@string/Title"
             android:textSize="@dimen/layout_18sp"/>
 
         <TextView

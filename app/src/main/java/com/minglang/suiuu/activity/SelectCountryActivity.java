@@ -44,8 +44,23 @@ public class SelectCountryActivity extends BaseActivity {
 
     private static final String TAG = SelectCountryActivity.class.getSimpleName();
 
+    private static final String COUNTRY_ID = "countryId";
+    private static final String CITY_ID = "cityId";
+
+    private static final String COUNTRY_CN_NAME = "countryCNname";
+    private static final String CITY_NAME = "cityName";
+
     @BindString(R.string.load_wait)
     String wait;
+
+    @BindString(R.string.NoData)
+    String NoData;
+
+    @BindString(R.string.DataError)
+    String DataError;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkAnomaly;
 
     @Bind(R.id.select_country_back)
     ImageView back;
@@ -130,7 +145,7 @@ public class SelectCountryActivity extends BaseActivity {
                         "您选择的国家为:" + selectCountryCNname, Toast.LENGTH_LONG).show();
 
                 Intent intent = new Intent(SelectCountryActivity.this, SelectCityActivity.class);
-                intent.putExtra("countryId", selectCountryId);
+                intent.putExtra(COUNTRY_ID, selectCountryId);
                 intent.putExtra("countryCNname", selectCountryCNname);
                 intent.putExtra("countryName2", selectCountryUSname);
                 startActivityForResult(intent, AppConstant.SELECT_CITY_OK);
@@ -149,13 +164,19 @@ public class SelectCountryActivity extends BaseActivity {
         httpRequest.executive();
     }
 
+    private void hideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
-            String countryId = data.getStringExtra("countryId");
-            String countryCNname = data.getStringExtra("countryCNname");
-            String cityId = data.getStringExtra("cityId");
-            String cityName = data.getStringExtra("cityName");
+            String countryId = data.getStringExtra(COUNTRY_ID);
+            String countryCNname = data.getStringExtra(COUNTRY_CN_NAME);
+            String cityId = data.getStringExtra(CITY_ID);
+            String cityName = data.getStringExtra(CITY_NAME);
 
             DeBugLog.i(TAG, "countryId:" + countryId);
             DeBugLog.i(TAG, "countryCNname:" + countryCNname);
@@ -197,12 +218,9 @@ public class SelectCountryActivity extends BaseActivity {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
             String str = stringResponseInfo.result;
             DeBugLog.i(TAG, "返回的国家信息数据:" + str);
+            hideDialog();
             try {
                 Country country = JsonUtils.getInstance().fromJSON(Country.class, str);
                 List<CountryData> countryDataList = country.getData();
@@ -212,26 +230,21 @@ public class SelectCountryActivity extends BaseActivity {
                     adapter = new SelectCountryAdapter(SelectCountryActivity.this, list);
                     countryListView.setAdapter(adapter);
                 } else {
-                    Toast.makeText(SelectCountryActivity.this,
-                            getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SelectCountryActivity.this, NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析失败:" + e.getMessage());
-                Toast.makeText(SelectCountryActivity.this,
-                        getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SelectCountryActivity.this, DataError, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, "国家数据请求失败:" + s);
-
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-            Toast.makeText(SelectCountryActivity.this,
-                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            hideDialog();
+            Toast.makeText(SelectCountryActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }
+
     }
 
 }

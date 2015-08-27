@@ -3,12 +3,14 @@ package com.minglang.suiuu.base;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
+import com.minglang.suiuu.utils.DeBugLog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 public class BaseFragment extends Fragment {
+
+    private static final String TAG = BaseFragment.class.getSimpleName();
 
     public ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -86,16 +88,22 @@ public class BaseFragment extends Fragment {
     public String addUrlAndParams(String url, String[] keyArray, String[] valueArray) {
         String _url = url + "?";
         for (int i = 0; i < keyArray.length; i++) {
-            if (valueArray.length >= i) {
-                _url = _url + keyArray[i] + "=" + valueArray[i] + "&";
-            } else {
-                _url = _url + keyArray[i] + "=&";
+            String key = keyArray[i];
+            String value;
+            try {
+                value = URLEncoder.encode(valueArray[i], "UTF-8");
+            } catch (Exception e) {
+                DeBugLog.e(TAG, e.getMessage());
+                value = "";
             }
-        }
-        try {
-            _url = URLDecoder.decode(_url, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+
+            if (keyArray.length > i + 1) {
+                _url = _url + key + "=" + value + "&";
+                DeBugLog.i(TAG, "true:" + _url);
+            } else {
+                _url = _url + key + "=" + value;
+                DeBugLog.i(TAG, "false:" + _url);
+            }
         }
         return _url;
     }

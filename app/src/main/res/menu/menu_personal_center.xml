@@ -1,22 +1,4 @@
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item
-        android:id="@+id/personal_center_setting"
-        android:icon="@drawable/icon_setting"
-        android:title=""
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/personal_center_dialogue"
-        android:icon="@drawable/icon_dialogue"
-        android:title=""
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/personal_center_refresh"
-        android:title="@string/Refresh"
-        app:showAsAction="never"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
 </menu>

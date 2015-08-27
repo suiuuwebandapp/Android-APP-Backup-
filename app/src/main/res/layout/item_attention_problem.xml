@@ -48,7 +48,7 @@
         android:layout_toEndOf="@+id/item_attention_problem_head_layout"
         android:layout_toRightOf="@+id/item_attention_problem_head_layout"
         android:singleLine="true"
-        android:text="@string/title"
+        android:text="@string/Title"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/textColor"/>
 

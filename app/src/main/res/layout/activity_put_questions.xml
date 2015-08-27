@@ -67,7 +67,8 @@
                     android:id="@+id/question_location_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/layout_8dp"
+                    android:layout_margin="@dimen/layout_5dp"
+                    android:padding="@dimen/layout_5dp"
                     android:text="@string/Location"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
@@ -109,19 +110,21 @@
                 android:id="@+id/question_flow_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_8dp"
-                android:padding="@dimen/layout_8dp"/>
+                android:layout_marginTop="@dimen/layout_5dp"
+                android:padding="@dimen/layout_5dp"/>
 
             <LinearLayout
                 android:id="@+id/answer_user_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/layout_50dp"
-                android:layout_marginTop="@dimen/layout_8dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_5dp"
                 android:background="@color/white"
-                android:orientation="horizontal">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/layout_5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/layout_20dp"

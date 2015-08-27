@@ -1,29 +1,36 @@
 package com.minglang.suiuu.activity;
 
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.PersonalCenterPagerAdapter;
+import com.minglang.suiuu.adapter.PersonalSuiuuAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.fragment.center.PersonalProblemFragment;
-import com.minglang.suiuu.fragment.center.PersonalSuiuuFragment;
-import com.minglang.suiuu.fragment.center.PersonalTravelFragment;
+import com.minglang.suiuu.entity.UserSuiuu;
+import com.minglang.suiuu.entity.UserSuiuu.UserSuiuuData;
+import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -32,47 +39,37 @@ import butterknife.ButterKnife;
  */
 public class PersonalCenterActivity extends BaseAppCompatActivity {
 
-    @BindString(R.string.PersonalCenter)
-    String titleText;
+    private static final String TAG = PersonalCenterActivity.class.getSimpleName();
 
-    @BindColor(R.color.mainColor)
-    int expandedTitleColor;
+    private static final String PAGE = "page";
+    private static final String NUMBER = "number";
+    private static final String USERSIGN = "userSign";
 
-    @BindColor(R.color.white)
-    int collapsedTitleTextColor;
+    @BindString(R.string.load_wait)
+    String dialogMsg;
 
-    @BindString(R.string.MainTitle1)
-    String str1;
+    @BindString(R.string.NoData)
+    String noData;
 
-    @BindString(R.string.MainTitle2)
-    String str2;
+    @BindString(R.string.DataError)
+    String dataError;
 
-    @BindString(R.string.Problem)
-    String str3;
-
-    @Bind(R.id.personal_center_collapsing_toolbar_layout)
-    CollapsingToolbarLayout toolbarLayout;
+    @BindString(R.string.NetworkAnomaly)
+    String netWorkError;
 
     @Bind(R.id.personal_center_toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.personal_center_tab_layout)
-    TabLayout tabLayout;
+    @Bind(R.id.personal_center_recycler_view)
+    RecyclerView recyclerView;
 
-    @Bind(R.id.personal_center_view_pager)
-    ViewPager viewPager;
+    private ProgressDialog progressDialog;
 
-    private List<Fragment> fragmentList = new ArrayList<>();
+    private List<UserSuiuuData> listAll = new ArrayList<>();
 
-    private List<String> titleList = new ArrayList<>();
+    private PersonalSuiuuAdapter adapter;
 
-    private PersonalTravelFragment travelFragment;
-
-    private PersonalSuiuuFragment suiuuFragment;
-
-    private PersonalProblemFragment problemFragment;
-
-    private int ViewPagerIndex;
+    private int page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,65 +77,125 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_personal_center);
         ButterKnife.bind(this);
         initView();
-        viewAction();
+        getPersonalSuiuuData(buildRequestParams(page));
     }
 
     private void initView() {
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
+
         setSupportActionBar(toolbar);
+
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.back);
         }
-        toolbarLayout.setTitle(titleText);
-        toolbarLayout.setExpandedTitleColor(expandedTitleColor);
-        toolbarLayout.setCollapsedTitleTextColor(collapsedTitleTextColor);
-        toolbarLayout.setExpandedTitleTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium);
-        titleList.add(str1);
-        titleList.add(str2);
-        titleList.add(str3);
-        tabLayout.addTab(tabLayout.newTab().setText(str1), true);
-        tabLayout.addTab(tabLayout.newTab().setText(str2), false);
-        tabLayout.addTab(tabLayout.newTab().setText(str3), false);
 
-        travelFragment = PersonalTravelFragment.newInstance(userSign, verification);
-        suiuuFragment = PersonalSuiuuFragment.newInstance(userSign, verification);
-        problemFragment = PersonalProblemFragment.newInstance(userSign, verification);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(dialogMsg);
+        progressDialog.setCanceledOnTouchOutside(false);
 
-        fragmentList.add(travelFragment);
-        fragmentList.add(suiuuFragment);
-        fragmentList.add(problemFragment);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
 
-        PersonalCenterPagerAdapter personalCenterPagerAdapter
-                = new PersonalCenterPagerAdapter(getSupportFragmentManager(), fragmentList, titleList);
+        adapter = new PersonalSuiuuAdapter();
 
-        viewPager.setAdapter(personalCenterPagerAdapter);
-
-        tabLayout.setTabsFromPagerAdapter(personalCenterPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-
-        toolbar.showOverflowMenu();
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setAdapter(adapter);
     }
 
-    private void viewAction() {
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    private RequestParams buildRequestParams(int page) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter(PAGE, String.valueOf(page));
+        params.addBodyParameter(NUMBER, String.valueOf(10));
+        params.addBodyParameter(USERSIGN, userSign);
+        params.addBodyParameter(HttpServicePath.key, verification);
+        return params;
+    }
 
+    private void getPersonalSuiuuData(RequestParams params) {
+        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
+                HttpServicePath.getPersonalSuiuuDataPath, new PersonalSuiuuRequestCallBack());
+        httpRequest.setParams(params);
+        httpRequest.executive();
+    }
+
+    private void hideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    private void failureLessPage() {
+        if (page > 1) {
+            page = page - 1;
+        }
+    }
+
+    private void clearDataList() {
+        if (page == 1) {
+            if (listAll != null && listAll.size() > 0) {
+                listAll.clear();
             }
+        }
+    }
 
-            @Override
-            public void onPageSelected(int position) {
-                ViewPagerIndex = position;
+    private void bindData2View(String str) {
+        if (TextUtils.isEmpty(str)) {
+            failureLessPage();
+            Toast.makeText(PersonalCenterActivity.this, noData, Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                UserSuiuu userSuiuu = JsonUtils.getInstance().fromJSON(UserSuiuu.class, str);
+                if (userSuiuu != null) {
+                    List<UserSuiuuData> list = userSuiuu.getData();
+                    if (list != null && list.size() > 0) {
+                        clearDataList();
+                        listAll.addAll(list);
+                        adapter.setList(listAll);
+                        DeBugLog.i(TAG, "当前页码:" + page + ",当前请求数据数量:" + list.size()
+                                + ",总数据数量:" + listAll.size());
+                    } else {
+                        failureLessPage();
+                        Toast.makeText(PersonalCenterActivity.this, noData, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    failureLessPage();
+                    Toast.makeText(PersonalCenterActivity.this, noData, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "数据绑定Error:" + e.getMessage());
+                failureLessPage();
+                Toast.makeText(PersonalCenterActivity.this, dataError, Toast.LENGTH_SHORT).show();
             }
+        }
+    }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
+    private class PersonalSuiuuRequestCallBack extends RequestCallBack<String> {
 
+        @Override
+        public void onStart() {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
             }
-        });
+        }
+
+        @Override
+        public void onSuccess(ResponseInfo<String> responseInfo) {
+            String str = responseInfo.result;
+            DeBugLog.i(TAG, "返回的数据:" + str);
+            hideDialog();
+            bindData2View(str);
+        }
+
+        @Override
+        public void onFailure(HttpException e, String s) {
+            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
+            hideDialog();
+            failureLessPage();
+            Toast.makeText(PersonalCenterActivity.this, netWorkError, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -149,28 +206,9 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                break;
-            case R.id.personal_center_setting:
-                startActivity(new Intent(PersonalCenterActivity.this, SettingActivity.class));
-                break;
-            case R.id.personal_center_dialogue:
-                break;
-            case R.id.personal_center_refresh:
-                switch (ViewPagerIndex) {
-                    case 0:
-                        travelFragment.getPersonalSuiuuData(travelFragment.buildRequestParams(1));
-                        break;
-                    case 1:
-                        suiuuFragment.getPersonalSuiuuData(suiuuFragment.buildRequestParams(1));
-                        break;
-                    case 2:
-                        problemFragment.getPersonalSuiuuData(problemFragment.buildRequestParams(1));
-                        break;
-                }
                 break;
         }
         return super.onOptionsItemSelected(item);

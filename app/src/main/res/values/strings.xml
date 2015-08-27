@@ -93,7 +93,7 @@
     <string name="TripGalleryMsg" translatable="false">旅图</string>
     <string name="QuestionAndAnswerMsg" translatable="false">问答</string>
     <string name="OrderMsg" translatable="false">订单</string>
-    <string name="SystemMsg" translatable="false">通知</string>
+    <string name="SystemMsg" translatable="false">系统</string>
 
     <string name="Post" translatable="false">帖子</string>
     <string name="Back" translatable="false">返回</string>
@@ -125,6 +125,8 @@
     <string name="load_wait" translatable="false">正在加载，请稍候&#8230;</string>
     <string name="login_wait" translatable="false">正在登陆，请稍候&#8230;</string>
     <string name="register_wait" translatable="false">正在注册，请稍候&#8230;</string>
+    <string name="question_wait" translatable="false">正在提问，请稍候&#8230;</string>
+
     <string name="choice_area" translatable="false">请选择地区</string>
     <string name="choice_theme" translatable="false">请选择主题</string>
     <string name="theme_or_area_is_empty" translatable="false">请选择主题或者地区</string>
@@ -137,7 +139,7 @@
     <string name="article_update_success" translatable="false">文章更新成功</string>
 
     <string name="UnknownArea" translatable="false">未知区域</string>
-    <string name="title" translatable="false">标题</string>
+    <string name="Title" translatable="false">标题</string>
     <string name="attentionDynamic" translatable="false">关注动态</string>
     <string name="more" translatable="false">更多</string>
     <string name="today_star" translatable="false">今日之星</string>
@@ -312,6 +314,10 @@
 
     <string name="PersonalCenter" translatable="false">个人中心</string>
 
+    <string name="UserLocation" translatable="false">用户位置</string>
+    <string name="UserOccupation" translatable="false">用户职业</string>
+    <string name="UserYear" translatable="false">用户年龄</string>
+
     <string name="ContactPhone" translatable="false">联系电话:</string>
     <string name="DepartureDate" translatable="false">出发日期:</string>
     <string name="StartTime" translatable="false">开始时间:</string>
@@ -384,6 +390,8 @@
 
     <string name="PleaseSelectCountry" translatable="false">请选择国家</string>
 
+    <string name="TagNameNotNull" translatable="false">标签名不能为空！</string>
+
     <string name="tempDate" translatable="false">15.08.15</string>
     <string name="tempTime" translatable="false">9:00 AM</string>
     <string name="tempNumber" translatable="false">2人</string>
@@ -418,6 +426,16 @@
     <string name="Agree" translatable="false">同意</string>
     <string name="trip_gallery_publish" translatable="false">旅图发布</string>
     <string name="Loading" translatable="false">请稍候&#8230;</string>
+
+    <string name="AllComment" translatable="false">全部评论</string>
+    <string name="CommentContent" translatable="false">评论内容</string>
+
+    <string name="EmailVerification" translatable="false">邮箱验证</string>
+    <string name="PhoneVerification" translatable="false">电话验证</string>
+    <string name="RealNameVerification" translatable="false">实名验证</string>
+    <string name="ExperienceVerification" translatable="false">经历验证</string>
+
+    <string name="RelevantSuiuu" translatable="false">相关随游</string>
 
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
     <string name="pull_to_refresh_release_label">Release rear refresh</string>

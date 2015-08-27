@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/layout_5dp"
             android:padding="@dimen/layout_2dp"
-            android:text="@string/title"
+            android:text="@string/Title"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <RelativeLayout
