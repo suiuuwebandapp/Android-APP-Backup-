@@ -2,6 +2,7 @@
     android:id="@+id/general_order_details_head_frame"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+    xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -297,6 +298,40 @@
             android:layout_alignParentTop="true"
             android:contentDescription="@string/app_name"
             android:src="@drawable/back"/>
+        <RelativeLayout
+            android:id="@+id/rl_general_order_detail_bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/layout_50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:visibility="gone"
+            >
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                android:id="@+id/bb_order_detail_cancel"
+                android:layout_width="@dimen/layout_100dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/layout_60dp"
+                android:text="取消订单"
+                bootstrapbutton:bb_roundedCorners="true"
+                bootstrapbutton:bb_size="small"
+                bootstrapbutton:bb_type="warning"
+                />
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                android:id="@+id/bb_order_detail_repay"
+                android:layout_width="@dimen/layout_100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/layout_60dp"
+                android:text="重新支付"
+                bootstrapbutton:bb_roundedCorners="true"
+                bootstrapbutton:bb_size="small"
+                bootstrapbutton:bb_type="info" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

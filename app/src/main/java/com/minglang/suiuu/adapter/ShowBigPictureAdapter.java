@@ -43,9 +43,9 @@ public class ShowBigPictureAdapter extends PagerAdapter {
         //System.out.println("instantiateItem  position:"+position);
 
         //给container添加一个指定位置上的view对象,container其实就是viewPager自身
-      View view =   list.get(position);
+      TextView  tv =   list.get(position);
 
-        return view;
+        return tv;
     }
 
 
@@ -61,7 +61,6 @@ public class ShowBigPictureAdapter extends PagerAdapter {
 //			}else{
 //				return false;
 //			}
-
         return view == object;
     }
 

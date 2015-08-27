@@ -54,33 +54,24 @@ import butterknife.ButterKnife;
  */
 
 public class TripGalleryFragment extends BaseFragment implements ReFlashListView.IReflashListener, ReFlashListView.ILoadMoreDataListener ,TripGalleryAdapter.LoadChoiceTag {
-
     private static final String TAGS = "tags";
     private static final String SORT_NAME = "sortName";
     private static final String SEARCH = "search";
     private static final String NUMBER = "number";
     private static final String PAGES = "page";
-
     @BindString(R.string.load_wait)
     String dialogMsg;
-
     private ProgressDialog progressDialog;
     @Bind(R.id.lv_suiuu)
     ReFlashListView lv_trip_gallery;
     private TripGalleryAdapter adapter;
-
     private List<TripGalleryDataInfo> tripGalleryList = new ArrayList<>();
-
     private int page = 1;
-
     private String clickTag = "";
-
     /**
      * 点击了的标签集合
      */
     private List<String> tagList = new ArrayList<>();
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_route, container, false);

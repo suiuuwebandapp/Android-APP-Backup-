@@ -166,7 +166,7 @@ public class SuiuuOrderActivity extends BaseActivity {
                     intent.putExtra("destinnation", titleInfo);
                     intent.putExtra("orderNumber", orderNumber);
                     startActivity(intent);
-                    Log.i("suiuu", "orderNumber" + orderNumber);
+                    finish();
                 } else if ("-2".equals(status)) {
                     orderNumber = message.getString("data");
                     Toast.makeText(SuiuuOrderActivity.this, orderNumber, Toast.LENGTH_SHORT).show();

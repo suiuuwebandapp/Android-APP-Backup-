@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -122,7 +121,6 @@ public class SuiuuPayActivity extends BaseActivity {
             try {
 
                 charge = stringResponseInfo.result;
-                Log.i("suiuu", "charge=" + charge);
                 Intent intent = new Intent();
                 String packageName = getPackageName();
                 ComponentName componentName = new ComponentName(packageName, packageName + ".wxapi.WXPayEntryActivity");
@@ -158,7 +156,7 @@ public class SuiuuPayActivity extends BaseActivity {
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(this, "User canceled", Toast.LENGTH_SHORT).show();
             } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
-                Toast.makeText(this, "An invalid Credential was submitted.", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(SuiuuPayActivity.this,GeneralOrderListActivity.class));
             }
         }
     }

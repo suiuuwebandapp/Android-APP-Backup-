@@ -416,7 +416,7 @@
     <string name="ContactWayNotNull" translatable="false">联系方式不能为空！</string>
 
     <string name="Agree" translatable="false">同意</string>
-
+    <string name="trip_gallery_publish" translatable="false">旅图发布</string>
     <string name="Loading" translatable="false">请稍候&#8230;</string>
 
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
@@ -480,5 +480,16 @@
     <string name="title_activity_receivables_way">ReceivablesWayActivity</string>
     <string name="title_activity_add_receivables_way">AddReceivablesWayActivity</string>
     <string name="show_big_picture_activity">ShowBigPictureActivity</string>
+
+    <!--滚动viewPager显示图片缩放相关-->
+    <declare-styleable name="CircleIndicator">
+        <attr name="ci_width" format="dimension" />
+        <attr name="ci_height" format="dimension" />
+        <attr name="ci_margin" format="dimension" />
+        <attr name="ci_animator" format="reference" />
+        <attr name="ci_animator_reverse" format="reference" />
+        <attr name="ci_drawable" format="reference" />
+        <attr name="ci_drawable_unselected" format="reference" />
+    </declare-styleable>
 
 </resources>

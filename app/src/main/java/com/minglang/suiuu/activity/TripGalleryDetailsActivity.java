@@ -212,6 +212,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         init(savedInstanceState);
         loadTripGalleryDetailDate(id);
         viewAction();
+        sv_trip_gallery_detail.smoothScrollTo(0, 0);
     }
 
     /**
@@ -224,8 +225,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         if (aMap == null) {
             aMap = mapView.getMap();
         }
-
-        sv_trip_gallery_detail.smoothScrollTo(0, 0);
 
         tv_top_center.setText("旅图详情");
         tv_top_right_more.setBackgroundResource(R.drawable.btn_suiuu_share_selector);
@@ -256,6 +255,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+        sv_trip_gallery_detail.smoothScrollTo(0, 0);
     }
 
     @Override
@@ -429,7 +429,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
                         .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
         trip_gallery_details_content.setAdapter(new showPicDescriptionAdapter(this, picList, picDescription));
         fullGuessYourLove();
-        sv_trip_gallery_detail.smoothScrollTo(0, 0);
     }
     @SuppressLint("InflateParams")
     private void fullGuessYourLove() {

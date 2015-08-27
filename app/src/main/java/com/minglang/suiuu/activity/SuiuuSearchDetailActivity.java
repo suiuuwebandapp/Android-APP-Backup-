@@ -59,7 +59,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
     private List<TextView> listClick = new ArrayList<>();
     private String tags = "";
     private String enjoyPeopleCount;
-
+    private TextView iv_top_back;
     private TextView tv_price_range;
     private int startTick = 0;
     private int endTick = 10000;
@@ -99,6 +99,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
         rangebar.setTickStart(0);
         rangebar.setTickEnd(10);
         rangebar.setTickInterval(1);
+        iv_top_back = (TextView) findViewById(R.id.iv_top_back);
         lv_search_suiuu = (ReFlashListView) findViewById(R.id.lv_search_suiuu);
         fl_search_more = (FrameLayout) findViewById(R.id.fl_search_more);
         tv_price_range = (TextView) findViewById(R.id.tv_price_range);
@@ -115,6 +116,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
     }
 
     private void viewAction() {
+        iv_top_back.setOnClickListener(new MyOnclick());
         ib_release.setOnClickListener(new MyOnclick());
         bb_search_confire.setOnClickListener(new MyOnclick());
         ib_plus.setOnClickListener(new MyOnclick());
@@ -140,7 +142,6 @@ public class SuiuuSearchDetailActivity extends BaseActivity
     }
 
     private void loadDate(String countryOrCity, String peopleCount, String tags, String startPrice, String endPrice, int page) {
-        Log.i("suiuu", "contryOrcity=" + countryOrCity + ",peoplecount=" + peopleCount + ",tags=" + tags + "startPrice=" + startPrice + ",endprice=" + endPrice + ",page=" + page);
         dialog.showDialog();
         String str = SuiuuInfo.ReadVerification(this);
         RequestParams params = new RequestParams();
@@ -185,7 +186,6 @@ public class SuiuuSearchDetailActivity extends BaseActivity
 
     @Override
     public void onLoadMoreData() {
-        Log.i("suiuu","tags="+tags);
         if (!dialog.isShow()) {
             page += 1;
             loadDate(searchCountry, "0".equals(enjoyPeopleCount) ? "" :
@@ -238,7 +238,6 @@ public class SuiuuSearchDetailActivity extends BaseActivity
      * 获取随游列表的回调接口
      */
     class getSuiuuDateCallBack extends RequestCallBack<String> {
-
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
             Log.i("suiuu", stringResponseInfo.result);
@@ -331,6 +330,9 @@ public class SuiuuSearchDetailActivity extends BaseActivity
 
                 case R.id.ib_plus:
                     peopleNumber.setText(String.valueOf(enjoy_peopleNumber + 1));
+                    break;
+                case R.id.iv_top_back:
+                    finish();
                     break;
                 case R.id.tv_top_right_more:
                     fragmentShow();

@@ -14,6 +14,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.ShowBigPictureActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -84,7 +85,10 @@ public class showPicDescriptionAdapter extends BaseAdapter {
         holder.picContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context, ShowBigPictureActivity.class));
+                Intent intent = new Intent(context,ShowBigPictureActivity.class);
+                intent.putStringArrayListExtra("picList", (ArrayList<String>) imageList);
+                intent.putExtra("position",position);
+                context.startActivity(intent);
 //                Intent showPic = new Intent(context, ShowBigImage.class);
 //                showPic.putExtra("remotepath", imageList.get(position));
 //                showPic.putExtra("isHuanXin", false);

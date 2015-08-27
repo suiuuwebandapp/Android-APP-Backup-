@@ -139,6 +139,9 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
     @Bind(R.id.fl_easy_take_photo)
     FlowLayout fl_easy_take_photo;
 
+    @Bind(R.id.tv_top_center)
+    TextView tv_top_center;
+
     @Bind(R.id.tv_show_tag)
     TextView tv_show_tag;
 
@@ -175,11 +178,10 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
 
     private void initView() {
         dialog = new TextProgressDialog(this);
-
         iv_top_back.setVisibility(View.GONE);
         tv_top_right.setVisibility(View.VISIBLE);
         tv_top_right_more.setVisibility(View.GONE);
-
+        tv_top_center.setText(R.string.trip_gallery_publish);
         //判断如果文章详情信息不为空就是修改文章的图片反之为新文章图片
         //iv_cancel.setVisibility(View.GONE);
         tv_cancel.setVisibility(View.VISIBLE);

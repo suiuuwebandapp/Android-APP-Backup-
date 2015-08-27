@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tablayout"
-        android:layout_width="match_parent"
-        android:background="#1FBCD2"
-        android:layout_height="48dp" />
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    android:background="@color/black"
+   >
 
-</LinearLayout>
+    <com.minglang.suiuu.customview.photodraweeview.MultiTouchViewPager
+        android:id="@+id/mv_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <com.minglang.suiuu.customview.photodraweeview.CircleIndicator
+        android:id="@+id/ci_indicator"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"/>
+</FrameLayout>

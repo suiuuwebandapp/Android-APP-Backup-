@@ -1,6 +1,7 @@
 package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,10 +10,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.exception.HttpException;
@@ -152,6 +155,21 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.order_details_back)
     ImageView orderDetailsBack;
+    /**
+     * 底部左边按钮
+     */
+    @Bind(R.id.bb_order_detail_repay)
+    BootstrapButton bb_order_detail_repay;
+    /**
+     * 底部左边按钮
+     */
+    @Bind(R.id.bb_order_detail_cancel)
+    BootstrapButton bb_order_detail_cancel;
+    /**
+     * 底部按钮布局
+     */
+    @Bind(R.id.rl_general_order_detail_bottom_layout)
+    RelativeLayout rl_general_order_detail_bottom_layout;
 
     private boolean isPullToRefresh = true;
 
@@ -170,6 +188,9 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
      * 订单总价
      */
     private float totalOrderPrice = 0f;
+    private InfoEntity infoEntity;
+    private TripJsonInfo tripJsonInfo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,11 +256,26 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             }
 
         });
+        //重新支付
+        bb_order_detail_repay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GeneralOrderDetailsActivity.this, SuiuuPayActivity.class);
+                intent.putExtra("peopleNumber", infoEntity.getPersonCount());
+                intent.putExtra("time", infoEntity.getBeginDate());
+                intent.putExtra("total_price", infoEntity.getTotalPrice());
+                intent.putExtra("destinnation", tripJsonInfo.getInfo().getTitle());
+                intent.putExtra("orderNumber", orderNumber);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private RequestParams buildRequestParams() {
         RequestParams params = new RequestParams();
         params.addBodyParameter(ORDER_NUMBER, orderNumber);
+        DeBugLog.i(TAG, " verification:"+verification);
         params.addBodyParameter(HttpServicePath.key, verification);
         return params;
     }
@@ -277,11 +313,11 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
                     if (detailsData != null) {
                         PublisherBaseEntity publisherBaseEntity = detailsData.getPublisherBase();
-                        InfoEntity infoEntity = detailsData.getInfo();
+                        infoEntity = detailsData.getInfo();
 
                         if (infoEntity != null) {
                             String jsonInfo = infoEntity.getTripJsonInfo();
-                            TripJsonInfo tripJsonInfo;
+
 
                             if (!TextUtils.isEmpty(jsonInfo)) {
                                 tripJsonInfo = jsonUtils.fromJSON(TripJsonInfo.class, jsonInfo);
@@ -410,6 +446,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                                 switch (status) {
                                     case "0":
                                         orderStatus.setText("待支付");
+                                        rl_general_order_detail_bottom_layout.setVisibility(View.VISIBLE);
                                         break;
                                     case "1":
                                         orderStatus.setText("已支付 待确认");
