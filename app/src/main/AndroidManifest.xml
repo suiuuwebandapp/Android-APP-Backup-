@@ -295,6 +295,7 @@
         <activity
             android:name=".activity.CommonCommentActivity"
             android:label="@string/title_activity_common_comment"
+            android:windowSoftInputMode="stateVisible"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
 
         <!-- 支付相关 -->

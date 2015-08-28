@@ -59,7 +59,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
     private List<TextView> listClick = new ArrayList<>();
     private String tags = "";
     private String enjoyPeopleCount;
-    private TextView iv_top_back;
+    private ImageView iv_top_back;
     private TextView tv_price_range;
     private int startTick = 0;
     private int endTick = 10000;
@@ -70,7 +70,6 @@ public class SuiuuSearchDetailActivity extends BaseActivity
     private int page = 1;
     //处理头部
     private TextView titleInfo;
-
 
 
     private ShowSuiuuAdapter adapter = null;
@@ -99,7 +98,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
         rangebar.setTickStart(0);
         rangebar.setTickEnd(10);
         rangebar.setTickInterval(1);
-        iv_top_back = (TextView) findViewById(R.id.iv_top_back);
+        iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
         lv_search_suiuu = (ReFlashListView) findViewById(R.id.lv_search_suiuu);
         fl_search_more = (FrameLayout) findViewById(R.id.fl_search_more);
         tv_price_range = (TextView) findViewById(R.id.tv_price_range);
@@ -151,16 +150,13 @@ public class SuiuuSearchDetailActivity extends BaseActivity
         params.addBodyParameter("tag", tags);
         params.addBodyParameter("startPrice", startPrice);
         params.addBodyParameter("endPrice", endPrice);
-
         params.addBodyParameter("page", Integer.toString(page));
         params.addBodyParameter("number", "10");
-
         SuiuuHttp suiuuHttp = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getSuiuuList, new getSuiuuDateCallBack());
         suiuuHttp.setParams(params);
         suiuuHttp.executive();
     }
-
 
     private void getSuiuuSearchTag() {
         String str = SuiuuInfo.ReadVerification(this);
@@ -254,8 +250,8 @@ public class SuiuuSearchDetailActivity extends BaseActivity
                     }
                     suiuuDataList.addAll(suiuuDataListNew);
                     showList(suiuuDataList);
-                }  else {
-                    Toast.makeText(SuiuuSearchDetailActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SuiuuSearchDetailActivity.this, "222数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
 
                 }
             } catch (Exception e) {
@@ -266,7 +262,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
         @Override
         public void onFailure(HttpException e, String s) {
             dialog.dismissDialog();
-            Toast.makeText(SuiuuSearchDetailActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SuiuuSearchDetailActivity.this, "111数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
 

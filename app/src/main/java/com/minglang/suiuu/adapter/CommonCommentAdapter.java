@@ -48,6 +48,10 @@ public class CommonCommentAdapter extends BaseAdapter {
         this.list = list;
         this.notifyDataSetChanged();
     }
+    public void onDateChangeType(List<CommentEntity> list) {
+        this.tripList = list;
+        this.notifyDataSetChanged();
+    }
 
     @Override
     public int getCount() {

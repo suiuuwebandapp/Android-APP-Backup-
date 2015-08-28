@@ -678,7 +678,7 @@ public class MainActivity extends BaseActivity {
                                     DeBugLog.i(TAG, "appTimeSign:" + appTimeSign);
                                     SuiuuInfo.WriteAppTimeSign(MainActivity.this, appTimeSign);
                                 } else {
-                                    DeBugLog.e(TAG, "获取失败");
+                                    DeBugLog.e(TAG,"获取失败");
                                 }
                             } catch (JSONException e) {
                                 DeBugLog.e(TAG, "JSONException:" + e.getMessage());

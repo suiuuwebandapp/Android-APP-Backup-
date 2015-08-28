@@ -119,7 +119,6 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 		this.setOnScrollListener(this);
 		mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
 	}
-
 	/**
 	 * 通知父布局，占用的宽，高；
 	 *
@@ -142,7 +141,6 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 		}
 		view.measure(width, height);
 	}
-
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2,

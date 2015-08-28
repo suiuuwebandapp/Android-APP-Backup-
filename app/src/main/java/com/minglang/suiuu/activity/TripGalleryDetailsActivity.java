@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -202,6 +204,15 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
      */
     private String attentionId;
 
+    /**
+     * 是否显示全部评论的状态
+     */
+    private boolean showCommentLoadMore = false;
+    /**
+     * 加载更多的view
+     */
+    private TextView textView = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -228,7 +239,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
 
         tv_top_center.setText("旅图详情");
         tv_top_right_more.setBackgroundResource(R.drawable.btn_suiuu_share_selector);
-
         dialog = new TextProgressDialog(this);
     }
 
@@ -246,6 +256,15 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
                     sv_trip_gallery_detail.requestDisallowInterceptTouchEvent(false);
                 } else {
                     sv_trip_gallery_detail.requestDisallowInterceptTouchEvent(true);
+                }
+            }
+        });
+        //评论点击事件
+        suiuu_details_comment_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(showCommentLoadMore && position == 5) {
+                    showCommentList(commentContentList,true);
                 }
             }
         });
@@ -392,6 +411,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
                 Toast.makeText(TripGalleryDetailsActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
             }
         }
+
         @Override
         public void onFailure(HttpException e, String s) {
             Toast.makeText(TripGalleryDetailsActivity.this, "网络错误,请稍候再试", Toast.LENGTH_SHORT).show();
@@ -430,6 +450,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         trip_gallery_details_content.setAdapter(new showPicDescriptionAdapter(this, picList, picDescription));
         fullGuessYourLove();
     }
+
     @SuppressLint("InflateParams")
     private void fullGuessYourLove() {
         View itemView;
@@ -462,25 +483,45 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
             suiuu_details_comment_number.setText("全部评论 (共" + commentContentList.size() + "条评论)");
             suiuu_details_input_comment.setVisibility(View.VISIBLE);
             suiuu_details_no_comment.setVisibility(View.GONE);
-            showCommentList(commentContentList);
+            showCommentList(commentContentList, showCommentLoadMore);
         } else {
             suiuu_details_no_comment.setVisibility(View.VISIBLE);
             suiuu_details_input_comment.setVisibility(View.GONE);
         }
     }
 
-    private void showCommentList(List<CommentEntity> commentDataList) {
-        if (adapter == null) {
-            adapter = new CommonCommentAdapter(this, commentDataList, "1");
-            suiuu_details_comment_view.setAdapter(adapter);
+    /**
+     * @param commentDataList 评论列表
+     * @param showAll         是否显示全部评论
+     */
+    private void showCommentList(List<CommentEntity> commentDataList, boolean showAll) {
+        List<CommentEntity> newCommentDataList = new ArrayList<>();
+        if (!showAll) {
+            if (commentDataList.size() > 5) {
+                showCommentLoadMore = true;
+                if(textView == null) {
+                    textView = new TextView(this);
+                    textView.setText("点击加载更多");
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(18);
+                    suiuu_details_comment_view.addFooterView(textView);
+                }
+                newCommentDataList.addAll(commentDataList);
+                newCommentDataList.subList(5, commentDataList.size()).clear();
+            }
+        } else {
+            showCommentLoadMore = false;
+            suiuu_details_comment_view.removeFooterView(textView);
         }
-        //        else {
-        //            adapter.onDateChange(commentDataList);
-        //        }
+        if (adapter == null) {
+            adapter = new CommonCommentAdapter(this, showAll ? commentDataList : newCommentDataList, "1");
+            suiuu_details_comment_view.setAdapter(adapter);
+        } else {
+            adapter.onDateChangeType(commentDataList);
+        }
     }
 
     private class MyOnClickListener implements View.OnClickListener {
-
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -511,7 +552,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
                     //关注按钮
                     if (TextUtils.isEmpty(attentionId)) {
                         collectionTripGallery();
-                    }else {
+                    } else {
                         collectionTripGalleryCancel(attentionId);
                     }
                     break;

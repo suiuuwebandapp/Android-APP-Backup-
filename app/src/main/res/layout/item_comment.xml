@@ -3,8 +3,6 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/layout_5dp"
-    android:layout_marginBottom="@dimen/layout_5dp"
     >
 
     <!--评论Item-->
@@ -12,12 +10,13 @@
     <com.facebook.drawee.view.SimpleDraweeView
         fresco:roundAsCircle="true"
         android:layout_marginTop="@dimen/layout_5dp"
+        android:layout_marginBottom="@dimen/layout_8dp"
         android:layout_width="@dimen/layout_45dp"
         android:layout_height="@dimen/layout_45dp"
         android:id="@+id/item_comment_head_image"
         android:background="@drawable/default_head_image"
         android:layout_marginLeft="10dp"
-        android:layout_centerVertical="true"/>
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,7 +45,6 @@
         android:id="@+id/item_comment_content"
         android:textSize="@dimen/layout_16sp"
         android:textColor="@color/tr_black"
-        android:maxLines="2"
         android:layout_below="@+id/item_comment_title"
         android:layout_alignLeft="@+id/item_comment_title"
         android:layout_alignStart="@+id/item_comment_title" />
