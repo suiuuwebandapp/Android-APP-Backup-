@@ -46,8 +46,22 @@ public class SelectCityActivity extends BaseActivity {
     private static final String COUNTRY_ID = "countryId";
     private static final String COUNTRY_C_NAME = "countryCNname";
 
+    private static final String CITY_ID = "cityId";
+
+    private static final String COUNTRY_CN_NAME = "countryCNname";
+    private static final String CITY_NAME = "cityName";
+
     @BindString(R.string.load_wait)
     String wait;
+
+    @BindString(R.string.NoData)
+    String NoData;
+
+    @BindString(R.string.DataError)
+    String DataError;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkAnomaly;
 
     @Bind(R.id.select_city_back)
     ImageView back;
@@ -88,7 +102,7 @@ public class SelectCityActivity extends BaseActivity {
         ButterKnife.bind(this);
         initView();
         getSelectCity4Service();
-        ViewAction();
+        viewAction();
     }
 
     /**
@@ -103,7 +117,7 @@ public class SelectCityActivity extends BaseActivity {
         cityNameComparator = new CityNameComparator();
     }
 
-    private void ViewAction() {
+    private void viewAction() {
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,10 +150,10 @@ public class SelectCityActivity extends BaseActivity {
                     Toast.makeText(SelectCityActivity.this, "请选择城市!", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent();
-                    intent.putExtra("countryId", countryId);
-                    intent.putExtra("countryCNname", countryCNname);
-                    intent.putExtra("cityId", selectCityId);
-                    intent.putExtra("cityName", selectCityName);
+                    intent.putExtra(COUNTRY_ID, countryId);
+                    intent.putExtra(COUNTRY_CN_NAME, countryCNname);
+                    intent.putExtra(CITY_ID, selectCityId);
+                    intent.putExtra(CITY_NAME, selectCityName);
                     setResult(RESULT_OK, intent);
                     finish();
                 }
@@ -151,12 +165,18 @@ public class SelectCityActivity extends BaseActivity {
     private void getSelectCity4Service() {
         RequestParams params = new RequestParams();
         params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
-        params.addBodyParameter("countryId", countryId);
+        params.addBodyParameter(COUNTRY_ID, countryId);
 
         SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
                 HttpServicePath.getCityListPath, new SelectCityRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
+    }
+
+    private void hideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     private List<CityAssistData> TransformationData(List<CityData> countryDataList) {
@@ -188,12 +208,10 @@ public class SelectCityActivity extends BaseActivity {
 
         @Override
         public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
+            hideDialog();
             String str = stringResponseInfo.result;
             if (TextUtils.isEmpty(str)) {
-                Toast.makeText(SelectCityActivity.this, getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SelectCityActivity.this, NoData, Toast.LENGTH_SHORT).show();
             } else {
                 try {
                     City city = JsonUtils.getInstance().fromJSON(City.class, str);
@@ -204,22 +222,19 @@ public class SelectCityActivity extends BaseActivity {
                     cityListView.setAdapter(adapter);
                 } catch (Exception e) {
                     DeBugLog.e(TAG, "数据解析错误:" + e.getMessage());
-                    Toast.makeText(SelectCityActivity.this,
-                            getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SelectCityActivity.this, DataError, Toast.LENGTH_SHORT).show();
                 }
             }
+
         }
 
         @Override
         public void onFailure(HttpException e, String s) {
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
-            DeBugLog.e(TAG, "请求失败:" + s);
-            Toast.makeText(SelectCityActivity.this,
-                    getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",请求失败:" + s);
+            hideDialog();
+            Toast.makeText(SelectCityActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }
+
     }
 
 }

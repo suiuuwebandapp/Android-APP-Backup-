@@ -98,6 +98,8 @@
     <string name="Post" translatable="false">帖子</string>
     <string name="Back" translatable="false">返回</string>
 
+    <string name="Search" translatable="false">Search</string>
+
     <string name="Confirm" translatable="false">确认</string>
     <string name="AllPicture" translatable="false">所有图片</string>
     <string name="Location" translatable="false">所在地</string>
@@ -501,13 +503,13 @@
 
     <!--滚动viewPager显示图片缩放相关-->
     <declare-styleable name="CircleIndicator">
-        <attr name="ci_width" format="dimension" />
-        <attr name="ci_height" format="dimension" />
-        <attr name="ci_margin" format="dimension" />
-        <attr name="ci_animator" format="reference" />
-        <attr name="ci_animator_reverse" format="reference" />
-        <attr name="ci_drawable" format="reference" />
-        <attr name="ci_drawable_unselected" format="reference" />
+        <attr name="ci_width" format="dimension"/>
+        <attr name="ci_height" format="dimension"/>
+        <attr name="ci_margin" format="dimension"/>
+        <attr name="ci_animator" format="reference"/>
+        <attr name="ci_animator_reverse" format="reference"/>
+        <attr name="ci_drawable" format="reference"/>
+        <attr name="ci_drawable_unselected" format="reference"/>
     </declare-styleable>
 
 </resources>

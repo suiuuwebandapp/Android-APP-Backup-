@@ -12,6 +12,8 @@ public class BaseFragment extends Fragment {
 
     private static final String TAG = BaseFragment.class.getSimpleName();
 
+    public static final String TOKEN = "token";
+
     public ImageLoader imageLoader = ImageLoader.getInstance();
 
     public String userSign;
@@ -99,10 +101,8 @@ public class BaseFragment extends Fragment {
 
             if (keyArray.length > i + 1) {
                 _url = _url + key + "=" + value + "&";
-                DeBugLog.i(TAG, "true:" + _url);
             } else {
                 _url = _url + key + "=" + value;
-                DeBugLog.i(TAG, "false:" + _url);
             }
         }
         return _url;

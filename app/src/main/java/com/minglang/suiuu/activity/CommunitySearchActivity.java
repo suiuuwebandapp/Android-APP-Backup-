@@ -18,6 +18,8 @@ import butterknife.ButterKnife;
  */
 public class CommunitySearchActivity extends BaseAppCompatActivity {
 
+    private static final String SEARCH = "Search";
+
     @Bind(R.id.community_search_layout_back)
     ImageView back;
 
@@ -32,10 +34,15 @@ public class CommunitySearchActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_search);
         ButterKnife.bind(this);
-        ViewAction();
+        initView();
+        viewAction();
     }
 
-    private void ViewAction() {
+    private void initView() {
+
+    }
+
+    private void viewAction() {
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +59,7 @@ public class CommunitySearchActivity extends BaseAppCompatActivity {
                     setResult(RESULT_CANCELED);
                 } else {
                     Intent intent = new Intent();
-                    intent.putExtra("Search", str);
+                    intent.putExtra(SEARCH, str);
                     setResult(RESULT_OK, intent);
                 }
                 finish();

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--已关注的Selector-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--已关注，已按下-->
+    <item android:drawable="@drawable/icon_heart_for_attention_is_click" android:state_pressed="true"/>
+    <!--已关注，未按下-->
+    <item android:drawable="@drawable/icon_heart_is_attention_no_click"/>
+
+</selector>

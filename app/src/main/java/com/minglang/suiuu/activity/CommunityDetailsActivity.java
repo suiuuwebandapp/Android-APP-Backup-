@@ -2,7 +2,8 @@ package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -26,7 +28,6 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshScrollView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.CommunityItemAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.entity.CommunityItem;
@@ -34,21 +35,25 @@ import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.AnswerEntity;
 import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.QuestionEntity;
 import com.minglang.suiuu.entity.Tag;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.phillipcalvin.iconbutton.IconButton;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.BindColor;
+import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -79,6 +84,9 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
     @BindColor(R.color.white)
     int titleTextColor;
 
+    @BindString(R.string.load_wait)
+    String DialogMsg;
+
     @BindString(R.string.NoData)
     String NoData;
 
@@ -94,6 +102,18 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
     @BindString(R.string.AttentionQuestion_FAI)
     String attention_fai;
 
+    /**
+     * 未关注的Selector
+     */
+    @BindDrawable(R.drawable.icon_no_attention_selector)
+    Drawable noAttentionSelector;
+
+    /**
+     * 已关注的Selector
+     */
+    @BindDrawable(R.drawable.icon_is_attention_selector)
+    Drawable isAttentionSelector;
+
     @Bind(R.id.community_details_refresh_scroll_view)
     PullToRefreshScrollView pullToRefreshScrollView;
 
@@ -104,7 +124,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
     Toolbar toolbar;
 
     @Bind(R.id.item_community_layout_1_head_view)
-    CircleImageView headImageView;
+    SimpleDraweeView headImageView;
 
     @Bind(R.id.item_community_layout_1_problem)
     TextView problemTitle;
@@ -123,10 +143,6 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
 
     private ProgressDialog progressDialog;
 
-    private ImageLoader imageLoader;
-
-    private DisplayImageOptions options;
-
     private CommunityItemAdapter communityItemAdapter;
 
     @Override
@@ -140,7 +156,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
 
         ButterKnife.bind(this);
         initView();
-        ViewAction();
+        viewAction();
         getTagList();
     }
 
@@ -148,6 +164,12 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
     protected void onResume() {
         super.onResume();
         getCommunityItemDetails(buildRequestParams(strID));
+
+        //        if (progressDialog != null && !progressDialog.isShowing()) {
+        //            progressDialog.show();
+        //        }
+        //        getProblemData(buildUrl(HttpNewServicePath.getProblemDetailsPath, strID));
+
     }
 
     /**
@@ -166,33 +188,34 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         pullToRefreshScrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
-
-        imageLoader = ImageLoader.getInstance();
-
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image)
-                .showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
         ImageView tag = (ImageView) LayoutInflater.from(this).inflate(R.layout.layout_image_tag, tagLayout, false);
         tagLayout.addView(tag);
 
         communityItemAdapter = new CommunityItemAdapter(this);
         noScrollBarListView.setAdapter(communityItemAdapter);
+
+        verification = SuiuuInfo.ReadVerification(this);
+
+        try {
+            token = URLEncoder.encode(SuiuuInfo.ReadAppTimeSign(this), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * 控件相关事件
      */
-    private void ViewAction() {
+    private void viewAction() {
 
         attentionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getAttentionRequest(buildAttentionParams(qID));
+                //                getAttentionRequest(buildAttentionParams(qID));
+                getAttentionProblem(buildUrl(HttpNewServicePath.getAttentionQuestionPath, qID));
             }
         });
 
@@ -228,6 +251,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 getCommunityItemDetails(buildRequestParams(strID));
+                //                getProblemData(buildUrl(HttpNewServicePath.getProblemDetailsPath, strID));
             }
 
             @Override
@@ -247,10 +271,56 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
      * 获取系统标签
      */
     private void getTagList() {
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.GET,
-                HttpServicePath.getDefaultTagListPath, new TagRequestCallBack());
-        httpRequest.executive();
+        //        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.GET,
+        //                HttpNewServicePath.getDefaultTagListPath, new TagRequestCallBack());
+        //        httpRequest.executive();
+
+        try {
+            String url = HttpNewServicePath.getDefaultTagListPath + "?" + TOKEN + "=" + token;
+            DeBugLog.i(TAG, "TAG URL:" + url);
+            OkHttpManager.onGetAsynRequest(url, new TagResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            DeBugLog.e(TAG, "获取标签异常:" + e.getMessage());
+        }
+
     }
+
+    /**
+     * 构造问题详情请求URL
+     *
+     * @param baseUrl 基础URL
+     * @param id      问题ID
+     * @return 带参数的URL
+     */
+    private String buildUrl(String baseUrl, String id) {
+        String[] keyArray = new String[]{HttpServicePath.key, ID, TOKEN};
+        String[] valueArray = new String[]{verification, id, token};
+        return addUrlAndParams(baseUrl, keyArray, valueArray);
+    }
+
+    /**
+     * 发起问题详情网络请求
+     *
+     * @param url 问题详情请求URL
+     */
+    private void getProblemData(String url) {
+        try {
+            OkHttpManager.onGetAsynRequest(url, new ProblemDetailsResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getAttentionProblem(String url) {
+        try {
+            OkHttpManager.onGetAsynRequest(url, new AttentionProblemResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //******************************旧版网络请求************************************************************
 
     /**
      * 构造问题详情网络请求参数
@@ -260,7 +330,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
      */
     private RequestParams buildRequestParams(String id) {
         RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
+        params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter(ID, id);
         return params;
     }
@@ -285,7 +355,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
      */
     private RequestParams buildAttentionParams(String id) {
         RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
+        params.addBodyParameter(HttpServicePath.key, verification);
         params.addBodyParameter(ID, id);
         return params;
     }
@@ -328,6 +398,16 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
                     CommunityItem.CommunityItemData itemData = communityItem.getData();
 
                     if (itemData != null) {
+                        List<CommunityItem.CommunityItemData.AttentionEntity> attentionEntityList
+                                = itemData.getAttention();
+                        if (attentionEntityList != null && attentionEntityList.size() > 0) {
+                            DeBugLog.i(TAG, "已关注");
+                            attentionBtn.setCompoundDrawablesWithIntrinsicBounds(isAttentionSelector, null, null, null);
+                        } else {
+                            DeBugLog.i(TAG, "未关注");
+                            attentionBtn.setCompoundDrawablesWithIntrinsicBounds(noAttentionSelector, null, null, null);
+                        }
+
                         List<QuestionEntity> questionList = itemData.getQuestion();
 
                         if (questionList != null && questionList.size() > 0) {
@@ -337,7 +417,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
 
                             String headImagePath = questionEntity.getHeadImg();
                             if (!TextUtils.isEmpty(headImagePath)) {
-                                imageLoader.displayImage(headImagePath, headImageView, options);
+                                headImageView.setImageURI(Uri.parse(headImagePath));
                             }
 
                             String strTitle = questionEntity.getQTitle();
@@ -468,6 +548,82 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         @Override
         public void onFailure(HttpException e, String s) {
             DeBugLog.e(TAG, "Attention HttpException:" + e.getMessage() + ",Attention Error:" + s);
+        }
+
+    }
+
+
+    private class TagResultCallback extends OkHttpManager.ResultCallback<String> {
+
+        @Override
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "get Tag HttpException:" + e.getMessage());
+        }
+
+        @Override
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "返回的Tag数据:" + response);
+            if (!TextUtils.isEmpty(response)) {
+                try {
+                    Tag tagInfo = JsonUtils.getInstance().fromJSON(Tag.class, response);
+                    if (tagInfo != null) {
+                        List<Tag.TagData> list = tagInfo.getData();
+                        if (list != null && list.size() > 0) {
+                            for (Tag.TagData data : list) {
+                                TextView tagView = (TextView) LayoutInflater.from(CommunityDetailsActivity.this)
+                                        .inflate(R.layout.layout_text_tag, tagLayout, false);
+                                tagView.setText(data.getTName());
+                                tagLayout.addView(tagView);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    DeBugLog.e(TAG, "Tag数据解析失败:" + e.getMessage());
+                }
+            } else {
+                DeBugLog.e(TAG, "无返回Tag数据");
+            }
+        }
+
+    }
+
+    private class ProblemDetailsResultCallback extends OkHttpManager.ResultCallback<String> {
+
+        @Override
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "问题详情数据异常:" + e.getMessage());
+        }
+
+        @Override
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "问题详情数据:" + response);
+            hideDialog();
+            bindData2View(response);
+        }
+
+    }
+
+    private class AttentionProblemResultCallback extends OkHttpManager.ResultCallback<String> {
+
+        @Override
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "关注问题数据异常:" + e.getMessage());
+        }
+
+        @Override
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "关注问题返回的数据:" + response);
+            try {
+                JSONObject object = new JSONObject(response);
+                String stats = object.getString(STATUS);
+                if (stats.equals(SUC_VALUE)) {
+                    Toast.makeText(CommunityDetailsActivity.this, attention_suc, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CommunityDetailsActivity.this, attention_fai, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+            }
         }
 
     }

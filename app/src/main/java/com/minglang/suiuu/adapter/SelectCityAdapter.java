@@ -16,6 +16,8 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2015/5/13.
+ * <p/>
+ * 选择城市的数据适配器
  */
 public class SelectCityAdapter extends BaseAdapter implements SectionIndexer {
 
@@ -106,4 +108,5 @@ public class SelectCityAdapter extends BaseAdapter implements SectionIndexer {
     public int getSectionForPosition(int position) {
         return list.get(position).getFirstLetter().toUpperCase().charAt(0);
     }
+
 }

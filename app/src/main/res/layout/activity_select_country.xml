@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.minglang.suiuu.activity.SelectCountryActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.minglang.suiuu.activity.SelectCountryActivity">
 
     <RelativeLayout
         android:id="@+id/select_country_title_layout"
@@ -20,7 +20,7 @@
             android:layout_centerVertical="true"
             android:text="@string/countryDetails"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
 
         <ImageView
             android:id="@+id/select_country_back"
@@ -31,7 +31,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/layout_5dp"
             android:layout_marginStart="@dimen/layout_5dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/back"/>
 
         <TextView
             android:id="@+id/select_country_next"
@@ -44,17 +44,17 @@
             android:layout_marginRight="@dimen/layout_5dp"
             android:text="@string/Next"
             android:textColor="@color/text_color1"
-            android:visibility="invisible"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="invisible"/>
     </RelativeLayout>
 
     <ListView
         android:id="@+id/select_country_index_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
         android:layout_below="@+id/select_country_title_layout"
-        android:choiceMode="singleChoice"/>
+        android:choiceMode="singleChoice"
+        android:scrollbars="none"/>
 
     <TextView
         android:id="@+id/select_country_dialog"
@@ -66,15 +66,15 @@
         android:gravity="center"
         android:textColor="#ffffffff"
         android:textSize="30.0dip"
-        android:visibility="invisible" />
+        android:visibility="invisible"/>
 
     <com.minglang.suiuu.customview.SideBar
+        android:id="@+id/select_country_index_side_bar"
         android:layout_width="@dimen/layout_30dp"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/select_country_title_layout"
         android:layout_alignParentBottom="true"
-        android:id="@+id/select_country_index_side_bar"/>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/select_country_title_layout"/>
 
 </RelativeLayout>

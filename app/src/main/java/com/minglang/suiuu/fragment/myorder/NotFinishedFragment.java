@@ -50,6 +50,7 @@ public class NotFinishedFragment extends BaseFragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
@@ -95,11 +96,12 @@ public class NotFinishedFragment extends BaseFragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment NotFinishedFragment.
      */
-    public static NotFinishedFragment newInstance(String param1, String param2) {
+    public static NotFinishedFragment newInstance(String param1, String param2, String param3) {
         NotFinishedFragment fragment = new NotFinishedFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -114,17 +116,18 @@ public class NotFinishedFragment extends BaseFragment {
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
+            token = getArguments().getString(ARG_PARAM3);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         View rootView = inflater.inflate(R.layout.fragment_not_finished, container, false);
         ButterKnife.bind(this, rootView);
         initView();
         ViewAction();
         getCompletedOrderData4Service(buildRequestParams(page));
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 

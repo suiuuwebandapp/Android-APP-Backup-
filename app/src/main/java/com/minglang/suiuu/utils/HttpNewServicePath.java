@@ -54,4 +54,29 @@ public class HttpNewServicePath {
      */
     public static String addNewProblemInterFacePath = RootPath + "/app-qa/add-question";
 
+    /**
+     * 得到系统默认Tag
+     */
+    public static String getDefaultTagListPath = RootPath + "/app-qa/get-tag";
+
+    /**
+     * 关注问题
+     */
+    public static String getAttentionQuestionPath = RootPath + "/app-attention/attention-tp";
+
+    /**
+     * 关键字匹配Title
+     */
+    public static String serachProblemTitlePath = RootPath + "/app-qa/get-qa-title";
+
+    /**
+     * 得到普通用户的已完成的订单
+     */
+    public static String getGeneralUserCompletedOrderPath = RootPath + "/app-user-order/get-finish-order";
+
+    /**
+     * 得到普通用户未完成的订单
+     */
+    public static String getGeneralUserNotFinishOrderPath = RootPath + "/app-user-order/get-un-finish-order";
+
 }

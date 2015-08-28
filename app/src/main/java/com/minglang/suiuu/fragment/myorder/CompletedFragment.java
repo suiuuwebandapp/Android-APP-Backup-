@@ -27,10 +27,16 @@ import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.CompletedOrder;
 import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuHttp;
+import com.squareup.okhttp.Request;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +56,7 @@ public class CompletedFragment extends BaseFragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
@@ -95,11 +102,12 @@ public class CompletedFragment extends BaseFragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment CompletedFragment.
      */
-    public static CompletedFragment newInstance(String param1, String param2) {
+    public static CompletedFragment newInstance(String param1, String param2, String param3) {
         CompletedFragment fragment = new CompletedFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -114,6 +122,7 @@ public class CompletedFragment extends BaseFragment {
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
+            token = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -122,8 +131,9 @@ public class CompletedFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_completed, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
+        viewAction();
         getCompletedOrderData4Service(buildRequestParams(page));
+//        onDataRequest();
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
@@ -146,9 +156,15 @@ public class CompletedFragment extends BaseFragment {
         listView.setAdapter(adapter);
 
         jsonUtils = JsonUtils.getInstance();
+
+        try {
+            token = URLEncoder.encode(token, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void ViewAction() {
+    private void viewAction() {
 
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 
@@ -161,6 +177,7 @@ public class CompletedFragment extends BaseFragment {
                 isPullToRefresh = false;
                 page = 1;
                 getCompletedOrderData4Service(buildRequestParams(page));
+//                onDataRequest();
             }
 
             @Override
@@ -172,6 +189,7 @@ public class CompletedFragment extends BaseFragment {
                 isPullToRefresh = false;
                 page = page + 1;
                 getCompletedOrderData4Service(buildRequestParams(page));
+//                onDataRequest();
             }
 
         });
@@ -212,6 +230,27 @@ public class CompletedFragment extends BaseFragment {
                 HttpServicePath.getGeneralUserCompletedOrderPath, new CompletedRequestCallBack());
         httpRequest.setParams(params);
         httpRequest.executive();
+    }
+
+    private void onDataRequest() {
+        if (isPullToRefresh) {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
+
+        getCompletedData();
+    }
+
+    private void getCompletedData() {
+        String[] keyArray = new String[]{HttpServicePath.key, PAGE, NUMBER, TOKEN};
+        String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
+        String url = addUrlAndParams(HttpNewServicePath.getGeneralUserCompletedOrderPath, keyArray, valueArray);
+        try {
+            OkHttpManager.onGetAsynRequest(url, new CompletedResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -295,6 +334,25 @@ public class CompletedFragment extends BaseFragment {
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private class CompletedResultCallback extends OkHttpManager.ResultCallback<String> {
+
+        @Override
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            hideDialog();
+            failureLessPage();
+            Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "获取到的数据:" + response);
+            hideDialog();
+            bindData2View(response);
         }
 
     }

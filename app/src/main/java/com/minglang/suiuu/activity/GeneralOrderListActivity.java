@@ -76,9 +76,10 @@ public class GeneralOrderListActivity extends BaseAppCompatActivity {
 
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
+        token = SuiuuInfo.ReadAppTimeSign(this);
 
-        CompletedFragment completedFragment = CompletedFragment.newInstance(userSign, verification);
-        NotFinishedFragment notFinishedFragment = NotFinishedFragment.newInstance(userSign, verification);
+        CompletedFragment completedFragment = CompletedFragment.newInstance(userSign, verification, token);
+        NotFinishedFragment notFinishedFragment = NotFinishedFragment.newInstance(userSign, verification, token);
 
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(completedFragment);

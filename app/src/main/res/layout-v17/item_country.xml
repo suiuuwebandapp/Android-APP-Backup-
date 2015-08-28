@@ -2,31 +2,30 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/country"
         android:id="@+id/item_country_name"
-        android:textSize="18sp"
-        android:layout_marginTop="@dimen/layout_15dp"
-        android:layout_marginLeft="@dimen/layout_10dp"
-        android:layout_marginStart="@dimen/layout_10dp"
-        android:layout_marginBottom="@dimen/layout_15dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/a"
-        android:paddingLeft="@dimen/layout_15dp"
-        android:paddingStart="@dimen/layout_15dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/item_country_index_letter"
+        android:padding="@dimen/layout_10dp"
+        android:text="@string/country"
+        android:textSize="@dimen/layout_18sp"/>
+
+    <TextView
         android:id="@+id/item_country_index_letter"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_30dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:background="@color/mainColor3"
+        android:gravity="center_vertical"
+        android:paddingEnd="0dp"
+        android:paddingStart="@dimen/layout_15dp"
+        android:text="@string/a"
+        android:textColor="@color/white"
+        android:textSize="@dimen/layout_20sp"/>
 
 </RelativeLayout>

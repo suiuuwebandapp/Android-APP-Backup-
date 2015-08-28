@@ -50,6 +50,8 @@ public class SelectCountryActivity extends BaseActivity {
     private static final String COUNTRY_CN_NAME = "countryCNname";
     private static final String CITY_NAME = "cityName";
 
+    private static final String COUNTRY_NAME_2 = "countryName2";
+
     @BindString(R.string.load_wait)
     String wait;
 
@@ -96,7 +98,7 @@ public class SelectCountryActivity extends BaseActivity {
         setContentView(R.layout.activity_select_country);
         ButterKnife.bind(this);
         initView();
-        ViewAction();
+        viewAction();
         getCountryData4Service();
     }
 
@@ -114,7 +116,7 @@ public class SelectCountryActivity extends BaseActivity {
         sideBar.setTextView(textDialog);
     }
 
-    private void ViewAction() {
+    private void viewAction() {
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,8 +148,8 @@ public class SelectCountryActivity extends BaseActivity {
 
                 Intent intent = new Intent(SelectCountryActivity.this, SelectCityActivity.class);
                 intent.putExtra(COUNTRY_ID, selectCountryId);
-                intent.putExtra("countryCNname", selectCountryCNname);
-                intent.putExtra("countryName2", selectCountryUSname);
+                intent.putExtra(COUNTRY_CN_NAME, selectCountryCNname);
+                intent.putExtra(COUNTRY_NAME_2, selectCountryUSname);
                 startActivityForResult(intent, AppConstant.SELECT_CITY_OK);
             }
         });
