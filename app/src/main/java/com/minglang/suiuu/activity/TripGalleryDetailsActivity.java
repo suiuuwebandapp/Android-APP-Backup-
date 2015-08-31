@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -43,11 +44,15 @@ import com.minglang.suiuu.entity.TripGalleryDetail.DataEntity.CommentEntity;
 import com.minglang.suiuu.entity.TripGalleryDetail.DataEntity.InfoEntity;
 import com.minglang.suiuu.entity.TripGalleryDetail.DataEntity.LikeEntity;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
+import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -264,8 +269,8 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         suiuu_details_comment_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(!showAllCommnet && position == 5) {
-                    showCommentList(commentContentList,true);
+                if (!showAllCommnet && position == 5) {
+                    showCommentList(commentContentList, true);
                 }
             }
         });
@@ -299,15 +304,15 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
     //根据id获得旅图详情
     private void loadTripGalleryDetailDate(String id) {
         dialog.showDialog();
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("id", id);
-        params.addBodyParameter(HttpServicePath.key, verification);
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getTripGalleryDetailById, new loadTripGalleryDetailDateCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String[] keyArray1 = new String[]{"id","token"};
+        String[] valueArray1 = new String[]{id,SuiuuInfo.ReadAppTimeSign(TripGalleryDetailsActivity.this)};
+        Log.i("suiuu","url="+addUrlAndParams(HttpNewServicePath.getTripGalleryDetailById, keyArray1, valueArray1));
+        try {
+            OkHttpManager.onGetAsynRequest(addUrlAndParams(HttpNewServicePath.getTripGalleryDetailById, keyArray1, valueArray1), new loadTripGalleryDetailDateCallBack());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
-
     /**
      * 收藏旅图
      */
@@ -337,12 +342,15 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
     /**
      * 请求数据网络接口回调
      */
-    class loadTripGalleryDetailDateCallBack extends RequestCallBack<String> {
-
+    class loadTripGalleryDetailDateCallBack extends OkHttpManager.ResultCallback<String> {
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
+        public void onError(Request request, Exception e) {
+            DeBugLog.e("suiuu", "request:" + request.toString() + ",Exception:" + e.getMessage());
+        }
+        @Override
+        public void onResponse(String resultData) {
             dialog.dismissDialog();
-            String resultData = responseInfo.result;
+            Log.i("suiuu", resultData);
             TripGalleryDetail tripGalleryDetail = JsonUtils.getInstance().fromJSON(TripGalleryDetail.class, resultData);
             if (tripGalleryDetail.getStatus() == 1) {
                 tripGalleryDetailInfo = tripGalleryDetail.getData().getInfo();
@@ -353,13 +361,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
             } else {
                 Toast.makeText(TripGalleryDetailsActivity.this, "返回结果为" + tripGalleryDetail.getStatus(), Toast.LENGTH_SHORT).show();
             }
-
-        }
-
-        @Override
-        public void onFailure(HttpException error, String msg) {
-            dialog.dismissDialog();
-            Toast.makeText(TripGalleryDetailsActivity.this, "数据请求失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -384,7 +385,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
             }
 
         }
-
         @Override
         public void onFailure(HttpException e, String s) {
             Toast.makeText(TripGalleryDetailsActivity.this, "网络异常，请稍候再试！", Toast.LENGTH_SHORT).show();
@@ -493,11 +493,11 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
 
     /**
      * @param commentDataList 评论列表
-     * @param showAll         是否显示全部评论
+     * @param showAllCommnet         是否显示全部评论
      */
-    private void showCommentList(List<CommentEntity> commentDataList, boolean showAll) {
+    private void showCommentList(List<CommentEntity> commentDataList, boolean showAllCommnet) {
         List<CommentEntity> newCommentDataList = new ArrayList<>();
-        if (!showAll) {
+        if (!showAllCommnet) {
             if (commentDataList.size() > 5) {
                 if(textView == null) {
                     textView = new TextView(this);
@@ -505,8 +505,8 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
                     textView.setPadding(0, 10, 0, 0);
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextSize(18);
+                    suiuu_details_comment_view.addFooterView(textView);
                 }
-                suiuu_details_comment_view.addFooterView(textView);
                 newCommentDataList.addAll(commentDataList);
                 newCommentDataList.subList(5, commentDataList.size()).clear();
             }
@@ -514,11 +514,11 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
             suiuu_details_comment_view.removeFooterView(textView);
         }
         if (adapter == null) {
-            adapter = new CommonCommentAdapter(this, showAll ? commentDataList : newCommentDataList, "1");
+            adapter = new CommonCommentAdapter(this, showAllCommnet ? commentDataList : newCommentDataList, "1");
             suiuu_details_comment_view.setAdapter(adapter);
             Utils.setListViewHeightBasedOnChildren(suiuu_details_comment_view);
         } else {
-            adapter.onDateChangeType(showAll ? commentDataList : newCommentDataList);
+            adapter.onDateChangeType(showAllCommnet ? commentDataList : newCommentDataList);
         }
     }
     private class MyOnClickListener implements View.OnClickListener {

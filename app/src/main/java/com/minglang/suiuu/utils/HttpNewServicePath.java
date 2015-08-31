@@ -140,6 +140,10 @@ public class HttpNewServicePath {
 
 
 /*-----------------------旅图相关------------------------------------*/
+    /**
+     * 根据id获得旅图详情
+     */
+    public static String getTripGalleryDetailById = RootPath + "/app-travel-picture/get-info";
 
 
 

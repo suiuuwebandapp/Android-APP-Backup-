@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -37,7 +36,6 @@ import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.CommentEntity.Comme
 import com.minglang.suiuu.entity.UserBack.UserBackData;
 import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuiuuHttp;
@@ -220,10 +218,11 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
             });
 
             mWebView.addJavascriptInterface(getHtmlObject(), "jsObj");
-            String[] keyArray1 = new String[]{"trId",TOKEN};
-            String[] valueArray1 = new String[]{tripId,SuiuuInfo.ReadAppTimeSign(SuiuuDetailsActivity.this)};
-            Log.i("suiuu", "token=" + SuiuuInfo.ReadAppTimeSign(SuiuuDetailsActivity.this));
-            mWebView.loadUrl(addUrlAndParams(HttpNewServicePath.getSuiuuDetailInfo, keyArray1, valueArray1));
+//            String[] keyArray1 = new String[]{"trId",TOKEN};
+//            String[] valueArray1 = new String[]{tripId,SuiuuInfo.ReadAppTimeSign(SuiuuDetailsActivity.this)};
+//            Log.i("suiuu", "token=" + SuiuuInfo.ReadAppTimeSign(SuiuuDetailsActivity.this));
+//            mWebView.loadUrl(addUrlAndParams(HttpNewServicePath.getSuiuuDetailInfo, keyArray1, valueArray1));
+              mWebView.loadUrl("http://apptest.suiuu.com/app-travel/get-travel-info?trId="+tripId+"&token="+SuiuuInfo.ReadAppTimeSign(SuiuuDetailsActivity.this));
         } catch (Exception e) {
             e.printStackTrace();
         }
