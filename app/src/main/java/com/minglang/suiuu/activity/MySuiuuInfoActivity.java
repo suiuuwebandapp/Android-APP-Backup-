@@ -59,7 +59,7 @@ public class MySuiuuInfoActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_my_suiuu_info);
         ButterKnife.bind(this);
         initView();
-        ViewAction();
+        viewAction();
     }
 
     /**
@@ -96,7 +96,7 @@ public class MySuiuuInfoActivity extends BaseAppCompatActivity {
     /**
      * 控件动作
      */
-    private void ViewAction() {
+    private void viewAction() {
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 

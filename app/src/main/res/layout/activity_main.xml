@@ -24,18 +24,18 @@
             <include
                 android:id="@+id/top"
                 layout="@layout/common_top_layout"/>
-            <!--<include layout="@layout/layout_net_breakoff"-->
-                <!--android:id="@+id/connection_net_error"/>-->
+
             <TextView
                 android:id="@+id/rl_net_error"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/layout_50dp"
-                android:text="@string/NetworkError"
-                android:gravity="center"
-                android:textSize="@dimen/layout_16sp"
-                android:textColor="@color/bbutton_warning"
                 android:drawableLeft="@drawable/icon_main_2_green"
-                />
+                android:drawableStart="@drawable/icon_main_2_green"
+                android:gravity="center"
+                android:text="@string/NetworkError"
+                android:textColor="@color/warning_color"
+                android:textSize="@dimen/layout_16sp"/>
+
         </LinearLayout>
 
         <FrameLayout

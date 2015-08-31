@@ -19,12 +19,58 @@ public class HttpNewServicePath {
      */
     public static String RootPath = "http://api.suiuu.com/v1";
 
+    /**
+     * 获取服务器时间
+     */
     public static String getTime = RootPath + "/app-main/get-time";
 
     /**
      * 获取Token
      */
     public static String getToken = RootPath + "/app-main/get-token";
+
+    /**
+     * 发送国际电话区号和手机号到服务器
+     * <p/>
+     * 请求方式:POST
+     * <p/>
+     * 请求参数:国际电话区号 areaCode、手机号 phone
+     */
+    public static String SendAreaCodeAndPhoneNumber = RootPath + "/app-login/get-phone-code";
+
+    /**
+     * 得到国际电话区号
+     */
+    public static String getAreaCodeDataPath = RootPath + "/app-login/get-country-list";
+
+    /**
+     * 应用用户注册地址
+     * <p/>
+     * 请求方式:POST
+     * <p/>
+     * 请求参数:手机号 phone、密码 password、确认密码 cPassword、昵称 nick、验证码 validateCode
+     */
+    public static String Register4SuiuuPath = RootPath + "/app-login/app-register";
+
+    /**
+     * 应用自带登陆URL
+     * <p/>
+     * 请求方式:POST
+     * <p/>
+     * 请求参数:用户名 username 、密码 password
+     */
+    public static String SelfLoginPath = RootPath + "/app-login/app-login";
+
+    /**
+     * 第三方登陆地址
+     * <p/>
+     * 请求方式:POST
+     * <p/>
+     * 请求参数:openId（第三方唯一标识符）、nickname（昵称）、sex （男：1、女：2、保密/不详：3）
+     * headImg 头像URL、type（1、QQ 2、微信 3、微博）
+     * sign 信息混淆（sign = md5 openId+type+混淆码）
+     */
+    public static String ThirdPartyPath = RootPath + "/app-login/access-login";
 
     /**
      * 得到问答社区页面上问题列表的数据

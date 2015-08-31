@@ -2,6 +2,7 @@
 <LinearLayout
     android:id="@+id/head_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
@@ -38,12 +39,15 @@
             android:background="@drawable/background_head_frame"
             android:padding="@dimen/layout_2dp">
 
-            <com.minglang.suiuu.customview.CircleImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/head_image"
-                android:layout_width="@dimen/layout_65dp"
-                android:layout_height="@dimen/layout_65dp"
+                android:layout_width="@dimen/layout_60dp"
+                android:layout_height="@dimen/layout_60dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/default_head_image"/>
+                fresco:actualImageScaleType="fitXY"
+                fresco:failureImage="@drawable/default_head_image"
+                fresco:placeholderImage="@drawable/default_head_image"
+                fresco:roundAsCircle="true"/>
 
         </FrameLayout>
 

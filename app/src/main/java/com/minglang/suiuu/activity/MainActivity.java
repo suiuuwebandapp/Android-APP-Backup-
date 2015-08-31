@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -25,10 +26,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MainSliderAdapter;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.fragment.main.CommunityFragment;
 import com.minglang.suiuu.fragment.main.InformationFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
@@ -99,7 +100,7 @@ public class MainActivity extends BaseActivity {
      * 点击修改头像
      */
     @Bind(R.id.head_image)
-    CircleImageView headImageView;
+    SimpleDraweeView headImageView;
 
     @Bind(R.id.switch_suiuu)
     Switch switchSuiuu;
@@ -114,7 +115,7 @@ public class MainActivity extends BaseActivity {
     TextView titleInfo;
 
     @Bind(R.id.drawer_switch)
-    CircleImageView drawerSwitch;
+    SimpleDraweeView drawerSwitch;
 
     @Bind(R.id.tab1)
     LinearLayout tab1;
@@ -202,6 +203,7 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.img4)
     ImageView iv_tab4;
 
+    @Bind(R.id.rl_net_error)
     TextView rl_net_error;
 
     private ExitReceiver exitReceiver;
@@ -223,7 +225,7 @@ public class MainActivity extends BaseActivity {
 
         String network_headImage_path = SuiuuInfo.ReadUserData(this).getHeadImg();
         if (!TextUtils.isEmpty(network_headImage_path)) {
-            imageLoader.displayImage(network_headImage_path, headImageView);
+            headImageView.setImageURI(Uri.parse(network_headImage_path));
         }
 
         String user_name = SuiuuInfo.ReadUserData(this).getNickname();
@@ -253,8 +255,8 @@ public class MainActivity extends BaseActivity {
 
         String strHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
         if (!TextUtils.isEmpty(strHeadImagePath)) {
-            imageLoader.displayImage(strHeadImagePath, headImageView);
-            imageLoader.displayImage(strHeadImagePath, drawerSwitch);
+            headImageView.setImageURI(Uri.parse(strHeadImagePath));
+            drawerSwitch.setImageURI(Uri.parse(strHeadImagePath));
         }
 
         switchSuiuu.setChecked(true);
@@ -276,7 +278,6 @@ public class MainActivity extends BaseActivity {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SettingActivity.class.getSimpleName());
         this.registerReceiver(exitReceiver, intentFilter);
-        rl_net_error = (TextView) findViewById(R.id.rl_net_error);
     }
 
     private void initFragment() {
@@ -660,7 +661,7 @@ public class MainActivity extends BaseActivity {
                         String status = object.getString(STATUS);
                         if (status.equals("1")) {
                             String data = object.getString(DATA);
-                            DeBugLog.i(TAG, "服务器时间:" + data);
+//                            DeBugLog.i(TAG, "服务器时间:" + data);
                             getAppTimeSign(data);
                         }
                     } catch (JSONException e) {
@@ -685,7 +686,7 @@ public class MainActivity extends BaseActivity {
 
         String _url = addUrlAndParams(HttpNewServicePath.getToken,
                 new String[]{TIME_STAMP, APP_SIGN, SIGN}, new String[]{time, verification, sign});
-        DeBugLog.i(TAG, "请求Token的URL=" + _url);
+//        DeBugLog.i(TAG, "请求Token的URL=" + _url);
 
         try {
             OkHttpManager.onGetAsynRequest(_url, new OkHttpManager.ResultCallback<String>() {

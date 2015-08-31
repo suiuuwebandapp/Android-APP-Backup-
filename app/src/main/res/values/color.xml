@@ -38,6 +38,8 @@
 
     <color name="we_chat_color">#2DBA00</color>
 
+    <color name="warning_color">#fff0ad4e</color>
+
     <!--分割线-->
     <color name="topColor">#55d4bf</color>
     <color name="mainColor">#62d6c3</color>

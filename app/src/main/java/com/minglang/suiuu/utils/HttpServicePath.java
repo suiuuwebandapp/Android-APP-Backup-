@@ -117,7 +117,7 @@ public class HttpServicePath {
     /**
      * 得到国际电话区号
      */
-    public static String GetInternationalAreaCode = RootPath + "/app-login/get-country-list";
+    public static String getAreaCodeDataPath = RootPath + "/app-login/get-country-list";
 
     /**
      * 应用用户注册地址

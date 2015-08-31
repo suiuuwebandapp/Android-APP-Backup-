@@ -2,22 +2,24 @@
 <RelativeLayout
     android:id="@+id/titleLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/layout_50dp"
     android:background="@color/mainColor">
 
-    <com.minglang.suiuu.customview.CircleImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/drawer_switch"
-        android:layout_width="@dimen/layout_40dp"
-        android:layout_height="@dimen/layout_40dp"
+        android:layout_width="@dimen/layout_45dp"
+        android:layout_height="@dimen/layout_45dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="@dimen/layout_5dp"
         android:layout_marginLeft="@dimen/layout_10dp"
         android:layout_marginStart="@dimen/layout_10dp"
-        android:layout_marginTop="@dimen/layout_5dp"
-        android:src="@drawable/default_head_image"/>
+        fresco:actualImageScaleType="fitXY"
+        fresco:failureImage="@drawable/default_head_image"
+        fresco:placeholderImage="@drawable/default_head_image"
+        fresco:roundAsCircle="true"/>
 
     <TextView
         android:id="@+id/titleInfo"

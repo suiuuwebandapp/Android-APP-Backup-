@@ -26,6 +26,9 @@ import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -44,6 +47,9 @@ public class AccountManageActivity extends BaseAppCompatActivity {
 
     private static final String TAG = AccountManageActivity.class.getSimpleName();
 
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
+
     @BindString(R.string.load_wait)
     String DialogMsg;
 
@@ -52,6 +58,9 @@ public class AccountManageActivity extends BaseAppCompatActivity {
 
     @BindString(R.string.NetworkAnomaly)
     String NetworkError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     @BindString(R.string.DataException)
     String DataException;
@@ -187,13 +196,16 @@ public class AccountManageActivity extends BaseAppCompatActivity {
             try {
                 TransferAccounts accounts = JsonUtils.getInstance().fromJSON(TransferAccounts.class, str);
                 if (accounts != null) {
-                    List<TransferAccountsItemData> list = accounts.getData().getList();
-                    if (list != null && list.size() > 0) {
-                        listAll.addAll(list);
-                        adapter.setList(listAll);
-                    } else {
-                        DeBugLog.e(TAG, "集合数据为空");
-                        Toast.makeText(this, NoData, Toast.LENGTH_SHORT).show();
+                    int status = accounts.getStatus();
+                    if (status == 1) {
+                        List<TransferAccountsItemData> list = accounts.getData().getList();
+                        if (list != null && list.size() > 0) {
+                            listAll.addAll(list);
+                            adapter.setList(listAll);
+                        } else {
+                            DeBugLog.e(TAG, "集合数据为空");
+                            Toast.makeText(this, NoData, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } else {
                     DeBugLog.e(TAG, "返回数据为空");
@@ -202,7 +214,19 @@ public class AccountManageActivity extends BaseAppCompatActivity {
             } catch (Exception e) {
                 hideDialog();
                 DeBugLog.e(TAG, "数据解析异常:" + e.getMessage());
-                Toast.makeText(this, DataException, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(this, SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(this, DataException, Toast.LENGTH_SHORT).show();
+                }
+
             }
         }
     }
