@@ -33,7 +33,7 @@ import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.pickerview.OptionsPopupWindow;
 import com.minglang.suiuu.entity.UserBack;
-import com.minglang.suiuu.entity.UserBackData;
+import com.minglang.suiuu.entity.UserBack.UserBackData;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;

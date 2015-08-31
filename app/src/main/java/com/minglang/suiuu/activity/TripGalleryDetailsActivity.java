@@ -42,7 +42,7 @@ import com.minglang.suiuu.entity.TripGalleryDetail;
 import com.minglang.suiuu.entity.TripGalleryDetail.DataEntity.CommentEntity;
 import com.minglang.suiuu.entity.TripGalleryDetail.DataEntity.InfoEntity;
 import com.minglang.suiuu.entity.TripGalleryDetail.DataEntity.LikeEntity;
-import com.minglang.suiuu.entity.UserBackData;
+import com.minglang.suiuu.entity.UserBack.UserBackData;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuiuuHttp;

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="0.9">
+
+    <TextView
+        android:id="@+id/item_account_manage_date"
+        style="@style/AccountManageItemView"
+        android:text="@string/tempDate"/>
+
+    <TextView
+        android:id="@+id/item_account_manage_info"
+        style="@style/AccountManageItemView"
+        android:text="@string/Details"/>
+
+    <TextView
+        android:id="@+id/item_account_manage_money"
+        style="@style/AccountManageItemView"
+        android:text="@string/tempMoney"/>
+
+</LinearLayout>

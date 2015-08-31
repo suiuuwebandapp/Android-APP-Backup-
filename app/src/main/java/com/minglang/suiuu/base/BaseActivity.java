@@ -14,6 +14,7 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.net.URLEncoder;
 import java.util.Locale;
 
 public class BaseActivity extends FragmentActivity {
@@ -152,6 +153,29 @@ public class BaseActivity extends FragmentActivity {
         Locale locale = getResources().getConfiguration().locale;
         String language = locale.getLanguage();
         return language.endsWith("zh");
+    }
+
+    public String addUrlAndParams(String url, String[] keyArray, String[] valueArray) {
+        String _url = url + "?";
+        for (int i = 0; i < keyArray.length; i++) {
+            String key = keyArray[i];
+            String value;
+            try {
+                value = URLEncoder.encode(valueArray[i], "UTF-8");
+            } catch (Exception e) {
+                DeBugLog.e(TAG, e.getMessage());
+                value = "";
+            }
+
+            if (keyArray.length > i + 1) {
+                _url = _url + key + "=" + value + "&";
+//                DeBugLog.i(TAG, "true:" + _url);
+            } else {
+                _url = _url + key + "=" + value;
+//                DeBugLog.i(TAG, "false:" + _url);
+            }
+        }
+        return _url;
     }
 
     @Override

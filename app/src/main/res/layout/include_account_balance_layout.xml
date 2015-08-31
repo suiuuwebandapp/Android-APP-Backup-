@@ -6,7 +6,7 @@
     android:background="@drawable/layout_background_balance">
 
     <TextView
-        android:id="@+id/accountBalanceNumber"
+        android:id="@+id/account_balance_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -24,7 +24,7 @@
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/accountBalanceNumber"
+        android:layout_above="@+id/account_balance_number"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/layout_5dp"
         android:text="@string/AccountBalance"
@@ -35,7 +35,7 @@
         android:id="@+id/textView17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/accountBalanceNumber"
+        android:layout_below="@+id/account_balance_number"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/layout_10dp"
         android:text="@string/ClickWithdrawals"
