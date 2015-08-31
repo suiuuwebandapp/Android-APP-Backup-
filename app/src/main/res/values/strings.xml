@@ -254,6 +254,7 @@
 
     <string name="Date" translatable="false">日期</string>
     <string name="TransferAccount" translatable="false">转账账户</string>
+    <string name="Details" translatable="false">详情</string>
     <string name="Money" translatable="false">金额</string>
 
     <string name="IndividualResume" translatable="false">个人简介</string>
@@ -412,6 +413,7 @@
     <string name="tempMuseumTag" translatable="false">吃货,博物馆</string>
     <string name="tempStreet" translatable="false">香榭丽大道</string>
     <string name="tempLove" translatable="false">猜你喜欢</string>
+    <string name="tempMoney" translatable="false">2000.0</string>
 
     <string name="logo" translatable="false">logo</string>
 

@@ -19,6 +19,8 @@ public class HttpNewServicePath {
      */
     public static String RootPath = "http://api.suiuu.com/v1";
 
+    public static String getTime = RootPath + "/app-main/get-time";
+
     /**
      * 获取Token
      */
@@ -78,11 +80,21 @@ public class HttpNewServicePath {
      * 得到普通用户未完成的订单
      */
     public static String getGeneralUserNotFinishOrderPath = RootPath + "/app-user-order/get-un-finish-order";
+    /**
+     * 获取用户账户信息
+     */
+    public static String getUserAccountInfoPath = RootPath + "/app-account/account-list";
+
+
 /*-----------------------随游相关-----------------------------*/
     /**
      * 得到普通用户未完成的订单
      */
     public static String getSuiuuDetailInfo = RootPath + "/app-travel/get-travel-info";
 
+
 /*-----------------------旅图相关------------------------------------*/
+
+
+
 }

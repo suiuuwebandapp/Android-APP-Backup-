@@ -5,36 +5,22 @@
     android:layout_height="wrap_content"
     android:background="@color/btn_2_bg_color"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:weightSum="0.9">
 
     <TextView
         android:id="@+id/textView18"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.3"
-        android:gravity="center_horizontal"
-        android:text="@string/Date"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/white"/>
+        style="@style/AccountManageTitleView"
+        android:text="@string/Date"/>
 
     <TextView
         android:id="@+id/textView19"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.3"
-        android:gravity="center_horizontal"
-        android:text="@string/TransferAccount"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/white"/>
+        style="@style/AccountManageTitleView"
+        android:text="@string/Details"/>
 
     <TextView
         android:id="@+id/textView23"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.3"
-        android:gravity="center_horizontal"
-        android:text="@string/Money"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/white"/>
+        style="@style/AccountManageTitleView"
+        android:text="@string/Money"/>
 
 </LinearLayout>

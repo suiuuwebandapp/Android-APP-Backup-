@@ -231,7 +231,7 @@ public class MainActivity extends BaseActivity {
             nickNameView.setText(user_name);
         }
 
-        getAppTimeSign();
+        getServiceTime();
     }
 
     /**
@@ -645,47 +645,74 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    private void getAppTimeSign() {
-        OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[3];
-        String time = String.valueOf(System.currentTimeMillis() / 1000);
-
-        paramsArray[0] = new OkHttpManager.Params(TIME_STAMP, time);
-        paramsArray[1] = new OkHttpManager.Params(APP_SIGN, verification);
+    private void getServiceTime() {
         try {
-            String sign = MD5Utils.getMD5(time + verification + HttpNewServicePath.ConfusedCode);
-            DeBugLog.i(TAG, "Sign:" + sign);
-            paramsArray[2] = new OkHttpManager.Params(SIGN, sign);
+            OkHttpManager.onGetAsynRequest(HttpNewServicePath.getTime, new OkHttpManager.ResultCallback<String>() {
+                @Override
+                public void onError(Request request, Exception e) {
+                    DeBugLog.e(TAG, "时间获取错误:" + e.getMessage());
+                }
+
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String status = object.getString(STATUS);
+                        if (status.equals("1")) {
+                            String data = object.getString(DATA);
+                            DeBugLog.i(TAG, "服务器时间:" + data);
+                            getAppTimeSign(data);
+                        }
+                    } catch (JSONException e) {
+                        DeBugLog.e(TAG, "时间数据解析异常:");
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getAppTimeSign(String time) {
+        String sign = null;
+        try {
+            sign = MD5Utils.getMD5(time + verification + HttpNewServicePath.ConfusedCode);
+            DeBugLog.i(TAG, "verification:" + verification + ",sign:" + sign);
         } catch (NoSuchAlgorithmException e) {
             DeBugLog.e(TAG, "NoSuchAlgorithmException:" + e.getMessage());
         }
 
+        String _url = addUrlAndParams(HttpNewServicePath.getToken,
+                new String[]{TIME_STAMP, APP_SIGN, SIGN}, new String[]{time, verification, sign});
+        DeBugLog.i(TAG, "请求Token的URL=" + _url);
+
         try {
-            OkHttpManager.onPostAsynRequest(HttpNewServicePath.getToken,
-                    new OkHttpManager.ResultCallback<String>() {
-                        @Override
-                        public void onError(Request request, Exception e) {
-                            DeBugLog.e(TAG, "Network Exception:" + e.getMessage());
-                        }
+            OkHttpManager.onGetAsynRequest(_url, new OkHttpManager.ResultCallback<String>() {
+                @Override
+                public void onError(Request request, Exception e) {
+                    DeBugLog.e(TAG, "Network Exception:" + e.getMessage());
+                }
 
-                        @Override
-                        public void onResponse(String response) {
-                            DeBugLog.i(TAG, "response:" + response);
-                            try {
-                                JSONObject object = new JSONObject(response);
-                                String status = object.getString(STATUS);
-                                if (status.equals("1")) {
-                                    String appTimeSign = object.getString(DATA);
-                                    DeBugLog.i(TAG, "appTimeSign:" + appTimeSign);
-                                    SuiuuInfo.WriteAppTimeSign(MainActivity.this, appTimeSign);
-                                } else {
-                                    DeBugLog.e(TAG,"获取失败");
-                                }
-                            } catch (JSONException e) {
-                                DeBugLog.e(TAG, "JSONException:" + e.getMessage());
-                            }
+                @Override
+                public void onResponse(String response) {
+                    DeBugLog.i(TAG, "response:" + response);
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String status = object.getString(STATUS);
+                        if (status.equals("1")) {
+                            String appTimeSign = object.getString(DATA);
+                            DeBugLog.i(TAG, "appTimeSign:" + appTimeSign);
+                            SuiuuInfo.WriteAppTimeSign(MainActivity.this, appTimeSign);
+                        } else {
+                            DeBugLog.e(TAG, "获取失败");
                         }
+                    } catch (JSONException e) {
+                        DeBugLog.e(TAG, "JSONException:" + e.getMessage());
+                    }
+                }
 
-                    }, paramsArray);
+            });
         } catch (IOException e) {
             DeBugLog.e(TAG, "IOException:" + e.getMessage());
         }

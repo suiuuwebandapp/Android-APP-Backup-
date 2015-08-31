@@ -34,7 +34,7 @@ import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.dbhelper.DbHelper;
 import com.minglang.suiuu.entity.SuiuuDetailsData;
 import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity;
-import com.minglang.suiuu.entity.UserBackData;
+import com.minglang.suiuu.entity.UserBack.UserBackData;
 import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpNewServicePath;

@@ -76,10 +76,10 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
             if (keyArray.length > i + 1) {
                 _url = _url + key + "=" + value + "&";
-                DeBugLog.i(TAG, "true:" + _url);
+//                DeBugLog.i(TAG, "true:" + _url);
             } else {
                 _url = _url + key + "=" + value;
-                DeBugLog.i(TAG, "false:" + _url);
+//                DeBugLog.i(TAG, "false:" + _url);
             }
         }
         return _url;

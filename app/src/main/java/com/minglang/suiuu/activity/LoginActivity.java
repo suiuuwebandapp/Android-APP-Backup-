@@ -31,7 +31,6 @@ import com.minglang.suiuu.entity.AreaCode;
 import com.minglang.suiuu.entity.AreaCodeData;
 import com.minglang.suiuu.entity.RequestData;
 import com.minglang.suiuu.entity.UserBack;
-import com.minglang.suiuu.entity.UserBackData;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -660,10 +659,11 @@ public class LoginActivity extends BaseActivity {
         public void onSuccess(ResponseInfo<String> responseInfo) {
             hideLoginDialog();
             String str = responseInfo.result;
+            DeBugLog.i(TAG, "登陆返回的数据:" + str);
             try {
                 UserBack user = JsonUtils.getInstance().fromJSON(UserBack.class, str);
                 if (user.getStatus().equals("1")) {
-                    UserBackData data = user.getData();
+                    UserBack.UserBackData data = user.getData();
                     SuiuuInfo.WriteVerification(LoginActivity.this, user.getMessage());
                     SuiuuInfo.WriteUserSign(LoginActivity.this, data.getUserSign());
                     SuiuuInfo.WriteUserData(LoginActivity.this, data);
@@ -673,7 +673,6 @@ public class LoginActivity extends BaseActivity {
                     Toast.makeText(LoginActivity.this, "登录失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "登陆返回的数据:" + str);
                 DeBugLog.e(TAG, "登陆返回的数据解析异常:" + e.getMessage());
                 Toast.makeText(LoginActivity.this, "获取数据失败，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
@@ -842,7 +841,7 @@ public class LoginActivity extends BaseActivity {
             String str = responseInfo.result;
             try {
                 UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, str);
-                if (userBack.status.equals("1")) {
+                if (userBack.getStatus().equals("1")) {
 
                     String message = userBack.getMessage();
                     if (!TextUtils.isEmpty(message)) {
@@ -1006,7 +1005,7 @@ public class LoginActivity extends BaseActivity {
 
             try {
                 UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, str);
-                if (userBack.status.equals("1")) {
+                if (userBack.getStatus().equals("1")) {
 
                     String message = userBack.getMessage();
                     if (!TextUtils.isEmpty(message)) {
@@ -1221,7 +1220,7 @@ public class LoginActivity extends BaseActivity {
             UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, str);
 
             if (userBack != null) {
-                if (userBack.status.equals("1")) {
+                if (userBack.getStatus().equals("1")) {
                     SuiuuInfo.WriteVerification(LoginActivity.this, userBack.getMessage());
                     SuiuuInfo.WriteUserSign(LoginActivity.this, userBack.getData().getUserSign());
                 } else {

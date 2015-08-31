@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.minglang.suiuu.entity.RequestData;
-import com.minglang.suiuu.entity.UserBackData;
+import com.minglang.suiuu.entity.UserBack;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -18,9 +18,6 @@ import java.util.Map;
  */
 public class SuiuuInfo implements Serializable {
 
-    /**
-     * 文件名1
-     */
     private static final String PREFERENCE_NAME1 = "Suiuu_Third";
 
     /**
@@ -28,27 +25,79 @@ public class SuiuuInfo implements Serializable {
      */
     private static final String THIRD_PARTY_ID = "ThirdPartyID";
 
-    /**
-     * 昵称
-     */
     private static final String NICKNAME = "NickName";
 
-    /**
-     * 性别
-     */
     private static final String GENDER = "Gender";
-
-    /**
-     * 头像URL
-     */
-    private static final String HEAD_IMG = "headImg";
 
     private static final String TYPE = "Type";
 
-    /**
-     * 登陆成功后返回的验证信息
-     */
-    private static final String PREFERENCE_NAME2 = "SuiuuInfo";
+
+    private static final String PREFERENCE_NAME = "SuiuuInfo";
+
+    private static final String USER_ID = "userId";
+
+    private static final String NICKNAME_ = "nickname";
+
+    private static final String SUR_NAME = "surname";
+
+    private static final String NAME = "name";
+
+    private static final String PASSWORD = "password";
+
+    private static final String EMAIL = "email";
+
+    private static final String PHONE = "phone";
+
+    private static final String AREA_CODE = "areaCode";
+
+    private static final String SEX = "sex";
+
+    private static final String BIRTHDAY = "birthday";
+
+    private static final String HEAD_IMG = "headImg";
+
+    private static final String HOBBY = "hobby";
+
+    private static final String PROFESSION = "profession";
+
+    private static final String SCHOOL = "school";
+
+    private static final String QQ = "qq";
+
+    private static final String WE_CHAT = "wechat";
+
+    private static final String INTRO = "intro";
+
+    private static final String INFO = "info";
+
+    private static final String TRAVEL_COUNT = "travelCount";
+
+    private static final String REGISTER_IP = "registerIp";
+
+    private static final String REGISTER_TIME = "registerTime";
+
+    private static final String LAST_LOGIN_IP = "lastLoginIp";
+
+    private static final String LAST_LOGIN_TIME = "lastLoginTime";
+
+    private static final String USER_SIGN = "userSign";
+
+    private static final String STATUS = "status";
+
+    private static final String IS_PUBLISHER = "isPublisher";
+
+    private static final String COUNTRY_ID = "countryId";
+
+    private static final String CITY_ID = "cityId";
+
+    private static final String LON = "lon";
+
+    private static final String LAT = "lat";
+
+    private static final String BALANCE = "balance";
+
+    private static final String VERSION = "version";
+
 
     /**
      * 当前用户的位置信息
@@ -71,18 +120,144 @@ public class SuiuuInfo implements Serializable {
 
     private static final String APP_TIME_SIGN = "AppTimeSign";
 
+
+    /**
+     * 读取用户数据
+     *
+     * @param context 上下文对象
+     * @return 用户数据实体类
+     */
+    public static UserBack.UserBackData ReadUserData(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND);
+        UserBack back = new UserBack();
+        UserBack.UserBackData data = back.new UserBackData();
+        data.setUserId(sp.getString(USER_ID, ""));
+        data.setNickname(sp.getString(NICKNAME_, ""));
+        data.setSurname(sp.getString(SUR_NAME, ""));
+        data.setName(sp.getString(NAME, ""));
+        data.setPassword(sp.getString(PASSWORD, ""));
+        data.setEmail(sp.getString(EMAIL, ""));
+        data.setPhone(sp.getString(PHONE, ""));
+        data.setAreaCode(sp.getString(AREA_CODE, ""));
+        data.setSex(sp.getString(SEX, ""));
+        data.setBirthday(sp.getString(BIRTHDAY, ""));
+        data.setHeadImg(sp.getString(HEAD_IMG, ""));
+        data.setHobby(sp.getString(HOBBY, ""));
+        data.setProfession(sp.getString(PROFESSION, ""));
+        data.setSchool(sp.getString(SCHOOL, ""));
+        data.setQq(sp.getString(QQ, ""));
+        data.setQq(sp.getString(WE_CHAT, ""));
+        data.setIntro(sp.getString(INTRO, ""));
+        data.setInfo(sp.getString(INFO, ""));
+        data.setTravelCount(sp.getString(TRAVEL_COUNT, ""));
+        data.setRegisterIp(sp.getString(REGISTER_IP, ""));
+        data.setRegisterTime(sp.getString(REGISTER_TIME, ""));
+        data.setLastLoginIp(sp.getString(LAST_LOGIN_IP, ""));
+        data.setLastLoginTime(sp.getString(LAST_LOGIN_TIME, ""));
+        data.setUserSign(sp.getString(USER_SIGN, ""));
+        data.setStatus(sp.getString(STATUS, ""));
+        data.setIsPublisher(sp.getString(IS_PUBLISHER, ""));
+        data.setCountryId(sp.getString(COUNTRY_ID, ""));
+        data.setCityId(sp.getString(CITY_ID, ""));
+        data.setLon(sp.getString(LON, ""));
+        data.setLat(sp.getString(LAT, ""));
+        data.setBalance(sp.getString(BALANCE, ""));
+        data.setVersion(sp.getString(VERSION, ""));
+        return data;
+    }
+
+    /**
+     * 保存用户数据
+     *
+     * @param context 上下文对象
+     * @param data    用户数据
+     */
+    public static void WriteUserData(Context context, UserBack.UserBackData data) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(USER_ID, data.getUserId());
+        editor.putString(NICKNAME_, data.getNickname());
+        editor.putString(SUR_NAME, data.getSurname());
+        editor.putString(PASSWORD, data.getPassword());
+        editor.putString(EMAIL, data.getEmail());
+        editor.putString(PHONE, data.getPhone());
+        editor.putString(AREA_CODE, data.getAreaCode());
+        editor.putString(SEX, data.getSex());
+        editor.putString(BIRTHDAY, data.getBirthday());
+        editor.putString(HEAD_IMG, data.getHeadImg());
+        editor.putString(HOBBY, data.getHobby());
+        editor.putString(PROFESSION, data.getProfession());
+        editor.putString(SCHOOL, data.getSchool());
+        editor.putString(QQ, data.getQq());
+        editor.putString(WE_CHAT, data.getWechat());
+        editor.putString(INTRO, data.getIntro());
+        editor.putString(INFO, data.getInfo());
+        editor.putString(TRAVEL_COUNT, data.getTravelCount());
+        editor.putString(REGISTER_IP, data.getRegisterIp());
+        editor.putString(REGISTER_TIME, data.getRegisterTime());
+        editor.putString(LAST_LOGIN_IP, data.getLastLoginIp());
+        editor.putString(LAST_LOGIN_TIME, data.getLastLoginTime());
+        editor.putString(USER_SIGN, data.getUserSign());
+        editor.putString(STATUS, data.getStatus());
+        editor.putString(IS_PUBLISHER, data.getIsPublisher());
+        editor.putString(COUNTRY_ID, data.getCountryId());
+        editor.putString(CITY_ID, data.getCityId());
+        editor.putString(LON, data.getLon());
+        editor.putString(LAT, data.getLat());
+        editor.putString(BALANCE, data.getBalance());
+        editor.putString(VERSION, data.getVersion());
+        editor.apply();
+    }
+
+    //    /**
+    //     * 写入余额
+    //     *
+    //     * @param context 上下文对象
+    //     * @param value   余额值
+    //     */
+
+    //    private static void WriteBalance(Context context, String value) {
+    //        if (context == null) {
+    //            return;
+    //        }
+    //
+    //        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).edit();
+    //        editor.putString(BALANCE, value);
+    //        editor.apply();
+    //    }
+    /**
+     * @param context 上下文对象
+     * @return 余额值
+     */
+
+    public static String ReadBalance(Context context) {
+        return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).getString(BALANCE, "");
+    }
+
+    /**
+     * 写入token
+     *
+     * @param context 上下文对象
+     * @param value   token
+     */
     public static void WriteAppTimeSign(Context context, String value) {
         if (context == null) {
             return;
         }
 
-        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).edit();
         editor.putString(APP_TIME_SIGN, value);
         editor.apply();
     }
 
-    public static String ReadAppTimeSign(Context context){
-        return context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).getString(APP_TIME_SIGN, "");
+    /**
+     * 读取token
+     *
+     * @param context 上下文对象
+     * @return token
+     */
+    public static String ReadAppTimeSign(Context context) {
+        return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).getString(APP_TIME_SIGN, "");
     }
 
     public static void WriteAnyInfo(Context context, String key, String value) {
@@ -90,7 +265,7 @@ public class SuiuuInfo implements Serializable {
             return;
         }
 
-        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).edit();
         editor.putString(key, value);
         editor.apply();
     }
@@ -102,7 +277,7 @@ public class SuiuuInfo implements Serializable {
      * @return 居住度城市信息
      */
     public static String ReadDomicileCity(Context context) {
-        return context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).getString(DomicileCity, "");
+        return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).getString(DomicileCity, "");
     }
 
     /**
@@ -112,7 +287,7 @@ public class SuiuuInfo implements Serializable {
      * @return 居住地国家信息
      */
     public static String ReadDomicileCountry(Context context) {
-        return context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).getString(DomicileCountry, "");
+        return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).getString(DomicileCountry, "");
     }
 
     /**
@@ -127,7 +302,7 @@ public class SuiuuInfo implements Serializable {
             return;
         }
 
-        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).edit();
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).edit();
         editor.putString(DomicileCountry, domicileCountry);
         editor.putString(DomicileCity, domicileCity);
         editor.apply();
@@ -140,7 +315,7 @@ public class SuiuuInfo implements Serializable {
      * @return 个性签名内容
      */
     private static String ReadUserSignature(Context context) {
-        return context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).getString(SIGNATURE, "");
+        return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).getString(SIGNATURE, "");
     }
 
     /**
@@ -153,7 +328,7 @@ public class SuiuuInfo implements Serializable {
         if (context == null) {
             return;
         }
-        context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).edit()
+        context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).edit()
                 .putString(SIGNATURE, Signature).apply();
     }
 
@@ -167,85 +342,8 @@ public class SuiuuInfo implements Serializable {
         if (context == null) {
             return;
         }
-        context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).edit()
+        context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).edit()
                 .putString(HEAD_IMG, headImagePath).apply();
-    }
-
-    /**
-     * 读取用户数据
-     *
-     * @param context 上下文对象
-     * @return 用户数据实体类
-     */
-    public static UserBackData ReadUserData(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND);
-        UserBackData data = new UserBackData();
-        data.setUserId(sp.getString("userId", ""));
-        data.setNickname(sp.getString("nickname", ""));
-        data.setPassword(sp.getString("password", ""));
-        data.setEmail(sp.getString("email", ""));
-        data.setEmail(sp.getString("email", ""));
-        data.setPhone(sp.getString("phone", ""));
-        data.setAreaCode(sp.getString("areaCode", ""));
-        data.setSex(sp.getString("sex", ""));
-        data.setBirthday(sp.getString("birthday", ""));
-        data.setHeadImg(sp.getString("headImg", ""));
-        data.setHobby(sp.getString("hobby", ""));
-        data.setProfession(sp.getString("profession", ""));
-        data.setSchool(sp.getString("school", ""));
-        data.setIntro(sp.getString("intro", ""));
-        data.setInfo(sp.getString("info", ""));
-        data.setTravelCount(sp.getString("travelCount", ""));
-        data.setRegisterIp(sp.getString("registerIp", ""));
-        data.setRegisterTime(sp.getString("registerTime", ""));
-        data.setLastLoginIp(sp.getString("lastLoginIp", ""));
-        data.setLastLoginTime(sp.getString("lastLoginTime", ""));
-        data.setUserSign(sp.getString("userSign", ""));
-        data.setStatus(sp.getString("status", ""));
-        data.setIsPublisher(sp.getString("isPublisher", ""));
-        data.setCountryId(sp.getString("countryId", ""));
-        data.setCityId(sp.getString("cityId", ""));
-        data.setLon(sp.getString("lon", ""));
-        data.setLat(sp.getString("lat", ""));
-        return data;
-    }
-
-    /**
-     * 保存用户数据
-     *
-     * @param context 上下文对象
-     * @param data    用户数据
-     */
-    public static void WriteUserData(Context context, UserBackData data) {
-        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString("userId", data.getUserId());
-        editor.putString("nickname", data.getNickname());
-        editor.putString("password", data.getPassword());
-        editor.putString("email", data.getEmail());
-        editor.putString("phone", data.getPhone());
-        editor.putString("areaCode", data.getAreaCode());
-        editor.putString("sex", data.getSex());
-        editor.putString("birthday", data.getBirthday());
-        editor.putString("headImg", data.getHeadImg());
-        editor.putString("hobby", data.getHobby());
-        editor.putString("profession", data.getProfession());
-        editor.putString("school", data.getSchool());
-        editor.putString("intro", data.getIntro());
-        editor.putString("info", data.getInfo());
-        editor.putString("travelCount", data.getTravelCount());
-        editor.putString("registerIp", data.getRegisterIp());
-        editor.putString("registerTime", data.getRegisterTime());
-        editor.putString("lastLoginIp", data.getLastLoginIp());
-        editor.putString("lastLoginTime", data.getLastLoginTime());
-        editor.putString("userSign", data.getUserSign());
-        editor.putString("status", data.getStatus());
-        editor.putString("isPublisher", data.getIsPublisher());
-        editor.putString("countryId", data.getCountryId());
-        editor.putString("cityId", data.getCityId());
-        editor.putString("lon", data.getLon());
-        editor.putString("lat", data.getLat());
-        editor.apply();
     }
 
     /**
@@ -255,7 +353,7 @@ public class SuiuuInfo implements Serializable {
      * @return sign内容
      */
     public static String ReadUserSign(Context context) {
-        return context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND)
+        return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND)
                 .getString("userSign", "");
     }
 
@@ -273,7 +371,7 @@ public class SuiuuInfo implements Serializable {
         if (TextUtils.isEmpty(usersign)) {
             return;
         }
-        context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND).edit()
+        context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).edit()
                 .putString("userSign", usersign).apply();
     }
 
@@ -327,7 +425,7 @@ public class SuiuuInfo implements Serializable {
      * @param str     验证信息
      */
     public static void WriteVerification(Context context, String str) {
-        context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND)
+        context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND)
                 .edit().putString(MESSAGE, str).apply();
     }
 
@@ -338,7 +436,7 @@ public class SuiuuInfo implements Serializable {
      * @return 验证信息
      */
     public static String ReadVerification(Context context) {
-        return context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND)
+        return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND)
                 .getString(MESSAGE, "");
     }
 
@@ -358,7 +456,7 @@ public class SuiuuInfo implements Serializable {
      * @param context 上下文对象
      */
     public static void ClearSuiuuInfo(Context context) {
-        context.getSharedPreferences(PREFERENCE_NAME2, Context.MODE_APPEND)
+        context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND)
                 .edit().clear().apply();
     }
 
@@ -376,8 +474,8 @@ public class SuiuuInfo implements Serializable {
     /**
      * 读取当前用户的位置信息
      *
-     * @param context
-     * @return
+     * @param context 上下文对象
+     * @return 位置信息
      */
     public static Map ReadUserLocation(Context context) {
         SharedPreferences sp = context.getSharedPreferences(LocationInfo, Context.MODE_APPEND);
