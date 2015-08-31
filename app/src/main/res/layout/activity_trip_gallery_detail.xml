@@ -113,8 +113,7 @@
 
             <include
                 layout="@layout/common_comment_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            />
 
             <include layout="@layout/view_line"/>
 

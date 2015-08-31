@@ -47,6 +47,7 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -207,7 +208,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
     /**
      * 是否显示全部评论的状态
      */
-    private boolean showCommentLoadMore = false;
+    private boolean showAllCommnet = false;
     /**
      * 加载更多的view
      */
@@ -263,7 +264,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         suiuu_details_comment_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(showCommentLoadMore && position == 5) {
+                if(!showAllCommnet && position == 5) {
                     showCommentList(commentContentList,true);
                 }
             }
@@ -483,7 +484,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
             suiuu_details_comment_number.setText("全部评论 (共" + commentContentList.size() + "条评论)");
             suiuu_details_input_comment.setVisibility(View.VISIBLE);
             suiuu_details_no_comment.setVisibility(View.GONE);
-            showCommentList(commentContentList, showCommentLoadMore);
+            showCommentList(commentContentList, showAllCommnet);
         } else {
             suiuu_details_no_comment.setVisibility(View.VISIBLE);
             suiuu_details_input_comment.setVisibility(View.GONE);
@@ -498,29 +499,28 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         List<CommentEntity> newCommentDataList = new ArrayList<>();
         if (!showAll) {
             if (commentDataList.size() > 5) {
-                showCommentLoadMore = true;
                 if(textView == null) {
                     textView = new TextView(this);
                     textView.setText("点击加载更多");
+                    textView.setPadding(0, 10, 0, 0);
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextSize(18);
-                    suiuu_details_comment_view.addFooterView(textView);
                 }
+                suiuu_details_comment_view.addFooterView(textView);
                 newCommentDataList.addAll(commentDataList);
                 newCommentDataList.subList(5, commentDataList.size()).clear();
             }
         } else {
-            showCommentLoadMore = false;
             suiuu_details_comment_view.removeFooterView(textView);
         }
         if (adapter == null) {
             adapter = new CommonCommentAdapter(this, showAll ? commentDataList : newCommentDataList, "1");
             suiuu_details_comment_view.setAdapter(adapter);
+            Utils.setListViewHeightBasedOnChildren(suiuu_details_comment_view);
         } else {
-            adapter.onDateChangeType(commentDataList);
+            adapter.onDateChangeType(showAll ? commentDataList : newCommentDataList);
         }
     }
-
     private class MyOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -577,6 +577,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
             CommentEntity newCommentData =
                     JsonUtils.getInstance().fromJSON(CommentEntity.class, json.toString());
             commentContentList.add(0, newCommentData);
+            showAllCommnet = false;
             fullCommentList();
         }
     }

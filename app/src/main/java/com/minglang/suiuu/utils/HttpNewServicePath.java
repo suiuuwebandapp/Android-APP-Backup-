@@ -78,5 +78,11 @@ public class HttpNewServicePath {
      * 得到普通用户未完成的订单
      */
     public static String getGeneralUserNotFinishOrderPath = RootPath + "/app-user-order/get-un-finish-order";
+/*-----------------------随游相关-----------------------------*/
+    /**
+     * 得到普通用户未完成的订单
+     */
+    public static String getSuiuuDetailInfo = RootPath + "/app-travel/get-travel-info";
 
+/*-----------------------旅图相关------------------------------------*/
 }

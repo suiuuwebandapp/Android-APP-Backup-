@@ -284,27 +284,23 @@ public class CommunityFragment extends BaseFragment {
                 String[] valueArray0 = new String[]{verification, String.valueOf(20), String.valueOf(page), token};
                 url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray0, valueArray0);
                 break;
-
             case 1:
                 String[] keyArray1 = new String[]{HttpNewServicePath.key, NUMBER, PAGES, SORT_NAME, TOKEN};
                 String[] valueArray1 = new String[]{verification, String.valueOf(20), String.valueOf(page), String.valueOf(0), token};
                 url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray1, valueArray1);
                 break;
-
             case 2:
                 String[] keyArray2 = new String[]{HttpNewServicePath.key, NUMBER, PAGES, SORT_NAME, TOKEN};
                 String[] valueArray2 = new String[]{verification, String.valueOf(20),
                         String.valueOf(page), String.valueOf(1), token};
                 url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray2, valueArray2);
                 break;
-
             case 3:
                 String[] keyArray3 = new String[]{HttpNewServicePath.key, NUMBER, PAGES, SORT_NAME, COUNTRY_ID, CITY_ID, TOKEN};
                 String[] valueArray3 = new String[]{verification, String.valueOf(20),
                         String.valueOf(page), String.valueOf(1), countryId, cityId, token};
                 url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray3, valueArray3);
                 break;
-
             case 4:
                 String[] keyArray4 = new String[]{HttpNewServicePath.key, NUMBER, PAGES,
                         SORT_NAME, COUNTRY_ID, CITY_ID, SEARCH, TOKEN};

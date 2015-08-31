@@ -89,10 +89,6 @@ public class showPicDescriptionAdapter extends BaseAdapter {
                 intent.putStringArrayListExtra("picList", (ArrayList<String>) imageList);
                 intent.putExtra("position",position);
                 context.startActivity(intent);
-//                Intent showPic = new Intent(context, ShowBigImage.class);
-//                showPic.putExtra("remotepath", imageList.get(position));
-//                showPic.putExtra("isHuanXin", false);
-//                context.startActivity(showPic);
             }
         });
         return view;

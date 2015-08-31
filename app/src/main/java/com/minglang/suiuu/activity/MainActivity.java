@@ -711,9 +711,7 @@ public class MainActivity extends BaseActivity {
             tripGalleryFragment.onReflash();
         }
     }
-
     private class ExitReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
