@@ -130,6 +130,7 @@
     <string name="question_wait" translatable="false">正在提问，请稍候&#8230;</string>
 
     <string name="choice_area" translatable="false">请选择地区</string>
+    <string name="choice_location" translatable="false">请选择位置</string>
     <string name="choice_theme" translatable="false">请选择主题</string>
     <string name="theme_or_area_is_empty" translatable="false">请选择主题或者地区</string>
     <string name="ask_description_is_empty" translatable="false">问题描述不能为空</string>
@@ -392,6 +393,7 @@
     <string name="Add" translatable="false">Add</string>
 
     <string name="PleaseSelectCountry" translatable="false">请选择国家</string>
+    <string name="please_choice_tag" translatable="false">请选择标签</string>
 
     <string name="TagNameNotNull" translatable="false">标签名不能为空！</string>
 
@@ -421,6 +423,7 @@
 
     <string name="feed_back_information" translatable="false">留下您的宝贵意见</string>
     <string name="feed_back_contact_way" translatable="false">留下您的联系方式</string>
+    <string name="search_no_data" translatable="false">没有相关搜索内容</string>
 
     <string name="Commit" translatable="false">提交</string>
 

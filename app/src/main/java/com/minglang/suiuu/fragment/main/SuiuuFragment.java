@@ -13,11 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuDetailsActivity;
 import com.minglang.suiuu.activity.SuiuuSearchActivity;
@@ -28,13 +23,15 @@ import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.SuiuuDataList;
 import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.utils.AppUtils;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,20 +103,13 @@ public class SuiuuFragment extends BaseFragment
      */
     private void loadDate(String countryOrCity, String peopleCount, String tags, String startPrice, String endPrice, int page) {
         dialog.showDialog();
-        String str = SuiuuInfo.ReadVerification(getActivity().getApplicationContext());
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, str);
-        params.addBodyParameter("cc", countryOrCity);
-        params.addBodyParameter("peopleCount", peopleCount);
-        params.addBodyParameter("tag", tags);
-        params.addBodyParameter("startPrice", startPrice);
-        params.addBodyParameter("endPrice", endPrice);
-        params.addBodyParameter("page", Integer.toString(page));
-        params.addBodyParameter("number", "10");
-        SuiuuHttp suiuuHttp = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getSuiuuList, new getSuiuuDateCallBack());
-        suiuuHttp.setParams(params);
-        suiuuHttp.executive();
+        String[] keyArray1 = new String[]{"cc", "peopleCount", "tag", "startPrice", "endPrice", "page", "number", "token"};
+        String[] valueArray1 = new String[]{countryOrCity, peopleCount, tags, startPrice, endPrice, Integer.toString(page), "10", SuiuuInfo.ReadAppTimeSign(getActivity())};
+        try {
+            OkHttpManager.onGetAsynRequest(addUrlAndParams(HttpNewServicePath.getSuiuuList, keyArray1, valueArray1), new getSuiuuDateCallBack());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -139,6 +129,7 @@ public class SuiuuFragment extends BaseFragment
         loadDate(null, null, null, null, null, page);
         suiuuListView.reflashComplete();
     }
+
     private void showList(List<SuiuuDataList> suiuuDataList) {
         if (adapter == null) {
             suiuuListView.setInterface(this);
@@ -149,18 +140,25 @@ public class SuiuuFragment extends BaseFragment
             adapter.onDateChange(suiuuDataList);
         }
     }
+
     /**
      * 获取随游列表的回调接口
      */
-    class getSuiuuDateCallBack extends RequestCallBack<String> {
+    class getSuiuuDateCallBack extends OkHttpManager.ResultCallback<String> {
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+        public void onError(Request request, Exception e) {
+            dialog.dismissDialog();
+            Toast.makeText(getActivity().getApplicationContext(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onResponse(String response) {
             dialog.dismissDialog();
             try {
-                JSONObject json = new JSONObject(stringResponseInfo.result);
+                JSONObject json = new JSONObject(response);
                 String status = json.getString("status");
                 if ("1".equals(status)) {
-                    SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class,stringResponseInfo.result);
+                    SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, response);
                     List<SuiuuDataList> suiuuDataListNew = baseCollection.getData();
                     if (suiuuDataListNew.size() < 1) {
                         Toast.makeText(getActivity().getApplicationContext(), "数据加载完毕", Toast.LENGTH_SHORT).show();
@@ -178,12 +176,6 @@ public class SuiuuFragment extends BaseFragment
                 e.printStackTrace();
             }
         }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            dialog.dismissDialog();
-            Toast.makeText(getActivity().getApplicationContext(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
-        }
     }
 
     @SuppressWarnings("deprecation")
@@ -193,8 +185,8 @@ public class SuiuuFragment extends BaseFragment
             switch (v.getId()) {
                 case R.id.main_2_search:
                     //跳转到搜索页面
-                    Intent intent = new Intent(getActivity(),SuiuuSearchActivity.class);
-                    intent.putExtra("searchClass",2);
+                    Intent intent = new Intent(getActivity(), SuiuuSearchActivity.class);
+                    intent.putExtra("searchClass", 2);
                     startActivity(intent);
                     break;
             }

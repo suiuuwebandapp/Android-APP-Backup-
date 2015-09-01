@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import com.minglang.suiuu.R;
@@ -158,21 +159,23 @@ public class BaseActivity extends FragmentActivity {
     public String addUrlAndParams(String url, String[] keyArray, String[] valueArray) {
         String _url = url + "?";
         for (int i = 0; i < keyArray.length; i++) {
-            String key = keyArray[i];
-            String value;
-            try {
-                value = URLEncoder.encode(valueArray[i], "UTF-8");
-            } catch (Exception e) {
-                DeBugLog.e(TAG, e.getMessage());
-                value = "";
-            }
+            if (!TextUtils.isEmpty(valueArray[i])) {
+                String key = keyArray[i];
+                String value;
+                try {
+                    value = URLEncoder.encode(valueArray[i], "UTF-8");
+                } catch (Exception e) {
+                    DeBugLog.e(TAG, e.getMessage());
+                    value = "";
+                }
 
-            if (keyArray.length > i + 1) {
-                _url = _url + key + "=" + value + "&";
+                if (keyArray.length > i + 1) {
+                    _url = _url + key + "=" + value + "&";
 //                DeBugLog.i(TAG, "true:" + _url);
-            } else {
-                _url = _url + key + "=" + value;
+                } else {
+                    _url = _url + key + "=" + value;
 //                DeBugLog.i(TAG, "false:" + _url);
+                }
             }
         }
         return _url;

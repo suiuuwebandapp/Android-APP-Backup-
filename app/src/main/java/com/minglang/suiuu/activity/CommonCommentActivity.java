@@ -10,19 +10,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.SuiuuInfo;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.BindString;
@@ -144,40 +145,35 @@ public class CommonCommentActivity extends BaseActivity {
 
     //文章详情发送评论
     private void requestArticleCommentSend(String commentContent, String rId, String rTitle) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(TP_ID, articleId);
-        params.addBodyParameter(COMMENT, commentContent);
-
+        Map<String,String> map = new HashMap<>();
+        map.put(TP_ID,articleId);
+        map.put(COMMENT,commentContent);
         if (!TextUtils.isEmpty(rId)) {
-            params.addBodyParameter(R_ID, rId);
-            params.addBodyParameter(R_TITLE, rTitle);
+            map.put(R_ID,rId);
+            map.put(R_TITLE,rTitle);
         }
-
-        params.addBodyParameter(HttpServicePath.key, verification);
-
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.articleCreateComment, new requestCommentSendCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        try {
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.articleCreateComment+"?token="+ SuiuuInfo.ReadAppTimeSign(CommonCommentActivity.this), new requestCommentSendCallBack(), map);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
     //随游详情发送评论
     private void requestSuiuuCommentSend(String commentContent, String rId, String rTitle) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(TRIP_ID, tripId);
-        params.addBodyParameter(CONTENT, commentContent);
-
+        Map<String,String> map = new HashMap<>();
+        map.put(TRIP_ID,tripId);
+        map.put(CONTENT,commentContent);
         if (!TextUtils.isEmpty(rId)) {
-            params.addBodyParameter(R_ID, rId);
-            params.addBodyParameter(R_TITLE, rTitle);
+            map.put(R_ID,rId);
+            map.put(R_TITLE,rTitle);
         }
-        params.addBodyParameter(HttpServicePath.key, verification);
-
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.suiuuCreateComment, new requestCommentSendCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        try {
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.suiuuCreateComment+"?token="+ SuiuuInfo.ReadAppTimeSign(CommonCommentActivity.this), new requestCommentSendCallBack(), map);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -187,12 +183,17 @@ public class CommonCommentActivity extends BaseActivity {
         }
     }
 
-    class requestCommentSendCallBack extends RequestCallBack<String> {
+    class requestCommentSendCallBack extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
+        public void onError(Request request, Exception e) {
             hideDialog();
-            String str = responseInfo.result;
+            Toast.makeText(CommonCommentActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onResponse(String str) {
+            hideDialog();
             try {
                 JSONObject json = new JSONObject(str);
                 int status = json.getInt(STATUS);
@@ -212,14 +213,6 @@ public class CommonCommentActivity extends BaseActivity {
                 Toast.makeText(CommonCommentActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
             }
         }
-
-        @Override
-        public void onFailure(HttpException error, String msg) {
-            hideDialog();
-            DeBugLog.e(TAG, "HttpException:" + error.getMessage() + ",Error:" + msg);
-            Toast.makeText(CommonCommentActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
-        }
-
     }
 
 }

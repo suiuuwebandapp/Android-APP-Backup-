@@ -4,46 +4,41 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.reflect.TypeToken;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.EasyTackPhotoAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.customview.swipelistview.SwipeListView;
-import com.minglang.suiuu.entity.LoopArticleData;
 import com.minglang.suiuu.service.UpdateImageService;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.ScreenUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.BindString;
@@ -123,14 +118,9 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
     @Bind(R.id.iv_top_back)
     ImageView iv_top_back;
 
-    private String dataNum;
-
-    private LoopArticleData articleDetail;
 
     private JsonUtils jsonUtil = JsonUtils.getInstance();
 
-    //修改文章进来是否重新选择图片
-    private boolean isChangePic = false;
 
     private List<TextView> suiuuTagClick = new ArrayList<>();
     private List<TextView> suiuuTagList = new ArrayList<>();
@@ -168,8 +158,6 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
 
         picList = this.getIntent().getStringArrayListExtra("pictureMessage");
         //articleDetail = (LoopArticleData)getIntent().getSerializableExtra("articleDetail");
-        articleDetail = jsonUtil.fromJSON(LoopArticleData.class, getIntent().getStringExtra("articleDetail"));
-
         ButterKnife.bind(this);
         initView();
         setSuiuuTag();
@@ -193,15 +181,11 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, picList, "0");
         adapter.setSwipeListView(lv_pic_description);
 
-        if (articleDetail != null) {
-            changeArticleFullData();
-        } else {
-            lv_pic_description.setAdapter(adapter);
-            Utils.setListViewHeightBasedOnChildren(lv_pic_description);
-        }
+
+        lv_pic_description.setAdapter(adapter);
+        Utils.setListViewHeightBasedOnChildren(lv_pic_description);
 
         verification = SuiuuInfo.ReadVerification(this);
-
         int layout100dp = (int) getResources().getDimension(R.dimen.layout_100dp);
         int layout16dp = (int) getResources().getDimension(R.dimen.layout_16dp);
         int itemRemoveBtnWidth = Utils.newInstance().px2dip(layout100dp, this);
@@ -218,32 +202,11 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         tv_show_your_location.setOnClickListener(this);
     }
 
-    private void changeArticleFullData() {
-        search_question.setText(articleDetail.getaTitle());
-        tv_show_your_location.setText(articleDetail.getaAddr());
-
-        List<String> changePicList
-                = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>() {
-        }.getType(), articleDetail.getaImgList());
-
-        List<String> changeContentList
-                = jsonUtil.fromJSON(new TypeToken<ArrayList<String>>() {
-        }.getType(), articleDetail.getaContent());
-
-        EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, changePicList, changeContentList, "1");
-        adapter.setSwipeListView(lv_pic_description);
-        lv_pic_description.setAdapter(adapter);
-
-        Utils.setListViewHeightBasedOnChildren(lv_pic_description);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == 9) {
-            if (articleDetail != null) {
-                isChangePic = true;
-            }
             picList = data.getStringArrayListExtra("pictureMessage");
             EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, picList, "0");
             adapter.setSwipeListView(lv_pic_description);
@@ -271,11 +234,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         if (mId == R.id.tv_top_cancel) {
             finish();
         } else if (mId == R.id.tv_top_right) {
-            if (articleDetail != null) {
-                changeLoadDate();
-            } else {
                 loadDate();
-            }
         } else if (mId == R.id.tv_show_your_location) {
             startActivityForResult(new Intent(EasyTackPhotoActivity.this,
                     AMapActivity.class), REQUEST_CODE_MAP);
@@ -284,46 +243,12 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         }
     }
 
+    /**
+     * 发布旅图
+     */
     private void loadDate() {
         for (int i = 0; i < lv_pic_description.getChildCount(); i++) {
             FrameLayout layout = (FrameLayout) lv_pic_description.getChildAt(i);// 获得子item的layout
-            EditText et = (EditText) layout.findViewById(R.id.item_tack_description);// 从layout中获得控件,根据其id
-            // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
-            picDescriptionList.add(et.getText().toString());
-        }
-        if (TextUtils.isEmpty(locationAddress)) {
-            Toast.makeText(this, "请选择位置", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        //访问网络相关
-        dialog.showDialog();
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter("title", search_question.getText().toString().trim());
-        params.addBodyParameter("contents", jsonUtil.toJSON(picDescriptionList));
-        params.addBodyParameter("country", locationCountry);
-        params.addBodyParameter("city", locationCity);
-        params.addBodyParameter("lon", String.valueOf(longitude));
-        params.addBodyParameter("lat", String.valueOf(latitude));
-        params.addBodyParameter("tags", tagText.replace(" ", ","));
-        params.addBodyParameter("address", locationAddress);
-        List<String> picNameList = new ArrayList<>();
-        for (String string : picList) {
-            String substring = string.substring(string.lastIndexOf("/"));
-            picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
-        }
-        params.addBodyParameter("picList", jsonUtil.toJSON(picNameList));
-        params.addBodyParameter("titleImg", picNameList.get(0));
-        SuiuuHttp suiuuHttp = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.createTripGallery, new CreateLoopCallBack());
-        suiuuHttp.setParams(params);
-        suiuuHttp.executive();
-    }
-
-    private void changeLoadDate() {
-        RequestParams params = new RequestParams();
-        for (int i = 0; i < lv_pic_description.getChildCount() - 1; i++) {
-            LinearLayout layout = (LinearLayout) lv_pic_description.getChildAt(i);// 获得子item的layout
             EditText et = (EditText) layout.findViewById(R.id.item_tack_description);// 从layout中获得控件,根据其id
             // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
             picDescriptionList.add(et.getText().toString());
@@ -332,48 +257,53 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
             Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
             return;
         }
-        dialog.showDialog();
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter("articleId", articleDetail.getArticleId());
-        params.addBodyParameter("title", search_question.getText().toString().trim());
-        params.addBodyParameter("content", jsonUtil.toJSON(picDescriptionList));
-        params.addBodyParameter("addr", tv_show_your_location.getText().toString().trim());
-
-        List<String> picNameList = new ArrayList<>();
-        if (isChangePic) {
-            for (String string : picList) {
-                //updateDate(string);
-                String substring = string.substring(string.lastIndexOf("/"));
-                picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
-            }
-            params.addBodyParameter("imgList", JsonUtils.getInstance().toJSON(picNameList));
-            if (picNameList.size() >= 1) {
-                params.addBodyParameter("img", picNameList.get(0));
-            }
-        } else {
-            params.addBodyParameter("imgList", articleDetail.getaImgList());
-            params.addBodyParameter("img", articleDetail.getaImg());
+        if (TextUtils.isEmpty(locationAddress)) {
+            Toast.makeText(this, R.string.choice_location, Toast.LENGTH_SHORT).show();
+            return;
         }
-
-        SuiuuHttp suiuuHttp = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.updateLoop, new UpdateLoopCallBack());
-        suiuuHttp.setParams(params);
-        suiuuHttp.executive();
+        if (TextUtils.isEmpty(tagText)) {
+            Toast.makeText(this, R.string.please_choice_tag, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //访问网络相关
+        dialog.showDialog();
+        Map<String, String> map = new HashMap<>();
+        map.put("title", search_question.getText().toString().trim());
+        map.put("contents", jsonUtil.toJSON(picDescriptionList));
+        map.put("country", locationCountry);
+        map.put("city", locationCity);
+        map.put("lon", String.valueOf(longitude));
+        map.put("lat", String.valueOf(latitude));
+        map.put("tags", tagText.replace(" ", ","));
+        map.put("address", locationAddress);
+        List<String> picNameList = new ArrayList<>();
+        for (String string : picList) {
+            String substring = string.substring(string.lastIndexOf("/"));
+            picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
+        }
+        map.put("picList", jsonUtil.toJSON(picNameList));
+        map.put("titleImg", picNameList.get(0));
+        try {
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.createTripGallery + "?token=" + SuiuuInfo.ReadAppTimeSign(EasyTackPhotoActivity.this), new CreateLoopCallBack(), map);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * 发布圈子文章回调接口
      */
-    class CreateLoopCallBack extends RequestCallBack<String> {
+    class CreateLoopCallBack extends OkHttpManager.ResultCallback<String> {
+        @Override
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + e.toString());
+        }
 
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            String result = stringResponseInfo.result;
-            Log.i("suiuu", result);
+        public void onResponse(String result) {
             try {
                 JSONObject json = new JSONObject(result);
                 status = (int) json.get("status");
-                dataNum = (String) json.get("data");
                 if (status == 1) {
                     Intent intent = new Intent(EasyTackPhotoActivity.this, UpdateImageService.class);
                     intent.putExtra("imageList", jsonUtil.toJSON(picList));
@@ -387,44 +317,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
                 e.printStackTrace();
             }
         }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
-        }
-
     }
-
-    /**
-     * 修改圈子文章回调接口
-     */
-    class UpdateLoopCallBack extends RequestCallBack<String> {
-
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            String result = stringResponseInfo.result;
-            try {
-                JSONObject json = new JSONObject(result);
-                status = (int) json.get("status");
-                dataNum = (String) json.get("data");
-                if ("success".equals(dataNum)) {
-                    Toast.makeText(EasyTackPhotoActivity.this, R.string.article_update_success, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(EasyTackPhotoActivity.this, LoopArticleActivity.class);
-                    intent.putExtra("articleId", articleDetail.getArticleId());
-                    intent.putExtra("TAG", TAG);
-                    startActivity(intent);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "发布文章失败:" + s);
-        }
-    }
-
     public void setSuiuuTag() {
         fl_easy_take_photo.removeAllViews();
         LayoutInflater mInflater = LayoutInflater.from(this);
@@ -470,9 +363,9 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         }
         tagText += setCustomerTag;
         if ("".equals(tagText)) {
-            if("".equals(setCustomerTag)) {
-                tv_show_tag.setText("选择标签");
-            }else {
+            if ("".equals(setCustomerTag)) {
+                tv_show_tag.setText(R.string.please_choice_tag);
+            } else {
                 tv_show_tag.setText(setCustomerTag);
             }
         } else {

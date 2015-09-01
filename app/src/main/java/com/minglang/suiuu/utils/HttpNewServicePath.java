@@ -132,19 +132,55 @@ public class HttpNewServicePath {
     public static String getUserAccountInfoPath = RootPath + "/app-account/account-list";
 
 
+
+
+
 /*-----------------------随游相关-----------------------------*/
     /**
      * 得到普通用户未完成的订单
      */
     public static String getSuiuuDetailInfo = RootPath + "/app-travel/get-travel-info";
+    /**
+     * 得到随游列表
+     */
+    public static String getSuiuuList = RootPath + "/app-travel/get-travel-list";
+    /**
+     * 创建一条随游评论
+     */
+    public static String suiuuCreateComment = RootPath + "/app-travel/add-comment";
+    /**
+     * 得到随游高级搜索中的标签
+     */
+    public static String getSuiuuSearchTag = RootPath + "/app-travel/get-tag-list";
 
 
 /*-----------------------旅图相关------------------------------------*/
     /**
+     * 发布旅图文章
+     */
+    public static String createTripGallery = RootPath + "/app-travel-picture/add-travel-picture";
+    /**
      * 根据id获得旅图详情
      */
     public static String getTripGalleryDetailById = RootPath + "/app-travel-picture/get-info";
-
-
-
+    /**
+     * 得到旅图列表
+     */
+    public static String getTripGalleryList = RootPath + "/app-travel-picture/get-list";
+    /**
+     * 收藏旅图
+     */
+    public static String CollectionTripGalleryPath = RootPath + "/app-attention/attention-tp";
+    /**
+     * 取消收藏文章
+     * <p/>
+     * 请求方式:POST
+     * <p/>
+     * 请求参数:需要收藏文章的attentionId
+     */
+    public static String CollectionArticleCancelPath = RootPath + "/app-attention/delete-attention";
+    /**
+     * 创建一条旅图评论
+     */
+    public static String articleCreateComment = RootPath + "/app-travel-picture/add-travel-picture-comment";
 }

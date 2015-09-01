@@ -2,6 +2,7 @@ package com.minglang.suiuu.base;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 
 import com.minglang.suiuu.utils.DeBugLog;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -90,19 +91,21 @@ public class BaseFragment extends Fragment {
     public String addUrlAndParams(String url, String[] keyArray, String[] valueArray) {
         String _url = url + "?";
         for (int i = 0; i < keyArray.length; i++) {
-            String key = keyArray[i];
-            String value;
-            try {
-                value = URLEncoder.encode(valueArray[i], "UTF-8");
-            } catch (Exception e) {
-                DeBugLog.e(TAG, e.getMessage());
-                value = "";
-            }
+            if(!TextUtils.isEmpty(valueArray[i])) {
+                String key = keyArray[i];
+                String value;
+                try {
+                    value = URLEncoder.encode(valueArray[i], "UTF-8");
+                } catch (Exception e) {
+                    DeBugLog.e(TAG, e.getMessage());
+                    value = "";
+                }
 
-            if (keyArray.length > i + 1) {
-                _url = _url + key + "=" + value + "&";
-            } else {
-                _url = _url + key + "=" + value;
+                if (keyArray.length > i + 1) {
+                    _url = _url + key + "=" + value + "&";
+                } else {
+                    _url = _url + key + "=" + value;
+                }
             }
         }
         return _url;

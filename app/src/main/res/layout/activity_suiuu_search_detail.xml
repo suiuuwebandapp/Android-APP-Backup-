@@ -18,6 +18,7 @@
         android:background="@color/white"
         android:scrollbars="none"
         android:visibility="visible"/>
+    <include layout="@layout/common_no_data_layout"/>
 
     <FrameLayout
         android:id="@+id/fl_search_more"

@@ -3,7 +3,6 @@ package com.minglang.suiuu.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,25 +12,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.TripGalleryAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.ReFlashListView;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.TripGallery;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +41,11 @@ import java.util.List;
  * 修改备注：
  */
 public class TripGallerySearchActivity extends BaseActivity implements ReFlashListView.IReflashListener, ReFlashListView.ILoadMoreDataListener {
+    private static final String TAGS = "tags";
+    private static final String SORT_NAME = "sortName";
+    private static final String SEARCH = "search";
+    private static final String NUMBER = "number";
+    private static final String PAGES = "page";
     private LinearLayout ll_trip_gallery_search_tag;
     private ImageView iv_top_back;
     private ImageView tv_top_right_more;
@@ -150,29 +151,28 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
         if(tags != null && tags.length() >1) {
             tagnew = tags.substring(0,tags.length()-1);
         }
-        String str = SuiuuInfo.ReadVerification(this);
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, str);
-        params.addBodyParameter("tags", tagnew);
-        params.addBodyParameter("sortName", sortName);
-        params.addBodyParameter("search", search);
-        params.addBodyParameter("page", Integer.toString(page));
-        params.addBodyParameter("number", "10");
-        SuiuuHttp suiuuHttp = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getTripGalleryList, new loadTripGalleryListCallBack());
-        suiuuHttp.setParams(params);
-        suiuuHttp.executive();
+        String[] keyArray1 = new String[]{TAGS, SORT_NAME, SEARCH, PAGES, NUMBER, "token"};
+        String[] valueArray1 = new String[]{tagnew, sortName, search, Integer.toString(page), "10", SuiuuInfo.ReadAppTimeSign(TripGallerySearchActivity.this)};
+        try {
+            OkHttpManager.onGetAsynRequest(addUrlAndParams(HttpNewServicePath.getTripGalleryList, keyArray1, valueArray1), new loadTripGalleryListCallBack());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * 发布圈子文章回调接口
      */
-    class loadTripGalleryListCallBack extends RequestCallBack<String> {
+    class loadTripGalleryListCallBack extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+        public void onError(Request request, Exception e) {
             dialog.dismissDialog();
-            String result = stringResponseInfo.result;
+        }
+
+        @Override
+        public void onResponse(String result) {
+            dialog.dismissDialog();
             try {
                 JSONObject json = new JSONObject(result);
                 int status = (int) json.get("status");
@@ -199,12 +199,6 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            dialog.dismissDialog();
-            Log.i("suiuu", "请求失败------------------------------------" + s);
         }
     }
 

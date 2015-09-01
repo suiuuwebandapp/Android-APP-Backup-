@@ -10,15 +10,11 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.base.BaseActivity;
@@ -29,15 +25,20 @@ import com.minglang.suiuu.customview.rangebar.RangeBar;
 import com.minglang.suiuu.entity.SuiuuDataList;
 import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.entity.SuiuuSearchTag;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * 项目名称：Android-APP-Backup-
@@ -78,11 +79,13 @@ public class SuiuuSearchDetailActivity extends BaseActivity
     private ImageButton ib_release;
     private String searchCountry;
     private BootstrapButton bb_search_confire;
-
+    @Bind(R.id.rl_common_no_data)
+    RelativeLayout rl_no_data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suiuu_search_detail);
+        ButterKnife.bind(this);
         searchCountry = this.getIntent().getStringExtra("country");
         initView();
         viewAction();
@@ -142,30 +145,22 @@ public class SuiuuSearchDetailActivity extends BaseActivity
 
     private void loadDate(String countryOrCity, String peopleCount, String tags, String startPrice, String endPrice, int page) {
         dialog.showDialog();
-        String str = SuiuuInfo.ReadVerification(this);
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, str);
-        params.addBodyParameter("cc", countryOrCity);
-        params.addBodyParameter("peopleCount", peopleCount);
-        params.addBodyParameter("tag", tags);
-        params.addBodyParameter("startPrice", startPrice);
-        params.addBodyParameter("endPrice", endPrice);
-        params.addBodyParameter("page", Integer.toString(page));
-        params.addBodyParameter("number", "10");
-        SuiuuHttp suiuuHttp = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getSuiuuList, new getSuiuuDateCallBack());
-        suiuuHttp.setParams(params);
-        suiuuHttp.executive();
+        String[] keyArray1 = new String[]{"cc", "peopleCount","tag","startPrice","endPrice","page","number", "token"};
+        String[] valueArray1 = new String[]{countryOrCity, peopleCount, tags,  startPrice, endPrice,Integer.toString(page),"10", SuiuuInfo.ReadAppTimeSign(SuiuuSearchDetailActivity.this)};
+        try {
+            OkHttpManager.onGetAsynRequest(addUrlAndParams(HttpNewServicePath.getSuiuuList, keyArray1, valueArray1), new getSuiuuDateCallBack());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void getSuiuuSearchTag() {
-        String str = SuiuuInfo.ReadVerification(this);
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, str);
-        SuiuuHttp suiuuHttp = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getSuiuuSearchTag, new getSuiuuSearchTagCallBack());
-        suiuuHttp.setParams(params);
-        suiuuHttp.executive();
+        try {
+            Log.i("suiuu", HttpNewServicePath.getSuiuuSearchTag + "?token=" + SuiuuInfo.ReadAppTimeSign(SuiuuSearchDetailActivity.this));
+        OkHttpManager.onGetAsynRequest(HttpNewServicePath.getSuiuuSearchTag+"?token="+SuiuuInfo.ReadAppTimeSign(SuiuuSearchDetailActivity.this), new getSuiuuSearchTagCallBack());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void showList(List<SuiuuDataList> suiuuDataList) {
@@ -202,14 +197,20 @@ public class SuiuuSearchDetailActivity extends BaseActivity
     }
 
     /**
-     * 获取随游列表的回调接口
+     * 获取随游标签回调接口
      */
-    class getSuiuuSearchTagCallBack extends RequestCallBack<String> {
+    class getSuiuuSearchTagCallBack extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+        public void onError(Request request, Exception e) {
+            dialog.dismissDialog();
+            Toast.makeText(SuiuuSearchDetailActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onResponse(String response) {
             try {
-                SuiuuSearchTag suiuuSearchTag = jsonUtil.fromJSON(SuiuuSearchTag.class, stringResponseInfo.result);
+                SuiuuSearchTag suiuuSearchTag = jsonUtil.fromJSON(SuiuuSearchTag.class, response);
                 if ("1".equals(suiuuSearchTag.getStatus())) {
                     tagList = suiuuSearchTag.getData();
                     setViewGroup();
@@ -222,47 +223,44 @@ public class SuiuuSearchDetailActivity extends BaseActivity
                 e.printStackTrace();
             }
         }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            dialog.dismissDialog();
-            Toast.makeText(SuiuuSearchDetailActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
-        }
     }
 
     /**
      * 获取随游列表的回调接口
      */
-    class getSuiuuDateCallBack extends RequestCallBack<String> {
+    class getSuiuuDateCallBack extends OkHttpManager.ResultCallback<String> {
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            Log.i("suiuu", stringResponseInfo.result);
+        public void onError(Request request, Exception e) {
+            dialog.dismissDialog();
+            Toast.makeText(SuiuuSearchDetailActivity.this, "111数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onResponse(String response) {
+            Log.i("suiuu",response);
             dialog.dismissDialog();
             try {
-                JSONObject json = new JSONObject(stringResponseInfo.result);
+                JSONObject json = new JSONObject(response);
                 String status = json.getString("status");
                 if ("1".equals(status)) {
-                    SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, stringResponseInfo.result);
 
+                    SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, response);
                     List<SuiuuDataList> suiuuDataListNew = baseCollection.getData();
                     if (suiuuDataListNew.size() < 1) {
-                        Toast.makeText(SuiuuSearchDetailActivity.this, "没有更多数据", Toast.LENGTH_SHORT).show();
+                        lv_search_suiuu.setVisibility(View.GONE);
+                        rl_no_data.setVisibility(View.VISIBLE);
+                    }else {
+                        lv_search_suiuu.setVisibility(View.VISIBLE);
+                        rl_no_data.setVisibility(View.GONE);
+                        suiuuDataList.addAll(suiuuDataListNew);
+                        showList(suiuuDataList);
                     }
-                    suiuuDataList.addAll(suiuuDataListNew);
-                    showList(suiuuDataList);
                 } else {
                     Toast.makeText(SuiuuSearchDetailActivity.this, "222数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            dialog.dismissDialog();
-            Toast.makeText(SuiuuSearchDetailActivity.this, "111数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_no_data"
         android:layout_centerHorizontal="true"
-        android:text="没有搜索到相关旅图"
+        android:text="@string/search_no_data"
         android:textColor="@color/mainColor"
         android:textSize="@dimen/layout_18sp"/>
 
