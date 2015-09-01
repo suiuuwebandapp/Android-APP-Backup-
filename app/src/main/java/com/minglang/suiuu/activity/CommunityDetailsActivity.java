@@ -163,12 +163,12 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getCommunityItemDetails(buildRequestParams(strID));
 
-        //        if (progressDialog != null && !progressDialog.isShowing()) {
-        //            progressDialog.show();
-        //        }
-        //        getProblemData(buildUrl(HttpNewServicePath.getProblemDetailsPath, strID));
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
+
+        getProblemData(buildUrl(HttpNewServicePath.getProblemDetailsPath, strID));
 
     }
 
@@ -214,8 +214,9 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         attentionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //                getAttentionRequest(buildAttentionParams(qID));
-                getAttentionProblem(buildUrl(HttpNewServicePath.getAttentionQuestionPath, qID));
+                String url = buildUrl(HttpNewServicePath.getAttentionQuestionPath, qID);
+                DeBugLog.i(TAG, "关注问题URL:" + url);
+                getAttentionProblem(url);
             }
         });
 
@@ -250,8 +251,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                getCommunityItemDetails(buildRequestParams(strID));
-                //                getProblemData(buildUrl(HttpNewServicePath.getProblemDetailsPath, strID));
+                getProblemData(buildUrl(HttpNewServicePath.getProblemDetailsPath, strID));
             }
 
             @Override
@@ -271,10 +271,6 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
      * 获取系统标签
      */
     private void getTagList() {
-        //        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.GET,
-        //                HttpNewServicePath.getDefaultTagListPath, new TagRequestCallBack());
-        //        httpRequest.executive();
-
         try {
             String url = HttpNewServicePath.getDefaultTagListPath + "?" + TOKEN + "=" + token;
             DeBugLog.i(TAG, "TAG URL:" + url);
@@ -318,58 +314,6 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    //******************************旧版网络请求************************************************************
-
-    /**
-     * 构造问题详情网络请求参数
-     *
-     * @param id 问题ID
-     * @return 网络请求参数
-     */
-    private RequestParams buildRequestParams(String id) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter(ID, id);
-        return params;
-    }
-
-    /**
-     * 问题详情网络请求
-     *
-     * @param params 网络请求参数
-     */
-    private void getCommunityItemDetails(RequestParams params) {
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getProblemDetailsPath, new CommunityItemRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
-    }
-
-    /**
-     * 构造关注问题的网络请求参数
-     *
-     * @param id 问题ID
-     * @return 请求参数
-     */
-    private RequestParams buildAttentionParams(String id) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter(ID, id);
-        return params;
-    }
-
-    /**
-     * 关注问题的网络请求
-     *
-     * @param params 请求参数
-     */
-    private void getAttentionRequest(RequestParams params) {
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getAttentionQuestionPath, new AttentionQuestionRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
     }
 
     /**
@@ -462,97 +406,6 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * 问题详情页网络请求回调接口
-     */
-    private class CommunityItemRequestCallBack extends RequestCallBack<String> {
-
-        @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            DeBugLog.i(TAG, "返回的数据:" + responseInfo.result);
-            hideDialog();
-            bindData2View(responseInfo.result);
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
-            hideDialog();
-            Toast.makeText(CommunityDetailsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    /**
-     * 得到Tag的网络请求回调接口
-     */
-    private class TagRequestCallBack extends RequestCallBack<String> {
-
-        @Override
-        public void onStart() {
-            super.onStart();
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            if (!TextUtils.isEmpty(str)) {
-                Tag tagInfo = JsonUtils.getInstance().fromJSON(Tag.class, str);
-                if (tagInfo != null) {
-                    List<Tag.TagData> list = tagInfo.getData();
-                    if (list != null && list.size() > 0) {
-                        for (Tag.TagData data : list) {
-                            TextView tagView = (TextView) LayoutInflater.from(CommunityDetailsActivity.this)
-                                    .inflate(R.layout.layout_text_tag, tagLayout, false);
-                            tagView.setText(data.getTName());
-                            tagLayout.addView(tagView);
-                        }
-                    }
-                }
-
-            }
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "get Tag HttpException:" + e.getMessage() + ",get Tag Error:" + s);
-        }
-
-    }
-
-    private class AttentionQuestionRequestCallBack extends RequestCallBack<String> {
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            try {
-                JSONObject object = new JSONObject(str);
-                String stats = object.getString(STATUS);
-                if (stats.equals(SUC_VALUE)) {
-                    Toast.makeText(CommunityDetailsActivity.this, attention_suc, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(CommunityDetailsActivity.this, attention_fai, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
-            }
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "Attention HttpException:" + e.getMessage() + ",Attention Error:" + s);
-        }
-
-    }
-
-
     private class TagResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
@@ -592,6 +445,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         @Override
         public void onError(Request request, Exception e) {
             DeBugLog.e(TAG, "问题详情数据异常:" + e.getMessage());
+            Toast.makeText(CommunityDetailsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
         @Override

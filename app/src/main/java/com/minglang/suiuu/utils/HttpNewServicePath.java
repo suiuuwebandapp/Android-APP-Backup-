@@ -102,7 +102,7 @@ public class HttpNewServicePath {
     /**
      * 关注问题
      */
-    public static String getAttentionQuestionPath = RootPath + "/app-attention/attention-tp";
+    public static String getAttentionQuestionPath = RootPath + "/app-attention/attention-qa";
 
     /**
      * 关键字匹配Title

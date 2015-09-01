@@ -219,6 +219,7 @@ public class MainActivity extends BaseActivity {
         initView();
         registerReceiver();
         viewAction();
+        getServiceTime();
     }
 
     @Override
@@ -322,7 +323,6 @@ public class MainActivity extends BaseActivity {
         intentFilter2.addAction(Intent.ACTION_TIME_TICK);
         registerReceiver(tokenBroadcastReceiver, intentFilter2);
     }
-
 
     /**
      * 控件相关事件
