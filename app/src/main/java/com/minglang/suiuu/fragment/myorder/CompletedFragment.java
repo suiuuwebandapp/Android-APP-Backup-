@@ -13,11 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
@@ -25,14 +20,17 @@ import com.minglang.suiuu.activity.GeneralOrderDetailsActivity;
 import com.minglang.suiuu.adapter.CompletedAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.CompletedOrder;
+import com.minglang.suiuu.entity.CompletedOrder.CompletedOrderData;
 import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.OkHttpManager;
-import com.minglang.suiuu.utils.SuiuuHttp;
 import com.squareup.okhttp.Request;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -52,6 +50,7 @@ import butterknife.ButterKnife;
  * 普通用户->已完成的订单页面
  */
 public class CompletedFragment extends BaseFragment {
+
     private static final String TAG = CompletedFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
@@ -64,17 +63,26 @@ public class CompletedFragment extends BaseFragment {
     private static final String ORDER_NUMBER = "orderNumber";
     private static final String TITLE_IMG = "titleImg";
 
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
+
     @Bind(R.id.completed_order_list_view)
     PullToRefreshListView pullToRefreshListView;
 
     @BindString(R.string.load_wait)
-    String wait;
+    String DialogMsg;
 
     @BindString(R.string.NoData)
-    String noData;
+    String NoData;
 
     @BindString(R.string.DataError)
-    String errorString;
+    String DataError;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     private boolean isPullToRefresh = true;
 
@@ -88,7 +96,7 @@ public class CompletedFragment extends BaseFragment {
 
     private ProgressDialog progressDialog;
 
-    private List<CompletedOrder.CompletedOrderData> listAll = new ArrayList<>();
+    private List<CompletedOrderData> listAll = new ArrayList<>();
 
     private CompletedAdapter adapter;
 
@@ -132,8 +140,7 @@ public class CompletedFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         initView();
         viewAction();
-        getCompletedOrderData4Service(buildRequestParams(page));
-//        onDataRequest();
+        sendRequest();
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
@@ -146,7 +153,7 @@ public class CompletedFragment extends BaseFragment {
 
     private void initView() {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(wait);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
@@ -174,10 +181,9 @@ public class CompletedFragment extends BaseFragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                isPullToRefresh = false;
                 page = 1;
-                getCompletedOrderData4Service(buildRequestParams(page));
-//                onDataRequest();
+                isPullToRefresh = false;
+                sendRequest();
             }
 
             @Override
@@ -186,10 +192,9 @@ public class CompletedFragment extends BaseFragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                isPullToRefresh = false;
                 page = page + 1;
-                getCompletedOrderData4Service(buildRequestParams(page));
-//                onDataRequest();
+                isPullToRefresh = false;
+                sendRequest();
             }
 
         });
@@ -205,7 +210,7 @@ public class CompletedFragment extends BaseFragment {
                     titleImg = jsonUtils.fromJSON(TripJsonInfo.class, listAll.get(location)
                             .getTripJsonInfo()).getInfo().getTitleImg();
                 } catch (Exception e) {
-                    DeBugLog.e(TAG, "获取图片地址失败:");
+                    DeBugLog.e(TAG, "获取图片地址失败:" + e.getMessage());
                 }
 
                 Intent intent = new Intent(getActivity(), GeneralOrderDetailsActivity.class);
@@ -217,22 +222,7 @@ public class CompletedFragment extends BaseFragment {
 
     }
 
-    private RequestParams buildRequestParams(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(15));
-        return params;
-    }
-
-    private void getCompletedOrderData4Service(RequestParams params) {
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getGeneralUserCompletedOrderPath, new CompletedRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
-    }
-
-    private void onDataRequest() {
+    private void sendRequest() {
         if (isPullToRefresh) {
             if (progressDialog != null && !progressDialog.isShowing()) {
                 progressDialog.show();
@@ -250,6 +240,7 @@ public class CompletedFragment extends BaseFragment {
             OkHttpManager.onGetAsynRequest(url, new CompletedResultCallback());
         } catch (IOException e) {
             e.printStackTrace();
+            hideDialog();
         }
     }
 
@@ -287,55 +278,38 @@ public class CompletedFragment extends BaseFragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 CompletedOrder completedOrder = jsonUtils.fromJSON(CompletedOrder.class, str);
                 if (completedOrder != null) {
-                    List<CompletedOrder.CompletedOrderData> list = completedOrder.getData();
+                    List<CompletedOrderData> list = completedOrder.getData();
                     if (list != null && list.size() > 0) {
                         clearListData();
                         listAll.addAll(list);
                         adapter.setList(listAll);
                     } else {
                         failureLessPage();
-                        Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析失败:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
-    }
-
-    private class CompletedRequestCallBack extends RequestCallBack<String> {
-
-        @Override
-        public void onStart() {
-            if (isPullToRefresh)
-                if (progressDialog != null && !progressDialog.isShowing()) {
-                    progressDialog.show();
-                }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            DeBugLog.i(TAG, "获取到的数据:" + str);
-            hideDialog();
-            bindData2View(str);
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error Info:" + s);
-            hideDialog();
-            failureLessPage();
-            Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
-        }
-
     }
 
     private class CompletedResultCallback extends OkHttpManager.ResultCallback<String> {
@@ -345,7 +319,7 @@ public class CompletedFragment extends BaseFragment {
             DeBugLog.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             failureLessPage();
-            Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
 
         @Override

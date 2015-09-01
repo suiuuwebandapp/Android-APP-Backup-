@@ -12,27 +12,26 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshGridView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.TripGalleryDetailsActivity;
 import com.minglang.suiuu.adapter.AttentionGalleryAdapter;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.AttentionGallery;
 import com.minglang.suiuu.entity.AttentionGallery.AttentionGalleryData;
 import com.minglang.suiuu.entity.AttentionGallery.AttentionGalleryData.AttentionGalleryItemData;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.ScreenUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,17 +48,21 @@ public class AttentionGalleryFragment extends BaseFragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
 
     private static final String ID = "id";
 
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
+
     private String userSign;
     private String verification;
 
     @BindString(R.string.load_wait)
-    String dialogMessage;
+    String DialogMsg;
 
     @BindString(R.string.NoData)
     String NoData;
@@ -70,10 +73,15 @@ public class AttentionGalleryFragment extends BaseFragment {
     @BindString(R.string.NetworkAnomaly)
     String NetworkError;
 
+    @BindString(R.string.SystemException)
+    String SystemException;
+
     @Bind(R.id.attention_galler_gridView)
     PullToRefreshGridView pullToRefreshGridView;
 
     private int page = 1;
+
+    private boolean isPullToRefresh = true;
 
     private List<AttentionGalleryItemData> listAll = new ArrayList<>();
 
@@ -87,13 +95,15 @@ public class AttentionGalleryFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
+     * @param param3 Parameter 3.
      * @return A new instance of fragment AttentionThemeFragment.
      */
-    public static AttentionGalleryFragment newInstance(String param1, String param2) {
+    public static AttentionGalleryFragment newInstance(String param1, String param2, String param3) {
         AttentionGalleryFragment fragment = new AttentionGalleryFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -107,6 +117,7 @@ public class AttentionGalleryFragment extends BaseFragment {
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
+            token = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -117,6 +128,7 @@ public class AttentionGalleryFragment extends BaseFragment {
         initView();
         viewAction();
         getData4Service(page);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -125,7 +137,7 @@ public class AttentionGalleryFragment extends BaseFragment {
      */
     private void initView() {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(dialogMessage);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -135,8 +147,6 @@ public class AttentionGalleryFragment extends BaseFragment {
         adapter = new AttentionGalleryAdapter(getActivity());
         adapter.setScreenParams(new ScreenUtils(getActivity()).getScreenWidth());
         mGridView.setAdapter(adapter);
-
-        DeBugLog.i(TAG, "userSign:" + userSign);
     }
 
     /**
@@ -151,6 +161,7 @@ public class AttentionGalleryFragment extends BaseFragment {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page = 1;
+                isPullToRefresh = false;
                 getData4Service(page);
             }
 
@@ -161,6 +172,7 @@ public class AttentionGalleryFragment extends BaseFragment {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page = page + 1;
+                isPullToRefresh = false;
                 getData4Service(page);
             }
 
@@ -181,15 +193,24 @@ public class AttentionGalleryFragment extends BaseFragment {
      * 从服务器获取数据
      */
     private void getData4Service(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(20));
+        if (isPullToRefresh) {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
 
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getAttentionTripPath, new AttentionGalleryRequestCallback());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
+        String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(20), token};
+        String url = addUrlAndParams(HttpNewServicePath.getAttentionTripPath, keyArray, valueArray);
+
+        try {
+            OkHttpManager.onGetAsynRequest(url, new AttentionGalleryResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            failureLessPage();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -230,7 +251,7 @@ public class AttentionGalleryFragment extends BaseFragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(SuiuuApplication.getInstance(), NoData, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 AttentionGallery attentionGallery = JsonUtils.getInstance().fromJSON(AttentionGallery.class, str);
@@ -243,24 +264,35 @@ public class AttentionGalleryFragment extends BaseFragment {
                             listAll.addAll(list);
                             adapter.setList(listAll);
                         } else {
-                            DeBugLog.e(TAG, "；列表为Null");
+                            DeBugLog.e(TAG, "列表为Null");
                             failureLessPage();
-                            Toast.makeText(SuiuuApplication.getInstance(), NoData, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         DeBugLog.e(TAG, "第二层为Null");
                         failureLessPage();
-                        Toast.makeText(SuiuuApplication.getInstance(), NoData, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     DeBugLog.e(TAG, "第一层为Null");
                     failureLessPage();
-                    Toast.makeText(SuiuuApplication.getInstance(), NoData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "数据解析失败:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(SuiuuApplication.getInstance(), DataError, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -268,29 +300,21 @@ public class AttentionGalleryFragment extends BaseFragment {
     /**
      * 关注的圈子网络请求回调接口
      */
-    private class AttentionGalleryRequestCallback extends RequestCallBack<String> {
+    private class AttentionGalleryResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            DeBugLog.i(TAG, "关注的旅图数据:" + str);
-            hideDialog();
-            bindData2View(str);
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "关注的圈子数据请求失败:" + s);
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "关注的圈子数据请求失败:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "关注的旅图数据:" + response);
+            hideDialog();
+            bindData2View(response);
         }
 
     }

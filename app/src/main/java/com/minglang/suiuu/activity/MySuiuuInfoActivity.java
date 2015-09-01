@@ -73,11 +73,12 @@ public class MySuiuuInfoActivity extends BaseAppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText(Participate), false);
         tabLayout.setTabTextColors(normalColor, selectedColor);
 
-        String userSign = SuiuuInfo.ReadUserSign(this);
-        String verification = SuiuuInfo.ReadVerification(this);
+        userSign = SuiuuInfo.ReadUserSign(this);
+        verification = SuiuuInfo.ReadVerification(this);
+        token = SuiuuInfo.ReadAppTimeSign(this);
 
-        PublishedFragment publishedFragment = PublishedFragment.newInstance(userSign, verification);
-        ParticipateFragment participateFragment = ParticipateFragment.newInstance(userSign, verification);
+        PublishedFragment publishedFragment = PublishedFragment.newInstance(userSign, verification, token);
+        ParticipateFragment participateFragment = ParticipateFragment.newInstance(userSign, verification, token);
 
         List<String> titleList = new ArrayList<>();
         titleList.add(Published);

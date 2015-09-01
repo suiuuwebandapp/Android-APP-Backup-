@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
@@ -97,7 +97,7 @@ public class AnswerActivity extends BaseAppCompatActivity {
      */
     private OkHttpManager.Params[] buildNewParams(String id, String content) {
         OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[3];
-        paramsArray[0] = new OkHttpManager.Params(HttpServicePath.key, verification);
+        paramsArray[0] = new OkHttpManager.Params(HttpNewServicePath.key, verification);
         paramsArray[1] = new OkHttpManager.Params(Q_ID, id);
         paramsArray[2] = new OkHttpManager.Params(CONTENT, content);
         return paramsArray;
@@ -114,8 +114,8 @@ public class AnswerActivity extends BaseAppCompatActivity {
         }
 
         try {
-            OkHttpManager.onPostAsynRequest(HttpServicePath.setAnswerToQuestionPath,
-                    new AnswerResultCallback(), buildNewParams(qID, content));
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.setAnswerToQuestionPath,
+                 new AnswerResultCallback(), buildNewParams(qID, content));
         } catch (IOException e) {
             e.printStackTrace();
             hideDialog();

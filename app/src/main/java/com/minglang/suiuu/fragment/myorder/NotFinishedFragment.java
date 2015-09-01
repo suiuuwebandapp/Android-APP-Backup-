@@ -13,11 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
@@ -25,12 +20,21 @@ import com.minglang.suiuu.activity.GeneralOrderDetailsActivity;
 import com.minglang.suiuu.adapter.NotFinishedAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.NotFinishedOrder;
+import com.minglang.suiuu.entity.NotFinishedOrder.NotFinishedOrderData;
 import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +50,7 @@ import butterknife.ButterKnife;
  * 普通用户->未完成的订单页面
  */
 public class NotFinishedFragment extends BaseFragment {
+
     private static final String TAG = NotFinishedFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
@@ -58,17 +63,26 @@ public class NotFinishedFragment extends BaseFragment {
     private static final String ORDER_NUMBER = "orderNumber";
     private static final String TITLE_IMG = "titleImg";
 
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
+
     @Bind(R.id.not_finished_order_list_view)
     PullToRefreshListView pullToRefreshListView;
 
     @BindString(R.string.load_wait)
-    String wait;
+    String DialogMsg;
 
     @BindString(R.string.NoData)
-    String dataNull;
+    String NoData;
 
     @BindString(R.string.DataError)
-    String errorString;
+    String DataError;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     private boolean isPullToRefresh = true;
 
@@ -82,7 +96,7 @@ public class NotFinishedFragment extends BaseFragment {
 
     private ProgressDialog progressDialog;
 
-    private List<NotFinishedOrder.NotFinishedOrderData> listAll = new ArrayList<>();
+    private List<NotFinishedOrderData> listAll = new ArrayList<>();
 
     private NotFinishedAdapter adapter;
 
@@ -125,8 +139,8 @@ public class NotFinishedFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_not_finished, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
-        getCompletedOrderData4Service(buildRequestParams(page));
+        viewAction();
+        sendRequest();
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
@@ -139,7 +153,7 @@ public class NotFinishedFragment extends BaseFragment {
 
     private void initView() {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(wait);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
@@ -149,9 +163,15 @@ public class NotFinishedFragment extends BaseFragment {
         listView.setAdapter(adapter);
 
         jsonUtils = JsonUtils.getInstance();
+
+        try {
+            token = URLEncoder.encode(token, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void ViewAction() {
+    private void viewAction() {
 
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 
@@ -163,7 +183,7 @@ public class NotFinishedFragment extends BaseFragment {
 
                 page = 1;
                 isPullToRefresh = false;
-                getCompletedOrderData4Service(buildRequestParams(page));
+                sendRequest();
             }
 
             @Override
@@ -174,7 +194,7 @@ public class NotFinishedFragment extends BaseFragment {
 
                 page = page + 1;
                 isPullToRefresh = false;
-                getCompletedOrderData4Service(buildRequestParams(page));
+                sendRequest();
             }
 
         });
@@ -190,7 +210,7 @@ public class NotFinishedFragment extends BaseFragment {
                     titleImg = jsonUtils.fromJSON(TripJsonInfo.class, listAll.get(location)
                             .getTripJsonInfo()).getInfo().getTitleImg();
                 } catch (Exception e) {
-                    DeBugLog.e(TAG, "获取图片地址失败:");
+                    DeBugLog.e(TAG, "获取图片地址失败:" + e.getMessage());
                 }
 
                 Intent intent = new Intent(getActivity(), GeneralOrderDetailsActivity.class);
@@ -202,19 +222,26 @@ public class NotFinishedFragment extends BaseFragment {
 
     }
 
-    private RequestParams buildRequestParams(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(15));
-        return params;
+    private void sendRequest() {
+        if (isPullToRefresh) {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
+
+        getNotFinishedData();
     }
 
-    private void getCompletedOrderData4Service(RequestParams params) {
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getGeneralUserNotFinishOrderPath, new NotFinishedRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+    private void getNotFinishedData() {
+        String[] keyArray = new String[]{HttpServicePath.key, PAGE, NUMBER, TOKEN};
+        String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
+        String url = addUrlAndParams(HttpNewServicePath.getGeneralUserNotFinishOrderPath, keyArray, valueArray);
+        try {
+            OkHttpManager.onGetAsynRequest(url, new NotFinishedResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+        }
     }
 
     /**
@@ -251,53 +278,55 @@ public class NotFinishedFragment extends BaseFragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(getActivity(), dataNull, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 NotFinishedOrder notFinishedOrder = jsonUtils.fromJSON(NotFinishedOrder.class, str);
                 if (notFinishedOrder != null) {
-                    List<NotFinishedOrder.NotFinishedOrderData> list = notFinishedOrder.getData();
+                    List<NotFinishedOrderData> list = notFinishedOrder.getData();
                     if (list != null && list.size() > 0) {
                         clearListData();
                         listAll.addAll(list);
                         adapter.setList(listAll);
                     } else {
                         failureLessPage();
-                        Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析失败:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
 
-    private class NotFinishedRequestCallBack extends RequestCallBack<String> {
+    private class NotFinishedResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (isPullToRefresh)
-                if (progressDialog != null && !progressDialog.isShowing()) {
-                    progressDialog.show();
-                }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            DeBugLog.i(TAG, "获取到的数据:" + str);
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "获取到的数据:" + response);
             hideDialog();
-            bindData2View(str);
+            bindData2View(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error Info:" + s);
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             failureLessPage();
-            Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

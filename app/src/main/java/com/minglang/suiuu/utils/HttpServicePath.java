@@ -193,7 +193,7 @@ public class HttpServicePath {
     public static String getCityListPath = RootPath + "/app-travel/get-city";
 
     /**
-     * 我发布的随游地址
+     * 获取我发布的随游
      * <p/>
      * 请求方式:POST
      * <p/>
@@ -202,7 +202,7 @@ public class HttpServicePath {
     public static String MyPublishedSuiuuPath = RootPath + "/app-travel/my-trip-list";
 
     /**
-     * 我参加的随游地址
+     * 获取我参加的随游
      * <p/>
      * 请求方式:POST
      * <p/>

@@ -13,11 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
@@ -28,10 +23,15 @@ import com.minglang.suiuu.entity.AttentionProblem;
 import com.minglang.suiuu.entity.AttentionProblem.AttentionProblemData;
 import com.minglang.suiuu.entity.AttentionProblem.AttentionProblemData.AttentionProblemItemData;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +50,7 @@ public class AttentionProblemFragment extends BaseFragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
@@ -57,13 +58,18 @@ public class AttentionProblemFragment extends BaseFragment {
     private static final String ID = "id";
     private static final String TITLE = "title";
 
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
+
     private String userSign;
     private String verification;
 
     private int page = 1;
 
+    private boolean isPullToRefresh = true;
+
     @BindString(R.string.load_wait)
-    String dialogMessage;
+    String DialogMsg;
 
     @BindString(R.string.NoData)
     String NoData;
@@ -73,6 +79,9 @@ public class AttentionProblemFragment extends BaseFragment {
 
     @BindString(R.string.NetworkAnomaly)
     String NetworkError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     @Bind(R.id.attention_problem_list_view)
     PullToRefreshListView pullToRefreshListView;
@@ -89,13 +98,15 @@ public class AttentionProblemFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
+     * @param param3 Parameter 3.
      * @return A new instance of fragment AttentionProblemFragment.
      */
-    public static AttentionProblemFragment newInstance(String param1, String param2) {
+    public static AttentionProblemFragment newInstance(String param1, String param2, String param3) {
         AttentionProblemFragment fragment = new AttentionProblemFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -110,6 +121,7 @@ public class AttentionProblemFragment extends BaseFragment {
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
+            token = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -119,8 +131,8 @@ public class AttentionProblemFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         initView();
         ViewAction();
-        getProblemData4Service(buildRequestParams(page));
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+        getProblemData4Service(page);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -129,7 +141,7 @@ public class AttentionProblemFragment extends BaseFragment {
      */
     private void initView() {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(dialogMessage);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -143,6 +155,7 @@ public class AttentionProblemFragment extends BaseFragment {
      * 控件相关事件
      */
     private void ViewAction() {
+
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 
             @Override
@@ -152,7 +165,8 @@ public class AttentionProblemFragment extends BaseFragment {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page = 1;
-                getProblemData4Service(buildRequestParams(page));
+                isPullToRefresh = false;
+                getProblemData4Service(page);
             }
 
             @Override
@@ -162,7 +176,8 @@ public class AttentionProblemFragment extends BaseFragment {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page = page + 1;
-                getProblemData4Service(buildRequestParams(page));
+                isPullToRefresh = false;
+                getProblemData4Service(page);
             }
 
         });
@@ -184,29 +199,29 @@ public class AttentionProblemFragment extends BaseFragment {
     }
 
     /**
-     * 构造网络请求参数
-     *
-     * @param page 页码
-     * @return 网络请求参数
-     */
-    private RequestParams buildRequestParams(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(20));
-        return params;
-    }
-
-    /**
      * 网络请求方法
      *
-     * @param params 网络请求参数
+     * @param page 页码
      */
-    private void getProblemData4Service(RequestParams params) {
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getAttentionProblemInfoPath, new AttentionProblemRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+    private void getProblemData4Service(int page) {
+        if (isPullToRefresh) {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
+
+        String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
+        String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(20), token};
+        String url = addUrlAndParams(HttpNewServicePath.getAttentionProblemInfoPath, keyArray, valueArray);
+
+        try {
+            OkHttpManager.onGetAsynRequest(url,new AttentionProblemResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            failureLessPage();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void hideDialog() {
@@ -247,45 +262,51 @@ public class AttentionProblemFragment extends BaseFragment {
                             listAll.addAll(list);
                             adapter.setList(listAll);
                         } else {
+                            DeBugLog.e(TAG, "列表为Null");
                             failureLessPage();
                             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                         }
                     } else {
+                        DeBugLog.e(TAG, "第二层为Null");
                         failureLessPage();
                         Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
                 } else {
+                    DeBugLog.e(TAG, "第一层为Null");
                     failureLessPage();
                     Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析错误:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
 
-    private class AttentionProblemRequestCallBack extends RequestCallBack<String> {
+    private class AttentionProblemResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> response) {
-            String str = response.result;
-            DeBugLog.i(TAG, "关注的问答数据:" + str);
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "关注的问答数据:" + response);
             hideDialog();
-            bindData2View(str);
+            bindData2View(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
