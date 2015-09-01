@@ -61,7 +61,7 @@ public class AttentionActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_attention);
         ButterKnife.bind(this);
         initView();
-        ViewAction();
+        viewAction();
     }
 
     /**
@@ -88,11 +88,11 @@ public class AttentionActivity extends BaseAppCompatActivity {
         viewPager.setOffscreenPageLimit(3);
 
         //关注的旅图
-        AttentionGalleryFragment attentionGalleryFragment = AttentionGalleryFragment.newInstance(userSign, verification);
+        AttentionGalleryFragment attentionGalleryFragment = AttentionGalleryFragment.newInstance(userSign, verification, token);
         //关注的随游
-        AttentionSuiuuFragment attentionSuiuuFragment = AttentionSuiuuFragment.newInstance(userSign, verification);
+        AttentionSuiuuFragment attentionSuiuuFragment = AttentionSuiuuFragment.newInstance(userSign, verification, token);
         //关注的问答
-        AttentionProblemFragment attentionProblemFragment = AttentionProblemFragment.newInstance(userSign, verification);
+        AttentionProblemFragment attentionProblemFragment = AttentionProblemFragment.newInstance(userSign, verification, token);
 
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(attentionGalleryFragment);
@@ -107,10 +107,10 @@ public class AttentionActivity extends BaseAppCompatActivity {
         tabLayout.setTabsFromPagerAdapter(attentionPagerAdapter);
     }
 
-//    /**
-//     * 控件动作
-//     */
-    private void ViewAction() {
+    /**
+     * 控件动作
+     */
+    private void viewAction() {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -128,7 +128,6 @@ public class AttentionActivity extends BaseAppCompatActivity {
             }
 
         });
-
     }
 
     @Override

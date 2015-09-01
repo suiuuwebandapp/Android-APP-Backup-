@@ -46,16 +46,16 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
     private static final String USERSIGN = "userSign";
 
     @BindString(R.string.load_wait)
-    String dialogMsg;
+    String DialogMsg;
 
     @BindString(R.string.NoData)
-    String noData;
+    String NoData;
 
     @BindString(R.string.DataError)
-    String dataError;
+    String DataError;
 
     @BindString(R.string.NetworkAnomaly)
-    String netWorkError;
+    String NetWorkError;
 
     @Bind(R.id.personal_center_toolbar)
     Toolbar toolbar;
@@ -93,7 +93,7 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
         }
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(dialogMsg);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
@@ -143,7 +143,7 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(PersonalCenterActivity.this, noData, Toast.LENGTH_SHORT).show();
+            Toast.makeText(PersonalCenterActivity.this, NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 UserSuiuu userSuiuu = JsonUtils.getInstance().fromJSON(UserSuiuu.class, str);
@@ -157,16 +157,16 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
                                 + ",总数据数量:" + listAll.size());
                     } else {
                         failureLessPage();
-                        Toast.makeText(PersonalCenterActivity.this, noData, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PersonalCenterActivity.this, NoData, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     failureLessPage();
-                    Toast.makeText(PersonalCenterActivity.this, noData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PersonalCenterActivity.this, NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "数据绑定Error:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(PersonalCenterActivity.this, dataError, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PersonalCenterActivity.this, DataError, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -193,7 +193,7 @@ public class PersonalCenterActivity extends BaseAppCompatActivity {
             DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
             hideDialog();
             failureLessPage();
-            Toast.makeText(PersonalCenterActivity.this, netWorkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(PersonalCenterActivity.this, NetWorkError, Toast.LENGTH_SHORT).show();
         }
 
     }

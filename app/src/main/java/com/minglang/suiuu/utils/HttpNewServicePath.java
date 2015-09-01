@@ -7,6 +7,8 @@ package com.minglang.suiuu.utils;
  */
 public class HttpNewServicePath {
 
+    //***************************************************基本*****************************************************\\
+
     /**
      * 混淆码
      */
@@ -29,12 +31,10 @@ public class HttpNewServicePath {
      */
     public static String getToken = RootPath + "/app-main/get-token";
 
+    //***************************************************注册登录相关*****************************************************\\
+
     /**
      * 发送国际电话区号和手机号到服务器
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:国际电话区号 areaCode、手机号 phone
      */
     public static String SendAreaCodeAndPhoneNumber = RootPath + "/app-login/get-phone-code";
 
@@ -45,32 +45,24 @@ public class HttpNewServicePath {
 
     /**
      * 应用用户注册地址
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:手机号 phone、密码 password、确认密码 cPassword、昵称 nick、验证码 validateCode
      */
     public static String Register4SuiuuPath = RootPath + "/app-login/app-register";
 
     /**
      * 应用自带登陆URL
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:用户名 username 、密码 password
      */
     public static String SelfLoginPath = RootPath + "/app-login/app-login";
 
     /**
      * 第三方登陆地址
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:openId（第三方唯一标识符）、nickname（昵称）、sex （男：1、女：2、保密/不详：3）
-     * headImg 头像URL、type（1、QQ 2、微信 3、微博）
-     * sign 信息混淆（sign = md5 openId+type+混淆码）
      */
     public static String ThirdPartyPath = RootPath + "/app-login/access-login";
+
+    //****************************************************个人主页******************************************************\\
+
+    private static String getPersonalMainPagePath = RootPath + "/app-user-info/get-info";
+
+    //***************************************************问答社区相关*****************************************************\\
 
     /**
      * 得到问答社区页面上问题列表的数据
@@ -118,6 +110,36 @@ public class HttpNewServicePath {
     public static String serachProblemTitlePath = RootPath + "/app-qa/get-qa-title";
 
     /**
+     * 回答问题
+     */
+    public static String setAnswerToQuestionPath = RootPath + "/app-qa/add-answer";
+
+    //********************************************侧栏-随友-随游查看************************************************************\\
+
+    /**
+     * 获取我发布的随游
+     * <p/>
+     * 请求方式:GET
+     */
+    public static String getMyPublishedSuiuuPath = RootPath + "/app-travel/my-trip-list";
+
+    /**
+     * 获取我参加的随游
+     * <p/>
+     * 请求方式:GET
+     */
+    public static String MyParticipateSuiuuPath = RootPath + "/app-travel/my-join-trip-list";
+
+    //********************************************侧栏-随友-账户管理**************************************************************\\
+
+    /**
+     * 获取用户账户信息
+     */
+    public static String getUserAccountInfoPath = RootPath + "/app-account/account-list";
+
+    //********************************************侧栏-普通用户-预定订单***********************************************************\\
+
+    /**
      * 得到普通用户的已完成的订单
      */
     public static String getGeneralUserCompletedOrderPath = RootPath + "/app-user-order/get-finish-order";
@@ -126,16 +148,26 @@ public class HttpNewServicePath {
      * 得到普通用户未完成的订单
      */
     public static String getGeneralUserNotFinishOrderPath = RootPath + "/app-user-order/get-un-finish-order";
+
+    //***********************************************侧栏-普通用户-关注**************************************************************\\
+
     /**
-     * 获取用户账户信息
+     * 得到关注的旅图
      */
-    public static String getUserAccountInfoPath = RootPath + "/app-account/account-list";
+    public static String getAttentionTripPath = RootPath + "/app-attention/get-attention-tp";
 
+    /**
+     * 得到关注的问答
+     */
+    public static String getAttentionProblemInfoPath = RootPath + "/app-attention/get-attention-qa";
 
+    /**
+     * 得到关注的随游
+     */
+    public static String getAttentionSuiuuPath = RootPath + "/app-attention/get-collection-travel";
 
+    /*-----------------------随游相关-----------------------------*/
 
-
-/*-----------------------随游相关-----------------------------*/
     /**
      * 得到普通用户未完成的订单
      */
@@ -153,8 +185,8 @@ public class HttpNewServicePath {
      */
     public static String getSuiuuSearchTag = RootPath + "/app-travel/get-tag-list";
 
+    /*-----------------------旅图相关------------------------------------*/
 
-/*-----------------------旅图相关------------------------------------*/
     /**
      * 发布旅图文章
      */
@@ -163,6 +195,7 @@ public class HttpNewServicePath {
      * 根据id获得旅图详情
      */
     public static String getTripGalleryDetailById = RootPath + "/app-travel-picture/get-info";
+
     /**
      * 得到旅图列表
      */

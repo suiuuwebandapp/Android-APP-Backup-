@@ -87,6 +87,8 @@ public class LoginActivity extends BaseActivity {
     private static final String TYPE = "type";
     private static final String SIGN = "sign";
 
+    private static final String DATA = "data";
+
     @BindString(R.string.login_wait)
     String loginMessage;
 
@@ -110,6 +112,9 @@ public class LoginActivity extends BaseActivity {
 
     @BindString(R.string.NetworkAnomaly)
     String NetworkAnomaly;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     @BindString(R.string.QQAuthorizedComplete)
     String QQAuthorizedComplete;
@@ -551,7 +556,7 @@ public class LoginActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "国际电话区号数据解析异常:" + e.getMessage());
-                Toast.makeText(LoginActivity.this, repeatAreaCode, Toast.LENGTH_SHORT).show();
+                AbnormalHandle(response, repeatAreaCode);
             }
         }
 
@@ -595,7 +600,7 @@ public class LoginActivity extends BaseActivity {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(LoginActivity.this, "发送失败，请重试！", Toast.LENGTH_SHORT).show();
+                AbnormalHandle(response, "发送失败，请重试！");
             }
         }
 
@@ -648,6 +653,7 @@ public class LoginActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "注册返回的数据解析异常信息:" + e.getMessage());
+                AbnormalHandle(response, "注册失败，请稍候再试！");
             }
         }
 
@@ -657,6 +663,7 @@ public class LoginActivity extends BaseActivity {
             hideRegisterDialog();
             Toast.makeText(LoginActivity.this, "注册失败，请检查网络后再试！", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     /**
@@ -709,7 +716,7 @@ public class LoginActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "登陆返回的数据解析异常:" + e.getMessage());
-                Toast.makeText(LoginActivity.this, "获取数据失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                AbnormalHandle(response, "获取数据失败，请稍候再试！");
             }
         }
 
@@ -884,6 +891,7 @@ public class LoginActivity extends BaseActivity {
             } catch (Exception e) {
                 DeBugLog.e(TAG, "QQ登陆数据解析错误:" + e.getMessage());
                 Toast.makeText(LoginActivity.this, DataError, Toast.LENGTH_SHORT).show();
+                AbnormalHandle(response, DataError);
             }
         }
 
@@ -1036,8 +1044,7 @@ public class LoginActivity extends BaseActivity {
             } catch (Exception e) {
                 DeBugLog.e(TAG, "微信数据发送到服务器返回数据解析错误:" + e.getMessage());
                 hideWeChatDialog();
-                Toast.makeText(LoginActivity.this, DataError, Toast.LENGTH_SHORT).show();
-
+                AbnormalHandle(response, DataError);
             }
 
         }
@@ -1089,7 +1096,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
             DeBugLog.i(TAG, "新浪微博授权取消！");
-            Toast.makeText(LoginActivity.this, WeiboAuthorizedCancel,Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, WeiboAuthorizedCancel, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -1198,20 +1205,29 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onResponse(String response) {
-            if (!TextUtils.isEmpty(response)) {
-                UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, response);
-                if (userBack != null) {
-                    if (userBack.getStatus().equals("1")) {
-                        SuiuuInfo.WriteVerification(LoginActivity.this, userBack.getMessage());
-                        SuiuuInfo.WriteUserSign(LoginActivity.this, userBack.getData().getUserSign());
-                    } else {
-                        Toast.makeText(LoginActivity.this, "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(LoginActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
-                }
-            } else {
+            if (TextUtils.isEmpty(response)) {
                 Toast.makeText(LoginActivity.this, NoData, Toast.LENGTH_SHORT).show();
+            } else {
+                try {
+                    if (!TextUtils.isEmpty(response)) {
+                        UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, response);
+                        if (userBack != null) {
+                            if (userBack.getStatus().equals("1")) {
+                                SuiuuInfo.WriteVerification(LoginActivity.this, userBack.getMessage());
+                                SuiuuInfo.WriteUserSign(LoginActivity.this, userBack.getData().getUserSign());
+                            } else {
+                                Toast.makeText(LoginActivity.this, "数据获取失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(LoginActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(LoginActivity.this, NoData, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    DeBugLog.e(TAG, "微博登录错误:" + e.getMessage());
+                    AbnormalHandle(response, "数据获取失败，请稍候再试！");
+                }
             }
         }
 
@@ -1222,6 +1238,21 @@ public class LoginActivity extends BaseActivity {
             Toast.makeText(LoginActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void AbnormalHandle(String AbnormalField, String showInfo) {
+        try {
+            JSONObject object = new JSONObject(AbnormalField);
+            String status = object.getString(STATUS);
+            if (status.equals("-1")) {
+                Toast.makeText(this, SystemException, Toast.LENGTH_SHORT).show();
+            } else if (status.equals("-2")) {
+                Toast.makeText(this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, showInfo, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

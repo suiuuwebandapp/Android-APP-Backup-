@@ -208,6 +208,8 @@ public class MainActivity extends BaseActivity {
 
     private ExitReceiver exitReceiver;
 
+    private TokenBroadcastReceiver tokenBroadcastReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -232,8 +234,6 @@ public class MainActivity extends BaseActivity {
         if (!TextUtils.isEmpty(user_name)) {
             nickNameView.setText(user_name);
         }
-
-        getServiceTime();
     }
 
     /**
@@ -241,6 +241,7 @@ public class MainActivity extends BaseActivity {
      */
     private void initView() {
         mDrawerLayout.setFocusableInTouchMode(true);
+
         ViewGroup.LayoutParams sliderNavigationViewParams = sliderView.getLayoutParams();
         sliderNavigationViewParams.width = screenWidth / 4 * 3;
         sliderNavigationViewParams.height = screenHeight;
@@ -259,8 +260,29 @@ public class MainActivity extends BaseActivity {
             drawerSwitch.setImageURI(Uri.parse(strHeadImagePath));
         }
 
-        switchSuiuu.setChecked(true);
-        switchSuiuu.setText(SuiuuAccount);
+        String isPublisher = SuiuuInfo.ReadUserData(this).getIsPublisher();
+        DeBugLog.i(TAG, "isPublisher:" + isPublisher);
+
+        if (TextUtils.isEmpty(isPublisher)) {
+            switchSuiuu.setChecked(false);
+            switchSuiuu.setText(OrdinaryAccount);
+            switchSuiuu.setEnabled(false);
+            sideListView.setVisibility(View.GONE);
+            sideListView2.setVisibility(View.VISIBLE);
+        } else {
+            if (isPublisher.equals("1")) {
+                switchSuiuu.setChecked(true);
+                switchSuiuu.setText(SuiuuAccount);
+                sideListView.setVisibility(View.VISIBLE);
+                sideListView2.setVisibility(View.GONE);
+            } else {
+                switchSuiuu.setChecked(false);
+                switchSuiuu.setText(OrdinaryAccount);
+                switchSuiuu.setEnabled(false);
+                sideListView.setVisibility(View.GONE);
+                sideListView2.setVisibility(View.VISIBLE);
+            }
+        }
 
         MainSliderAdapter adapter =
                 new MainSliderAdapter(this, getResources().getStringArray(R.array.sideList));
@@ -273,22 +295,34 @@ public class MainActivity extends BaseActivity {
         sideListView2.setAdapter(adapter2);
 
         initFragment();
-
-        exitReceiver = new ExitReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(SettingActivity.class.getSimpleName());
-        this.registerReceiver(exitReceiver, intentFilter);
+        initReceiver();
     }
 
     private void initFragment() {
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
+
         switchViewState(NUMBER1);
+
         tripGalleryFragment = new TripGalleryFragment();
         informationFragment = InformationFragment.newInstance(userSign, verification);
         communityFragment = CommunityFragment.newInstance(userSign, verification);
+
         LoadDefaultFragment();
     }
+
+    private void initReceiver() {
+        exitReceiver = new ExitReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SettingActivity.class.getSimpleName());
+        this.registerReceiver(exitReceiver, intentFilter);
+
+        tokenBroadcastReceiver = new TokenBroadcastReceiver();
+        IntentFilter intentFilter2 = new IntentFilter();
+        intentFilter2.addAction(Intent.ACTION_TIME_TICK);
+        registerReceiver(tokenBroadcastReceiver, intentFilter2);
+    }
+
 
     /**
      * 控件相关事件
@@ -697,7 +731,6 @@ public class MainActivity extends BaseActivity {
 
                 @Override
                 public void onResponse(String response) {
-                    DeBugLog.i(TAG, "response:" + response);
                     try {
                         JSONObject object = new JSONObject(response);
                         String status = object.getString(STATUS);
@@ -717,6 +750,14 @@ public class MainActivity extends BaseActivity {
         } catch (IOException e) {
             DeBugLog.e(TAG, "IOException:" + e.getMessage());
         }
+    }
+
+    private ConnectionNetChangeReceiver myReceiver;
+
+    private void registerReceiver() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        myReceiver = new ConnectionNetChangeReceiver();
+        this.registerReceiver(myReceiver, filter);
     }
 
     @Override
@@ -739,6 +780,7 @@ public class MainActivity extends BaseActivity {
             tripGalleryFragment.onReflash();
         }
     }
+
     private class ExitReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -748,6 +790,22 @@ public class MainActivity extends BaseActivity {
                 MainActivity.this.finish();
             }
         }
+    }
+
+    private class TokenBroadcastReceiver extends BroadcastReceiver {
+
+        private int count = 0;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            count++;
+            DeBugLog.i(TAG, "count:" + count);
+            if (count == 120) {
+                getServiceTime();
+                count = 0;
+            }
+        }
+
     }
 
     private class MyOnClickListener implements OnClickListener {
@@ -833,20 +891,19 @@ public class MainActivity extends BaseActivity {
         } catch (Exception e) {
             DeBugLog.e(TAG, "反注册ExitBroadcastReceiver失败:" + e.getMessage());
         }
-        unregisterReceiver();
 
-    }
+        try {
+            unregisterReceiver(myReceiver);
+        } catch (Exception e) {
+            DeBugLog.e(TAG, "反注册ConnectionNetChangeReceiver失败:" + e.getMessage());
+        }
 
-    private ConnectionNetChangeReceiver myReceiver;
+        try {
+            unregisterReceiver(tokenBroadcastReceiver);
+        } catch (Exception e) {
+            DeBugLog.e(TAG, "反注册TokenBroadcastReceiver失败:" + e.getMessage());
+        }
 
-    private void registerReceiver() {
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        myReceiver = new ConnectionNetChangeReceiver();
-        this.registerReceiver(myReceiver, filter);
-    }
-
-    private void unregisterReceiver() {
-        this.unregisterReceiver(myReceiver);
     }
 
 }

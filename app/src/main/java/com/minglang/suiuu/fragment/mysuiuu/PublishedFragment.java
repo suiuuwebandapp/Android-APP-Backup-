@@ -13,11 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase.OnRefreshListener2;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
@@ -28,10 +23,15 @@ import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.Published;
 import com.minglang.suiuu.entity.Published.PublishedData;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +52,7 @@ public class PublishedFragment extends BaseFragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     private static final String USER_SIGN = "userSign";
     private static final String PAGE = "page";
@@ -62,6 +63,9 @@ public class PublishedFragment extends BaseFragment {
     private static final String PRICE = "price";
     private static final String TRIP_ID = "tripId";
     private static final String TITLE_IMG = "titleImg";
+
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
 
     private String userSign;
     private String verification;
@@ -78,7 +82,12 @@ public class PublishedFragment extends BaseFragment {
     @BindString(R.string.DataException)
     String DataException;
 
+    @BindString(R.string.SystemException)
+    String SystemException;
+
     private int page = 1;
+
+    private boolean isPullToRefresh = true;
 
     @Bind(R.id.my_suiuu_published_list_view)
     PullToRefreshListView pullToRefreshListView;
@@ -95,13 +104,15 @@ public class PublishedFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
+     * @param param3 Parameter 3.
      * @return A new instance of fragment PublishedFragment.
      */
-    public static PublishedFragment newInstance(String param1, String param2) {
+    public static PublishedFragment newInstance(String param1, String param2, String param3) {
         PublishedFragment fragment = new PublishedFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -116,6 +127,7 @@ public class PublishedFragment extends BaseFragment {
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
+            token = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -124,9 +136,9 @@ public class PublishedFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_published, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
+        viewAction();
         getMyPublishedSuiuuData(page);
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -149,7 +161,7 @@ public class PublishedFragment extends BaseFragment {
         pullToRefreshListView.setAdapter(publishedAdapter);
     }
 
-    private void ViewAction() {
+    private void viewAction() {
         pullToRefreshListView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
 
             @Override
@@ -159,6 +171,7 @@ public class PublishedFragment extends BaseFragment {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page = 1;
+                isPullToRefresh = false;
                 getMyPublishedSuiuuData(page);
             }
 
@@ -169,6 +182,7 @@ public class PublishedFragment extends BaseFragment {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page++;
+                isPullToRefresh = false;
                 getMyPublishedSuiuuData(page);
             }
 
@@ -196,16 +210,24 @@ public class PublishedFragment extends BaseFragment {
      * @param page 页码
      */
     private void getMyPublishedSuiuuData(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(USER_SIGN, userSign);
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(10));
+        if (isPullToRefresh) {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
 
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpMethod.POST,
-                HttpServicePath.MyPublishedSuiuuPath, new MyPublishedRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String[] keyArray = new String[]{USER_SIGN, HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
+        String[] valueArray = new String[]{userSign, verification, String.valueOf(page), String.valueOf(10), token};
+        String url = addUrlAndParams(HttpNewServicePath.getMyPublishedSuiuuPath, keyArray, valueArray);
+        DeBugLog.i(TAG, "请求URL:" + url);
+        try {
+            OkHttpManager.onGetAsynRequest(url, new MyPublishedResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            failureLessPage();
+            hideDialog();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -258,37 +280,40 @@ public class PublishedFragment extends BaseFragment {
             } catch (Exception e) {
                 failureLessPage();
                 DeBugLog.e(TAG, "解析错误:" + e.getMessage());
-                Toast.makeText(getActivity(), DataException, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(getActivity(), DataException, Toast.LENGTH_SHORT).show();
+                }
             }
 
         }
 
     }
 
-    private class MyPublishedRequestCallBack extends RequestCallBack<String> {
+    private class MyPublishedResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "已发布的随游数据:" + response);
             hideDialog();
-            bindData2View(str);
+            bindData2View(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
             failureLessPage();
             hideDialog();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
-
     }
 
 }
