@@ -21,6 +21,7 @@ import java.util.Locale;
 public class BaseActivity extends FragmentActivity {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
+    public static final String TOKEN = "token";
 
     public ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -28,26 +29,32 @@ public class BaseActivity extends FragmentActivity {
      * 状态栏控制
      */
     public SystemBarTintManager systemBarTintManager;
+
     /**
      * 状态栏设置
      */
     public SystemBarTintManager.SystemBarConfig systemBarConfig;
+
     /**
      * 状态栏高度
      */
     public int statusBarHeight;
+
     /**
      * 虚拟按键高度
      */
     public int navigationBarHeight;
+
     /**
      * 虚拟按键宽度(?)
      */
     public int navigationBarWidth;
+
     /**
      * 是否有虚拟按键
      */
     public boolean isNavigationBar;
+
     /**
      * 检查系统版本(是否高于4.4)
      */
@@ -59,6 +66,7 @@ public class BaseActivity extends FragmentActivity {
      * 屏幕宽度
      */
     public int screenWidth;
+
     /**
      * 屏幕高度
      */
@@ -82,6 +90,7 @@ public class BaseActivity extends FragmentActivity {
 
     public String userSign;
     public String verification;
+    public String token;
 
     public boolean isZhCnLanguage;
 

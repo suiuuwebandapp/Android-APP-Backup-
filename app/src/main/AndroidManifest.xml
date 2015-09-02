@@ -321,7 +321,7 @@
             android:label="@string/title_activity_community_search"
             android:theme="@style/AppMainTheme"/>
         <activity
-            android:name=".activity.PersonalCenterActivity"
+            android:name=".activity.PersonalMainPagerActivity"
             android:label="@string/title_activity_personal_center"
             android:theme="@style/AppMainTheme"/>
         <activity

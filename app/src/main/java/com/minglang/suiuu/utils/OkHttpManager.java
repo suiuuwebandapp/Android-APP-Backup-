@@ -2,6 +2,7 @@ package com.minglang.suiuu.utils;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -25,6 +26,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.FileNameMap;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Set;
 
@@ -638,6 +640,29 @@ public class OkHttpManager {
     private String getFileName(String path) {
         int separatorIndex = path.lastIndexOf("/");
         return (separatorIndex < 0) ? path : path.substring(separatorIndex + 1, path.length());
+    }
+
+    public static String addUrlAndParams(String url, String[] keyArray, String[] valueArray) {
+        String _url = url + "?";
+        for (int i = 0; i < keyArray.length; i++) {
+            if (!TextUtils.isEmpty(valueArray[i])) {
+                String key = keyArray[i];
+                String value;
+                try {
+                    value = URLEncoder.encode(valueArray[i], "UTF-8");
+                } catch (Exception e) {
+                    DeBugLog.e(TAG, e.getMessage());
+                    value = "";
+                }
+                if (keyArray.length > i + 1) {
+                    _url = _url + key + "=" + value + "&";
+                } else {
+                    _url = _url + key + "=" + value;
+                }
+
+            }
+        }
+        return _url;
     }
 
     /**

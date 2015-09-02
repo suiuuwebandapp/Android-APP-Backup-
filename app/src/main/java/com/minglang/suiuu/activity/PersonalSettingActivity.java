@@ -23,11 +23,6 @@ import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
 import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSFile;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.CircleImageView;
@@ -36,15 +31,18 @@ import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.squareup.okhttp.Request;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -62,6 +60,18 @@ public class PersonalSettingActivity extends BaseActivity {
 
     private static final String SUIUU = "suiuu";
 
+    private static final String HEAD_IMG = "headImg";
+    private static final String SEX = "sex";
+    private static final String NICK_NAME = "nickname";
+    private static final String BIRTHDAY = "birthday";
+    private static final String INTRO = "intro";
+    private static final String INFO = "info";
+    private static final String COUNTRY_ID = "countryId";
+    private static final String CITY_ID = "cityId";
+    private static final String LON = "lon";
+    private static final String LAT = "lat";
+    private static final String PROFESSION = "profession";
+
     @BindString(R.string.uploading)
     String uploading;
 
@@ -75,7 +85,7 @@ public class PersonalSettingActivity extends BaseActivity {
     String dataError;
 
     @BindString(R.string.NetworkAnomaly)
-    String networkError;
+    String NetworkError;
 
     @BindString(R.string.sex)
     String strSex;
@@ -142,7 +152,7 @@ public class PersonalSettingActivity extends BaseActivity {
     private String nativeImagePath;
 
     private String netWorkImagePath;
-    
+
     private ProgressDialog upLoadDialog;
 
     private DisplayImageOptions options;
@@ -176,7 +186,7 @@ public class PersonalSettingActivity extends BaseActivity {
 
                 case UP_LOAD_FAIL:
                     hideDialog();
-                    Toast.makeText(PersonalSettingActivity.this, networkError, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PersonalSettingActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
                     break;
 
                 case UP_LOADING:
@@ -217,6 +227,9 @@ public class PersonalSettingActivity extends BaseActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(uploadingData);
         progressDialog.setCanceledOnTouchOutside(false);
+
+        verification = SuiuuInfo.ReadVerification(this);
+        token = SuiuuInfo.ReadAppTimeSign(this);
 
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.default_head_image)
@@ -390,27 +403,35 @@ public class PersonalSettingActivity extends BaseActivity {
         }
     }
 
+
     private void setPersonalMessage4Service() {
-        String verification = SuiuuInfo.ReadVerification(this);
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
 
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("headImg", netWorkImagePath);
-        params.addBodyParameter("sex", strGender);
-        params.addBodyParameter("nickname", str_NickName);
-        params.addBodyParameter("birthday", data.getBirthday());
-        params.addBodyParameter("intro", str_Sign);
-        params.addBodyParameter("info", data.getInfo());
-        params.addBodyParameter("countryId", countryId);
-        params.addBodyParameter("cityId", cityId);
-        params.addBodyParameter("lon", data.getLon());
-        params.addBodyParameter("lat", data.getLat());
-        params.addBodyParameter("profession", str_Trade);
-        params.addBodyParameter(HttpServicePath.key, verification);
+        OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[12];
+        paramsArray[0] = new OkHttpManager.Params(HEAD_IMG, netWorkImagePath);
+        paramsArray[1] = new OkHttpManager.Params(SEX, strGender);
+        paramsArray[2] = new OkHttpManager.Params(NICK_NAME, str_NickName);
+        paramsArray[3] = new OkHttpManager.Params(BIRTHDAY, data.getBirthday());
+        paramsArray[4] = new OkHttpManager.Params(INTRO, str_Sign);
+        paramsArray[5] = new OkHttpManager.Params(INFO, data.getInfo());
+        paramsArray[6] = new OkHttpManager.Params(COUNTRY_ID, countryId);
+        paramsArray[7] = new OkHttpManager.Params(CITY_ID, cityId);
+        paramsArray[8] = new OkHttpManager.Params(LON, data.getLon());
+        paramsArray[9] = new OkHttpManager.Params(LAT, data.getLat());
+        paramsArray[10] = new OkHttpManager.Params(PROFESSION, str_Trade);
+        paramsArray[11] = new OkHttpManager.Params(HttpServicePath.key, verification);
 
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.upDatePersonalStatus, new PersonalSettingRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String url = HttpNewServicePath.upDatePersonalStatus + "?" + TOKEN + "=" + token;
+
+        try {
+            OkHttpManager.onPostAsynRequest(url, new PersonalSettingResultCallback(), paramsArray);
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            Toast.makeText(PersonalSettingActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void hideDialog() {
@@ -495,32 +516,21 @@ public class PersonalSettingActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 发送个人资料到服务器的网络请求回调接口
-     */
-    private class PersonalSettingRequestCallBack extends RequestCallBack<String> {
+    private class PersonalSettingResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "返回的数据:" + response);
             hideDialog();
-            String str = stringResponseInfo.result;
-            bindData2View(str);
+            bindData2View(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
+        public void onError(Request request, Exception e) {
             DeBugLog.i(TAG, "数据更新异常:" + e.getMessage());
             hideDialog();
-            Toast.makeText(PersonalSettingActivity.this, networkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(PersonalSettingActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
-
     }
 
 }

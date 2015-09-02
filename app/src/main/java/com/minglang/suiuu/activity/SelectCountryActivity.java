@@ -3,6 +3,7 @@ package com.minglang.suiuu.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -10,11 +11,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.SelectCountryAdapter;
 import com.minglang.suiuu.base.BaseActivity;
@@ -26,11 +22,15 @@ import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.CharacterParser;
 import com.minglang.suiuu.utils.CountryNameComparator;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.squareup.okhttp.Request;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -114,6 +114,13 @@ public class SelectCountryActivity extends BaseActivity {
         countryNameComparator = new CountryNameComparator();
 
         sideBar.setTextView(textDialog);
+
+        verification = SuiuuInfo.ReadVerification(this);
+        try {
+            token = URLEncoder.encode(SuiuuInfo.ReadAppTimeSign(this), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     private void viewAction() {
@@ -157,13 +164,19 @@ public class SelectCountryActivity extends BaseActivity {
     }
 
     private void getCountryData4Service() {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
 
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getCountryData, new SelectCountryRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String url = HttpNewServicePath.getCountryData + "?" + HttpNewServicePath.key + "=" + verification +
+                "&" + TOKEN + "=" + token;
+        try {
+            OkHttpManager.onGetAsynRequest(url, new SelectCountryResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            Toast.makeText(SelectCountryActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void hideDialog() {
@@ -206,47 +219,39 @@ public class SelectCountryActivity extends BaseActivity {
         return list;
     }
 
-    /**
-     * 国家列表网络请求回调接口
-     */
-    private class SelectCountryRequestCallBack extends RequestCallBack<String> {
+    private class SelectCountryResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            String str = stringResponseInfo.result;
-            DeBugLog.i(TAG, "返回的国家信息数据:" + str);
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "返回的国家信息数据:" + response);
             hideDialog();
-            try {
-                Country country = JsonUtils.getInstance().fromJSON(Country.class, str);
-                List<CountryData> countryDataList = country.getData();
-                if (countryDataList != null && countryDataList.size() > 0) {
-                    list = TransformationData(countryDataList);
-                    Collections.sort(list, countryNameComparator);
-                    adapter = new SelectCountryAdapter(SelectCountryActivity.this, list);
-                    countryListView.setAdapter(adapter);
-                } else {
-                    Toast.makeText(SelectCountryActivity.this, NoData, Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(response)) {
+                Toast.makeText(SelectCountryActivity.this, NoData, Toast.LENGTH_SHORT).show();
+            } else {
+                try {
+                    Country country = JsonUtils.getInstance().fromJSON(Country.class, response);
+                    List<CountryData> countryDataList = country.getData();
+                    if (countryDataList != null && countryDataList.size() > 0) {
+                        list = TransformationData(countryDataList);
+                        Collections.sort(list, countryNameComparator);
+                        adapter = new SelectCountryAdapter(SelectCountryActivity.this, list);
+                        countryListView.setAdapter(adapter);
+                    } else {
+                        Toast.makeText(SelectCountryActivity.this, NoData, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                    Toast.makeText(SelectCountryActivity.this, DataError, Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
-                Toast.makeText(SelectCountryActivity.this, DataError, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "国家数据请求失败:" + s);
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "国家数据请求失败:" + e.getMessage());
             hideDialog();
             Toast.makeText(SelectCountryActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }
-
     }
 
 }

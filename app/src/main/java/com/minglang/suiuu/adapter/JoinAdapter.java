@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -11,26 +12,25 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuUserInfoActivity;
 import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.ConfirmJoinSuiuu;
+import com.minglang.suiuu.entity.ConfirmJoinSuiuu.ConfirmJoinSuiuuData.PublisherListEntity;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -44,11 +44,13 @@ public class JoinAdapter extends BaseAdapter {
 
     private Context context;
 
-    private List<ConfirmJoinSuiuu.ConfirmJoinSuiuuData.PublisherListEntity> list;
+    private List<PublisherListEntity> list;
 
     private ImageLoader imageLoader;
 
     private DisplayImageOptions options;
+
+    private ProgressDialog progressDialog;
 
     public JoinAdapter(Context context) {
         this.context = context;
@@ -61,7 +63,7 @@ public class JoinAdapter extends BaseAdapter {
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
-    public void setList(List<ConfirmJoinSuiuu.ConfirmJoinSuiuuData.PublisherListEntity> list) {
+    public void setList(List<PublisherListEntity> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -114,6 +116,12 @@ public class JoinAdapter extends BaseAdapter {
         return convertView;
     }
 
+    private void hideDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     private class LookSuiuuDetailsClickListener implements View.OnClickListener {
 
         private int index;
@@ -144,75 +152,62 @@ public class JoinAdapter extends BaseAdapter {
             String tripId = list.get(index).getTripId();
             String tripPublisherId = list.get(index).getTripPublisherId();
 
-            RequestParams params = new RequestParams();
-            params.addBodyParameter("userSign", SuiuuInfo.ReadUserSign(context));
-            params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(context));
-            params.addBodyParameter("tripId", tripId);
-            params.addBodyParameter("tripPublisherId", tripPublisherId);
+            String[] keyArray = new String[]{"userSign", HttpServicePath.key, "tripId", "tripPublisherId", "token"};
+            String[] valueArray = new String[]{SuiuuInfo.ReadUserSign(context), SuiuuInfo.ReadVerification(context),
+                    tripId, tripPublisherId, SuiuuInfo.ReadAppTimeSign(context)};
 
-            SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                    HttpServicePath.removeSuiuuUserPath, new RemoveRequestCallBack(index));
-            httpRequest.setParams(params);
-            httpRequest.executive();
+            String url = OkHttpManager.addUrlAndParams(HttpNewServicePath.removeSuiuuUserPath, keyArray, valueArray);
+
+            try {
+                OkHttpManager.onGetAsynRequest(url, new RemoveResultCallback(index));
+            } catch (IOException e) {
+                e.printStackTrace();
+                hideDialog();
+                Toast.makeText(context, context.getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            }
         }
 
     }
 
-    private ProgressDialog progressDialog;
-
-    private class RemoveRequestCallBack extends RequestCallBack<String> {
+    private class RemoveResultCallback extends OkHttpManager.ResultCallback<String> {
 
         private int index;
 
-        private RemoveRequestCallBack(int index) {
+        private RemoveResultCallback(int index) {
             this.index = index;
+
             progressDialog = new ProgressDialog(context);
-            progressDialog.setMessage("请稍候...");
+            progressDialog.setMessage(context.getResources().getString(R.string.load_wait));
             progressDialog.setCanceledOnTouchOutside(false);
         }
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
-            String str = responseInfo.result;
-            DeBugLog.i(TAG, "移除返回数据:" + str);
-            try {
-                JSONObject object = new JSONObject(str);
-                String status = object.getString("status");
-                if (status.equals("1")) {
-                    list.remove(index);
-                    setList(list);
-                } else {
-                    Toast.makeText(context, context.getResources().getString(R.string.NetworkError),
-                            Toast.LENGTH_SHORT).show();
+        public void onResponse(String response) {
+            hideDialog();
+            if (TextUtils.isEmpty(response)) {
+                Toast.makeText(context, context.getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+            } else {
+                try {
+                    JSONObject object = new JSONObject(response);
+                    String status = object.getString("status");
+                    if (status.equals("1")) {
+                        list.remove(index);
+                        setList(list);
+                    } else {
+                        Toast.makeText(context, context.getResources().getString(R.string.NetworkError), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    DeBugLog.e(TAG, "解析错误:" + e.getMessage());
+                    Toast.makeText(context, context.getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                DeBugLog.e(TAG, "解析错误:" + e.getMessage());
             }
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",error:" + s);
+        public void onError(Request request, Exception e) {
 
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
-            Toast.makeText(context, context.getResources().getString(R.string.NetworkAnomaly),
-                    Toast.LENGTH_SHORT).show();
         }
+
     }
 
 }

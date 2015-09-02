@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.UserSuiuu.UserSuiuuData;
+import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData.TripListEntity;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
 
 import java.util.List;
@@ -19,18 +19,19 @@ import java.util.List;
 /**
  * Created by Administrator on 2015/5/11.
  * <p/>
- * 用户个人主页随游列表数据适配器
+ * 用户个人主页列表数据适配器
  */
 public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<UserSuiuuData> list;
+    private List<TripListEntity> list;
 
     private RecyclerViewOnItemClickListener onItemClickListener;
 
     public PersonalSuiuuAdapter() {
+
     }
 
-    public void setList(List<UserSuiuuData> list) {
+    public void setList(List<TripListEntity> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -49,6 +50,7 @@ public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final PersonalSuiuuViewHolder suiuuViewHolder = (PersonalSuiuuViewHolder) holder;
+
         String imagePath = list.get(position).getHeadImg();
         if (!TextUtils.isEmpty(imagePath)) {
             Uri uri = Uri.parse(imagePath);

@@ -12,16 +12,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.SuiuuInfo;
+import com.squareup.okhttp.Request;
+
+import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -52,7 +51,7 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
     String YourNameNotNull;
 
     @BindString(R.string.Loading)
-    String loading;
+    String DialogMsg;
 
     @Bind(R.id.add_receivables_tool_bar)
     Toolbar toolbar;
@@ -99,9 +98,10 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
         }
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(loading);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
+        token = SuiuuInfo.ReadAppTimeSign(this);
     }
 
     private void viewAction() {
@@ -115,33 +115,31 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
                 } else if (TextUtils.isEmpty(strUserName)) {
                     Toast.makeText(context, YourNameNotNull, Toast.LENGTH_SHORT).show();
                 } else {
-                    setAccountInfo4Service(buildRequestParams(strAccount, strUserName));
+                    setAccountInfo4Service(strAccount, strUserName);
                 }
             }
         });
     }
 
-    private RequestParams buildRequestParams(String account, String userName) {
-        RequestParams params = new RequestParams();
-        if (isAccount) {
-            params.addBodyParameter(ACCOUNT, account);
-        } else {
-            params.addBodyParameter(ACCOUNT, account);
+    private void setAccountInfo4Service(String account, String userName) {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
         }
-        params.addBodyParameter(NAME, userName);
-        return params;
-    }
 
-    private void setAccountInfo4Service(RequestParams params) {
-        SuiuuHttp suiuuHttp = new SuiuuHttp();
-        suiuuHttp.setHttpMethod(HttpRequest.HttpMethod.POST);
-        if (isAccount) {
-            suiuuHttp.setHttpPath(HttpServicePath.addAliPayUserInfo);
-        } else {
-            suiuuHttp.setHttpPath(HttpServicePath.addWeChatAUserInfo);
+        OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[2];
+        paramsArray[0] = new OkHttpManager.Params(ACCOUNT, account);
+        paramsArray[1] = new OkHttpManager.Params(NAME, userName);
+
+        String url = (isAccount ? HttpNewServicePath.addAliPayUserInfo : HttpNewServicePath.addWeChatAUserInfo)
+                + "?" + TOKEN + "=" + token;
+        DeBugLog.i(TAG, "URL:" + url);
+
+        try {
+            OkHttpManager.onPostAsynRequest(url, new AddReceivablesWayResultCallback(), paramsArray);
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
         }
-        suiuuHttp.setParams(params);
-        suiuuHttp.setRequestCallBack(new AddReceivablesWayCallBack());
     }
 
     private void hideDialog() {
@@ -172,26 +170,17 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class AddReceivablesWayCallBack extends RequestCallBack<String> {
+    private class AddReceivablesWayResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "返回信息:" + response);
+            hideDialog();
         }
 
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            hideDialog();
-            String str = responseInfo.result;
-            DeBugLog.i(TAG, "返回信息:" + str);
-        }
+        public void onError(Request request, Exception e) {
 
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
-            hideDialog();
         }
 
     }

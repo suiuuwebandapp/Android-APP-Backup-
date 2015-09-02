@@ -12,22 +12,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.CommunityDetailsActivity;
 import com.minglang.suiuu.adapter.PersonalProblemAdapter;
+import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.UserProblem;
 import com.minglang.suiuu.entity.UserProblem.UserProblemData.UserProblemItemData;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.squareup.okhttp.Request;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +39,7 @@ import butterknife.ButterKnife;
  * Use the {@link PersonalProblemFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PersonalProblemFragment extends Fragment {
+public class PersonalProblemFragment extends BaseFragment {
 
     private static final String TAG = PersonalProblemFragment.class.getSimpleName();
 
@@ -117,8 +116,8 @@ public class PersonalProblemFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_personal_problem, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
-        getPersonalSuiuuData(buildRequestParams(page));
+        viewAction();
+        getPersonalSuiuuData();
         return rootView;
     }
 
@@ -141,7 +140,7 @@ public class PersonalProblemFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-    private void ViewAction() {
+    private void viewAction() {
         //        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
         //            @Override
         //            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -174,26 +173,24 @@ public class PersonalProblemFragment extends Fragment {
 
     }
 
-    /**
-     * 构造网络请求参数
-     *
-     * @param page 页码
-     * @return 网络请求参数
-     */
-    public RequestParams buildRequestParams(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(10));
-        params.addBodyParameter(USERSIGN, userSign);
-        params.addBodyParameter(HttpServicePath.key, verification);
-        return params;
-    }
+    private void getPersonalSuiuuData() {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
 
-    public void getPersonalSuiuuData(RequestParams params) {
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getPersonalProblemDataPath, new PersonalProblemRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String[] keyArray = new String[]{PAGE, NUMBER, USERSIGN, HttpServicePath.key, TOKEN};
+        String[] valueArray = new String[]{String.valueOf(page), String.valueOf(10),
+                userSign, verification, token};
+        String url = addUrlAndParams(HttpNewServicePath.getPersonalProblemDataPath, keyArray, valueArray);
+
+        try {
+            OkHttpManager.onGetAsynRequest(url, new PersonalProblemResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            failureLessPage();
+            Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void hideDialog() {
@@ -245,25 +242,18 @@ public class PersonalProblemFragment extends Fragment {
         }
     }
 
-    private class PersonalProblemRequestCallBack extends RequestCallBack<String> {
+    private class PersonalProblemResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "Problem:" + response);
             hideDialog();
-            bindData2View(str);
+            bindData2View(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();

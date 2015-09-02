@@ -90,6 +90,7 @@ public class HttpServicePath {
      * <p/>
      * 请求参数:需要收藏文章的id:articleId
      */
+    @Deprecated
     public static String CollectionArticlePath = RootPath + "/attention/add-collection-article";
     /**
      * 收藏旅图
@@ -185,10 +186,6 @@ public class HttpServicePath {
 
     /**
      * 得到城市列表
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:国家ID countryId
      */
     public static String getCityListPath = RootPath + "/app-travel/get-city";
 
