@@ -1,35 +1,24 @@
-
 <in.srain.cube.views.ptr.PtrClassicFrameLayout
-    android:id="@+id/general_order_details_head_frame"
     xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
-    xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/tools"
+    android:id="@+id/general_order_details_head_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
-    cube_ptr:ptr_duration_to_close="200"
-    cube_ptr:ptr_duration_to_close_header="1000"
-    cube_ptr:ptr_keep_header_when_refresh="true"
-    cube_ptr:ptr_pull_to_fresh="false"
-    cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
-    cube_ptr:ptr_resistance="1.7">
-
+    android:layout_alignParentTop="true"
+    android:contentDescription="@string/app_name"
+    android:src="@drawable/back">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <ScrollView
             android:id="@+id/general_order_details_parent_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/layout_200dp">
@@ -60,7 +49,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                         android:text="@string/app_name"
                         android:textColor="@color/white"
                         android:textSize="@dimen/layout_16sp" />
-
                     <TextView
                         android:id="@+id/order_details_title"
                         android:layout_width="match_parent"
@@ -75,7 +63,6 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                         android:text="@string/app_name"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/white" />
-
                     <RatingBar
                         android:id="@+id/order_details_indicator"
                         style="?android:attr/ratingBarStyleSmall"
@@ -317,7 +304,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/layout_60dp"
                 android:layout_marginStart="@dimen/layout_60dp"
-                android:text="@string/CancelOrder"
+                android:text="取消订单"
                 bootstrapbutton:bb_roundedCorners="true"
                 bootstrapbutton:bb_size="small"
                 bootstrapbutton:bb_type="warning" />
@@ -331,10 +318,10 @@ xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/layout_60dp"
                 android:layout_marginRight="@dimen/layout_60dp"
-                android:text="@string/AgainPay"
+                android:text="支付"
                 bootstrapbutton:bb_roundedCorners="true"
                 bootstrapbutton:bb_size="small"
-                bootstrapbutton:bb_type="info"/>
+                bootstrapbutton:bb_type="info" />
 
         </RelativeLayout>
 
