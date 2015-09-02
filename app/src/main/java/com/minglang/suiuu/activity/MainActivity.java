@@ -823,13 +823,13 @@ public class MainActivity extends BaseActivity {
                     break;
 
                 case R.id.head_image:
-                    Intent headIntent = new Intent(MainActivity.this, PersonalCenterActivity.class);
+                    Intent headIntent = new Intent(MainActivity.this, PersonalMainPagerActivity.class);
                     startActivity(headIntent);
                     mDrawerLayout.closeDrawer(sliderView);
                     break;
 
                 case R.id.nick_name:
-                    Intent nickIntent = new Intent(MainActivity.this, PersonalCenterActivity.class);
+                    Intent nickIntent = new Intent(MainActivity.this, PersonalMainPagerActivity.class);
                     startActivity(nickIntent);
                     mDrawerLayout.closeDrawer(sliderView);
                     break;

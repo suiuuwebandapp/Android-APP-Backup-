@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.UserTravel.UserTravelData.UserTravelItemData;
+import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData.TripListEntity;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class PersonalTravelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<UserTravelItemData> list;
+    private List<TripListEntity> list;
 
     private RecyclerViewOnItemClickListener onItemClickListener;
 
@@ -31,7 +31,7 @@ public class PersonalTravelAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     }
 
-    public void setList(List<UserTravelItemData> list) {
+    public void setList(List<TripListEntity> list) {
         this.list = list;
         notifyDataSetChanged();
     }

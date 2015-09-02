@@ -10,11 +10,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.SelectCityAdapter;
 import com.minglang.suiuu.base.BaseActivity;
@@ -25,11 +20,14 @@ import com.minglang.suiuu.entity.CityData;
 import com.minglang.suiuu.utils.CharacterParser;
 import com.minglang.suiuu.utils.CityNameComparator;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.squareup.okhttp.Request;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +50,7 @@ public class SelectCityActivity extends BaseActivity {
     private static final String CITY_NAME = "cityName";
 
     @BindString(R.string.load_wait)
-    String wait;
+    String DialogMsg;
 
     @BindString(R.string.NoData)
     String NoData;
@@ -110,11 +108,14 @@ public class SelectCityActivity extends BaseActivity {
      */
     private void initView() {
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(wait);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         characterParser = CharacterParser.getInstance();
         cityNameComparator = new CityNameComparator();
+
+        verification = SuiuuInfo.ReadVerification(this);
+        token = SuiuuInfo.ReadAppTimeSign(this);
     }
 
     private void viewAction() {
@@ -163,14 +164,22 @@ public class SelectCityActivity extends BaseActivity {
     }
 
     private void getSelectCity4Service() {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, SuiuuInfo.ReadVerification(this));
-        params.addBodyParameter(COUNTRY_ID, countryId);
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
 
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getCityListPath, new SelectCityRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String[] keyArray = new String[]{HttpServicePath.key, COUNTRY_ID, TOKEN};
+        String[] valueArray = new String[]{verification, countryId, token};
+        String url = addUrlAndParams(HttpNewServicePath.getCityListPath, keyArray, valueArray);
+
+        try {
+            OkHttpManager.onGetAsynRequest(url, new SelectCityResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            Toast.makeText(SelectCityActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void hideDialog() {
@@ -194,27 +203,16 @@ public class SelectCityActivity extends BaseActivity {
         return list;
     }
 
-    /**
-     * 城市列表网络请求回调接口
-     */
-    private class SelectCityRequestCallBack extends RequestCallBack<String> {
+    private class SelectCityResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+        public void onResponse(String response) {
             hideDialog();
-            String str = stringResponseInfo.result;
-            if (TextUtils.isEmpty(str)) {
+            if (TextUtils.isEmpty(response)) {
                 Toast.makeText(SelectCityActivity.this, NoData, Toast.LENGTH_SHORT).show();
             } else {
                 try {
-                    City city = JsonUtils.getInstance().fromJSON(City.class, str);
+                    City city = JsonUtils.getInstance().fromJSON(City.class, response);
                     List<CityData> dataList = city.getData();
                     list = TransformationData(dataList);
                     Collections.sort(list, cityNameComparator);
@@ -225,12 +223,11 @@ public class SelectCityActivity extends BaseActivity {
                     Toast.makeText(SelectCityActivity.this, DataError, Toast.LENGTH_SHORT).show();
                 }
             }
-
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",请求失败:" + s);
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             Toast.makeText(SelectCityActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }

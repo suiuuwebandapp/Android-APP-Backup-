@@ -31,6 +31,16 @@ public class HttpNewServicePath {
      */
     public static String getToken = RootPath + "/app-main/get-token";
 
+    /**
+     * 得到选择国家的数据
+     */
+    public static String getCountryData = RootPath + "/app-travel/get-country";
+
+    /**
+     * 得到城市列表
+     */
+    public static String getCityListPath = RootPath + "/app-travel/get-city";
+
     //***************************************************注册登录相关*****************************************************\\
 
     /**
@@ -60,7 +70,7 @@ public class HttpNewServicePath {
 
     //****************************************************个人主页******************************************************\\
 
-    private static String getPersonalMainPagePath = RootPath + "/app-user-info/get-info";
+    public static String getPersonalMainPagePath = RootPath + "/app-user-info/get-info";
 
     //***************************************************问答社区相关*****************************************************\\
 
@@ -130,6 +140,37 @@ public class HttpNewServicePath {
      */
     public static String MyParticipateSuiuuPath = RootPath + "/app-travel/my-join-trip-list";
 
+    /**
+     * 移除随友
+     */
+    public static String removeSuiuuUserPath = RootPath + "/app-travel/remove-publisher";
+
+    public static String ignoreDataPath = RootPath + "/app-travel/oppose-apply";
+
+    public static String agreeDataPath = RootPath + "/app-travel/agree-apply";
+
+    //********************************************侧栏-随友-随游订单*************************************************************\\
+
+    /**
+     * 忽略订单
+     */
+    public static String setIgnoreOrderDataPath = RootPath + "/app-travel/publisher-ignore-order";
+
+    /**
+     * 接受订单
+     */
+    public static String setConfirmOrderDataPath = RootPath + "/app-travel/publisher-confirm-order";
+
+    /**
+     * 取消订单
+     */
+    public static String setCancelOrderDataPath = RootPath + "/app-travel/publisher-cancel-order";
+
+    /**
+     * 得到随游的订单详情
+     */
+    public static String getOrderDetailsDataPath = RootPath + "/app-travel/trip-order-info";
+
     //********************************************侧栏-随友-账户管理**************************************************************\\
 
     /**
@@ -149,6 +190,11 @@ public class HttpNewServicePath {
      */
     public static String getGeneralUserNotFinishOrderPath = RootPath + "/app-user-order/get-un-finish-order";
 
+    /**
+     * 得到普通用户订单的详情
+     */
+    public static String getGeneralUserOrderDetailsPath = RootPath + "/app-travel/user-order-info";
+
     //***********************************************侧栏-普通用户-关注**************************************************************\\
 
     /**
@@ -165,6 +211,42 @@ public class HttpNewServicePath {
      * 得到关注的随游
      */
     public static String getAttentionSuiuuPath = RootPath + "/app-attention/get-collection-travel";
+
+    //*************************************************账户相关**********************************************************************\\
+
+    /**
+     * 添加支付宝账户
+     */
+    public static String addAliPayUserInfo = RootPath + "/app-account/bind-alipay";
+
+    /**
+     * 添加微信账户
+     */
+    public static String addWeChatAUserInfo = RootPath + "/app-account/bind-wechat";
+
+    /**
+     * 得到绑定的账户列表
+     */
+    public static String getUserBindAccountListData = RootPath + "/app-account/get-user-account-list";
+
+    //*************************************************temp*********************************************************\\
+
+    /**
+     * 圈子文章请求地址
+     * 请求方式:POST
+     * 请求参数: 文章id articleId、统一参数key{@link #key}
+     */
+    public static String LoopArticlePath = RootPath + "/circle/get-article-by-id";
+
+    /**
+     * 更新个人信息状态
+     * <p/>
+     * 请求方式:POST
+     * <p/>
+     * 请求参数:sex 性别、nickname 昵称、birthday 生日、intro 短简介
+     * info 详情介绍、countryId、国家id cityI、城市id、lon经度、lat 维度、profession 职业
+     */
+    public static String upDatePersonalStatus = RootPath + "/app-user-info/update-user-info";
 
     /*-----------------------随游相关-----------------------------*/
 
@@ -216,4 +298,5 @@ public class HttpNewServicePath {
      * 创建一条旅图评论
      */
     public static String articleCreateComment = RootPath + "/app-travel-picture/add-travel-picture-comment";
+
 }

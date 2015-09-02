@@ -444,6 +444,9 @@
 
     <string name="RelevantSuiuu" translatable="false">相关随游</string>
 
+    <string name="CancelOrder" translatable="false">取消订单</string>
+    <string name="AgainPay" translatable="false">重新支付</string>
+
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
     <string name="pull_to_refresh_release_label">Release rear refresh</string>
     <string name="pull_to_refresh_refreshing_label">refresh\u2026</string>

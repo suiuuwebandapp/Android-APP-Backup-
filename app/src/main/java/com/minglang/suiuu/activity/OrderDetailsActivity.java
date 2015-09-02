@@ -19,11 +19,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.CircleImageView;
@@ -32,17 +27,20 @@ import com.minglang.suiuu.entity.OrderDetails.OrderDetailsData.InfoEntity;
 import com.minglang.suiuu.entity.OrderDetails.OrderDetailsData.UserInfoEntity;
 import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -83,22 +81,25 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     String dialogMsg;
 
     @BindString(R.string.NoData)
-    String dataNull;
+    String NoData;
 
     @BindString(R.string.DataError)
-    String dataError;
+    String DataError;
 
     @BindString(R.string.NetworkAnomaly)
-    String networkError;
+    String NetworkError;
 
     @BindString(R.string.SystemException)
     String systemException;
 
     @BindString(R.string.DataException)
-    String dataException;
+    String DataException;
 
     @BindString(R.string.UnknownError)
-    String unknownError;
+    String UnknownError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     @BindString(R.string.CancelOrderSuccess)
     String cancelOrderSuc;
@@ -216,9 +217,9 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
     private DisplayImageOptions options;
 
-    private OrderDetailsRequestCallBack orderDetailsRequestCallBack;
-
     private InfoEntity infoEntity;
+
+    private OrderDetailsResultCallback orderDetailsResultCallback = new OrderDetailsResultCallback();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,7 +228,11 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         ButterKnife.bind(this);
         initView();
         viewAction();
-        getData4Service(buildRequestParams(), orderDetailsDataPath, orderDetailsRequestCallBack);
+
+        String[] keyArray = new String[]{ORDER_NUMBER, HttpServicePath.key, TOKEN};
+        String[] valueArray = new String[]{strID, verification, token};
+        getData4Service(orderDetailsDataPath, keyArray, valueArray, orderDetailsResultCallback);
+
     }
 
     private void initView() {
@@ -254,6 +259,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                 .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
         verification = SuiuuInfo.ReadVerification(this);
+        token = SuiuuInfo.ReadAppTimeSign(this);
 
         int paddingParams = Utils.newInstance().dip2px(15, this);
 
@@ -270,13 +276,11 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
         context = OrderDetailsActivity.this;
 
-        orderDetailsDataPath = HttpServicePath.getOrderDetailsDataPath;
+        orderDetailsDataPath = HttpNewServicePath.getOrderDetailsDataPath;
 
-        cancelOrderPath = HttpServicePath.setCancelOrderDataPath;
-        confirmOrderPath = HttpServicePath.setConfirmOrderDataPath;
-        ignoreOrderPath = HttpServicePath.setIgnoreOrderDataPath;
-
-        orderDetailsRequestCallBack = new OrderDetailsRequestCallBack();
+        cancelOrderPath = HttpNewServicePath.setCancelOrderDataPath;
+        confirmOrderPath = HttpNewServicePath.setConfirmOrderDataPath;
+        ignoreOrderPath = HttpNewServicePath.setIgnoreOrderDataPath;
 
     }
 
@@ -291,7 +295,9 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
             @Override
             public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
                 isPullToRefresh = false;
-                getData4Service(buildRequestParams(), orderDetailsDataPath, orderDetailsRequestCallBack);
+                String[] keyArray = new String[]{ORDER_NUMBER, HttpServicePath.key, TOKEN};
+                String[] valueArray = new String[]{strID, verification, token};
+                getData4Service(orderDetailsDataPath, keyArray, valueArray, orderDetailsResultCallback);
             }
 
         });
@@ -353,10 +359,9 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                                 if (TextUtils.isEmpty(cancelOrderPath)) {
                                     Toast.makeText(context, refundReasonNotNull, Toast.LENGTH_SHORT).show();
                                 } else {
-                                    RequestParams params = new RequestParams();
-                                    params.addBodyParameter(ORDER_ID, strID);
-                                    params.addBodyParameter(MESSAGE, cancelOrderReason);
-                                    getData4Service(params, cancelOrderPath, new CancelOrderDataRequestCallBack());
+                                    String[] keyArray = new String[]{ORDER_NUMBER, HttpServicePath.key, TOKEN};
+                                    String[] valueArray = new String[]{strID, cancelOrderReason, token};
+                                    getData4Service(cancelOrderPath, keyArray, valueArray, new CancelOrderResultCallback());
                                 }
 
                             }
@@ -369,34 +374,41 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         confirmOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestParams params = new RequestParams();
-                params.addBodyParameter(ORDER_ID, strID);
-                getData4Service(params, confirmOrderPath, new ConfirmOrderDataRequestCallBack());
+                String[] keyArray = new String[]{ORDER_ID, TOKEN};
+                String[] valueArray = new String[]{strID, token};
+                getData4Service(confirmOrderPath, keyArray, valueArray, new ConfirmOrderResultCallback());
             }
         });
 
         ignoreOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestParams params = new RequestParams();
-                params.addBodyParameter(ORDER_ID, strID);
-                getData4Service(params, ignoreOrderPath, new IgnoreOrderDataRequestCallBack());
+                String[] keyArray = new String[]{ORDER_ID, TOKEN};
+                String[] valueArray = new String[]{strID, token};
+                getData4Service(ignoreOrderPath, keyArray, valueArray, new IgnoreOrderResultCallback());
             }
         });
 
     }
 
-    private RequestParams buildRequestParams() {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter(ORDER_NUMBER, strID);
-        return params;
-    }
+    private void getData4Service(String path, String[] keyArray, String[] valueArray,
+                                 OkHttpManager.ResultCallback<String> requestCallBack) {
+        if (isPullToRefresh) {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
 
-    private void getData4Service(RequestParams params, String path, RequestCallBack<String> requestCallBack) {
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST, path, requestCallBack);
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String url = addUrlAndParams(path, keyArray, valueArray);
+
+        try {
+            OkHttpManager.onGetAsynRequest(url, requestCallBack);
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void hideDialog() {
@@ -414,7 +426,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
      */
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
-            Toast.makeText(this, dataNull, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, NoData, Toast.LENGTH_SHORT).show();
         } else {
             JsonUtils jsonUtils = JsonUtils.getInstance();
             try {
@@ -586,175 +598,204 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
             } catch (Exception e) {
                 DeBugLog.e(TAG, "绑定数据异常:" + e.getMessage());
-                Toast.makeText(context, dataError, Toast.LENGTH_SHORT).show();
+                handleException(str, DataError);
             }
 
         }
 
     }
 
-    private class OrderDetailsRequestCallBack extends RequestCallBack<String> {
+    private void cancelOrder(String str) {
+        if (!TextUtils.isEmpty(str)) {
+            try {
+                JSONObject object = new JSONObject(str);
+                String status = object.getString(STATUS);
+                String returnData = object.getString(DATA);
 
-        @Override
-        public void onStart() {
-            if (isPullToRefresh)
-                if (progressDialog != null && !progressDialog.isShowing()) {
-                    progressDialog.show();
+                if (!TextUtils.isEmpty(status)) {
+                    switch (status) {
+                        case "1":
+                            Toast.makeText(context, cancelOrderSuc, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "-1":
+                            Toast.makeText(context, systemException, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "-2":
+                            Toast.makeText(context, returnData, Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(context, UnknownError, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                } else {
+                    Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
                 }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "解析异常:" + e.getMessage());
+                handleException(str, DataException);
+            }
+        } else {
+            Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void confirmOrder(String str) {
+        if (!TextUtils.isEmpty(str)) {
+            try {
+                JSONObject object = new JSONObject(str);
+                String status = object.getString(STATUS);
+                String returnData = object.getString(DATA);
+
+                if (!TextUtils.isEmpty(status)) {
+                    switch (status) {
+                        case "1":
+                            Toast.makeText(context, confirmOrderSuc, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "-1":
+                            Toast.makeText(context, systemException, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "-2":
+                            Toast.makeText(context, returnData, Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(context, UnknownError, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                } else {
+                    Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "解析异常:" + e.getMessage());
+                handleException(str, DataException);
+            }
+        } else {
+            Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void ignoreOrder(String str) {
+        if (!TextUtils.isEmpty(str)) {
+            try {
+                JSONObject object = new JSONObject(str);
+                String status = object.getString(STATUS);
+                String returnData = object.getString(DATA);
+
+                if (!TextUtils.isEmpty(status)) {
+                    switch (status) {
+                        case "1":
+                            Toast.makeText(context, ignoreOrderSuc, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "-1":
+                            Toast.makeText(context, systemException, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "-2":
+                            Toast.makeText(context, returnData, Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(context, UnknownError, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                } else {
+                    Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "解析异常:" + e.getMessage());
+                handleException(str, DataException);
+            }
+        } else {
+            Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void handleException(String str, String error) {
+        try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "-1":
+                    Toast.makeText(context, SystemException, Toast.LENGTH_SHORT).show();
+                    break;
+                case "-2":
+                    Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        } catch (Exception e) {
+            DeBugLog.e(TAG, "二次解析异常:" + e.getMessage());
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class OrderDetailsResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "订单详情数据:" + response);
             hideDialog();
-            bindData2View(str);
-            DeBugLog.i(TAG, "订单详情数据:" + str);
+            bindData2View(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
-            Toast.makeText(context, networkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    private class CancelOrderDataRequestCallBack extends RequestCallBack<String> {
+    private class CancelOrderResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            if (!TextUtils.isEmpty(str)) {
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    String returnData = object.getString(DATA);
-
-                    if (!TextUtils.isEmpty(status)) {
-                        switch (status) {
-                            case "1":
-                                Toast.makeText(context, cancelOrderSuc, Toast.LENGTH_SHORT).show();
-                                break;
-                            case "-1":
-                                Toast.makeText(context, systemException, Toast.LENGTH_SHORT).show();
-                                break;
-                            case "-2":
-                                Toast.makeText(context, returnData, Toast.LENGTH_SHORT).show();
-                                break;
-                            default:
-                                Toast.makeText(context, unknownError, Toast.LENGTH_SHORT).show();
-                                break;
-                        }
-                    } else {
-                        Toast.makeText(context, dataError, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    DeBugLog.e(TAG, "解析异常:" + e.getMessage());
-                    Toast.makeText(context, dataException, Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(context, dataNull, Toast.LENGTH_SHORT).show();
-            }
-
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "取消订单数据:" + response);
+            hideDialog();
+            cancelOrder(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
-            Toast.makeText(context, networkError, Toast.LENGTH_SHORT).show();
+        public void onError(Request request, Exception e) {
+            hideDialog();
+            DeBugLog.e(TAG, "Cancel Exception:" + e.getMessage());
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    private class ConfirmOrderDataRequestCallBack extends RequestCallBack<String> {
+    private class ConfirmOrderResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            if (!TextUtils.isEmpty(str)) {
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    String returnData = object.getString(DATA);
-
-                    if (!TextUtils.isEmpty(status)) {
-                        switch (status) {
-                            case "1":
-                                Toast.makeText(context, confirmOrderSuc, Toast.LENGTH_SHORT).show();
-                                break;
-                            case "-1":
-                                Toast.makeText(context, systemException, Toast.LENGTH_SHORT).show();
-                                break;
-                            case "-2":
-                                Toast.makeText(context, returnData, Toast.LENGTH_SHORT).show();
-                                break;
-                            default:
-                                Toast.makeText(context, unknownError, Toast.LENGTH_SHORT).show();
-                                break;
-                        }
-                    } else {
-                        Toast.makeText(context, dataError, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    DeBugLog.e(TAG, "解析异常:" + e.getMessage());
-                    Toast.makeText(context, dataException, Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(context, dataNull, Toast.LENGTH_SHORT).show();
-            }
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "确认订单返回的数据:" + response);
+            hideDialog();
+            confirmOrder(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
-            Toast.makeText(context, networkError, Toast.LENGTH_SHORT).show();
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Confirm Exception:" + e.getMessage());
+            hideDialog();
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    private class IgnoreOrderDataRequestCallBack extends RequestCallBack<String> {
+    private class IgnoreOrderResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            if (!TextUtils.isEmpty(str)) {
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    String returnData = object.getString(DATA);
-
-                    if (!TextUtils.isEmpty(status)) {
-                        switch (status) {
-                            case "1":
-                                Toast.makeText(context, ignoreOrderSuc, Toast.LENGTH_SHORT).show();
-                                break;
-                            case "-1":
-                                Toast.makeText(context, systemException, Toast.LENGTH_SHORT).show();
-                                break;
-                            case "-2":
-                                Toast.makeText(context, returnData, Toast.LENGTH_SHORT).show();
-                                break;
-                            default:
-                                Toast.makeText(context, unknownError, Toast.LENGTH_SHORT).show();
-                                break;
-                        }
-                    } else {
-                        Toast.makeText(context, dataError, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    DeBugLog.e(TAG, "解析异常:" + e.getMessage());
-                    Toast.makeText(context, dataException, Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(context, dataNull, Toast.LENGTH_SHORT).show();
-            }
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "忽略订单数据:" + response);
+            hideDialog();
+            ignoreOrder(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
-            Toast.makeText(context, networkError, Toast.LENGTH_SHORT).show();
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Ignore Exception:" + e.getMessage());
+            hideDialog();
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

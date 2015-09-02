@@ -18,11 +18,6 @@ import android.widget.Toast;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.GeneralOrderDetails;
@@ -32,12 +27,15 @@ import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.Pub
 import com.minglang.suiuu.entity.ServiceInfo;
 import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
+import com.squareup.okhttp.Request;
 
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -61,13 +59,13 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     private static final float DEFAULT_SCORE = 0f;
 
     @BindString(R.string.load_wait)
-    String dialogMsg;
+    String DialogMsg;
 
     @BindString(R.string.NoData)
     String dataNull;
 
     @BindString(R.string.NetworkAnomaly)
-    String errorMsg;
+    String NetworkError;
 
     @Bind(R.id.general_order_details_head_frame)
     PtrClassicFrameLayout mPtrFrame;
@@ -155,16 +153,19 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.order_details_back)
     ImageView orderDetailsBack;
+
     /**
      * 底部左边按钮
      */
     @Bind(R.id.bb_order_detail_repay)
     BootstrapButton bb_order_detail_repay;
+
     /**
      * 底部左边按钮
      */
     @Bind(R.id.bb_order_detail_cancel)
     BootstrapButton bb_order_detail_cancel;
+
     /**
      * 底部按钮布局
      */
@@ -191,7 +192,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     private InfoEntity infoEntity;
     private TripJsonInfo tripJsonInfo;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,7 +199,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         ButterKnife.bind(this);
         initView();
         viewAction();
-        getGeneralUserOrderData4Service(buildRequestParams());
+        getGeneralUserOrderData4Service();
     }
 
     private void initView() {
@@ -208,9 +208,10 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         DeBugLog.i(TAG, "OrderID:" + orderNumber + ",titleImg:" + titleImg);
 
         verification = SuiuuInfo.ReadVerification(this);
+        token = SuiuuInfo.ReadAppTimeSign(this);
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(dialogMsg);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         int paddingParams = Utils.newInstance().dip2px(15, this);
@@ -252,10 +253,11 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             @Override
             public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
                 isPullToRefresh = false;
-                getGeneralUserOrderData4Service(buildRequestParams());
+                getGeneralUserOrderData4Service();
             }
 
         });
+
         //重新支付
         bb_order_detail_repay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -272,19 +274,24 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         });
     }
 
-    private RequestParams buildRequestParams() {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(ORDER_NUMBER, orderNumber);
-        DeBugLog.i(TAG, " verification:"+verification);
-        params.addBodyParameter(HttpServicePath.key, verification);
-        return params;
-    }
+    private void getGeneralUserOrderData4Service() {
+        if (isPullToRefresh) {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
 
-    private void getGeneralUserOrderData4Service(RequestParams params) {
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getGeneralUserOrderDetailsPath, new GeneralUserOrderDetailsRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String[] keyArray = new String[]{ORDER_NUMBER, HttpServicePath.key, TOKEN};
+        String[] valueArray = new String[]{orderNumber, verification, token};
+        String url = addUrlAndParams(HttpNewServicePath.getGeneralUserOrderDetailsPath, keyArray, valueArray);
+
+        try {
+            OkHttpManager.onGetAsynRequest(url, new GeneralUserOrderDetailsResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            Toast.makeText(GeneralOrderDetailsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void hideDialog() {
@@ -540,29 +547,20 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         }
     }
 
-    private class GeneralUserOrderDetailsRequestCallBack extends RequestCallBack<String> {
+    private class GeneralUserOrderDetailsResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (isPullToRefresh)
-                if (progressDialog != null && !progressDialog.isShowing()) {
-                    progressDialog.show();
-                }
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "返回的数据:" + response);
+            hideDialog();
+            bindData2View(response);
         }
 
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
-            String str = responseInfo.result;
-            bindData2View(str);
-            DeBugLog.i(TAG, "返回的数据:" + str);
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
-            hideDialog();
-            Toast.makeText(GeneralOrderDetailsActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+            Toast.makeText(GeneralOrderDetailsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

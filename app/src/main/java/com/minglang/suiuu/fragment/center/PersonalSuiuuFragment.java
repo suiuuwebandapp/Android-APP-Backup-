@@ -1,7 +1,6 @@
 package com.minglang.suiuu.fragment.center;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,11 +17,9 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.SuiuuDetailsActivity;
 import com.minglang.suiuu.adapter.PersonalSuiuuAdapter;
 import com.minglang.suiuu.entity.UserSuiuu;
 import com.minglang.suiuu.entity.UserSuiuu.UserSuiuuData;
-import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -161,15 +158,15 @@ public class PersonalSuiuuFragment extends Fragment {
         //
         //        });
 
-        adapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                String tripId = listAll.get(position).getTripId();
-                Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
-                intent.putExtra(TRIP_ID, tripId);
-                startActivity(intent);
-            }
-        });
+        //        adapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
+        //            @Override
+        //            public void onItemClick(View view, int position) {
+        //                String tripId = listAll.get(position).getTripId();
+        //                Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
+        //                intent.putExtra(TRIP_ID, tripId);
+        //                startActivity(intent);
+        //            }
+        //        });
 
     }
 
@@ -221,7 +218,7 @@ public class PersonalSuiuuFragment extends Fragment {
                     if (list != null && list.size() > 0) {
                         clearDataList();
                         listAll.addAll(list);
-                        adapter.setList(listAll);
+//                        adapter.setList(listAll);
                         DeBugLog.i(TAG, "当前页码:" + page + ",当前请求数据数量:" + list.size()
                                 + ",总数据数量:" + listAll.size());
                     } else {
