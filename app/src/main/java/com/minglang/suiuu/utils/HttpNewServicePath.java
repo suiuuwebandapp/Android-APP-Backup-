@@ -149,6 +149,20 @@ public class HttpNewServicePath {
      */
     public static String getGeneralUserNotFinishOrderPath = RootPath + "/app-user-order/get-un-finish-order";
 
+    /**
+     * 生成订单号
+     */
+    public static String createOrderNumber = RootPath + "/app-user-order/add-order";
+    /**
+     * 取消订单
+     */
+    public static String userCancelOrder = RootPath + "/app-user-order/cancel-order";
+    /**
+     * 删除订单
+     */
+    public static String userDeleteOrder = RootPath + "/app-user-order/delete-order";
+
+
     //***********************************************侧栏-普通用户-关注**************************************************************\\
 
     /**

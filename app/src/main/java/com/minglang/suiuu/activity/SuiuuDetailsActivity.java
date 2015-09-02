@@ -205,7 +205,6 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                     }
                 }
             });
-
             mWebView.setOnKeyListener(new View.OnKeyListener() {// webView can go back
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -216,7 +215,6 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                     return false;
                 }
             });
-
             mWebView.addJavascriptInterface(getHtmlObject(), "jsObj");
 //            String[] keyArray1 = new String[]{"trId",TOKEN};
 //            String[] valueArray1 = new String[]{tripId,SuiuuInfo.ReadAppTimeSign(SuiuuDetailsActivity.this)};

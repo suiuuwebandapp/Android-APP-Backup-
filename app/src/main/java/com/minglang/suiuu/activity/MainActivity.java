@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
@@ -466,7 +467,14 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
-
+        //跳到设置界面
+        rl_net_error.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =  new Intent(Settings.ACTION_SETTINGS);
+                startActivity(intent);
+            }
+        });
     }
 
     /**

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,9 +94,14 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 2) {
-                    Intent intent = new Intent(getActivity(), TripGalleryDetailsActivity.class);
-                    intent.putExtra("id", tripGalleryList.get(position - 3).getId());
-                    startActivity(intent);
+                    if(Utils.isNetworkConnected(getActivity())) {
+                        Intent intent = new Intent(getActivity(), TripGalleryDetailsActivity.class);
+                        intent.putExtra("id", tripGalleryList.get(position - 3).getId());
+                        startActivity(intent);
+                    }else {
+                        Toast.makeText(getActivity(), R.string.lsq_network_connection_interruption, Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
 
@@ -180,19 +186,12 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
         }
 
         @Override
-        public void onResponse(String result) {
+            public void onResponse(String result) {
+            Log.i("suiuu", "result=" + result);
             progressDialog.dismiss();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd", Locale.CHINA);
             Date date = new Date();
             String format = simpleDateFormat.format(date);
-            Map tripGalleryCacheData = TripGalleryCacheUtils.getTripGalleryCacheData(getActivity());
-            //上次缓存时间
-            String time = (String) tripGalleryCacheData.get("time");
-            if (time == null) {
-                TripGalleryCacheUtils.insertTripGalleryCache(getActivity(), format, result);
-            } else if (Utils.compareDate(time, format) == -1) {
-                TripGalleryCacheUtils.updateTripGalleryCache(getActivity(), format, (String) tripGalleryCacheData.get("id"), result);
-            }
             try {
                 JSONObject json = new JSONObject(result);
                 int status = (int) json.get("status");
@@ -202,10 +201,21 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
                     if (data.size() < 1) {
                         Toast.makeText(getActivity(), "没有更多数据显示", Toast.LENGTH_SHORT).show();
                     } else {
+                        //缓存数据
+                        Map tripGalleryCacheData = TripGalleryCacheUtils.getTripGalleryCacheData(getActivity());
+                        //上次缓存时间
+                        String time = (String) tripGalleryCacheData.get("time");
+                        if (time == null) {
+                            TripGalleryCacheUtils.insertTripGalleryCache(getActivity(), format, result);
+                        } else if (Utils.compareDate(time, format) == -1) {
+                            TripGalleryCacheUtils.updateTripGalleryCache(getActivity(), format, (String) tripGalleryCacheData.get("id"), result);
+                        }
                         lv_trip_gallery.setVisibility(View.VISIBLE);
                         tripGalleryList.addAll(data);
                         showList(tripGalleryList);
                     }
+                }else if(status == -5){
+                    loadTripGalleryList(null, "0", null, page);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

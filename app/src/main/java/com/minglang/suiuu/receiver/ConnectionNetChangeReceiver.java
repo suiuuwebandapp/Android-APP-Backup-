@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 /**
  * 项目名称：Android-APP-Backup-
@@ -25,7 +24,6 @@ public class ConnectionNetChangeReceiver extends BroadcastReceiver{
         NetworkInfo  wifiNetInfo=connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
         if (!mobNetInfo.isConnected() && !wifiNetInfo.isConnected()) {
-            Log.i("suiuu", "网络不可用了");
             listener.conectionBreakOff(context);
             //改变背景或者 处理网络的全局变量
         }else {

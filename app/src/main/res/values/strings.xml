@@ -350,10 +350,14 @@
 
 
     <string name="cancelOrder" translatable="false">取消订单</string>
+    <string name="deleteOrder" translatable="false">删除订单</string>
     <string name="inputRefundReason" translatable="false">请输入退款理由</string>
     <string name="refundReasonNotNull" translatable="false">退款理由不能为空!</string>
 
     <string name="CancelOrderSuccess" translatable="false">订单已取消</string>
+    <string name="DeleteOrderSuccess" translatable="false">订单已删除</string>
+    <string name="CancelOrderFailure" translatable="false">订单取消失败,请重试</string>
+    <string name="DeleteOrderFailure" translatable="false">订单删除失败,请重试</string>
     <string name="ConfirmOrderSuccess" translatable="false">订单已确认</string>
     <string name="IgnoreOrderSuccess" translatable="false">订单已忽略</string>
 

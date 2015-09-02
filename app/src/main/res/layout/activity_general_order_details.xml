@@ -1,9 +1,8 @@
-<in.srain.cube.views.ptr.PtrClassicFrameLayout
-    android:id="@+id/general_order_details_head_frame"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+<in.srain.cube.views.ptr.PtrClassicFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
+    xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/tools"
+    android:id="@+id/general_order_details_head_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundColor"
@@ -41,7 +40,7 @@
                         android:contentDescription="@string/app_name"
                         fresco:actualImageScaleType="fitXY"
                         fresco:failureImage="@drawable/loading_error"
-                        fresco:placeholderImage="@drawable/default_background_image"/>
+                        fresco:placeholderImage="@drawable/default_background_image" />
 
                     <TextView
                         android:id="@+id/order_details_base_price"
@@ -57,7 +56,7 @@
                         android:layout_toStartOf="@+id/order_details_indicator"
                         android:text="@string/app_name"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/layout_16sp"/>
+                        android:textSize="@dimen/layout_16sp" />
 
                     <TextView
                         android:id="@+id/order_details_title"
@@ -72,7 +71,7 @@
                         android:singleLine="true"
                         android:text="@string/app_name"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white" />
 
                     <RatingBar
                         android:id="@+id/order_details_indicator"
@@ -85,7 +84,7 @@
                         android:layout_marginEnd="@dimen/layout_8dp"
                         android:layout_marginRight="@dimen/layout_8dp"
                         android:isIndicator="true"
-                        android:rating="1"/>
+                        android:rating="1" />
 
                 </RelativeLayout>
 
@@ -103,7 +102,7 @@
                         fresco:actualImageScaleType="fitXY"
                         fresco:failureImage="@drawable/default_head_image"
                         fresco:placeholderImage="@drawable/default_head_image"
-                        fresco:roundAsCircle="true"/>
+                        fresco:roundAsCircle="true" />
 
                     <TextView
                         android:id="@+id/order_details_name"
@@ -116,7 +115,7 @@
                         android:layout_toStartOf="@+id/textView6"
                         android:padding="@dimen/layout_3dp"
                         android:text="@string/app_name"
-                        android:textSize="@dimen/layout_18sp"/>
+                        android:textSize="@dimen/layout_18sp" />
 
                     <TextView
                         android:id="@+id/order_details_status"
@@ -132,14 +131,14 @@
                         android:gravity="end"
                         android:padding="@dimen/layout_3dp"
                         android:text="@string/app_name"
-                        android:textSize="@dimen/layout_18sp"/>
+                        android:textSize="@dimen/layout_18sp" />
 
                     <TextView
                         android:id="@+id/textView6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"/>
+                        android:layout_centerVertical="true" />
 
                 </RelativeLayout>
 
@@ -163,7 +162,7 @@
                             android:layout_margin="@dimen/layout_5dp"
                             android:singleLine="true"
                             android:text="@string/ContactPhone"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                         <TextView
                             android:id="@+id/order_details_phone"
@@ -171,7 +170,7 @@
                             android:layout_height="wrap_content"
                             android:singleLine="true"
                             android:text="@string/Zero"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                     </LinearLayout>
 
@@ -188,14 +187,14 @@
                             android:layout_margin="@dimen/layout_5dp"
                             android:singleLine="true"
                             android:text="@string/DepartureDate"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                         <TextView
                             android:id="@+id/order_details_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tempDate"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                     </LinearLayout>
 
@@ -212,14 +211,14 @@
                             android:layout_margin="@dimen/layout_5dp"
                             android:singleLine="true"
                             android:text="@string/StartTime"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                         <TextView
                             android:id="@+id/order_details_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tempTime"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                     </LinearLayout>
 
@@ -236,7 +235,7 @@
                             android:layout_margin="@dimen/layout_5dp"
                             android:singleLine="true"
                             android:text="@string/SuiuuNumber"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                         <TextView
                             android:id="@+id/order_details_suiuu_number"
@@ -244,7 +243,7 @@
                             android:layout_height="wrap_content"
                             android:singleLine="true"
                             android:text="@string/tempNumber"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                     </LinearLayout>
 
@@ -271,7 +270,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/layout_5dp"
                             android:text="@string/AdditionalServices"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                         <TextView
                             android:id="@+id/order_details_additional_service_prices"
@@ -279,7 +278,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/layout_5dp"
                             android:text="@string/Zero"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                     </LinearLayout>
 
@@ -297,15 +296,15 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/back"/>
+            android:src="@drawable/back" />
+
         <RelativeLayout
             android:id="@+id/rl_general_order_detail_bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_50dp"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <com.beardedhen.androidbootstrap.BootstrapButton
                 android:id="@+id/bb_order_detail_cancel"
@@ -316,8 +315,7 @@
                 android:text="取消订单"
                 bootstrapbutton:bb_roundedCorners="true"
                 bootstrapbutton:bb_size="small"
-                bootstrapbutton:bb_type="warning"
-                />
+                bootstrapbutton:bb_type="warning" />
 
             <com.beardedhen.androidbootstrap.BootstrapButton
                 android:id="@+id/bb_order_detail_repay"

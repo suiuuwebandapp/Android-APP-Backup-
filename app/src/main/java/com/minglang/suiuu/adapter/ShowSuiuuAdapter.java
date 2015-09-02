@@ -57,7 +57,7 @@ public class ShowSuiuuAdapter extends BaseAdapter {
         TextView tv_suiuu_name = holder.getView(R.id.tv_item_suiuu_name);
         TextView tv_item_suiuu_price = holder.getView(R.id.tv_item_suiuu_price);
         RatingBar rb_suiuu_star = holder.getView(R.id.rb_suiuu_star);
-        rb_suiuu_star.setRating(Integer.valueOf(list.get(position).getScore().replace(".","")));
+        rb_suiuu_star.setRating(Math.round(Double.valueOf(list.get(position).getScore().replace(".", ""))/2));
         tv_item_suiuu_price.setText("￥:  " + list.get(position).getBasePrice());
         tv_suiuu_name.setText(list.get(position).getTitle().trim().toString());
         Uri uri = Uri.parse(list.get(position).getTitleImg());

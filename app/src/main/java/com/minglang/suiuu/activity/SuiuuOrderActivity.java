@@ -11,23 +11,23 @@ import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.utils.DateTimePickDialogUtils;
-import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.SuiuuInfo;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * 项目名称：Android-APP-Backup-
@@ -125,35 +125,34 @@ public class SuiuuOrderActivity extends BaseActivity {
         if (flag) {
             Toast.makeText(this, "请选择出行日期", Toast.LENGTH_SHORT).show();
             return;
-        } else {
-            Toast.makeText(this, "晚于今天", Toast.LENGTH_SHORT).show();
         }
-
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("tripId", tripId);
-        params.addBodyParameter("peopleCount", Integer.toString(enjoy_peopleNumber));
-        params.addBodyParameter("beginDate", tv_travel_date.getText().toString());
-        params.addBodyParameter("startTime", tv_travel_time.getText().toString());
-        params.addBodyParameter("type", "2");
-        params.addBodyParameter(HttpServicePath.key, verification);
-
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.createOrderNumber, new createOrderCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        Map<String, String> map = new HashMap<>();
+        map.put("tripId", tripId);
+        map.put("peopleCount", Integer.toString(enjoy_peopleNumber));
+        map.put("beginDate", tv_travel_date.getText().toString());
+        map.put("startTime", tv_travel_time.getText().toString());
+        map.put("type", "2");
+        try {
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.createOrderNumber + "?token=" + SuiuuInfo.ReadAppTimeSign(SuiuuOrderActivity.this), new createOrderCallBack(), map);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
     /**
      * 生成订单回调接口
      */
-    class createOrderCallBack extends RequestCallBack<String> {
-
+    class createOrderCallBack extends OkHttpManager.ResultCallback<String> {
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            Log.i("suiuu", "order=" + stringResponseInfo.result);
+        public void onError(Request request, Exception e) {
+            Toast.makeText(SuiuuOrderActivity.this, "访问失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+        }
+        @Override
+        public void onResponse(String response) {
+            Log.i("suiuu", response);
             try {
-                JSONObject message = new JSONObject(stringResponseInfo.result);
+                JSONObject message = new JSONObject(response);
 
                 String status = message.getString("status");
                 String orderNumber;
@@ -175,12 +174,6 @@ public class SuiuuOrderActivity extends BaseActivity {
                 e.printStackTrace();
                 Toast.makeText(SuiuuOrderActivity.this, "点赞失败，请稍候再试", Toast.LENGTH_SHORT).show();
             }
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            Toast.makeText(SuiuuOrderActivity.this, "访问失败，请稍候再试！" + s, Toast.LENGTH_SHORT).show();
-
         }
     }
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,13 +33,22 @@ import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.Pub
 import com.minglang.suiuu.entity.ServiceInfo;
 import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
+import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.BindString;
@@ -190,6 +200,10 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     private float totalOrderPrice = 0f;
     private InfoEntity infoEntity;
     private TripJsonInfo tripJsonInfo;
+    /**
+     * 订单状态
+     */
+    private String status;
 
 
     @Override
@@ -256,22 +270,61 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             }
 
         });
-        //重新支付
+        //重新支付按钮
         bb_order_detail_repay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(GeneralOrderDetailsActivity.this, SuiuuPayActivity.class);
-                intent.putExtra("peopleNumber", infoEntity.getPersonCount());
-                intent.putExtra("time", infoEntity.getBeginDate());
-                intent.putExtra("total_price", infoEntity.getTotalPrice());
-                intent.putExtra("destinnation", tripJsonInfo.getInfo().getTitle());
-                intent.putExtra("orderNumber", orderNumber);
-                startActivity(intent);
-                finish();
+                switch (status) {
+                    case "0":
+                        Intent intent = new Intent(GeneralOrderDetailsActivity.this, SuiuuPayActivity.class);
+                        intent.putExtra("peopleNumber", infoEntity.getPersonCount());
+                        intent.putExtra("time", infoEntity.getBeginDate());
+                        intent.putExtra("total_price", infoEntity.getTotalPrice());
+                        intent.putExtra("destinnation", tripJsonInfo.getInfo().getTitle());
+                        intent.putExtra("orderNumber", orderNumber);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    case "3":
+                        deleteOreder();
+                        break;
+                    case "5":
+                        deleteOreder();
+                        break;
+                }
+
+
+
             }
         });
-    }
+        //取消订单
+        bb_order_detail_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelOrder();
+            }
 
+
+        });
+    }
+    private void cancelOrder() {
+        Map<String, String> map = new HashMap<>();
+        map.put("orderId", infoEntity.getOrderId());
+        try {
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.userCancelOrder + "?token=" + SuiuuInfo.ReadAppTimeSign(GeneralOrderDetailsActivity.this), new CancelOrderCallBack(), map);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void deleteOreder() {
+        Map<String, String> map = new HashMap<>();
+        map.put("orderId", infoEntity.getOrderId());
+        try {
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.userDeleteOrder + "?token=" + SuiuuInfo.ReadAppTimeSign(GeneralOrderDetailsActivity.this), new CancelOrderCallBack(), map);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     private RequestParams buildRequestParams() {
         RequestParams params = new RequestParams();
         params.addBodyParameter(ORDER_NUMBER, orderNumber);
@@ -441,7 +494,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             serviceLayout.addView(totalOrderPriceView);
 
                             //订单状态
-                            String status = infoEntity.getStatus();
+                            status = infoEntity.getStatus();
                             if (!TextUtils.isEmpty(status)) {
                                 switch (status) {
                                     case "0":
@@ -455,12 +508,20 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                                         orderStatus.setText("已支付 已确认");
                                         break;
                                     case "3":
+                                        rl_general_order_detail_bottom_layout.setVisibility(View.VISIBLE);
+                                        bb_order_detail_cancel.setVisibility(View.GONE);
+                                        bb_order_detail_cancel.setBootstrapType("danger");
+                                        bb_order_detail_cancel.setText(R.string.deleteOrder);
                                         orderStatus.setText("未支付 已取消");
                                         break;
                                     case "4":
                                         orderStatus.setText("待退款");
                                         break;
                                     case "5":
+                                        rl_general_order_detail_bottom_layout.setVisibility(View.VISIBLE);
+                                        bb_order_detail_cancel.setVisibility(View.GONE);
+                                        bb_order_detail_cancel.setBootstrapType("danger");
+                                        bb_order_detail_cancel.setText(R.string.deleteOrder);
                                         orderStatus.setText("退款成功");
                                         break;
                                     case "6":
@@ -565,6 +626,38 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             Toast.makeText(GeneralOrderDetailsActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
         }
 
+    }
+    private class CancelOrderCallBack extends OkHttpManager.ResultCallback<String> {
+
+        @Override
+        public void onError(Request request, Exception e) {
+            Log.i("suiuu","---"+e.toString());
+        }
+
+        @Override
+        public void onResponse(String response) {
+            try {
+                JSONObject result = new JSONObject(response);
+                String results = (String)result.get("status");
+                if("1".equals(result.get(results))) {
+                    if("0".equals(status)) {
+                        Toast.makeText(GeneralOrderDetailsActivity.this,R.string.CancelOrderSuccess,Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(GeneralOrderDetailsActivity.this,R.string.DeleteOrderSuccess,Toast.LENGTH_SHORT).show();
+                    }
+                    finish();
+                }else {
+                    if("0".equals(status)) {
+                        Toast.makeText(GeneralOrderDetailsActivity.this, R.string.CancelOrderFailure, Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(GeneralOrderDetailsActivity.this, R.string.DeleteOrderFailure, Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

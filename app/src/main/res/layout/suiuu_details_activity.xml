@@ -54,16 +54,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/suiuu_details_title_layout" />
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@+id/suiuu_detail_web_view"-->
-                <!--android:layout_marginTop="@dimen/layout_5dp"-->
-                <!--android:background="@color/white"-->
-                <!--android:orientation="vertical">-->
-               <!-- -->
-            <!--</LinearLayout>-->
             <include layout="@layout/common_comment_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
