@@ -10,16 +10,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.pingplusplus.android.PaymentActivity;
+import com.squareup.okhttp.Request;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 项目名称：Android-APP-Backup-
@@ -41,7 +42,6 @@ public class SuiuuPayActivity extends BaseActivity {
     private String destinnation;
     private String orderNumber;
     private TextView tv_suiuu_pay_detail;
-    private String charge;
     private ImageView iv_pay_wechat;
     private ImageView iv_pay_alipay;
 
@@ -101,41 +101,39 @@ public class SuiuuPayActivity extends BaseActivity {
 
     //获取订单的接口
     private void getCharge(String orderNumber, String payWay) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("orderNumber", orderNumber);
-        params.addBodyParameter("channel", payWay);
-        params.addBodyParameter(HttpServicePath.key, verification);
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getCharge, new getChargeCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        Map<String,String> map = new HashMap<>();
+        map.put("orderNumber", orderNumber);
+        map.put("channel", payWay);
+        try {
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.getCharge + "?token=" + SuiuuInfo.ReadAppTimeSign(SuiuuPayActivity.this), new getChargeCallBack(), map);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * 获得charge对象接口
      */
-    class getChargeCallBack extends RequestCallBack<String> {
+    class getChargeCallBack extends OkHttpManager.ResultCallback<String> {
+        @Override
+        public void onError(Request request, Exception e) {
+            Toast.makeText(SuiuuPayActivity.this, "请稍候再试！", Toast.LENGTH_SHORT).show();
+        }
 
         @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
+        public void onResponse(String response) {
             try {
 
-                charge = stringResponseInfo.result;
                 Intent intent = new Intent();
                 String packageName = getPackageName();
                 ComponentName componentName = new ComponentName(packageName, packageName + ".wxapi.WXPayEntryActivity");
                 intent.setComponent(componentName);
-                intent.putExtra(PaymentActivity.EXTRA_CHARGE, charge);
+                intent.putExtra(PaymentActivity.EXTRA_CHARGE, response);
                 startActivityForResult(intent, REQUEST_CODE_PAYMENT);
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(SuiuuPayActivity.this, "请稍候再试！", Toast.LENGTH_SHORT).show();
             }
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            Toast.makeText(SuiuuPayActivity.this, "请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
 

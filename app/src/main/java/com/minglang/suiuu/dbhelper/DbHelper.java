@@ -32,7 +32,6 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("create table user (userid varchar(30), nikename varchar(50), titleimg varchar(50))");
         db.execSQL("create table tripgallerycache (id varchar(30),time varchar(30), data varchar(5000))");
     }
-
     //数据库升级调用的方法。数据库的版本号增加的时候调用。
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import com.minglang.suiuu.activity.TripGalleryDetailsActivity;
 import com.minglang.suiuu.adapter.TripGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.ReFlashListView;
-import com.minglang.suiuu.dbhelper.TripGalleryCacheUtils;
+import com.minglang.suiuu.dbhelper.DataCacheUtils;
 import com.minglang.suiuu.entity.TripGallery;
 import com.minglang.suiuu.entity.TripGallery.DataEntity.TripGalleryDataInfo;
 import com.minglang.suiuu.utils.HttpNewServicePath;
@@ -94,11 +93,11 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 2) {
-                    if(Utils.isNetworkConnected(getActivity())) {
+                    if (Utils.isNetworkConnected(getActivity())) {
                         Intent intent = new Intent(getActivity(), TripGalleryDetailsActivity.class);
                         intent.putExtra("id", tripGalleryList.get(position - 3).getId());
                         startActivity(intent);
-                    }else {
+                    } else {
                         Toast.makeText(getActivity(), R.string.lsq_network_connection_interruption, Toast.LENGTH_SHORT).show();
                     }
 
@@ -122,9 +121,14 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
 
     @Override
     public void onLoadMoreData() {
-        page += 1;
-        loadTripGalleryList("".equals(clickTag) ? null : clickTag, "0", null, page);
-        lv_trip_gallery.loadComplete();
+        if(Utils.isNetworkConnected(getActivity()) ) {
+            page += 1;
+            loadTripGalleryList("".equals(clickTag) ? null : clickTag, "0", null, page);
+            lv_trip_gallery.loadComplete();
+        }else {
+            Toast.makeText(getActivity(),R.string.NetworkAnomaly, Toast.LENGTH_SHORT).show();
+            lv_trip_gallery.loadComplete();
+        }
     }
 
     @Override
@@ -149,7 +153,6 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
         page = 1;
         loadTripGalleryList(clickTag, "0", null, page);
     }
-
     /**
      * 加载旅图列表
      * @param tags 标签
@@ -180,14 +183,13 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
     class loadTripGalleryListCallBack extends OkHttpManager.ResultCallback<String> {
         @Override
         public void onError(Request request, Exception e) {
-            tripGalleryList.addAll(JsonUtils.getInstance().fromJSON(TripGallery.class, (String) TripGalleryCacheUtils.getTripGalleryCacheData(getActivity()).get("data")).getData().getData());
+            tripGalleryList.addAll(JsonUtils.getInstance().fromJSON(TripGallery.class, (String) DataCacheUtils.getCacheData(getActivity(),"1").get("data")).getData().getData());
             showList(tripGalleryList);
             progressDialog.dismiss();
         }
 
         @Override
             public void onResponse(String result) {
-            Log.i("suiuu", "result=" + result);
             progressDialog.dismiss();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd", Locale.CHINA);
             Date date = new Date();
@@ -202,20 +204,21 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
                         Toast.makeText(getActivity(), "没有更多数据显示", Toast.LENGTH_SHORT).show();
                     } else {
                         //缓存数据
-                        Map tripGalleryCacheData = TripGalleryCacheUtils.getTripGalleryCacheData(getActivity());
+                        Map tripGalleryCacheData = DataCacheUtils.getCacheData(getActivity(),"1");
                         //上次缓存时间
                         String time = (String) tripGalleryCacheData.get("time");
                         if (time == null) {
-                            TripGalleryCacheUtils.insertTripGalleryCache(getActivity(), format, result);
+                            DataCacheUtils.insertCacheData(getActivity(), format, result,"1");
                         } else if (Utils.compareDate(time, format) == -1) {
-                            TripGalleryCacheUtils.updateTripGalleryCache(getActivity(), format, (String) tripGalleryCacheData.get("id"), result);
+                            DataCacheUtils.updateCacheData(getActivity(), format, (String) tripGalleryCacheData.get("id"), result);
                         }
                         lv_trip_gallery.setVisibility(View.VISIBLE);
                         tripGalleryList.addAll(data);
                         showList(tripGalleryList);
                     }
                 }else if(status == -5){
-                    loadTripGalleryList(null, "0", null, page);
+                    tripGalleryList.addAll(JsonUtils.getInstance().fromJSON(TripGallery.class, (String) DataCacheUtils.getCacheData(getActivity(), "1").get("data")).getData().getData());
+                    showList(tripGalleryList);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -20,6 +20,7 @@ import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.customview.ReFlashListView;
 import com.minglang.suiuu.customview.TextProgressDialog;
+import com.minglang.suiuu.dbhelper.DataCacheUtils;
 import com.minglang.suiuu.entity.SuiuuDataList;
 import com.minglang.suiuu.entity.SuiuuReturnDate;
 import com.minglang.suiuu.utils.AppUtils;
@@ -27,13 +28,18 @@ import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.Utils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * 随游页面
@@ -114,11 +120,16 @@ public class SuiuuFragment extends BaseFragment
 
     @Override
     public void onLoadMoreData() {
+        if(Utils.isNetworkConnected(getActivity()) ) {
         if (!dialog.isShow()) {
             page += 1;
             loadDate(null, null, null, null, null, page);
         }
         suiuuListView.loadComplete();
+        }else {
+            Toast.makeText(getActivity(),R.string.NetworkAnomaly, Toast.LENGTH_SHORT).show();
+            suiuuListView.loadComplete();
+        }
     }
 
     @Override
@@ -148,12 +159,17 @@ public class SuiuuFragment extends BaseFragment
         @Override
         public void onError(Request request, Exception e) {
             dialog.dismissDialog();
+            suiuuDataList.addAll(JsonUtils.getInstance().fromJSON(SuiuuReturnDate.class, (String) DataCacheUtils.getCacheData(getActivity(), "2").get("data")).getData());
+            showList(suiuuDataList);
             Toast.makeText(getActivity().getApplicationContext(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onResponse(String response) {
             dialog.dismissDialog();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd", Locale.CHINA);
+            Date date = new Date();
+            String format = simpleDateFormat.format(date);
             try {
                 JSONObject json = new JSONObject(response);
                 String status = json.getString("status");
@@ -162,9 +178,20 @@ public class SuiuuFragment extends BaseFragment
                     List<SuiuuDataList> suiuuDataListNew = baseCollection.getData();
                     if (suiuuDataListNew.size() < 1) {
                         Toast.makeText(getActivity().getApplicationContext(), "数据加载完毕", Toast.LENGTH_SHORT).show();
+                    } else {
+                        //缓存数据
+                        Map tripGalleryCacheData = DataCacheUtils.getCacheData(getActivity(), "2");
+                        //上次缓存时间
+                        String time = (String) tripGalleryCacheData.get("time");
+                        if (time == null) {
+                            DataCacheUtils.insertCacheData(getActivity(), format, response, "2");
+                        } else if (Utils.compareDate(time, format) == -1) {
+                            DataCacheUtils.updateCacheData(getActivity(), format, (String) tripGalleryCacheData.get("id"), response);
+                        }
+                        suiuuDataList.addAll(suiuuDataListNew);
+                        showList(suiuuDataList);
                     }
-                    suiuuDataList.addAll(suiuuDataListNew);
-                    showList(suiuuDataList);
+
                 } else if ("-3".equals(status)) {
                     Toast.makeText(getActivity().getApplicationContext(), "登录信息过期,请重新登录", Toast.LENGTH_SHORT).show();
                     AppUtils.intentLogin(getActivity());

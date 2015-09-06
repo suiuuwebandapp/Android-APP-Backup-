@@ -264,6 +264,11 @@ public class HttpNewServicePath {
     /*-----------------------随游相关-----------------------------*/
 
     /**
+     * 得到随游的详细信息
+     */
+    public static String getSuiuuItemInfo = RootPath + "/app-travel/get-travel-info-json";
+
+    /**
      * 得到普通用户未完成的订单
      */
     public static String getSuiuuDetailInfo = RootPath + "/app-travel/get-travel-info";
@@ -311,5 +316,11 @@ public class HttpNewServicePath {
      * 创建一条旅图评论
      */
     public static String articleCreateComment = RootPath + "/app-travel-picture/add-travel-picture-comment";
+
+ /*-----------------------支付相关------------------------------------*/
+    /**
+     * 获得charge
+     */
+    public static String getCharge = RootPath + "/app-main/pay";
 
 }

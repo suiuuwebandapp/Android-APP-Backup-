@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -21,11 +22,6 @@ import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.CommonCommentAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
@@ -35,11 +31,12 @@ import com.minglang.suiuu.entity.SuiuuDetailsData;
 import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
 import com.minglang.suiuu.utils.AppUtils;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.Utils;
+import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -136,6 +133,15 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
      */
     private List<CommentDataEntity> listAll = new ArrayList<>();
 
+    /**
+     * 是否显示全部评论的状态
+     */
+    private boolean showAllCommnet = false;
+    /**
+     * 加载更多的view
+     */
+    private TextView textView = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -182,11 +188,16 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         suiuu_detail_comment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
-                intent.putExtra(TRIP_ID, tripId);
-                intent.putExtra(R_ID, listAll.get(position).getCommentId());
-                intent.putExtra(NICK_NAME, listAll.get(position).getNickname());
-                startActivityForResult(intent, COMMENT_SUCCESS);
+                if(!showAllCommnet && position == 5) {
+                    showAllCommnet = true;
+                    showList(listAll);
+                }else {
+                    Intent intent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
+                    intent.putExtra(TRIP_ID, tripId);
+                    intent.putExtra(R_ID, listAll.get(position).getCommentId());
+                    intent.putExtra(NICK_NAME, listAll.get(position).getNickname());
+                    startActivityForResult(intent, COMMENT_SUCCESS);
+                }
             }
         });
     }
@@ -279,31 +290,31 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
     //访问网络
     private void getSuiuuDetailsData(String tripId) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(TRIP_ID, tripId);
-        params.addBodyParameter(HttpServicePath.key, verification);
-
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getSuiuuItemInfo, new SuiuuItemInfoCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String[] keyArray1 = new String[]{TRIP_ID, "token"};
+        String[] valueArray1 = new String[]{tripId, SuiuuInfo.ReadAppTimeSign(SuiuuDetailsActivity.this)};
+        try {
+            OkHttpManager.onGetAsynRequest(addUrlAndParams(HttpNewServicePath.getSuiuuItemInfo, keyArray1, valueArray1), new SuiuuItemInfoCallBack());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * 请求数据网络接口回调
      */
-    class SuiuuItemInfoCallBack extends RequestCallBack<String> {
-
+    class SuiuuItemInfoCallBack extends OkHttpManager.ResultCallback<String> {
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            DeBugLog.i(TAG, "请求的数据:" + str);
+        public void onError(Request request, Exception e) {
+            Toast.makeText(SuiuuDetailsActivity.this, DataRequestFailure, Toast.LENGTH_SHORT).show();
+        }
+        @Override
+        public void onResponse(String str) {
             try {
                 JSONObject jsonObject = new JSONObject(str);
                 String status = jsonObject.getString(STATUS);
 
                 if ("1".equals(status)) {
-                    detailsData = JsonUtils.getInstance().fromJSON(SuiuuDetailsData.class, responseInfo.result);
+                    detailsData = JsonUtils.getInstance().fromJSON(SuiuuDetailsData.class, str);
                     listAll = detailsData.getData().getComment().getData();
                     fullCommentList();
                 } else if ("-3".equals(status)) {
@@ -321,11 +332,6 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
         }
 
-        @Override
-        public void onFailure(HttpException error, String msg) {
-            DeBugLog.e(TAG, "HttpException:" + error + ",msg:" + msg);
-            Toast.makeText(SuiuuDetailsActivity.this, DataRequestFailure, Toast.LENGTH_SHORT).show();
-        }
 
     }
 
@@ -342,11 +348,29 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     }
 
     private void showList(List<CommentDataEntity> commentDataList) {
-        if (adapter == null) {
-            adapter = new CommonCommentAdapter(this, commentDataList);
-            suiuu_detail_comment.setAdapter(adapter);
+        List<CommentDataEntity> newCommentDataList = new ArrayList<>();
+        if (!showAllCommnet) {
+            if (commentDataList.size() > 5) {
+                if (textView == null) {
+                    textView = new TextView(this);
+                    textView.setText("点击加载更多");
+                    textView.setPadding(0, 10, 0, 0);
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(18);
+                }
+                suiuu_detail_comment.addFooterView(textView);
+                newCommentDataList.addAll(commentDataList);
+                newCommentDataList.subList(5, commentDataList.size()).clear();
+            }
         } else {
-            adapter.onDateChange(commentDataList);
+            suiuu_detail_comment.removeFooterView(textView);
+        }
+        if (adapter == null) {
+            adapter = new CommonCommentAdapter(this, commentDataList.size() > 5 && !showAllCommnet ? newCommentDataList : commentDataList);
+            suiuu_detail_comment.setAdapter(adapter);
+            Utils.setListViewHeightBasedOnChildren(suiuu_detail_comment);
+        } else {
+            adapter.onDateChange(commentDataList.size() > 5 && !showAllCommnet ? newCommentDataList : commentDataList);
         }
     }
 
@@ -409,6 +433,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                 CommentDataEntity newCommentData =
                         JsonUtils.getInstance().fromJSON(CommentDataEntity.class, json.toString());
                 listAll.add(0, newCommentData);
+                showAllCommnet = false;
                 fullCommentList();
             } catch (JSONException e) {
                 e.printStackTrace();
