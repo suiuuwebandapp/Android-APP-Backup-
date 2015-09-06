@@ -18,11 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshScrollView;
 import com.minglang.suiuu.R;
@@ -39,7 +34,6 @@ import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.OkHttpManager;
-import com.minglang.suiuu.utils.SuiuuHttp;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.phillipcalvin.iconbutton.IconButton;
 import com.squareup.okhttp.Request;
@@ -152,7 +146,6 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
 
         strID = getIntent().getStringExtra(ID);
         title = getIntent().getStringExtra(TITLE);
-        DeBugLog.i(TAG, "strID:" + strID);
 
         ButterKnife.bind(this);
         initView();
@@ -215,7 +208,6 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 String url = buildUrl(HttpNewServicePath.getAttentionQuestionPath, qID);
-                DeBugLog.i(TAG, "关注问题URL:" + url);
                 getAttentionProblem(url);
             }
         });
@@ -273,7 +265,6 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
     private void getTagList() {
         try {
             String url = HttpNewServicePath.getDefaultTagListPath + "?" + TOKEN + "=" + token;
-            DeBugLog.i(TAG, "TAG URL:" + url);
             OkHttpManager.onGetAsynRequest(url, new TagResultCallback());
         } catch (IOException e) {
             e.printStackTrace();
@@ -370,7 +361,6 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
                             } else {
                                 problemTitle.setText("");
                             }
-                            DeBugLog.i(TAG, "title:" + strTitle);
 
                             String strContent = questionEntity.getQContent();
                             if (!TextUtils.isEmpty(strContent)) {
@@ -378,7 +368,6 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
                             } else {
                                 problemContent.setText("");
                             }
-                            DeBugLog.i(TAG, "content:" + strContent);
                         }
 
                         List<AnswerEntity> list = itemData.getAnswer();
@@ -462,6 +451,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         @Override
         public void onError(Request request, Exception e) {
             DeBugLog.e(TAG, "关注问题数据异常:" + e.getMessage());
+            Toast.makeText(CommunityDetailsActivity.this, attention_fai, Toast.LENGTH_SHORT).show();
         }
 
         @Override

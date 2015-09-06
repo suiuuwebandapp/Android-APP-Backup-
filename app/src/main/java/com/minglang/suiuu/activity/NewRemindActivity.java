@@ -5,7 +5,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -13,9 +12,9 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.NewRemindPageAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.remind.MsgOrderFragment;
-import com.minglang.suiuu.fragment.remind.MsgTripGalleryFragment;
-import com.minglang.suiuu.fragment.remind.MsgSystemFragment;
 import com.minglang.suiuu.fragment.remind.MsgQuestionFragment;
+import com.minglang.suiuu.fragment.remind.MsgSystemFragment;
+import com.minglang.suiuu.fragment.remind.MsgTripGalleryFragment;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
@@ -83,7 +82,6 @@ public class NewRemindActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_remind);
-
         ButterKnife.bind(this);
         initView();
     }
@@ -92,14 +90,7 @@ public class NewRemindActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
-
         setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.back);
-        }
 
         newRemindPager.setOffscreenPageLimit(4);
 
@@ -135,11 +126,12 @@ public class NewRemindActivity extends BaseAppCompatActivity {
     private void CreateFragment() {
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
+        token = SuiuuInfo.ReadAppTimeSign(this);
 
-        msgTripGalleryFragment = MsgTripGalleryFragment.newInstance(userSign, verification);
-        msgQuestionFragment = MsgQuestionFragment.newInstance(userSign, verification);
-        msgOrderFragment = MsgOrderFragment.newInstance(userSign, verification);
-        msgSystemFragment = MsgSystemFragment.newInstance(userSign, verification);
+        msgTripGalleryFragment = MsgTripGalleryFragment.newInstance(userSign, verification, token);
+        msgQuestionFragment = MsgQuestionFragment.newInstance(userSign, verification, token);
+        msgOrderFragment = MsgOrderFragment.newInstance(userSign, verification, token);
+        msgSystemFragment = MsgSystemFragment.newInstance(userSign, verification, token);
     }
 
     @Override

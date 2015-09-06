@@ -68,9 +68,36 @@ public class HttpNewServicePath {
      */
     public static String ThirdPartyPath = RootPath + "/app-login/access-login";
 
+    //***************************************************消息提醒*******************************************************\\
+
+    /**
+     * 得到旅途消息
+     */
+    public static String getTripGalleryMsgDataPath = RootPath + "/app-user-message/get-tp-messages";
+
+    /**
+     * 得到问答消息
+     */
+    public static String getQuestionAndAnswerMsgDataPath = RootPath + "/app-user-message/get-qa-messages";
+
+    /**
+     * 得到订单消息
+     */
+    public static String getOrderMsgDataPath = RootPath + "/app-user-message/get-order-messages";
+
+    /**
+     * 得到系统消息
+     */
+    public static String getSystemMsgDataPath = RootPath + "/app-user-message/get-sys-messages";
+
     //****************************************************个人主页******************************************************\\
 
     public static String getPersonalMainPagePath = RootPath + "/app-user-info/get-info";
+
+    /**
+     * 得到指定用户的随游
+     */
+    public static String getPersonalSuiuuDataPath = RootPath + "/app-travel/my-trip-list";
 
     //***************************************************问答社区相关*****************************************************\\
 
@@ -141,6 +168,16 @@ public class HttpNewServicePath {
     public static String MyParticipateSuiuuPath = RootPath + "/app-travel/my-join-trip-list";
 
     /**
+     * 得到随游的详细信息
+     */
+    public static String getSuiuuItemInfo = RootPath + "/app-travel/get-travel-info-json";
+
+    /**
+     * 新申请数据接口
+     */
+    public static String getNewApplyForDataPath = RootPath + "/app-travel/get-apply-list";
+
+    /**
      * 移除随友
      */
     public static String removeSuiuuUserPath = RootPath + "/app-travel/remove-publisher";
@@ -150,6 +187,16 @@ public class HttpNewServicePath {
     public static String agreeDataPath = RootPath + "/app-travel/agree-apply";
 
     //********************************************侧栏-随友-随游订单*************************************************************\\
+
+    /**
+     * 获取新订单
+     */
+    public static String getNewOrderDataPath = RootPath + "/app-travel/get-un-confirm-order";
+
+    /**
+     * 已接到的订单
+     */
+    public static String getConfirmOrderDataPath = RootPath + "/app-travel/get-publisher-order-list";
 
     /**
      * 忽略订单
@@ -191,7 +238,6 @@ public class HttpNewServicePath {
     public static String getGeneralUserNotFinishOrderPath = RootPath + "/app-user-order/get-un-finish-order";
 
     /**
-<<<<<<< HEAD
      * 生成订单号
      */
     public static String createOrderNumber = RootPath + "/app-user-order/add-order";

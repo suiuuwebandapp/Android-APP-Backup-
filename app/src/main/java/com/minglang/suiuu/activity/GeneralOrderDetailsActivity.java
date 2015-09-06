@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
-import com.lidroid.xutils.http.RequestParams;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.GeneralOrderDetails;
@@ -62,6 +61,11 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
     private static final String ORDER_NUMBER = "orderNumber";
     private static final String TITLE_IMG = "titleImg";
+
+    private String PEOPLE_NUMBER = "peopleNumber";
+    private String TIME = "time";
+    private String TOTAL_PRICE = "total_price";
+    private String DESTINATION = "destination";
 
     private static final float DEFAULT_SCORE = 0f;
 
@@ -198,6 +202,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     private float totalOrderPrice = 0f;
     private InfoEntity infoEntity;
     private TripJsonInfo tripJsonInfo;
+
     /**
      * 订单状态
      */
@@ -276,22 +281,21 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                 switch (status) {
                     case "0":
                         Intent intent = new Intent(GeneralOrderDetailsActivity.this, SuiuuPayActivity.class);
-                        intent.putExtra("peopleNumber", infoEntity.getPersonCount());
-                        intent.putExtra("time", infoEntity.getBeginDate());
-                        intent.putExtra("total_price", infoEntity.getTotalPrice());
-                        intent.putExtra("destinnation", tripJsonInfo.getInfo().getTitle());
-                        intent.putExtra("orderNumber", orderNumber);
+                        intent.putExtra(PEOPLE_NUMBER, infoEntity.getPersonCount());
+                        intent.putExtra(TIME, infoEntity.getBeginDate());
+                        intent.putExtra(TOTAL_PRICE, infoEntity.getTotalPrice());
+                        intent.putExtra(DESTINATION, tripJsonInfo.getInfo().getTitle());
+                        intent.putExtra(ORDER_NUMBER, orderNumber);
                         startActivity(intent);
                         finish();
                         break;
                     case "3":
-                        deleteOreder();
+                        deleteOrder();
                         break;
                     case "5":
-                        deleteOreder();
+                        deleteOrder();
                         break;
                 }
-
 
 
             }
@@ -304,30 +308,25 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             }
         });
     }
+
     private void cancelOrder() {
         Map<String, String> map = new HashMap<>();
         map.put("orderId", infoEntity.getOrderId());
         try {
-            OkHttpManager.onPostAsynRequest(HttpNewServicePath.userCancelOrder + "?token=" + SuiuuInfo.ReadAppTimeSign(GeneralOrderDetailsActivity.this), new CancelOrderCallBack(), map);
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.userCancelOrder + "?token=" + token, new CancelOrderCallBack(), map);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    private void deleteOreder() {
+
+    private void deleteOrder() {
         Map<String, String> map = new HashMap<>();
         map.put("orderId", infoEntity.getOrderId());
         try {
-            OkHttpManager.onPostAsynRequest(HttpNewServicePath.userDeleteOrder + "?token=" + SuiuuInfo.ReadAppTimeSign(GeneralOrderDetailsActivity.this), new CancelOrderCallBack(), map);
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.userDeleteOrder + "?token=" + token, new CancelOrderCallBack(), map);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    private RequestParams buildRequestParams() {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(ORDER_NUMBER, orderNumber);
-        DeBugLog.i(TAG, " verification:"+verification);
-        params.addBodyParameter(HttpServicePath.key, verification);
-        return params;
     }
 
     private void getGeneralUserOrderData4Service() {
@@ -336,6 +335,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                 progressDialog.show();
             }
         }
+
         String[] keyArray = new String[]{ORDER_NUMBER, HttpServicePath.key, TOKEN};
         String[] valueArray = new String[]{orderNumber, verification, token};
         String url = addUrlAndParams(HttpNewServicePath.getGeneralUserOrderDetailsPath, keyArray, valueArray);
@@ -627,29 +627,30 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         }
 
     }
+
     private class CancelOrderCallBack extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onError(Request request, Exception e) {
-            Log.i("suiuu","---"+e.toString());
+            Log.i("suiuu", "---" + e.toString());
         }
 
         @Override
         public void onResponse(String response) {
             try {
                 JSONObject result = new JSONObject(response);
-                String results = (String)result.get("status");
-                if("1".equals(result.get(results))) {
-                    if("0".equals(status)) {
-                        Toast.makeText(GeneralOrderDetailsActivity.this,R.string.CancelOrderSuccess,Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(GeneralOrderDetailsActivity.this,R.string.DeleteOrderSuccess,Toast.LENGTH_SHORT).show();
+                String results = (String) result.get("status");
+                if ("1".equals(result.get(results))) {
+                    if ("0".equals(status)) {
+                        Toast.makeText(GeneralOrderDetailsActivity.this, R.string.CancelOrderSuccess, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(GeneralOrderDetailsActivity.this, R.string.DeleteOrderSuccess, Toast.LENGTH_SHORT).show();
                     }
                     finish();
-                }else {
-                    if("0".equals(status)) {
+                } else {
+                    if ("0".equals(status)) {
                         Toast.makeText(GeneralOrderDetailsActivity.this, R.string.CancelOrderFailure, Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         Toast.makeText(GeneralOrderDetailsActivity.this, R.string.DeleteOrderFailure, Toast.LENGTH_SHORT).show();
 
                     }

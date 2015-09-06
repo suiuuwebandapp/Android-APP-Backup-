@@ -162,7 +162,7 @@ public class SuiuuOrderActivity extends BaseActivity {
                     intent.putExtra("peopleNumber", Integer.toString(enjoy_peopleNumber));
                     intent.putExtra("time", tv_travel_date.getText());
                     intent.putExtra("total_price", tv_order_price.getText());
-                    intent.putExtra("destinnation", titleInfo);
+                    intent.putExtra("destination", titleInfo);
                     intent.putExtra("orderNumber", orderNumber);
                     startActivity(intent);
                     finish();

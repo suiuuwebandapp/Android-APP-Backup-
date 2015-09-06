@@ -79,6 +79,8 @@ public class MainActivity extends BaseActivity {
     private static final String STATUS = "status";
     private static final String DATA = "data";
 
+    private static final String USERSIGN = "userSign";
+
     @BindString(R.string.SuiuuAccount)
     String SuiuuAccount;
 
@@ -303,11 +305,12 @@ public class MainActivity extends BaseActivity {
     private void initFragment() {
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
+        token = SuiuuInfo.ReadAppTimeSign(this);
 
         switchViewState(NUMBER1);
 
         tripGalleryFragment = new TripGalleryFragment();
-        informationFragment = InformationFragment.newInstance(userSign, verification);
+        informationFragment = InformationFragment.newInstance(userSign, verification, token);
         communityFragment = CommunityFragment.newInstance(userSign, verification);
 
         LoadDefaultFragment();
@@ -471,7 +474,7 @@ public class MainActivity extends BaseActivity {
         rl_net_error.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =  new Intent(Settings.ACTION_SETTINGS);
+                Intent intent = new Intent(Settings.ACTION_SETTINGS);
                 startActivity(intent);
             }
         });
@@ -832,12 +835,14 @@ public class MainActivity extends BaseActivity {
 
                 case R.id.head_image:
                     Intent headIntent = new Intent(MainActivity.this, PersonalMainPagerActivity.class);
+                    headIntent.putExtra(USERSIGN, userSign);
                     startActivity(headIntent);
                     mDrawerLayout.closeDrawer(sliderView);
                     break;
 
                 case R.id.nick_name:
                     Intent nickIntent = new Intent(MainActivity.this, PersonalMainPagerActivity.class);
+                    nickIntent.putExtra(USERSIGN, userSign);
                     startActivity(nickIntent);
                     mDrawerLayout.closeDrawer(sliderView);
                     break;

@@ -136,11 +136,14 @@
 
                 <TextView
                     android:id="@+id/my_suiuu_release_main_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/layout_8dp"
+                    android:layout_marginRight="@dimen/layout_8dp"
                     android:layout_toEndOf="@+id/my_suiuu_release_back"
                     android:layout_toRightOf="@+id/my_suiuu_release_back"
+                    android:singleLine="true"
                     android:text="@string/Title"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/white"/>
@@ -161,8 +164,9 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <!--展示区域-->
     <android.support.v4.view.ViewPager
-        android:id="@+id/my_suiuu_release_viewPager"
+        android:id="@+id/my_suiuu_release_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>

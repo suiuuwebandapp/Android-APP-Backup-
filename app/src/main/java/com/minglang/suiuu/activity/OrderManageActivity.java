@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -74,11 +73,12 @@ public class OrderManageActivity extends BaseAppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText(confirmOrder), false);
         tabLayout.setTabTextColors(normalColor, selectedColor);
 
-        String userSign = SuiuuInfo.ReadUserSign(this);
-        String verification = SuiuuInfo.ReadVerification(this);
+        userSign = SuiuuInfo.ReadUserSign(this);
+        verification = SuiuuInfo.ReadVerification(this);
+        token = SuiuuInfo.ReadAppTimeSign(this);
 
-        NewOrderFragment newOrderFragment = NewOrderFragment.newInstance(userSign, verification);
-        ConfirmOrderFragment confirmOrderFragment = ConfirmOrderFragment.newInstance(userSign, verification);
+        NewOrderFragment newOrderFragment = NewOrderFragment.newInstance(userSign, verification,token);
+        ConfirmOrderFragment confirmOrderFragment = ConfirmOrderFragment.newInstance(userSign, verification, token);
 
         List<String> titleList = new ArrayList<>();
         titleList.add(newOrder);
@@ -98,13 +98,6 @@ public class OrderManageActivity extends BaseAppCompatActivity {
      * 控件动作
      */
     private void ViewAction() {
-
-        setSupportActionBar(toolbar);
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.back);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 

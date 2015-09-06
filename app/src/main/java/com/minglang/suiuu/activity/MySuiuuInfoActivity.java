@@ -44,13 +44,13 @@ public class MySuiuuInfoActivity extends BaseAppCompatActivity {
     @BindColor(R.color.mainColor)
     int selectedColor;
 
-    @Bind(R.id.mySuiuuToolbar)
+    @Bind(R.id.my_suiuu_tool_bar)
     Toolbar toolbar;
 
-    @Bind(R.id.mySuiuuTabLayout)
+    @Bind(R.id.my_suiuu_tab_layout)
     TabLayout tabLayout;
 
-    @Bind(R.id.mySuiuuViewPager)
+    @Bind(R.id.my_suiuu_view_pager)
     ViewPager viewPager;
 
     @Override

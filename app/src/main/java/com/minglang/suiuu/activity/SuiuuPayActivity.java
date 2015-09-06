@@ -39,7 +39,7 @@ public class SuiuuPayActivity extends BaseActivity {
     private String peopleNumber;
     private String time;
     private String total_price;
-    private String destinnation;
+    private String destination;
     private String orderNumber;
     private TextView tv_suiuu_pay_detail;
     private ImageView iv_pay_wechat;
@@ -52,7 +52,7 @@ public class SuiuuPayActivity extends BaseActivity {
         peopleNumber = this.getIntent().getStringExtra("peopleNumber");
         time = this.getIntent().getStringExtra("time");
         total_price = this.getIntent().getStringExtra("total_price");
-        destinnation = this.getIntent().getStringExtra("destinnation");
+        destination = this.getIntent().getStringExtra("destination");
         orderNumber = this.getIntent().getStringExtra("orderNumber");
         initView();
         viewAction();
@@ -74,7 +74,7 @@ public class SuiuuPayActivity extends BaseActivity {
         tv_top_center.setVisibility(View.VISIBLE);
         tv_top_center.setText("支付");
         tv_top_right.setVisibility(View.INVISIBLE);
-        tv_suiuu_pay_detail.setText(Html.fromHtml("<font color=#000000>你选择了随游</font> " + destinnation + "<font color=#000000>,并将在</font>" + time + "<font color=#000000>出行,人数为</font>" + peopleNumber + "<font color=#000000>人,选择单项服务</font>" + 0 + "<font color=#000000>个,总价为 ￥:</font>" + total_price));
+        tv_suiuu_pay_detail.setText(Html.fromHtml("<font color=#000000>你选择了随游</font> " + destination + "<font color=#000000>,并将在</font>" + time + "<font color=#000000>出行,人数为</font>" + peopleNumber + "<font color=#000000>人,选择单项服务</font>" + 0 + "<font color=#000000>个,总价为 ￥:</font>" + total_price));
     }
 
     class Myclick implements View.OnClickListener {

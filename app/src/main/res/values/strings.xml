@@ -74,6 +74,7 @@
     <string name="AliPay" translatable="false">支付宝</string>
     <string name="WeChatPay" translatable="false">微信支付</string>
 
+    <string name="Pay" translatable="false">支付</string>
 
     <string name="AddReceivablesMode" translatable="false">添加收款方式</string>
 
@@ -451,6 +452,10 @@
     <string name="CancelOrder" translatable="false">取消订单</string>
     <string name="AgainPay" translatable="false">重新支付</string>
 
+    <string name="MyProblem" trabslatable="false">我的问答</string>
+
+    <string name="AttentionFailure" trabslatable="false">关注失败</string>
+
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
     <string name="pull_to_refresh_release_label">Release rear refresh</string>
     <string name="pull_to_refresh_refreshing_label">refresh\u2026</string>
@@ -523,5 +528,7 @@
         <attr name="ci_drawable" format="reference"/>
         <attr name="ci_drawable_unselected" format="reference"/>
     </declare-styleable>
+    <string name="title_activity_personal_suiuu">PersonalSuiuuActivity</string>
+    <string name="title_activity_personal_problem">PersonalProblemActivity</string>
 
 </resources>

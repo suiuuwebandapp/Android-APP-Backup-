@@ -71,7 +71,7 @@ public class ParticipateFragment extends BaseFragment {
     private String verification;
 
     @BindString(R.string.load_wait)
-    String wait;
+    String DialogMsg;
 
     @BindString(R.string.NoData)
     String NoData;
@@ -155,7 +155,7 @@ public class ParticipateFragment extends BaseFragment {
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
 
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(wait);
+        progressDialog.setMessage(DialogMsg);
 
         participateAdapter = new ParticipateAdapter(getActivity());
         pullToRefreshListView.setAdapter(participateAdapter);
@@ -219,7 +219,7 @@ public class ParticipateFragment extends BaseFragment {
 
         String[] keyArray = new String[]{USER_SIGN, HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{userSign, verification, String.valueOf(page), String.valueOf(10), token};
-        String url = addUrlAndParams(HttpNewServicePath.getMyPublishedSuiuuPath, keyArray, valueArray);
+        String url = addUrlAndParams(HttpNewServicePath.MyParticipateSuiuuPath, keyArray, valueArray);
         DeBugLog.i(TAG, "请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new MyParticipateResultCallback());

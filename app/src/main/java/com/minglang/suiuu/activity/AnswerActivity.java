@@ -43,13 +43,13 @@ public class AnswerActivity extends BaseAppCompatActivity {
     private String qID;
 
     @BindString(R.string.Waiting)
-    String wait;
+    String DialogMsg;
 
     @BindString(R.string.AnswerSuccess)
     String success;
 
     @BindString(R.string.NetworkAnomaly)
-    String netWorkError;
+    String NetWorkError;
 
     @BindString(R.string.AnswerNoNull)
     String AnswerNoNull;
@@ -82,10 +82,13 @@ public class AnswerActivity extends BaseAppCompatActivity {
         setSupportActionBar(toolbar);
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(wait);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         verification = SuiuuInfo.ReadVerification(this);
+        token = SuiuuInfo.ReadAppTimeSign(this);
+
+        DeBugLog.i(TAG, "verification:" + verification + ",token:" + token);
     }
 
     /**
@@ -96,10 +99,11 @@ public class AnswerActivity extends BaseAppCompatActivity {
      * @return 参数
      */
     private OkHttpManager.Params[] buildNewParams(String id, String content) {
-        OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[3];
+        OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[4];
         paramsArray[0] = new OkHttpManager.Params(HttpNewServicePath.key, verification);
         paramsArray[1] = new OkHttpManager.Params(Q_ID, id);
         paramsArray[2] = new OkHttpManager.Params(CONTENT, content);
+        paramsArray[3] = new OkHttpManager.Params(TOKEN, token);
         return paramsArray;
     }
 
@@ -115,10 +119,11 @@ public class AnswerActivity extends BaseAppCompatActivity {
 
         try {
             OkHttpManager.onPostAsynRequest(HttpNewServicePath.setAnswerToQuestionPath,
-                 new AnswerResultCallback(), buildNewParams(qID, content));
+                    new AnswerResultCallback(), buildNewParams(qID, content));
         } catch (IOException e) {
             e.printStackTrace();
             hideDialog();
+            Toast.makeText(AnswerActivity.this, NetWorkError, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -159,12 +164,6 @@ public class AnswerActivity extends BaseAppCompatActivity {
     private class AnswerResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onError(Request request, Exception e) {
-            hideDialog();
-            DeBugLog.e(TAG, "request:" + request.toString() + ",Exception:" + e.getMessage());
-        }
-
-        @Override
         public void onResponse(String response) {
             hideDialog();
             DeBugLog.i(TAG, "response:" + response);
@@ -175,11 +174,19 @@ public class AnswerActivity extends BaseAppCompatActivity {
                     Toast.makeText(AnswerActivity.this, success, Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(AnswerActivity.this, netWorkError, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AnswerActivity.this, NetWorkError, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析数据异常:" + e.getMessage());
+                Toast.makeText(AnswerActivity.this, NetWorkError, Toast.LENGTH_SHORT).show();
             }
+        }
+
+        @Override
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "request:" + request.toString() + ",Exception:" + e.getMessage());
+            hideDialog();
+            Toast.makeText(AnswerActivity.this, NetWorkError, Toast.LENGTH_SHORT).show();
         }
 
     }

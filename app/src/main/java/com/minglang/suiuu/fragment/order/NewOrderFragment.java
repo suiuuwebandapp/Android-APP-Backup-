@@ -13,24 +13,24 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.OrderDetailsActivity;
 import com.minglang.suiuu.adapter.OrderListManageAdapter;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.OrderManage;
+import com.minglang.suiuu.entity.OrderManage.OrderManageData;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +51,7 @@ public class NewOrderFragment extends BaseFragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     private static final String USER_SIGN = "userSign";
     private static final String PAGE = "page";
@@ -61,17 +62,23 @@ public class NewOrderFragment extends BaseFragment {
 
     private static final String NEW = "new";
 
-    private String userSign;
-    private String verification;
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
 
     @BindString(R.string.load_wait)
-    String wait;
+    String DialogMsg;
 
     @BindString(R.string.NoData)
-    String noData;
+    String NoData;
 
     @BindString(R.string.DataError)
-    String errorString;
+    String DataError;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     @Bind(R.id.new_order_list_view)
     PullToRefreshListView pullToRefreshListView;
@@ -96,7 +103,7 @@ public class NewOrderFragment extends BaseFragment {
     /**
      * 数据源
      */
-    private List<OrderManage.OrderManageData> listAll = new ArrayList<>();
+    private List<OrderManageData> listAll = new ArrayList<>();
 
     /**
      * Use this factory method to create a new instance of
@@ -104,13 +111,15 @@ public class NewOrderFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
+     * @param param3 Parameter 3.
      * @return A new instance of fragment NewOrderFragment.
      */
-    public static NewOrderFragment newInstance(String param1, String param2) {
+    public static NewOrderFragment newInstance(String param1, String param2, String param3) {
         NewOrderFragment fragment = new NewOrderFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM2, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -125,6 +134,7 @@ public class NewOrderFragment extends BaseFragment {
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
+            token = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -133,8 +143,9 @@ public class NewOrderFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_new_order, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
+        viewAction();
         getNewOrderData(page);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -148,10 +159,8 @@ public class NewOrderFragment extends BaseFragment {
      * 初始化方法
      */
     private void initView() {
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
-
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(wait);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -163,7 +172,7 @@ public class NewOrderFragment extends BaseFragment {
     /**
      * 控件动作
      */
-    private void ViewAction() {
+    private void viewAction() {
 
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -205,16 +214,24 @@ public class NewOrderFragment extends BaseFragment {
     }
 
     private void getNewOrderData(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(USER_SIGN, userSign);
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(15));
+        if (isPullToRefresh) {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
 
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getNewOrderDataPath, new NewOrderRequestCallback());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String[] keyArray = new String[]{USER_SIGN, HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
+        String[] valueArray = new String[]{userSign, verification, String.valueOf(page), String.valueOf(15), token};
+        String url = addUrlAndParams(HttpNewServicePath.getNewOrderDataPath, keyArray, valueArray);
+
+        try {
+            OkHttpManager.onGetAsynRequest(url, new NewOrderResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            failureLessPage();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -251,7 +268,7 @@ public class NewOrderFragment extends BaseFragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 OrderManage orderManage = JsonUtils.getInstance().fromJSON(OrderManage.class, str);
@@ -263,44 +280,49 @@ public class NewOrderFragment extends BaseFragment {
                         orderListManageAdapter.setList(listAll);
                     } else {
                         failureLessPage();
-                        Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     failureLessPage();
-                    Toast.makeText(SuiuuApplication.applicationContext, noData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析失败:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(SuiuuApplication.applicationContext, errorString, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                }
+
             }
+
         }
+
     }
 
-    private class NewOrderRequestCallback extends RequestCallBack<String> {
+    private class NewOrderResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (isPullToRefresh)
-                if (progressDialog != null && !progressDialog.isShowing()) {
-                    progressDialog.show();
-                }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
-            DeBugLog.i(TAG, "新订单数据:" + str);
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "新订单数据:" + response);
             hideDialog();
-            bindData2View(str);
+            bindData2View(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error Info:" + s);
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             failureLessPage();
-            Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

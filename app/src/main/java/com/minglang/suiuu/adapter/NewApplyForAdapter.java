@@ -2,7 +2,7 @@ package com.minglang.suiuu.adapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.NewApply;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpNewServicePath;
@@ -20,9 +20,6 @@ import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.ViewHolder;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
@@ -43,21 +40,10 @@ public class NewApplyForAdapter extends BaseAdapter {
 
     private List<NewApply.NewApplyData> list;
 
-    private ImageLoader imageLoader;
-
-    private DisplayImageOptions options;
-
     private ProgressDialog progressDialog;
 
     public NewApplyForAdapter(Context context) {
         this.context = context;
-
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image)
-                .showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     public void setList(List<NewApply.NewApplyData> list) {
@@ -93,7 +79,7 @@ public class NewApplyForAdapter extends BaseAdapter {
 
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_my_suiuu_new_apply_for, position);
         convertView = holder.getConvertView();
-        CircleImageView headImageView = holder.getView(R.id.item_my_suiuu_new_apply_for_head_image);
+        SimpleDraweeView headImageView = holder.getView(R.id.item_my_suiuu_new_apply_for_head_image);
         TextView userNameView = holder.getView(R.id.item_my_suiuu_new_apply_for_user_name);
         Button ignoreBtn = holder.getView(R.id.item_my_suiuu_new_apply_for_ignore);
         Button agreeBtn = holder.getView(R.id.item_my_suiuu_new_apply_for_agree);
@@ -102,7 +88,7 @@ public class NewApplyForAdapter extends BaseAdapter {
 
         String headImagePath = newApplyData.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            imageLoader.displayImage(headImagePath, headImageView, options);
+            headImageView.setImageURI(Uri.parse(headImagePath));
         }
 
         String name = newApplyData.getNickname();

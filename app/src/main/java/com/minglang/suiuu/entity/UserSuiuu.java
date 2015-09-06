@@ -1,5 +1,7 @@
 package com.minglang.suiuu.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -10,171 +12,152 @@ import java.util.List;
 public class UserSuiuu {
 
     /**
-     * data : [{"isAirplane":"0","titleImg":"http://image.suiuu.com/suiuu_trip/104_reset.jpg","tripId":"104","lon":null,"cityId":"3018","title":"东京文化之旅","countryId":"3005","score":"0","travelTimeType":"1","tripCount":"0","intro":"体验纯正的日本文化精神","createPublisherId":"11","nickname":"277*****@qq.com","maxUserCount":"6","startTime":"09:00:00","lat":null,"basePrice":"800.00","info":"文化一日游，有内涵、讲深度、有趣味。从庄严地天皇居所，到人文圣地东大，夜晚领略歌舞伎町的歌舞升平，体验菊与刀的纯正日本精神。","travelTime":"10","headImg":"http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg","count":null,"tags":"家庭,美食,猎奇,自然,浪漫,购物","names":"包车,东京成田空港接机,东京羽田空港","createTime":"2015-05-13 11:41:49","endTime":"19:00:00","isHotel":"0","basePriceType":"1","status":"1"}]
-     * message :
      * status : 1
-     * token : 43283c41262ed097515375f2d55ef424
+     * data : [{"tripId":"104","createPublisherId":"11","createTime":"2015-05-13 11:41:49","title":"游东京感受日本三道文化-花道、茶道、书道","titleImg":"http://image.suiuu.com/suiuu_head/20150724021112_79300.png","countryId":"3005","cityId":"3018","lon":null,"lat":null,"basePrice":"1103","oldPrice":"1050.00","basePriceType":"1","maxUserCount":"6","score":"10","tripCount":"3","startTime":"09:00:00","endTime":"19:00:00","travelTime":"10","travelTimeType":"1","intro":"游东京感受日本三道文化-花道、茶道、书道","info":"文化一日游，有内涵、讲深度、有趣味。从庄严地天皇居所，到人文圣地东大，夜晚领略歌舞伎町的歌舞升平，体验菊与刀的纯正日本精神。","tags":"家庭,美食,猎奇,自然,浪漫,购物","commentCount":"1","collectCount":"0","isHot":"0","type":"1","status":"1","nickname":"dorlen","headImg":"http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg","count":null,"names":"包车,东京成田空港接机,东京羽田空港","userSign":"a4c1406ff4cc382389f19bf6ec3e55c1"}]
+     * message :
+     * token : 764baef79fc634ef85f7ba56aea9ddd5
      */
-    private List<UserSuiuuData> data;
-    private String message;
-    private int status;
-    private String token;
 
-    public void setData(List<UserSuiuuData> data) {
-        this.data = data;
+    private int status;
+    private String message;
+    private String token;
+    @SerializedName("data")
+    private List<UserSuiuuData> userSuiuuData;
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public void setMessage(String message) {
         this.message = message;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
     public void setToken(String token) {
         this.token = token;
     }
 
-    public List<UserSuiuuData> getData() {
-        return data;
-    }
-
-    public String getMessage() {
-        return message;
+    public void setUserSuiuuData(List<UserSuiuuData> UserSuiuuData) {
+        this.userSuiuuData = UserSuiuuData;
     }
 
     public int getStatus() {
         return status;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
     public String getToken() {
         return token;
     }
 
+    public List<UserSuiuuData> getUserSuiuuData() {
+        return userSuiuuData;
+    }
+
     public static class UserSuiuuData {
         /**
-         * isAirplane : 0
-         * titleImg : http://image.suiuu.com/suiuu_trip/104_reset.jpg
          * tripId : 104
-         * lon : null
-         * cityId : 3018
-         * title : 东京文化之旅
-         * countryId : 3005
-         * score : 0
-         * travelTimeType : 1
-         * tripCount : 0
-         * intro : 体验纯正的日本文化精神
          * createPublisherId : 11
-         * nickname : 277*****@qq.com
-         * maxUserCount : 6
-         * startTime : 09:00:00
+         * createTime : 2015-05-13 11:41:49
+         * title : 游东京感受日本三道文化-花道、茶道、书道
+         * titleImg : http://image.suiuu.com/suiuu_head/20150724021112_79300.png
+         * countryId : 3005
+         * cityId : 3018
+         * lon : null
          * lat : null
-         * basePrice : 800.00
-         * info : 文化一日游，有内涵、讲深度、有趣味。从庄严地天皇居所，到人文圣地东大，夜晚领略歌舞伎町的歌舞升平，体验菊与刀的纯正日本精神。
+         * basePrice : 1103
+         * oldPrice : 1050.00
+         * basePriceType : 1
+         * maxUserCount : 6
+         * score : 10
+         * tripCount : 3
+         * startTime : 09:00:00
+         * endTime : 19:00:00
          * travelTime : 10
+         * travelTimeType : 1
+         * intro : 游东京感受日本三道文化-花道、茶道、书道
+         * info : 文化一日游，有内涵、讲深度、有趣味。从庄严地天皇居所，到人文圣地东大，夜晚领略歌舞伎町的歌舞升平，体验菊与刀的纯正日本精神。
+         * tags : 家庭,美食,猎奇,自然,浪漫,购物
+         * commentCount : 1
+         * collectCount : 0
+         * isHot : 0
+         * type : 1
+         * status : 1
+         * nickname : dorlen
          * headImg : http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg
          * count : null
-         * tags : 家庭,美食,猎奇,自然,浪漫,购物
          * names : 包车,东京成田空港接机,东京羽田空港
-         * createTime : 2015-05-13 11:41:49
-         * endTime : 19:00:00
-         * isHotel : 0
-         * basePriceType : 1
-         * status : 1
+         * userSign : a4c1406ff4cc382389f19bf6ec3e55c1
          */
-        private String isAirplane;
-        private String titleImg;
+
         private String tripId;
-        private String lon;
-        private String cityId;
-        private String title;
-        private String countryId;
-        private String score;
-        private String travelTimeType;
-        private String tripCount;
-        private String intro;
         private String createPublisherId;
-        private String nickname;
-        private String maxUserCount;
-        private String startTime;
-        private String lat;
-        private String basePrice;
-        private String info;
-        private String travelTime;
-        private String headImg;
-        private String count;
-        private String tags;
-        private String names;
         private String createTime;
-        private String endTime;
-        private String isHotel;
+        private String title;
+        private String titleImg;
+        private String countryId;
+        private String cityId;
+        private Object lon;
+        private Object lat;
+        private String basePrice;
+        private String oldPrice;
         private String basePriceType;
-        private String status;
+        private String maxUserCount;
+        private String score;
+        private String tripCount;
+        private String startTime;
+        private String endTime;
+        private String travelTime;
+        private String travelTimeType;
+        private String intro;
+        private String info;
+        private String tags;
         private String commentCount;
         private String collectCount;
-
-        public void setIsAirplane(String isAirplane) {
-            this.isAirplane = isAirplane;
-        }
-
-        public void setTitleImg(String titleImg) {
-            this.titleImg = titleImg;
-        }
+        private String isHot;
+        private String type;
+        private String status;
+        private String nickname;
+        private String headImg;
+        private Object count;
+        private String names;
+        private String userSign;
 
         public void setTripId(String tripId) {
             this.tripId = tripId;
-        }
-
-        public void setLon(String lon) {
-            this.lon = lon;
-        }
-
-        public void setCityId(String cityId) {
-            this.cityId = cityId;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public void setCountryId(String countryId) {
-            this.countryId = countryId;
-        }
-
-        public void setScore(String score) {
-            this.score = score;
-        }
-
-        public void setTravelTimeType(String travelTimeType) {
-            this.travelTimeType = travelTimeType;
-        }
-
-        public void setTripCount(String tripCount) {
-            this.tripCount = tripCount;
-        }
-
-        public void setIntro(String intro) {
-            this.intro = intro;
         }
 
         public void setCreatePublisherId(String createPublisherId) {
             this.createPublisherId = createPublisherId;
         }
 
-        public void setNickname(String nickname) {
-            this.nickname = nickname;
+        public void setCreateTime(String createTime) {
+            this.createTime = createTime;
         }
 
-        public void setMaxUserCount(String maxUserCount) {
-            this.maxUserCount = maxUserCount;
+        public void setTitle(String title) {
+            this.title = title;
         }
 
-        public void setStartTime(String startTime) {
-            this.startTime = startTime;
+        public void setTitleImg(String titleImg) {
+            this.titleImg = titleImg;
         }
 
-        public void setLat(String lat) {
+        public void setCountryId(String countryId) {
+            this.countryId = countryId;
+        }
+
+        public void setCityId(String cityId) {
+            this.cityId = cityId;
+        }
+
+        public void setLon(Object lon) {
+            this.lon = lon;
+        }
+
+        public void setLat(Object lat) {
             this.lat = lat;
         }
 
@@ -182,48 +165,52 @@ public class UserSuiuu {
             this.basePrice = basePrice;
         }
 
-        public void setInfo(String info) {
-            this.info = info;
-        }
-
-        public void setTravelTime(String travelTime) {
-            this.travelTime = travelTime;
-        }
-
-        public void setHeadImg(String headImg) {
-            this.headImg = headImg;
-        }
-
-        public void setCount(String count) {
-            this.count = count;
-        }
-
-        public void setTags(String tags) {
-            this.tags = tags;
-        }
-
-        public void setNames(String names) {
-            this.names = names;
-        }
-
-        public void setCreateTime(String createTime) {
-            this.createTime = createTime;
-        }
-
-        public void setEndTime(String endTime) {
-            this.endTime = endTime;
-        }
-
-        public void setIsHotel(String isHotel) {
-            this.isHotel = isHotel;
+        public void setOldPrice(String oldPrice) {
+            this.oldPrice = oldPrice;
         }
 
         public void setBasePriceType(String basePriceType) {
             this.basePriceType = basePriceType;
         }
 
-        public void setStatus(String status) {
-            this.status = status;
+        public void setMaxUserCount(String maxUserCount) {
+            this.maxUserCount = maxUserCount;
+        }
+
+        public void setScore(String score) {
+            this.score = score;
+        }
+
+        public void setTripCount(String tripCount) {
+            this.tripCount = tripCount;
+        }
+
+        public void setStartTime(String startTime) {
+            this.startTime = startTime;
+        }
+
+        public void setEndTime(String endTime) {
+            this.endTime = endTime;
+        }
+
+        public void setTravelTime(String travelTime) {
+            this.travelTime = travelTime;
+        }
+
+        public void setTravelTimeType(String travelTimeType) {
+            this.travelTimeType = travelTimeType;
+        }
+
+        public void setIntro(String intro) {
+            this.intro = intro;
+        }
+
+        public void setInfo(String info) {
+            this.info = info;
+        }
+
+        public void setTags(String tags) {
+            this.tags = tags;
         }
 
         public void setCommentCount(String commentCount) {
@@ -234,67 +221,71 @@ public class UserSuiuu {
             this.collectCount = collectCount;
         }
 
-        public String getIsAirplane() {
-            return isAirplane;
+        public void setIsHot(String isHot) {
+            this.isHot = isHot;
         }
 
-        public String getTitleImg() {
-            return titleImg;
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public void setNickname(String nickname) {
+            this.nickname = nickname;
+        }
+
+        public void setHeadImg(String headImg) {
+            this.headImg = headImg;
+        }
+
+        public void setCount(Object count) {
+            this.count = count;
+        }
+
+        public void setNames(String names) {
+            this.names = names;
+        }
+
+        public void setUserSign(String userSign) {
+            this.userSign = userSign;
         }
 
         public String getTripId() {
             return tripId;
         }
 
-        public String getLon() {
-            return lon;
+        public String getCreatePublisherId() {
+            return createPublisherId;
         }
 
-        public String getCityId() {
-            return cityId;
+        public String getCreateTime() {
+            return createTime;
         }
 
         public String getTitle() {
             return title;
         }
 
+        public String getTitleImg() {
+            return titleImg;
+        }
+
         public String getCountryId() {
             return countryId;
         }
 
-        public String getScore() {
-            return score;
+        public String getCityId() {
+            return cityId;
         }
 
-        public String getTravelTimeType() {
-            return travelTimeType;
+        public Object getLon() {
+            return lon;
         }
 
-        public String getTripCount() {
-            return tripCount;
-        }
-
-        public String getIntro() {
-            return intro;
-        }
-
-        public String getCreatePublisherId() {
-            return createPublisherId;
-        }
-
-        public String getNickname() {
-            return nickname;
-        }
-
-        public String getMaxUserCount() {
-            return maxUserCount;
-        }
-
-        public String getStartTime() {
-            return startTime;
-        }
-
-        public String getLat() {
+        public Object getLat() {
             return lat;
         }
 
@@ -302,48 +293,52 @@ public class UserSuiuu {
             return basePrice;
         }
 
-        public String getInfo() {
-            return info;
-        }
-
-        public String getTravelTime() {
-            return travelTime;
-        }
-
-        public String getHeadImg() {
-            return headImg;
-        }
-
-        public String getCount() {
-            return count;
-        }
-
-        public String getTags() {
-            return tags;
-        }
-
-        public String getNames() {
-            return names;
-        }
-
-        public String getCreateTime() {
-            return createTime;
-        }
-
-        public String getEndTime() {
-            return endTime;
-        }
-
-        public String getIsHotel() {
-            return isHotel;
+        public String getOldPrice() {
+            return oldPrice;
         }
 
         public String getBasePriceType() {
             return basePriceType;
         }
 
-        public String getStatus() {
-            return status;
+        public String getMaxUserCount() {
+            return maxUserCount;
+        }
+
+        public String getScore() {
+            return score;
+        }
+
+        public String getTripCount() {
+            return tripCount;
+        }
+
+        public String getStartTime() {
+            return startTime;
+        }
+
+        public String getEndTime() {
+            return endTime;
+        }
+
+        public String getTravelTime() {
+            return travelTime;
+        }
+
+        public String getTravelTimeType() {
+            return travelTimeType;
+        }
+
+        public String getIntro() {
+            return intro;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public String getTags() {
+            return tags;
         }
 
         public String getCommentCount() {
@@ -353,6 +348,39 @@ public class UserSuiuu {
         public String getCollectCount() {
             return collectCount;
         }
+
+        public String getIsHot() {
+            return isHot;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public String getNickname() {
+            return nickname;
+        }
+
+        public String getHeadImg() {
+            return headImg;
+        }
+
+        public Object getCount() {
+            return count;
+        }
+
+        public String getNames() {
+            return names;
+        }
+
+        public String getUserSign() {
+            return userSign;
+        }
+
     }
 
 }

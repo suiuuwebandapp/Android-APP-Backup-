@@ -1,6 +1,7 @@
 package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +37,9 @@ import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +58,11 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
     private static final String USERSIGN = "userSign";
 
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
+
+    private static final String ID = "id";
+
     @BindString(R.string.load_wait)
     String DialogMsg;
 
@@ -65,6 +74,9 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
     @BindString(R.string.NetworkAnomaly)
     String NetWorkError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     @BindString(R.string.MainTitle1)
     String strTripImage;
@@ -101,6 +113,15 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.personal_center_info)
     TextView infoView;
+
+    @Bind(R.id.personal_center_user_location)
+    TextView userLocation;
+
+    @Bind(R.id.personal_center_user_profession)
+    TextView userProfession;
+
+    @Bind(R.id.personal_center_user_age)
+    TextView userAge;
 
     @Bind(R.id.personal_center_other_user_head_image_view)
     SimpleDraweeView commentUserHeadImageView;
@@ -143,7 +164,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
     }
 
     private void initView() {
-        userSign = SuiuuInfo.ReadUserSign(this);
+        userSign = getIntent().getStringExtra(USERSIGN);
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
 
@@ -165,6 +186,8 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(adapter);
+
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
     }
 
     private void viewAction() {
@@ -190,7 +213,16 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
         adapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                Intent intent = new Intent(PersonalMainPagerActivity.this, TripGalleryDetailsActivity.class);
+                intent.putExtra(ID, listAll.get(position).getTripId());
+                startActivity(intent);
+            }
+        });
 
+        questionTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PersonalMainPagerActivity.this, PersonalProblemActivity.class));
             }
         });
 
@@ -278,6 +310,13 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
                             verPhone.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
                         }
 
+                        String profession = userInfo.getProfession();
+                        if (!TextUtils.isEmpty(profession)) {
+                            userProfession.setText(profession);
+                        } else {
+                            userProfession.setText("");
+                        }
+
                     } else {
                         userNameView.setText("");
                         infoView.setText("");
@@ -329,7 +368,18 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析异常:" + e.getMessage());
-                Toast.makeText(this, DataError, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(PersonalMainPagerActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(PersonalMainPagerActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(PersonalMainPagerActivity.this, DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

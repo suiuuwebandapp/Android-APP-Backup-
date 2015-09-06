@@ -67,11 +67,8 @@ public class PublishedFragment extends BaseFragment {
     private static final String STATUS = "status";
     private static final String DATA = "data";
 
-    private String userSign;
-    private String verification;
-
     @BindString(R.string.load_wait)
-    String wait;
+    String DialogMsg;
 
     @BindString(R.string.NoData)
     String NoData;
@@ -155,7 +152,7 @@ public class PublishedFragment extends BaseFragment {
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
 
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(wait);
+        progressDialog.setMessage(DialogMsg);
 
         publishedAdapter = new PublishedAdapter(getActivity());
         pullToRefreshListView.setAdapter(publishedAdapter);

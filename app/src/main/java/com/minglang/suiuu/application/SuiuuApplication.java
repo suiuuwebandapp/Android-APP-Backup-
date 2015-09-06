@@ -74,8 +74,9 @@ public class SuiuuApplication extends TuSdkApplication {
         Fresco.initialize(this);
 
         //初始化TuSDK
-        this.initPreLoader(this.getApplicationContext(), "745f61271fd7f7f7-00-04gxn1");
+        this.initPreLoader(this, "745f61271fd7f7f7-00-04gxn1");
         GlobalCrashHandler.getInstance().init(this);
+
 
 
     }

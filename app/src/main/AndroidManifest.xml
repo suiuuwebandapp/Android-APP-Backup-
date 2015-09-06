@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.minglang.suiuu"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools">
+<manifest
+    package="com.minglang.suiuu"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- 内置SD卡的写入权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -56,6 +57,7 @@
     <!-- 允许一个程序打开窗口使用 TYPE_SYSTEM_ALERT，显示在其他所有程序的顶层 -->
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!--发送短信权限-->
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
     <!-- 拨打电话权限 -->
@@ -70,9 +72,11 @@
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme"
         tools:replace="android:label,android:theme,android:name">
+
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="554c2a0567e58e074f00054e"/>
+
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="e305ef7850d9f5d2e8f7b0c3c3fbb16c"/>
@@ -87,6 +91,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <!-- *******************公共分组控制器******************* -->
         <activity
             android:name="org.lasque.tusdk.impl.activity.TuFragmentActivity"
@@ -110,43 +115,52 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.AttentionActivity"
             android:label="@string/title_activity_attention"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.SettingActivity"
             android:label="@string/title_activity_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.PersonalSettingActivity"
             android:label="@string/title_activity_person_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.NewRemindActivity"
             android:label="@string/title_activity_new_remind"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.FeedbackActivity"
             android:label="@string/title_activity_feedback"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.ContactUsActivity"
             android:label="@string/title_activity_contact_us"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.SuiuuDetailsActivity"
             android:label="@string/title_activity_suiuu_details"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.CommentsActivity"
             android:label="@string/title_activity_comments"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustResize"/>
+
         <activity
             android:name=".activity.SelectPictureActivity"
             android:label="@string/title_activity_select_picture"
@@ -165,14 +179,17 @@
             android:label="EasyTackPhotoActivity"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="stateHidden"/>
+
         <activity
             android:name=".activity.TripGalleryDetailsActivity"
             android:label="TripGalleryActivity"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.TripGallerySearchActivity"
             android:label="TripGallerySearchActivity"
             android:theme="@style/FullBleedTheme"/>
+
         <activity
             android:name=".activity.AMapActivity"
             android:label="AMapActivity"
@@ -192,6 +209,7 @@
                 <data android:scheme="tencent1104557000"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -210,22 +228,27 @@
             android:exported="true"
             android:label="@string/title_activity_wxentry"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.SelectCountryActivity"
             android:label="@string/title_activity_select_country"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.SelectCityActivity"
             android:label="@string/title_activity_select_city"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.SuiuuOrderActivity"
             android:label="@string/title_activity_suiuu_order"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.SuiuuPayActivity"
             android:label="@string/title_activity_suiuu_pay"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
         <activity
             android:name=".base.BaseActivity"
             android:label="@string/title_activity_base"/>
@@ -238,34 +261,42 @@
         <activity
             android:name="com.umeng.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
         <activity
             android:name=".activity.MySuiuuInfoActivity"
             android:label="@string/title_activity_my_suiuu"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.MySuiuuReleaseActivity"
             android:label="@string/title_activity_my_suiuu_details"
             android:theme="@style/AppReleaseTheme"/>
+
         <activity
             android:name=".activity.EditSuiuuInfoActivity"
             android:label="@string/title_activity_edit_suiuu_info"
             android:theme="@style/AppMainTheme2"/>
+
         <activity
             android:name=".activity.EditSuiuuPriceActivity"
             android:label="@string/title_activity_edit_suiuu_price"
             android:theme="@style/AppMainTheme2"/>
+
         <activity
             android:name=".activity.OrderManageActivity"
             android:label="@string/title_activity_order_manage"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.SuiuuSearchDetailActivity"
             android:label="@string/title_activity_suiuu_search_detail"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.SuiuuSearchActivity"
             android:label="@string/title_activity_suiuu_search"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.CommonCommentActivity"
             android:label="@string/title_activity_common_comment"
@@ -285,49 +316,41 @@
             android:exported="true"
             android:targetActivity="com.pingplusplus.android.PaymentActivity"/>
 
-        <!-- 支付宝注册 -->
-        <activity
-            android:name="com.alipay.sdk.app.H5PayActivity"
-            android:configChanges="orientation|keyboardHidden|navigation"
-            android:exported="false"
-            android:screenOrientation="behind"/>
-        <activity
-            android:name="com.alipay.sdk.auth.AuthActivity"
-            android:configChanges="orientation|keyboardHidden|navigation"
-            android:exported="false"
-            android:screenOrientation="behind"/>
         <activity
             android:name=".activity.AccountManageActivity"
             android:label="@string/title_activity_account_manage"
             android:theme="@style/AppAccountTheme"/>
-        <activity
-            android:name=".activity.SuiuuUserInfoActivity"
-            android:label="@string/title_activity_suiuu_user_info"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.CommunityDetailsActivity"
             android:label="@string/title_activity_community_item"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
         <activity
             android:name=".activity.PutQuestionsActivity"
             android:label="@string/title_activity_questions"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.AnswerActivity"
             android:label="@string/title_activity_answer"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.CommunitySearchActivity"
             android:label="@string/title_activity_community_search"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.PersonalMainPagerActivity"
             android:label="@string/title_activity_personal_center"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.GeneralOrderDetailsActivity"
             android:label="@string/title_activity_order_details"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.GeneralOrderListActivity"
             android:label="@string/title_activity_my_order_list"
@@ -340,21 +363,35 @@
             android:name=".activity.OrderDetailsActivity"
             android:label="@string/title_activity_order_details"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.AboutSuiuuActivity"
             android:label="@string/title_activity_about_us"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.ReceivablesWayActivity"
             android:label="@string/title_activity_receivables_way"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.AddReceivablesWayActivity"
             android:label="@string/title_activity_add_receivables_way"
             android:theme="@style/AppMainTheme"/>
+
         <activity
             android:name=".activity.ShowBigPictureActivity"
             android:label="@string/show_big_picture_activity"
+            android:theme="@style/AppMainTheme"/>
+
+        <activity
+            android:name=".activity.PersonalSuiuuActivity"
+            android:label="@string/title_activity_personal_suiuu"
+            android:theme="@style/AppMainTheme"/>
+
+        <activity
+            android:name=".activity.PersonalProblemActivity"
+            android:label="@string/title_activity_personal_problem"
             android:theme="@style/AppMainTheme"/>
 
     </application>

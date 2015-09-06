@@ -2,7 +2,6 @@ package com.minglang.suiuu.fragment.suiuu;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -12,25 +11,27 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.NewApplyForAdapter;
+import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.NewApply;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -40,16 +41,37 @@ import butterknife.ButterKnife;
  * Use the {@link JoinFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewApplyForFragment extends Fragment {
+public class NewApplyForFragment extends BaseFragment {
     private static final String TAG = NewApplyForFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
 
-    private String userSign;
-    private String verification;
+    private static final String USER_SIGN = "userSign";
+    private static final String PAGE = "page";
+    private static final String NUMBER = "number";
+    private static final String TRIP_ID = "tripId";
+
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
+
     private String tripId;
+
+    @BindString(R.string.load_wait)
+    String DialogMsg;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkError;
+
+    @BindString(R.string.DataError)
+    String DataError;
+
+    @BindString(R.string.NoData)
+    String NoData;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     @Bind(R.id.ApplyForListView)
     PullToRefreshListView pullToRefreshListView;
@@ -99,8 +121,9 @@ public class NewApplyForFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_new_apply_for, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
+        viewAction();
         getNewApplyForData(page);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
         return rootView;
     }
 
@@ -108,13 +131,11 @@ public class NewApplyForFragment extends Fragment {
      * 初始化方法
      */
     private void initView() {
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
-
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         ListView listView = pullToRefreshListView.getRefreshableView();
 
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(getResources().getString(R.string.load_wait));
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         newApplyForAdapter = new NewApplyForAdapter(getActivity());
@@ -122,7 +143,7 @@ public class NewApplyForFragment extends Fragment {
 
     }
 
-    private void ViewAction() {
+    private void viewAction() {
 
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -159,23 +180,28 @@ public class NewApplyForFragment extends Fragment {
     }
 
     private void getNewApplyForData(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("userSign", userSign);
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter("page", String.valueOf(page));
-        params.addBodyParameter("number", String.valueOf(10));
-        params.addBodyParameter("trId", tripId);
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
 
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getNewApplyForDataPath, new NewApplyForRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String[] keyArray = new String[]{USER_SIGN, HttpNewServicePath.key, PAGE, NUMBER, TRIP_ID, TOKEN};
+        String[] valueArray = new String[]{userSign, verification, String.valueOf(page), String.valueOf(10), tripId, token};
+        String url = addUrlAndParams(HttpNewServicePath.getNewApplyForDataPath, keyArray, valueArray);
+
+        try {
+            OkHttpManager.onGetAsynRequest(url, new NewApplyForResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            failureComputePage();
+            Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
      * 隐藏进度框和ListView加载进度View
      */
-    private void showOrHideDialog() {
+    private void hideDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
@@ -207,7 +233,7 @@ public class NewApplyForFragment extends Fragment {
      */
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
-            Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 NewApply newApply = JsonUtils.getInstance().fromJSON(NewApply.class, str);
@@ -218,38 +244,42 @@ public class NewApplyForFragment extends Fragment {
                     newApplyForAdapter.setList(listAll);
                 } else {
                     failureComputePage();
-                    Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析失败:" + e.getMessage());
                 failureComputePage();
-                Toast.makeText(getActivity(), getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
 
-    private class NewApplyForRequestCallBack extends RequestCallBack<String> {
+    private class NewApplyForResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "返回的数据:" + response);
+            hideDialog();
+            bindData2View(response);
         }
 
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            showOrHideDialog();
-            String str = responseInfo.result;
-            bindData2View(str);
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",error:" + s);
-            showOrHideDialog();
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            hideDialog();
             failureComputePage();
-            Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

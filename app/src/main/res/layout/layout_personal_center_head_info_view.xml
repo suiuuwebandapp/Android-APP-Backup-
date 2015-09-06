@@ -57,17 +57,17 @@
                 android:weightSum="1.2">
 
                 <TextView
-                    android:id="@+id/textView13"
+                    android:id="@+id/personal_center_user_location"
                     style="@style/PersonalCenterTextView"
                     android:text="@string/UserLocation"/>
 
                 <TextView
-                    android:id="@+id/textView20"
+                    android:id="@+id/personal_center_user_profession"
                     style="@style/PersonalCenterTextView"
                     android:text="@string/UserOccupation"/>
 
                 <TextView
-                    android:id="@+id/textView24"
+                    android:id="@+id/personal_center_user_age"
                     style="@style/PersonalCenterTextView"
                     android:text="@string/UserYear"/>
 

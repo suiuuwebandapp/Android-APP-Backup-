@@ -34,6 +34,9 @@ import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +68,9 @@ public class CommunityFragment extends BaseFragment {
     private static final String TITLE = "title";
 
     private static final String TOKEN = "token";
+
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
 
     private String userSign;
     private String verification;
@@ -99,16 +105,19 @@ public class CommunityFragment extends BaseFragment {
     }
 
     @BindString(R.string.load_wait)
-    String dialogMsg;
+    String DialogMsg;
 
     @BindString(R.string.NoData)
-    String NoDataHint;
+    String NoData;
 
     @BindString(R.string.DataError)
     String DataError;
 
     @BindString(R.string.NetworkAnomaly)
     String NetworkError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     @Bind(R.id.spinner)
     Spinner spinner;
@@ -173,7 +182,7 @@ public class CommunityFragment extends BaseFragment {
         ListView listView = pullToRefreshListView.getRefreshableView();
 
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(dialogMsg);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         stringArray = getResources().getStringArray(R.array.communitySort);
@@ -251,7 +260,6 @@ public class CommunityFragment extends BaseFragment {
                 int location = position - 1;
                 String qID = listAll.get(location).getQId();
                 String qTitle = listAll.get(location).getQTitle();
-                DeBugLog.i(TAG, "location:" + location + ",qID:" + qID + ",qTitle:" + qTitle);
 
                 Intent intent = new Intent(getActivity(), CommunityDetailsActivity.class);
                 intent.putExtra(ID, qID);
@@ -369,7 +377,7 @@ public class CommunityFragment extends BaseFragment {
                 adapter.setList(listAll);
             }
         }
-        Toast.makeText(getActivity(), NoDataHint, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -380,7 +388,7 @@ public class CommunityFragment extends BaseFragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             lessPageNumber();
-            Toast.makeText(getActivity(), NoDataHint, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 MainCommunity mainCommunity = JsonUtils.getInstance().fromJSON(MainCommunity.class, str);
@@ -409,7 +417,18 @@ public class CommunityFragment extends BaseFragment {
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析异常:" + e.getMessage());
                 lessPageNumber();
-                Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -442,18 +461,18 @@ public class CommunityFragment extends BaseFragment {
     private class CommunityResultCallBack extends OkHttpManager.ResultCallback<String> {
 
         @Override
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "问答社区返回的数据:" + response);
+            hideDialog();
+            bindData2View(response);
+        }
+
+        @Override
         public void onError(Request request, Exception e) {
             DeBugLog.e(TAG, "Exception:" + e.getMessage());
             lessPageNumber();
             hideDialog();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onResponse(String response) {
-            DeBugLog.i(TAG, "问答社区返回的数据:" + response);
-            hideDialog();
-            bindData2View(response);
         }
 
     }

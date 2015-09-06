@@ -85,7 +85,7 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
     @Bind(R.id.my_suiuu_release_show_image)
     SimpleDraweeView titleImageView;
 
-    @Bind(R.id.my_suiuu_release_viewPager)
+    @Bind(R.id.my_suiuu_release_view_pager)
     ViewPager releaseViewPager;
 
     @Bind(R.id.my_suiuu_release_main_title)

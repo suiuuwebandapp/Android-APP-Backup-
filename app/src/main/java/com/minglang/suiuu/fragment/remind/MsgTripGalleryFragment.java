@@ -10,22 +10,23 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MsgTripGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MsgTripGallery;
 import com.minglang.suiuu.entity.MsgTripGallery.MsgTripGalleryData.MsgTripGalleryItemData;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.Utils;
+import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,21 +52,31 @@ public class MsgTripGalleryFragment extends BaseFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
+
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
 
     private String userSign;
     private String verification;
 
     @BindString(R.string.load_wait)
-    String dialogMsg;
+    String DialogMsg;
 
     @BindString(R.string.NoData)
-    String noData;
+    String NoData;
+
+    @BindString(R.string.DataError)
+    String DataError;
 
     @BindString(R.string.NetworkAnomaly)
-    String netWorkError;
+    String NetworkError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     @Bind(R.id.new_at_fragment_head_frame)
     PtrClassicFrameLayout mPtrFrame;
@@ -89,11 +100,12 @@ public class MsgTripGalleryFragment extends BaseFragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment MsgTripGalleryFragment.
      */
-    public static MsgTripGalleryFragment newInstance(String param1, String param2) {
+    public static MsgTripGalleryFragment newInstance(String param1, String param2, String param3) {
         MsgTripGalleryFragment fragment = new MsgTripGalleryFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -108,6 +120,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
+            token = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -116,9 +129,9 @@ public class MsgTripGalleryFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_msg_trip_gallery, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
+        viewAction();
         getData4Service(page);
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -133,7 +146,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
      */
     private void initView() {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(dialogMsg);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         int paddingParams = Utils.newInstance().dip2px(15, getActivity());
@@ -149,21 +162,11 @@ public class MsgTripGalleryFragment extends BaseFragment {
         mPtrFrame.addPtrUIHandler(header);
         mPtrFrame.setPinContent(true);
 
-        // the following are default settings
-        mPtrFrame.setResistance(1.7f);
-        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
-        mPtrFrame.setDurationToClose(200);
-        mPtrFrame.setDurationToCloseHeader(1000);
-        // default is false
-        mPtrFrame.setPullToRefresh(false);
-        // default is true
-        mPtrFrame.setKeepHeaderWhenRefresh(true);
-
         adapter = new MsgTripGalleryAdapter(getActivity(), listAll, R.layout.item_msg_trip_gallery);
         msgTripGalleryList.setAdapter(adapter);
     }
 
-    private void ViewAction() {
+    private void viewAction() {
 
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
@@ -191,15 +194,19 @@ public class MsgTripGalleryFragment extends BaseFragment {
      * 从网络获取数据
      */
     private void getData4Service(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(15));
+        String[] keyArray = new String[]{HttpServicePath.key, PAGE, TOKEN};
+        String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
+        String url = addUrlAndParams(HttpNewServicePath.getTripGalleryMsgDataPath, keyArray, valueArray);
 
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getTripGalleryMsgDataPath, new MsgTripGalleryRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        try {
+            OkHttpManager.onGetAsynRequest(url, new MsgTripGalleryResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            failureLessPage();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void hideDialog() {
@@ -227,7 +234,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 MsgTripGallery msgTripGallery = JsonUtils.getInstance().fromJSON(MsgTripGallery.class, str);
@@ -238,39 +245,42 @@ public class MsgTripGalleryFragment extends BaseFragment {
                     adapter.setList(listAll);
                 } else {
                     failureLessPage();
-                    Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "旅途数据解析异常:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
 
-    private class MsgTripGalleryRequestCallBack extends RequestCallBack<String> {
+    private class MsgTripGalleryResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            String str = stringResponseInfo.result;
-            DeBugLog.i(TAG, "旅图返回的数据:" + str);
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "旅图返回的数据:" + response);
             hideDialog();
-            bindData2View(str);
+            bindData2View(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "获取旅途数据失败:" + s);
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "获取旅途消息失败:" + e.getMessage());
             hideDialog();
             failureLessPage();
-            Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

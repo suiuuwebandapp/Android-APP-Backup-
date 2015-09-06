@@ -104,6 +104,7 @@ public class PersonalTravelAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             headImageView = (SimpleDraweeView) itemView.findViewById(R.id.item_personal_travel_head_image);
             titleView = (TextView) itemView.findViewById(R.id.item_personal_travel_title);
         }
+
     }
 
 }

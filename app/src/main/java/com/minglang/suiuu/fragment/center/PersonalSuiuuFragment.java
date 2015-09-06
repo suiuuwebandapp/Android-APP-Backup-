@@ -11,20 +11,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.PersonalSuiuuAdapter;
+import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.UserSuiuu;
 import com.minglang.suiuu.entity.UserSuiuu.UserSuiuuData;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,12 +38,13 @@ import butterknife.ButterKnife;
  * Use the {@link PersonalSuiuuFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PersonalSuiuuFragment extends Fragment {
+public class PersonalSuiuuFragment extends BaseFragment {
 
     private static final String TAG = PersonalSuiuuFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
@@ -50,20 +52,26 @@ public class PersonalSuiuuFragment extends Fragment {
 
     private static final String TRIP_ID = "tripId";
 
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
+
     private String userSign;
     private String verification;
 
     @BindString(R.string.load_wait)
-    String dialogMsg;
+    String DialogMsg;
 
     @BindString(R.string.NoData)
-    String noData;
+    String NoData;
 
     @BindString(R.string.DataError)
-    String dataError;
+    String DataError;
 
     @BindString(R.string.NetworkAnomaly)
-    String netWorkError;
+    String NetworkError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     private int page = 1;
 
@@ -86,11 +94,12 @@ public class PersonalSuiuuFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment PersonalSuiuuFragment.
      */
-    public static PersonalSuiuuFragment newInstance(String param1, String param2) {
+    public static PersonalSuiuuFragment newInstance(String param1, String param2, String param3) {
         PersonalSuiuuFragment fragment = new PersonalSuiuuFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -105,6 +114,7 @@ public class PersonalSuiuuFragment extends Fragment {
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
+            token = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -113,9 +123,9 @@ public class PersonalSuiuuFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_personal_suiuu, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
-        getPersonalSuiuuData(buildRequestParams(page));
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+        viewAction();
+        getPersonalSuiuuData();
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -127,7 +137,7 @@ public class PersonalSuiuuFragment extends Fragment {
 
     private void initView() {
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(dialogMsg);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
@@ -138,7 +148,8 @@ public class PersonalSuiuuFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-    private void ViewAction() {
+    private void viewAction() {
+
         //        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
         //            @Override
         //            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -170,20 +181,24 @@ public class PersonalSuiuuFragment extends Fragment {
 
     }
 
-    public RequestParams buildRequestParams(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(10));
-        params.addBodyParameter(USERSIGN, userSign);
-        params.addBodyParameter(HttpServicePath.key, verification);
-        return params;
-    }
+    private void getPersonalSuiuuData() {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
 
-    public void getPersonalSuiuuData(RequestParams params) {
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getPersonalSuiuuDataPath, new PersonalSuiuuRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String[] keyArray = new String[]{USERSIGN, NUMBER, PAGE, TOKEN};
+        String[] valueArray = new String[]{userSign, String.valueOf(10), String.valueOf(page), token};
+
+        String url = addUrlAndParams(HttpNewServicePath.getPersonalSuiuuDataPath, keyArray, valueArray);
+
+        try {
+            OkHttpManager.onGetAsynRequest(url, new PersonalSuiuuResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            failureLessPage();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void hideDialog() {
@@ -209,56 +224,59 @@ public class PersonalSuiuuFragment extends Fragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 UserSuiuu userSuiuu = JsonUtils.getInstance().fromJSON(UserSuiuu.class, str);
                 if (userSuiuu != null) {
-                    List<UserSuiuuData> list = userSuiuu.getData();
+                    List<UserSuiuuData> list = userSuiuu.getUserSuiuuData();
                     if (list != null && list.size() > 0) {
                         clearDataList();
                         listAll.addAll(list);
-//                        adapter.setList(listAll);
-                        DeBugLog.i(TAG, "当前页码:" + page + ",当前请求数据数量:" + list.size()
-                                + ",总数据数量:" + listAll.size());
+                        adapter.setList(listAll);
+                        DeBugLog.i(TAG, "当前页码:" + page + ",当前请求数据数量:" + list.size() + ",总数据数量:" + listAll.size());
                     } else {
                         failureLessPage();
-                        Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     failureLessPage();
-                    Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "数据绑定Error:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(getActivity(), dataError, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
 
-    private class PersonalSuiuuRequestCallBack extends RequestCallBack<String> {
+    private class PersonalSuiuuResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
-            String str = responseInfo.result;
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "返回的数据:" + response);
             hideDialog();
-            bindData2View(str);
+            bindData2View(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             failureLessPage();
-            Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

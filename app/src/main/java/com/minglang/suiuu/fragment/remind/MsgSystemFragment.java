@@ -10,22 +10,23 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MsgSystemAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MsgSystem;
 import com.minglang.suiuu.entity.MsgSystem.MsgSystemData.MsgSystemItemData;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.Utils;
+import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,9 +52,13 @@ public class MsgSystemFragment extends BaseFragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
+
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
 
     private String userSign;
     private String verification;
@@ -62,10 +67,16 @@ public class MsgSystemFragment extends BaseFragment {
     String loadString;
 
     @BindString(R.string.NoData)
-    String noData;
+    String NoData;
+
+    @BindString(R.string.DataError)
+    String DataError;
 
     @BindString(R.string.NetworkAnomaly)
-    String netWorkError;
+    String NetworkError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     @Bind(R.id.new_attention_fragment_head_frame)
     PtrClassicFrameLayout mPtrFrame;
@@ -87,13 +98,15 @@ public class MsgSystemFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
+     * @param param3 Parameter 3.
      * @return A new instance of fragment MsgSystemFragment.
      */
-    public static MsgSystemFragment newInstance(String param1, String param2) {
+    public static MsgSystemFragment newInstance(String param1, String param2, String param3) {
         MsgSystemFragment fragment = new MsgSystemFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -108,6 +121,7 @@ public class MsgSystemFragment extends BaseFragment {
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
+            token = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -116,9 +130,9 @@ public class MsgSystemFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_msg_system, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
+        viewAction();
         getData4Service(page);
-        DeBugLog.i(TAG, "userSign:" + userSign);
+        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + "token:" + token);
         return rootView;
     }
 
@@ -149,21 +163,11 @@ public class MsgSystemFragment extends BaseFragment {
         mPtrFrame.addPtrUIHandler(header);
         mPtrFrame.setPinContent(true);
 
-        // the following are default settings
-        mPtrFrame.setResistance(1.7f);
-        mPtrFrame.setRatioOfHeaderHeightToRefresh(1.2f);
-        mPtrFrame.setDurationToClose(200);
-        mPtrFrame.setDurationToCloseHeader(1000);
-        // default is false
-        mPtrFrame.setPullToRefresh(false);
-        // default is true
-        mPtrFrame.setKeepHeaderWhenRefresh(true);
-
         adapter = new MsgSystemAdapter(getActivity(), listAll, R.layout.item_msg_system);
         systemMsgList.setAdapter(adapter);
     }
 
-    private void ViewAction() {
+    private void viewAction() {
 
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
@@ -190,15 +194,22 @@ public class MsgSystemFragment extends BaseFragment {
      * 从网络获取数据
      */
     private void getData4Service(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(15));
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
 
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getSystemMsgDataPath, new NewAttentionRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String[] keyArray = new String[]{HttpServicePath.key, PAGE, NUMBER, TOKEN};
+        String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
+        String url = addUrlAndParams(HttpNewServicePath.getSystemMsgDataPath, keyArray, valueArray);
+
+        try {
+            OkHttpManager.onGetAsynRequest(url, new NewAttentionResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            failureLessPage();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void hideDialog() {
@@ -226,7 +237,7 @@ public class MsgSystemFragment extends BaseFragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 MsgSystem msgSystem = JsonUtils.getInstance().fromJSON(MsgSystem.class, str);
@@ -237,39 +248,42 @@ public class MsgSystemFragment extends BaseFragment {
                     adapter.setList(listAll);
                 } else {
                     failureLessPage();
-                    Toast.makeText(getActivity(), noData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "系统消息解析失败:" + e.getMessage());
                 failureLessPage();
-                Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
 
-    private class NewAttentionRequestCallBack extends RequestCallBack<String> {
+    private class NewAttentionResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> stringResponseInfo) {
-            String str = stringResponseInfo.result;
-            DeBugLog.i(TAG, "系统消息返回的数据:" + str);
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "系统消息返回的数据:" + response);
             hideDialog();
-            bindData2View(str);
+            bindData2View(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "系统消息数据请求失败:" + s);
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "系统消息获取失败:" + e.getMessage());
             hideDialog();
             failureLessPage();
-            Toast.makeText(getActivity(), netWorkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

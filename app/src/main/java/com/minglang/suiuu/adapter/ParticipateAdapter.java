@@ -6,9 +6,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.Participate;
 import com.minglang.suiuu.utils.ViewHolder;
@@ -62,7 +62,7 @@ public class ParticipateAdapter extends BaseAdapter {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_participate_layout, position);
         convertView = holder.getConvertView();
 
-        ImageView participateImage = holder.getView(R.id.item_participate_image);
+        SimpleDraweeView participateImage = holder.getView(R.id.item_participate_image);
         TextView participateTitle = holder.getView(R.id.item_participate_title);
         TextView participateIntro = holder.getView(R.id.item_participate_intro);
 

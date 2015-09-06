@@ -39,9 +39,7 @@ public class InformationFragment extends BaseFragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    private String userSign;
-    private String verification;
+    private static final String ARG_PARAM3 = "param3";
 
     @BindString(R.string.OrderMsg)
     String str1;
@@ -75,11 +73,12 @@ public class InformationFragment extends BaseFragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment InformationFragment.
      */
-    public static InformationFragment newInstance(String param1, String param2) {
+    public static InformationFragment newInstance(String param1, String param2, String param3) {
         InformationFragment fragment = new InformationFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -94,6 +93,7 @@ public class InformationFragment extends BaseFragment {
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
+            token = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -121,10 +121,10 @@ public class InformationFragment extends BaseFragment {
         tabLayout.addTab(tabLayout.newTab().setText(str4), false);
         tabLayout.setTabTextColors(normalColor, selectedColor);
 
-        MsgTripGalleryFragment msgTripGalleryFragment = MsgTripGalleryFragment.newInstance(userSign, verification);
-        MsgQuestionFragment msgQuestionFragment = MsgQuestionFragment.newInstance(userSign, verification);
-        MsgOrderFragment msgOrderFragment = MsgOrderFragment.newInstance(userSign, verification);
-        MsgSystemFragment msgSystemFragment = MsgSystemFragment.newInstance(userSign, verification);
+        MsgTripGalleryFragment msgTripGalleryFragment = MsgTripGalleryFragment.newInstance(userSign, verification, token);
+        MsgQuestionFragment msgQuestionFragment = MsgQuestionFragment.newInstance(userSign, verification, token);
+        MsgOrderFragment msgOrderFragment = MsgOrderFragment.newInstance(userSign, verification, token);
+        MsgSystemFragment msgSystemFragment = MsgSystemFragment.newInstance(userSign, verification, token);
 
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(msgOrderFragment);

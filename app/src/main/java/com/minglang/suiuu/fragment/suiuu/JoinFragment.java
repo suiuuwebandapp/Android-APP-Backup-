@@ -12,21 +12,22 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.JoinAdapter;
+import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.ConfirmJoinSuiuu;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.squareup.okhttp.Request;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -40,7 +41,7 @@ import butterknife.ButterKnife;
  * Use the {@link JoinFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class JoinFragment extends Fragment {
+public class JoinFragment extends BaseFragment {
     private static final String TAG = JoinFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
@@ -52,12 +53,25 @@ public class JoinFragment extends Fragment {
     private static final String NUMBER = "number";
     private static final String TRIP_ID = "tripId";
 
-    private String userSign;
-    private String verification;
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
+
     private String tripId;
 
     @BindString(R.string.load_wait)
-    String wait;
+    String DialogMsg;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkError;
+
+    @BindString(R.string.DataError)
+    String DataError;
+
+    @BindString(R.string.NoData)
+    String NoData;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     @Bind(R.id.JoinListView)
     PullToRefreshListView pullToRefreshListView;
@@ -65,6 +79,8 @@ public class JoinFragment extends Fragment {
     private ProgressDialog progressDialog;
 
     private JoinAdapter joinAdapter;
+
+    private int page = 1;
 
     /**
      * Use this factory method to create a new instance of
@@ -103,7 +119,7 @@ public class JoinFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_join, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
+        viewAction();
         getJoinSuiuuData(1);
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
         return rootView;
@@ -117,14 +133,14 @@ public class JoinFragment extends Fragment {
         ListView listView = pullToRefreshListView.getRefreshableView();
 
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage(wait);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
         joinAdapter = new JoinAdapter(getActivity());
         listView.setAdapter(joinAdapter);
     }
 
-    private void ViewAction() {
+    private void viewAction() {
 
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
@@ -148,17 +164,22 @@ public class JoinFragment extends Fragment {
     }
 
     private void getJoinSuiuuData(int page) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter(USER_SIGN, userSign);
-        params.addBodyParameter(HttpServicePath.key, verification);
-        params.addBodyParameter(PAGE, String.valueOf(page));
-        params.addBodyParameter(NUMBER, String.valueOf(10));
-        params.addBodyParameter(TRIP_ID, tripId);
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
 
-        SuiuuHttp httpRequest = new SuiuuHttp(HttpRequest.HttpMethod.POST,
-                HttpServicePath.getSuiuuItemInfo, new JoinSuiuuRequestCallBack());
-        httpRequest.setParams(params);
-        httpRequest.executive();
+        String[] keyArray = new String[]{USER_SIGN, HttpNewServicePath.key, PAGE, NUMBER, TRIP_ID, TOKEN};
+        String[] valueArray = new String[]{userSign, verification, String.valueOf(page), String.valueOf(10), tripId, token};
+        String url = addUrlAndParams(HttpNewServicePath.getSuiuuItemInfo, keyArray, valueArray);
+
+        try {
+            OkHttpManager.onGetAsynRequest(url, new JoinSuiuuResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            failureComputePage();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -172,9 +193,16 @@ public class JoinFragment extends Fragment {
         pullToRefreshListView.onRefreshComplete();
     }
 
+    private void failureComputePage() {
+        if (page > 1) {
+            page = page - 1;
+        }
+    }
+
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
-            Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+            failureComputePage();
+            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 ConfirmJoinSuiuu confirmJoinSuiuu = JsonUtils.getInstance().fromJSON(ConfirmJoinSuiuu.class, str);
@@ -182,35 +210,43 @@ public class JoinFragment extends Fragment {
                 if (list != null && list.size() > 0) {
                     joinAdapter.setList(list);
                 } else {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.NoData), Toast.LENGTH_SHORT).show();
+                    failureComputePage();
+                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "解析错误:" + e.getMessage());
+                failureComputePage();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
 
-    private class JoinSuiuuRequestCallBack extends RequestCallBack<String> {
+    private class JoinSuiuuResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "返回的数据:" + response);
+            hideDialog();
+            bindData2View(response);
         }
 
         @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
-            String str = responseInfo.result;
-            bindData2View(str);
-        }
-
-        @Override
-        public void onFailure(HttpException e, String s) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",error:" + s);
-            hideDialog();
-            Toast.makeText(getActivity(), getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
+            failureComputePage();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }
