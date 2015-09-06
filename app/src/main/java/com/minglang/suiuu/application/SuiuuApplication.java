@@ -64,7 +64,7 @@ public class SuiuuApplication extends TuSdkApplication {
         applicationContext = this;
         instance = this;
 
-        initAboatOSS();
+        initAboutOSS();
         initImageLoad();
 
         // 设置输出状态
@@ -75,9 +75,7 @@ public class SuiuuApplication extends TuSdkApplication {
 
         //初始化TuSDK
         this.initPreLoader(this, "745f61271fd7f7f7-00-04gxn1");
-        GlobalCrashHandler.getInstance().init(this);
-
-
+        //GlobalCrashHandler.getInstance().init(this);
 
     }
 
@@ -90,7 +88,7 @@ public class SuiuuApplication extends TuSdkApplication {
     /**
      * 初始化阿里OSS上传图片相关
      */
-    public void initAboatOSS() {
+    public void initAboutOSS() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 

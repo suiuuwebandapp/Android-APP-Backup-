@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,12 +122,12 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
 
     @Override
     public void onLoadMoreData() {
-        if(Utils.isNetworkConnected(getActivity()) ) {
+        if (Utils.isNetworkConnected(getActivity())) {
             page += 1;
             loadTripGalleryList("".equals(clickTag) ? null : clickTag, "0", null, page);
             lv_trip_gallery.loadComplete();
-        }else {
-            Toast.makeText(getActivity(),R.string.NetworkAnomaly, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), R.string.NetworkAnomaly, Toast.LENGTH_SHORT).show();
             lv_trip_gallery.loadComplete();
         }
     }
@@ -153,9 +154,11 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
         page = 1;
         loadTripGalleryList(clickTag, "0", null, page);
     }
+
     /**
      * 加载旅图列表
-     * @param tags 标签
+     *
+     * @param tags     标签
      * @param sortName 排序方式
      * @param search
      * @param page
@@ -181,15 +184,22 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
      * 获取旅图数据回调接口
      */
     class loadTripGalleryListCallBack extends OkHttpManager.ResultCallback<String> {
+
         @Override
         public void onError(Request request, Exception e) {
-            tripGalleryList.addAll(JsonUtils.getInstance().fromJSON(TripGallery.class, (String) DataCacheUtils.getCacheData(getActivity(),"1").get("data")).getData().getData());
-            showList(tripGalleryList);
+            String str = (String) DataCacheUtils.getCacheData(getActivity(), "1").get("data");
+            if (!TextUtils.isEmpty(str)) {
+                List<TripGalleryDataInfo> list = JsonUtils.getInstance().fromJSON(TripGallery.class, str).getData().getData();
+                if (list != null && list.size() > 0) {
+                    tripGalleryList.addAll(list);
+                    showList(tripGalleryList);
+                }
+            }
             progressDialog.dismiss();
         }
 
         @Override
-            public void onResponse(String result) {
+        public void onResponse(String result) {
             progressDialog.dismiss();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd", Locale.CHINA);
             Date date = new Date();
@@ -204,11 +214,11 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
                         Toast.makeText(getActivity(), "没有更多数据显示", Toast.LENGTH_SHORT).show();
                     } else {
                         //缓存数据
-                        Map tripGalleryCacheData = DataCacheUtils.getCacheData(getActivity(),"1");
+                        Map tripGalleryCacheData = DataCacheUtils.getCacheData(getActivity(), "1");
                         //上次缓存时间
                         String time = (String) tripGalleryCacheData.get("time");
                         if (time == null) {
-                            DataCacheUtils.insertCacheData(getActivity(), format, result,"1");
+                            DataCacheUtils.insertCacheData(getActivity(), format, result, "1");
                         } else if (Utils.compareDate(time, format) == -1) {
                             DataCacheUtils.updateCacheData(getActivity(), format, (String) tripGalleryCacheData.get("id"), result);
                         }
@@ -216,9 +226,17 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
                         tripGalleryList.addAll(data);
                         showList(tripGalleryList);
                     }
-                }else if(status == -5){
-                    tripGalleryList.addAll(JsonUtils.getInstance().fromJSON(TripGallery.class, (String) DataCacheUtils.getCacheData(getActivity(), "1").get("data")).getData().getData());
-                    showList(tripGalleryList);
+                } else if (status == -5) {
+                    String str = (String) DataCacheUtils.getCacheData(getActivity(), "1").get("data");
+                    if (!TextUtils.isEmpty(str)) {
+                        List<TripGalleryDataInfo> list = JsonUtils.getInstance().fromJSON(TripGallery.class, str).getData().getData();
+                        if (list != null && list.size() > 0) {
+                            tripGalleryList.addAll(list);
+                            showList(tripGalleryList);
+                        }
+
+                    }
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

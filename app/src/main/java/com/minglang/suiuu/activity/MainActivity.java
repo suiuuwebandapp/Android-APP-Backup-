@@ -219,10 +219,10 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         UmengUpdateAgent.update(this);
         ButterKnife.bind(this);
+        getServiceTime();
         initView();
         registerReceiver();
         viewAction();
-        getServiceTime();
     }
 
     @Override

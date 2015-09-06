@@ -13,7 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,6 +97,9 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.personal_center_toolbar)
     Toolbar toolbar;
+
+    @Bind(R.id.personal_center_head_scroll_view)
+    ScrollView scrollView;
 
     @Bind(R.id.personal_center_head_image_view)
     SimpleDraweeView headImageView;
@@ -186,6 +191,15 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(adapter);
+
+        String isPublisher = SuiuuInfo.ReadUserData(this).getIsPublisher();
+        if (!isPublisher.equals("1")) {
+            ViewGroup.LayoutParams params = scrollView.getLayoutParams();
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            scrollView.setLayoutParams(params);
+            recyclerView.setVisibility(View.GONE);
+        }
 
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
     }

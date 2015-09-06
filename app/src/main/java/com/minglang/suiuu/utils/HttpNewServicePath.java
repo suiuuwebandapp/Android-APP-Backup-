@@ -168,11 +168,6 @@ public class HttpNewServicePath {
     public static String MyParticipateSuiuuPath = RootPath + "/app-travel/my-join-trip-list";
 
     /**
-     * 得到随游的详细信息
-     */
-    public static String getSuiuuItemInfo = RootPath + "/app-travel/get-travel-info-json";
-
-    /**
      * 新申请数据接口
      */
     public static String getNewApplyForDataPath = RootPath + "/app-travel/get-apply-list";
