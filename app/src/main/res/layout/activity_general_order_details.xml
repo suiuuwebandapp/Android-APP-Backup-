@@ -296,7 +296,7 @@
 
 
         <RelativeLayout
-            android:id="@+id/rl_general_order_detail_bottom_layout"
+            android:id="@+id/order_details_bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_50dp"
             android:layout_alignParentBottom="true"
@@ -304,7 +304,7 @@
             android:visibility="gone">
 
             <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/bb_order_detail_cancel"
+                android:id="@+id/order_details_cancel"
                 android:layout_width="@dimen/layout_100dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -316,7 +316,7 @@
                 bootstrapbutton:bb_type="warning"/>
 
             <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/bb_order_detail_repay"
+                android:id="@+id/order_details_repay"
                 android:layout_width="@dimen/layout_100dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"

@@ -171,7 +171,7 @@
     <!--请求失败1-->
     <string name="NetworkAnomaly" translatable="false">网络异常，请检查后再试！</string>
     <!--请求失败2-->
-    <string name="NetworkError" translatable="false">网络错误，请检查网络设置后再试！</string>
+    <string name="NetworkError" translatable="false">网络错误，请检查后再试！</string>
 
     <string name="SystemException" translatable="false">系统异常，请稍候再试</string>
     <string name="UnknownError" translatable="false">未知错误</string>
@@ -530,5 +530,6 @@
     </declare-styleable>
     <string name="title_activity_personal_suiuu">PersonalSuiuuActivity</string>
     <string name="title_activity_personal_problem">PersonalProblemActivity</string>
+    <string name="title_activity_personal_trip_gallery">PersonalTripGalleryActivity</string>
 
 </resources>

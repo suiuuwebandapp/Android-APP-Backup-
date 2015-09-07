@@ -65,6 +65,7 @@
 
     <color name="titleColor">#e1e1e1</color>
     <color name="backgroundColor">#eeeeee</color>
+    <color name="backgroundColor2">#F7F7F7</color>
     <color name="remindColor">#ffeb78</color>
 
     <color name="click_red">#ff7a45</color>

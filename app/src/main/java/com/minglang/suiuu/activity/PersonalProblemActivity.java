@@ -17,6 +17,8 @@ import butterknife.ButterKnife;
 
 public class PersonalProblemActivity extends BaseAppCompatActivity {
 
+    private static final String USER_SIGN = "userSign";
+
     @BindColor(R.color.white)
     int titleColor;
 
@@ -35,7 +37,8 @@ public class PersonalProblemActivity extends BaseAppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(titleColor);
 
-        userSign = SuiuuInfo.ReadUserSign(this);
+        userSign = getIntent().getStringExtra(USER_SIGN);
+
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
 

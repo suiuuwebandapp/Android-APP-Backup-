@@ -57,6 +57,7 @@ import in.srain.cube.views.ptr.header.MaterialHeader;
  * 订单详情页面-普通用户
  */
 public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
+
     private static final String TAG = GeneralOrderDetailsActivity.class.getSimpleName();
 
     private static final String ORDER_NUMBER = "orderNumber";
@@ -67,16 +68,28 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     private String TOTAL_PRICE = "total_price";
     private String DESTINATION = "destination";
 
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
+
     private static final float DEFAULT_SCORE = 0f;
 
     @BindString(R.string.load_wait)
     String DialogMsg;
 
     @BindString(R.string.NoData)
-    String dataNull;
+    String NoData;
+
+    @BindString(R.string.DataError)
+    String DataError;
 
     @BindString(R.string.NetworkAnomaly)
     String NetworkError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
+
+    @BindString(R.string.deleteOrder)
+    String DeleteOrder;
 
     @Bind(R.id.general_order_details_head_frame)
     PtrClassicFrameLayout mPtrFrame;
@@ -168,20 +181,20 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     /**
      * 底部左边按钮
      */
-    @Bind(R.id.bb_order_detail_repay)
-    BootstrapButton bb_order_detail_repay;
+    @Bind(R.id.order_details_repay)
+    BootstrapButton orderDetailsRepay;
 
     /**
      * 底部左边按钮
      */
-    @Bind(R.id.bb_order_detail_cancel)
-    BootstrapButton bb_order_detail_cancel;
+    @Bind(R.id.order_details_cancel)
+    BootstrapButton orderDetailsCancel;
 
     /**
      * 底部按钮布局
      */
-    @Bind(R.id.rl_general_order_detail_bottom_layout)
-    RelativeLayout rl_general_order_detail_bottom_layout;
+    @Bind(R.id.order_details_bottom_layout)
+    RelativeLayout orderDetailsBottomLayout;
 
     private boolean isPullToRefresh = true;
 
@@ -200,6 +213,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
      * 订单总价
      */
     private float totalOrderPrice = 0f;
+
     private InfoEntity infoEntity;
     private TripJsonInfo tripJsonInfo;
 
@@ -207,6 +221,8 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
      * 订单状态
      */
     private String status;
+
+    private String failureImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,10 +237,11 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     private void initView() {
         orderNumber = getIntent().getStringExtra(ORDER_NUMBER);
         String titleImg = getIntent().getStringExtra(TITLE_IMG);
-        DeBugLog.i(TAG, "OrderID:" + orderNumber + ",titleImg:" + titleImg);
 
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
+
+        failureImagePath = "res://com.minglang.suiuu/" + R.drawable.default_head_image;
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(DialogMsg);
@@ -275,7 +292,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         });
 
         //重新支付按钮
-        bb_order_detail_repay.setOnClickListener(new View.OnClickListener() {
+        orderDetailsRepay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (status) {
@@ -301,7 +318,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             }
         });
         //取消订单
-        bb_order_detail_cancel.setOnClickListener(new View.OnClickListener() {
+        orderDetailsCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cancelOrder();
@@ -339,9 +356,9 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         String[] keyArray = new String[]{ORDER_NUMBER, HttpServicePath.key, TOKEN};
         String[] valueArray = new String[]{orderNumber, verification, token};
         String url = addUrlAndParams(HttpNewServicePath.getGeneralUserOrderDetailsPath, keyArray, valueArray);
-
+        DeBugLog.i(TAG, "订单数据请求URL:" + url);
         try {
-            OkHttpManager.onGetAsynRequest(url, new GeneralUserOrderDetailsResultCallback());
+            OkHttpManager.onGetAsynRequest(url, new OrderDetailsResultCallback());
         } catch (IOException e) {
             e.printStackTrace();
             hideDialog();
@@ -359,7 +376,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
-            Toast.makeText(this, dataNull, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, NoData, Toast.LENGTH_SHORT).show();
         } else {
             JsonUtils jsonUtils = JsonUtils.getInstance();
 
@@ -379,7 +396,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
                         if (infoEntity != null) {
                             String jsonInfo = infoEntity.getTripJsonInfo();
-
 
                             if (!TextUtils.isEmpty(jsonInfo)) {
                                 tripJsonInfo = jsonUtils.fromJSON(TripJsonInfo.class, jsonInfo);
@@ -508,46 +524,57 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                                 switch (status) {
                                     case "0":
                                         orderStatus.setText("待支付");
-                                        rl_general_order_detail_bottom_layout.setVisibility(View.VISIBLE);
+                                        orderDetailsBottomLayout.setVisibility(View.VISIBLE);
                                         break;
+
                                     case "1":
                                         orderStatus.setText("已支付 待确认");
                                         break;
+
                                     case "2":
                                         orderStatus.setText("已支付 已确认");
                                         break;
+
                                     case "3":
-                                        rl_general_order_detail_bottom_layout.setVisibility(View.VISIBLE);
-                                        bb_order_detail_cancel.setVisibility(View.GONE);
-                                        bb_order_detail_cancel.setBootstrapType("danger");
-                                        bb_order_detail_cancel.setText(R.string.deleteOrder);
+                                        orderDetailsBottomLayout.setVisibility(View.VISIBLE);
+                                        orderDetailsCancel.setVisibility(View.GONE);
+                                        orderDetailsCancel.setBootstrapType("danger");
+                                        orderDetailsCancel.setText(DeleteOrder);
                                         orderStatus.setText("未支付 已取消");
                                         break;
+
                                     case "4":
                                         orderStatus.setText("待退款");
                                         break;
+
                                     case "5":
-                                        rl_general_order_detail_bottom_layout.setVisibility(View.VISIBLE);
-                                        bb_order_detail_cancel.setVisibility(View.GONE);
-                                        bb_order_detail_cancel.setBootstrapType("danger");
-                                        bb_order_detail_cancel.setText(R.string.deleteOrder);
+                                        orderDetailsBottomLayout.setVisibility(View.VISIBLE);
+                                        orderDetailsCancel.setVisibility(View.GONE);
+                                        orderDetailsCancel.setBootstrapType("danger");
+                                        orderDetailsCancel.setText(DeleteOrder);
                                         orderStatus.setText("退款成功");
                                         break;
+
                                     case "6":
                                         orderStatus.setText("游玩结束 待付款给随友");
                                         break;
+
                                     case "7":
                                         orderStatus.setText("结束，已经付款给随友");
                                         break;
+
                                     case "8":
                                         orderStatus.setText("退款审核中");
                                         break;
+
                                     case "9":
                                         orderStatus.setText("退款审核失败");
                                         break;
+
                                     case "10":
                                         orderStatus.setText("随友取消订单");
                                         break;
+
                                     default:
                                         orderStatus.setText("订单状态未知");
                                         break;
@@ -573,7 +600,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             if (!TextUtils.isEmpty(headImagePath)) {
                                 headImageView.setImageURI(Uri.parse(headImagePath));
                             } else {
-                                String failureImagePath = "res://com.minglang.suiuu" + R.drawable.default_head_image;
                                 headImageView.setImageURI(Uri.parse(failureImagePath));
                             }
 
@@ -596,7 +622,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                         } else {
                             userName.setText("");
                             orderDetailsPhone.setText("");
-                            String failureImagePath = "res://com.minglang.suiuu" + R.drawable.default_head_image;
                             headImageView.setImageURI(Uri.parse(failureImagePath));
                         }
 
@@ -606,11 +631,23 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
             } catch (Exception e) {
                 DeBugLog.e(TAG, "数据绑定异常:" + e.getMessage());
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(GeneralOrderDetailsActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(GeneralOrderDetailsActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(GeneralOrderDetailsActivity.this, DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
 
-    private class GeneralUserOrderDetailsResultCallback extends OkHttpManager.ResultCallback<String> {
+    private class OrderDetailsResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String response) {

@@ -1,44 +1,38 @@
-<android.support.design.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/personal_center_app_bar_layout"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppBarLayoutTheme">
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/personal_center_collapsing_toolbar_layout"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/personal_center_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            android:background="@color/white"/>
+
+        <com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader
+            android:id="@+id/personal_center_recycler_header_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top">
 
             <include layout="@layout/layout_personal_center_head_info_view"/>
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/personal_center_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/layout_50dp"
-                android:background="@color/transparent"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/Theme.AppCompat.Light"/>
+        </com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader>
 
-        </android.support.design.widget.CollapsingToolbarLayout>
+    </FrameLayout>
 
-    </android.support.design.widget.AppBarLayout>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/personal_center_toolbar"
+        style="@style/AppToolBar"
+        android:background="@color/transparent"
+        app:navigationIcon="@drawable/back"
+        app:title="@string/PersonalCenter"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/personal_center_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

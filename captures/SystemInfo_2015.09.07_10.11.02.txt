@@ -1,0 +1,214 @@
+TASK com.minglang.suiuu id=190
+  ACTIVITY com.minglang.suiuu/.activity.MainActivity 426a3b38 pid=533
+    Local FragmentActivity 4225c100 State:
+      mCreated=truemResumed=false mStopped=true mReallyStopped=true
+      mLoadersStarted=false
+    Active Fragments in 4222be28:
+      #0: TripGalleryFragment{42254b10 #0 id=0x7f0e0100}
+        mFragmentId=#7f0e0100 mContainerId=#7f0e0100 mTag=null
+        mState=2 mIndex=0 mWho=android:fragment:0 mBackStackNesting=0
+        mAdded=true mRemoving=false mResumed=false mFromLayout=false mInLayout=false
+        mHidden=false mDetached=false mMenuVisible=true mHasMenu=false
+        mRetainInstance=false mRetaining=false mUserVisibleHint=true
+        mFragmentManager=FragmentManager{4222be28 in MainActivity{4225c100}}
+        mActivity=com.minglang.suiuu.activity.MainActivity@4225c100
+        mSavedViewState=android.util.SparseArray@427917d8
+        mContainer=android.widget.FrameLayout@4220caf0
+        mView=android.widget.RelativeLayout@42349080
+        mInnerView=android.widget.RelativeLayout@42349080
+        Child FragmentManager{4221a240 in TripGalleryFragment{42254b10}}:
+          FragmentManager misc state:
+            mActivity=com.minglang.suiuu.activity.MainActivity@4225c100
+            mContainer=android.support.v4.app.Fragment$1@42216588
+            mParent=TripGalleryFragment{42254b10 #0 id=0x7f0e0100}
+            mCurState=2 mStateSaved=true mDestroyed=false
+      #1: TripGalleryFragment{4234a638 #1 id=0x7f0e0100}
+        mFragmentId=#7f0e0100 mContainerId=#7f0e0100 mTag=null
+        mState=2 mIndex=1 mWho=android:fragment:1 mBackStackNesting=0
+        mAdded=true mRemoving=false mResumed=false mFromLayout=false mInLayout=false
+        mHidden=false mDetached=false mMenuVisible=true mHasMenu=false
+        mRetainInstance=false mRetaining=false mUserVisibleHint=true
+        mFragmentManager=FragmentManager{4222be28 in MainActivity{4225c100}}
+        mActivity=com.minglang.suiuu.activity.MainActivity@4225c100
+        mSavedViewState=android.util.SparseArray@427919a8
+        mContainer=android.widget.FrameLayout@4220caf0
+        mView=android.widget.RelativeLayout@4233b5a0
+        mInnerView=android.widget.RelativeLayout@4233b5a0
+        Child FragmentManager{4233bcc8 in TripGalleryFragment{4234a638}}:
+          FragmentManager misc state:
+            mActivity=com.minglang.suiuu.activity.MainActivity@4225c100
+            mContainer=android.support.v4.app.Fragment$1@423325a0
+            mParent=TripGalleryFragment{4234a638 #1 id=0x7f0e0100}
+            mCurState=2 mStateSaved=true mDestroyed=false
+    Added Fragments:
+      #0: TripGalleryFragment{42254b10 #0 id=0x7f0e0100}
+      #1: TripGalleryFragment{4234a638 #1 id=0x7f0e0100}
+    FragmentManager misc state:
+      mActivity=com.minglang.suiuu.activity.MainActivity@4225c100
+      mContainer=android.support.v4.app.FragmentActivity$2@4222ce58
+      mCurState=2 mStateSaved=true mDestroyed=false
+    View Hierarchy:
+      com.android.internal.policy.impl.PhoneWindow$DecorView{422552a0 I.E..... ... 0,0-720,1280}
+        android.widget.LinearLayout{421f80f0 V.E..... ... 0,0-720,1280}
+          android.view.ViewStub{421fe2d8 G.E..... ... 0,0-0,0 #10203e4}
+          android.widget.FrameLayout{4220f808 V.ED.... ... 0,50-720,1280 #1020002 android:id/content}
+            android.support.v4.widget.DrawerLayout{421dfc78 VFE..... ... 0,0-720,1230 #7f0e00fc app:id/drawer_layout}
+              android.widget.RelativeLayout{422004e0 V.E..... ... 0,0-720,1230 #7f0e00fd app:id/main_show_layout}
+                android.widget.LinearLayout{421ad938 V.E..... ... 0,0-720,100 #7f0e00fe app:id/topTitleLayout}
+                  android.widget.RelativeLayout{42202e18 V.E..... ... 0,0-720,100 #7f0e01e4 app:id/titleLayout}
+                    com.facebook.drawee.view.SimpleDraweeView{42200120 V.ED..C. ... 10,5-100,95 #7f0e01e5 app:id/drawer_switch}
+                    android.widget.TextView{422369a0 V.ED.... ... 316,20-404,79 #7f0e01e6 app:id/titleInfo}
+                    android.widget.RelativeLayout{42201158 V.E..... ... 404,0-720,100 #7f0e01e7 app:id/travel_image_layout}
+                      android.widget.ImageView{4224e670 V.ED..C. ... 206,0-306,100 #7f0e01e8 app:id/main_1_album}
+                    android.widget.FrameLayout{421de260 G.E..... ... 0,0-0,0 #7f0e01e9 app:id/suiuu_button_layout}
+                      android.widget.ImageView{421ad458 V.ED..C. ... 0,0-0,0 #7f0e01ea app:id/main_2_search}
+                    android.widget.RelativeLayout{42205cf0 G.E..... ... 0,0-0,0 #7f0e01eb app:id/community_layout}
+                      android.widget.ImageView{421ad748 V.ED..C. ... 0,0-0,0 #7f0e01ec app:id/main_3_search}
+                      android.widget.ImageView{42275310 V.ED..C. ... 0,0-0,0 #7f0e01ed app:id/main_3_questions}
+                    android.widget.FrameLayout{42207e70 G.E..... ... 0,0-0,0 #7f0e01ee app:id/inbox_button_layout}
+                      android.widget.ImageView{421dc470 V.ED..C. ... 0,0-0,0 #7f0e01ef app:id/main_4_search}
+                  android.widget.TextView{4221a6f0 G.ED..C. ... 0,0-0,0 #7f0e00ff app:id/rl_net_error}
+                android.widget.FrameLayout{4220caf0 V.E..... ... 0,100-720,1114 #7f0e0100 app:id/show_layout}
+                  android.widget.RelativeLayout{42349080 V.E..... ... 0,0-720,1014 #7f0e0216 app:id/suiuu_root}
+                    com.minglang.suiuu.customview.ReFlashListView{423337c8 VFED..C. F.. 0,0-720,1014 #7f0e0217 app:id/lv_suiuu}
+                      android.widget.LinearLayout{4222d8e0 V.E..... ... 0,0-720,0}
+                        android.widget.RelativeLayout{422468a0 V.E..... ... 0,-124-720,0}
+                          android.widget.LinearLayout{42346f28 V.E..... ... 262,24-458,100 #7f0e01cc app:id/layout}
+                            android.widget.TextView{4227c2f8 V.ED.... ... 0,0-196,38 #7f0e0221 app:id/tip}
+                            android.widget.TextView{4223ea50 V.ED.... ... 98,38-98,76 #7f0e0222 app:id/lastupdate_time}
+                          android.widget.ImageView{423312f0 V.ED.... ... 187,20-222,104 #7f0e0223 app:id/arrow}
+                          android.widget.ProgressBar{422415f0 G.ED.... ... 0,0-0,0 #7f0e0224 app:id/progress}
+                      android.widget.RelativeLayout{42335d20 V.E..... ... 0,2-720,242 #7f0e021d app:id/layout_trip_gallery_search}
+                        android.widget.ImageView{4225ee50 V.ED.... ... 0,0-720,240}
+                        android.widget.TextView{423790a8 V.ED..C. ... 224,85-495,154 #7f0e021e app:id/trip_gallery_search}
+                      android.widget.LinearLayout{42331f70 V.E..... ... 0,244-720,473}
+                        android.widget.TextView{42373128 V.ED.... ... 0,0-720,69}
+                        android.widget.HorizontalScrollView{422573e0 VFED.... ... 0,69-720,229}
+                          android.widget.LinearLayout{423442d0 V.E..... ... 0,0-1190,160 #7f0e021f app:id/galleryLinearLayout}
+                            android.widget.RelativeLayout{42271790 V.E...C. ... 0,0-170,160}
+                              android.widget.ImageView{42231238 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{42363840 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                            android.widget.RelativeLayout{421f42b8 V.E...C. ... 170,0-340,160}
+                              android.widget.ImageView{421e8020 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{422b6a48 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                            android.widget.RelativeLayout{42330ec0 V.E...C. ... 340,0-510,160}
+                              android.widget.ImageView{42321aa0 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{4237af70 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                            android.widget.RelativeLayout{423453c8 V.E...C. ... 510,0-680,160}
+                              android.widget.ImageView{4235bde8 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{42326360 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                            android.widget.RelativeLayout{4227d970 V.E...C. ... 680,0-850,160}
+                              android.widget.ImageView{42332308 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{42342c98 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                            android.widget.RelativeLayout{4224a0e8 V.E...C. ... 850,0-1020,160}
+                              android.widget.ImageView{42343a50 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{42321688 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                            android.widget.RelativeLayout{42326098 V.E...C. ... 1020,0-1190,160}
+                              android.widget.ImageView{42359b68 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{423574e0 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                      android.widget.RelativeLayout{4237a518 V.E..... ... 0,475-720,995}
+                        com.facebook.drawee.view.SimpleDraweeView{42219dc8 V.ED.... ... 0,0-720,400 #7f0e02fe app:id/sdv_trip_gallery_item_picture}
+                        android.widget.RelativeLayout{42338ee8 V.E..... ... 380,40-720,140}
+                          android.widget.TextView{423727d8 V.ED.... ... 161,4-330,95 #7f0e02ff app:id/tv_trip_gallery_location_distance}
+                        android.widget.RelativeLayout{42336190 V.E..... ... 0,400-720,520 #7f0e0300 app:id/tl_user_message}
+                          com.facebook.drawee.view.SimpleDraweeView{4237bb80 V.ED.... ... 20,10-120,110 #7f0e0301 app:id/civ_trip_gallery_head_portrait}
+                          android.widget.TextView{42357de8 V.ED.... ... 120,0-200,61 #7f0e0302 app:id/tv_trip_gallery_name}
+                          android.widget.TextView{42281fe0 V.ED.... ... 130,61-223,102 #7f0e0303 app:id/tv_trip_gallery_tag}
+                          android.widget.TextView{423782b8 V.ED.... ... 652,72-710,110 #7f0e0304 app:id/tv_trip_gallery_love_number}
+                      android.widget.RelativeLayout{4228b400 V.E..... ... 0,997-720,1517}
+                        com.facebook.drawee.view.SimpleDraweeView{42270708 V.ED.... ... 0,0-720,400 #7f0e02fe app:id/sdv_trip_gallery_item_picture}
+                        android.widget.RelativeLayout{42354158 V.E..... ... 380,40-720,140}
+                          android.widget.TextView{42363bb0 V.ED.... ... 161,4-330,95 #7f0e02ff app:id/tv_trip_gallery_location_distance}
+                        android.widget.RelativeLayout{42366c58 V.E..... ... 0,400-720,520 #7f0e0300 app:id/tl_user_message}
+                          com.facebook.drawee.view.SimpleDraweeView{4234cf38 V.ED.... ... 20,10-120,110 #7f0e0301 app:id/civ_trip_gallery_head_portrait}
+                          android.widget.TextView{42231b60 V.ED.... ... 120,0-170,61 #7f0e0302 app:id/tv_trip_gallery_name}
+                          android.widget.TextView{42282840 V.ED.... ... 130,61-253,102 #7f0e0303 app:id/tv_trip_gallery_tag}
+                          android.widget.TextView{42276090 V.ED.... ... 652,72-710,110 #7f0e0304 app:id/tv_trip_gallery_love_number}
+                    android.widget.TextView{42272f80 G.ED.... ... 0,0-0,0 #7f0e0218 app:id/tv_noDataLoad}
+                  android.widget.RelativeLayout{4233b5a0 V.E..... ... 0,0-720,1014 #7f0e0216 app:id/suiuu_root}
+                    com.minglang.suiuu.customview.ReFlashListView{4235c6f8 VFED..C. ... 0,0-720,1014 #7f0e0217 app:id/lv_suiuu}
+                      android.widget.LinearLayout{42273d50 V.E..... ... 0,0-720,0}
+                        android.widget.RelativeLayout{42354510 V.E..... ... 0,-124-720,0}
+                          android.widget.LinearLayout{42334078 V.E..... ... 262,24-458,100 #7f0e01cc app:id/layout}
+                            android.widget.TextView{42356838 V.ED.... ... 0,0-196,38 #7f0e0221 app:id/tip}
+                            android.widget.TextView{4233a7e8 V.ED.... ... 98,38-98,76 #7f0e0222 app:id/lastupdate_time}
+                          android.widget.ImageView{4233aae8 V.ED.... ... 187,20-222,104 #7f0e0223 app:id/arrow}
+                          android.widget.ProgressBar{42367350 G.ED.... ... 0,0-0,0 #7f0e0224 app:id/progress}
+                      android.widget.RelativeLayout{4238e1d8 V.E..... ... 0,2-720,242 #7f0e021d app:id/layout_trip_gallery_search}
+                        android.widget.ImageView{4237a078 V.ED.... ... 0,0-720,240}
+                        android.widget.TextView{4239c7d0 V.ED..C. ... 224,85-495,154 #7f0e021e app:id/trip_gallery_search}
+                      android.widget.LinearLayout{42386ae8 V.E..... ... 0,244-720,473}
+                        android.widget.TextView{42386de8 V.ED.... ... 0,0-720,69}
+                        android.widget.HorizontalScrollView{42387550 VFED.... ... 0,69-720,229}
+                          android.widget.LinearLayout{42387d08 V.E..... ... 0,0-1190,160 #7f0e021f app:id/galleryLinearLayout}
+                            android.widget.RelativeLayout{42388368 V.E...C. ... 0,0-170,160}
+                              android.widget.ImageView{423887e8 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{42388ac0 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                            android.widget.RelativeLayout{42389188 V.E...C. ... 170,0-340,160}
+                              android.widget.ImageView{42749910 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{42749ae0 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                            android.widget.RelativeLayout{4274a138 V.E...C. ... 340,0-510,160}
+                              android.widget.ImageView{4274a5b8 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{4274a890 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                            android.widget.RelativeLayout{4274af10 V.E...C. ... 510,0-680,160}
+                              android.widget.ImageView{4274b390 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{4274b668 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                            android.widget.RelativeLayout{4274bce8 V.E...C. ... 680,0-850,160}
+                              android.widget.ImageView{4274c168 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{4274c440 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                            android.widget.RelativeLayout{4274cac0 V.E...C. ... 850,0-1020,160}
+                              android.widget.ImageView{4274cf40 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{4274d218 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                            android.widget.RelativeLayout{4274d898 V.E...C. ... 1020,0-1190,160}
+                              android.widget.ImageView{4274dd18 V.ED.... ... 10,0-170,160 #7f0e0307 app:id/iv_item_trip_gallery_tag}
+                              android.widget.TextView{427644d0 V.ED.... ... 5,100-165,160 #7f0e0308 app:id/tv_item_trip_gallery_tag}
+                      android.widget.RelativeLayout{427672a8 V.E..... ... 0,475-720,995}
+                        com.facebook.drawee.view.SimpleDraweeView{42767758 V.ED.... ... 0,0-720,400 #7f0e02fe app:id/sdv_trip_gallery_item_picture}
+                        android.widget.RelativeLayout{42768358 V.E..... ... 380,40-720,140}
+                          android.widget.TextView{42768900 V.ED.... ... 161,4-330,95 #7f0e02ff app:id/tv_trip_gallery_location_distance}
+                        android.widget.RelativeLayout{42768fe8 V.E..... ... 0,400-720,520 #7f0e0300 app:id/tl_user_message}
+                          com.facebook.drawee.view.SimpleDraweeView{427695f0 V.ED.... ... 20,10-120,110 #7f0e0301 app:id/civ_trip_gallery_head_portrait}
+                          android.widget.TextView{4276a2a8 V.ED.... ... 120,0-200,61 #7f0e0302 app:id/tv_trip_gallery_name}
+                          android.widget.TextView{4276a7c0 V.ED.... ... 130,61-223,102 #7f0e0303 app:id/tv_trip_gallery_tag}
+                          android.widget.TextView{4276ae00 V.ED.... ... 652,72-710,110 #7f0e0304 app:id/tv_trip_gallery_love_number}
+                      android.widget.RelativeLayout{4276e430 V.E..... ... 0,997-720,1517}
+                        com.facebook.drawee.view.SimpleDraweeView{4276e8e0 V.ED.... ... 0,0-720,400 #7f0e02fe app:id/sdv_trip_gallery_item_picture}
+                        android.widget.RelativeLayout{4276f4e0 V.E..... ... 380,40-720,140}
+                          android.widget.TextView{4276fa88 V.ED.... ... 161,4-330,95 #7f0e02ff app:id/tv_trip_gallery_location_distance}
+                        android.widget.RelativeLayout{42770170 V.E..... ... 0,400-720,520 #7f0e0300 app:id/tl_user_message}
+                          com.facebook.drawee.view.SimpleDraweeView{42770778 V.ED.... ... 20,10-120,110 #7f0e0301 app:id/civ_trip_gallery_head_portrait}
+                          android.widget.TextView{42787888 V.ED.... ... 120,0-170,61 #7f0e0302 app:id/tv_trip_gallery_name}
+                          android.widget.TextView{42787da0 V.ED.... ... 130,61-253,102 #7f0e0303 app:id/tv_trip_gallery_tag}
+                          android.widget.TextView{427883e0 V.ED.... ... 652,72-710,110 #7f0e0304 app:id/tv_trip_gallery_love_number}
+                    android.widget.TextView{42296960 G.ED.... ... 0,0-0,0 #7f0e0218 app:id/tv_noDataLoad}
+                android.support.v7.widget.CardView{42266af0 V.E..... ... 0,1114-720,1230 #7f0e0101 app:id/tab_select_card_layout}
+                  android.widget.LinearLayout{42224870 V.E..... ... 6,8-714,108 #7f0e030f app:id/tab_select}
+                    android.widget.LinearLayout{42250b18 V.E...C. ... 0,0-177,100 #7f0e0310 app:id/tab1}
+                      android.widget.ImageView{4221c1a8 V.ED.... ... 38,0-138,100 #7f0e0311 app:id/img1}
+                    android.widget.LinearLayout{421e5938 V.E...C. ... 177,0-354,100 #7f0e0312 app:id/tab2}
+                      android.widget.ImageView{42217be0 V.ED.... ... 38,0-138,100 #7f0e0313 app:id/img2}
+                    android.widget.LinearLayout{4225c868 V.E...C. ... 354,0-530,100 #7f0e0314 app:id/tab3}
+                      android.widget.ImageView{42269668 V.ED.... ... 38,0-138,100 #7f0e0315 app:id/img3}
+                    android.widget.LinearLayout{42219820 V.E...C. ... 530,0-707,100 #7f0e0316 app:id/tab4}
+                      android.widget.ImageView{4224f660 V.ED.... ... 38,0-138,100 #7f0e0317 app:id/img4}
+              android.widget.RelativeLayout{42238f98 I.E..... ... -540,0-0,1280 #7f0e0102 app:id/slider_layout}
+                android.widget.LinearLayout{42253a60 V.E..... ... 0,0-540,360 #7f0e0103 app:id/include}
+                  android.widget.RelativeLayout{42262378 V.E..... ... 0,0-540,300}
+                    android.widget.FrameLayout{421e9d00 V.E..... ... 0,0-540,148}
+                    android.widget.TextView{42255950 V.ED.... ... 0,148-540,152 #7f0e030a app:id/dividing_line}
+                    android.widget.FrameLayout{42228a80 V.E..... ... 206,86-334,214 #7f0e030b app:id/head_image_layout}
+                      com.facebook.drawee.view.SimpleDraweeView{4230d660 V.ED..C. ... 4,4-124,124 #7f0e030c app:id/head_image}
+                    android.widget.TextView{421abc90 V.ED..C. ... 0,16-540,70 #7f0e030d app:id/nick_name}
+                  android.widget.Switch{422837b8 VFED..C. ... 20,300-520,360 #7f0e030e app:id/switch_suiuu}
+                android.widget.ListView{42242568 VFED.VC. ... 0,360-540,1280 #7f0e0104 app:id/side_list_view}
+                  android.widget.RelativeLayout{42360060 V.E..... ... 0,0-540,106}
+                    android.widget.TextView{42222e80 V.ED.... ... 30,26-150,80 #7f0e02ef app:id/itemSliderText}
+                  android.widget.RelativeLayout{4237e2e8 V.E..... ... 0,108-540,214}
+                    android.widget.TextView{42228df0 V.ED.... ... 30,26-190,80 #7f0e02ef app:id/itemSliderText}
+                  android.widget.RelativeLayout{423307c0 V.E..... ... 0,216-540,322}
+                    android.widget.TextView{42361098 V.ED.... ... 30,26-190,80 #7f0e02ef app:id/itemSliderText}
+                  android.widget.RelativeLayout{42351788 V.E..... ... 0,324-540,430}
+                    android.widget.TextView{42383578 V.ED.... ... 30,26-190,80 #7f0e02ef app:id/itemSliderText}
+                  android.widget.RelativeLayout{42372bc8 V.E..... ... 0,432-540,538}
+                    android.widget.TextView{42383b98 V.ED.... ... 30,26-110,80 #7f0e02ef app:id/itemSliderText}
+                android.widget.ListView{4221ad60 GFED.VC. ... 0,0-0,0 #7f0e0105 app:id/side_list_view_2}

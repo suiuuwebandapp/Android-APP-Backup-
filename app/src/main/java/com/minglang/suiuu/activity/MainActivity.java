@@ -79,7 +79,7 @@ public class MainActivity extends BaseActivity {
     private static final String STATUS = "status";
     private static final String DATA = "data";
 
-    private static final String USERSIGN = "userSign";
+    private static final String USER_SIGN = "userSign";
 
     @BindString(R.string.SuiuuAccount)
     String SuiuuAccount;
@@ -433,7 +433,9 @@ public class MainActivity extends BaseActivity {
                         break;
 
                     case 1:
-                        startActivity(new Intent(MainActivity.this, AttentionActivity.class));
+                        Intent intent1 = new Intent(MainActivity.this, AttentionActivity.class);
+                        intent1.putExtra(USER_SIGN, userSign);
+                        startActivity(intent1);
                         break;
 
                     case 2:
@@ -835,14 +837,14 @@ public class MainActivity extends BaseActivity {
 
                 case R.id.head_image:
                     Intent headIntent = new Intent(MainActivity.this, PersonalMainPagerActivity.class);
-                    headIntent.putExtra(USERSIGN, userSign);
+                    headIntent.putExtra(USER_SIGN, userSign);
                     startActivity(headIntent);
                     mDrawerLayout.closeDrawer(sliderView);
                     break;
 
                 case R.id.nick_name:
                     Intent nickIntent = new Intent(MainActivity.this, PersonalMainPagerActivity.class);
-                    nickIntent.putExtra(USERSIGN, userSign);
+                    nickIntent.putExtra(USER_SIGN, userSign);
                     startActivity(nickIntent);
                     mDrawerLayout.closeDrawer(sliderView);
                     break;

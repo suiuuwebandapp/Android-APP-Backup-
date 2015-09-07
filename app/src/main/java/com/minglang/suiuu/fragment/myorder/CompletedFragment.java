@@ -229,18 +229,16 @@ public class CompletedFragment extends BaseFragment {
             }
         }
 
-        getCompletedData();
-    }
-
-    private void getCompletedData() {
         String[] keyArray = new String[]{HttpServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
         String url = addUrlAndParams(HttpNewServicePath.getGeneralUserCompletedOrderPath, keyArray, valueArray);
+        DeBugLog.i(TAG, "已完成数据请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new CompletedResultCallback());
         } catch (IOException e) {
             e.printStackTrace();
             hideDialog();
+            Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -315,18 +313,18 @@ public class CompletedFragment extends BaseFragment {
     private class CompletedResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "获取到的数据:" + response);
+            hideDialog();
+            bindData2View(response);
+        }
+
+        @Override
         public void onError(Request request, Exception e) {
             DeBugLog.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onResponse(String response) {
-            DeBugLog.i(TAG, "获取到的数据:" + response);
-            hideDialog();
-            bindData2View(response);
         }
 
     }

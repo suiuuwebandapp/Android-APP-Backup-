@@ -99,6 +99,16 @@ public class HttpNewServicePath {
      */
     public static String getPersonalSuiuuDataPath = RootPath + "/app-travel/my-trip-list";
 
+    /**
+     * 得到指定用户的旅图
+     */
+    public static String getPersonalTripDataPath = RootPath + "/app-travel-picture/get-user-tp";
+
+    /**
+     * 得到指定用户的问答
+     */
+    public static String getPersonalProblemDataPath = RootPath + "/app-qa/get-user-qa";
+
     //***************************************************问答社区相关*****************************************************\\
 
     /**
@@ -115,11 +125,6 @@ public class HttpNewServicePath {
      * 得到问题详情
      */
     public static String getProblemDetailsPath = RootPath + "/app-qa/get-qa-info";
-
-    /**
-     * 得到指定用户的问答
-     */
-    public static String getPersonalProblemDataPath = RootPath + "/app-qa/get-user-qa";
 
     /**
      * 添加标签
@@ -245,8 +250,10 @@ public class HttpNewServicePath {
      */
     public static String userDeleteOrder = RootPath + "/app-user-order/delete-order";
 
-
-    public static String getGeneralUserOrderDetailsPath = RootPath + "/app-travel/user-order-info";
+    /**
+     * 普通用户订单详情
+     */
+    public static String getGeneralUserOrderDetailsPath = RootPath + "/app-user-order/user-order-info";
 
 
     //***********************************************侧栏-普通用户-关注**************************************************************\\

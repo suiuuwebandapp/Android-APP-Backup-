@@ -59,6 +59,7 @@ dependencies {
     compile 'com.githang:com-phillipcalvin-iconbutton:1.0.1@aar'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.okio:okio:1.5.0'
+    compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
     compile files('libs/picasso-2.4.0.jar')
     compile files('libs/umeng-analytics-v5.2.4.jar')
     compile files('libs/xUtils-2.6.14.jar')

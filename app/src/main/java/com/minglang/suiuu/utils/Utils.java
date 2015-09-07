@@ -20,9 +20,13 @@ import android.widget.ListView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class Utils {
+
+    private static final String TAG = Utils.class.getSimpleName();
 
     private static Utils utils;
 
@@ -200,8 +204,7 @@ public class Utils {
         final String[] projection = {column};
 
         try {
-            cursor = context.getContentResolver().query(uri, projection,
-                    selection, selectionArgs, null);
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
             if (cursor != null && cursor.moveToFirst()) {
                 final int index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(index);
@@ -218,8 +221,7 @@ public class Utils {
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
     public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri
-                .getAuthority());
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
     /**
@@ -227,8 +229,7 @@ public class Utils {
      * @return Whether the Uri authority is DownloadsProvider.
      */
     public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri
-                .getAuthority());
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
     /**
@@ -236,8 +237,7 @@ public class Utils {
      * @return Whether the Uri authority is MediaProvider.
      */
     public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri
-                .getAuthority());
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
     /**
@@ -245,8 +245,7 @@ public class Utils {
      * @return Whether the Uri authority is Google Photos.
      */
     public static boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri
-                .getAuthority());
+        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
     /**
@@ -315,12 +314,13 @@ public class Utils {
 
     /**
      * 比较日期前后
+     *
      * @param DATE1
      * @param DATE2
      * @return
      */
     public static int compareDate(String DATE1, String DATE2) {
-        DateFormat df = new SimpleDateFormat("yyyy:MM:dd");
+        DateFormat df = new SimpleDateFormat("yyyy:MM:dd", Locale.getDefault());
         try {
             Date dt1 = df.parse(DATE1);
             Date dt2 = df.parse(DATE2);
@@ -337,5 +337,29 @@ public class Utils {
         return 0;
     }
 
-}
+    /**
+     * 根据生日计算年龄
+     *
+     * @param birthday 生日
+     * @return 年龄
+     */
+    public static String calculateAge(String birthday) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date date = format.parse(birthday);
+            Calendar calendar = Calendar.getInstance();
+            int yearNow = calendar.get(Calendar.YEAR);
+            calendar.setTime(date);
+            int yearBirth = calendar.get(Calendar.YEAR);
+            DeBugLog.i(TAG, "yearNow:" + yearNow + ",yearBirth:" + yearBirth);
+            if (yearNow > yearBirth) {
+                return String.valueOf(yearNow - yearBirth);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
+}

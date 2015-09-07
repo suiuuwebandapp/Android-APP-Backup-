@@ -99,11 +99,10 @@ public class AnswerActivity extends BaseAppCompatActivity {
      * @return 参数
      */
     private OkHttpManager.Params[] buildNewParams(String id, String content) {
-        OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[4];
+        OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[3];
         paramsArray[0] = new OkHttpManager.Params(HttpNewServicePath.key, verification);
         paramsArray[1] = new OkHttpManager.Params(Q_ID, id);
         paramsArray[2] = new OkHttpManager.Params(CONTENT, content);
-        paramsArray[3] = new OkHttpManager.Params(TOKEN, token);
         return paramsArray;
     }
 
@@ -117,9 +116,10 @@ public class AnswerActivity extends BaseAppCompatActivity {
             progressDialog.show();
         }
 
+        String url = HttpNewServicePath.setAnswerToQuestionPath + "?" + TOKEN + "=" + token;
+
         try {
-            OkHttpManager.onPostAsynRequest(HttpNewServicePath.setAnswerToQuestionPath,
-                    new AnswerResultCallback(), buildNewParams(qID, content));
+            OkHttpManager.onPostAsynRequest(url, new AnswerResultCallback(), buildNewParams(qID, content));
         } catch (IOException e) {
             e.printStackTrace();
             hideDialog();

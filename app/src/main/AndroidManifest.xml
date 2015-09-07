@@ -22,9 +22,7 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <!-- 获取精确的GPS位置 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-
     <!-- 允许一个程序获取信息有关当前或最近运行的任务，一个缩略的任务状态，是否活动等等 -->
-    <!-- suppress DeprecatedClassUsageInspection -->
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <!-- 允许程序访问有关GSM网络信息 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -56,9 +54,11 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <!-- 允许一个程序打开窗口使用 TYPE_SYSTEM_ALERT，显示在其他所有程序的顶层 -->
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW"/>
+    <!-- 详细定位信息-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <!--发送短信权限-->
+    <!-- 发送短信权限 -->
     <uses-permission android:name="android.permission.SEND_SMS"/>
+    <!-- 允许一个程序是否改变一个组件或其他的启用或禁用-->
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
     <!-- 拨打电话权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE"/>
@@ -343,7 +343,6 @@
 
         <activity
             android:name=".activity.PersonalMainPagerActivity"
-            android:label="@string/title_activity_personal_center"
             android:theme="@style/AppMainTheme"/>
 
         <activity
@@ -392,6 +391,11 @@
         <activity
             android:name=".activity.PersonalProblemActivity"
             android:label="@string/title_activity_personal_problem"
+            android:theme="@style/AppMainTheme"/>
+
+        <activity
+            android:name=".activity.PersonalTripGalleryActivity"
+            android:label="@string/title_activity_personal_trip_gallery"
             android:theme="@style/AppMainTheme"/>
 
     </application>

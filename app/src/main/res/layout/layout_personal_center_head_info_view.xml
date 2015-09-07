@@ -1,236 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    android:id="@+id/personal_center_head_scroll_view"
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/layout_450dp">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/personal_center_head_info_view_layout_1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_180dp">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_background_image"/>
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/personal_center_head_image_view"
+            android:layout_width="@dimen/layout_65dp"
+            android:layout_height="@dimen/layout_65dp"
+            android:layout_centerInParent="true"
+            fresco:actualImageScaleType="fitXY"
+            fresco:failureImage="@drawable/default_head_image"
+            fresco:placeholderImage="@drawable/default_head_image"
+            fresco:roundAsCircle="true"/>
+
+        <TextView
+            android:id="@+id/personal_center_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/personal_center_user_info_layout"
+            android:layout_below="@+id/personal_center_head_image_view"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="@string/userName"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"/>
+
+        <LinearLayout
+            android:id="@+id/personal_center_user_info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="1.2">
+
+            <TextView
+                android:id="@+id/personal_center_user_location"
+                style="@style/PersonalCenterTextView"
+                android:text="@string/UserLocation"/>
+
+            <TextView
+                android:id="@+id/personal_center_user_profession"
+                style="@style/PersonalCenterTextView"
+                android:text="@string/UserOccupation"/>
+
+            <TextView
+                android:id="@+id/personal_center_user_age"
+                style="@style/PersonalCenterTextView"
+                android:text="@string/UserYear"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+
+        android:weightSum="1.2">
+
+        <TextView
+            android:id="@+id/personal_center_trip_image"
+            style="@style/PersonalCenterTextView2"
+            android:drawableTop="@drawable/personal_trip_image_selector"
+            android:text="@string/MainTitle1"/>
+
+        <TextView
+            android:id="@+id/personal_center_question"
+            style="@style/PersonalCenterTextView2"
+            android:drawableTop="@drawable/personal_question_selector"
+            android:text="@string/QuestionsAndAnswers"/>
+
+        <TextView
+            android:id="@+id/personal_center_attention"
+            style="@style/PersonalCenterTextView2"
+            android:drawableTop="@drawable/personal_attention_selector"
+            android:text="@string/Attention"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/backgroundColor2"
+        android:padding="@dimen/layout_8dp">
+
+        <TextView
+            android:id="@+id/personal_center_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="140"
+            android:text="@string/IndividualResume"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/textColor"/>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/personal_center_head_info_view_layout_1"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/layout_180dp">
+        <TextView
+            android:id="@+id/personal_center_other_user_comment_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/layout_10dp"
+            android:layout_marginRight="@dimen/layout_10dp"
+            android:drawableEnd="@drawable/icon_little_arrow"
+            android:drawableRight="@drawable/icon_little_arrow"
+            android:padding="@dimen/layout_5dp"
+            android:text="@string/AllComment"
+            android:textColor="@color/textColor"/>
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/app_name"
-                android:scaleType="fitXY"
-                android:src="@drawable/default_background_image"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/layout_5dp">
 
             <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/personal_center_head_image_view"
-                android:layout_width="@dimen/layout_65dp"
-                android:layout_height="@dimen/layout_65dp"
-                android:layout_centerInParent="true"
+                android:id="@+id/personal_center_other_user_head_image_view"
+                android:layout_width="@dimen/layout_50dp"
+                android:layout_height="@dimen/layout_50dp"
+                android:layout_margin="@dimen/layout_5dp"
                 fresco:actualImageScaleType="fitXY"
                 fresco:failureImage="@drawable/default_head_image"
                 fresco:placeholderImage="@drawable/default_head_image"
                 fresco:roundAsCircle="true"/>
 
             <TextView
-                android:id="@+id/personal_center_user_name"
+                android:id="@+id/personal_center_other_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/personal_center_user_info_layout"
-                android:layout_below="@+id/personal_center_head_image_view"
-                android:layout_centerHorizontal="true"
-                android:gravity="center_vertical"
+                android:layout_alignTop="@+id/personal_center_other_user_head_image_view"
+                android:layout_toEndOf="@+id/personal_center_other_user_head_image_view"
+                android:layout_toRightOf="@+id/personal_center_other_user_head_image_view"
                 android:singleLine="true"
                 android:text="@string/userName"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/white"/>
+                android:textColor="@color/textColor"/>
 
-            <LinearLayout
-                android:id="@+id/personal_center_user_info_layout"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/personal_center_comment_content"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="1.2">
-
-                <TextView
-                    android:id="@+id/personal_center_user_location"
-                    style="@style/PersonalCenterTextView"
-                    android:text="@string/UserLocation"/>
-
-                <TextView
-                    android:id="@+id/personal_center_user_profession"
-                    style="@style/PersonalCenterTextView"
-                    android:text="@string/UserOccupation"/>
-
-                <TextView
-                    android:id="@+id/personal_center_user_age"
-                    style="@style/PersonalCenterTextView"
-                    android:text="@string/UserYear"/>
-
-            </LinearLayout>
+                android:layout_alignBottom="@+id/personal_center_other_user_head_image_view"
+                android:layout_toEndOf="@+id/personal_center_other_user_head_image_view"
+                android:layout_toRightOf="@+id/personal_center_other_user_head_image_view"
+                android:singleLine="true"
+                android:text="@string/CommentContent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/textColor"/>
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+    </LinearLayout>
 
-            android:weightSum="1.2">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/backgroundColor2"
+        android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/personal_center_trip_image"
-                style="@style/PersonalCenterTextView2"
-                android:drawableTop="@drawable/personal_trip_image_selector"
-                android:text="@string/MainTitle1"/>
+        <TextView
+            android:id="@+id/personal_center_email_ver"
+            style="@style/VerificationTextView"
+            android:text="@string/EmailVerification"/>
 
-            <TextView
-                android:id="@+id/personal_center_question"
-                style="@style/PersonalCenterTextView2"
-                android:drawableTop="@drawable/personal_question_selector"
-                android:text="@string/QuestionsAndAnswers"/>
+        <TextView style="@style/settingDividingLine2"/>
 
-            <TextView
-                android:id="@+id/personal_center_attention"
-                style="@style/PersonalCenterTextView2"
-                android:drawableTop="@drawable/personal_attention_selector"
-                android:text="@string/Attention"/>
+        <TextView
+            android:id="@+id/personal_center_phone_ver"
+            style="@style/VerificationTextView"
+            android:text="@string/PhoneVerification"/>
 
-        </LinearLayout>
+        <TextView style="@style/settingDividingLine2"/>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/backgroundColor"
-            android:padding="@dimen/layout_8dp">
+        <TextView
+            android:id="@+id/personal_center_name_ver"
+            style="@style/VerificationTextView"
+            android:text="@string/RealNameVerification"/>
 
-            <TextView
-                android:id="@+id/personal_center_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLength="140"
-                android:text="@string/IndividualResume"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/textColor"/>
+        <TextView style="@style/settingDividingLine2"/>
 
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="@dimen/layout_10dp"
-                android:layout_marginRight="@dimen/layout_10dp"
-                android:drawableEnd="@drawable/icon_little_arrow"
-                android:drawableRight="@drawable/icon_little_arrow"
-                android:padding="@dimen/layout_5dp"
-                android:text="@string/AllComment"
-                android:textColor="@color/textColor"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/layout_5dp">
-
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/personal_center_other_user_head_image_view"
-                    android:layout_width="@dimen/layout_50dp"
-                    android:layout_height="@dimen/layout_50dp"
-                    android:layout_margin="@dimen/layout_5dp"
-                    fresco:actualImageScaleType="fitXY"
-                    fresco:failureImage="@drawable/default_head_image"
-                    fresco:placeholderImage="@drawable/default_head_image"
-                    fresco:roundAsCircle="true"/>
-
-                <TextView
-                    android:id="@+id/personal_center_other_user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/personal_center_other_user_head_image_view"
-                    android:layout_toEndOf="@+id/personal_center_other_user_head_image_view"
-                    android:layout_toRightOf="@+id/personal_center_other_user_head_image_view"
-                    android:singleLine="true"
-                    android:text="@string/userName"
-                    android:textColor="@color/textColor"/>
-
-                <TextView
-                    android:id="@+id/personal_center_comment_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/personal_center_other_user_head_image_view"
-                    android:layout_toEndOf="@+id/personal_center_other_user_head_image_view"
-                    android:layout_toRightOf="@+id/personal_center_other_user_head_image_view"
-                    android:singleLine="true"
-                    android:text="@string/CommentContent"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/textColor"/>
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/backgroundColor"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/personal_center_email_ver"
-                style="@style/VerificationTextView"
-                android:text="@string/EmailVerification"/>
-
-            <TextView style="@style/settingDividingLine2"/>
-
-            <TextView
-                android:id="@+id/personal_center_phone_ver"
-                style="@style/VerificationTextView"
-                android:text="@string/PhoneVerification"/>
-
-            <TextView style="@style/settingDividingLine2"/>
-
-            <TextView
-                android:id="@+id/personal_center_name_ver"
-                style="@style/VerificationTextView"
-                android:text="@string/RealNameVerification"/>
-
-            <TextView style="@style/settingDividingLine2"/>
-
-            <TextView
-                android:id="@+id/personal_center_experience_ver"
-                style="@style/VerificationTextView"
-                android:text="@string/ExperienceVerification"/>
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/textView49"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:padding="@dimen/layout_5dp"
-                android:text="@string/RelevantSuiuu"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-        </FrameLayout>
+        <TextView
+            android:id="@+id/personal_center_experience_ver"
+            style="@style/VerificationTextView"
+            android:text="@string/ExperienceVerification"/>
 
     </LinearLayout>
 
-</ScrollView>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView49"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:padding="@dimen/layout_8dp"
+            android:text="@string/RelevantSuiuu"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    </FrameLayout>
+
+</LinearLayout>

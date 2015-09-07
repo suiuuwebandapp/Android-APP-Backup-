@@ -1,21 +1,19 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.AttentionSuiuu.AttentionSuiuuData.AttentionSuiuuItemData;
 import com.minglang.suiuu.utils.ViewHolder;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -32,22 +30,10 @@ public class AttentionSuiuuAdapter extends BaseAdapter {
 
     private List<AttentionSuiuuItemData> list;
 
-    private ImageLoader imageLoader;
-
-    private DisplayImageOptions options;
-
     private int screenWidth;
 
     public AttentionSuiuuAdapter(Context context) {
         this.context = context;
-
-        imageLoader = ImageLoader.getInstance();
-
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading_error)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     public void setScreenWidth(int screenWidth) {
@@ -87,18 +73,21 @@ public class AttentionSuiuuAdapter extends BaseAdapter {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_attention_suiuu, position);
         convertView = holder.getConvertView();
 
-        int itemWidth = screenWidth / 2;
-        AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int itemLength = screenWidth / 2;
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemLength, AbsListView.LayoutParams.WRAP_CONTENT);
         convertView.setLayoutParams(params);
 
-        ImageView imageView = holder.getView(R.id.item_attention_suiuu_image);
+        SimpleDraweeView imageView = holder.getView(R.id.item_attention_suiuu_image);
         TextView titleView = holder.getView(R.id.item_attention_suiuu_title);
         TextView heartView = holder.getView(R.id.item_attention_suiuu_heart);
         TextView commentView = holder.getView(R.id.item_attention_suiuu_comment);
 
+        RelativeLayout.LayoutParams imageParams = new RelativeLayout.LayoutParams(itemLength, itemLength);
+        imageView.setLayoutParams(imageParams);
+
         String imagePath = list.get(position).getTitleImg();
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, imageView, options);
+            imageView.setImageURI(Uri.parse(imagePath));
         }
 
         String strTitle = list.get(position).getTitle();

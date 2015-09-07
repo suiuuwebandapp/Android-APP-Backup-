@@ -5,23 +5,19 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.PersonalTravelAdapter;
+import com.minglang.suiuu.adapter.PersonalMainPagerAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.PersonalCenter;
 import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData;
@@ -37,6 +33,7 @@ import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.Utils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -47,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
@@ -58,12 +56,15 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
     private static final String TAG = PersonalMainPagerActivity.class.getSimpleName();
 
-    private static final String USERSIGN = "userSign";
+    private static final String USER_SIGN = "userSign";
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
 
     private static final String ID = "id";
+
+    @BindColor(R.color.transparent)
+    int titleColor;
 
     @BindString(R.string.load_wait)
     String DialogMsg;
@@ -89,17 +90,17 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
     @BindString(R.string.Attention)
     String strAttention;
 
+    @BindString(R.string.AllComment)
+    String AllComment;
+
     @BindDrawable(R.drawable.icon_hook)
     Drawable hook;
-
-    @Bind(R.id.personal_center_app_bar_layout)
-    AppBarLayout appBarLayout;
 
     @Bind(R.id.personal_center_toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.personal_center_head_scroll_view)
-    ScrollView scrollView;
+    @Bind(R.id.personal_center_recycler_header_view)
+    RecyclerViewHeader recyclerViewHeader;
 
     @Bind(R.id.personal_center_head_image_view)
     SimpleDraweeView headImageView;
@@ -134,6 +135,9 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
     @Bind(R.id.personal_center_other_user_name)
     TextView commentUserNameView;
 
+    @Bind(R.id.personal_center_other_user_comment_number)
+    TextView commentContentNumber;
+
     @Bind(R.id.personal_center_comment_content)
     TextView commentContentView;
 
@@ -156,7 +160,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
     private List<TripListEntity> listAll = new ArrayList<>();
 
-    private PersonalTravelAdapter adapter;
+    private PersonalMainPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +173,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
     }
 
     private void initView() {
-        userSign = getIntent().getStringExtra(USERSIGN);
+        userSign = getIntent().getStringExtra(USER_SIGN);
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
 
@@ -177,66 +181,70 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
         progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
+        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
-
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.back);
-        }
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
 
-        adapter = new PersonalTravelAdapter();
+        adapter = new PersonalMainPagerAdapter();
 
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(adapter);
 
-        String isPublisher = SuiuuInfo.ReadUserData(this).getIsPublisher();
-        if (!isPublisher.equals("1")) {
-            ViewGroup.LayoutParams params = scrollView.getLayoutParams();
-            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            scrollView.setLayoutParams(params);
-            recyclerView.setVisibility(View.GONE);
-        }
+        recyclerViewHeader.attachTo(recyclerView, true);
 
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
     }
 
     private void viewAction() {
 
-        appBarLayout.setLayoutAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                DeBugLog.i(TAG, "AppLayout Start");
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                DeBugLog.i(TAG, "AppLayout End");
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-                DeBugLog.i(TAG, "AppLayout Repeat");
-            }
-
-        });
-
         adapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                DeBugLog.i(TAG, "click position:" + position);
                 Intent intent = new Intent(PersonalMainPagerActivity.this, TripGalleryDetailsActivity.class);
                 intent.putExtra(ID, listAll.get(position).getTripId());
                 startActivity(intent);
             }
         });
 
+        tripImageTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(userSign)) {
+                    Intent intent = new Intent(PersonalMainPagerActivity.this, PersonalTripGalleryActivity.class);
+                    intent.putExtra(USER_SIGN, userSign);
+                    startActivity(intent);
+                }
+            }
+        });
+
         questionTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PersonalMainPagerActivity.this, PersonalProblemActivity.class));
+                if (!TextUtils.isEmpty(userSign)) {
+                    Intent intent = new Intent(PersonalMainPagerActivity.this, PersonalProblemActivity.class);
+                    intent.putExtra(USER_SIGN, userSign);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        attentionTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(userSign)) {
+                    Intent intent = new Intent(PersonalMainPagerActivity.this, AttentionActivity.class);
+                    intent.putExtra(USER_SIGN, userSign);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        commentContentNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -247,10 +255,10 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
             progressDialog.show();
         }
 
-        String[] keyArray = new String[]{USERSIGN, TOKEN};
+        String[] keyArray = new String[]{USER_SIGN, TOKEN};
         String[] valueArray = new String[]{userSign, token};
         String url = addUrlAndParams(HttpNewServicePath.getPersonalMainPagePath, keyArray, valueArray);
-
+        DeBugLog.i(TAG, "Request Url:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new PersonalCenterResultCallback());
         } catch (IOException e) {
@@ -277,6 +285,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
                 } else {
                     PersonalCenterData data = personalCenter.getData();
                     if (data != null) {
+
                         String tripCount = data.getTpCount();
                         if (!TextUtils.isEmpty(tripCount)) {
                             tripImageTitle.setText(strTripImage + tripCount);
@@ -291,10 +300,18 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
                         if (!TextUtils.isEmpty(attentionCount)) {
                             attentionTitle.setText(strAttention + attentionCount);
                         }
+
+                        String commentNumber = data.getCommentNumb();
+                        if (!TextUtils.isEmpty(commentNumber)) {
+                            commentContentNumber.setText(AllComment + " " + commentNumber);
+                        }
+
                     }
 
+                    //TODO 个人主页 用户信息
                     UserInfoEntity userInfo = personalCenter.getData().getUserInfo();
                     if (userInfo != null) {
+
                         String headImagePath = userInfo.getHeadImg();
                         if (!TextUtils.isEmpty(headImagePath)) {
                             headImageView.setImageURI(Uri.parse(headImagePath));
@@ -305,6 +322,30 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
                             userNameView.setText(userName);
                         } else {
                             userNameView.setText("");
+                        }
+
+                        String countryName = userInfo.getCountryCname();
+                        String cityName = userInfo.getCityCname();
+                        if (!TextUtils.isEmpty(countryName)) {
+                            if (!TextUtils.isEmpty(cityName)) {
+                                userLocation.setText(countryName + "," + cityName);
+                            } else {
+                                userLocation.setText(countryName);
+                            }
+                        } else {
+                            userLocation.setText("");
+                        }
+
+                        String birthday = userInfo.getBirthday();
+                        if (!TextUtils.isEmpty(birthday)) {
+                            String age = Utils.calculateAge(birthday);
+                            if (!TextUtils.isEmpty(age)) {
+                                userAge.setText(age);
+                            } else {
+                                userAge.setText("");
+                            }
+                        } else {
+                            userAge.setText("");
                         }
 
                         String info = userInfo.getInfo();
@@ -334,6 +375,8 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
                     } else {
                         userNameView.setText("");
                         infoView.setText("");
+                        userLocation.setText("");
+                        userAge.setText("");
                     }
 
                     List<CommentInfoEntity> list = personalCenter.getData().getCommentInfo();

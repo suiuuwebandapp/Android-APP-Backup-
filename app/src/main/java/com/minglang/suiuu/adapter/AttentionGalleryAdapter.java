@@ -1,23 +1,19 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.AttentionGallery.AttentionGalleryData.AttentionGalleryItemData;
-import com.minglang.suiuu.utils.Utils;
 import com.minglang.suiuu.utils.ViewHolder;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -32,28 +28,10 @@ public class AttentionGalleryAdapter extends BaseAdapter {
 
     private List<AttentionGalleryItemData> list;
 
-    private ImageLoader imageLoader;
-    private DisplayImageOptions options1;
-    private DisplayImageOptions options2;
-
     private int screenWidth;
 
     public AttentionGalleryAdapter(Context context) {
         this.context = context;
-
-        imageLoader = ImageLoader.getInstance();
-
-        options1 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
-                .showImageForEmptyUri(R.drawable.loading)
-                .showImageOnFail(R.drawable.loading_error)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
-
-        options2 = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image)
-                .showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     public void setScreenParams(int screenWidth) {
@@ -93,22 +71,29 @@ public class AttentionGalleryAdapter extends BaseAdapter {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_attention_gallery, position);
         convertView = holder.getConvertView();
 
-        int itemParams = screenWidth / 3 - Utils.newInstance().dip2px(10, context);
-        AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemParams, itemParams);
+        int itemLength = screenWidth / 2;
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemLength, AbsListView.LayoutParams.WRAP_CONTENT);
         convertView.setLayoutParams(params);
 
-        ImageView imageView = holder.getView(R.id.item_attention_gallery_image);
-        CircleImageView headView = holder.getView(R.id.item_attention_gallery_head_image_view);
+        SimpleDraweeView imageView = holder.getView(R.id.item_attention_gallery_image);
+        SimpleDraweeView headView = holder.getView(R.id.item_attention_gallery_head_image_view);
         TextView titleView = holder.getView(R.id.item_attention_gallery_title);
+
+        RelativeLayout.LayoutParams imageParams = new RelativeLayout.LayoutParams(itemLength, itemLength);
+        imageView.setLayoutParams(imageParams);
 
         String imagePath = list.get(position).getTitleImg();
         if (!TextUtils.isEmpty(imagePath)) {
-            imageLoader.displayImage(imagePath, imageView, options1);
+            imageView.setImageURI(Uri.parse(imagePath));
+        } else {
+            imageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.loading_error));
         }
 
         String headImagePath = list.get(position).getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            imageLoader.displayImage(headImagePath, headView, options2);
+            headView.setImageURI(Uri.parse(headImagePath));
+        } else {
+            imageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image));
         }
 
         String strTitle = list.get(position).getTitle();

@@ -28,6 +28,8 @@ import butterknife.ButterKnife;
  */
 public class AttentionActivity extends BaseAppCompatActivity {
 
+    private static final String USER_SIGN = "userSign";
+
     @BindColor(R.color.white)
     int titleColor;
 
@@ -68,6 +70,9 @@ public class AttentionActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
+
+        userSign = getIntent().getStringExtra(USER_SIGN);
+
         toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
@@ -81,7 +86,6 @@ public class AttentionActivity extends BaseAppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText(str3), false);
         tabLayout.setTabTextColors(normalColor, selectedColor);
 
-        userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
 
