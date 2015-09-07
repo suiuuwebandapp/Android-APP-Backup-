@@ -369,7 +369,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            Log.i("suiuu", response);
             try {
                 JSONObject json = new JSONObject(response);
                 String status = json.getString("status");

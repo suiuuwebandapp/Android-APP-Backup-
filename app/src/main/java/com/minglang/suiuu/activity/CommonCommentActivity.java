@@ -182,9 +182,7 @@ public class CommonCommentActivity extends BaseActivity {
             progressDialog.dismiss();
         }
     }
-
     class requestCommentSendCallBack extends OkHttpManager.ResultCallback<String> {
-
         @Override
         public void onError(Request request, Exception e) {
             hideDialog();

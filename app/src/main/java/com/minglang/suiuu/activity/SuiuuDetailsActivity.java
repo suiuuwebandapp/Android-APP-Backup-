@@ -246,7 +246,9 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
             @JavascriptInterface
             public void userHomePage(String user) {
-
+                Intent intent2UserActivity = new Intent(SuiuuDetailsActivity.this, PersonalMainPagerActivity.class);
+                intent2UserActivity.putExtra("userSign", user);
+                startActivity(intent2UserActivity);
             }
 
             @JavascriptInterface
@@ -266,7 +268,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         //得到可读可写数据库
         SQLiteDatabase db = helper.getReadableDatabase();
         //执行sql语句
-        db.execSQL("insert into user (userId,nickName,titleImg) values (?,?,?)",
+        db.execSQL("insert into user (userId,nikename,titleImg) values (?,?,?)",
                 new Object[]{detailsData.getData().getPublisherList().get(0).getUserSign(),
                         detailsData.getData().getPublisherList().get(0).getNickname(),
                         detailsData.getData().getPublisherList().get(0).getHeadImg()});
@@ -397,9 +399,9 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                     break;
                 case R.id.bb_consult:
                     //跳到会话页面
-                    if (!isExistUser(detailsData.getData().getPublisherList().get(0).getUserSign())) {
-                        addUser();
-                    }
+//                    if (!isExistUser(detailsData.getData().getPublisherList().get(0).getUserSign())) {
+//                        addUser();
+//                    }
                     break;
                 case R.id.bb_schedule:
                     //跳到预定页面
