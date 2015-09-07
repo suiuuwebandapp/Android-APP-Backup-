@@ -235,6 +235,8 @@ public class TripGalleryFragment extends BaseFragment implements ReFlashListView
                             showList(tripGalleryList);
                         }
 
+                    }else {
+                        onReflash();
                     }
 
                 }

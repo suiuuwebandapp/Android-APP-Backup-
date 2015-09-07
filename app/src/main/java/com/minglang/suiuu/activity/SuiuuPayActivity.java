@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -122,8 +123,8 @@ public class SuiuuPayActivity extends BaseActivity {
 
         @Override
         public void onResponse(String response) {
+            Log.i("suiuu", response+"----pay");
             try {
-
                 Intent intent = new Intent();
                 String packageName = getPackageName();
                 ComponentName componentName = new ComponentName(packageName, packageName + ".wxapi.WXPayEntryActivity");

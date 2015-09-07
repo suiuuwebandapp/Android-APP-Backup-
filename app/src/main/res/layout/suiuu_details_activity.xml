@@ -16,7 +16,7 @@
         <RelativeLayout
             android:id="@+id/rl_suiuu_detail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <RelativeLayout
                 android:id="@+id/suiuu_details_title_layout"
@@ -58,7 +58,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/suiuu_detail_web_view"
-                android:layout_marginTop="@dimen/layout_5dp"/>
+                />
 
         </RelativeLayout>
 

@@ -308,6 +308,15 @@ public class HttpNewServicePath {
      * info 详情介绍、countryId、国家id cityI、城市id、lon经度、lat 维度、profession 职业
      */
     public static String upDatePersonalStatus = RootPath + "/app-user-info/update-user-info";
+    /**
+     * 根据文章ID获得评论列表
+     */
+    public static String getCommentListByArticleId = RootPath + "/circle/get-comment-by-article-id";
+    /**
+     * 根据文章ID获得评论列表
+     */
+    public static String getCommentListByTripId = RootPath + "/app-travel/get-comment-list";
+
 
     /*-----------------------随游相关-----------------------------*/
 

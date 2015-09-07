@@ -392,7 +392,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, response);
+            DeBugLog.i(TAG, "收藏文章:" + response);
             try {
                 JSONObject json = new JSONObject(response);
                 String status = json.getString("status");
