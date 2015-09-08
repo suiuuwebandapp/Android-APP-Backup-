@@ -301,8 +301,7 @@
             android:layout_height="@dimen/layout_50dp"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
-            android:visibility="gone">
-
+            android:visibility="visible">
             <com.beardedhen.androidbootstrap.BootstrapButton
                 android:id="@+id/order_details_cancel"
                 android:layout_width="@dimen/layout_100dp"
@@ -314,7 +313,6 @@
                 bootstrapbutton:bb_roundedCorners="true"
                 bootstrapbutton:bb_size="small"
                 bootstrapbutton:bb_type="warning"/>
-
             <com.beardedhen.androidbootstrap.BootstrapButton
                 android:id="@+id/order_details_repay"
                 android:layout_width="@dimen/layout_100dp"
@@ -328,7 +326,6 @@
                 bootstrapbutton:bb_roundedCorners="true"
                 bootstrapbutton:bb_size="small"
                 bootstrapbutton:bb_type="info"/>
-
         </RelativeLayout>
 
     </RelativeLayout>

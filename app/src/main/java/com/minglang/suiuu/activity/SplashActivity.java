@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -115,7 +114,6 @@ public class SplashActivity extends BaseActivity implements AMapLocationListener
             //获取位置信息
             Double geoLat = amapLocation.getLatitude();
             Double geoLng = amapLocation.getLongitude();
-            Log.i("suiuu", "当前用户位置lat=" + geoLat + ",lng=" + geoLng);
             SuiuuInfo.WriteUserLocation(this, geoLat, geoLng);
         }
     }

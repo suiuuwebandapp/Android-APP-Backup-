@@ -2,7 +2,6 @@ package com.minglang.suiuu.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -71,8 +70,6 @@ public class SuiuuSearchDetailActivity extends BaseActivity
     private int page = 1;
     //处理头部
     private TextView titleInfo;
-
-
     private ShowSuiuuAdapter adapter = null;
     private ImageView iv_suiuu_search_more;
     private ImageButton ib_plus;
@@ -110,7 +107,6 @@ public class SuiuuSearchDetailActivity extends BaseActivity
         flowLayout = (FlowLayout) findViewById(R.id.id_flowLayout);
         titleInfo = (TextView) findViewById(R.id.tv_top_center);
         bb_search_confire = (BootstrapButton) findViewById(R.id.bb_search_confire);
-
         iv_suiuu_search_more = (ImageView) findViewById(R.id.tv_top_right_more);
         iv_suiuu_search_more.setVisibility(View.VISIBLE);
         ib_plus = (ImageButton) findViewById(R.id.ib_plus);
@@ -156,7 +152,6 @@ public class SuiuuSearchDetailActivity extends BaseActivity
 
     private void getSuiuuSearchTag() {
         try {
-            Log.i("suiuu", HttpNewServicePath.getSuiuuSearchTag + "?token=" + SuiuuInfo.ReadAppTimeSign(SuiuuSearchDetailActivity.this));
         OkHttpManager.onGetAsynRequest(HttpNewServicePath.getSuiuuSearchTag+"?token="+SuiuuInfo.ReadAppTimeSign(SuiuuSearchDetailActivity.this), new getSuiuuSearchTagCallBack());
         } catch (IOException e) {
             e.printStackTrace();
@@ -231,13 +226,11 @@ public class SuiuuSearchDetailActivity extends BaseActivity
     class getSuiuuDateCallBack extends OkHttpManager.ResultCallback<String> {
         @Override
         public void onError(Request request, Exception e) {
-            dialog.dismissDialog();
-            Toast.makeText(SuiuuSearchDetailActivity.this, "111数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SuiuuSearchDetailActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onResponse(String response) {
-            Log.i("suiuu",response);
             dialog.dismissDialog();
             try {
                 JSONObject json = new JSONObject(response);
@@ -247,8 +240,12 @@ public class SuiuuSearchDetailActivity extends BaseActivity
                     SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, response);
                     List<SuiuuDataList> suiuuDataListNew = baseCollection.getData();
                     if (suiuuDataListNew.size() < 1) {
-                        lv_search_suiuu.setVisibility(View.GONE);
-                        rl_no_data.setVisibility(View.VISIBLE);
+                        if(page == 1) {
+                            lv_search_suiuu.setVisibility(View.GONE);
+                            rl_no_data.setVisibility(View.VISIBLE);
+                        }else {
+                            Toast.makeText(SuiuuSearchDetailActivity.this, "没有更多数据显示", Toast.LENGTH_SHORT).show();
+                        }
                     }else {
                         lv_search_suiuu.setVisibility(View.VISIBLE);
                         rl_no_data.setVisibility(View.GONE);
@@ -256,7 +253,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
                         showList(suiuuDataList);
                     }
                 } else {
-                    Toast.makeText(SuiuuSearchDetailActivity.this, "222数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SuiuuSearchDetailActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -286,9 +283,6 @@ public class SuiuuSearchDetailActivity extends BaseActivity
         } else {
             lv_search_suiuu.setEnabled(false);
             fl_search_more.setVisibility(View.VISIBLE);
-//            LinearLayout.LayoutParams paramTest1 = (LinearLayout.LayoutParams) fl_search_more.getLayoutParams();
-//            paramTest1.setMargins(10, ConstantUtils.topHeight + 10, 10, 0);
-//            fl_search_more.setLayoutParams(paramTest1);
             if (tagList.size() < 1) {
                 getSuiuuSearchTag();
             }

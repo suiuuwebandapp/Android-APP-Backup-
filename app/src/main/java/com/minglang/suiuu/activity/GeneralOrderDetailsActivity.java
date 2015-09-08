@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -538,8 +539,9 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                                     case "3":
                                         orderDetailsBottomLayout.setVisibility(View.VISIBLE);
                                         orderDetailsCancel.setVisibility(View.GONE);
-                                        orderDetailsCancel.setBootstrapType("danger");
-                                        orderDetailsCancel.setText(DeleteOrder);
+                                        orderDetailsRepay.setBootstrapType("danger");
+                                        orderDetailsRepay.setText(DeleteOrder);
+                                        orderDetailsRepay.setForegroundGravity(Gravity.CENTER);
                                         orderStatus.setText("未支付 已取消");
                                         break;
 
@@ -676,8 +678,8 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         public void onResponse(String response) {
             try {
                 JSONObject result = new JSONObject(response);
-                String results = (String) result.get("status");
-                if ("1".equals(result.get(results))) {
+                int results = (int) result.get("status");
+                if (results == 1) {
                     if ("0".equals(status)) {
                         Toast.makeText(GeneralOrderDetailsActivity.this, R.string.CancelOrderSuccess, Toast.LENGTH_SHORT).show();
                     } else {

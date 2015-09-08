@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,6 +86,9 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     WebView mWebView;
 
     private ProgressDialog progressDialog = null;
+
+    @Bind(R.id.rl_suiuu_detail)
+    RelativeLayout rl_suiuu_detail;
 
     @Bind(R.id.suiuu_details_back)
     ImageView back;
@@ -158,6 +162,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         tripId = getIntent().getStringExtra(TRIP_ID);
 
         progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         webSettings = mWebView.getSettings();
@@ -211,7 +216,8 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                 @Override
                 public void onProgressChanged(WebView view, int progress) {
                     progressDialog.setMessage("已经加载" + progress + "%");
-                    if (progress >= 90) {
+                    if (progress >= 85) {
+                        rl_suiuu_detail.setVisibility(View.VISIBLE);
                         progressDialog.dismiss();
                     }
                 }

@@ -36,7 +36,7 @@ import java.util.Map;
  * 修改备注：
  */
 public class TripGalleryAdapter extends BaseAdapter {
-    public static final int SEARCH = 0;// 7种不同的布局
+    public static final int SEARCH = 0;
     public static final int SETTAG = 1;
     public static final int DATA = 2;
     private Context context;
@@ -154,12 +154,6 @@ public class TripGalleryAdapter extends BaseAdapter {
             TextView trip_gallery_name = holderData.getView(R.id.tv_trip_gallery_name);
             TextView trip_gallery_tag = holderData.getView(R.id.tv_trip_gallery_tag);
             TextView trip_gallery_loveNumber = holderData.getView(R.id.tv_trip_gallery_love_number);
-//            LatLng lngLat = new LatLng(Double.valueOf(list.get(position).getLon()),
-//                    Double.valueOf(list.get(position).getLat()));
-//            LatLng lngLat1 = new LatLng(Double.valueOf(lng), Double.valueOf(lat));
-//            float v1 = AMapUtils.calculateLineDistance(lngLat, lngLat1);
-//            tv_location_distance.setText(String.valueOf((double) v1).length() >= 4 ?
-//                    String.valueOf(v1).substring(0, 4) : String.valueOf(v1));
             double distance = Utils.distanceByLngLat(Double.valueOf(lng), Double.valueOf(lat),Double.valueOf(list.get(position).getLon()),Double.valueOf(list.get(position).getLat()));
             tv_location_distance.setText(list.get(position).getCity()+"\n"+distance+"KM");
             trip_gallery_name.setText(list.get(position).getTitle());

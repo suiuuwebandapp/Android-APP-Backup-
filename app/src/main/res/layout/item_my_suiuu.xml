@@ -39,7 +39,7 @@
             android:textColor="@color/white"
             android:textSize="20sp"/>
 
-        <TextView
+        +<TextView
             android:id="@+id/item_my_suiuu_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

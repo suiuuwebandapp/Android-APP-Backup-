@@ -13,7 +13,7 @@
         android:layout_width="@dimen/layout_45dp"
         android:layout_height="@dimen/layout_45dp"
         android:id="@+id/item_comment_head_image"
-        android:background="@drawable/default_head_image"
+        android:background="@drawable/user_head_image_bg"
         android:layout_marginLeft="10dp"
         />
     <TextView
