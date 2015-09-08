@@ -109,6 +109,11 @@ public class HttpNewServicePath {
      */
     public static String getPersonalProblemDataPath = RootPath + "/app-qa/get-user-qa";
 
+    /**
+     * 得到随游数据
+     */
+    public static String getPersonalSuiuuCommentPath = RootPath + "/app-travel/get-comment-list";
+
     //***************************************************问答社区相关*****************************************************\\
 
     /**
@@ -224,6 +229,11 @@ public class HttpNewServicePath {
      * 获取用户账户信息
      */
     public static String getUserAccountInfoPath = RootPath + "/app-account/account-list";
+
+    /**
+     * 提现接口
+     */
+    public static String getDrawMoneyDataPath = RootPath + "/app-account/draw-money";
 
     //********************************************侧栏-普通用户-预定订单***********************************************************\\
 

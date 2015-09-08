@@ -311,8 +311,8 @@ public class ParticipateFragment extends BaseFragment {
         @Override
         public void onError(Request request, Exception e) {
             DeBugLog.e(TAG, "Exception:" + e.getMessage());
-            failureLessPage();
             hideDialog();
+            failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
     }

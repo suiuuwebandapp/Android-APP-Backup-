@@ -27,8 +27,11 @@ public class PersonalTripGalleryAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private RecyclerViewOnItemClickListener onItemClickListener;
 
-    public PersonalTripGalleryAdapter() {
+    private String failureImagePath,failureImagePath2;
 
+    public PersonalTripGalleryAdapter() {
+        failureImagePath = "res://com.minglang.suiuu/" + R.drawable.loading_error;
+        failureImagePath2 = "res://com.minglang.suiuu/" + R.drawable.default_head_image_error;
     }
 
     public void setList(List<UserTravelItemData> list) {
@@ -53,14 +56,16 @@ public class PersonalTripGalleryAdapter extends RecyclerView.Adapter<RecyclerVie
 
         String mainImagePath = list.get(position).getTitleImg();
         if (!TextUtils.isEmpty(mainImagePath)) {
-            Uri uri = Uri.parse(mainImagePath);
-            travelViewHolder.mainImageView.setImageURI(uri);
+            travelViewHolder.mainImageView.setImageURI(Uri.parse(mainImagePath));
+        } else {
+            travelViewHolder.mainImageView.setImageURI(Uri.parse(failureImagePath));
         }
 
         String headImagePath = list.get(position).getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            Uri uri = Uri.parse(headImagePath);
-            travelViewHolder.headImageView.setImageURI(uri);
+            travelViewHolder.headImageView.setImageURI(Uri.parse(headImagePath));
+        }else{
+            travelViewHolder.headImageView.setImageURI(Uri.parse(failureImagePath2));
         }
 
         String title = list.get(position).getTitle();

@@ -15,7 +15,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.swipelistview.SwipeListView;
 import com.minglang.suiuu.utils.ViewHolder;
@@ -50,7 +49,6 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
 
     private SwipeListView swipeListView;
     private int tempPosition;
-    BitmapUtils bitmapUtils;
 
     /**
      * 组件帮助方法
@@ -74,7 +72,6 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
         this.componentHelper = new TuSdkHelperComponent(activity);
-        bitmapUtils = new BitmapUtils(context);
     }
 
     public EasyTackPhotoAdapter(Context context, List<String> list, String type) {
@@ -92,7 +89,6 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
                 .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
                 .imageScaleType(ImageScaleType.NONE_SAFE).bitmapConfig(Bitmap.Config.RGB_565).build();
         this.componentHelper = new TuSdkHelperComponent(activity);
-        bitmapUtils = new BitmapUtils(context);
     }
 
     public void onDateChange(List<String> list) {
@@ -133,9 +129,8 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
         if ("1".equals(type)) {
             picDescriptionView.setText(changeContentList.get(position));
             imageLoader.displayImage(list.get(position), pictureView, options);
-        } else {
-            bitmapUtils.display(pictureView, list.get(position));
         }
+
         picDescriptionView.setHint(R.string.picture_description);
         pictureView.setOnClickListener(new pictureViewClick(position));
         picRemoveView.setOnClickListener(new picRemoveViewClick(position, this));

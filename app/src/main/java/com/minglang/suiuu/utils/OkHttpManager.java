@@ -518,6 +518,7 @@ public class OkHttpManager {
             public void run() {
                 if (callback != null) {
                     callback.onResponse(object);
+                    callback.onFinish();
                 }
             }
         });
@@ -527,8 +528,10 @@ public class OkHttpManager {
         mDelivery.post(new Runnable() {
             @Override
             public void run() {
-                if (callback != null)
+                if (callback != null) {
                     callback.onError(request, e);
+                    callback.onFinish();
+                }
             }
         });
     }
@@ -690,6 +693,9 @@ public class OkHttpManager {
         public abstract void onError(Request request, Exception e);
 
         public abstract void onResponse(T response);
+
+        public void onFinish() {
+        }
 
     }
 

@@ -18,6 +18,8 @@
             android:layout_height="@dimen/layout_100dp"
             android:layout_gravity="center"
             fresco:actualImageScaleType="fitXY"
+            fresco:failureImage="@drawable/loading_error"
+            fresco:failureImageScaleType="fitXY"
             fresco:placeholderImage="@drawable/loading"/>
 
     </FrameLayout>

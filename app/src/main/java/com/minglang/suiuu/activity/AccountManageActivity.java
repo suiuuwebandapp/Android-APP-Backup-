@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +74,9 @@ public class AccountManageActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.account_balance_number)
     TextView accountBalanceNumber;
+
+    @Bind(R.id.account_balance_layout)
+    RelativeLayout relativeLayout;
 
     @Bind(R.id.account_balance_list_view)
     PullToRefreshListView pullToRefreshListView;
@@ -156,6 +160,13 @@ public class AccountManageActivity extends BaseAppCompatActivity {
             }
         });
 
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
     }
 
     /**
@@ -172,6 +183,7 @@ public class AccountManageActivity extends BaseAppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
             hideDialog();
+            Toast.makeText(AccountManageActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -245,17 +257,17 @@ public class AccountManageActivity extends BaseAppCompatActivity {
     private class AccountManagerResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "错误信息:" + e.getMessage());
-            hideDialog();
-            Toast.makeText(AccountManageActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
         public void onResponse(String response) {
             DeBugLog.i(TAG, "账户信息:" + response);
             hideDialog();
             bindData2View(response);
+        }
+
+        @Override
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "错误信息:" + e.getMessage());
+            hideDialog();
+            Toast.makeText(AccountManageActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

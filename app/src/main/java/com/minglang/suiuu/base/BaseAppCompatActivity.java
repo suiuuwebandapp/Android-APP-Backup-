@@ -17,6 +17,14 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
     public static final String TOKEN = "token";
 
+    public static final String USER_SIGN = "userSign";
+
+    public static final String STATUS = "status";
+    public static final String DATA = "data";
+
+    public static final String PAGE = "page";
+    public static final String NUMBER = "number";
+
     public ImageLoader imageLoader;
 
     public DisplayMetrics dm;

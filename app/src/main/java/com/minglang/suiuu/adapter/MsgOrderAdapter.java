@@ -1,22 +1,21 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.customview.CircleImageView;
+import com.minglang.suiuu.activity.PersonalMainPagerActivity;
 import com.minglang.suiuu.entity.MsgOrder.MsgOrderData.MsgOrderItemData;
 import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ViewHolder;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -29,22 +28,18 @@ public class MsgOrderAdapter extends BaseHolderAdapter<MsgOrderItemData> {
 
     private static final String TAG = MsgOrderAdapter.class.getSimpleName();
 
-    private ImageLoader imageLoader;
-    private DisplayImageOptions options;
+    private static final String USER_SIGN = "userSign";
+
+    private Context context;
 
     public MsgOrderAdapter(Context context, List<MsgOrderItemData> list, int itemLayoutId) {
         super(context, list, itemLayoutId);
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image)
-                .showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
+        this.context = context;
     }
 
     @Override
     public void convert(ViewHolder helper, MsgOrderItemData item, long position) {
-        CircleImageView headImageView = helper.getView(R.id.item_msg_order_head_image_view);
+        SimpleDraweeView headImageView = helper.getView(R.id.item_msg_order_head_image_view);
         TextView userNameView = helper.getView(R.id.item_msg_order_user_name);
         TextView titleView = helper.getView(R.id.item_msg_order_title);
 
@@ -69,7 +64,9 @@ public class MsgOrderAdapter extends BaseHolderAdapter<MsgOrderItemData> {
 
         String headImagePath = item.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            imageLoader.displayImage(headImagePath, headImageView, options);
+            headImageView.setImageURI(Uri.parse(headImagePath));
+        } else {
+            headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
         }
 
         String userName = item.getNickname();
@@ -185,6 +182,43 @@ public class MsgOrderAdapter extends BaseHolderAdapter<MsgOrderItemData> {
             confirmRefundView.setVisibility(View.GONE);
             confirmView.setVisibility(View.GONE);
             titleView.setText("");
+        }
+
+        headImageView.setOnClickListener(new HeadImageViewClickListener(item));
+        userNameView.setOnClickListener(new UserNameViewClickListener(item));
+
+    }
+
+    private class HeadImageViewClickListener implements View.OnClickListener {
+
+        private MsgOrderItemData item;
+
+        private HeadImageViewClickListener(MsgOrderItemData item) {
+            this.item = item;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(context, PersonalMainPagerActivity.class);
+            intent.putExtra(USER_SIGN, item.getCreateUserSign());
+            context.startActivity(intent);
+        }
+
+    }
+
+    private class UserNameViewClickListener implements View.OnClickListener {
+
+        private MsgOrderItemData item;
+
+        private UserNameViewClickListener(MsgOrderItemData item) {
+            this.item = item;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(context, PersonalMainPagerActivity.class);
+            intent.putExtra(USER_SIGN, item.getCreateUserSign());
+            context.startActivity(intent);
         }
 
     }

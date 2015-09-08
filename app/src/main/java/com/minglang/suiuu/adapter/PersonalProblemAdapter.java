@@ -27,7 +27,10 @@ public class PersonalProblemAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private RecyclerViewOnItemClickListener onItemClickListener;
 
+    private String failureImagePath;
+
     public PersonalProblemAdapter() {
+        failureImagePath = "res://com.minglang.suiuu/" + R.drawable.default_head_image_error;
     }
 
     public void setList(List<UserProblemItemData> list) {
@@ -52,8 +55,9 @@ public class PersonalProblemAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         String headImagePath = list.get(position).getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            Uri uri = Uri.parse(headImagePath);
-            problemViewHolder.headImageView.setImageURI(uri);
+            problemViewHolder.headImageView.setImageURI(Uri.parse(headImagePath));
+        } else {
+            problemViewHolder.headImageView.setImageURI(Uri.parse(failureImagePath));
         }
 
         String strCount = list.get(position).getAttentionNumber();

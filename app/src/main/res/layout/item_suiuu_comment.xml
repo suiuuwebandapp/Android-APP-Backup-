@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/layout_80dp"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/item_suiuu_comment_header_image"
+            android:layout_width="@dimen/layout_60dp"
+            android:layout_height="@dimen/layout_60dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/layout_5dp"
+            android:layout_marginLeft="@dimen/layout_5dp"
+            android:layout_marginRight="@dimen/layout_5dp"
+            android:layout_marginStart="@dimen/layout_5dp"
+            fresco:failureImage="@drawable/default_head_image_error"
+            fresco:failureImageScaleType="fitCenter"
+            fresco:placeholderImage="@drawable/default_head_image"
+            fresco:placeholderImageScaleType="fitCenter"
+            fresco:roundAsCircle="true"/>
+
+        <TextView
+            android:id="@+id/item_suiuu_comment_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/item_suiuu_comment_header_image"
+            android:layout_toRightOf="@+id/item_suiuu_comment_header_image"
+            android:maxEms="20"
+            android:padding="@dimen/layout_2dp"
+            android:singleLine="true"
+            android:text="@string/app_name"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/textColor"/>
+
+        <TextView
+            android:id="@+id/item_suiuu_comment_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/item_suiuu_comment_title"
+            android:layout_alignLeft="@+id/item_suiuu_comment_title"
+            android:layout_alignRight="@+id/item_suiuu_comment_title"
+            android:layout_alignStart="@+id/item_suiuu_comment_title"
+            android:layout_below="@+id/item_suiuu_comment_title"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:padding="@dimen/layout_3dp"
+            android:text="@string/tempText"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

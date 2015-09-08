@@ -27,8 +27,10 @@ public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private RecyclerViewOnItemClickListener onItemClickListener;
 
-    public PersonalSuiuuAdapter() {
+    private String failureImagePath;
 
+    public PersonalSuiuuAdapter() {
+        failureImagePath = "res://com.minglang.suiuu/" + R.drawable.loading_error;
     }
 
     public void setList(List<UserSuiuuData> list) {
@@ -53,8 +55,9 @@ public class PersonalSuiuuAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         String imagePath = list.get(position).getHeadImg();
         if (!TextUtils.isEmpty(imagePath)) {
-            Uri uri = Uri.parse(imagePath);
-            suiuuViewHolder.mainImage.setImageURI(uri);
+            suiuuViewHolder.mainImage.setImageURI(Uri.parse(imagePath));
+        } else {
+            suiuuViewHolder.mainImage.setImageURI(Uri.parse(failureImagePath));
         }
 
         String strTitle = list.get(position).getTitle();

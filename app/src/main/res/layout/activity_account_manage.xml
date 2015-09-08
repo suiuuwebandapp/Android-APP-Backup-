@@ -16,8 +16,8 @@
             style="@style/AppToolBar"
             app:layout_collapseMode="pin"
             app:navigationIcon="@drawable/back"
-            app:title="@string/ContactUs"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:title="@string/ContactUs"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -28,6 +28,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <include
+            android:id="@+id/account_balance_layout"
             layout="@layout/include_account_balance_layout"
             android:layout_width="@dimen/layout_150dp"
             android:layout_height="@dimen/layout_150dp"

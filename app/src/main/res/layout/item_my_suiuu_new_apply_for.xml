@@ -15,8 +15,11 @@
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/layout_10dp"
         fresco:actualImageScaleType="fitXY"
-        fresco:failureImage="@drawable/default_head_image"
-        fresco:placeholderImage="@drawable/default_head_image"/>
+        fresco:failureImage="@drawable/default_head_image_error"
+        fresco:failureImageScaleType="fitCenter"
+        fresco:placeholderImage="@drawable/default_head_image"
+        fresco:placeholderImageScaleType="fitCenter"
+        fresco:roundAsCircle="true"/>
 
     <!--用户名-->
     <TextView

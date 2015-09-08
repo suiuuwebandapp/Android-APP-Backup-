@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_200dp"
         android:layout_alignParentTop="true"
-        fresco:actualImageScaleType="focusCrop"
+        fresco:failureImage="@drawable/loading_error"
         fresco:placeholderImage="@drawable/loading"
         fresco:placeholderImageScaleType="fitXY"/>
 

@@ -121,9 +121,9 @@ public class InformationFragment extends BaseFragment {
         tabLayout.addTab(tabLayout.newTab().setText(str4), false);
         tabLayout.setTabTextColors(normalColor, selectedColor);
 
-        MsgTripGalleryFragment msgTripGalleryFragment = MsgTripGalleryFragment.newInstance(userSign, verification, token);
-        MsgQuestionFragment msgQuestionFragment = MsgQuestionFragment.newInstance(userSign, verification, token);
         MsgOrderFragment msgOrderFragment = MsgOrderFragment.newInstance(userSign, verification, token);
+        MsgQuestionFragment msgQuestionFragment = MsgQuestionFragment.newInstance(userSign, verification, token);
+        MsgTripGalleryFragment msgTripGalleryFragment = MsgTripGalleryFragment.newInstance(userSign, verification, token);
         MsgSystemFragment msgSystemFragment = MsgSystemFragment.newInstance(userSign, verification, token);
 
         List<Fragment> fragmentList = new ArrayList<>();

@@ -27,6 +27,9 @@ import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
+/**
+ * 添加收款方式页面
+ */
 public class AddReceivablesWayActivity extends BaseAppCompatActivity {
 
     private static final String TAG = AddReceivablesWayActivity.class.getSimpleName();

@@ -19,20 +19,18 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.ReceivablesWayAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.AccountInfo;
 import com.minglang.suiuu.entity.AccountInfo.AccountInfoData;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.SuiuuHttp;
+import com.minglang.suiuu.utils.OkHttpManager;
+import com.squareup.okhttp.Request;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +55,7 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
     String dialogMessage;
 
     @BindString(R.string.NetworkAnomaly)
-    String networkError;
+    String NetworkError;
 
     @BindString(R.string.NoData)
     String DataNull;
@@ -217,8 +215,20 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
     }
 
     private void getUserBindAccountList4Service() {
-        new SuiuuHttp(HttpRequest.HttpMethod.GET, HttpServicePath.getUserBindAccountListData,
-                new ReceivablesWayCallBack()).executive();
+        if (progressDialog != null && !progressDialog.isShowing())
+            progressDialog.show();
+
+        relativeLayout.setVisibility(View.GONE);
+
+        try {
+            OkHttpManager.onGetAsynRequest(HttpNewServicePath.getUserBindAccountListData, new ReceivablesWayResultCallback());
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            relativeLayout.setVisibility(View.VISIBLE);
+            Toast.makeText(ReceivablesWayActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void hideDialog() {
@@ -276,29 +286,21 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class ReceivablesWayCallBack extends RequestCallBack<String> {
+    private class ReceivablesWayResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onStart() {
-            if (progressDialog != null && !progressDialog.isShowing())
-                progressDialog.show();
-            relativeLayout.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onSuccess(ResponseInfo<String> responseInfo) {
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "返回的数据:" + response);
             hideDialog();
-            String str = responseInfo.result;
-            bindData2View(str);
-            DeBugLog.i(TAG, "返回的数据:" + str);
+            bindData2View(response);
         }
 
         @Override
-        public void onFailure(HttpException e, String s) {
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             relativeLayout.setVisibility(View.VISIBLE);
-            DeBugLog.i(TAG, "HttpException:" + e.getMessage() + ",Error:" + s);
-            Toast.makeText(ReceivablesWayActivity.this, networkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(ReceivablesWayActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

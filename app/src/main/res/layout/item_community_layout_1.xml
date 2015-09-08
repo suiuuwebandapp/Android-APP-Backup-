@@ -11,9 +11,10 @@
         android:layout_width="@dimen/layout_50dp"
         android:layout_height="@dimen/layout_50dp"
         android:layout_margin="@dimen/layout_10dp"
-        fresco:actualImageScaleType="fitXY"
-        fresco:failureImage="@drawable/default_head_image"
+        fresco:failureImage="@drawable/default_head_image_error"
+        fresco:failureImageScaleType="fitXY"
         fresco:placeholderImage="@drawable/default_head_image"
+        fresco:placeholderImageScaleType="centerInside"
         fresco:roundAsCircle="true"/>
 
     <LinearLayout

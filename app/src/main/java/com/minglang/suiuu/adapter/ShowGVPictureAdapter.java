@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.lidroid.xutils.BitmapUtils;
 import com.minglang.suiuu.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -27,14 +26,12 @@ public class ShowGVPictureAdapter extends BaseAdapter {
     private String type;
     private ImageLoader imageLoader;
     private DisplayImageOptions options;
-    private BitmapUtils bitmapUtils;
 
     public ShowGVPictureAdapter(Context context, List<String> list, String type) {
         super();
         this.context = context;
         this.list = list;
         this.type = type;
-        bitmapUtils = new BitmapUtils(context);
         if ("1".equals(type)) {
             imageLoader = ImageLoader.getInstance();
             imageLoader.init(ImageLoaderConfiguration.createDefault(context));
@@ -65,7 +62,6 @@ public class ShowGVPictureAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         @SuppressLint("ViewHolder")
         View view = LayoutInflater.from(context).inflate(R.layout.adapter_show_picture, null);
         ImageView iv_picture = (ImageView) view.findViewById(R.id.iv_picture);
@@ -74,12 +70,10 @@ public class ShowGVPictureAdapter extends BaseAdapter {
         } else {
             if ("1".equals(type)) {
                 imageLoader.displayImage(list.get(position), iv_picture, options);
-            } else {
-                bitmapUtils.display(iv_picture, list.get(position));
             }
         }
+
         return view;
     }
-
 
 }

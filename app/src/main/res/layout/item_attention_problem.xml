@@ -20,7 +20,7 @@
             android:id="@+id/item_attention_problem_head_view"
             android:layout_width="@dimen/layout_60dp"
             android:layout_height="@dimen/layout_60dp"
-            fresco:failureImage="@drawable/default_head_image"
+            fresco:failureImage="@drawable/default_head_image_error"
             fresco:failureImageScaleType="fitXY"
             fresco:placeholderImage="@drawable/default_head_image"
             fresco:roundAsCircle="true"/>

@@ -4,10 +4,7 @@
     xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_alignParentTop="true"
-    android:contentDescription="@string/app_name"
-    android:src="@drawable/back">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -96,7 +93,7 @@
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/layout_8dp"
                         fresco:actualImageScaleType="fitXY"
-                        fresco:failureImage="@drawable/default_head_image"
+                        fresco:failureImage="@drawable/default_head_image_error"
                         fresco:placeholderImage="@drawable/default_head_image"
                         fresco:roundAsCircle="true"/>
 

@@ -156,6 +156,8 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
     @Bind(R.id.personal_center_recycler_view)
     RecyclerView recyclerView;
 
+    private boolean isPublisher = false;
+
     private ProgressDialog progressDialog;
 
     private List<TripListEntity> listAll = new ArrayList<>();
@@ -193,6 +195,13 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
         recyclerViewHeader.attachTo(recyclerView, true);
 
+        String publisher = SuiuuInfo.ReadUserData(this).getIsPublisher();
+        if (!TextUtils.isEmpty(publisher)) {
+            isPublisher = publisher.equals("1");
+        } else {
+            isPublisher = false;
+        }
+
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
     }
 
@@ -211,40 +220,36 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
         tripImageTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(userSign)) {
-                    Intent intent = new Intent(PersonalMainPagerActivity.this, PersonalTripGalleryActivity.class);
-                    intent.putExtra(USER_SIGN, userSign);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(PersonalMainPagerActivity.this, PersonalTripGalleryActivity.class);
+                intent.putExtra(USER_SIGN, userSign);
+                startActivity(intent);
             }
         });
 
         questionTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(userSign)) {
-                    Intent intent = new Intent(PersonalMainPagerActivity.this, PersonalProblemActivity.class);
-                    intent.putExtra(USER_SIGN, userSign);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(PersonalMainPagerActivity.this, PersonalProblemActivity.class);
+                intent.putExtra(USER_SIGN, userSign);
+                startActivity(intent);
             }
         });
 
         attentionTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(userSign)) {
-                    Intent intent = new Intent(PersonalMainPagerActivity.this, AttentionActivity.class);
-                    intent.putExtra(USER_SIGN, userSign);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(PersonalMainPagerActivity.this, AttentionActivity.class);
+                intent.putExtra(USER_SIGN, userSign);
+                startActivity(intent);
             }
         });
 
         commentContentNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(PersonalMainPagerActivity.this, SuiuuCommentActivity.class);
+                intent.putExtra(USER_SIGN, userSign);
+                startActivity(intent);
             }
         });
 
@@ -277,166 +282,175 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             Toast.makeText(PersonalMainPagerActivity.this, NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                PersonalCenter personalCenter = JsonUtils.getInstance().fromJSON(PersonalCenter.class, str);
-                if (personalCenter == null) {
-                    Toast.makeText(PersonalMainPagerActivity.this, NoData, Toast.LENGTH_SHORT).show();
-                } else {
-                    PersonalCenterData data = personalCenter.getData();
-                    if (data != null) {
+        } else try {
+            PersonalCenter personalCenter = JsonUtils.getInstance().fromJSON(PersonalCenter.class, str);
+            if (personalCenter == null) {
+                Toast.makeText(PersonalMainPagerActivity.this, NoData, Toast.LENGTH_SHORT).show();
+            } else {
+                PersonalCenterData data = personalCenter.getData();
+                if (data != null) {
 
-                        String tripCount = data.getTpCount();
-                        if (!TextUtils.isEmpty(tripCount)) {
-                            tripImageTitle.setText(strTripImage + tripCount);
-                        }
-
-                        String questionsCount = data.getQaCount();
-                        if (!TextUtils.isEmpty(questionsCount)) {
-                            questionTitle.setText(strQuestions + questionsCount);
-                        }
-
-                        String attentionCount = data.getCollectCount();
-                        if (!TextUtils.isEmpty(attentionCount)) {
-                            attentionTitle.setText(strAttention + attentionCount);
-                        }
-
-                        String commentNumber = data.getCommentNumb();
-                        if (!TextUtils.isEmpty(commentNumber)) {
-                            commentContentNumber.setText(AllComment + " " + commentNumber);
-                        }
-
+                    String tripCount = data.getTpCount();
+                    if (!TextUtils.isEmpty(tripCount)) {
+                        tripImageTitle.setText(strTripImage + tripCount);
                     }
 
-                    //TODO 个人主页 用户信息
-                    UserInfoEntity userInfo = personalCenter.getData().getUserInfo();
-                    if (userInfo != null) {
+                    String questionsCount = data.getQaCount();
+                    if (!TextUtils.isEmpty(questionsCount)) {
+                        questionTitle.setText(strQuestions + questionsCount);
+                    }
 
-                        String headImagePath = userInfo.getHeadImg();
-                        if (!TextUtils.isEmpty(headImagePath)) {
-                            headImageView.setImageURI(Uri.parse(headImagePath));
-                        }
+                    String attentionCount = data.getCollectCount();
+                    if (!TextUtils.isEmpty(attentionCount)) {
+                        attentionTitle.setText(strAttention + attentionCount);
+                    }
 
-                        String userName = userInfo.getNickname();
-                        if (!TextUtils.isEmpty(userName)) {
-                            userNameView.setText(userName);
+                    String commentNumber = data.getCommentNumb();
+                    if (!TextUtils.isEmpty(commentNumber)) {
+                        commentContentNumber.setText(AllComment + " " + commentNumber);
+                    }
+
+                }
+
+                //TODO 个人主页 用户信息
+                UserInfoEntity userInfo = personalCenter.getData().getUserInfo();
+                if (userInfo != null) {
+
+                    String headImagePath = userInfo.getHeadImg();
+                    if (!TextUtils.isEmpty(headImagePath)) {
+                        headImageView.setImageURI(Uri.parse(headImagePath));
+                    }
+
+                    String userName = userInfo.getNickname();
+                    if (!TextUtils.isEmpty(userName)) {
+                        userNameView.setText(userName);
+                    } else {
+                        userNameView.setText("");
+                    }
+
+                    String countryName = userInfo.getCountryCname();
+                    String cityName = userInfo.getCityCname();
+                    if (!TextUtils.isEmpty(countryName)) {
+                        if (!TextUtils.isEmpty(cityName)) {
+                            userLocation.setText(countryName + "," + cityName);
                         } else {
-                            userNameView.setText("");
+                            userLocation.setText(countryName);
                         }
+                    } else {
+                        userLocation.setText("");
+                    }
 
-                        String countryName = userInfo.getCountryCname();
-                        String cityName = userInfo.getCityCname();
-                        if (!TextUtils.isEmpty(countryName)) {
-                            if (!TextUtils.isEmpty(cityName)) {
-                                userLocation.setText(countryName + "," + cityName);
-                            } else {
-                                userLocation.setText(countryName);
-                            }
-                        } else {
-                            userLocation.setText("");
-                        }
-
-                        String birthday = userInfo.getBirthday();
-                        if (!TextUtils.isEmpty(birthday)) {
-                            String age = Utils.calculateAge(birthday);
-                            if (!TextUtils.isEmpty(age)) {
-                                userAge.setText(age);
-                            } else {
-                                userAge.setText("");
-                            }
+                    String birthday = userInfo.getBirthday();
+                    if (!TextUtils.isEmpty(birthday)) {
+                        String age = Utils.calculateAge(birthday);
+                        if (!TextUtils.isEmpty(age)) {
+                            userAge.setText(age);
                         } else {
                             userAge.setText("");
                         }
-
-                        String info = userInfo.getInfo();
-                        if (!TextUtils.isEmpty(info)) {
-                            infoView.setText(info);
-                        } else {
-                            infoView.setText("");
-                        }
-
-                        String email = userInfo.getEmail();
-                        if (!TextUtils.isEmpty(email)) {
-                            verEmail.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
-                        }
-
-                        String phone = userInfo.getPhone();
-                        if (!TextUtils.isEmpty(phone)) {
-                            verPhone.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
-                        }
-
-                        String profession = userInfo.getProfession();
-                        if (!TextUtils.isEmpty(profession)) {
-                            userProfession.setText(profession);
-                        } else {
-                            userProfession.setText("");
-                        }
-
                     } else {
-                        userNameView.setText("");
-                        infoView.setText("");
-                        userLocation.setText("");
                         userAge.setText("");
                     }
 
-                    List<CommentInfoEntity> list = personalCenter.getData().getCommentInfo();
-                    if (list != null && list.size() > 0) {
-                        CommentInfoEntity commentInfo = list.get(0);
+                    String info = userInfo.getInfo();
+                    if (!TextUtils.isEmpty(info)) {
+                        infoView.setText(info);
+                    } else {
+                        infoView.setText("");
+                    }
 
-                        String otherUserHeadImagePath = commentInfo.getHeadImg();
-                        if (!TextUtils.isEmpty(otherUserHeadImagePath)) {
-                            commentUserHeadImageView.setImageURI(Uri.parse(otherUserHeadImagePath));
-                        }
+                    String email = userInfo.getEmail();
+                    if (!TextUtils.isEmpty(email)) {
+                        verEmail.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
+                    }
 
-                        String otherUserName = commentInfo.getNickname();
-                        if (!TextUtils.isEmpty(otherUserHeadImagePath)) {
-                            commentUserNameView.setText(otherUserName);
-                        } else {
-                            commentUserNameView.setText("");
-                        }
+                    String phone = userInfo.getPhone();
+                    if (!TextUtils.isEmpty(phone)) {
+                        verPhone.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
+                    }
 
-                        String otherUserContent = commentInfo.getContent();
-                        if (!TextUtils.isEmpty(otherUserContent)) {
-                            commentContentView.setText(otherUserContent);
-                        } else {
-                            commentContentView.setText("");
-                        }
+                    String profession = userInfo.getProfession();
+                    if (!TextUtils.isEmpty(profession)) {
+                        userProfession.setText(profession);
+                    } else {
+                        userProfession.setText("");
+                    }
+
+                } else {
+                    userNameView.setText("");
+                    infoView.setText("");
+                    userLocation.setText("");
+                    userAge.setText("");
+                }
+
+                //TODO 绑定评论数据
+                List<CommentInfoEntity> list = personalCenter.getData().getCommentInfo();
+                if (list != null && list.size() > 0) {
+                    CommentInfoEntity commentInfo = list.get(0);
+
+                    String otherUserHeadImagePath = commentInfo.getHeadImg();
+                    if (!TextUtils.isEmpty(otherUserHeadImagePath)) {
+                        commentUserHeadImageView.setImageURI(Uri.parse(otherUserHeadImagePath));
+                    }
+
+                    String otherUserName = commentInfo.getNickname();
+                    if (!TextUtils.isEmpty(otherUserHeadImagePath)) {
+                        commentUserNameView.setText(otherUserName);
                     } else {
                         commentUserNameView.setText("");
+                    }
+
+                    String otherUserContent = commentInfo.getContent();
+                    if (!TextUtils.isEmpty(otherUserContent)) {
+                        commentContentView.setText(otherUserContent);
+                    } else {
                         commentContentView.setText("");
                     }
+                } else {
+                    commentUserNameView.setText("");
+                    commentContentView.setText("");
+                }
 
-                    UserCardEntity userCard = personalCenter.getData().getUserCard();
-                    if (userCard != null) {
-                        verName.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
-                    }
+                /**
+                 * 实名验证
+                 */
+                UserCardEntity userCard = personalCenter.getData().getUserCard();
+                if (userCard != null) {
+                    verName.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
+                }
 
-                    UserAptitudeEntity userAptitude = personalCenter.getData().getUserAptitude();
-                    if (userAptitude != null) {
-                        verExperience.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
-                    }
+                /**
+                 * 经历验证
+                 */
+                UserAptitudeEntity userAptitude = personalCenter.getData().getUserAptitude();
+                if (userAptitude != null) {
+                    verExperience.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
+                }
 
+                //TODO 相关随游数据绑定
+                if (isPublisher) {
                     List<TripListEntity> tripList = personalCenter.getData().getTripList();
                     if (tripList != null && tripList.size() > 0) {
                         listAll.addAll(tripList);
                         adapter.setList(listAll);
                     }
+                }
 
+            }
+
+        } catch (Exception e) {
+            DeBugLog.e(TAG, "解析异常:" + e.getMessage());
+            try {
+                JSONObject object = new JSONObject(str);
+                String status = object.getString(STATUS);
+                if (status.equals("-1")) {
+                    Toast.makeText(PersonalMainPagerActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                } else if (status.equals("-2")) {
+                    Toast.makeText(PersonalMainPagerActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                DeBugLog.e(TAG, "解析异常:" + e.getMessage());
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(PersonalMainPagerActivity.this, SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(PersonalMainPagerActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                    Toast.makeText(PersonalMainPagerActivity.this, DataError, Toast.LENGTH_SHORT).show();
-                }
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+                Toast.makeText(PersonalMainPagerActivity.this, DataError, Toast.LENGTH_SHORT).show();
             }
         }
     }

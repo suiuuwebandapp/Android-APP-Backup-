@@ -27,8 +27,8 @@
             android:src="@drawable/login_down_bg"/>
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_above="@+id/loginImageDownBG"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
@@ -54,6 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/icon_wechat_light"/>
+
         </LinearLayout>
 
     </RelativeLayout>

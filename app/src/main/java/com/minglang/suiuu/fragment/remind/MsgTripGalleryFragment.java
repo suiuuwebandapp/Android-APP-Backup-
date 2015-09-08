@@ -81,7 +81,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
     @Bind(R.id.new_at_fragment_head_frame)
     PtrClassicFrameLayout mPtrFrame;
 
-    @Bind(R.id.newAtList)
+    @Bind(R.id.new_at_list)
     ListView msgTripGalleryList;
 
     private List<MsgTripGalleryItemData> listAll = new ArrayList<>();
@@ -185,19 +185,21 @@ public class MsgTripGalleryFragment extends BaseFragment {
         msgTripGalleryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                String userSign = listAll.get(position).getCreateUserSign();
+                DeBugLog.i(TAG, "CreateUserSign:" + userSign);
             }
         });
+
     }
 
     /**
      * 从网络获取数据
      */
     private void getData4Service(int page) {
-        String[] keyArray = new String[]{HttpServicePath.key, PAGE, TOKEN};
+        String[] keyArray = new String[]{HttpServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
         String url = addUrlAndParams(HttpNewServicePath.getTripGalleryMsgDataPath, keyArray, valueArray);
-
+        DeBugLog.i(TAG, "旅图信息请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new MsgTripGalleryResultCallback());
         } catch (IOException e) {
@@ -248,7 +250,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
                     Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "旅途数据解析异常:" + e.getMessage());
+                DeBugLog.e(TAG, "数据解析异常:" + e.getMessage());
                 failureLessPage();
                 try {
                     JSONObject object = new JSONObject(str);

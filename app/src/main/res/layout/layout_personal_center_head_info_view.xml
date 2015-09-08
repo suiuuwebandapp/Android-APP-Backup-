@@ -25,9 +25,10 @@
             android:layout_width="@dimen/layout_65dp"
             android:layout_height="@dimen/layout_65dp"
             android:layout_centerInParent="true"
-            fresco:actualImageScaleType="fitXY"
-            fresco:failureImage="@drawable/default_head_image"
+            fresco:failureImage="@drawable/default_head_image_error"
+            fresco:failureImageScaleType="fitCenter"
             fresco:placeholderImage="@drawable/default_head_image"
+            fresco:placeholderImageScaleType="fitCenter"
             fresco:roundAsCircle="true"/>
 
         <TextView
@@ -146,9 +147,10 @@
                 android:layout_width="@dimen/layout_50dp"
                 android:layout_height="@dimen/layout_50dp"
                 android:layout_margin="@dimen/layout_5dp"
-                fresco:actualImageScaleType="fitXY"
-                fresco:failureImage="@drawable/default_head_image"
+                fresco:failureImage="@drawable/default_head_image_error"
+                fresco:failureImageScaleType="fitCenter"
                 fresco:placeholderImage="@drawable/default_head_image"
+                fresco:placeholderImageScaleType="fitCenter"
                 fresco:roundAsCircle="true"/>
 
             <TextView

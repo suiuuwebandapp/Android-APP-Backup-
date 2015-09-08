@@ -17,8 +17,10 @@
             android:layout_height="@dimen/layout_200dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            fresco:actualImageScaleType="fitXY"
-            fresco:placeholderImage="@drawable/loading"/>
+            fresco:failureImage="@drawable/loading_error"
+            fresco:failureImageScaleType="fitCenter"
+            fresco:placeholderImage="@drawable/loading"
+            fresco:placeholderImageScaleType="fitXY"/>
 
         <TextView
             android:id="@+id/item_personal_suiuu_title"

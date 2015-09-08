@@ -27,6 +27,7 @@ import java.util.List;
  * 修改备注：
  */
 public class showPicDescriptionAdapter extends BaseAdapter {
+
     private Context context;
     private List<String> imageList;
     private List<String> contentList;
@@ -54,10 +55,12 @@ public class showPicDescriptionAdapter extends BaseAdapter {
             return null;
         }
     }
+
     @Override
     public long getItemId(int position) {
         return position;
     }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -72,6 +75,7 @@ public class showPicDescriptionAdapter extends BaseAdapter {
             holder.textContent = (TextView) view.findViewById(R.id.tv_show_text_description);
             view.setTag(holder);
         }
+
         Uri uri = Uri.parse(imageList.get(position));
         holder.picContent.setImageURI(uri);
         if (contentList.size() >= 1) {
@@ -79,9 +83,10 @@ public class showPicDescriptionAdapter extends BaseAdapter {
                 holder.textContent.setVisibility(View.GONE);
             } else {
                 holder.textContent.setVisibility(View.VISIBLE);
-                holder.textContent.setText(contentList.get(position).toString());
+                holder.textContent.setText(contentList.get(position));
             }
         }
+
         holder.picContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +96,7 @@ public class showPicDescriptionAdapter extends BaseAdapter {
                 context.startActivity(intent);
             }
         });
+
         return view;
     }
 

@@ -9,16 +9,15 @@
         android:id="@+id/account_balance_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/layout_10dp"
-        android:layout_marginLeft="@dimen/layout_10dp"
-        android:layout_marginRight="@dimen/layout_10dp"
-        android:layout_marginStart="@dimen/layout_10dp"
         android:singleLine="true"
         android:text="@string/RMB"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:layout_alignLeft="@+id/textView9"
+        android:layout_alignStart="@+id/textView9"
+        android:layout_alignRight="@+id/textView9"
+        android:layout_alignEnd="@+id/textView9"/>
 
     <TextView
         android:id="@+id/textView9"
@@ -37,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/account_balance_number"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/layout_10dp"
+        android:layout_marginTop="@dimen/layout_5dp"
         android:text="@string/ClickWithdrawals"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/btn_1_bg_color"/>

@@ -336,9 +336,9 @@ public class LoginActivity extends BaseActivity {
     private void initPopupWindow() {
         loginRootView = LayoutInflater.from(this).inflate(R.layout.popup_login, null);
 
-        popupLoginUserName = (EditText) loginRootView.findViewById(R.id.userName);
-        popupLoginPassword = (EditText) loginRootView.findViewById(R.id.userPassword);
-        popupLoginBtn = (Button) loginRootView.findViewById(R.id.popupLoginBtn);
+        popupLoginUserName = (EditText) loginRootView.findViewById(R.id.user_name);
+        popupLoginPassword = (EditText) loginRootView.findViewById(R.id.user_password);
+        popupLoginBtn = (Button) loginRootView.findViewById(R.id.popup_login_btn);
 
         ViewGroup.LayoutParams loginParams = popupLoginBtn.getLayoutParams();
         loginParams.width = screenWidth / 3;

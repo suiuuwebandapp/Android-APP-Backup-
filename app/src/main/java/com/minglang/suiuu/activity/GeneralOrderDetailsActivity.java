@@ -242,7 +242,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
 
-        failureImagePath = "res://com.minglang.suiuu/" + R.drawable.default_head_image;
+        failureImagePath = "res://com.minglang.suiuu/" + R.drawable.default_head_image_error;
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(DialogMsg);

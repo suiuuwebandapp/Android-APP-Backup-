@@ -30,8 +30,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_margin="@dimen/layout_5dp"
-                fresco:actualImageScaleType="fitXY"
-                fresco:failureImage="@drawable/default_head_image"
+                fresco:failureImage="@drawable/default_head_image_error"
                 fresco:failureImageScaleType="fitXY"
                 fresco:placeholderImage="@drawable/default_head_image"
                 fresco:roundAsCircle="true"/>

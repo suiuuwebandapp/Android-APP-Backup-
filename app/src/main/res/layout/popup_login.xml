@@ -6,40 +6,38 @@
     android:background="#b0000000">
 
     <EditText
-        android:id="@+id/userPassword"
+        android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="请输入密码"
-        android:inputType="textPassword"
+        android:layout_above="@+id/user_password"
+        android:layout_marginLeft="@dimen/layout_10dp"
+        android:layout_marginRight="@dimen/layout_10dp"
+        android:hint="@string/PleaseInputUserName"
         android:textColor="@color/white"
         android:textColorHint="@color/textColor"/>
 
     <EditText
-        android:id="@+id/userName"
+        android:id="@+id/user_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/userPassword"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:hint="请输入用户名"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/layout_10dp"
+        android:ems="10"
+        android:hint="@string/PleaseInputPassword"
+        android:inputType="textPassword"
         android:textColor="@color/white"
         android:textColorHint="@color/textColor"/>
 
     <Button
-        android:id="@+id/popupLoginBtn"
+        android:id="@+id/popup_login_btn"
         style="@style/loginButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/userPassword"
+        android:layout_below="@+id/user_password"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="登陆"
+        android:layout_marginTop="@dimen/layout_10dp"
+        android:text="@string/Login"
         android:textColorHint="@color/textColor"/>
 
 </RelativeLayout>

@@ -93,7 +93,7 @@ public class AttentionGalleryAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(headImagePath)) {
             headView.setImageURI(Uri.parse(headImagePath));
         } else {
-            imageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image));
+            imageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
         }
 
         String strTitle = list.get(position).getTitle();

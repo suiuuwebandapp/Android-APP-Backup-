@@ -44,9 +44,10 @@
                 android:layout_width="@dimen/layout_60dp"
                 android:layout_height="@dimen/layout_60dp"
                 android:layout_gravity="center_horizontal"
-                fresco:actualImageScaleType="fitXY"
-                fresco:failureImage="@drawable/default_head_image"
+                fresco:failureImage="@drawable/default_head_image_error"
+                fresco:failureImageScaleType="fitCenter"
                 fresco:placeholderImage="@drawable/default_head_image"
+                fresco:placeholderImageScaleType="fitCenter"
                 fresco:roundAsCircle="true"/>
 
         </FrameLayout>

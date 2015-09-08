@@ -1,18 +1,18 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.customview.CircleImageView;
+import com.minglang.suiuu.activity.PersonalMainPagerActivity;
 import com.minglang.suiuu.entity.MsgTripGallery.MsgTripGalleryData.MsgTripGalleryItemData;
 import com.minglang.suiuu.utils.ViewHolder;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -23,29 +23,27 @@ import java.util.List;
  */
 public class MsgTripGalleryAdapter extends BaseHolderAdapter<MsgTripGalleryItemData> {
 
-    private ImageLoader imageLoader;
-    private DisplayImageOptions options;
+    private static final String USER_SIGN = "userSign";
+
+    private Context context;
 
     public MsgTripGalleryAdapter(Context context, List<MsgTripGalleryItemData> list, int itemLayoutId) {
         super(context, list, itemLayoutId);
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image)
-                .showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
+        this.context = context;
     }
 
     @Override
     public void convert(ViewHolder helper, MsgTripGalleryItemData item, long position) {
-        CircleImageView headImageView = helper.getView(R.id.item_msg_trip_gallery_head_image_view);
+        SimpleDraweeView headImageView = helper.getView(R.id.item_msg_trip_gallery_head_image_view);
         TextView userNameView = helper.getView(R.id.item_msg_trip_gallery_user_name);
         TextView infoView = helper.getView(R.id.item_msg_trip_gallery_info);
         TextView actionView = helper.getView(R.id.item_msg_trip_gallery_action);
 
         String headImagePath = item.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            imageLoader.displayImage(headImagePath, headImageView, options);
+            headImageView.setImageURI(Uri.parse(headImagePath));
+        } else {
+            headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
         }
 
         String userName = item.getNickname();
@@ -80,6 +78,43 @@ public class MsgTripGalleryAdapter extends BaseHolderAdapter<MsgTripGalleryItemD
             }
         } else {
             actionView.setText("");
+        }
+
+        headImageView.setOnClickListener(new HeadImageViewClickListener(item));
+        userNameView.setOnClickListener(new UserNameViewClickListener(item));
+
+    }
+
+    private class HeadImageViewClickListener implements View.OnClickListener {
+
+        private MsgTripGalleryItemData item;
+
+        private HeadImageViewClickListener(MsgTripGalleryItemData item) {
+            this.item = item;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(context, PersonalMainPagerActivity.class);
+            intent.putExtra(USER_SIGN, item.getCreateUserSign());
+            context.startActivity(intent);
+        }
+
+    }
+
+    private class UserNameViewClickListener implements View.OnClickListener {
+
+        private MsgTripGalleryItemData item;
+
+        private UserNameViewClickListener(MsgTripGalleryItemData item) {
+            this.item = item;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(context, PersonalMainPagerActivity.class);
+            intent.putExtra(USER_SIGN, item.getCreateUserSign());
+            context.startActivity(intent);
         }
 
     }

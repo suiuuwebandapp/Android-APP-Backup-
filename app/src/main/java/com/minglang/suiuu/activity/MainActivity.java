@@ -211,6 +211,8 @@ public class MainActivity extends BaseActivity {
 
     private ExitReceiver exitReceiver;
 
+    private ConnectionNetChangeReceiver connectionNetChangeReceiver;
+
     private TokenBroadcastReceiver tokenBroadcastReceiver;
 
     @Override
@@ -220,9 +222,6 @@ public class MainActivity extends BaseActivity {
         UmengUpdateAgent.update(this);
         ButterKnife.bind(this);
         getServiceTime();
-        initView();
-        registerReceiver();
-        viewAction();
     }
 
     @Override
@@ -232,11 +231,97 @@ public class MainActivity extends BaseActivity {
         String network_headImage_path = SuiuuInfo.ReadUserData(this).getHeadImg();
         if (!TextUtils.isEmpty(network_headImage_path)) {
             headImageView.setImageURI(Uri.parse(network_headImage_path));
+        } else {
+            headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
         }
 
         String user_name = SuiuuInfo.ReadUserData(this).getNickname();
         if (!TextUtils.isEmpty(user_name)) {
             nickNameView.setText(user_name);
+        }
+    }
+
+    private void getServiceTime() {
+        try {
+            OkHttpManager.onGetAsynRequest(HttpNewServicePath.getTime, new OkHttpManager.ResultCallback<String>() {
+
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String status = object.getString(STATUS);
+                        if (status.equals("1")) {
+                            String data = object.getString(DATA);
+                            getAppTimeSign(data);
+                        }
+                    } catch (JSONException e) {
+                        DeBugLog.e(TAG, "时间数据解析异常:");
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Exception e) {
+                    DeBugLog.e(TAG, "时间获取错误:" + e.getMessage());
+                }
+
+                @Override
+                public void onFinish() {
+                    DeBugLog.i(TAG, "Service Time Request Finish!");
+                }
+
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getAppTimeSign(String time) {
+        String sign = null;
+        try {
+            sign = MD5Utils.getMD5(time + verification + HttpNewServicePath.ConfusedCode);
+            DeBugLog.i(TAG, "verification:" + verification + ",sign:" + sign);
+        } catch (NoSuchAlgorithmException e) {
+            DeBugLog.e(TAG, "NoSuchAlgorithmException:" + e.getMessage());
+        }
+
+        String _url = addUrlAndParams(HttpNewServicePath.getToken,
+                new String[]{TIME_STAMP, APP_SIGN, SIGN}, new String[]{time, verification, sign});
+
+        try {
+            OkHttpManager.onGetAsynRequest(_url, new OkHttpManager.ResultCallback<String>() {
+
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String status = object.getString(STATUS);
+                        if (status.equals("1")) {
+                            String appTimeSign = object.getString(DATA);
+                            DeBugLog.i(TAG, "appTimeSign:" + appTimeSign);
+                            SuiuuInfo.WriteAppTimeSign(MainActivity.this, appTimeSign);
+                        } else {
+                            DeBugLog.e(TAG, "获取失败");
+                        }
+                    } catch (JSONException e) {
+                        DeBugLog.e(TAG, "JSONException:" + e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Exception e) {
+                    DeBugLog.e(TAG, "Network Exception:" + e.getMessage());
+                }
+
+                @Override
+                public void onFinish() {
+                    initView();
+                    viewAction();
+                }
+
+            });
+        } catch (IOException e) {
+            DeBugLog.e(TAG, "IOException:" + e.getMessage());
         }
     }
 
@@ -262,19 +347,23 @@ public class MainActivity extends BaseActivity {
         if (!TextUtils.isEmpty(strHeadImagePath)) {
             headImageView.setImageURI(Uri.parse(strHeadImagePath));
             drawerSwitch.setImageURI(Uri.parse(strHeadImagePath));
+        } else {
+            String failurePath = "res://com.minglang.suiuu/" + R.drawable.default_head_image_error;
+            headImageView.setImageURI(Uri.parse(failurePath));
+            drawerSwitch.setImageURI(Uri.parse(failurePath));
         }
 
-        String isPublisher = SuiuuInfo.ReadUserData(this).getIsPublisher();
-        DeBugLog.i(TAG, "isPublisher:" + isPublisher);
+        String publisher = SuiuuInfo.ReadUserData(this).getIsPublisher();
+        DeBugLog.i(TAG, "isPublisher:" + publisher);
 
-        if (TextUtils.isEmpty(isPublisher)) {
+        if (TextUtils.isEmpty(publisher)) {
             switchSuiuu.setChecked(false);
             switchSuiuu.setText(OrdinaryAccount);
             switchSuiuu.setEnabled(false);
             sideListView.setVisibility(View.GONE);
             sideListView2.setVisibility(View.VISIBLE);
         } else {
-            if (isPublisher.equals("1")) {
+            if (publisher.equals("1")) {
                 switchSuiuu.setChecked(true);
                 switchSuiuu.setText(SuiuuAccount);
                 sideListView.setVisibility(View.VISIBLE);
@@ -326,6 +415,10 @@ public class MainActivity extends BaseActivity {
         IntentFilter intentFilter2 = new IntentFilter();
         intentFilter2.addAction(Intent.ACTION_TIME_TICK);
         registerReceiver(tokenBroadcastReceiver, intentFilter2);
+
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        connectionNetChangeReceiver = new ConnectionNetChangeReceiver();
+        this.registerReceiver(connectionNetChangeReceiver, filter);
     }
 
     /**
@@ -395,62 +488,31 @@ public class MainActivity extends BaseActivity {
         nickNameView.setOnClickListener(onClickListener);
         headImageView.setOnClickListener(onClickListener);
 
+        final Class<?>[] classArray1 = new Class[]{NewRemindActivity.class, MySuiuuInfoActivity.class, OrderManageActivity.class,
+                AccountManageActivity.class, SettingActivity.class};
+
         sideListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mDrawerLayout.closeDrawer(sliderView);
-                switch (position) {
-                    case 0:
-                        startActivity(new Intent(MainActivity.this, NewRemindActivity.class));
-                        break;
-
-                    case 1:
-                        startActivity(new Intent(MainActivity.this, MySuiuuInfoActivity.class));
-                        break;
-
-                    case 2:
-                        startActivity(new Intent(MainActivity.this, OrderManageActivity.class));
-                        break;
-
-                    case 3:
-                        startActivity(new Intent(MainActivity.this, AccountManageActivity.class));
-                        break;
-
-                    case 4:
-                        startActivity(new Intent(MainActivity.this, SettingActivity.class));
-                        break;
-                }
+                DeBugLog.i(TAG, "click item name:" + classArray1[position].getSimpleName());
+                startActivity(new Intent(MainActivity.this, classArray1[position]));
             }
         });
+
+        final Class<?>[] classArray2 = new Class[]{GeneralOrderListActivity.class, AttentionActivity.class, NewRemindActivity.class,
+                SettingActivity.class};
 
         sideListView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mDrawerLayout.closeDrawer(sliderView);
-                switch (position) {
-                    case 0:
-                        startActivity(new Intent(MainActivity.this, GeneralOrderListActivity.class));
-                        break;
-
-                    case 1:
-                        Intent intent1 = new Intent(MainActivity.this, AttentionActivity.class);
-                        intent1.putExtra(USER_SIGN, userSign);
-                        startActivity(intent1);
-                        break;
-
-                    case 2:
-                        startActivity(new Intent(MainActivity.this, NewRemindActivity.class));
-                        break;
-
-                    case 3:
-                        startActivity(new Intent(MainActivity.this, SettingActivity.class));
-                        break;
-
-                    case 4:
-                        finish();
-                        break;
-
+                DeBugLog.i(TAG, "click item name:" + classArray2[position].getSimpleName());
+                Intent intent = new Intent(MainActivity.this, classArray2[position]);
+                if (position == 1) {
+                    intent.putExtra(USER_SIGN, userSign);
                 }
+                startActivity(intent);
             }
         });
 
@@ -459,7 +521,7 @@ public class MainActivity extends BaseActivity {
         tab3.setOnClickListener(onClickListener);
         tab4.setOnClickListener(onClickListener);
         //广播监听
-        myReceiver.setConnectionChangeListener(new ConnectionNetChangeReceiver.ConnectionChangeListener() {
+        connectionNetChangeReceiver.setConnectionChangeListener(new ConnectionNetChangeReceiver.ConnectionChangeListener() {
             @Override
             public void conectionBreakOff(Context b) {
                 rl_net_error.setVisibility(View.VISIBLE);
@@ -693,86 +755,6 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    private void getServiceTime() {
-        try {
-            OkHttpManager.onGetAsynRequest(HttpNewServicePath.getTime, new OkHttpManager.ResultCallback<String>() {
-                @Override
-                public void onError(Request request, Exception e) {
-                    DeBugLog.e(TAG, "时间获取错误:" + e.getMessage());
-                }
-
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONObject object = new JSONObject(response);
-                        String status = object.getString(STATUS);
-                        if (status.equals("1")) {
-                            String data = object.getString(DATA);
-//                            DeBugLog.i(TAG, "服务器时间:" + data);
-                            getAppTimeSign(data);
-                        }
-                    } catch (JSONException e) {
-                        DeBugLog.e(TAG, "时间数据解析异常:");
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void getAppTimeSign(String time) {
-        String sign = null;
-        try {
-            sign = MD5Utils.getMD5(time + verification + HttpNewServicePath.ConfusedCode);
-            DeBugLog.i(TAG, "verification:" + verification + ",sign:" + sign);
-        } catch (NoSuchAlgorithmException e) {
-            DeBugLog.e(TAG, "NoSuchAlgorithmException:" + e.getMessage());
-        }
-
-        String _url = addUrlAndParams(HttpNewServicePath.getToken,
-                new String[]{TIME_STAMP, APP_SIGN, SIGN}, new String[]{time, verification, sign});
-//        DeBugLog.i(TAG, "请求Token的URL=" + _url);
-
-        try {
-            OkHttpManager.onGetAsynRequest(_url, new OkHttpManager.ResultCallback<String>() {
-                @Override
-                public void onError(Request request, Exception e) {
-                    DeBugLog.e(TAG, "Network Exception:" + e.getMessage());
-                }
-
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONObject object = new JSONObject(response);
-                        String status = object.getString(STATUS);
-                        if (status.equals("1")) {
-                            String appTimeSign = object.getString(DATA);
-                            DeBugLog.i(TAG, "appTimeSign:" + appTimeSign);
-                            SuiuuInfo.WriteAppTimeSign(MainActivity.this, appTimeSign);
-                        } else {
-                            DeBugLog.e(TAG, "获取失败");
-                        }
-                    } catch (JSONException e) {
-                        DeBugLog.e(TAG, "JSONException:" + e.getMessage());
-                    }
-                }
-
-            });
-        } catch (IOException e) {
-            DeBugLog.e(TAG, "IOException:" + e.getMessage());
-        }
-    }
-
-    private ConnectionNetChangeReceiver myReceiver;
-
-    private void registerReceiver() {
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        myReceiver = new ConnectionNetChangeReceiver();
-        this.registerReceiver(myReceiver, filter);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -908,7 +890,7 @@ public class MainActivity extends BaseActivity {
         }
 
         try {
-            unregisterReceiver(myReceiver);
+            unregisterReceiver(connectionNetChangeReceiver);
         } catch (Exception e) {
             DeBugLog.e(TAG, "反注册ConnectionNetChangeReceiver失败:" + e.getMessage());
         }

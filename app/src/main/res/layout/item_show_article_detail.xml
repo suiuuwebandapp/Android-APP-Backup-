@@ -4,17 +4,16 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/layout_20dp"
-    android:layout_marginRight="@dimen/layout_20dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/layout_20dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/iv_show_pic"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_200dp"
-        android:scaleType="centerCrop"
-        fresco:placeholderImage="@drawable/loading"
-        />
+        fresco:failureImage="@drawable/loading_error"
+        fresco:placeholderImage="@drawable/loading"/>
+
     <TextView
         android:id="@+id/tv_show_text_description"
         android:layout_width="fill_parent"

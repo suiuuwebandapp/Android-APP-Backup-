@@ -7,8 +7,11 @@
 
     <string name="app_name" translatable="false">随游</string>
 
-    <string name="Login" translatable="false">登录</string>
+    <string name="Login" translatable="false">登陆</string>
     <string name="Register" translatable="false">注册</string>
+
+    <string name="PleaseInputUserName" translatable="false">请输入用户名</string>
+    <string name="PleaseInputPassword" translatable="false">请输入密码</string>
 
     <string name="Title1" translatable="false">主页</string>
     <string name="Title2" translatable="false">圈子</string>
@@ -129,6 +132,8 @@
     <string name="login_wait" translatable="false">正在登陆，请稍候&#8230;</string>
     <string name="register_wait" translatable="false">正在注册，请稍候&#8230;</string>
     <string name="question_wait" translatable="false">正在提问，请稍候&#8230;</string>
+
+    <string name="commit_wait" translatable="false">正在提交，请稍后&#8230;</string>
 
     <string name="choice_area" translatable="false">请选择地区</string>
     <string name="choice_location" translatable="false">请选择位置</string>
@@ -402,26 +407,6 @@
 
     <string name="TagNameNotNull" translatable="false">标签名不能为空！</string>
 
-    <string name="tempDate" translatable="false">15.08.15</string>
-    <string name="tempTime" translatable="false">9:00 AM</string>
-    <string name="tempNumber" translatable="false">2人</string>
-    <string name="tempText" translatable="false">《未踏召唤://鲜血印记》是镰池和马创作，依河和希插画，并由电击文库发售的小说。第1卷于2014年9月10日发售。此作为《魔法禁书目录》作者镰池和马在“镰池和马十周年”网站的十大重大消息中宣布出版的正统派新作</string>
-    <string name="tempOrderState" translatable="false">未付款</string>
-    <string name="tempOrderTitle" translatable="false">法国巴黎浪漫温馨之旅</string>
-    <string name="tempPhoneNumber" translatable="false">1782066022</string>
-    <string name="tempEmail" translatable="false">123123123@qq.com</string>
-    <string name="tempContent" translatable="false">(临时)内容</string>
-    <string name="tempPrice" translatable="false">(临时)价格</string>
-    <string name="tempIntro" translatable="false">简介</string>
-    <string name="tempBeginDate" translatable="false">开始日期</string>
-    <string name="tempStartTime" translatable="false">开始时间</string>
-    <string name="tempPersonalNumber" translatable="false">人数</string>
-    <string name="tempFranceTrip" translatable="false">法国最浪漫的温馨之旅</string>
-    <string name="tempMuseumTag" translatable="false">吃货,博物馆</string>
-    <string name="tempStreet" translatable="false">香榭丽大道</string>
-    <string name="tempLove" translatable="false">猜你喜欢</string>
-    <string name="tempMoney" translatable="false">2000.0</string>
-
     <string name="logo" translatable="false">logo</string>
 
     <string name="article_temp" translatable="false">文章内容在此显示</string>
@@ -455,6 +440,28 @@
     <string name="MyProblem" trabslatable="false">我的问答</string>
 
     <string name="AttentionFailure" trabslatable="false">关注失败</string>
+
+    <string name="SuiuuComment" trabslatable="false">随游评论</string>
+
+    <string name="tempDate" translatable="false">15.08.15</string>
+    <string name="tempTime" translatable="false">9:00 AM</string>
+    <string name="tempNumber" translatable="false">2人</string>
+    <string name="tempText" translatable="false">《未踏召唤://鲜血印记》是镰池和马创作，依河和希插画，并由电击文库发售的小说。第1卷于2014年9月10日发售。此作为《魔法禁书目录》作者镰池和马在“镰池和马十周年”网站的十大重大消息中宣布出版的正统派新作</string>
+    <string name="tempOrderState" translatable="false">未付款</string>
+    <string name="tempOrderTitle" translatable="false">法国巴黎浪漫温馨之旅</string>
+    <string name="tempPhoneNumber" translatable="false">1782066022</string>
+    <string name="tempEmail" translatable="false">123123123@qq.com</string>
+    <string name="tempContent" translatable="false">(临时)内容</string>
+    <string name="tempPrice" translatable="false">(临时)价格</string>
+    <string name="tempIntro" translatable="false">简介</string>
+    <string name="tempBeginDate" translatable="false">开始日期</string>
+    <string name="tempStartTime" translatable="false">开始时间</string>
+    <string name="tempPersonalNumber" translatable="false">人数</string>
+    <string name="tempFranceTrip" translatable="false">法国最浪漫的温馨之旅</string>
+    <string name="tempMuseumTag" translatable="false">吃货,博物馆</string>
+    <string name="tempStreet" translatable="false">香榭丽大道</string>
+    <string name="tempLove" translatable="false">猜你喜欢</string>
+    <string name="tempMoney" translatable="false">2000.0</string>
 
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
     <string name="pull_to_refresh_release_label">Release rear refresh</string>
@@ -531,5 +538,7 @@
     <string name="title_activity_personal_suiuu">PersonalSuiuuActivity</string>
     <string name="title_activity_personal_problem">PersonalProblemActivity</string>
     <string name="title_activity_personal_trip_gallery">PersonalTripGalleryActivity</string>
+    <string name="title_activity_suiuu_comment">SuiuuCommentActivity</string>
+    <string name="title_activity_with_drawals">WithDrawalsActivity</string>
 
 </resources>

@@ -1,16 +1,14 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.minglang.suiuu.fragment.remind.MsgTripGalleryFragment">
+    android:background="@color/white">
 
     <in.srain.cube.views.ptr.PtrClassicFrameLayout
         android:id="@+id/new_at_fragment_head_frame"
         xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/backgroundColor"
         cube_ptr:ptr_duration_to_close="200"
         cube_ptr:ptr_duration_to_close_header="1000"
         cube_ptr:ptr_keep_header_when_refresh="true"
@@ -19,9 +17,9 @@
         cube_ptr:ptr_resistance="1.7">
 
         <ListView
+            android:id="@+id/new_at_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/newAtList"/>
+            android:layout_height="match_parent"/>
 
     </in.srain.cube.views.ptr.PtrClassicFrameLayout>
 
