@@ -300,6 +300,11 @@ public class HttpNewServicePath {
      */
     public static String getUserBindAccountListData = RootPath + "/app-account/get-user-account-list";
 
+    /**
+     * 删除一个绑定账户
+     */
+    public static String deleteUserBindAccountItemData = RootPath + "/app-account/delete-user-account";
+
     //*************************************************temp*********************************************************\\
 
     /**

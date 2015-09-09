@@ -14,6 +14,7 @@
         android:layout_marginTop="@dimen/layout_10dp"
         android:background="@color/btn_2_bg_color"
         android:text="@string/AliPay"
+        android:textColor="@color/white"
         android:textSize="@dimen/layout_20sp"/>
 
     <Button
@@ -25,6 +26,7 @@
         android:layout_marginTop="@dimen/layout_10dp"
         android:background="@color/we_chat_color"
         android:text="@string/WeChatPay"
+        android:textColor="@color/white"
         android:textSize="@dimen/layout_20sp"/>
 
 </LinearLayout>

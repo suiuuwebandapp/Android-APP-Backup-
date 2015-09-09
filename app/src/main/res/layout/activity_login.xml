@@ -69,7 +69,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/loginBtn"
+            android:id="@+id/login_btn"
             style="@style/loginButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
             android:layout_weight="0.5"/>
 
         <Button
-            android:id="@+id/registerBtn"
+            android:id="@+id/register_btn"
             style="@style/registerButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -20,6 +20,8 @@ import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import butterknife.Bind;
@@ -56,6 +58,21 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
     @BindString(R.string.Loading)
     String DialogMsg;
 
+    @BindString(R.string.NetworkError)
+    String NetworkError;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkException;
+
+    @BindString(R.string.NoData)
+    String NoData;
+
+    @BindString(R.string.DataError)
+    String DataError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
+
     @Bind(R.id.add_receivables_tool_bar)
     Toolbar toolbar;
 
@@ -70,9 +87,9 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
 
     private Context context;
 
-    private boolean isAccount = true;
-
     private ProgressDialog progressDialog;
+
+    private String strAccount, strUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,14 +109,6 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
 
         context = AddReceivablesWayActivity.this;
 
-        if (!TextUtils.isEmpty(strKey)) {
-            if (strKey.equals(ALIPAY)) {
-                isAccount = true;
-            } else if (strKey.equals(WECHAT)) {
-                isAccount = false;
-            }
-        }
-
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -111,8 +120,8 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
         addReceivablesOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String strAccount = addReceivablesAccount.getText().toString().trim();
-                String strUserName = addReceivablesUserName.getText().toString().trim();
+                strAccount = addReceivablesAccount.getText().toString().trim();
+                strUserName = addReceivablesUserName.getText().toString().trim();
                 if (TextUtils.isEmpty(strAccount)) {
                     Toast.makeText(context, AccountNotNull, Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(strUserName)) {
@@ -133,8 +142,7 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
         paramsArray[0] = new OkHttpManager.Params(ACCOUNT, account);
         paramsArray[1] = new OkHttpManager.Params(NAME, userName);
 
-        String url = (isAccount ? HttpNewServicePath.addAliPayUserInfo : HttpNewServicePath.addWeChatAUserInfo)
-                + "?" + TOKEN + "=" + token;
+        String url = HttpNewServicePath.addAliPayUserInfo + "?" + TOKEN + "=" + token;
         DeBugLog.i(TAG, "URL:" + url);
 
         try {
@@ -142,6 +150,7 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
             hideDialog();
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -179,11 +188,37 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
         public void onResponse(String response) {
             DeBugLog.i(TAG, "返回信息:" + response);
             hideDialog();
+            try {
+                JSONObject object = new JSONObject(response);
+                String status = object.getString(STATUS);
+                if (!TextUtils.isEmpty(status)) {
+                    switch (status) {
+                        case "1":
+                            SuiuuInfo.WriteAliPayInfo(context, strAccount, strUserName);
+                            setResult(RESULT_OK);
+                            finish();
+                            break;
+                        case "-1":
+                            Toast.makeText(context, SystemException, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "-2":
+                            Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(context, NetworkException, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "数据解析异常:" + e.getMessage());
+                Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
         public void onError(Request request, Exception e) {
-
+            DeBugLog.e(TAG, "添加支付宝账户异常:" + e.getMessage());
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

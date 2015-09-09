@@ -24,7 +24,6 @@ import com.minglang.suiuu.adapter.AreaCodeAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.entity.AreaCode;
 import com.minglang.suiuu.entity.AreaCodeData;
-import com.minglang.suiuu.entity.RequestData;
 import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpNewServicePath;
@@ -90,19 +89,19 @@ public class LoginActivity extends BaseActivity {
     private static final String DATA = "data";
 
     @BindString(R.string.login_wait)
-    String loginMessage;
+    String LoginMessage;
 
     @BindString(R.string.register_wait)
-    String registerMessage;
+    String RegisterMessage;
 
     @BindString(R.string.User_name_cannot_be_empty)
-    String userNameNotNull;
+    String UserNameNotNull;
 
     @BindString(R.string.Password_cannot_be_empty)
-    String passwordNotNull;
+    String PasswordNotNull;
 
     @BindString(R.string.InternationalCodeFailure)
-    String repeatAreaCode;
+    String RepeatAreaCode;
 
     @BindString(R.string.NoData)
     String NoData;
@@ -149,10 +148,13 @@ public class LoginActivity extends BaseActivity {
     @BindString(R.string.WeiboAuthorizedCancel)
     String WeiboAuthorizedCancel;
 
-    @Bind(R.id.loginBtn)
+    @BindString(R.string.NoInstallWeChat)
+    String NoInstallWeChat;
+
+    @Bind(R.id.login_btn)
     Button loginBtn;
 
-    @Bind(R.id.registerBtn)
+    @Bind(R.id.register_btn)
     Button registerBtn;
 
     //登陆PopupWindow
@@ -301,24 +303,24 @@ public class LoginActivity extends BaseActivity {
         loginDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         loginDialog.setCanceledOnTouchOutside(false);
         loginDialog.setCancelable(true);
-        loginDialog.setMessage(loginMessage);
+        loginDialog.setMessage(LoginMessage);
 
         registerDialog = new ProgressDialog(this);
         registerDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         registerDialog.setCanceledOnTouchOutside(false);
         registerDialog.setCancelable(true);
-        registerDialog.setMessage(registerMessage);
+        registerDialog.setMessage(RegisterMessage);
 
         tencentLoginDialog = new ProgressDialog(this);
         tencentLoginDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         tencentLoginDialog.setCanceledOnTouchOutside(false);
-        tencentLoginDialog.setMessage(loginMessage);
+        tencentLoginDialog.setMessage(LoginMessage);
 
         weChatLoadDialog = new ProgressDialog(this);
         weChatLoadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         weChatLoadDialog.setCanceledOnTouchOutside(false);
         weChatLoadDialog.setCancelable(true);
-        weChatLoadDialog.setMessage(loginMessage);
+        weChatLoadDialog.setMessage(LoginMessage);
     }
 
     /**
@@ -421,9 +423,9 @@ public class LoginActivity extends BaseActivity {
                 loginPassword = popupLoginPassword.getText().toString().trim();
 
                 if (TextUtils.isEmpty(loginUserName)) {
-                    Toast.makeText(LoginActivity.this, userNameNotNull, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, UserNameNotNull, Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(loginPassword)) {
-                    Toast.makeText(LoginActivity.this, passwordNotNull, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, PasswordNotNull, Toast.LENGTH_SHORT).show();
                 } else {
                     suiuuLogin(loginUserName, loginPassword);
                 }
@@ -480,7 +482,6 @@ public class LoginActivity extends BaseActivity {
                     Toast.makeText(LoginActivity.this, "确认密码密码不能为空！", Toast.LENGTH_SHORT).show();
                 } else {
                     SuiuuInfo.ClearSuiuuInfo(LoginActivity.this);
-                    SuiuuInfo.ClearSuiuuThird(LoginActivity.this);
                     register4Suiuu();
                 }
             }
@@ -512,7 +513,7 @@ public class LoginActivity extends BaseActivity {
                 type = "2";
 
                 if (!weChatApi.isWXAppInstalled()) {
-                    Toast.makeText(LoginActivity.this, "您尚未安装微信，请安装后再用！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, NoInstallWeChat, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -541,7 +542,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onError(Request request, Exception e) {
             DeBugLog.e(TAG, "国际电话区号数据请求失败:" + e.getMessage());
-            Toast.makeText(LoginActivity.this, repeatAreaCode, Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, RepeatAreaCode, Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -552,11 +553,11 @@ public class LoginActivity extends BaseActivity {
                 if (areaCodeDataList != null && areaCodeDataList.size() > 0) {
                     areaCodeAdapter.setList(areaCodeDataList);
                 } else {
-                    Toast.makeText(LoginActivity.this, repeatAreaCode, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, RepeatAreaCode, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "国际电话区号数据解析异常:" + e.getMessage());
-                AbnormalHandle(response, repeatAreaCode);
+                AbnormalHandle(response, RepeatAreaCode);
             }
         }
 
@@ -962,6 +963,7 @@ public class LoginActivity extends BaseActivity {
             DeBugLog.i(TAG, "微信数据获取完成");
             hideWeChatDialog();
             if (status == 200 && info != null) {
+                DeBugLog.i(TAG, "微信数据:" + info.toString());
                 wechat_union_id = info.get("unionid").toString();
                 wechat_nick_name = info.get("nickname").toString();
                 String sex = info.get("sex").toString();
@@ -980,6 +982,7 @@ public class LoginActivity extends BaseActivity {
                 }
                 wechat_head_image_path = info.get("headimgurl").toString();
 
+                SuiuuInfo.WriteWeChatInfo(LoginActivity.this, wechat_union_id, wechat_nick_name);
                 sendWeChatInfo2Service();
             } else {
                 DeBugLog.i(TAG, "微信数据获取失败");
@@ -1008,8 +1011,7 @@ public class LoginActivity extends BaseActivity {
         paramsArray[5] = new OkHttpManager.Params(SIGN, sign);
 
         try {
-            OkHttpManager.onPostAsynRequest(HttpNewServicePath.ThirdPartyPath,
-                    new WeChatResultCallback(), paramsArray);
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.ThirdPartyPath, new WeChatResultCallback(), paramsArray);
         } catch (IOException e) {
             e.printStackTrace();
             hideLoginDialog();
@@ -1180,9 +1182,6 @@ public class LoginActivity extends BaseActivity {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
-        SuiuuInfo.WriteInformation(LoginActivity.this, new RequestData(weibo_open_id, weibo_name,
-                code, weibo_head_img, type));
 
         OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[6];
         paramsArray[0] = new OkHttpManager.Params(OPEN_ID, weibo_open_id);

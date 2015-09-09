@@ -2,9 +2,12 @@ package com.minglang.suiuu.activity;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -24,15 +27,30 @@ import com.minglang.suiuu.adapter.ReceivablesWayAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.AccountInfo;
 import com.minglang.suiuu.entity.AccountInfo.AccountInfoData;
+import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.wechat.WeChatConstant;
 import com.squareup.okhttp.Request;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.controller.listener.SocializeListeners;
+import com.umeng.socialize.exception.SocializeException;
+import com.umeng.socialize.weixin.controller.UMWXHandler;
 
-import java.io.IOException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -49,19 +67,56 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
     private static final String KEY = "key";
 
     private static final String ALIPAY = "alipay";
-    private static final String WECHAT = "weChat";
+
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
+
+    private static final String ACCOUNT_ID = "accountId";
+
+    private static final String UNION_ID = "unionid";
+    private static final String NICK_NAME = "nickname";
+
+    private static final String OPEN_ID = "openId";
+    private static final String NAME = "name";
 
     @BindString(R.string.load_wait)
-    String dialogMessage;
+    String DialogMsg;
 
-    @BindString(R.string.NetworkAnomaly)
+    @BindString(R.string.NetworkError)
     String NetworkError;
 
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkException;
+
     @BindString(R.string.NoData)
-    String DataNull;
+    String NoData;
 
     @BindString(R.string.DataError)
     String DataError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
+
+    @BindString(R.string.ConfirmDelete)
+    String ConfirmDelete;
+
+    @BindString(R.string.DeleteFailure)
+    String DeleteFailure;
+
+    @BindString(R.string.NoInstallWeChat)
+    String NoInstallWeChat;
+
+    @BindString(R.string.WeChatAuthorizedComplete)
+    String WeChatAuthorizedComplete;
+
+    @BindString(R.string.WeChatAuthorizedError)
+    String WeChatAuthorizedError;
+
+    @BindString(R.string.WeChatAuthorizedCancel)
+    String WeChatAuthorizedCancel;
+
+    @BindString(R.string.ObtainWeChatAuthorization)
+    String ObtainWeChatAuthorization;
 
     @BindColor(R.color.white)
     int titleColor;
@@ -83,19 +138,6 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
     private Button weChatButton;
 
-    private PopupWindow deletePopupWindow;
-
-    private View deleteRootView;
-
-    private Button okButton;
-
-    private Button cancelButton;
-
-    /**
-     * 按钮点击选择
-     */
-    private boolean isSelected = true;
-
     private ProgressDialog progressDialog;
 
     private List<AccountInfoData> listAll = new ArrayList<>();
@@ -104,6 +146,16 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
     private long index = 0;
 
+    private IWXAPI weChatApi;
+
+    private UMSocialService mController;
+
+    private Context context;
+
+    private ProgressDialog weChatLoadDialog;
+
+    private String openId, nickName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,20 +163,33 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
         ButterKnife.bind(this);
         initView();
         viewAction();
+        sendRequest();
     }
 
     private void initView() {
+        context = ReceivablesWayActivity.this;
+
         toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(dialogMessage);
+        progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
+
+        weChatLoadDialog = new ProgressDialog(this);
+        weChatLoadDialog.setCanceledOnTouchOutside(false);
+        weChatLoadDialog.setCancelable(true);
+        weChatLoadDialog.setMessage(ObtainWeChatAuthorization);
 
         initPopupWindow();
 
         adapter = new ReceivablesWayAdapter(this, listAll, R.layout.item_receivables_way);
         receivablesWayListView.setAdapter(adapter);
+
+        token = SuiuuInfo.ReadAppTimeSign(this);
+
+        weChatApi = WXAPIFactory.createWXAPI(this, WeChatConstant.APP_ID, false);
+        mController = UMServiceFactory.getUMSocialService("com.umeng.login");
     }
 
     @SuppressLint("InflateParams")
@@ -138,47 +203,54 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT, true);
         addPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         addPopupWindow.setAnimationStyle(R.style.time_popup_window_anim_style);
-        addPopupWindow.setOutsideTouchable(true);
-
-        deleteRootView = LayoutInflater.from(this).inflate(R.layout.popup_delete_receivables, null);
-        okButton = (Button) deleteRootView.findViewById(R.id.popup_delete_receivables_ok);
-        cancelButton = (Button) deleteRootView.findViewById(R.id.popup_delete_receivables_cancel);
-
-        deletePopupWindow = new PopupWindow(deleteRootView, ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        deletePopupWindow.setBackgroundDrawable(new BitmapDrawable());
-        deletePopupWindow.setAnimationStyle(R.style.time_popup_window_anim_style);
-        deletePopupWindow.setOutsideTouchable(true);
+        addPopupWindow.setOutsideTouchable(false);
     }
 
+    /**
+     * 控件动作
+     */
     private void viewAction() {
 
         alipayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isSelected = true;
                 addPopupWindow.dismiss();
+                Intent intent = new Intent(context, AddReceivablesWayActivity.class);
+                intent.putExtra(KEY, ALIPAY);
+                startActivityForResult(intent, AppConstant.ADD_ALIPAY_WAY);
             }
         });
 
         weChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isSelected = false;
                 addPopupWindow.dismiss();
+
+                Map<String, String> map = SuiuuInfo.ReadWeChatInfo(context);
+                if (map != null && map.size() > 0) {
+                    String openId = map.get(SuiuuInfo.T_ONLY_ID);
+                    String nickName = map.get(SuiuuInfo.T_NICKNAME);
+                    if (TextUtils.isEmpty(openId)) {
+                        if (!weChatApi.isWXAppInstalled()) {
+                            Toast.makeText(context, NoInstallWeChat, Toast.LENGTH_SHORT).show();
+                        } else {
+                            UMWXHandler wxHandler = new UMWXHandler(context, WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
+                            wxHandler.addToSocialSDK();
+
+                            mController.doOauthVerify(context, SHARE_MEDIA.WEIXIN, new ObtainWeChat4UmAuthListener());
+                        }
+                    } else {
+                        sendWeChatDataRequest(openId, nickName);
+                    }
+                }
             }
         });
 
-        addPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+        weChatButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onDismiss() {
-                Intent intent = new Intent(ReceivablesWayActivity.this, AddReceivablesWayActivity.class);
-                if (isSelected) {
-                    intent.putExtra(KEY, ALIPAY);
-                } else {
-                    intent.putExtra(KEY, WECHAT);
-                }
-                startActivity(intent);
+            public boolean onLongClick(View v) {
+                SuiuuInfo.ClearWeChatInfo(context);
+                return false;
             }
         });
 
@@ -186,60 +258,69 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
             @Override
             public void onDeleteReceivablesItem(long position) {
                 index = position;
-                deletePopupWindow.showAtLocation(deleteRootView, Gravity.BOTTOM, 0, 0);
+                new AlertDialog.Builder(context)
+                        .setMessage(ConfirmDelete)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String accountId = listAll.get(Long.bitCount(index)).getAccountId();
+                                sendDeleteRequest(accountId);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .create().show();
             }
         });
 
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getUserBindAccountList4Service();
-            }
-        });
-
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listAll.remove(Long.bitCount(index));
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deletePopupWindow.dismiss();
+                sendRequest();
             }
         });
 
     }
 
-    private void getUserBindAccountList4Service() {
-        if (progressDialog != null && !progressDialog.isShowing())
+    /**
+     * 发送获取收款列表数据的网络请求
+     */
+    private void sendRequest() {
+        if (progressDialog != null && !progressDialog.isShowing()) {
             progressDialog.show();
+        }
 
         relativeLayout.setVisibility(View.GONE);
 
         try {
-            OkHttpManager.onGetAsynRequest(HttpNewServicePath.getUserBindAccountListData, new ReceivablesWayResultCallback());
-        } catch (IOException e) {
+            String url = HttpNewServicePath.getUserBindAccountListData + "?" + TOKEN + "=" + URLEncoder.encode(token, "UTF-8");
+            DeBugLog.i(TAG, "Request URL:" + url);
+            OkHttpManager.onGetAsynRequest(url, new ReceivablesWayResultCallback());
+        } catch (Exception e) {
             e.printStackTrace();
             hideDialog();
             relativeLayout.setVisibility(View.VISIBLE);
-            Toast.makeText(ReceivablesWayActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, NetworkException, Toast.LENGTH_SHORT).show();
         }
 
     }
 
+    /**
+     * 隐藏请求Dialog
+     */
     private void hideDialog() {
         if (progressDialog != null && progressDialog.isShowing())
             progressDialog.dismiss();
     }
 
+    /**
+     * 绑定收款方式数据到View
+     *
+     * @param str JSON数据
+     */
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             relativeLayout.setVisibility(View.VISIBLE);
-            Toast.makeText(ReceivablesWayActivity.this, DataNull, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 AccountInfo accountInfo = JsonUtils.getInstance().fromJSON(AccountInfo.class, str);
@@ -247,22 +328,97 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
                 if (list != null && list.size() > 0) {
                     listAll.addAll(list);
                     adapter.setList(listAll);
+
+                    for (AccountInfoData data : listAll) {
+                        if (data.getType().equals("1")) {
+                            weChatButton.setEnabled(false);
+                            SuiuuInfo.WriteWeChatInfo(context, data.getAccount(), data.getUsername());
+                        } else if (data.getType().equals("2")) {
+                            alipayButton.setEnabled(false);
+                            SuiuuInfo.WriteAliPayInfo(context, data.getAccount(), data.getUsername());
+                        }
+                    }
+
                 } else {
                     relativeLayout.setVisibility(View.VISIBLE);
+                    Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "数据解析错误:" + e.getMessage());
                 relativeLayout.setVisibility(View.VISIBLE);
-                Toast.makeText(ReceivablesWayActivity.this, DataError, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(str);
+                    String status = object.getString(STATUS);
+                    if (status.equals("-1")) {
+                        Toast.makeText(context, SystemException, Toast.LENGTH_SHORT).show();
+                    } else if (status.equals("-2")) {
+                        Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
     }
 
+    /**
+     * 发送删除单项收款方式的网络请求
+     *
+     * @param accountId 相关ID
+     */
+    private void sendDeleteRequest(String accountId) {
+        try {
+            String url = HttpNewServicePath.deleteUserBindAccountItemData + "?" + TOKEN + "=" + URLEncoder.encode(token, "UTF-8");
+            OkHttpManager.onPostAsynRequest(url, new DeleteWayResultCallback(), new OkHttpManager.Params(ACCOUNT_ID, accountId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 发送微信相关数据到服务器
+     *
+     * @param openId   微信唯一ID
+     * @param nickName 用户昵称
+     */
+    private void sendWeChatDataRequest(String openId, String nickName) {
+        try {
+            OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[2];
+            paramsArray[0] = new OkHttpManager.Params(OPEN_ID, openId);
+            paramsArray[1] = new OkHttpManager.Params(NAME, nickName);
+
+            String url = HttpNewServicePath.addWeChatAUserInfo + "?" + TOKEN + "=" + URLEncoder.encode(token, "UTF-8");
+            DeBugLog.i(TAG, "微信绑定接口:" + url);
+
+            OkHttpManager.onPostAsynRequest(url, new BindWeChat2SuiuuListener(), paramsArray);
+        } catch (Exception e) {
+            DeBugLog.e(TAG, "网络请求过程发生异常:" + e.getMessage());
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    /**
+     * 隐藏微信授权进度Dialog
+     */
+    private void hideWeChatDialog() {
+        if (weChatLoadDialog != null && weChatLoadDialog.isShowing()) {
+            weChatLoadDialog.dismiss();
+        }
+    }
+
     @Override
-    protected void onResume() {
-        super.onResume();
-        getUserBindAccountList4Service();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case AppConstant.ADD_ALIPAY_WAY:
+                    sendRequest();
+                    break;
+            }
+        }
     }
 
     @Override
@@ -286,6 +442,9 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 获取收款方式列表数据-回调接口
+     */
     private class ReceivablesWayResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
@@ -297,10 +456,153 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            DeBugLog.e(TAG, "网络请求失败:" + e.getMessage());
             hideDialog();
             relativeLayout.setVisibility(View.VISIBLE);
-            Toast.makeText(ReceivablesWayActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    /**
+     * 删除单项收款方式回调接口
+     */
+    private class DeleteWayResultCallback extends OkHttpManager.ResultCallback<String> {
+
+        @Override
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "删除返回信息:" + response);
+            try {
+                JSONObject object = new JSONObject(response);
+                String status = object.getString(STATUS);
+                if (!TextUtils.isEmpty(status))
+                    switch (status) {
+                        case "1":
+                            listAll.remove(Long.bitCount(index));
+                            adapter.notifyDataSetChanged();
+                            sendRequest();
+                            break;
+                        case "-1":
+                            Toast.makeText(context, SystemException, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "-2":
+                            Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "删除失败:" + e.getMessage());
+            Toast.makeText(context, DeleteFailure, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    /**
+     * 获取微信授权回调接口
+     */
+    private class ObtainWeChat4UmAuthListener implements SocializeListeners.UMAuthListener {
+
+        @Override
+        public void onStart(SHARE_MEDIA share_media) {
+            DeBugLog.i(TAG, "微信授权开始");
+            if (weChatLoadDialog != null && !weChatLoadDialog.isShowing()) {
+                weChatLoadDialog.show();
+            }
+        }
+
+        @Override
+        public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
+            DeBugLog.i(TAG, "微信授权完成");
+            //hideWeChatDialog();
+            Toast.makeText(context, WeChatAuthorizedComplete, Toast.LENGTH_SHORT).show();
+            mController.getPlatformInfo(context, SHARE_MEDIA.WEIXIN, new ObtainWeChat4UmDataListener());
+        }
+
+        @Override
+        public void onError(SocializeException e, SHARE_MEDIA share_media) {
+            DeBugLog.i(TAG, "微信授权错误:" + e.getMessage() + ",微信授权错误码:" + e.getErrorCode());
+            hideWeChatDialog();
+            Toast.makeText(context, WeChatAuthorizedError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA share_media) {
+            DeBugLog.i(TAG, "微信授权取消");
+            hideWeChatDialog();
+            Toast.makeText(context, WeChatAuthorizedCancel, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    /**
+     * 获取微信数据回调接口
+     */
+    private class ObtainWeChat4UmDataListener implements SocializeListeners.UMDataListener {
+
+        @Override
+        public void onStart() {
+            DeBugLog.i(TAG, "正在获取微信数据");
+        }
+
+        @Override
+        public void onComplete(int status, Map<String, Object> info) {
+            DeBugLog.i(TAG, "微信数据获取完成");
+            hideWeChatDialog();
+            if (status == 200 && info != null) {
+                DeBugLog.i(TAG, "微信数据:" + info.toString());
+
+                openId = info.get(UNION_ID).toString();
+                nickName = info.get(NICK_NAME).toString();
+
+                sendWeChatDataRequest(openId, nickName);
+            }
+        }
+
+    }
+
+    private class BindWeChat2SuiuuListener extends OkHttpManager.ResultCallback<String> {
+
+        @Override
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "返回的数据信息:" + response);
+            try {
+                JSONObject object = new JSONObject(response);
+                String status = object.getString(STATUS);
+                if (!TextUtils.isEmpty(status)) {
+                    switch (status) {
+                        case "1":
+                            SuiuuInfo.WriteWeChatInfo(context, openId, nickName);
+                            break;
+                        case "-1":
+                            Toast.makeText(context, SystemException, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "-2":
+                            Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(context, NetworkException, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "数据解析失败:" + e.getMessage());
+                Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "网络请求失败:" + e.getMessage());
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

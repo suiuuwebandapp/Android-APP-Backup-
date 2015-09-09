@@ -91,11 +91,15 @@ public class SettingActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 SuiuuInfo.ClearSuiuuInfo(SettingActivity.this);
-                SuiuuInfo.ClearSuiuuThird(SettingActivity.this);
+                SuiuuInfo.ClearWeChatInfo(SettingActivity.this);
+                SuiuuInfo.ClearAliPayInfo(SettingActivity.this);
+
                 Intent intent = new Intent();
                 intent.setAction(TAG);
                 sendBroadcast(intent);
+
                 SettingActivity.this.finish(); // 重新显示登陆页面
+
                 startActivity(new Intent(SettingActivity.this, LoginActivity.class));
             }
         });

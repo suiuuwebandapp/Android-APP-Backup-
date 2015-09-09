@@ -1,12 +1,12 @@
 package com.minglang.suiuu.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 
-public class WithDrawActivity extends AppCompatActivity {
+public class WithDrawActivity extends BaseAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

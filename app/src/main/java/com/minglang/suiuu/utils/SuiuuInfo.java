@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.minglang.suiuu.entity.RequestData;
 import com.minglang.suiuu.entity.UserBack;
 
 import java.io.Serializable;
@@ -18,21 +17,27 @@ import java.util.Map;
  */
 public class SuiuuInfo implements Serializable {
 
-    private static final String PREFERENCE_NAME1 = "Suiuu_Third";
-
-    /**
-     * 第三方唯一ID
-     */
-    private static final String THIRD_PARTY_ID = "ThirdPartyID";
-
-    private static final String NICKNAME = "NickName";
-
-    private static final String GENDER = "Gender";
-
-    private static final String TYPE = "Type";
-
+    private static final String TAG = SuiuuInfo.class.getSimpleName();
 
     private static final String PREFERENCE_NAME = "SuiuuInfo";
+
+    private static final String PREFERENCE_WE_CHAT_NAME = "SuiuuForWeChat";
+
+    private static final String PREFERENCE_ALI_PAY_NAME = "SuiuuForAliPay";
+
+    /**
+     * 微信唯一ID
+     */
+    public static final String T_ONLY_ID = "ThirdOnlyID";
+
+    /**
+     * 微信用户昵称
+     */
+    public static final String T_NICKNAME = "NickName";
+
+    public static final String A_ACCOUNT_NAME = "AccountName";
+
+    public static final String A_USER_NAME = "UserName";
 
     private static final String USER_ID = "userId";
 
@@ -98,7 +103,6 @@ public class SuiuuInfo implements Serializable {
 
     private static final String VERSION = "version";
 
-
     /**
      * 当前用户的位置信息
      */
@@ -119,7 +123,6 @@ public class SuiuuInfo implements Serializable {
     private static final String DomicileCity = "domicileCity";
 
     private static final String APP_TIME_SIGN = "AppTimeSign";
-
 
     /**
      * 读取用户数据
@@ -225,11 +228,11 @@ public class SuiuuInfo implements Serializable {
     //        editor.putString(BALANCE, value);
     //        editor.apply();
     //    }
+
     /**
      * @param context 上下文对象
      * @return 余额值
      */
-
     public static String ReadBalance(Context context) {
         return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).getString(BALANCE, "");
     }
@@ -376,49 +379,6 @@ public class SuiuuInfo implements Serializable {
     }
 
     /**
-     * 第三方相关信息保存到本地
-     *
-     * @param context     上下文对象
-     * @param requestData 相关数据实体
-     */
-    public static void WriteInformation(Context context, RequestData requestData) {
-
-        if (context == null) {
-            return;
-        }
-
-        if (requestData == null) {
-            return;
-        }
-
-        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME1, Context.MODE_APPEND);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(THIRD_PARTY_ID, requestData.getID());
-        editor.putString(NICKNAME, requestData.getNickName());
-        editor.putString(GENDER, requestData.getGender());
-        editor.putString(HEAD_IMG, requestData.getImagePath());
-        editor.putString(TYPE, requestData.getType());
-        editor.apply();
-    }
-
-    /**
-     * 从本地读取第三方相关信息
-     *
-     * @param context 上下文对象
-     * @return 相关数据实体
-     */
-    public static RequestData ReadInformation(Context context) {
-        RequestData requestData = new RequestData();
-        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME1, Context.MODE_APPEND);
-        requestData.setID(sp.getString(THIRD_PARTY_ID, ""));
-        requestData.setNickName(sp.getString(NICKNAME, ""));
-        requestData.setGender(sp.getString(GENDER, ""));
-        requestData.setImagePath(sp.getString(HEAD_IMG, ""));
-        requestData.setType(sp.getString(TYPE, ""));
-        return requestData;
-    }
-
-    /**
      * 保存验证信息
      *
      * @param context 上下文对象
@@ -441,23 +401,12 @@ public class SuiuuInfo implements Serializable {
     }
 
     /**
-     * 清除第三方相关信息
-     *
-     * @param context 上下文对象
-     */
-    public static void ClearSuiuuThird(Context context) {
-        context.getSharedPreferences(PREFERENCE_NAME1, Context.MODE_APPEND)
-                .edit().clear().apply();
-    }
-
-    /**
      * 清除用户身份信息
      *
      * @param context 上下文对象
      */
     public static void ClearSuiuuInfo(Context context) {
-        context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND)
-                .edit().clear().apply();
+        context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).edit().clear().apply();
     }
 
     /**
@@ -484,5 +433,90 @@ public class SuiuuInfo implements Serializable {
         map.put("lng", sp.getString("lng", ""));
         return map;
     }
+
+    /**
+     * 写入微信相关数据
+     *
+     * @param context  上下文对象
+     * @param openId   唯一ID
+     * @param nickName 昵称
+     */
+    public static void WriteWeChatInfo(Context context, String openId, String nickName) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_WE_CHAT_NAME, Context.MODE_APPEND);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(T_ONLY_ID, openId);
+        editor.putString(T_NICKNAME, nickName);
+        editor.apply();
+    }
+
+    /**
+     * 读取微信相关数据
+     *
+     * @param context 上下文对象
+     * @return 相关数据集合
+     */
+    public static Map<String, String> ReadWeChatInfo(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_WE_CHAT_NAME, Context.MODE_APPEND);
+        Map<String, String> infoMap = new HashMap<>();
+        infoMap.put(T_ONLY_ID, sp.getString(T_ONLY_ID, ""));
+        infoMap.put(T_NICKNAME, sp.getString(T_NICKNAME, ""));
+        return infoMap;
+    }
+
+    /**
+     * 清除微信相关数据
+     *
+     * @param context 上下文对象
+     */
+    public static void ClearWeChatInfo(Context context) {
+        try {
+            context.getSharedPreferences(PREFERENCE_WE_CHAT_NAME, Context.MODE_APPEND).edit().clear().apply();
+        } catch (Exception e) {
+            DeBugLog.e(TAG, PREFERENCE_WE_CHAT_NAME + "不存在！" + e.getMessage());
+        }
+    }
+
+    /**
+     * 保存支付宝的相关数据
+     *
+     * @param context     上下文对象
+     * @param accountName 支付宝账户名
+     * @param name        用户名
+     */
+    public static void WriteAliPayInfo(Context context, String accountName, String name) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_ALI_PAY_NAME, Context.MODE_APPEND);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(A_ACCOUNT_NAME, accountName);
+        editor.putString(A_USER_NAME, name);
+        editor.apply();
+    }
+
+    /**
+     * 读取支付宝相关信息
+     *
+     * @param context 上下文对象
+     * @return 数据集合
+     */
+    public static Map<String, String> ReadAliPayInfo(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_ALI_PAY_NAME, Context.MODE_APPEND);
+        Map<String, String> infoMap = new HashMap<>();
+        infoMap.put(A_ACCOUNT_NAME, sp.getString(A_ACCOUNT_NAME, ""));
+        infoMap.put(A_ACCOUNT_NAME, sp.getString(A_ACCOUNT_NAME, ""));
+        return infoMap;
+    }
+
+    /**
+     * 清除微信相关数据
+     *
+     * @param context 上下文对象
+     */
+    public static void ClearAliPayInfo(Context context) {
+        try {
+            context.getSharedPreferences(PREFERENCE_ALI_PAY_NAME, Context.MODE_APPEND).edit().clear().apply();
+        } catch (Exception e) {
+            DeBugLog.e(TAG, PREFERENCE_ALI_PAY_NAME + "不存在！" + e.getMessage());
+        }
+    }
+
 
 }

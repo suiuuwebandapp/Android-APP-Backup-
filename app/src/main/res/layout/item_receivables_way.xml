@@ -3,16 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
     android:background="@color/white">
 
     <TextView
         android:id="@+id/item_receivables_way_title_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/layout_15dp"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/layout_10dp"
         android:singleLine="true"
         android:text="@string/app_name"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/textColor"/>
 
     <TextView
@@ -20,11 +22,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/item_receivables_way_title_head"
         android:layout_toLeftOf="@+id/item_receivables_way_delete"
         android:layout_toRightOf="@+id/item_receivables_way_title_head"
         android:layout_toStartOf="@+id/item_receivables_way_delete"
+        android:padding="@dimen/layout_10dp"
         android:text="@string/userName"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/textColor"/>
 
     <ImageView
