@@ -35,7 +35,6 @@
             android:drawablePadding="@dimen/layout_10dp"
             android:drawableStart="@drawable/trip_gallery_location"
             android:padding="@dimen/layout_5dp"
-            android:text="香榭丽大道\n11Km"
             android:textColor="@color/white"/>
 
     </RelativeLayout>

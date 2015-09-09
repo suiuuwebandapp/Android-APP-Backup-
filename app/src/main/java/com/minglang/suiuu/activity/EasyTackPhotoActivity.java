@@ -178,7 +178,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
 
         dialog = new TextProgressDialog(this);
 
-        EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, picList, "0");
+        EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, picList);
         adapter.setSwipeListView(lv_pic_description);
 
 
@@ -208,7 +208,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == 9) {
             picList = data.getStringArrayListExtra("pictureMessage");
-            EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, picList, "0");
+            EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, picList);
             adapter.setSwipeListView(lv_pic_description);
             lv_pic_description.setAdapter(adapter);
             Utils.setListViewHeightBasedOnChildren(lv_pic_description);
