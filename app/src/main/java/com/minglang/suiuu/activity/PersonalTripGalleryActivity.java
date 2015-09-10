@@ -1,6 +1,8 @@
 package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -53,6 +55,8 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
     private static final String STATUS = "status";
     private static final String DATA = "data";
 
+    private static final String ID = "id";
+
     @BindColor(R.color.white)
     int titleColor;
 
@@ -84,6 +88,8 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
 
     private int page = 1;
 
+    private Context context;
+
     private ProgressDialog progressDialog;
 
     private PersonalTripGalleryAdapter adapter;
@@ -106,6 +112,8 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
         userSign = getIntent().getStringExtra(USER_SIGN);
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
+
+        context = this;
 
         toolBar.setTitleTextColor(titleColor);
         setSupportActionBar(toolBar);
@@ -153,7 +161,10 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
         adapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                String tripId = listAll.get(position).getId();
+                Intent intent = new Intent(context, TripGalleryDetailsActivity.class);
+                intent.putExtra(ID, tripId);
+                startActivity(intent);
             }
         });
 

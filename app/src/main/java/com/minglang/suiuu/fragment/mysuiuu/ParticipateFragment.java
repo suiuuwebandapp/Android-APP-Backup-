@@ -17,7 +17,7 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase.OnRefreshListener2;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.MySuiuuReleaseActivity;
+import com.minglang.suiuu.activity.SuiuuDetailsActivity;
 import com.minglang.suiuu.adapter.ParticipateAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.Participate;
@@ -58,11 +58,7 @@ public class ParticipateFragment extends BaseFragment {
     private static final String PAGE = "page";
     private static final String NUMBER = "number";
 
-    private static final String TITLE = "title";
-    private static final String INFO = "info";
-    private static final String PRICE = "price";
     private static final String TRIP_ID = "tripId";
-    private static final String TITLE_IMG = "titleImg";
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
@@ -193,12 +189,8 @@ public class ParticipateFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int location = position - 1;
-                Intent intent = new Intent(getActivity(), MySuiuuReleaseActivity.class);
-                intent.putExtra(TITLE, listAll.get(location).getTitle());
-                intent.putExtra(INFO, listAll.get(location).getInfo());
-                intent.putExtra(PRICE, listAll.get(location).getBasePrice());
+                Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
                 intent.putExtra(TRIP_ID, listAll.get(location).getTripId());
-                intent.putExtra(TITLE_IMG, listAll.get(location).getTitleImg());
                 startActivity(intent);
             }
         });

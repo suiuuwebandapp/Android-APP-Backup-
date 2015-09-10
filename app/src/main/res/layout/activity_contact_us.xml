@@ -9,7 +9,7 @@
         android:id="@+id/contact_us_tool_bar"
         style="@style/AppToolBar"
         app:navigationIcon="@drawable/back"
-        app:title="@string/ContactUs"/>
+        app:title="@string/AccountManager"/>
 
     <ScrollView
         android:layout_width="match_parent"

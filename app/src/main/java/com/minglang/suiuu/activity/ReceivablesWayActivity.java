@@ -64,10 +64,6 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
     private static final String TAG = ReceivablesWayActivity.class.getSimpleName();
 
-    private static final String KEY = "key";
-
-    private static final String ALIPAY = "alipay";
-
     private static final String STATUS = "status";
     private static final String DATA = "data";
 
@@ -215,9 +211,7 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 addPopupWindow.dismiss();
-                Intent intent = new Intent(context, AddReceivablesWayActivity.class);
-                intent.putExtra(KEY, ALIPAY);
-                startActivityForResult(intent, AppConstant.ADD_ALIPAY_WAY);
+                startActivityForResult(new Intent(context, AddReceivablesWayActivity.class), AppConstant.ADD_ALIPAY_WAY);
             }
         });
 
@@ -228,8 +222,8 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
                 Map<String, String> map = SuiuuInfo.ReadWeChatInfo(context);
                 if (map != null && map.size() > 0) {
-                    String openId = map.get(SuiuuInfo.T_ONLY_ID);
-                    String nickName = map.get(SuiuuInfo.T_NICKNAME);
+                    String openId = map.get(SuiuuInfo.W_ONLY_ID);
+                    String nickName = map.get(SuiuuInfo.W_NICK_NAME);
                     if (TextUtils.isEmpty(openId)) {
                         if (!weChatApi.isWXAppInstalled()) {
                             Toast.makeText(context, NoInstallWeChat, Toast.LENGTH_SHORT).show();
@@ -333,9 +327,11 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
                         if (data.getType().equals("1")) {
                             weChatButton.setEnabled(false);
                             SuiuuInfo.WriteWeChatInfo(context, data.getAccount(), data.getUsername());
+                            SuiuuInfo.WriteWeChatAccountId(context, data.getAccountId());
                         } else if (data.getType().equals("2")) {
                             alipayButton.setEnabled(false);
                             SuiuuInfo.WriteAliPayInfo(context, data.getAccount(), data.getUsername());
+                            SuiuuInfo.WriteAliPayAccountId(context, data.getAccountId());
                         }
                     }
 
@@ -569,11 +565,14 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
     }
 
+    /**
+     * 微信绑定的回调接口
+     */
     private class BindWeChat2SuiuuListener extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "返回的数据信息:" + response);
+            DeBugLog.i(TAG, "微信绑定返回的数据信息:" + response);
             try {
                 JSONObject object = new JSONObject(response);
                 String status = object.getString(STATUS);
@@ -581,6 +580,7 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
                     switch (status) {
                         case "1":
                             SuiuuInfo.WriteWeChatInfo(context, openId, nickName);
+                            SuiuuInfo.WriteWeChatAccountId(context, object.getString(DATA));
                             break;
                         case "-1":
                             Toast.makeText(context, SystemException, Toast.LENGTH_SHORT).show();

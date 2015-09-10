@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -86,6 +87,9 @@ public class MainActivity extends BaseActivity {
 
     @BindString(R.string.OrdinaryAccount)
     String OrdinaryAccount;
+
+    @BindString(R.string.LoginOverdue)
+    String LoginOverdue;
 
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -215,12 +219,15 @@ public class MainActivity extends BaseActivity {
 
     private TokenBroadcastReceiver tokenBroadcastReceiver;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         UmengUpdateAgent.update(this);
         ButterKnife.bind(this);
+        context = MainActivity.this;
         getServiceTime();
     }
 
@@ -229,6 +236,7 @@ public class MainActivity extends BaseActivity {
         super.onResume();
 
         String network_headImage_path = SuiuuInfo.ReadUserData(this).getHeadImg();
+
         if (!TextUtils.isEmpty(network_headImage_path)) {
             headImageView.setImageURI(Uri.parse(network_headImage_path));
         } else {
@@ -241,6 +249,9 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 得到服务器时间
+     */
     private void getServiceTime() {
         try {
             OkHttpManager.onGetAsynRequest(HttpNewServicePath.getTime, new OkHttpManager.ResultCallback<String>() {
@@ -276,19 +287,19 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 根据时间请求AppTimeSign
+     *
+     * @param time 服务器时间
+     */
     private void getAppTimeSign(String time) {
-        String sign = null;
         try {
-            sign = MD5Utils.getMD5(time + verification + HttpNewServicePath.ConfusedCode);
-            DeBugLog.i(TAG, "verification:" + verification + ",sign:" + sign);
-        } catch (NoSuchAlgorithmException e) {
-            DeBugLog.e(TAG, "NoSuchAlgorithmException:" + e.getMessage());
-        }
+            verification = SuiuuInfo.ReadVerification(this);
+            String sign = MD5Utils.getMD5(time + verification + HttpNewServicePath.ConfusedCode);
 
-        String _url = addUrlAndParams(HttpNewServicePath.getToken,
-                new String[]{TIME_STAMP, APP_SIGN, SIGN}, new String[]{time, verification, sign});
+            String _url = addUrlAndParams(HttpNewServicePath.getToken, new String[]{TIME_STAMP, APP_SIGN, SIGN},
+                    new String[]{time, verification, sign});
 
-        try {
             OkHttpManager.onGetAsynRequest(_url, new OkHttpManager.ResultCallback<String>() {
 
                 @Override
@@ -296,12 +307,21 @@ public class MainActivity extends BaseActivity {
                     try {
                         JSONObject object = new JSONObject(response);
                         String status = object.getString(STATUS);
-                        if (status.equals("1")) {
-                            String appTimeSign = object.getString(DATA);
-                            DeBugLog.i(TAG, "appTimeSign:" + appTimeSign);
-                            SuiuuInfo.WriteAppTimeSign(MainActivity.this, appTimeSign);
-                        } else {
-                            DeBugLog.e(TAG, "获取失败");
+                        switch (status) {
+                            case "1":
+                                String appTimeSign = object.getString(DATA);
+                                DeBugLog.i(TAG, "appTimeSign:" + appTimeSign);
+                                SuiuuInfo.WriteAppTimeSign(context, appTimeSign);
+                                break;
+                            case "-3":
+                                SuiuuInfo.ClearSuiuuInfo(context);
+                                SuiuuInfo.ClearWeChatInfo(context);
+                                SuiuuInfo.ClearAliPayInfo(context);
+                                Toast.makeText(context, LoginOverdue, Toast.LENGTH_SHORT).show();
+                                break;
+                            default:
+                                DeBugLog.e(TAG, "获取失败");
+                                break;
                         }
                     } catch (JSONException e) {
                         DeBugLog.e(TAG, "JSONException:" + e.getMessage());
@@ -320,6 +340,8 @@ public class MainActivity extends BaseActivity {
                 }
 
             });
+        } catch (NoSuchAlgorithmException e) {
+            DeBugLog.e(TAG, "NoSuchAlgorithmException:" + e.getMessage());
         } catch (IOException e) {
             DeBugLog.e(TAG, "IOException:" + e.getMessage());
         }
@@ -387,13 +409,15 @@ public class MainActivity extends BaseActivity {
         adapter2.setScreenHeight(screenHeight);
         sideListView2.setAdapter(adapter2);
 
+        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        String imei = tm.getDeviceId();
+
         initFragment();
         initReceiver();
     }
 
     private void initFragment() {
         userSign = SuiuuInfo.ReadUserSign(this);
-        verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
 
         switchViewState(NUMBER1);
@@ -444,7 +468,7 @@ public class MainActivity extends BaseActivity {
         Main_1_Album.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SelectPictureActivity.class);
+                Intent intent = new Intent(context, SelectPictureActivity.class);
                 intent.putExtra(STATE, 1);
                 startActivityForResult(intent, AppConstant.PUBLISTH_TRIP_GALLERY_SUCCESS);
             }
@@ -460,7 +484,7 @@ public class MainActivity extends BaseActivity {
         Main_3_Search.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, CommunitySearchActivity.class);
+                Intent intent = new Intent(context, CommunitySearchActivity.class);
                 startActivityForResult(intent, AppConstant.COMMUNITY_SEARCH_SKIP);
             }
         });
@@ -468,7 +492,7 @@ public class MainActivity extends BaseActivity {
         Main_3_Questions.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, PutQuestionsActivity.class);
+                Intent intent = new Intent(context, PutQuestionsActivity.class);
                 intent.putExtra(COUNTRY_ID, communityFragment.getCountryId());
                 intent.putExtra(CITY_ID, communityFragment.getCityId());
                 startActivity(intent);
@@ -489,14 +513,13 @@ public class MainActivity extends BaseActivity {
         headImageView.setOnClickListener(onClickListener);
 
         final Class<?>[] classArray1 = new Class[]{NewRemindActivity.class, MySuiuuInfoActivity.class, OrderManageActivity.class,
-                AccountManageActivity.class, SettingActivity.class};
+                AccountManagerActivity.class, SettingActivity.class};
 
         sideListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mDrawerLayout.closeDrawer(sliderView);
-                DeBugLog.i(TAG, "click item name:" + classArray1[position].getSimpleName());
-                startActivity(new Intent(MainActivity.this, classArray1[position]));
+                startActivity(new Intent(context, classArray1[position]));
             }
         });
 
@@ -507,8 +530,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mDrawerLayout.closeDrawer(sliderView);
-                DeBugLog.i(TAG, "click item name:" + classArray2[position].getSimpleName());
-                Intent intent = new Intent(MainActivity.this, classArray2[position]);
+                Intent intent = new Intent(context, classArray2[position]);
                 if (position == 1) {
                     intent.putExtra(USER_SIGN, userSign);
                 }
@@ -520,26 +542,28 @@ public class MainActivity extends BaseActivity {
         tab2.setOnClickListener(onClickListener);
         tab3.setOnClickListener(onClickListener);
         tab4.setOnClickListener(onClickListener);
+
         //广播监听
         connectionNetChangeReceiver.setConnectionChangeListener(new ConnectionNetChangeReceiver.ConnectionChangeListener() {
             @Override
-            public void conectionBreakOff(Context b) {
+            public void connectionBreakOff(Context b) {
                 rl_net_error.setVisibility(View.VISIBLE);
             }
 
             @Override
-            public void conectionResume(Context b) {
+            public void connectionResume(Context b) {
                 if (rl_net_error.isEnabled()) {
                     rl_net_error.setVisibility(View.GONE);
                 }
             }
+
         });
+
         //跳到设置界面
         rl_net_error.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Settings.ACTION_SETTINGS);
-                startActivity(intent);
+                startActivity(new Intent(Settings.ACTION_SETTINGS));
             }
         });
     }
@@ -818,14 +842,14 @@ public class MainActivity extends BaseActivity {
                     break;
 
                 case R.id.head_image:
-                    Intent headIntent = new Intent(MainActivity.this, PersonalMainPagerActivity.class);
+                    Intent headIntent = new Intent(context, PersonalMainPagerActivity.class);
                     headIntent.putExtra(USER_SIGN, userSign);
                     startActivity(headIntent);
                     mDrawerLayout.closeDrawer(sliderView);
                     break;
 
                 case R.id.nick_name:
-                    Intent nickIntent = new Intent(MainActivity.this, PersonalMainPagerActivity.class);
+                    Intent nickIntent = new Intent(context, PersonalMainPagerActivity.class);
                     nickIntent.putExtra(USER_SIGN, userSign);
                     startActivity(nickIntent);
                     mDrawerLayout.closeDrawer(sliderView);

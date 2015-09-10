@@ -61,7 +61,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
     private static final String STATUS = "status";
     private static final String DATA = "data";
 
-    private static final String ID = "id";
+    private static final String TRIP_ID = "tripId";
 
     @BindColor(R.color.transparent)
     int titleColor;
@@ -211,8 +211,8 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
             @Override
             public void onItemClick(View view, int position) {
                 DeBugLog.i(TAG, "click position:" + position);
-                Intent intent = new Intent(PersonalMainPagerActivity.this, TripGalleryDetailsActivity.class);
-                intent.putExtra(ID, listAll.get(position).getTripId());
+                Intent intent = new Intent(PersonalMainPagerActivity.this, SuiuuDetailsActivity.class);
+                intent.putExtra(TRIP_ID, listAll.get(position).getTripId());
                 startActivity(intent);
             }
         });

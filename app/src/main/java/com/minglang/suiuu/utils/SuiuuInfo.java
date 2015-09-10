@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.minglang.suiuu.crash.GlobalCrashHandler;
 import com.minglang.suiuu.entity.UserBack;
 
 import java.io.Serializable;
@@ -28,16 +29,20 @@ public class SuiuuInfo implements Serializable {
     /**
      * 微信唯一ID
      */
-    public static final String T_ONLY_ID = "ThirdOnlyID";
+    public static final String W_ONLY_ID = "ThirdOnlyID";
 
     /**
      * 微信用户昵称
      */
-    public static final String T_NICKNAME = "NickName";
+    public static final String W_NICK_NAME = "NickName";
 
     public static final String A_ACCOUNT_NAME = "AccountName";
 
     public static final String A_USER_NAME = "UserName";
+
+    public static final String A_ACCOUNT_ID = "AlipayAccountId";
+
+    public static final String W_ACCOUNT_ID = "WeChatAccountId";
 
     private static final String USER_ID = "userId";
 
@@ -234,7 +239,7 @@ public class SuiuuInfo implements Serializable {
      * @return 余额值
      */
     public static String ReadBalance(Context context) {
-        return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).getString(BALANCE, "");
+        return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).getString(BALANCE, "0");
     }
 
     /**
@@ -263,7 +268,14 @@ public class SuiuuInfo implements Serializable {
         return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).getString(APP_TIME_SIGN, "");
     }
 
-    public static void WriteAnyInfo(Context context, String key, String value) {
+    /**
+     * 写入错误日志名称
+     *
+     * @param context 上下文对象
+     * @param key     异常捕获类类名
+     * @param value   错误日志文件名
+     */
+    public static void WriteErrorLogName(Context context, String key, String value) {
         if (context == null) {
             return;
         }
@@ -271,6 +283,17 @@ public class SuiuuInfo implements Serializable {
         SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).edit();
         editor.putString(key, value);
         editor.apply();
+    }
+
+    /**
+     * 读取错误日志文件名
+     *
+     * @param context 上下文对象
+     * @return
+     */
+    public static String ReadErrorLogName(Context context) {
+        return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND)
+                .getString(GlobalCrashHandler.class.getSimpleName(), "");
     }
 
     /**
@@ -444,8 +467,8 @@ public class SuiuuInfo implements Serializable {
     public static void WriteWeChatInfo(Context context, String openId, String nickName) {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_WE_CHAT_NAME, Context.MODE_APPEND);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(T_ONLY_ID, openId);
-        editor.putString(T_NICKNAME, nickName);
+        editor.putString(W_ONLY_ID, openId);
+        editor.putString(W_NICK_NAME, nickName);
         editor.apply();
     }
 
@@ -458,22 +481,9 @@ public class SuiuuInfo implements Serializable {
     public static Map<String, String> ReadWeChatInfo(Context context) {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_WE_CHAT_NAME, Context.MODE_APPEND);
         Map<String, String> infoMap = new HashMap<>();
-        infoMap.put(T_ONLY_ID, sp.getString(T_ONLY_ID, ""));
-        infoMap.put(T_NICKNAME, sp.getString(T_NICKNAME, ""));
+        infoMap.put(W_ONLY_ID, sp.getString(W_ONLY_ID, ""));
+        infoMap.put(W_NICK_NAME, sp.getString(W_NICK_NAME, ""));
         return infoMap;
-    }
-
-    /**
-     * 清除微信相关数据
-     *
-     * @param context 上下文对象
-     */
-    public static void ClearWeChatInfo(Context context) {
-        try {
-            context.getSharedPreferences(PREFERENCE_WE_CHAT_NAME, Context.MODE_APPEND).edit().clear().apply();
-        } catch (Exception e) {
-            DeBugLog.e(TAG, PREFERENCE_WE_CHAT_NAME + "不存在！" + e.getMessage());
-        }
     }
 
     /**
@@ -501,8 +511,54 @@ public class SuiuuInfo implements Serializable {
         SharedPreferences sp = context.getSharedPreferences(PREFERENCE_ALI_PAY_NAME, Context.MODE_APPEND);
         Map<String, String> infoMap = new HashMap<>();
         infoMap.put(A_ACCOUNT_NAME, sp.getString(A_ACCOUNT_NAME, ""));
-        infoMap.put(A_ACCOUNT_NAME, sp.getString(A_ACCOUNT_NAME, ""));
+        infoMap.put(A_USER_NAME, sp.getString(A_USER_NAME, ""));
         return infoMap;
+    }
+
+    /**
+     * 写入支付宝的accountId
+     *
+     * @param context   上下文对象
+     * @param accountId 支付宝的accountId
+     */
+    public static void WriteAliPayAccountId(Context context, String accountId) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_ALI_PAY_NAME, Context.MODE_APPEND);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(A_ACCOUNT_ID, accountId);
+        editor.apply();
+    }
+
+    /**
+     * 读取支付宝的accountId
+     *
+     * @param context 上下文对象
+     * @return 支付宝的accountId
+     */
+    public static String ReadAliPayAccountId(Context context) {
+        return context.getSharedPreferences(PREFERENCE_ALI_PAY_NAME, Context.MODE_APPEND).getString(A_ACCOUNT_ID, "");
+    }
+
+    /**
+     * 写入微信的AccountId
+     *
+     * @param context   上下文对象
+     * @param accountId 微信的accountId
+     */
+    public static void WriteWeChatAccountId(Context context, String accountId) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_ALI_PAY_NAME, Context.MODE_APPEND);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(W_ACCOUNT_ID, accountId);
+        editor.apply();
+    }
+
+    /**
+     * 读取微信的AccountId
+     *
+     * @param context 上下文对象
+     * @return 微信的accountId
+     */
+    public static String ReadWeChatAccountId(Context context) {
+        return context.getSharedPreferences(PREFERENCE_WE_CHAT_NAME, Context.MODE_APPEND).getString(W_ACCOUNT_ID, "");
     }
 
     /**
@@ -518,5 +574,17 @@ public class SuiuuInfo implements Serializable {
         }
     }
 
+    /**
+     * 清除微信相关数据
+     *
+     * @param context 上下文对象
+     */
+    public static void ClearWeChatInfo(Context context) {
+        try {
+            context.getSharedPreferences(PREFERENCE_WE_CHAT_NAME, Context.MODE_APPEND).edit().clear().apply();
+        } catch (Exception e) {
+            DeBugLog.e(TAG, PREFERENCE_WE_CHAT_NAME + "不存在！" + e.getMessage());
+        }
+    }
 
 }

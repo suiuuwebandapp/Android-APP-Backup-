@@ -7,17 +7,14 @@
 
     <TextView
         android:id="@+id/account_balance_number"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:singleLine="true"
         android:text="@string/RMB"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white"
-        android:layout_alignLeft="@+id/textView9"
-        android:layout_alignStart="@+id/textView9"
-        android:layout_alignRight="@+id/textView9"
-        android:layout_alignEnd="@+id/textView9"/>
+        android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/textView9"

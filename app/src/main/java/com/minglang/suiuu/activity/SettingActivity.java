@@ -1,5 +1,6 @@
 package com.minglang.suiuu.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -44,6 +45,8 @@ public class SettingActivity extends BaseAppCompatActivity {
     @Bind(R.id.login_out_button)
     Button loginOutButton;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,43 +59,46 @@ public class SettingActivity extends BaseAppCompatActivity {
     private void initView() {
         toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
+        context = SettingActivity.this;
     }
 
     private void viewAction() {
+
         normalItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SettingActivity.this, NormalSettingActivity.class));
+                startActivity(new Intent(context, NormalSettingActivity.class));
             }
         });
 
         receivablesItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SettingActivity.this, ReceivablesWayActivity.class));
+                startActivity(new Intent(context, ReceivablesWayActivity.class));
             }
         });
 
         aboutItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SettingActivity.this, AboutSuiuuActivity.class));
+                startActivity(new Intent(context, AboutSuiuuActivity.class));
             }
         });
 
         contactItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SettingActivity.this, ContactUsActivity.class));
+                startActivity(new Intent(context, ContactUsActivity.class));
             }
         });
 
         loginOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SuiuuInfo.ClearSuiuuInfo(SettingActivity.this);
-                SuiuuInfo.ClearWeChatInfo(SettingActivity.this);
-                SuiuuInfo.ClearAliPayInfo(SettingActivity.this);
+
+                SuiuuInfo.ClearSuiuuInfo(context);
+                SuiuuInfo.ClearWeChatInfo(context);
+                SuiuuInfo.ClearAliPayInfo(context);
 
                 Intent intent = new Intent();
                 intent.setAction(TAG);
@@ -100,7 +106,7 @@ public class SettingActivity extends BaseAppCompatActivity {
 
                 SettingActivity.this.finish(); // 重新显示登陆页面
 
-                startActivity(new Intent(SettingActivity.this, LoginActivity.class));
+                startActivity(new Intent(context, LoginActivity.class));
             }
         });
 

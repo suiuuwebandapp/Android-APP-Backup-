@@ -48,7 +48,7 @@
             <TextView
                 android:id="@+id/contact_item_view"
                 style="@style/settingTextView"
-                android:text="@string/ContactUs"/>
+                android:text="@string/AccountManager"/>
 
             <TextView style="@style/settingDividingLine"/>
 

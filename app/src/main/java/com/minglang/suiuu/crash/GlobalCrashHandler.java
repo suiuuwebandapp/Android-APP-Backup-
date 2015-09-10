@@ -80,7 +80,7 @@ public class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
         //保存日志文件
         String fileName = saveCrashInfo2File(ex);
         if (!TextUtils.isEmpty(fileName)) {
-            SuiuuInfo.WriteAnyInfo(context, TAG, fileName);
+            SuiuuInfo.WriteErrorLogName(context, TAG, fileName);
         }
         return true;
     }
