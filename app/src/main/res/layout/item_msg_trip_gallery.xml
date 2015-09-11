@@ -33,7 +33,7 @@
         android:textSize="@dimen/layout_18sp"/>
 
     <TextView
-        android:id="@+id/textView46"
+        android:id="@+id/item_msg_trip_gallery_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -47,9 +47,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/textView46"
-        android:layout_toRightOf="@+id/textView46"
+        android:layout_toEndOf="@+id/item_msg_trip_gallery_in"
+        android:layout_toRightOf="@+id/item_msg_trip_gallery_in"
         android:clickable="false"
+        android:focusable="false"
         android:text="@string/itemLocationInfo"
         android:textSize="@dimen/layout_18sp"/>
 

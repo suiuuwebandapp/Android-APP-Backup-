@@ -45,7 +45,7 @@
     </integer-array>
 
     <string-array name="sideList">
-        <item>收件箱</item>
+        <item>私信</item>
         <item>我的随游</item>
         <item>订单管理</item>
         <item>账户管理</item>
@@ -55,7 +55,7 @@
     <string-array name="sideList2">
         <item>我的预定</item>
         <item>关注</item>
-        <item>收件箱</item>
+        <item>私信</item>
         <item>设置</item>
         <item>退出</item>
     </string-array>

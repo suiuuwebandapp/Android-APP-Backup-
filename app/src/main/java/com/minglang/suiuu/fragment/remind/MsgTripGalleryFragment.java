@@ -185,8 +185,8 @@ public class MsgTripGalleryFragment extends BaseFragment {
         msgTripGalleryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String userSign = listAll.get(position).getCreateUserSign();
-                DeBugLog.i(TAG, "CreateUserSign:" + userSign);
+                String relativeId = listAll.get(position).getRelativeId();
+                DeBugLog.i(TAG, "RelativeId:" + relativeId);
             }
         });
 

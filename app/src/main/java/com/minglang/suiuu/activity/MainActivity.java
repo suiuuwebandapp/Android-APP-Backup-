@@ -82,6 +82,11 @@ public class MainActivity extends BaseActivity {
 
     private static final String USER_SIGN = "userSign";
 
+    private static final String APP_ID = "appId";
+    private static final String CLIENT_TYPE = "clientType";
+    private static final String VERSION_ID = "versionId";
+    private static final String VERSION_MINI = "versionMini";
+
     @BindString(R.string.SuiuuAccount)
     String SuiuuAccount;
 
@@ -229,6 +234,7 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         context = MainActivity.this;
         getServiceTime();
+        versionCheck();
     }
 
     @Override
@@ -376,8 +382,6 @@ public class MainActivity extends BaseActivity {
         }
 
         String publisher = SuiuuInfo.ReadUserData(this).getIsPublisher();
-        DeBugLog.i(TAG, "isPublisher:" + publisher);
-
         if (TextUtils.isEmpty(publisher)) {
             switchSuiuu.setChecked(false);
             switchSuiuu.setText(OrdinaryAccount);
@@ -408,9 +412,6 @@ public class MainActivity extends BaseActivity {
                 new MainSliderAdapter(this, getResources().getStringArray(R.array.sideList2));
         adapter2.setScreenHeight(screenHeight);
         sideListView2.setAdapter(adapter2);
-
-        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String imei = tm.getDeviceId();
 
         initFragment();
         initReceiver();
@@ -443,6 +444,50 @@ public class MainActivity extends BaseActivity {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         connectionNetChangeReceiver = new ConnectionNetChangeReceiver();
         this.registerReceiver(connectionNetChangeReceiver, filter);
+    }
+
+    private void versionCheck() {
+        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        String serialNumber = tm.getDeviceId();
+        DeBugLog.i(TAG, "手机串号:" + serialNumber);
+
+        OkHttpManager.Params[] paramArray = new OkHttpManager.Params[4];
+        paramArray[0] = new OkHttpManager.Params(APP_ID, serialNumber);
+        paramArray[1] = new OkHttpManager.Params(CLIENT_TYPE, "androidPhone");
+        paramArray[2] = new OkHttpManager.Params(VERSION_ID, "1");
+        paramArray[3] = new OkHttpManager.Params(VERSION_MINI, "20");
+
+        try {
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.getVersionInfoPath,
+                    new OkHttpManager.ResultCallback<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (TextUtils.isEmpty(response)) {
+                                DeBugLog.e(TAG, "无返回信息！");
+                            } else try {
+                                JSONObject object = new JSONObject(response);
+                                String status = object.getString(STATUS);
+                                if (status.equals("1")) {
+                                    JSONObject data = object.getJSONObject(DATA);
+                                    String versionId = data.getString("vId");
+                                    DeBugLog.i(TAG, "versionId:" + versionId);
+                                    SuiuuInfo.WriteVersionId(context, versionId);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onError(Request request, Exception e) {
+                            DeBugLog.e(TAG, "版本信息请求失败:" + e.getMessage());
+                        }
+                    }, paramArray);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -512,7 +557,7 @@ public class MainActivity extends BaseActivity {
         nickNameView.setOnClickListener(onClickListener);
         headImageView.setOnClickListener(onClickListener);
 
-        final Class<?>[] classArray1 = new Class[]{NewRemindActivity.class, MySuiuuInfoActivity.class, OrderManageActivity.class,
+        final Class<?>[] classArray1 = new Class[]{PrivateLetterActivity.class, MySuiuuInfoActivity.class, OrderManageActivity.class,
                 AccountManagerActivity.class, SettingActivity.class};
 
         sideListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -523,7 +568,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        final Class<?>[] classArray2 = new Class[]{GeneralOrderListActivity.class, AttentionActivity.class, NewRemindActivity.class,
+        final Class<?>[] classArray2 = new Class[]{GeneralOrderListActivity.class, AttentionActivity.class, PrivateLetterActivity.class,
                 SettingActivity.class};
 
         sideListView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {

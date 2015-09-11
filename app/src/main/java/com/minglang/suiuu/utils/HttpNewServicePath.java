@@ -21,6 +21,8 @@ public class HttpNewServicePath {
      */
     public static String RootPath = "http://api.suiuu.com/v1";
 
+    public static String OssRooPath = "http://suiuu.oss-cn-hongkong.aliyuncs.com/";
+
     /**
      * 获取服务器时间
      */
@@ -40,6 +42,16 @@ public class HttpNewServicePath {
      * 得到城市列表
      */
     public static String getCityListPath = RootPath + "/app-travel/get-city";
+
+    /**
+     * 获取版本信息
+     */
+    public static String getVersionInfoPath = RootPath + "/app-main/check-version";
+
+    /**
+     * 上传错误日志信息
+     */
+    public static String addErrorLogPath = RootPath + "/app-main/add-log";
 
     //***************************************************注册登录相关*****************************************************\\
 
@@ -234,6 +246,13 @@ public class HttpNewServicePath {
      * 提现接口
      */
     public static String getDrawMoneyDataPath = RootPath + "/app-account/draw-money";
+
+    //*******************************************侧栏-私信********************************************************************\\
+
+    /**
+     * 获取私信列表
+     */
+    public static String getPrivateLetterListPath = RootPath + "/app-user-message/get-user-session-list";
 
     //********************************************侧栏-普通用户-预定订单***********************************************************\\
 

@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/layout_5dp">
 
-    <com.minglang.suiuu.customview.CircleImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/item_community_layout_4_head_image_view"
         android:layout_width="@dimen/layout_50dp"
         android:layout_height="@dimen/layout_50dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/layout_8dp"
-        android:layout_marginRight="@dimen/layout_8dp"
-        android:layout_marginStart="@dimen/layout_8dp"
-        android:layout_marginTop="@dimen/layout_8dp"
+        android:layout_margin="@dimen/layout_8dp"
         android:clickable="false"
-        android:src="@drawable/default_head_image"/>
+        fresco:failureImage="@drawable/default_head_image_error"
+        fresco:failureImageScaleType="fitCenter"
+        fresco:placeholderImage="@drawable/default_head_image"
+        fresco:placeholderImageScaleType="fitCenter"
+        fresco:roundAsCircle="true"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
-                android:padding="@dimen/layout_5dp"
+                android:padding="@dimen/layout_3dp"
                 android:singleLine="true"
                 android:text="@string/userName"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
@@ -49,7 +52,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:padding="@dimen/layout_5dp"
+                android:padding="@dimen/layout_3dp"
                 android:singleLine="true"
                 android:text="@string/tempBeginDate"
                 android:textSize="@dimen/layout_16sp"/>

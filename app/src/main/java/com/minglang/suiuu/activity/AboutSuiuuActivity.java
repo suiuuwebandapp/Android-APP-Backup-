@@ -87,7 +87,7 @@ public class AboutSuiuuActivity extends BaseAppCompatActivity {
             public void onClick(View v) {
                 count++;
                 if (count == 5) {
-                    startActivity(new Intent(context,UpLoadLogFileActivity.class));
+                    startActivity(new Intent(context, UpLoadLogFileActivity.class));
                 }
             }
         });
@@ -116,6 +116,12 @@ public class AboutSuiuuActivity extends BaseAppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        count = 1;
     }
 
     @Override

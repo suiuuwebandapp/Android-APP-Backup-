@@ -172,7 +172,7 @@ public class PersonalSettingActivity extends BaseActivity {
                     String s = msg.obj.toString();
 
                     DeBugLog.i(TAG, "图片上传成功:" + s);
-                    netWorkImagePath = AppConstant.IMG_FROM_SUIUU + s;
+                    netWorkImagePath = AppConstant.OSS_ROOT_PATH + s;
                     DeBugLog.i(TAG, "NetworkImagePath:" + netWorkImagePath);
 
                     SuiuuInfo.WriteUserHeadImagePath(PersonalSettingActivity.this, netWorkImagePath);
@@ -402,7 +402,6 @@ public class PersonalSettingActivity extends BaseActivity {
             DeBugLog.e(TAG, "文件未找到:" + e.getMessage());
         }
     }
-
 
     private void setPersonalMessage4Service() {
         if (progressDialog != null && !progressDialog.isShowing()) {

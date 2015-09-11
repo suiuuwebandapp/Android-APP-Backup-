@@ -279,7 +279,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         List<String> picNameList = new ArrayList<>();
         for (String string : picList) {
             String substring = string.substring(string.lastIndexOf("/"));
-            picNameList.add(AppConstant.IMG_FROM_SUIUU + "suiuu_content" + substring);
+            picNameList.add(AppConstant.OSS_ROOT_PATH + "suiuu_content" + substring);
         }
         map.put("picList", jsonUtil.toJSON(picNameList));
         map.put("titleImg", picNameList.get(0));

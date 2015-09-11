@@ -129,6 +129,8 @@ public class SuiuuInfo implements Serializable {
 
     private static final String APP_TIME_SIGN = "AppTimeSign";
 
+    private static final String VERSION_ID = "versionId";
+
     /**
      * 读取用户数据
      *
@@ -585,6 +587,29 @@ public class SuiuuInfo implements Serializable {
         } catch (Exception e) {
             DeBugLog.e(TAG, PREFERENCE_WE_CHAT_NAME + "不存在！" + e.getMessage());
         }
+    }
+
+    /**
+     * 保存版本ID
+     *
+     * @param context   上下文对象
+     * @param versionId 版本ID
+     */
+    public static void WriteVersionId(Context context, String versionId) {
+        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(VERSION_ID, versionId);
+        editor.apply();
+    }
+
+    /**
+     * 读取版本ID
+     *
+     * @param context 上下文对象
+     * @return 版本ID
+     */
+    public static String ReadVersionId(Context context) {
+        return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_APPEND).getString(VERSION_ID, "");
     }
 
 }

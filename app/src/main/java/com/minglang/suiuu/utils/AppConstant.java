@@ -15,12 +15,7 @@ public class AppConstant {
      */
     public static final int INTENT_CROP = 1003;
 
-    /**
-     * 保存在suiuu_content对象中的图片
-     */
-    public static final String IMG_FROM_SUIUU_CONTENT = "http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content";
-
-    public static final String IMG_FROM_SUIUU = "http://suiuu.oss-cn-hongkong.aliyuncs.com/";
+    public static final String OSS_ROOT_PATH = "http://suiuu.oss-cn-hongkong.aliyuncs.com/";
 
     public static final int SELECT_COUNTRY_OK = 200;
 

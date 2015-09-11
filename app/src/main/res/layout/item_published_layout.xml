@@ -16,7 +16,7 @@
     <RelativeLayout
         android:id="@+id/item_published_content_layout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/layout_50dp"
         android:layout_alignBottom="@+id/item_published_image"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

@@ -1,21 +1,19 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.customview.CircleImageView;
+import com.minglang.suiuu.activity.PersonalMainPagerActivity;
 import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.AnswerEntity;
-import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.ViewHolder;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -28,24 +26,14 @@ public class CommunityItemAdapter extends BaseAdapter {
 
     private static final String TAG = CommunityItemAdapter.class.getSimpleName();
 
+    private static final String USER_SIGN = "userSign";
+
     private Context context;
 
     private List<AnswerEntity> list;
 
-    private ImageLoader imageLoader;
-
-    private DisplayImageOptions options;
-
     public CommunityItemAdapter(Context context) {
         this.context = context;
-
-        imageLoader = ImageLoader.getInstance();
-
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image)
-                .showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     public void setList(List<AnswerEntity> list) {
@@ -81,7 +69,7 @@ public class CommunityItemAdapter extends BaseAdapter {
         ViewHolder holder4 = ViewHolder.get(context, convertView, parent, R.layout.item_community_layout, position);
         convertView = holder4.getConvertView();
 
-        CircleImageView headImageView = holder4.getView(R.id.item_community_layout_4_head_image_view);
+        SimpleDraweeView headImageView = holder4.getView(R.id.item_community_layout_4_head_image_view);
         TextView nameView = holder4.getView(R.id.item_community_layout_4_name);
         TextView dateAndTimeView = holder4.getView(R.id.item_community_layout_4_date_time);
         TextView detailsView = holder4.getView(R.id.item_community_layout_4_details);
@@ -90,7 +78,9 @@ public class CommunityItemAdapter extends BaseAdapter {
 
         String headImagePath = answerEntity.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
-            imageLoader.displayImage(headImagePath, headImageView, options);
+            headImageView.setImageURI(Uri.parse(headImagePath));
+        } else {
+            headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
         }
 
         String strName = answerEntity.getNickname();
@@ -130,7 +120,9 @@ public class CommunityItemAdapter extends BaseAdapter {
         @Override
         public void onClick(View v) {
             String userSign = list.get(position).getAUserSign();
-            DeBugLog.i(TAG, "userSign:" + userSign);
+            Intent intent = new Intent(context, PersonalMainPagerActivity.class);
+            intent.putExtra(USER_SIGN, userSign);
+            context.startActivity(intent);
         }
 
     }

@@ -19,6 +19,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.AccountInfo;
 import com.minglang.suiuu.entity.UserBack;
+import com.minglang.suiuu.interfaces.DetachableListener;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -128,6 +129,8 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
 
     private String weChatAccountId;
 
+    private AlertDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,6 +166,37 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
         dialogInputAccount = (EditText) dialogView.findViewById(R.id.layout_input_withdrawals_info_account);
         dialogInputUserName = (EditText) dialogView.findViewById(R.id.layout_input_withdrawals_info_user_name);
 
+        initAlertDialog();
+    }
+
+    private void initAlertDialog() {
+
+        DetachableListener detachableListener = DetachableListener.build(new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                String account = dialogInputAccount.getText().toString().trim();
+                String userName = dialogInputUserName.getText().toString().trim();
+
+                if (TextUtils.isEmpty(account)) {
+                    Toast.makeText(context, AccountNotNull, Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(userName)) {
+                    Toast.makeText(context, YourNameNotNull, Toast.LENGTH_SHORT).show();
+                } else {
+                    sendBindAlipayWayRequest(account, userName);
+                }
+
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        dialog = builder.setView(dialogView)
+                .setNegativeButton(android.R.string.ok, detachableListener)
+                .setPositiveButton(android.R.string.cancel, null)
+                .create();
+
+        //detachableListener.clearOnDetach(dialog);
+
     }
 
     private void viewAction() {
@@ -183,27 +217,7 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
                             && !TextUtils.isEmpty(alipayAccountId)) {
                         sendWithdrawalsRequest(alipayAccountId, inputMoney);
                     } else {
-                        new AlertDialog.Builder(context)
-                                .setView(dialogView)
-                                .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        String account = dialogInputAccount.getText().toString().trim();
-                                        String userName = dialogInputUserName.getText().toString().trim();
-
-                                        if (TextUtils.isEmpty(account)) {
-                                            Toast.makeText(context, AccountNotNull, Toast.LENGTH_SHORT).show();
-                                        } else if (TextUtils.isEmpty(userName)) {
-                                            Toast.makeText(context, YourNameNotNull, Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            sendBindAlipayWayRequest(account, userName);
-                                        }
-
-                                    }
-                                })
-                                .setPositiveButton(android.R.string.cancel, null)
-                                .create().show();
+                        dialog.show();
                     }
                 }
             }
@@ -415,6 +429,12 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        DeBugLog.i(TAG, "onDetachedFromWindow");
     }
 
     /**

@@ -25,6 +25,8 @@
     <string name="MainTitle3" translatable="false">问答社区</string>
     <string name="MainTitle4" translatable="false">收件箱</string>
 
+    <string name="PrivateLetter" translatable="false">私信</string>
+
     <string name="SuiuuAccount" translatable="false">随友账户</string>
     <string name="OrdinaryAccount" translatable="false">普通账户</string>
 
@@ -567,5 +569,6 @@
     <string name="title_activity_suiuu_comment">SuiuuCommentActivity</string>
     <string name="title_activity_with_drawals">WithDrawalsActivity</string>
     <string name="title_activity_up_load_log_file">UpLoadLogFileActivity</string>
+    <string name="title_activity_private_letter">PrivateLetterActivity</string>
 
 </resources>
