@@ -57,11 +57,20 @@ public class HttpNewServicePath {
      * 应用用户注册地址
      */
     public static String Register4SuiuuPath = RootPath + "/app-login/app-register";
+    /**
+     * 快速登录注册地址
+     */
+    public static String AccessRegister = RootPath + "/app-login/access-reg";
 
     /**
      * 应用自带登陆URL
      */
     public static String SelfLoginPath = RootPath + "/app-login/app-login";
+
+    /**
+     * 三方登录绑定登录URL
+     */
+    public static String BindLoginPath = RootPath + "/app-login/access-bind";
 
     /**
      * 第三方登陆地址

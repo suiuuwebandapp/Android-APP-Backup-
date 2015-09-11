@@ -3,49 +3,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical" >
-
+    android:orientation="vertical">
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:background="@color/mainColor"
-        android:gravity="center"
-        android:textColor="@color/contents_text"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_10dp"
+        android:layout_marginTop="@dimen/layout_5dp"
+        android:gravity="left"
         android:text="设置自定义标签"
-
+        android:textColor="@color/help_view"
         android:textSize="@dimen/layout_18sp" />
     <EditText
-        android:layout_marginTop="@dimen/layout_10dp"
-        android:layout_marginBottom="@dimen/layout_10dp"
+        android:id="@+id/et_input_customer_tag"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/layout_10dp"
+        android:background="@drawable/imageview_border_style"
         android:hint="输入标签"
-        android:id="@+id/et_input_customer_tag"/>
+        android:padding="@dimen/layout_10dp" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/layout_10dp">
-
         <Button
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:background="@drawable/background_template_tag_filled"
             android:id="@+id/bt_conffirm_button"
-            android:textSize="@dimen/layout_15sp"
-            android:textColor="@color/contents_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/layout_50dp"
-            android:text="确认" />
+            android:background="@drawable/background_template_tag_filled"
+            android:text="确认"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/layout_15sp" />
 
         <Button
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:background="@drawable/background_template_tag_filled"
             android:id="@+id/bt_cancel_button"
-            android:layout_marginRight="@dimen/layout_50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:textColor="@color/contents_text"
-            android:text="取消"/>
+            android:layout_marginRight="@dimen/layout_50dp"
+            android:background="@drawable/background_template_tag_filled"
+            android:text="取消"
+            android:textColor="@color/textColor" />
 
     </RelativeLayout>
 

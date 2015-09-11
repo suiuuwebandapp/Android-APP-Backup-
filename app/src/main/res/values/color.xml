@@ -58,6 +58,7 @@
 
     <!--文字颜色-->
     <color name="text_color1">#ffe986</color>
+    <color name="text_color2">#ffe987</color>
 
     <color name="slider_line_color">#ffa93b</color>
 

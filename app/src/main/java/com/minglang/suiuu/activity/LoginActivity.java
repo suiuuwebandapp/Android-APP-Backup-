@@ -845,7 +845,6 @@ public class LoginActivity extends BaseActivity {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
         OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[6];
         paramsArray[0] = new OkHttpManager.Params(OPEN_ID, qq_open_id);
         paramsArray[1] = new OkHttpManager.Params(NICK_NAME, qq_nick_Name);
@@ -1102,7 +1101,6 @@ public class LoginActivity extends BaseActivity {
         }
 
     }
-
     /**
      * 友盟for微博第三方登陆数据回调接口
      */

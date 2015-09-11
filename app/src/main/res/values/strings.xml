@@ -25,6 +25,7 @@
 
     <string name="SuiuuAccount" translatable="false">随友账户</string>
     <string name="OrdinaryAccount" translatable="false">普通账户</string>
+    <string name="socialLogin" translatable="false">社交帐号登录</string>
 
     <string name="QuestionsAndAnswers" translatable="false">问答</string>
     <string name="NickName" translatable="false">昵称</string>
@@ -37,6 +38,8 @@
     <string name="Attention" translatable="false">关注</string>
 
     <string name="thirdParty" translatable="false">绑定的第三方账号</string>
+    <string name="bind_suiuu" translatable="false">绑定随游账号随心所欲畅游世界</string>
+    <string name="suiuu_account_exist" translatable="false">已有随游账号</string>
 
     <string name="Setting" translatable="false">设置</string>
     <string name="PersonalSetting" translatable="false">个人设置</string>
@@ -160,7 +163,9 @@
     <string name="popularRecommendation" translatable="false">热门推荐</string>
 
     <string name="please_input_email_or_phone_number" translatable="false">请输入邮箱或手机号</string>
+    <string name="email_or_phone_number" translatable="false">手机号/邮箱</string>
     <string name="please_input_password" translatable="false">请输入密码</string>
+    <string name="password" translatable="false">密码</string>
     <string name="obtain_captcha" translatable="false">获取验证码</string>
     <string name="please_input_number" translatable="false">请输入手机号</string>
     <string name="please_input_confirm_password" translatable="false">请输入确认密码</string>
@@ -208,6 +213,8 @@
     <string name="price" translatable="false">价格</string>
     <string name="refreshData" translatable="false">点击重新加载数据</string>
     <string name="please_enter_search_content" translatable="false">请输入搜索内容</string>
+    <string name="login_message" translatable="false">现在开始 随心所欲畅游世界</string>
+    <string name="join_suiuu" translatable="false">立即加入随游</string>
 
     <string name="TripGallery" translatable="false">旅图</string>
     <string name="SuiuuPage" translatable="false">随游</string>
@@ -408,6 +415,7 @@
     <string name="please_choice_tag" translatable="false">请选择标签</string>
 
     <string name="TagNameNotNull" translatable="false">标签名不能为空！</string>
+    <string name="welcome_to_suiuu" translatable="false">欢迎来到随游</string>
 
     <string name="logo" translatable="false">logo</string>
 
