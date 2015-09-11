@@ -1,10 +1,11 @@
 package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,8 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
-import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.AccountManageAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
@@ -44,9 +43,9 @@ import butterknife.ButterKnife;
 /**
  * 账户管理页面
  */
-public class AccountManageActivity extends BaseAppCompatActivity {
+public class AccountManagerActivity extends BaseAppCompatActivity {
 
-    private static final String TAG = AccountManageActivity.class.getSimpleName();
+    private static final String TAG = AccountManagerActivity.class.getSimpleName();
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
@@ -79,13 +78,15 @@ public class AccountManageActivity extends BaseAppCompatActivity {
     RelativeLayout relativeLayout;
 
     @Bind(R.id.account_balance_list_view)
-    PullToRefreshListView pullToRefreshListView;
+    ListView pullToRefreshListView;
 
     private List<TransferAccountsItemData> listAll = new ArrayList<>();
 
     private ProgressDialog progressDialog;
 
     private AccountManageAdapter adapter;
+
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +96,13 @@ public class AccountManageActivity extends BaseAppCompatActivity {
         initView();
         viewAction();
         sendAccountInfoRequest();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String strBalance = SuiuuInfo.ReadBalance(this);
+        accountBalanceNumber.setText("￥" + strBalance);
     }
 
     /**
@@ -108,50 +116,23 @@ public class AccountManageActivity extends BaseAppCompatActivity {
         toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
-
         adapter = new AccountManageAdapter(this, listAll, R.layout.item_account_manage);
+        pullToRefreshListView.setAdapter(adapter);
 
         try {
             token = URLEncoder.encode(SuiuuInfo.ReadAppTimeSign(this), "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
             token = SuiuuInfo.ReadAppTimeSign(this);
+            e.printStackTrace();
         }
 
-        String strBalance = SuiuuInfo.ReadBalance(this);
-        accountBalanceNumber.setText("￥" + strBalance);
-
+        context = AccountManagerActivity.this;
     }
 
     /**
      * 控件动作
      */
     private void viewAction() {
-
-        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label = DateUtils.formatDateTime(AccountManageActivity.this, System.currentTimeMillis(),
-                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
-                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
-
-                pullToRefreshListView.onRefreshComplete();
-
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label = DateUtils.formatDateTime(AccountManageActivity.this, System.currentTimeMillis(),
-                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
-                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
-
-                pullToRefreshListView.onRefreshComplete();
-
-            }
-
-        });
 
         pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -163,7 +144,7 @@ public class AccountManageActivity extends BaseAppCompatActivity {
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(context, WithdrawalsActivity.class));
             }
         });
 
@@ -178,12 +159,13 @@ public class AccountManageActivity extends BaseAppCompatActivity {
         }
 
         String url = HttpNewServicePath.getUserAccountInfoPath + "?" + TOKEN + "=" + token;
+        DeBugLog.i(TAG, "提现记录URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new AccountManagerResultCallback());
         } catch (IOException e) {
             e.printStackTrace();
             hideDialog();
-            Toast.makeText(AccountManageActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -192,7 +174,6 @@ public class AccountManageActivity extends BaseAppCompatActivity {
             progressDialog.dismiss();
         }
 
-        pullToRefreshListView.onRefreshComplete();
     }
 
     /**
@@ -216,12 +197,12 @@ public class AccountManageActivity extends BaseAppCompatActivity {
                             adapter.setList(listAll);
                         } else {
                             DeBugLog.e(TAG, "集合数据为空");
-                            Toast.makeText(this, NoData, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
                     DeBugLog.e(TAG, "返回数据为空");
-                    Toast.makeText(this, NoData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 hideDialog();
@@ -230,13 +211,13 @@ public class AccountManageActivity extends BaseAppCompatActivity {
                     JSONObject object = new JSONObject(str);
                     String status = object.getString(STATUS);
                     if (status.equals("-1")) {
-                        Toast.makeText(this, SystemException, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, SystemException, Toast.LENGTH_SHORT).show();
                     } else if (status.equals("-2")) {
-                        Toast.makeText(this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e1) {
                     e1.printStackTrace();
-                    Toast.makeText(this, DataException, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, DataException, Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -267,7 +248,7 @@ public class AccountManageActivity extends BaseAppCompatActivity {
         public void onError(Request request, Exception e) {
             DeBugLog.e(TAG, "错误信息:" + e.getMessage());
             hideDialog();
-            Toast.makeText(AccountManageActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

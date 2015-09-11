@@ -1,31 +1,23 @@
-<android.support.design.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/account_balance_toolbar"
-            style="@style/AppToolBar"
-            app:layout_collapseMode="pin"
-            app:navigationIcon="@drawable/back"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:title="@string/ContactUs"/>
-
-    </android.support.design.widget.AppBarLayout>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/account_balance_toolbar"
+        style="@style/AppToolBar"
+        app:layout_collapseMode="pin"
+        app:navigationIcon="@drawable/back"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="@string/AccountManager"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_below="@+id/account_balance_toolbar">
 
         <include
             android:id="@+id/account_balance_layout"
@@ -40,11 +32,11 @@
             android:id="@+id/account_balance_info_title_layout"
             layout="@layout/include_account_info_list_title_layout"/>
 
-        <com.minglang.pulltorefreshlibrary.PullToRefreshListView
+        <ListView
             android:id="@+id/account_balance_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
     </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

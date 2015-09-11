@@ -10,6 +10,8 @@
     <string name="Login" translatable="false">登陆</string>
     <string name="Register" translatable="false">注册</string>
 
+    <string name="LoginOverdue" ranslatable="false">登陆已过期，请重新登陆！</string>
+
     <string name="PleaseInputUserName" translatable="false">请输入用户名</string>
     <string name="PleaseInputPassword" translatable="false">请输入密码</string>
 
@@ -46,7 +48,7 @@
     <string name="NormalSetting" translatable="false">通用设置</string>
     <string name="ReceivablesMode" translatable="false">收款方式</string>
     <string name="AboutSuiuu" translatable="false">关于随游</string>
-    <string name="ContactUs" translatable="false">联系我们</string>
+    <string name="AccountManager" translatable="false">账户管理</string>
     <string name="LoginOut" translatable="false">退出登录</string>
 
     <string name="VersionName" translatable="false">版本号:</string>
@@ -139,6 +141,8 @@
     <string name="question_wait" translatable="false">正在提问，请稍候&#8230;</string>
 
     <string name="commit_wait" translatable="false">正在提交，请稍后&#8230;</string>
+    <string name="request_wait" translatable="false">正在请求数据，请稍后&#8230;</string>
+    <string name="bind_alipay_wait" translatable="false">正在绑定支付宝，请稍候&#8230;</string>
 
     <string name="choice_area" translatable="false">请选择地区</string>
     <string name="choice_location" translatable="false">请选择位置</string>
@@ -267,6 +271,8 @@
     <string name="RMB" translatable="false">￥</string>
     <string name="AccountBalance" translatable="false">账户余额</string>
     <string name="ClickWithdrawals" translatable="false">点击提现</string>
+
+    <string name="Withdrawals" translatable="false">提现</string>
 
     <string name="Date" translatable="false">日期</string>
     <string name="TransferAccount" translatable="false">转账账户</string>
@@ -464,6 +470,13 @@
 
     <string name="MoneyHint" trabslatable="false">请输入要提现的金额</string>
 
+    <string name="MoneyNotNull" trabslatable="false">提现金额不能为空！</string>
+
+    <string name="NoBindReceivablesWay" trabslatable="false">您还没有绑定收款方式！</string>
+
+    <string name="UpLoadLogFile" trabslatable="false">上传日志</string>
+    <string name="SelectFile" trabslatable="false">SelectFile</string>
+
     <string name="tempDate" translatable="false">15.08.15</string>
     <string name="tempTime" translatable="false">9:00 AM</string>
     <string name="tempNumber" translatable="false">2人</string>
@@ -561,5 +574,6 @@
     <string name="title_activity_personal_trip_gallery">PersonalTripGalleryActivity</string>
     <string name="title_activity_suiuu_comment">SuiuuCommentActivity</string>
     <string name="title_activity_with_drawals">WithDrawalsActivity</string>
+    <string name="title_activity_up_load_log_file">UpLoadLogFileActivity</string>
 
 </resources>

@@ -310,7 +310,7 @@
             android:targetActivity="com.pingplusplus.android.PaymentActivity" />
 
         <activity
-            android:name=".activity.AccountManageActivity"
+            android:name=".activity.AccountManagerActivity"
             android:label="@string/title_activity_account_manage"
             android:theme="@style/AppAccountTheme" />
         <activity
@@ -381,9 +381,13 @@
             android:label="@string/title_activity_suiuu_comment"
             android:theme="@style/AppMainTheme" />
         <activity
-            android:name=".activity.WithDrawActivity"
-            android:label="@string/title_activity_with_drawals" >
-        </activity>
+            android:name=".activity.WithdrawalsActivity"
+            android:label="@string/title_activity_with_drawals"
+            android:theme="@style/AppMainTheme" />
+        <activity
+            android:name=".activity.UpLoadLogFileActivity"
+            android:label="@string/title_activity_up_load_log_file"
+            android:theme="@style/AppMainTheme"/>
     </application>
 
 </manifest>

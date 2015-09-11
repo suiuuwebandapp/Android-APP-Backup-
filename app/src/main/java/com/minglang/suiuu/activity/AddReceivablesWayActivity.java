@@ -38,13 +38,8 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
 
     private static final String KEY = "key";
 
-    private static final String ALIPAY = "alipay";
-    private static final String WECHAT = "weChat";
-
     private static final String ACCOUNT = "account";
     private static final String NAME = "name";
-
-    private String strKey;
 
     @BindColor(R.color.white)
     int titleColor;
@@ -89,15 +84,16 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
 
     private ProgressDialog progressDialog;
 
-    private String strAccount, strUserName;
+    private String account;
+
+    private String userName;
+
+    private String accountId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_receivables_way);
-
-        strKey = getIntent().getStringExtra(KEY);
-
         ButterKnife.bind(this);
         initView();
         viewAction();
@@ -117,23 +113,25 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
     }
 
     private void viewAction() {
+
         addReceivablesOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                strAccount = addReceivablesAccount.getText().toString().trim();
-                strUserName = addReceivablesUserName.getText().toString().trim();
-                if (TextUtils.isEmpty(strAccount)) {
+                account = addReceivablesAccount.getText().toString().trim();
+                userName = addReceivablesUserName.getText().toString().trim();
+                if (TextUtils.isEmpty(account)) {
                     Toast.makeText(context, AccountNotNull, Toast.LENGTH_SHORT).show();
-                } else if (TextUtils.isEmpty(strUserName)) {
+                } else if (TextUtils.isEmpty(userName)) {
                     Toast.makeText(context, YourNameNotNull, Toast.LENGTH_SHORT).show();
                 } else {
-                    setAccountInfo4Service(strAccount, strUserName);
+                    sendAccountInfo4Service(account, userName);
                 }
             }
         });
+
     }
 
-    private void setAccountInfo4Service(String account, String userName) {
+    private void sendAccountInfo4Service(String account, String userName) {
         if (progressDialog != null && !progressDialog.isShowing()) {
             progressDialog.show();
         }
@@ -143,7 +141,7 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
         paramsArray[1] = new OkHttpManager.Params(NAME, userName);
 
         String url = HttpNewServicePath.addAliPayUserInfo + "?" + TOKEN + "=" + token;
-        DeBugLog.i(TAG, "URL:" + url);
+        DeBugLog.i(TAG, "绑定支付宝的URL:" + url);
 
         try {
             OkHttpManager.onPostAsynRequest(url, new AddReceivablesWayResultCallback(), paramsArray);
@@ -188,13 +186,16 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
         public void onResponse(String response) {
             DeBugLog.i(TAG, "返回信息:" + response);
             hideDialog();
-            try {
+            if (TextUtils.isEmpty(response)) {
+                Toast.makeText(context, NoData, Toast.LENGTH_LONG).show();
+            } else try {
                 JSONObject object = new JSONObject(response);
                 String status = object.getString(STATUS);
                 if (!TextUtils.isEmpty(status)) {
                     switch (status) {
                         case "1":
-                            SuiuuInfo.WriteAliPayInfo(context, strAccount, strUserName);
+                            SuiuuInfo.WriteAliPayInfo(context, account, userName);
+                            SuiuuInfo.WriteAliPayAccountId(context, object.getString(DATA));
                             setResult(RESULT_OK);
                             finish();
                             break;

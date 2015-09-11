@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/layout_input_withdrawals_info_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/layout_8dp"
+        android:hint="@string/PleaseInputAccount"/>
+
+    <EditText
+        android:id="@+id/layout_input_withdrawals_info_user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/layout_8dp"
+        android:hint="@string/PleaseInputYourName"/>
+
+</LinearLayout>

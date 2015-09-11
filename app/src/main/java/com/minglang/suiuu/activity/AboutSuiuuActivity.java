@@ -1,5 +1,6 @@
 package com.minglang.suiuu.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
@@ -35,6 +37,9 @@ public class AboutSuiuuActivity extends BaseAppCompatActivity {
     @Bind(R.id.about_suiuu_tool_bar)
     Toolbar toolbar;
 
+    @Bind(R.id.about_suiuu_logo)
+    ImageView logo;
+
     @Bind(R.id.about_suiuu_version)
     TextView aboutSuiuuVersion;
 
@@ -47,16 +52,20 @@ public class AboutSuiuuActivity extends BaseAppCompatActivity {
     @Bind(R.id.about_suiuu_update)
     TextView aboutSuiuuUpdate;
 
+    private int count = 1;
+
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_suiuu);
         ButterKnife.bind(this);
-        init();
+        initView();
         viewAction();
     }
 
-    private void init() {
+    private void initView() {
         toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
@@ -68,9 +77,21 @@ public class AboutSuiuuActivity extends BaseAppCompatActivity {
             aboutSuiuuVersion.setText(versionNameFailure);
         }
 
+        context = AboutSuiuuActivity.this;
     }
 
     private void viewAction() {
+
+        logo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                count++;
+                if (count == 5) {
+                    startActivity(new Intent(context,UpLoadLogFileActivity.class));
+                }
+            }
+        });
+
         aboutSuiuuEvaluation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
