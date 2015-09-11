@@ -105,6 +105,30 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"/>
 
+        <activity
+            android:name=".activity.LoginsMainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme" />
+			
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme" />
+        <!-- 登陆页面 -->
+        <activity
+            android:name=".activity.LoginsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme" />
+        <activity
+            android:name=".activity.ActivityMainBind"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme" />
+
         <!-- 应用主页面 -->
         <activity
             android:name=".activity.MainActivity"

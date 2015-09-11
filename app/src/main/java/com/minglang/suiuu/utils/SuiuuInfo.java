@@ -107,11 +107,18 @@ public class SuiuuInfo implements Serializable {
     private static final String BALANCE = "balance";
 
     private static final String VERSION = "version";
+    private static final String OPENID = "openId";
+    private static final String TYPE = "type";
+    private static final String HEADIMAGE = "headImage";
 
     /**
      * 当前用户的位置信息
      */
     private static final String LocationInfo = "SuiuuLocationInfo";
+    /**
+     * 三方登录信息
+     */
+    private static final String QUICKLYLOGININFO = "quicklyLoginInfo";
 
     private static final String MESSAGE = "message";
 
@@ -473,6 +480,15 @@ public class SuiuuInfo implements Serializable {
         editor.putString(W_NICK_NAME, nickName);
         editor.apply();
     }
+    public static void WriteQuicklyLoginInfo(Context context, String openId, String nickName,String type,String headImage) {
+        SharedPreferences sp = context.getSharedPreferences(QUICKLYLOGININFO, Context.MODE_APPEND);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(OPENID, openId);
+        editor.putString(NICKNAME_, nickName);
+        editor.putString(TYPE, type);
+        editor.putString(HEADIMAGE, headImage);
+        editor.apply();
+    }
 
     /**
      * 读取微信相关数据
@@ -486,6 +502,34 @@ public class SuiuuInfo implements Serializable {
         infoMap.put(W_ONLY_ID, sp.getString(W_ONLY_ID, ""));
         infoMap.put(W_NICK_NAME, sp.getString(W_NICK_NAME, ""));
         return infoMap;
+    }
+
+    /**
+     * 读取三方登录信息
+     * @param context
+     * @return
+     */
+    public static Map<String, String> ReadQuicklyLoginInfo(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(QUICKLYLOGININFO, Context.MODE_APPEND);
+        Map<String, String> infoMap = new HashMap<>();
+        infoMap.put(OPENID, sp.getString(OPENID, ""));
+        infoMap.put(NICKNAME_, sp.getString(NICKNAME_, ""));
+        infoMap.put(TYPE, sp.getString(TYPE, ""));
+        infoMap.put(HEADIMAGE, sp.getString(HEADIMAGE, ""));
+        return infoMap;
+    }
+
+    /**
+     * 清除微信相关数据
+     *
+     * @param context 上下文对象
+     */
+    public static void ClearWeChatInfo(Context context) {
+        try {
+            context.getSharedPreferences(PREFERENCE_WE_CHAT_NAME, Context.MODE_APPEND).edit().clear().apply();
+        } catch (Exception e) {
+            DeBugLog.e(TAG, PREFERENCE_WE_CHAT_NAME + "不存在！" + e.getMessage());
+        }
     }
 
     /**
