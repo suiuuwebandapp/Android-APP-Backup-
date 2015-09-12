@@ -621,19 +621,6 @@ public class SuiuuInfo implements Serializable {
     }
 
     /**
-     * 清除微信相关数据
-     *
-     * @param context 上下文对象
-     */
-    public static void ClearWeChatInfo(Context context) {
-        try {
-            context.getSharedPreferences(PREFERENCE_WE_CHAT_NAME, Context.MODE_APPEND).edit().clear().apply();
-        } catch (Exception e) {
-            DeBugLog.e(TAG, PREFERENCE_WE_CHAT_NAME + "不存在！" + e.getMessage());
-        }
-    }
-
-    /**
      * 保存版本ID
      *
      * @param context   上下文对象
