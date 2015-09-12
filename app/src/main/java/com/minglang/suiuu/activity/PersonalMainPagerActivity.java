@@ -196,11 +196,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
         recyclerViewHeader.attachTo(recyclerView, true);
 
         String publisher = SuiuuInfo.ReadUserData(this).getIsPublisher();
-        if (!TextUtils.isEmpty(publisher)) {
-            isPublisher = publisher.equals("1");
-        } else {
-            isPublisher = false;
-        }
+        isPublisher = !TextUtils.isEmpty(publisher) && publisher.equals("1");
 
         DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
     }
