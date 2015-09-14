@@ -21,7 +21,15 @@ public class HttpNewServicePath {
      */
     public static String RootPath = "http://api.suiuu.com/v1";
 
-    public static String OssRooPath = "http://suiuu.oss-cn-hongkong.aliyuncs.com/";
+    /**
+     * OSS服务器地址
+     */
+    public static String OssRootPath = "http://suiuu.oss-cn-hongkong.aliyuncs.com/";
+
+    /**
+     * Socket通讯服务器地址
+     */
+    public static String SocketPath = "ws://58.96.191.44:7272";
 
     /**
      * 获取服务器时间
@@ -279,6 +287,7 @@ public class HttpNewServicePath {
      * 生成订单号
      */
     public static String createOrderNumber = RootPath + "/app-user-order/add-order";
+
     /**
      * 取消订单
      */
@@ -351,10 +360,12 @@ public class HttpNewServicePath {
      * info 详情介绍、countryId、国家id cityI、城市id、lon经度、lat 维度、profession 职业
      */
     public static String upDatePersonalStatus = RootPath + "/app-user-info/update-user-info";
+
     /**
      * 根据文章ID获得评论列表
      */
     public static String getCommentListByArticleId = RootPath + "/circle/get-comment-by-article-id";
+
     /**
      * 根据文章ID获得评论列表
      */
@@ -372,14 +383,17 @@ public class HttpNewServicePath {
      * 得到普通用户未完成的订单
      */
     public static String getSuiuuDetailInfo = RootPath + "/app-travel/get-travel-info";
+
     /**
      * 得到随游列表
      */
     public static String getSuiuuList = RootPath + "/app-travel/get-travel-list";
+
     /**
      * 创建一条随游评论
      */
     public static String suiuuCreateComment = RootPath + "/app-travel/add-comment";
+
     /**
      * 得到随游高级搜索中的标签
      */
@@ -400,10 +414,12 @@ public class HttpNewServicePath {
      * 得到旅图列表
      */
     public static String getTripGalleryList = RootPath + "/app-travel-picture/get-list";
+
     /**
      * 收藏旅图
      */
     public static String CollectionTripGalleryPath = RootPath + "/app-attention/attention-tp";
+
     /**
      * 取消收藏文章
      * <p/>
@@ -412,6 +428,7 @@ public class HttpNewServicePath {
      * 请求参数:需要收藏文章的attentionId
      */
     public static String CollectionArticleCancelPath = RootPath + "/app-attention/delete-attention";
+
     /**
      * 创建一条旅图评论
      */

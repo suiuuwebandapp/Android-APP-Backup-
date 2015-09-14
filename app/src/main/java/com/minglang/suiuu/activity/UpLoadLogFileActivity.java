@@ -147,7 +147,7 @@ public class UpLoadLogFileActivity extends BaseAppCompatActivity {
                             @Override
                             public void onSuccess(String s) {
                                 DeBugLog.i(TAG, "上传成功后返回的地址:" + s);
-                                String logFilePath = HttpNewServicePath.OssRooPath + s;
+                                String logFilePath = HttpNewServicePath.OssRootPath + s;
                                 sendLogPathRequest(logFilePath);
                             }
 

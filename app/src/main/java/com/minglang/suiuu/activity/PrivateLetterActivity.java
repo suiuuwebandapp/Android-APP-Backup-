@@ -228,7 +228,8 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        int id = item.getItemId();
+        switch (id) {
             case android.R.id.home:
                 finish();
                 break;

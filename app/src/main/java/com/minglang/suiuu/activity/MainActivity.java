@@ -575,11 +575,15 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mDrawerLayout.closeDrawer(sliderView);
-                Intent intent = new Intent(context, classArray2[position]);
-                if (position == 1) {
-                    intent.putExtra(USER_SIGN, userSign);
+                if (position == 4) {
+                    finish();
+                } else {
+                    Intent intent = new Intent(context, classArray2[position]);
+                    if (position == 1) {
+                        intent.putExtra(USER_SIGN, userSign);
+                    }
+                    startActivity(intent);
                 }
-                startActivity(intent);
             }
         });
 

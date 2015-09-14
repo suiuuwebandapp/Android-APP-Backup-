@@ -371,7 +371,6 @@
     <string name="uploading" translatable="false">正在上传&#8230;</string>
     <string name="uploading_data" translatable="false">"正在更新数据,请稍候&#8230;"</string>
 
-
     <string name="cancelOrder" translatable="false">取消订单</string>
     <string name="deleteOrder" translatable="false">删除订单</string>
     <string name="inputRefundReason" translatable="false">请输入退款理由</string>
@@ -561,16 +560,6 @@
     <string name="title_activity_add_receivables_way">AddReceivablesWayActivity</string>
     <string name="show_big_picture_activity">ShowBigPictureActivity</string>
 
-    <!--滚动viewPager显示图片缩放相关-->
-    <declare-styleable name="CircleIndicator">
-        <attr name="ci_width" format="dimension"/>
-        <attr name="ci_height" format="dimension"/>
-        <attr name="ci_margin" format="dimension"/>
-        <attr name="ci_animator" format="reference"/>
-        <attr name="ci_animator_reverse" format="reference"/>
-        <attr name="ci_drawable" format="reference"/>
-        <attr name="ci_drawable_unselected" format="reference"/>
-    </declare-styleable>
     <string name="title_activity_personal_suiuu">PersonalSuiuuActivity</string>
     <string name="title_activity_personal_problem">PersonalProblemActivity</string>
     <string name="title_activity_personal_trip_gallery">PersonalTripGalleryActivity</string>
@@ -578,5 +567,6 @@
     <string name="title_activity_with_drawals">WithDrawalsActivity</string>
     <string name="title_activity_up_load_log_file">UpLoadLogFileActivity</string>
     <string name="title_activity_private_letter">PrivateLetterActivity</string>
+    <string name="title_activity_private_letter_chat">PrivateLetterChatActivity</string>
 
 </resources>

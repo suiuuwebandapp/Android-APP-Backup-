@@ -21,7 +21,6 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.util.FloatMath;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
@@ -112,7 +111,7 @@ public class PullToRefreshWebView extends PullToRefreshBase<WebView> {
 
     @Override
     protected boolean isReadyForPullEnd() {
-        float exactContentHeight = FloatMath.floor(mRefreshableView.getContentHeight() * mRefreshableView.getScale());
+        double exactContentHeight = Math.floor(mRefreshableView.getContentHeight() * mRefreshableView.getScale());
         return mRefreshableView.getScrollY() >= (exactContentHeight - mRefreshableView.getHeight());
     }
 
@@ -133,11 +132,11 @@ public class PullToRefreshWebView extends PullToRefreshBase<WebView> {
 
         // WebView doesn't always scroll back to it's edge so we add some
         // fuzziness
-        static final int OVERSCROLL_FUZZY_THRESHOLD = 2;
+        static final int OVER_SCROLL_FUZZY_THRESHOLD = 2;
 
-        // WebView seems quite reluctant to overscroll so we use the scale
+        // WebView seems quite reluctant to overScroll so we use the scale
         // factor to scale it's value
-        static final float OVERSCROLL_SCALE_FACTOR = 1.5f;
+        static final float OVER_SCROLL_SCALE_FACTOR = 1.5f;
 
         public InternalWebViewSDK9(Context context, AttributeSet attrs) {
             super(context, attrs);
@@ -152,14 +151,15 @@ public class PullToRefreshWebView extends PullToRefreshBase<WebView> {
 
             // Does all of the hard work...
             OverscrollHelper.overScrollBy(PullToRefreshWebView.this, deltaX, scrollX, deltaY, scrollY,
-                    getScrollRange(), OVERSCROLL_FUZZY_THRESHOLD, OVERSCROLL_SCALE_FACTOR, isTouchEvent);
+                    getScrollRange(), OVER_SCROLL_FUZZY_THRESHOLD, OVER_SCROLL_SCALE_FACTOR, isTouchEvent);
 
             return returnValue;
         }
 
         private int getScrollRange() {
-            return (int) Math.max(0, FloatMath.floor(mRefreshableView.getContentHeight() * mRefreshableView.getScale())
+            return (int) Math.max(0, Math.floor(mRefreshableView.getContentHeight() * mRefreshableView.getScale())
                     - (getHeight() - getPaddingBottom() - getPaddingTop()));
         }
     }
+
 }

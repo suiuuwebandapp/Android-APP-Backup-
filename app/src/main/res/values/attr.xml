@@ -96,6 +96,17 @@
         <attr name="indicator_spacing" format="dimension" />
     </declare-styleable>
 
+    <!--滚动viewPager显示图片缩放相关-->
+    <declare-styleable name="CircleIndicator">
+        <attr name="ci_width" format="dimension"/>
+        <attr name="ci_height" format="dimension"/>
+        <attr name="ci_margin" format="dimension"/>
+        <attr name="ci_animator" format="reference"/>
+        <attr name="ci_animator_reverse" format="reference"/>
+        <attr name="ci_drawable" format="reference"/>
+        <attr name="ci_drawable_unselected" format="reference"/>
+    </declare-styleable>
+
     <attr name="borderRadius" format="dimension" />
 
     <attr name="type">
@@ -116,22 +127,26 @@
         <attr name="swipeCloseAllItemsWhenMoveList" format="boolean"/>
         <attr name="swipeFrontView" format="reference"/>
         <attr name="swipeBackView" format="reference"/>
+
         <attr name="swipeMode" format="enum">
             <enum name="none" value="0"/>
             <enum name="both" value="1"/>
             <enum name="right" value="2"/>
             <enum name="left" value="3"/>
         </attr>
+
         <attr name="swipeActionLeft" format="enum">
             <enum name="reveal" value="0"/>
             <enum name="dismiss" value="1"/>
             <enum name="choice" value="2"/>
         </attr>
+
         <attr name="swipeActionRight" format="enum">
             <enum name="reveal" value="0"/>
             <enum name="dismiss" value="1"/>
             <enum name="choice" value="2"/>
         </attr>
+
         <attr name="swipeDrawableChecked" format="reference"/>
         <attr name="swipeDrawableUnchecked" format="reference"/>
     </declare-styleable>
