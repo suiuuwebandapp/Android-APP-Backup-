@@ -314,9 +314,16 @@ public class RegisterActivity extends BaseActivity {
             try {
                 UserBack user = JsonUtils.getInstance().fromJSON(UserBack.class, response);
                 if (user.getStatus().equals("1")) {
-                    SuiuuInfo.WriteVerification(RegisterActivity.this, user.getMessage());
-                    SuiuuInfo.WriteUserSign(RegisterActivity.this, user.getData().getUserSign());
-                    startActivity(new Intent(RegisterActivity.this, LoginsActivity.class));
+
+                    if(isQuicklyLogin) {
+                        UserBack.UserBackData data = user.getData();
+                        SuiuuInfo.WriteVerification(RegisterActivity.this, user.getMessage());
+                        SuiuuInfo.WriteUserSign(RegisterActivity.this, user.getData().getUserSign());
+                        SuiuuInfo.WriteUserData(RegisterActivity.this, data);
+                        startActivity(new Intent(RegisterActivity.this,MainActivity.class));
+                    }else {
+                        startActivity(new Intent(RegisterActivity.this, LoginsActivity.class));
+                    }
                 } else {
                     Toast.makeText(RegisterActivity.this, "注册失败，请稍候再试！", Toast.LENGTH_SHORT).show();
                 }
