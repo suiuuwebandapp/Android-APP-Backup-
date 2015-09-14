@@ -32,7 +32,8 @@
                 android:gravity="center"
                 android:text="@string/NetworkError"
                 android:textColor="@color/warning_color"
-                android:textSize="@dimen/layout_16sp"/>
+                android:textSize="@dimen/layout_16sp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

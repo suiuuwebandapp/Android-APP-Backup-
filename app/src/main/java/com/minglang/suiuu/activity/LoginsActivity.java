@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -82,6 +83,7 @@ public class LoginsActivity extends BaseActivity {
     private String headImage;
     private String nickName;
     private String type;
+    private TextProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,7 @@ public class LoginsActivity extends BaseActivity {
 
 
     private void initView() {
+        dialog = new TextProgressDialog(this);
         if(isQuicklyLogin) {
             Map<String, String> map = SuiuuInfo.ReadQuicklyLoginInfo(this);
             openId = map.get("openId");
@@ -146,7 +149,9 @@ public class LoginsActivity extends BaseActivity {
                     }
                     break;
                 case R.id.tv_find_password:
-
+                    Intent intent2ChangePassWord = new Intent(LoginsActivity.this,LoginChangePasswordActivity.class);
+                    intent2ChangePassWord.putExtra("isQuicklyLogin",isQuicklyLogin);
+                    startActivity(intent2ChangePassWord);
                     break;
             }
         }
@@ -158,6 +163,7 @@ public class LoginsActivity extends BaseActivity {
      * @param password 密码
      */
     private void suiuuLogin(String userName, String password) {
+        dialog.showDialog();
         Map<String,String> map = new HashMap<>();
         map.put(USER_NAME,userName);
         map.put(PASSWORD,password);
@@ -188,6 +194,7 @@ public class LoginsActivity extends BaseActivity {
     private class LoginResultCallback extends OkHttpManager.ResultCallback<String> {
         @Override
         public void onResponse(String response) {
+            dialog.dismissDialog();
             Log.i("suiuu", response);
             try {
                 UserBack user = JsonUtils.getInstance().fromJSON(UserBack.class, response);
@@ -207,8 +214,10 @@ public class LoginsActivity extends BaseActivity {
 
         @Override
         public void onError(Request request, Exception e) {
+            dialog.dismissDialog();
             Toast.makeText(LoginsActivity.this, "登录失败，请稍候再试", Toast.LENGTH_SHORT).show();
         }
 
     }
+
 }

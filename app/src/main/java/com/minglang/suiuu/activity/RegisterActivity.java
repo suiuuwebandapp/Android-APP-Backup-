@@ -21,6 +21,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.AreaCodeAdapter;
 import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.AreaCode;
 import com.minglang.suiuu.entity.AreaCodeData;
 import com.minglang.suiuu.entity.UserBack;
@@ -107,6 +108,8 @@ public class RegisterActivity extends BaseActivity {
     private String headImage;
     private String nickName;
     private String type;
+
+    private TextProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +121,7 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void initView() {
+        dialog = new TextProgressDialog(this);
         //判断是否为快速登录
         if(isQuicklyLogin) {
             Map<String, String> map = SuiuuInfo.ReadQuicklyLoginInfo(this);
@@ -178,6 +182,7 @@ public class RegisterActivity extends BaseActivity {
      * 注册
      */
     public void registerService() {
+        dialog.showDialog();
         String user = et_register_user.getText().toString().trim();
         String passWord = et_register_password.getText().toString().trim();
         String phoneNumber = et_input_phone_number.getText().toString().trim();
@@ -310,6 +315,7 @@ public class RegisterActivity extends BaseActivity {
 
         @Override
         public void onResponse(String response) {
+            dialog.dismissDialog();
             Log.i("suiuu", response);
             try {
                 UserBack user = JsonUtils.getInstance().fromJSON(UserBack.class, response);
@@ -333,6 +339,7 @@ public class RegisterActivity extends BaseActivity {
 
         @Override
         public void onError(Request request, Exception e) {
+            dialog.dismissDialog();
             Toast.makeText(RegisterActivity.this, "注册失败，请检查网络后再试！", Toast.LENGTH_SHORT).show();
         }
 

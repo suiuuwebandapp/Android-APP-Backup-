@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpNewServicePath;
@@ -159,6 +160,7 @@ public class LoginsMainActivity extends BaseActivity {
 
     private IWXAPI weChatApi;
     private UMSocialService mController;
+    private TextProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +172,7 @@ public class LoginsMainActivity extends BaseActivity {
     }
 
     private void initView() {
+        dialog = new TextProgressDialog(this);
         initThirdParty();
     }
 
@@ -204,10 +207,12 @@ public class LoginsMainActivity extends BaseActivity {
                     startActivity(new Intent(LoginsMainActivity.this, RegisterActivity.class));
                     break;
                 case R.id.iv_sina:
+                    dialog.showDialog();
                     type = "3";
                     mController.doOauthVerify(LoginsMainActivity.this, SHARE_MEDIA.SINA, new MicroBlog4UMAuthListener());
                     break;
                 case R.id.iv_wechat:
+                    dialog.showDialog();
                     type = "2";
                     if (!weChatApi.isWXAppInstalled()) {
                         Toast.makeText(LoginsMainActivity.this, NoInstallWeChat, Toast.LENGTH_SHORT).show();
@@ -218,6 +223,7 @@ public class LoginsMainActivity extends BaseActivity {
                     mController.doOauthVerify(LoginsMainActivity.this, SHARE_MEDIA.WEIXIN, new WeChat4UMAuthListener());
                     break;
                 case R.id.iv_qq:
+                    dialog.showDialog();
                     type = "1";
                     UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(LoginsMainActivity.this, TencentConstant.APP_ID, TencentConstant.APP_KEY);
                     qqSsoHandler.addToSocialSDK();
@@ -246,6 +252,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
+            dialog.dismissDialog();
             DeBugLog.i(TAG, "QQ授权完成");
             Toast.makeText(LoginsMainActivity.this, QQAuthorizedComplete, Toast.LENGTH_SHORT).show();
 
@@ -257,6 +264,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onError(SocializeException e, SHARE_MEDIA share_media) {
+            dialog.dismissDialog();
             DeBugLog.i(TAG, "QQ授权错误");
             DeBugLog.e(TAG, "QQ登陆错误:" + e.getMessage() + ",错误代码:" + e.getErrorCode());
             Toast.makeText(LoginsMainActivity.this, QQAuthorizedError, Toast.LENGTH_SHORT).show();
@@ -264,6 +272,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
+            dialog.dismissDialog();
             DeBugLog.i(TAG, "QQ授权取消");
             Toast.makeText(LoginsMainActivity.this, QQAuthorizedCancel, Toast.LENGTH_SHORT).show();
         }
@@ -281,6 +290,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onComplete(int status, Map<String, Object> info) {
+            dialog.dismissDialog();
             DeBugLog.i(TAG, "QQ数据获取完成");
             if (status == 200 && info != null) {
                 String sex = info.get("gender").toString();
@@ -322,6 +332,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
+            dialog.dismissDialog();
             DeBugLog.i(TAG, "微信授权完成");
             Toast.makeText(LoginsMainActivity.this, WeChatAuthorizedComplete, Toast.LENGTH_SHORT).show();
             mController.getPlatformInfo(LoginsMainActivity.this, SHARE_MEDIA.WEIXIN, new WeChat4UMDataListener());
@@ -329,12 +340,14 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onError(SocializeException e, SHARE_MEDIA share_media) {
+            dialog.dismissDialog();
             DeBugLog.i(TAG, "微信授权错误:" + e.getMessage() + ",微信授权错误码:" + e.getErrorCode());
             Toast.makeText(LoginsMainActivity.this, WeChatAuthorizedError, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
+            dialog.dismissDialog();
             DeBugLog.i(TAG, "微信授权取消");
             Toast.makeText(LoginsMainActivity.this, WeChatAuthorizedCancel, Toast.LENGTH_SHORT).show();
         }
@@ -354,6 +367,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
+            dialog.dismissDialog();
             DeBugLog.i(TAG, "新浪微博授权完成！");
             if (bundle != null && !TextUtils.isEmpty(bundle.getString("uid"))) {
                 DeBugLog.i(TAG, "新浪微博授权成功！");
@@ -368,6 +382,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onError(SocializeException e, SHARE_MEDIA share_media) {
+            dialog.dismissDialog();
             DeBugLog.e(TAG, "新浪微博授权错误！" + e.getMessage());
             DeBugLog.e(TAG, "新浪微博错误代码1:" + e.getErrorCode());
             DeBugLog.e(TAG, "新浪微博错误代码2::" + String.valueOf(share_media.getReqCode()));
@@ -376,6 +391,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
+            dialog.dismissDialog();
             DeBugLog.i(TAG, "新浪微博授权取消！");
             Toast.makeText(LoginsMainActivity.this, WeiboAuthorizedCancel, Toast.LENGTH_SHORT).show();
         }
@@ -399,6 +415,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onComplete(int status, Map<String, Object> info) {
+            dialog.dismissDialog();
             DeBugLog.i(TAG, "微信数据获取完成");
             if (status == 200 && info != null) {
                 DeBugLog.i(TAG, "微信数据:" + info.toString());
@@ -445,6 +462,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onComplete(int status, Map<String, Object> info) {
+            dialog.dismissDialog();
             DeBugLog.i(TAG, "status:" + status);
             if (status == 200 && info != null) {
                 DeBugLog.i(TAG, "微博返回数据为:" + info.toString());
@@ -490,6 +508,8 @@ public class LoginsMainActivity extends BaseActivity {
      * 发送QQ相关信息到服务器
      */
     private void sendQQInfo2Service() {
+        dialog.showDialog();
+
         String sign = null;
         try {
             sign = MD5Utils.getMD5(qq_open_id + type + HttpNewServicePath.ConfusedCode);
@@ -516,6 +536,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onResponse(String response) {
+            dialog.dismissDialog();
             Log.i("suiuu", "使用QQ登录返回的数据:" + response);
             try {
                 UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, response);
@@ -536,6 +557,7 @@ public class LoginsMainActivity extends BaseActivity {
                         SuiuuInfo.WriteUserSign(LoginsMainActivity.this, userBack.getData().getIntro());
                         SuiuuInfo.WriteUserData(LoginsMainActivity.this, userBack.getData());
                         startActivity(new Intent(LoginsMainActivity.this, MainActivity.class));
+                        finish();
                     }else {
                         enterMainBind(qq_head_image_path, qq_nick_Name,"1",qq_open_id);
                     }
@@ -552,6 +574,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onError(Request request, Exception e) {
+            dialog.dismissDialog();
             DeBugLog.e(TAG, "QQ登陆数据解析错误:" + e.getMessage());
             Toast.makeText(LoginsMainActivity.this, DataError, Toast.LENGTH_SHORT).show();
         }
@@ -562,6 +585,7 @@ public class LoginsMainActivity extends BaseActivity {
      * 发送微信相关信息到服务器
      */
     private void sendWeChatInfo2Service() {
+        dialog.showDialog();
         String sign = null;
         try {
             sign = MD5Utils.getMD5(wechat_union_id + type + HttpServicePath.ConfusedCode);
@@ -570,7 +594,7 @@ public class LoginsMainActivity extends BaseActivity {
         }
 
         OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[6];
-        paramsArray[0] = new OkHttpManager.Params(OPEN_ID, wechat_union_id);
+        paramsArray[0] = new OkHttpManager.Params(UNION_ID, wechat_union_id);
         paramsArray[1] = new OkHttpManager.Params(NICK_NAME, wechat_nick_name);
         paramsArray[2] = new OkHttpManager.Params(SEX, wechat_gender);
         paramsArray[3] = new OkHttpManager.Params(HEAD_IMG, wechat_head_image_path);
@@ -588,6 +612,7 @@ public class LoginsMainActivity extends BaseActivity {
      * 发送微博相关数据到服务器
      */
     private void sendWeiBoInfo2Service() {
+        dialog.showDialog();
         String code;
         switch (weibo_gender) {
             case "男":
@@ -628,6 +653,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onResponse(String response) {
+            dialog.dismissDialog();
             Log.i("suiuu", response);
             if (TextUtils.isEmpty(response)) {
                 Toast.makeText(LoginsMainActivity.this, NoData, Toast.LENGTH_SHORT).show();
@@ -637,10 +663,16 @@ public class LoginsMainActivity extends BaseActivity {
                         UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, response);
                         if (userBack != null) {
                             if (userBack.getStatus().equals("1")) {
-                                SuiuuInfo.WriteVerification(LoginsMainActivity.this, userBack.getMessage());
-                                SuiuuInfo.WriteUserSign(LoginsMainActivity.this, userBack.getData().getUserSign());
+
                                 if (userBack.getData() != null) {
-                                    startActivity(new Intent(LoginsMainActivity.this,MainActivity.class));
+                                    String userSign = userBack.getData().getUserSign();
+                                    if (!TextUtils.isEmpty(userBack.getData().getUserSign())) {
+                                        SuiuuInfo.WriteUserSign(LoginsMainActivity.this, userSign);
+                                    }
+                                    SuiuuInfo.WriteUserSign(LoginsMainActivity.this, userBack.getData().getIntro());
+                                    SuiuuInfo.WriteUserData(LoginsMainActivity.this, userBack.getData());
+                                    startActivity(new Intent(LoginsMainActivity.this, MainActivity.class));
+                                    finish();
                                 }else {
                                     enterMainBind(weibo_head_img, weibo_name, "3", weibo_open_id);
                                 }
@@ -662,6 +694,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onError(Request request, Exception e) {
+            dialog.dismissDialog();
             DeBugLog.i(TAG, "网络异常:" + e.getMessage());
             Toast.makeText(LoginsMainActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }
@@ -672,7 +705,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onResponse(String response) {
-            Log.i("suiuu", "服务器返回的数据:" + response);
+            dialog.dismissDialog();
             try {
                 UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, response);
                 if (userBack.getStatus().equals("1")) {
@@ -682,17 +715,18 @@ public class LoginsMainActivity extends BaseActivity {
                         SuiuuInfo.WriteVerification(LoginsMainActivity.this, message);
                     }
 
-                    String userSign = userBack.getData().getUserSign();
-                    if (!TextUtils.isEmpty(userSign)) {
-                        SuiuuInfo.WriteUserSign(LoginsMainActivity.this, userSign);
-                    }
-
-                    SuiuuInfo.WriteUserSign(LoginsMainActivity.this, userBack.getData().getIntro());
-                    SuiuuInfo.WriteUserData(LoginsMainActivity.this, userBack.getData());
                     if (userBack.getData() != null) {
-                        startActivity(new Intent(LoginsMainActivity.this,MainActivity.class));
+                        String userSign = userBack.getData().getUserSign();
+                        if (!TextUtils.isEmpty(userBack.getData().getUserSign())) {
+                            SuiuuInfo.WriteUserSign(LoginsMainActivity.this, userSign);
+                        }
+
+                        SuiuuInfo.WriteUserSign(LoginsMainActivity.this, userBack.getData().getIntro());
+                        SuiuuInfo.WriteUserData(LoginsMainActivity.this, userBack.getData());
+                        startActivity(new Intent(LoginsMainActivity.this, MainActivity.class));
+                        finish();
                     }else {
-                        enterMainBind(wechat_head_image_path, wechat_nick_name, "2", wechat_union_id);
+                        enterMainBind(qq_head_image_path, qq_nick_Name, "1", qq_open_id);
                     }
                 } else {
                     Toast.makeText(LoginsMainActivity.this, "登录失败，请重试！", Toast.LENGTH_SHORT).show();
@@ -706,6 +740,7 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onError(Request request, Exception e) {
+            dialog.dismissDialog();
             DeBugLog.e(TAG, "发送微信信息到服务器发生错误:" + e.getMessage());
             Toast.makeText(LoginsMainActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }
@@ -734,7 +769,7 @@ public class LoginsMainActivity extends BaseActivity {
      * @param nickName
      */
     public void enterMainBind(String headImage, String nickName, String type, String openId) {
-        Intent intent = new Intent(this, ActivityMainBind.class);
+        Intent intent = new Intent(this, MainBindActivity.class);
         intent.putExtra("headImage", headImage);
         intent.putExtra("nickName", nickName);
         intent.putExtra("type", type);
