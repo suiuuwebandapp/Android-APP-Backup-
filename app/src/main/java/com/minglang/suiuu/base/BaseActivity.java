@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.application.BaseAppManager;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
@@ -124,6 +125,7 @@ public class BaseActivity extends FragmentActivity {
 
         imageLoader.getMemoryCache().clear();
         imageLoader.clearMemoryCache();
+        BaseAppManager.getInstance().addActivity(this);
     }
 
     private void initStatusBarControl() {

@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MainSliderAdapter;
+import com.minglang.suiuu.application.BaseAppManager;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.fragment.main.CommunityFragment;
 import com.minglang.suiuu.fragment.main.InformationFragment;
@@ -44,6 +45,7 @@ import com.minglang.suiuu.utils.MD5Utils;
 import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 import org.json.JSONException;
@@ -944,7 +946,10 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                     exitTime = System.currentTimeMillis();
                 } else {
-                    finish();
+                    BaseAppManager.getInstance().clear();
+                    System.gc();
+                    MobclickAgent.onKillProcess(this);
+                    android.os.Process.killProcess(android.os.Process.myPid());
                 }
             }
             return true;

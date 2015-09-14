@@ -100,17 +100,16 @@
             android:windowSoftInputMode="stateHidden|adjustResize"/>
 
         <!-- 登陆页面 -->
-        <activity
-            android:name=".activity.LoginActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppMainTheme"/>
+        <!--<activity-->
+            <!--android:name=".activity.LoginActivity"-->
+            <!--android:label="@string/app_name"-->
+            <!--android:launchMode="singleTask"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:theme="@style/AppMainTheme"/>-->
 
         <activity
             android:name=".activity.LoginsMainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"/>
 
@@ -118,9 +117,13 @@
             android:name=".activity.RegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+<<<<<<< HEAD
             android:theme="@style/AppMainTheme"/>
 
         <!-- 登陆页面 -->
+=======
+            android:theme="@style/AppMainTheme" />
+>>>>>>> origin/master
         <activity
             android:name=".activity.LoginsActivity"
             android:label="@string/app_name"
@@ -128,10 +131,19 @@
             android:theme="@style/AppMainTheme"/>
 
         <activity
-            android:name=".activity.ActivityMainBind"
+            android:name=".activity.MainBindActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+<<<<<<< HEAD
             android:theme="@style/AppMainTheme"/>
+=======
+            android:theme="@style/AppMainTheme" />
+        <activity
+            android:name=".activity.LoginChangePasswordActivity"
+            android:label="@string/title_change_password"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme" />
+>>>>>>> origin/master
 
         <!-- 应用主页面 -->
         <activity

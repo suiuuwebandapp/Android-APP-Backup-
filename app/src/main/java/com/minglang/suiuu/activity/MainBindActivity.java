@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
  * 修改时间：2015/9/11 12:42
  * 修改备注：
  */
-public class ActivityMainBind extends BaseActivity {
+public class MainBindActivity extends BaseActivity {
     @Bind(R.id.iv_bind_back)
     ImageView iv_bind_back;
     @Bind(R.id.sdv_bind_head_image)
@@ -70,7 +70,7 @@ public class ActivityMainBind extends BaseActivity {
         tv_account_exist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ActivityMainBind.this, LoginsActivity.class);
+                Intent intent = new Intent(MainBindActivity.this, LoginsActivity.class);
                 intent.putExtra("isQuicklyLogin", true);
                 startActivity(intent);
             }
@@ -78,7 +78,7 @@ public class ActivityMainBind extends BaseActivity {
         tv_join_suiuu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ActivityMainBind.this, RegisterActivity.class);
+                Intent intent = new Intent(MainBindActivity.this, RegisterActivity.class);
                 intent.putExtra("isQuicklyLogin", true);
                 startActivity(intent);
             }

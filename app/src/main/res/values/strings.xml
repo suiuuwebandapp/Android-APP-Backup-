@@ -175,6 +175,7 @@
     <string name="obtain_captcha" translatable="false">获取验证码</string>
     <string name="please_input_number" translatable="false">请输入手机号</string>
     <string name="please_input_confirm_password" translatable="false">请输入确认密码</string>
+    <string name="confirm_change_password" translatable="false">确认修改密码</string>
     <string name="please_input_obtain_captcha" translatable="false">请输入验证码</string>
 
     <!--请求数据为空-->
@@ -547,6 +548,7 @@
     <string name="title_activity_answer" translatable="false">AnswerActivity</string>
     <string name="title_activity_community_search" translatable="false">CommunitySearchActivity</string>
     <string name="title_activity_personal_center" translatable="false">PersonalCenterActivity</string>
+    <string name="title_change_password" translatable="false">LoginChangePasswordActivity</string>
 
     <string name="title_section1" translatable="false">Section 1</string>
     <string name="title_section2" translatable="false">Section 2</string>

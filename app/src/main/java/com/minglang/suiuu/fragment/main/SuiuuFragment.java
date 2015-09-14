@@ -83,9 +83,13 @@ public class SuiuuFragment extends BaseFragment
         suiuuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
-                intent.putExtra("tripId", suiuuDataList.get(position - 1).getTripId());
-                startActivity(intent);
+                if (Utils.isNetworkConnected(getActivity())) {
+                    Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
+                    intent.putExtra("tripId", suiuuDataList.get(position - 1).getTripId());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getActivity(), R.string.lsq_network_connection_interruption, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
