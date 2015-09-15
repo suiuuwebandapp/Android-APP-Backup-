@@ -11,7 +11,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0.1"
-        multiDexEnabled false
+        multiDexEnabled true
     }
 
     sourceSets {
@@ -63,6 +63,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.okio:okio:1.5.0'
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
+    compile 'com.android.support:multidex:1.0.1'
     compile files('libs/picasso-2.4.0.jar')
     compile files('libs/umeng-analytics-v5.2.4.jar')
     compile files('libs/gson-2.3.1.jar')
@@ -78,7 +79,6 @@ dependencies {
     compile files('libs/umeng-update-v2.6.0.1.jar')
     compile files('libs/Android_Map_V2.5.0.jar')
     compile files('libs/Android_Location_V1.3.2.jar')
-    compile files('libs/universal-image-loader-1.9.4.jar')
     compile project(':pulltorefreshlibrary')
     compile files('libs/AMap_Services_V2.4.0.jar')
     compile project(':TuSDK-for-Android-1.8.11')

@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import com.minglang.suiuu.utils.DeBugLog;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.net.URLEncoder;
 
@@ -14,8 +13,6 @@ public class BaseFragment extends Fragment {
     private static final String TAG = BaseFragment.class.getSimpleName();
 
     public static final String TOKEN = "token";
-
-    public ImageLoader imageLoader = ImageLoader.getInstance();
 
     public String userSign;
     public String verification;

@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,9 +18,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.OrderDetails;
 import com.minglang.suiuu.entity.OrderDetails.OrderDetailsData.InfoEntity;
 import com.minglang.suiuu.entity.OrderDetails.OrderDetailsData.UserInfoEntity;
@@ -33,9 +32,6 @@ import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
@@ -62,7 +58,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     private static final String ORDER_NUMBER = "orderNumber";
 
     private static final String ORDER_ID = "orderId";
-    private static final String MESSAGE = "message";
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
@@ -151,7 +146,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     ScrollView scrollView;
 
     @Bind(R.id.suiuu_order_details_head_image)
-    CircleImageView headImageView;
+    SimpleDraweeView headImageView;
 
     @Bind(R.id.suiuu_order_details_status)
     TextView orderStatus;
@@ -213,10 +208,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
     private ProgressDialog progressDialog;
 
-    private ImageLoader imageLoader;
-
-    private DisplayImageOptions options;
-
     private InfoEntity infoEntity;
 
     private OrderDetailsResultCallback orderDetailsResultCallback = new OrderDetailsResultCallback();
@@ -250,13 +241,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(dialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
-
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image)
-                .showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
@@ -436,7 +420,9 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
                 String headImagePath = userInfo.getHeadImg();
                 if (!TextUtils.isEmpty(headImagePath)) {
-                    imageLoader.displayImage(headImagePath, headImageView, options);
+                    headImageView.setImageURI(Uri.parse(headImagePath));
+                } else {
+                    headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
                 }
 
                 String strUserName = userInfo.getNickname();

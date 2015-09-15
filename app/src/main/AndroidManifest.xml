@@ -247,11 +247,6 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <!-- QQ SDK所需的Activity -->
 
-        <activity
-            android:name=".activity.LoopArticleActivity"
-            android:label="@string/title_activity_loop_article"
-            android:theme="@style/AppMainTheme"/>
-
         <!-- 微信回调Activity -->
         <activity
             android:name=".wxapi.WXEntryActivity"

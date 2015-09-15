@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2013-2014 EaseMob Technologies. All rights reserved.
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,7 +14,10 @@
 package com.minglang.suiuu.application;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.StrictMode;
+import android.support.multidex.MultiDex;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.OSSServiceProvider;
@@ -23,19 +26,35 @@ import com.alibaba.sdk.android.oss.model.ClientConfiguration;
 import com.alibaba.sdk.android.oss.model.TokenGenerator;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.koushikdutta.WebSocketClient;
 import com.minglang.suiuu.crash.GlobalCrashHandler;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.SuiuuInfo;
 
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.lasque.tusdk.core.TuSdkApplication;
 
+import java.net.URI;
+import java.util.Collections;
+import java.util.List;
 
 public class SuiuuApplication extends TuSdkApplication {
 
     private static final String TAG = SuiuuApplication.class.getSimpleName();
+
+    private static final String TYPE = "type";
+    private static final String USER_KEY = "user_key";
+    private static final String LOGIN = "login";
+
+    public static final String CONNECT = "connect";
+    public static final String STRING_MESSAGE = "String_Message";
+    public static final String BYTE_MESSAGE = "Byte_Message";
+    public static final String DISCONNECT = "disconnect";
+    public static final String DISCONNECT_CODE = "disconnect_code";
+    public static final String ERROR = "error";
 
     public static Context applicationContext;
     private static SuiuuApplication instance;
@@ -48,13 +67,21 @@ public class SuiuuApplication extends TuSdkApplication {
     static final String accessKey = "LaKLZHyL2Dmy8Qqq"; // 测试代码没有考虑AK/SK的安全性
     static final String screctKey = "c7xPteQRqjV8nNB8xGFIZoFijzjDLX";
 
-    private ImageLoader imageLoader;
+    private static WebSocketClient webSocketClient;
+
+    private LocalBroadcastManager localBroadcastManager;
 
     public static SuiuuApplication getInstance() {
         if (instance == null) {
             instance = new SuiuuApplication();
         }
         return instance;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -64,8 +91,10 @@ public class SuiuuApplication extends TuSdkApplication {
         applicationContext = this;
         instance = this;
 
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+
         initAboutOSS();
-        initImageLoad();
+        initWebSocket();
 
         // 设置输出状态
         this.setEnableLog(true);
@@ -75,14 +104,13 @@ public class SuiuuApplication extends TuSdkApplication {
 
         //初始化TuSDK
         this.initPreLoader(this, "745f61271fd7f7f7-00-04gxn1");
-        //GlobalCrashHandler.getInstance().init(this);
+        GlobalCrashHandler.getInstance().init(this);
 
-    }
+        String loginMessage = buildLoginMessage();
+        DeBugLog.i(TAG, "loginMessage:" + loginMessage);
 
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        imageLoader.clearMemoryCache();
+        webSocketClient.send(loginMessage);
+
     }
 
     /**
@@ -113,19 +141,74 @@ public class SuiuuApplication extends TuSdkApplication {
         ossService.setClientConfiguration(conf);
     }
 
-    private void initImageLoad() {
-        long maxMemorySize = Runtime.getRuntime().maxMemory() / 1024 / 1024;
-        DeBugLog.i(TAG, "最大可用内存为:" + String.valueOf(maxMemorySize));
-        imageLoader = ImageLoader.getInstance();
-        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(this);
-        config.threadPoolSize(4);
-        config.threadPriority(Thread.NORM_PRIORITY - 2);
-        config.denyCacheImageMultipleSizesInMemory();
-        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
-        config.diskCacheSize(Long.bitCount(maxMemorySize / 2));
-        config.memoryCacheSize(50 * 1024 * 1024);
-        config.tasksProcessingOrder(QueueProcessingType.LIFO);
-        imageLoader.init(config.build());
+    private void initWebSocket() {
+        List<BasicNameValuePair> extraHeaders = Collections.singletonList(new BasicNameValuePair("", ""));
+        webSocketClient = new WebSocketClient(URI.create(HttpNewServicePath.SocketPath), new initListener(), extraHeaders);
+        webSocketClient.connect();
+    }
+
+    private String buildLoginMessage() {
+        String verification = SuiuuInfo.ReadVerification(this);
+
+        JSONObject object = new JSONObject();
+        try {
+            object.put(USER_KEY, verification);
+            object.put(TYPE, LOGIN);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return object.toString();
+    }
+
+    public static WebSocketClient getWebSocketClient() {
+        return webSocketClient;
+    }
+
+    private class initListener implements WebSocketClient.Listener {
+
+        @Override
+        public void onConnect() {
+            DeBugLog.i(TAG, "onConnect()");
+            Intent intent = new Intent(CONNECT);
+            intent.putExtra(CONNECT, "Socket连接已建立");
+            localBroadcastManager.sendBroadcast(intent);
+        }
+
+        @Override
+        public void onMessage(String message) {
+            DeBugLog.i(TAG, "String Message:" + message);
+            Intent intent = new Intent(STRING_MESSAGE);
+            intent.putExtra(STRING_MESSAGE, message);
+            localBroadcastManager.sendBroadcast(intent);
+        }
+
+        @Override
+        public void onMessage(byte[] data) {
+            String str = new String(data);
+            DeBugLog.i(TAG, "byte[] Message:" + str);
+
+            Intent intent = new Intent(BYTE_MESSAGE);
+            intent.putExtra(BYTE_MESSAGE, str);
+            localBroadcastManager.sendBroadcast(intent);
+        }
+
+        @Override
+        public void onDisconnect(int code, String reason) {
+            DeBugLog.i(TAG, "onDisconnect(),code:" + code + ",reason:" + reason);
+            Intent intent = new Intent(DISCONNECT);
+            intent.putExtra(DISCONNECT_CODE, code);
+            intent.putExtra(DISCONNECT, reason);
+            localBroadcastManager.sendBroadcast(intent);
+        }
+
+        @Override
+        public void onError(Exception error) {
+            DeBugLog.e(TAG, "onError(),error:" + error.getMessage());
+            Intent intent = new Intent(ERROR);
+            intent.putExtra(ERROR, error);
+            localBroadcastManager.sendBroadcast(intent);
+        }
+
     }
 
 }

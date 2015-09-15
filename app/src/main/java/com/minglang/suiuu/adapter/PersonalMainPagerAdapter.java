@@ -1,6 +1,5 @@
 package com.minglang.suiuu.adapter;
 
-import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -45,8 +44,7 @@ public class PersonalMainPagerAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        @SuppressLint("InflateParams")
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_personal_travel, null);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_personal_travel, parent,false);
         return new PersonalTravelViewHolder(itemView);
     }
 

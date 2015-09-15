@@ -1,52 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/layout_5dp"
-    >
+    android:padding="@dimen/layout_5dp">
 
     <!--评论Item-->
 
     <com.facebook.drawee.view.SimpleDraweeView
-        fresco:roundAsCircle="true"
-        android:layout_width="@dimen/layout_45dp"
-        android:layout_height="@dimen/layout_45dp"
         android:id="@+id/item_comment_head_image"
-        android:background="@drawable/user_head_image_bg"
-        android:layout_marginLeft="10dp"
-        />
+        android:layout_width="@dimen/layout_50dp"
+        android:layout_height="@dimen/layout_50dp"
+        android:layout_marginLeft="@dimen/layout_5dp"
+        android:layout_marginStart="@dimen/layout_5dp"
+        fresco:failureImage="@drawable/default_head_image_error"
+        fresco:failureImageScaleType="fitXY"
+        fresco:placeholderImage="@drawable/default_head_image"
+        fresco:placeholderImageScaleType="fitXY"
+        fresco:roundAsCircle="true"/>
+
     <TextView
+        android:id="@+id/item_comment_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/item_comment_title"
+        android:layout_alignTop="@+id/item_comment_head_image"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        android:textSize="@dimen/layout_15sp"
+        android:layout_toEndOf="@+id/item_comment_head_image"
+        android:layout_toRightOf="@+id/item_comment_head_image"
         android:singleLine="true"
         android:textColor="@color/mainColor"
-        android:layout_alignTop="@+id/item_comment_head_image"
-        android:layout_toRightOf="@+id/item_comment_head_image"
-        android:layout_toEndOf="@+id/item_comment_head_image"
-        />
-    <TextView
-        android:textSize="@dimen/layout_15sp"
-        android:textColor="@color/tr_black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_time"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="@dimen/layout_10dp"
-        android:layout_marginRight="@dimen/layout_10dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/item_comment_content"
-        android:textSize="@dimen/layout_16sp"
-        android:textColor="@color/tr_black"
-        android:layout_below="@+id/item_comment_title"
-        android:layout_alignLeft="@+id/item_comment_title"
-        android:layout_alignStart="@+id/item_comment_title" />
+        android:textSize="@dimen/layout_15sp"/>
 
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/layout_10dp"
+        android:layout_marginRight="@dimen/layout_10dp"
+        android:layout_marginTop="@dimen/layout_10dp"
+        android:textColor="@color/tr_black"
+        android:textSize="@dimen/layout_15sp"/>
+
+    <TextView
+        android:id="@+id/item_comment_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/item_comment_title"
+        android:layout_alignStart="@+id/item_comment_title"
+        android:layout_below="@+id/item_comment_title"
+        android:textColor="@color/tr_black"
+        android:textSize="@dimen/layout_16sp"/>
 
 </RelativeLayout>

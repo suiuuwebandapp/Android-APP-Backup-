@@ -5,7 +5,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.BaseHolderAdapter;
 import com.minglang.suiuu.adapter.SelectPictureAdapter;
@@ -30,8 +30,6 @@ import com.minglang.suiuu.entity.ImageItem;
 import com.minglang.suiuu.popupwindow.BasePopupWindowForListView;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.ViewHolder;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -52,8 +50,6 @@ public class SelectPictureActivity extends BaseActivity {
     private static final int OPEN_CAMERA = 100;
 
     private static final int result = 9;
-
-    private DisplayImageOptions options;
 
     private ContentResolver mContentResolver;
 
@@ -136,11 +132,6 @@ public class SelectPictureActivity extends BaseActivity {
     private void initView() {
 
         mContentResolver = getContentResolver();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image)
-                .showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
 
         imageAll = new ImageFolder();
         imageAll.setDir("/所有图片");
@@ -335,12 +326,12 @@ public class SelectPictureActivity extends BaseActivity {
                 @Override
                 public void convert(ViewHolder helper, ImageFolder item, long position) {
 
-                    ImageView imageView = helper.getView(R.id.id_dir_item_image);
+                    SimpleDraweeView imageView = helper.getView(R.id.id_dir_item_image);
                     TextView title = helper.getView(R.id.id_dir_item_name);
                     TextView count = helper.getView(R.id.id_dir_item_count);
                     ImageView choose = helper.getView(R.id.choose);
 
-                    imageLoader.displayImage("file://" + item.getFirstImagePath(), imageView, options);
+                    imageView.setImageURI(Uri.parse("file://com.minglang.suiuu/" + item.getFirstImagePath()));
                     title.setText(item.getName());
                     count.setText(item.images.size() + "张");
                     choose.setVisibility(currentImageFolder == item ? View.VISIBLE : View.GONE);

@@ -19,8 +19,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.customview.swipelistview.SwipeListView;
 import com.minglang.suiuu.utils.ViewHolder;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkResult;
@@ -41,9 +39,7 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
     private List<String> list;
     private Activity activity;
     private String type;
-    private ImageLoader imageLoader;
 
-    private DisplayImageOptions options;
     private List<String> changeContentList;
 
     private SwipeListView swipeListView;
@@ -110,7 +106,7 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
             picDescriptionView.setText(changeContentList.get(position));
 
         }
-        Uri uri = Uri.parse("file://"+list.get(position));
+        Uri uri = Uri.parse("file://" + list.get(position));
         pictureView.setImageURI(uri);
 
 
@@ -190,14 +186,12 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
      * @param error
      * @param lastFragment
      */
-    private void openEditMultiple(Bitmap bitmap, TuSdkResult result, Error error,
-                                  TuFragment lastFragment) {
+    private void openEditMultiple(Bitmap bitmap, TuSdkResult result, Error error, TuFragment lastFragment) {
         if (result == null || error != null) return;
         // 组件委托
         TuSdkComponent.TuSdkComponentDelegate delegate = new TuSdkComponent.TuSdkComponentDelegate() {
             @Override
-            public void onComponentFinished(TuSdkResult result, Error error,
-                                            TuFragment lastFragment) {
+            public void onComponentFinished(TuSdkResult result, Error error, TuFragment lastFragment) {
                 String path = result.imageSqlInfo.path;
                 if (!TextUtils.isEmpty(path)) {
                     resetPic(path);
@@ -207,7 +201,7 @@ public class EasyTackPhotoAdapter extends BaseAdapter {
 
         // 组件选项配置
         // @see-http://tusdk.com/docs/android/api/org/lasque/tusdk/impl/components/TuEditMultipleComponent.html
-        TuEditMultipleComponent component = null;
+        TuEditMultipleComponent component;
 
         if (lastFragment == null) {
             component = TuSdk.editMultipleCommponent(

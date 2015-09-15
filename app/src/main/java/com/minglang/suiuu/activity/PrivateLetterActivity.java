@@ -2,6 +2,7 @@ package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -44,6 +45,8 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
+
+    private static final String RELATE_ID = "relateId";
 
     @BindColor(R.color.white)
     int titleColor;
@@ -151,7 +154,9 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int location = position - 1;
                 String relateId = listAll.get(location).getRelateId();
-                DeBugLog.i(TAG, "relateId:" + relateId);
+                Intent intent = new Intent(PrivateLetterActivity.this, PrivateLetterChatActivity.class);
+                intent.putExtra(RELATE_ID, relateId);
+                startActivity(intent);
             }
         });
 

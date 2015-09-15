@@ -480,6 +480,7 @@ public class SuiuuInfo implements Serializable {
         editor.putString(W_NICK_NAME, nickName);
         editor.apply();
     }
+
     public static void WriteQuicklyLoginInfo(Context context, String openId, String nickName,String type,String headImage) {
         SharedPreferences sp = context.getSharedPreferences(QUICKLYLOGININFO, Context.MODE_APPEND);
         SharedPreferences.Editor editor = sp.edit();

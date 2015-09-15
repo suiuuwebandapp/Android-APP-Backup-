@@ -14,7 +14,6 @@ import com.minglang.suiuu.application.BaseAppManager;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.SystemBarTintManager;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.net.URLEncoder;
 import java.util.Locale;
@@ -23,8 +22,6 @@ public class BaseActivity extends FragmentActivity {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
     public static final String TOKEN = "token";
-
-    public ImageLoader imageLoader = ImageLoader.getInstance();
 
     /**
      * 状态栏控制
@@ -123,8 +120,6 @@ public class BaseActivity extends FragmentActivity {
         baseFragment.setScreenHeight(screenHeight);
         baseFragment.setScreenWidth(screenWidth);
 
-        imageLoader.getMemoryCache().clear();
-        imageLoader.clearMemoryCache();
         BaseAppManager.getInstance().addActivity(this);
     }
 

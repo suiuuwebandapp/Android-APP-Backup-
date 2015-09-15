@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 
 import com.minglang.suiuu.utils.DeBugLog;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.net.URLEncoder;
 
@@ -24,8 +23,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
     public static final String PAGE = "page";
     public static final String NUMBER = "number";
-
-    public ImageLoader imageLoader;
 
     public DisplayMetrics dm;
 
@@ -57,7 +54,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
-        imageLoader = ImageLoader.getInstance();
         initScreen();
     }
 
@@ -84,10 +80,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
             if (keyArray.length > i + 1) {
                 _url = _url + key + "=" + value + "&";
-//                DeBugLog.i(TAG, "true:" + _url);
             } else {
                 _url = _url + key + "=" + value;
-//                DeBugLog.i(TAG, "false:" + _url);
             }
         }
         return _url;

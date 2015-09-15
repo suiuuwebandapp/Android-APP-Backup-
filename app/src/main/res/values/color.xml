@@ -42,7 +42,7 @@
 
     <!--分割线-->
     <color name="topColor">#55d4bf</color>
-    <color name="mainColor">#62d6c3</color>
+    <color name="mainColor">#00E1C3</color>
     <color name="mainColor2">#fde69a</color>
     <color name="mainColor3">#54ECD4</color>
 
@@ -68,6 +68,8 @@
     <color name="backgroundColor">#eeeeee</color>
     <color name="backgroundColor2">#F7F7F7</color>
     <color name="remindColor">#ffeb78</color>
+
+    <color name="AcceptBackgroundColor">#94C9FF</color>
 
     <color name="click_red">#ff7a45</color>
     <color name="click_yellow">#ffeb78</color>

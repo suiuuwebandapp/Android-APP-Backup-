@@ -271,6 +271,11 @@ public class HttpNewServicePath {
      */
     public static String getPrivateLetterListPath = RootPath + "/app-user-message/get-user-session-list";
 
+    /**
+     * 获取聊天记录
+     */
+    public static String getPrivateLetterInfoPath = RootPath + "/app-user-message/get-user-message-info";
+
     //********************************************侧栏-普通用户-预定订单***********************************************************\\
 
     /**

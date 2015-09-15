@@ -1,23 +1,20 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.customview.CircleImageView;
-import com.minglang.suiuu.entity.OrderManage;
+import com.minglang.suiuu.entity.OrderManage.OrderManageData;
 import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ViewHolder;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -31,28 +28,13 @@ public class OrderListManageAdapter extends BaseAdapter {
     private static final String TAG = OrderListManageAdapter.class.getSimpleName();
 
     private Context context;
-
-    private List<OrderManage.OrderManageData> list;
-
-    private ImageLoader imageLoader;
-
-    private DisplayImageOptions options;
+    private List<OrderManageData> list;
 
     public OrderListManageAdapter(Context context) {
         this.context = context;
-        init();
     }
 
-    private void init() {
-        imageLoader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image)
-                .showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
-    }
-
-    public void setList(List<OrderManage.OrderManageData> list) {
+    public void setList(List<OrderManageData> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -86,7 +68,7 @@ public class OrderListManageAdapter extends BaseAdapter {
         convertView = holder.getConvertView();
 
         //用户头像
-        CircleImageView headImageView = holder.getView(R.id.new_oder_user_head_image);
+        SimpleDraweeView headImageView = holder.getView(R.id.new_oder_user_head_image);
         //标题
         TextView titleView = holder.getView(R.id.new_order_title);
         //价格
@@ -101,11 +83,13 @@ public class OrderListManageAdapter extends BaseAdapter {
         TextView personCountView = holder.getView(R.id.new_order_people_number);
 
         if (list != null && list.size() > 0) {
-            OrderManage.OrderManageData newOrderData = list.get(position);
+            OrderManageData newOrderData = list.get(position);
 
             String headImagePath = newOrderData.getHeadImg();
             if (!TextUtils.isEmpty(headImagePath)) {
-                imageLoader.displayImage(headImagePath, headImageView, options);
+                headImageView.setImageURI(Uri.parse(headImagePath));
+            } else {
+                headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
             }
 
             String tripJsonInfo = newOrderData.getTripJsonInfo();
@@ -151,7 +135,7 @@ public class OrderListManageAdapter extends BaseAdapter {
 
             String personCount = newOrderData.getPersonCount();
             if (!TextUtils.isEmpty(personCount)) {
-                personCountView.setText("出行人数:"+personCount);
+                personCountView.setText("出行人数:" + personCount);
             } else {
                 personCountView.setText("0");
             }

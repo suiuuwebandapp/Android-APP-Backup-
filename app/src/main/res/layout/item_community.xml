@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/layout_8dp">
 
-        <com.minglang.suiuu.customview.CircleImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/item_community_header_image"
             android:layout_width="@dimen/layout_50dp"
             android:layout_height="@dimen/layout_50dp"
@@ -18,7 +19,11 @@
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="@dimen/layout_10dp"
             android:layout_marginStart="@dimen/layout_10dp"
-            android:src="@drawable/default_head_image"/>
+            fresco:failureImage="@drawable/default_head_image_error"
+            fresco:failureImageScaleType="fitCenter"
+            fresco:placeholderImage="@drawable/default_head_image"
+            fresco:placeholderImageScaleType="fitCenter"
+            fresco:roundAsCircle="true"/>
 
         <TextView
             android:id="@+id/item_community_count"
@@ -28,10 +33,10 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/layout_5dp"
             android:layout_marginTop="@dimen/layout_5dp"
-            android:gravity="center_horizontal"
-            android:drawablePadding="@dimen/layout_3dp"
             android:drawableLeft="@drawable/icon_comment"
+            android:drawablePadding="@dimen/layout_3dp"
             android:drawableStart="@drawable/icon_comment"
+            android:gravity="center_horizontal"
             android:text="@string/Zero"
             android:textSize="@dimen/layout_18sp"/>
 

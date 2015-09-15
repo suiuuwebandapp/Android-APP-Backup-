@@ -3,7 +3,6 @@ package com.minglang.suiuu.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,9 +22,9 @@ import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
 import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSFile;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.customview.pickerview.OptionsPopupWindow;
 import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
@@ -37,8 +36,6 @@ import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.Utils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.squareup.okhttp.Request;
 
 import java.io.File;
@@ -118,7 +115,7 @@ public class PersonalSettingActivity extends BaseActivity {
      * 头像ImageView
      */
     @Bind(R.id.headImageView)
-    CircleImageView headImageView;
+    SimpleDraweeView headImageView;
 
     /**
      * 昵称编辑框
@@ -154,8 +151,6 @@ public class PersonalSettingActivity extends BaseActivity {
     private String netWorkImagePath;
 
     private ProgressDialog upLoadDialog;
-
-    private DisplayImageOptions options;
 
     private UserBackData data;
 
@@ -231,13 +226,6 @@ public class PersonalSettingActivity extends BaseActivity {
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
 
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.default_head_image)
-                .showImageForEmptyUri(R.drawable.default_head_image)
-                .showImageOnFail(R.drawable.default_head_image)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
-
         data = SuiuuInfo.ReadUserData(this);
 
         optionsPopupWindow = new OptionsPopupWindow(this);
@@ -255,10 +243,12 @@ public class PersonalSettingActivity extends BaseActivity {
         netWorkImagePath = data.getHeadImg();
 
         if (!TextUtils.isEmpty(netWorkImagePath)) {
-            imageLoader.displayImage(netWorkImagePath, headImageView, options);
+            headImageView.setImageURI(Uri.parse(netWorkImagePath));
         } else {
             if (!TextUtils.isEmpty(nativeImagePath)) {
-                imageLoader.displayImage("file://" + nativeImagePath, headImageView, options);
+                headImageView.setImageURI(Uri.parse("file://com.minglang.suiuu/" + nativeImagePath));
+            } else {
+                headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
             }
         }
 
@@ -495,7 +485,7 @@ public class PersonalSettingActivity extends BaseActivity {
                 break;
 
             case AppConstant.INTENT_CROP:
-                imageLoader.displayImage("file://" + nativeImagePath, headImageView);
+                headImageView.setImageURI(Uri.parse("file://" + nativeImagePath));
                 break;
 
             case AppConstant.SELECT_COUNTRY_OK:

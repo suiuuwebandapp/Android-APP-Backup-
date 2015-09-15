@@ -2,22 +2,19 @@ package com.minglang.suiuu.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.ImageFolder;
 import com.minglang.suiuu.entity.ImageItem;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import java.util.List;
 
@@ -31,10 +28,6 @@ public class SelectPictureAdapter extends BaseAdapter {
 
     private ImageFolder currentImageFolder;
 
-    private ImageLoader loader;
-
-    private DisplayImageOptions options;
-
     private List<String> selectedPicture;
 
     private TextView complete;
@@ -46,12 +39,6 @@ public class SelectPictureAdapter extends BaseAdapter {
         this.currentImageFolder = currentImageFolder;
         this.selectedPicture = selectedPicture;
         this.complete = complete;
-
-        loader = ImageLoader.getInstance();
-        options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.loading)
-                .showImageForEmptyUri(R.drawable.loading).showImageOnFail(R.drawable.loading_error)
-                .cacheInMemory(true).cacheOnDisk(true).considerExifParams(true)
-                .imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
     public void setImageFolder(ImageFolder currentImageFolder) {
@@ -82,7 +69,7 @@ public class SelectPictureAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.item_grid_select_picture, null);
-            holder.iv = (ImageView) convertView.findViewById(R.id.iv);
+            holder.iv = (SimpleDraweeView) convertView.findViewById(R.id.iv);
             holder.checkBox = (Button) convertView.findViewById(R.id.check);
             convertView.setTag(holder);
         } else {
@@ -97,7 +84,7 @@ public class SelectPictureAdapter extends BaseAdapter {
             holder.checkBox.setVisibility(View.VISIBLE);
 
             final ImageItem item = currentImageFolder.images.get(position);
-            loader.displayImage("file://" + item.path, holder.iv, options);
+            holder.iv.setImageURI(Uri.parse("file://com.minglang.suiuu/" + item.path));
             boolean isSelected = selectedPicture.contains(item.path);
 
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +111,7 @@ public class SelectPictureAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        ImageView iv;
+        SimpleDraweeView iv;
         Button checkBox;
     }
 
