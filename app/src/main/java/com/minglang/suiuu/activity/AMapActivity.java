@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
@@ -27,6 +29,9 @@ import com.minglang.suiuu.customview.TextProgressDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 
 public class AMapActivity extends BaseActivity implements
         AMapLocationListener, PoiSearch.OnPoiSearchListener, ReFlashListView.IReflashListener, ReFlashListView.ILoadMoreDataListener {
@@ -41,15 +46,23 @@ public class AMapActivity extends BaseActivity implements
     private PoiSearch poiSearch;
     private PoiResult poiResult; // poi返回的结果
     private List<PoiItem> poiItems;// poi数据
-    private ReFlashListView lv_location_message;
     private SearchNearMessageAdapter adapter;
     private TextProgressDialog dialog;
-    private ImageView iv_top_callback;
+    @Bind(R.id.et_amp_location_search)
+    EditText et_amp_location_search;
+    @Bind(R.id.lv_location_message)
+    ReFlashListView lv_location_message;
+    @Bind(R.id.iv_top_callback)
+    ImageView iv_top_callback;
+    @Bind(R.id.iv_amp_top_search)
+    ImageView iv_amp_top_search;
+    private String searchKey;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_amap);
+        ButterKnife.bind(this);
         init();
         viewAction();
         dialog.showDialog();
@@ -67,10 +80,9 @@ public class AMapActivity extends BaseActivity implements
         mLocationManagerProxy.requestLocationData(
                 LocationProviderProxy.AMapNetwork, -1, 15, this);
         mLocationManagerProxy.setGpsEnable(false);
-        lv_location_message = (ReFlashListView) findViewById(R.id.lv_location_message);
-        iv_top_callback = (ImageView) findViewById(R.id.iv_top_callback);
         dialog = new TextProgressDialog(this);
         poiItems = new ArrayList<>();
+
 
     }
 
@@ -87,10 +99,27 @@ public class AMapActivity extends BaseActivity implements
 
         if (lp != null) {
             poiSearch = new PoiSearch(this, query);
-            poiSearch.setOnPoiSearchListener((PoiSearch.OnPoiSearchListener) this);
+            poiSearch.setOnPoiSearchListener(this);
             poiSearch.setBound(new SearchBound(lp, 2000, true));//
             poiSearch.searchPOIAsyn();// 异步搜索
         }
+    }
+
+    public void keySearch() {
+        dialog.showDialog();
+        query = new PoiSearch.Query(searchKey, "", city);
+        // keyWord表示搜索字符串，
+        // 第二个参数表示POI搜索类型，二者选填其一，
+        //POI搜索类型共分为以下20种：汽车服务|汽车销售|
+        // 汽车维修|摩托车服务|餐饮服务|购物服务|生活服务|体育休闲服务|医疗保健服务|
+        //住宿服务|风景名胜|商务住宅|政府机构及社会团体|科教文化服务|交通设施服务|
+        //金融保险服务|公司企业|道路附属设施|地名地址信息|公共设施
+        //cityCode表示POI搜索区域的编码，是必须设置参数
+        query.setPageSize(30);// 设置每页最多返回多少条poiitem
+        query.setPageNum(currentPage);//设置查询页码
+        PoiSearch poiSearch = new PoiSearch(this, query);//初始化poiSearch对象
+        poiSearch.setOnPoiSearchListener(this);//设置回调数据的监听器
+        poiSearch.searchPOIAsyn();//开始搜索
     }
 
     /**
@@ -106,7 +135,12 @@ public class AMapActivity extends BaseActivity implements
                 }
             }
         }
-        showList();
+        if (currentPage == 1 && poiResult.getPois().size() < 1) {
+            dialog.dismissDialog();
+            Toast.makeText(this, R.string.no_search_data, Toast.LENGTH_SHORT).show();
+        } else {
+            showList();
+        }
     }
 
     private void showList() {
@@ -123,7 +157,6 @@ public class AMapActivity extends BaseActivity implements
 
     @Override
     public void onPoiItemDetailSearched(PoiItemDetail poiItemDetail, int i) {
-
     }
 
 
@@ -134,7 +167,7 @@ public class AMapActivity extends BaseActivity implements
                 Intent intent = AMapActivity.this.getIntent();
                 intent.putExtra("latitude", poiItems.get(position - 1).getLatLonPoint().getLatitude());
                 intent.putExtra("longitude", poiItems.get(position - 1).getLatLonPoint().getLongitude());
-                intent.putExtra("address", TextUtils.isEmpty(poiItems.get(position - 1).getSnippet()) ?poiItems.get(position - 1).toString():poiItems.get(position - 1).getSnippet());
+                intent.putExtra("address", TextUtils.isEmpty(poiItems.get(position - 1).getSnippet()) ? poiItems.get(position - 1).toString() : poiItems.get(position - 1).getSnippet());
                 intent.putExtra("country", country);
                 intent.putExtra("city", city);
                 AMapActivity.this.setResult(RESULT_OK, intent);
@@ -148,6 +181,21 @@ public class AMapActivity extends BaseActivity implements
                 finish();
             }
         });
+
+        iv_amp_top_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchKey = et_amp_location_search.getText().toString().trim();
+                if (TextUtils.isEmpty(searchKey)) {
+                    Toast.makeText(AMapActivity.this, "请输入搜索地点", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                currentPage = 1;
+                poiItems.clear();
+                keySearch();
+            }
+        });
+
     }
 
     /**
@@ -200,7 +248,11 @@ public class AMapActivity extends BaseActivity implements
     public void onLoadMoreData() {
         dialog.showDialog();
         currentPage += 1;
-        doSearchQuery();
+        if (TextUtils.isEmpty(searchKey)) {
+            doSearchQuery();
+        } else {
+            keySearch();
+        }
         lv_location_message.loadComplete();
     }
 

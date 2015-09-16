@@ -185,11 +185,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="60dp"
-            android:text="支付"
+            android:text="确定"
             bootstrapbutton:bb_roundedCorners="true"
             bootstrapbutton:bb_size="small"
             bootstrapbutton:bb_type="info" />
-
-
     </RelativeLayout>
 </RelativeLayout>

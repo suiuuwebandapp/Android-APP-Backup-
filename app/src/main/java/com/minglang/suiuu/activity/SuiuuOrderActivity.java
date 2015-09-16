@@ -3,7 +3,6 @@ package com.minglang.suiuu.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -150,10 +149,8 @@ public class SuiuuOrderActivity extends BaseActivity {
         }
         @Override
         public void onResponse(String response) {
-            Log.i("suiuu", response);
             try {
                 JSONObject message = new JSONObject(response);
-
                 String status = message.getString("status");
                 String orderNumber;
                 if ("1".equals(status)) {

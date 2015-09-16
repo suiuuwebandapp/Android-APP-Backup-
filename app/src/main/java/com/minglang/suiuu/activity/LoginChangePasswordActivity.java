@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -119,7 +121,7 @@ public class LoginChangePasswordActivity extends BaseActivity {
 
     private void initView() {
         //判断是否为快速登录
-        if(isQuicklyLogin) {
+        if (isQuicklyLogin) {
             Map<String, String> map = SuiuuInfo.ReadQuicklyLoginInfo(this);
             openId = map.get("openId");
             headImage = map.get("headImage");
@@ -145,6 +147,7 @@ public class LoginChangePasswordActivity extends BaseActivity {
     private void viewAction() {
         iv_change_password_back.setOnClickListener(new MyOnClickListener());
         tv_change_password_get_confirm_number.setOnClickListener(new MyOnClickListener());
+        tv_confirm_change_password.setOnClickListener(new MyOnClickListener());
     }
 
     private class MyOnClickListener implements View.OnClickListener {
@@ -157,11 +160,45 @@ public class LoginChangePasswordActivity extends BaseActivity {
                 case R.id.tv_change_password_get_confirm_number:
                     setPhoneNumber4Service();
                     break;
+                case R.id.tv_confirm_change_password:
+                    changePassWord();
+                    break;
 
 
             }
         }
     }
+
+    /**
+     * 更新密码提交
+     */
+    private void changePassWord() {
+        String phoneNumber = et_change_password_input_phone_number.getText().toString().trim();
+        String verificationCode = et_verification_code.getText().toString().trim();
+        String changePassWord = et_change_passWord.getText().toString().trim();
+        if (TextUtils.isEmpty(phoneNumber)) {
+            Toast.makeText(this, R.string.phone_number_is_empty, Toast.LENGTH_SHORT).show();
+        }
+        if (TextUtils.isEmpty(verificationCode)) {
+            Toast.makeText(this, R.string.verification_number_is_empty, Toast.LENGTH_SHORT).show();
+        }
+        if (TextUtils.isEmpty(changePassWord)) {
+            Toast.makeText(this, R.string.secrete_number_is_empty, Toast.LENGTH_SHORT).show();
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("phone", phoneNumber);
+        map.put("code", verificationCode);
+        map.put("password", changePassWord);
+        Log.i("suiuu",phoneNumber + "=="+verificationCode+"=="+changePassWord);
+        try {
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.UpdatePassWord,
+                    new updatePassWordCallBack(), map);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     /**
      * 把国际电话区号和手机号发送到服务器
      */
@@ -169,7 +206,7 @@ public class LoginChangePasswordActivity extends BaseActivity {
         String zone = tv_change_password_zone.getText().toString().trim();
         String phoneNumber = et_change_password_input_phone_number.getText().toString().trim();
         if (TextUtils.isEmpty(phoneNumber)) {
-            Toast.makeText(LoginChangePasswordActivity.this, "电话号码不能为空！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginChangePasswordActivity.this, R.string.phone_number_is_empty, Toast.LENGTH_SHORT).show();
             return;
         } else {
             time.start();//开始计时
@@ -178,12 +215,13 @@ public class LoginChangePasswordActivity extends BaseActivity {
         paramsArray[0] = new OkHttpManager.Params(AREA_CODE, zone);
         paramsArray[1] = new OkHttpManager.Params(PHONE, phoneNumber);
         try {
-            OkHttpManager.onPostAsynRequest(HttpNewServicePath.SendAreaCodeAndPhoneNumber,
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.UpdatePasswordSendAreaCodeAndPhoneNumber,
                     new PhoneNumberResultCallback(), paramsArray);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     private class PhoneNumberResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
@@ -209,6 +247,29 @@ public class LoginChangePasswordActivity extends BaseActivity {
 
     }
 
+    private class updatePassWordCallBack extends OkHttpManager.ResultCallback<String> {
+
+        @Override
+        public void onError(Request request, Exception e) {
+            Toast.makeText(LoginChangePasswordActivity.this, "修改失败，请重试！", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onResponse(String response) {
+            try {
+                JSONObject json = new JSONObject(response);
+                String status = (String) json.get("status");
+                String data = (String) json.get("data");
+                Toast.makeText(LoginChangePasswordActivity.this,data,Toast.LENGTH_SHORT).show();
+                if("1".equals(status) && data.equals("修改成功")) {
+                    finish();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     class TimeCount extends CountDownTimer {
         public TimeCount(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);//参数依次为总时长,和计时的时间间隔
@@ -223,7 +284,7 @@ public class LoginChangePasswordActivity extends BaseActivity {
         @Override
         public void onTick(long millisUntilFinished) {//计时过程显示
             tv_change_password_get_confirm_number.setClickable(false);
-            tv_change_password_get_confirm_number.setText(millisUntilFinished / 1000 + "秒");
+            tv_change_password_get_confirm_number.setText(millisUntilFinished / 1000 + "秒后重试");
         }
     }
 }

@@ -107,7 +107,7 @@ public class DateTimePickDialogUtils implements OnDateChangedListener, OnTimeCha
         ad = new AlertDialog.Builder(activity)
                 .setTitle(initDateTime)
                 .setView(dateTimeLayout)
-                .setPositiveButton("设置", new DialogInterface.OnClickListener() {
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         if (isDateTime) {
                             inputDate.setText(dateTime);

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/titleColor"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_top2_layout" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/layout_8dp"
+            android:layout_marginRight="@dimen/layout_8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/layout_8dp"
+                android:text="@string/order_person_info"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/connection_name"
+                android:textColor="@color/textColor"
+                android:layout_margin="@dimen/layout_5dp"
+                android:textSize="@dimen/layout_14sp" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:hint="@string/input_name"
+                android:padding="@dimen/layout_8dp"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="微信号"
+                android:layout_margin="@dimen/layout_5dp"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_14sp"/>
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:hint="选填"
+                android:padding="@dimen/layout_8dp"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_5dp"
+                android:text="主要联系号码"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_14sp" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:hint="国内手机号"
+                android:padding="@dimen/layout_8dp"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_5dp"
+                android:text="备用联系号码"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_14sp" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:hint="选填"
+                android:padding="@dimen/layout_8dp"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_15sp" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="紧急联系方式"
+                android:gravity="center"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_18sp"
+                android:layout_marginTop="@dimen/layout_15dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/connection_name"
+                android:textColor="@color/textColor"
+                android:layout_margin="@dimen/layout_5dp"
+                android:textSize="@dimen/layout_14sp" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:hint="@string/input_name"
+                android:padding="@dimen/layout_8dp"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_15sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_5dp"
+                android:text="联系人手机"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_14sp" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="@dimen/layout_8dp"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_15sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
