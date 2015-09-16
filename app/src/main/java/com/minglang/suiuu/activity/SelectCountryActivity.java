@@ -18,10 +18,14 @@ import com.minglang.suiuu.customview.SideBar;
 import com.minglang.suiuu.entity.Country;
 import com.minglang.suiuu.entity.CountryAssistData;
 import com.minglang.suiuu.entity.CountryData;
+import com.minglang.suiuu.entity.HaveAssistData;
+import com.minglang.suiuu.entity.HaveCountry;
+import com.minglang.suiuu.fragment.main.CommunityFragment;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.CharacterParser;
 import com.minglang.suiuu.utils.CountryNameComparator;
 import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.HaveCountryNameComparator;
 import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.OkHttpManager;
@@ -43,6 +47,8 @@ import butterknife.ButterKnife;
 public class SelectCountryActivity extends BaseActivity {
 
     private static final String TAG = SelectCountryActivity.class.getSimpleName();
+
+    private static final String OTHER_TAG = "OtherTag";
 
     private static final String COUNTRY_ID = "countryId";
     private static final String CITY_ID = "cityId";
@@ -84,7 +90,11 @@ public class SelectCountryActivity extends BaseActivity {
 
     private CountryNameComparator countryNameComparator;
 
+    private HaveCountryNameComparator haveCountryNameComparator;
+
     private List<CountryAssistData> list;
+
+    private List<HaveAssistData> haveList;
 
     private String selectCountryId;
 
@@ -92,11 +102,17 @@ public class SelectCountryActivity extends BaseActivity {
 
     private String selectCountryUSname;
 
+    private boolean isAllCountry = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_country);
         ButterKnife.bind(this);
+
+        String otherTag = getIntent().getStringExtra(OTHER_TAG);
+        if (!TextUtils.isEmpty(otherTag) && otherTag.equals(CommunityFragment.class.getSimpleName())) isAllCountry = true;
+
         initView();
         viewAction();
         getCountryData4Service();
@@ -112,6 +128,7 @@ public class SelectCountryActivity extends BaseActivity {
 
         characterParser = CharacterParser.getInstance();
         countryNameComparator = new CountryNameComparator();
+        haveCountryNameComparator = new HaveCountryNameComparator();
 
         sideBar.setTextView(textDialog);
 
@@ -168,10 +185,12 @@ public class SelectCountryActivity extends BaseActivity {
             progressDialog.show();
         }
 
-        String url = HttpNewServicePath.getCountryData + "?" + HttpNewServicePath.key + "=" + verification +
-                "&" + TOKEN + "=" + token;
+        String baseUrl = isAllCountry ? HttpNewServicePath.getHaveCountryPath : HttpNewServicePath.getCountryData;
+        String url = baseUrl + "?" + HttpNewServicePath.key + "=" + verification + "&" + TOKEN + "=" + token;
+
         try {
-            OkHttpManager.onGetAsynRequest(url, new SelectCountryResultCallback());
+            OkHttpManager.onGetAsynRequest(url,
+                    isAllCountry ? new HaveCountryResultCallback() : new SelectCountryResultCallback());
         } catch (IOException e) {
             e.printStackTrace();
             hideDialog();
@@ -219,6 +238,21 @@ public class SelectCountryActivity extends BaseActivity {
         return list;
     }
 
+    private List<HaveAssistData> HaveTransformationData(List<HaveCountry.HaveCountryData> haveList) {
+        List<HaveAssistData> list = new ArrayList<>();
+        for (HaveCountry.HaveCountryData haveCountryData : haveList) {
+            HaveAssistData haveAssistData = new HaveAssistData();
+            haveAssistData.setQCountryId(haveCountryData.getQCountryId());
+            haveAssistData.setCname(haveCountryData.getCname());
+            haveAssistData.setEname(haveCountryData.getEname());
+            String firstLetter = characterParser.getSelling(haveCountryData.getCname()).substring(0, 1)
+                    .toLowerCase(Locale.getDefault());
+            haveAssistData.setFirstLetter(firstLetter);
+            list.add(haveAssistData);
+        }
+        return list;
+    }
+
     private class SelectCountryResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
@@ -227,23 +261,22 @@ public class SelectCountryActivity extends BaseActivity {
             hideDialog();
             if (TextUtils.isEmpty(response)) {
                 Toast.makeText(SelectCountryActivity.this, NoData, Toast.LENGTH_SHORT).show();
-            } else {
-                try {
-                    Country country = JsonUtils.getInstance().fromJSON(Country.class, response);
-                    List<CountryData> countryDataList = country.getData();
-                    if (countryDataList != null && countryDataList.size() > 0) {
-                        list = TransformationData(countryDataList);
-                        Collections.sort(list, countryNameComparator);
-                        adapter = new SelectCountryAdapter(SelectCountryActivity.this, list);
-                        countryListView.setAdapter(adapter);
-                    } else {
-                        Toast.makeText(SelectCountryActivity.this, NoData, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    DeBugLog.e(TAG, "解析失败:" + e.getMessage());
-                    Toast.makeText(SelectCountryActivity.this, DataError, Toast.LENGTH_SHORT).show();
+            } else try {
+                Country country = JsonUtils.getInstance().fromJSON(Country.class, response);
+                List<CountryData> countryDataList = country.getData();
+                if (countryDataList != null && countryDataList.size() > 0) {
+                    list = TransformationData(countryDataList);
+                    Collections.sort(list, countryNameComparator);
+                    adapter = new SelectCountryAdapter(SelectCountryActivity.this, list);
+                    countryListView.setAdapter(adapter);
+                } else {
+                    Toast.makeText(SelectCountryActivity.this, NoData, Toast.LENGTH_SHORT).show();
                 }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                Toast.makeText(SelectCountryActivity.this, DataError, Toast.LENGTH_SHORT).show();
             }
+
         }
 
         @Override
@@ -252,6 +285,35 @@ public class SelectCountryActivity extends BaseActivity {
             hideDialog();
             Toast.makeText(SelectCountryActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private class HaveCountryResultCallback extends OkHttpManager.ResultCallback<String> {
+
+        @Override
+        public void onError(Request request, Exception e) {
+            DeBugLog.e(TAG, "已有的国家数据请求失败:" + e.getMessage());
+            hideDialog();
+            Toast.makeText(SelectCountryActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onResponse(String response) {
+            DeBugLog.i(TAG, "返回已有的国家信息数据:" + response);
+            if (TextUtils.isEmpty(response)) {
+                Toast.makeText(SelectCountryActivity.this, NoData, Toast.LENGTH_SHORT).show();
+            } else try {
+                HaveCountry haveCountry = JsonUtils.getInstance().fromJSON(HaveCountry.class, response);
+                List<HaveCountry.HaveCountryData> list = haveCountry.getData();
+                if (list != null && list.size() > 0) {
+                    haveList = HaveTransformationData(list);
+                    Collections.sort(haveList, haveCountryNameComparator);
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                Toast.makeText(SelectCountryActivity.this, DataError, Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 
 }

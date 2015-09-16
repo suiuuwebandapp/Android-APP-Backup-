@@ -10,24 +10,23 @@
         android:id="@+id/item_community_layout_1_head_view"
         android:layout_width="@dimen/layout_50dp"
         android:layout_height="@dimen/layout_50dp"
-        android:layout_margin="@dimen/layout_10dp"
+        android:layout_margin="@dimen/layout_5dp"
         fresco:failureImage="@drawable/default_head_image_error"
         fresco:failureImageScaleType="fitXY"
         fresco:placeholderImage="@drawable/default_head_image"
-        fresco:placeholderImageScaleType="centerInside"
+        fresco:placeholderImageScaleType="fitCenter"
         fresco:roundAsCircle="true"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/item_community_layout_1_problem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_5dp"
-            android:singleLine="true"
+            android:layout_margin="@dimen/layout_3dp"
             android:text="@string/Title"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/textColor"/>
@@ -35,9 +34,8 @@
         <com.minglang.suiuu.customview.FlowLayout
             android:id="@+id/item_community_layout_1_flow_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/layout_5dp"
-            android:layout_marginRight="@dimen/layout_5dp"/>
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/layout_2dp"/>
 
     </LinearLayout>
 

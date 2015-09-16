@@ -117,4 +117,5 @@ public class SelectCountryAdapter extends BaseAdapter implements SectionIndexer 
     public int getSectionForPosition(int position) {
         return list.get(position).getFirstLetter().toUpperCase().charAt(0);
     }
+
 }

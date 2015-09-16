@@ -2,6 +2,7 @@ package com.minglang.suiuu.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +16,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +35,8 @@ import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -67,6 +69,11 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
     private static final String ADDR = "addr";
     private static final String TAG_S = "tags";
 
+    private static final String STATUS = "status";
+    private static final String DATA = "data";
+
+    private static final String OTHER_TAG = "OtherTag";
+
     @BindString(R.string.load_wait)
     String LoadMsg;
 
@@ -81,6 +88,9 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
     @BindString(R.string.NetworkAnomaly)
     String NetworkError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
 
     @BindString(R.string.AddTag)
     String AddTag;
@@ -118,11 +128,16 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
     @Bind(R.id.answer_user_list_view)
     NoScrollBarListView invitationAnswerUserListView;
 
-    private ImageView addHeadView;
+    @Bind(R.id.question_location)
+    TextView addTagView;
 
-    private String countryId = null;
+    private String countryCNname;
 
-    private String cityId = null;
+    private String cityName;
+
+    private String countryId;
+
+    private String cityId;
 
     private String title;
 
@@ -137,6 +152,10 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
     private InvitationAnswerAdapter adapter;
 
     private List<String> tagList = new ArrayList<>();
+
+    private Context context;
+
+    private String tagName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,9 +194,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
         scrollView.smoothScrollTo(0, 0);
 
-        addHeadView = (ImageView) LayoutInflater.from(this)
-                .inflate(R.layout.view_flow_layout_head, questionFlowLayout, false);
-        questionFlowLayout.addView(addHeadView);
+        context = this;
 
         adapter = new InvitationAnswerAdapter(this, listAll, R.layout.item_invitation_answer);
         invitationAnswerUserListView.setAdapter(adapter);
@@ -194,7 +211,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
      */
     private void viewAction() {
 
-        addHeadView.setOnClickListener(new View.OnClickListener() {
+        addTagView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final EditText editText = new EditText(PutQuestionsActivity.this);
@@ -204,7 +221,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String tagName = editText.getText().toString().trim();
+                                tagName = editText.getText().toString().trim();
                                 if (!TextUtils.isEmpty(tagName)) {
                                     tagList.add(tagName);
                                     sendTag2Service(tagName);
@@ -229,6 +246,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PutQuestionsActivity.this, SelectCountryActivity.class);
+                intent.putExtra(OTHER_TAG, TAG);
                 startActivityForResult(intent, AppConstant.SELECT_COUNTRY_OK);
             }
         });
@@ -253,6 +271,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(PutQuestionsActivity.this, SelectCountryActivity.class);
+                        intent.putExtra(OTHER_TAG, TAG);
                         startActivityForResult(intent, AppConstant.SELECT_COUNTRY_OK);
                     }
                 })
@@ -344,7 +363,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
         OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[6];
         paramsArray[0] = new OkHttpManager.Params(TITLE, title);
         paramsArray[1] = new OkHttpManager.Params(CONTENT, content);
-        paramsArray[2] = new OkHttpManager.Params(ADDR, "");
+        paramsArray[2] = new OkHttpManager.Params(ADDR, countryCNname + "," + cityName);
         paramsArray[3] = new OkHttpManager.Params(COUNTRY_ID, countryId);
         paramsArray[4] = new OkHttpManager.Params(CITY_ID, cityId);
         paramsArray[5] = new OkHttpManager.Params(TAG_S, buildTagParams());
@@ -395,8 +414,8 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
         switch (requestCode) {
             case AppConstant.SELECT_COUNTRY_OK:
-                String countryCNname = data.getStringExtra(COUNTRY_CN_NAME);
-                String cityName = data.getStringExtra(CITY_NAME);
+                countryCNname = data.getStringExtra(COUNTRY_CN_NAME);
+                cityName = data.getStringExtra(CITY_NAME);
 
                 countryId = data.getStringExtra(COUNTRY_ID);
                 cityId = data.getStringExtra(CITY_ID);
@@ -491,6 +510,30 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
         @Override
         public void onResponse(String response) {
             DeBugLog.i(TAG, "添加标签返回的数据:" + response);
+            try {
+                JSONObject object = new JSONObject(response);
+                String status = object.getString(STATUS);
+                switch (status) {
+                    case "1":
+                        TextView tagView = (TextView) LayoutInflater.from(context).inflate(R.layout.layout_text_tag,
+                                questionFlowLayout, false);
+                        tagView.setText(tagName);
+                        questionFlowLayout.addView(tagView);
+                        break;
+
+                    case "-1":
+                        Toast.makeText(context, SystemException, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-2":
+                        Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                        break;
+
+                }
+            } catch (Exception e) {
+                DeBugLog.e(TAG, "Exception:" + e.getMessage());
+                Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
+            }
         }
 
     }
@@ -511,6 +554,10 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
             DeBugLog.i(TAG, "添加新问题数据:" + response);
         }
 
+        @Override
+        public void onFinish() {
+            hideDialog();
+        }
     }
 
 }

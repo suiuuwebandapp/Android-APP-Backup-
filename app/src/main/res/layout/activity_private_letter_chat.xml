@@ -17,35 +17,43 @@
         android:layout_above="@+id/private_letter_details_bottom_layout"
         android:layout_below="@+id/private_letter_details_tool_bar"/>
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
         android:id="@+id/private_letter_details_bottom_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
-        <ImageView
-            android:id="@+id/private_letter_details_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/layout_5dp"
-            android:layout_marginLeft="@dimen/layout_5dp"
-            android:layout_marginRight="@dimen/layout_5dp"
-            android:layout_marginStart="@dimen/layout_5dp"
-            android:src="@drawable/icon_send_unable"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/layout_50dp"
+            android:background="@color/white">
 
-        <EditText
-            android:id="@+id/private_letter_details_input"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/private_letter_details_send"
-            android:layout_toStartOf="@+id/private_letter_details_send"/>
+            <ImageView
+                android:id="@+id/private_letter_details_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/layout_5dp"
+                android:layout_marginLeft="@dimen/layout_5dp"
+                android:layout_marginRight="@dimen/layout_5dp"
+                android:layout_marginStart="@dimen/layout_5dp"
+                android:src="@drawable/icon_send_unable"/>
 
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/private_letter_details_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/private_letter_details_send"
+                android:layout_toStartOf="@+id/private_letter_details_send"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
 
 </RelativeLayout>

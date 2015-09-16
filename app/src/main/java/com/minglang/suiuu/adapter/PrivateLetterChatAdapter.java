@@ -32,19 +32,30 @@ public class PrivateLetterChatAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private String failureImagePath;
 
+    private String verification;
+
     public PrivateLetterChatAdapter(Context context, List<PrivateChat> list) {
         this.context = context;
         this.list = list;
         failureImagePath = "res://com.minglang.suiuu/" + R.drawable.default_head_image_error;
+        verification = SuiuuInfo.ReadVerification(context);
+    }
+
+    public void setList(List<PrivateChat> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemViewType(int position) {
-        PrivateChat chat = list.get(position);
-        if (!TextUtils.isEmpty(chat.getTo_client_id())) {
+        if (TextUtils.isEmpty(list.get(position).getSender_id())) {
             return SEND_MESSAGE;
         } else {
-            return ACCEPT_MESSAGE;
+            if (list.get(position).getSender_id().equals(verification)) {
+                return SEND_MESSAGE;
+            } else {
+                return ACCEPT_MESSAGE;
+            }
         }
     }
 

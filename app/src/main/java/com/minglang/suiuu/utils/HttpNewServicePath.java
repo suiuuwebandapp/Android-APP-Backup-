@@ -52,6 +52,16 @@ public class HttpNewServicePath {
     public static String getCityListPath = RootPath + "/app-travel/get-city";
 
     /**
+     * 得到已有的国家数据
+     */
+    public static String getHaveCountryPath = RootPath + "/app-qa/get-qa-country";
+
+    /**
+     * 得到已有的城市数据
+     */
+    public static String getHaveCityPath = RootPath + "/app-qa/get-qa-city";
+
+    /**
      * 获取版本信息
      */
     public static String getVersionInfoPath = RootPath + "/app-main/check-version";

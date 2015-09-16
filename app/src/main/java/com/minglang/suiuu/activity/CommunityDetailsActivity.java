@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -28,7 +29,6 @@ import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.entity.CommunityItem;
 import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.AnswerEntity;
 import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.QuestionEntity;
-import com.minglang.suiuu.entity.Tag;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.HttpServicePath;
@@ -60,6 +60,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
 
     private static final String ID = "id";
     private static final String TITLE = "title";
+    private static final String TAGS = "tag";
 
     private static final String Q_ID = "qId";
 
@@ -71,6 +72,8 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
     private String strID;
 
     private String title;
+
+    private String tags;
 
     @BindString(R.string.Problem)
     String Problem;
@@ -139,6 +142,8 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
 
     private CommunityItemAdapter communityItemAdapter;
 
+    private CommunityItem communityItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,11 +151,12 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
 
         strID = getIntent().getStringExtra(ID);
         title = getIntent().getStringExtra(TITLE);
+        tags = getIntent().getStringExtra(TAGS);
+        DeBugLog.i(TAG, "Tag Array:" + tags);
 
         ButterKnife.bind(this);
         initView();
         viewAction();
-        getTagList();
     }
 
     @Override
@@ -187,6 +193,16 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         ImageView tag = (ImageView) LayoutInflater.from(this).inflate(R.layout.layout_image_tag, tagLayout, false);
         tagLayout.addView(tag);
 
+        if (!TextUtils.isEmpty(tags)) {
+            String[] tagArray = tags.split(",");
+            for (String tagPosition : tagArray) {
+                TextView tagView = (TextView) LayoutInflater.from(CommunityDetailsActivity.this)
+                        .inflate(R.layout.layout_text_tag, tagLayout, false);
+                tagView.setText(tagPosition);
+                tagLayout.addView(tagView);
+            }
+        }
+
         communityItemAdapter = new CommunityItemAdapter(this);
         noScrollBarListView.setAdapter(communityItemAdapter);
 
@@ -204,11 +220,19 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
      */
     private void viewAction() {
 
+        headImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CommunityDetailsActivity.this, PersonalMainPagerActivity.class);
+                intent.putExtra(USER_SIGN, communityItem.getData().getQuestion().get(0).getQUserSign());
+                startActivity(intent);
+            }
+        });
+
         attentionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = buildUrl(HttpNewServicePath.getAttentionQuestionPath, qID);
-                getAttentionProblem(url);
+                getAttentionProblem(qID);
             }
         });
 
@@ -237,6 +261,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         });
 
         pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
+
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
                 String label = DateUtils.formatDateTime(CommunityDetailsActivity.this, System.currentTimeMillis(),
@@ -256,20 +281,6 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
             }
 
         });
-
-    }
-
-    /**
-     * 获取系统标签
-     */
-    private void getTagList() {
-        try {
-            String url = HttpNewServicePath.getDefaultTagListPath + "?" + TOKEN + "=" + token;
-            OkHttpManager.onGetAsynRequest(url, new TagResultCallback());
-        } catch (IOException e) {
-            e.printStackTrace();
-            DeBugLog.e(TAG, "获取标签异常:" + e.getMessage());
-        }
 
     }
 
@@ -299,9 +310,14 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
         }
     }
 
-    private void getAttentionProblem(String url) {
+    private void getAttentionProblem(String id) {
+        OkHttpManager.Params params = new OkHttpManager.Params(ID, id);
+
+        String url = HttpNewServicePath.getAttentionQuestionPath + "?" + TOKEN + "=" + token;
+        DeBugLog.i(TAG, "关注URL:" + url);
+
         try {
-            OkHttpManager.onGetAsynRequest(url, new AttentionProblemResultCallback());
+            OkHttpManager.onPostAsynRequest(url, new AttentionProblemResultCallback(), params);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -328,7 +344,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
             Toast.makeText(this, NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
-                CommunityItem communityItem = JsonUtils.getInstance().fromJSON(CommunityItem.class, str);
+                communityItem = JsonUtils.getInstance().fromJSON(CommunityItem.class, str);
                 if (communityItem != null) {
                     CommunityItem.CommunityItemData itemData = communityItem.getData();
 
@@ -364,7 +380,7 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
 
                             String strContent = questionEntity.getQContent();
                             if (!TextUtils.isEmpty(strContent)) {
-                                problemContent.setText(strContent);
+                                problemContent.setText(Html.fromHtml(strContent));
                             } else {
                                 problemContent.setText("");
                             }
@@ -393,40 +409,6 @@ public class CommunityDetailsActivity extends BaseAppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private class TagResultCallback extends OkHttpManager.ResultCallback<String> {
-
-        @Override
-        public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "get Tag HttpException:" + e.getMessage());
-        }
-
-        @Override
-        public void onResponse(String response) {
-            DeBugLog.i(TAG, "返回的Tag数据:" + response);
-            if (!TextUtils.isEmpty(response)) {
-                try {
-                    Tag tagInfo = JsonUtils.getInstance().fromJSON(Tag.class, response);
-                    if (tagInfo != null) {
-                        List<Tag.TagData> list = tagInfo.getData();
-                        if (list != null && list.size() > 0) {
-                            for (Tag.TagData data : list) {
-                                TextView tagView = (TextView) LayoutInflater.from(CommunityDetailsActivity.this)
-                                        .inflate(R.layout.layout_text_tag, tagLayout, false);
-                                tagView.setText(data.getTName());
-                                tagLayout.addView(tagView);
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    DeBugLog.e(TAG, "Tag数据解析失败:" + e.getMessage());
-                }
-            } else {
-                DeBugLog.e(TAG, "无返回Tag数据");
-            }
-        }
-
     }
 
     private class ProblemDetailsResultCallback extends OkHttpManager.ResultCallback<String> {

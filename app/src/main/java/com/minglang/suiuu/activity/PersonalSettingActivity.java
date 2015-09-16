@@ -69,6 +69,8 @@ public class PersonalSettingActivity extends BaseActivity {
     private static final String LAT = "lat";
     private static final String PROFESSION = "profession";
 
+    private static final String OTHER_TAG = "OtherTag";
+
     @BindString(R.string.uploading)
     String uploading;
 
@@ -338,6 +340,7 @@ public class PersonalSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PersonalSettingActivity.this, SelectCountryActivity.class);
+                intent.putExtra(OTHER_TAG, TAG);
                 startActivityForResult(intent, AppConstant.SELECT_COUNTRY_OK);
             }
         });

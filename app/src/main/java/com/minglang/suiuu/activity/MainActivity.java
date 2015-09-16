@@ -29,9 +29,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.koushikdutta.WebSocketClient;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MainSliderAdapter;
 import com.minglang.suiuu.application.BaseAppManager;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.fragment.main.CommunityFragment;
 import com.minglang.suiuu.fragment.main.InformationFragment;
@@ -45,7 +47,6 @@ import com.minglang.suiuu.utils.MD5Utils;
 import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
-import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 import org.json.JSONException;
@@ -228,13 +229,23 @@ public class MainActivity extends BaseActivity {
 
     private Context context;
 
+    private WebSocketClient webSocketClient;
+
+    private boolean isConnected;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         UmengUpdateAgent.update(this);
+
         ButterKnife.bind(this);
         context = MainActivity.this;
+
+        webSocketClient = SuiuuApplication.getWebSocketClient();
+        isConnected = webSocketClient.isConnected();
+        DeBugLog.i(TAG, "isConnected:" + isConnected);
+
         getServiceTime();
         versionCheck();
     }
@@ -946,10 +957,12 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                     exitTime = System.currentTimeMillis();
                 } else {
+                    if (isConnected) {
+                        webSocketClient.disconnect();
+                    }
+
                     BaseAppManager.getInstance().clear();
-                    System.gc();
-                    MobclickAgent.onKillProcess(this);
-                    android.os.Process.killProcess(android.os.Process.myPid());
+                    finish();
                 }
             }
             return true;

@@ -66,11 +66,14 @@ public class CommunityFragment extends BaseFragment {
 
     private static final String ID = "id";
     private static final String TITLE = "title";
+    private static final String TAGS = "tag";
 
     private static final String TOKEN = "token";
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
+
+    private static final String OTHER_TAG = "OtherTag";
 
     private String userSign;
     private String verification;
@@ -89,7 +92,7 @@ public class CommunityFragment extends BaseFragment {
      */
     private int page = 1;
 
-    private int number = 10;
+    private static final int number = 10;
 
     private String countryId = null;
 
@@ -256,16 +259,33 @@ public class CommunityFragment extends BaseFragment {
 
         });
 
-        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //            @Override
+        //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //                int location = position - 1;
+        //                String qID = listAll.get(location).getQId();
+        //                String qTitle = listAll.get(location).getQTitle();
+        //                String tags = listAll.get(position).getQTag();
+        //
+        //                Intent intent = new Intent(getActivity(), CommunityDetailsActivity.class);
+        //                intent.putExtra(ID, qID);
+        //                intent.putExtra(TITLE, qTitle);
+        //                intent.putExtra(TAGS, tags);
+        //                startActivity(intent);
+        //            }
+        //        });
+
+        adapter.setOnCommunityClickListener(new CommunityAdapter.OnCommunityClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int location = position - 1;
-                String qID = listAll.get(location).getQId();
-                String qTitle = listAll.get(location).getQTitle();
+            public void onClickListener(View itemView, int position) {
+                String qID = listAll.get(position).getQId();
+                String qTitle = listAll.get(position).getQTitle();
+                String tags = listAll.get(position).getQTag();
 
                 Intent intent = new Intent(getActivity(), CommunityDetailsActivity.class);
                 intent.putExtra(ID, qID);
                 intent.putExtra(TITLE, qTitle);
+                intent.putExtra(TAGS, tags);
                 startActivity(intent);
             }
         });
@@ -274,6 +294,7 @@ public class CommunityFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SelectCountryActivity.class);
+                intent.putExtra(OTHER_TAG,TAG);
                 startActivityForResult(intent, AppConstant.SELECT_COUNTRY_OK);
             }
         });

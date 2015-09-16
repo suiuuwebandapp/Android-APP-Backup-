@@ -3,7 +3,9 @@ package com.minglang.suiuu.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.Html;
 import android.text.TextUtils;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -14,6 +16,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.PersonalMainPagerActivity;
 import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.AnswerEntity;
 import com.minglang.suiuu.utils.ViewHolder;
+import com.ms.square.android.expandabletextview.ExpandableTextView;
 
 import java.util.List;
 
@@ -24,16 +27,17 @@ import java.util.List;
  */
 public class CommunityItemAdapter extends BaseAdapter {
 
-    private static final String TAG = CommunityItemAdapter.class.getSimpleName();
-
     private static final String USER_SIGN = "userSign";
 
     private Context context;
 
     private List<AnswerEntity> list;
 
+    private final SparseBooleanArray sparseBooleanArray;
+
     public CommunityItemAdapter(Context context) {
         this.context = context;
+        sparseBooleanArray = new SparseBooleanArray();
     }
 
     public void setList(List<AnswerEntity> list) {
@@ -72,7 +76,7 @@ public class CommunityItemAdapter extends BaseAdapter {
         SimpleDraweeView headImageView = holder4.getView(R.id.item_community_layout_4_head_image_view);
         TextView nameView = holder4.getView(R.id.item_community_layout_4_name);
         TextView dateAndTimeView = holder4.getView(R.id.item_community_layout_4_date_time);
-        TextView detailsView = holder4.getView(R.id.item_community_layout_4_details);
+        ExpandableTextView detailsView = holder4.getView(R.id.item_community_layout_4_expandable_content);
 
         AnswerEntity answerEntity = list.get(position);
 
@@ -99,7 +103,7 @@ public class CommunityItemAdapter extends BaseAdapter {
 
         String strContent = answerEntity.getAContent();
         if (!TextUtils.isEmpty(strContent)) {
-            detailsView.setText(strContent);
+            detailsView.setText(Html.fromHtml(strContent), sparseBooleanArray, position);
         } else {
             detailsView.setText("");
         }

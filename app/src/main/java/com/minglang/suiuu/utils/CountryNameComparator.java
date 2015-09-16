@@ -9,12 +9,7 @@ import java.util.Comparator;
  */
 public class CountryNameComparator implements Comparator<CountryAssistData> {
 
-    //CharacterParser characterParser = CharacterParser.getInstance();
-
     public int compare(CountryAssistData o1, CountryAssistData o2) {
-
-        //String str1 = characterParser.getSelling(o1.getCname()).substring(0, 1).toLowerCase(Locale.getDefault());
-        //String str2 = characterParser.getSelling(o2.getCname()).substring(0, 1).toLowerCase(Locale.getDefault());
 
         String str1 = o1.getFirstLetter();
         String str2 = o2.getFirstLetter();
@@ -26,6 +21,7 @@ public class CountryNameComparator implements Comparator<CountryAssistData> {
         } else {
             return str1.compareTo(str2);
         }
+
     }
 
 }
