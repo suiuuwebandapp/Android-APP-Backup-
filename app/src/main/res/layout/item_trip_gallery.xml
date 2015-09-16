@@ -62,9 +62,9 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/civ_trip_gallery_head_portrait"
             android:padding="@dimen/layout_5dp"
-            android:text="法国巴黎最浪漫温馨之路"
             android:textColor="@color/gray"
-            android:textSize="@dimen/layout_15sp"/>
+            android:textSize="@dimen/layout_15sp"
+            android:singleLine="true"/>
 
         <TextView
             android:id="@+id/tv_trip_gallery_tag"
@@ -72,12 +72,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_trip_gallery_name"
             android:layout_marginLeft="@dimen/layout_5dp"
+           android:layout_toLeftOf="@+id/tv_trip_gallery_love_number"
             android:layout_toRightOf="@+id/civ_trip_gallery_head_portrait"
             android:drawableLeft="@drawable/small_tag"
             android:drawablePadding="@dimen/layout_10dp"
-            android:text="吃货   购物   奇葩"
             android:textColor="@color/mainColor"
-            android:textSize="@dimen/layout_15sp"/>
+            android:textSize="@dimen/layout_15sp"
+            android:singleLine="true"/>
 
         <TextView
             android:id="@+id/tv_trip_gallery_love_number"

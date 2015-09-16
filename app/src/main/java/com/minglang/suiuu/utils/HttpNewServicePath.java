@@ -67,6 +67,10 @@ public class HttpNewServicePath {
      * 发送国际电话区号和手机号到服务器
      */
     public static String SendAreaCodeAndPhoneNumber = RootPath + "/app-login/get-phone-code";
+    /**
+     * 更新密码发送国际电话区号和手机号到服务器
+     */
+    public static String UpdatePasswordSendAreaCodeAndPhoneNumber = RootPath + "/app-login/password-code";
 
     /**
      * 得到国际电话区号
@@ -96,6 +100,10 @@ public class HttpNewServicePath {
      * 第三方登陆地址
      */
     public static String ThirdPartyPath = RootPath + "/app-login/access-login";
+    /**
+     * 更新密码
+     */
+    public static String UpdatePassWord = RootPath + "/app-login/update-password";
 
     //***************************************************消息提醒*******************************************************\\
 

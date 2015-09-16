@@ -18,14 +18,35 @@
            android:layout_height="wrap_content"
            android:src="@drawable/back"/>
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/rl_top_info"
+            android:layout_width="@dimen/layout_200dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/et_search"
+            android:visibility="visible">
+
+            <EditText
+                android:id="@+id/et_amp_location_search"
+                android:layout_width="@dimen/layout_200dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@color/transparent"
+                android:hint="@string/search_location"
+                android:padding="@dimen/layout_5dp"
+                android:singleLine="true"
+                android:textSize="@dimen/layout_15sp"/>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_amp_top_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="所在位置"
-            android:textColor="#ffffff"
-            android:textSize="@dimen/layout_18sp" />
-
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/layout_5dp"
+            android:src="@drawable/suiuu_search"/>
     </RelativeLayout>
 
     <com.minglang.suiuu.customview.ReFlashListView
