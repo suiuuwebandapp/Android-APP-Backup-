@@ -1,12 +1,6 @@
 package com.minglang.suiuu.entity;
 
-public class HaveAssistData {
-
-    /**
-     * qCountryId : 336
-     * cname : 中国
-     * ename : China
-     */
+public class HaveAssistCountry {
 
     private String qCountryId;
     private String cname;

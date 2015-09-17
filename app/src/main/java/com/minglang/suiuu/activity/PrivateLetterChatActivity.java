@@ -7,18 +7,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.WebSocketClient;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.PrivateLetterChatAdapter;
@@ -60,6 +63,8 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
     private static final String CLIENT_ID = "to_client_id";
     private static final String CONTENT = "content";
 
+    private static final String HEAD_IMAGE_PATH = "headImagePath";
+
     @BindString(R.string.load_wait)
     String DialogMsg;
 
@@ -88,21 +93,23 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
     ImageView sendMessage;
 
     @Bind(R.id.private_letter_details_input)
-    EditText inputMessage;
+    EditText inputMessageView;
 
     private Context context;
 
     private ProgressDialog progressDialog;
 
-    private List<PrivateChat> listAll = new ArrayList<>();
+    private List<PrivateChat.PrivateChatData> listAll = new ArrayList<>();
 
     private PrivateLetterChatAdapter adapter;
 
-    private WebSocketClient webSocketClient;
-
     private String relateId;
 
-    String inputString;
+    private String headImagePath;
+
+    private String inputString;
+
+    private static WebSocketClient webSocketClient;
 
     private LocalBroadcastManager localBroadcastManager;
 
@@ -116,12 +123,33 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
 
     private OnErrorBroadcast onErrorBroadcast;
 
+    //private Socket mSocket;
+
+    //    private Emitter.Listener newMessageListener = new Emitter.Listener() {
+    //
+    //        @Override
+    //        public void call(final Object... args) {
+    //            runOnUiThread(new Runnable() {
+    //                @Override
+    //                public void run() {
+    //                    DeBugLog.i(TAG, "args:" + args[0].toString());
+    //                }
+    //            });
+    //        }
+    //
+    //    };
+
+    //    {
+    //        mSocket = SuiuuApplication.getSocketClient();
+    //    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_letter_chat);
 
         relateId = getIntent().getStringExtra(RELATE_ID);
+        headImagePath = getIntent().getStringExtra(HEAD_IMAGE_PATH);
 
         ButterKnife.bind(this);
         initView();
@@ -130,6 +158,9 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         sendRequest();
     }
 
+    /**
+     * 初始化方法
+     */
     private void initView() {
         toolBar.setTitleTextColor(titleColor);
         setSupportActionBar(toolBar);
@@ -141,9 +172,14 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         progressDialog.setCanceledOnTouchOutside(false);
 
         adapter = new PrivateLetterChatAdapter(this, listAll);
+        adapter.setOtherHeadImagePath(headImagePath);
+
+        letterDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         letterDetailsRecyclerView.setAdapter(adapter);
 
         webSocketClient = SuiuuApplication.getWebSocketClient();
+
+        //mSocket.on("new message", newMessageListener);
 
         sendMessage.setEnabled(false);
 
@@ -181,6 +217,9 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         localBroadcastManager.registerReceiver(onErrorBroadcast, onErrorFilter);
     }
 
+    /**
+     * 控件动作
+     */
     private void viewAction() {
 
         sendMessage.setOnClickListener(new View.OnClickListener() {
@@ -189,14 +228,26 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
                 if (TextUtils.isEmpty(inputString)) {
                     Toast.makeText(context, "请输入信息", Toast.LENGTH_SHORT).show();
                 } else {
-                    String message = buildSendMessage(inputString);
-                    DeBugLog.i(TAG, "message:" + message);
+                    String message = buildSendMessage();
+                    addMessage();
                     webSocketClient.send(message);
                 }
             }
         });
 
-        inputMessage.addTextChangedListener(new TextWatcher() {
+        inputMessageView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == R.id.private_letter_details_send || actionId == EditorInfo.IME_NULL) {
+                    //attemptSendMessage();
+                    DeBugLog.i(TAG, "inputString:" + inputString);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        inputMessageView.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -223,19 +274,70 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
 
     }
 
-    private String buildSendMessage(String inputMessage) {
+    //    /**
+    //     * 发送消息
+    //     */
+    //    private void attemptSendMessage() {
+    //        boolean isConnected = !mSocket.connected();
+    //        DeBugLog.i(TAG, "isConnected:" + isConnected);
+    //        if (isConnected) return;
+    //
+    //        if (TextUtils.isEmpty(inputString)) {
+    //            Toast.makeText(context, "请输入信息", Toast.LENGTH_SHORT).show();
+    //        } else {
+    //            String message = buildSendMessage();
+    //            DeBugLog.i(TAG, "message:" + message);
+    //            addMessage();
+    //            mSocket.emit("new message", inputMessageView);
+    //        }
+    //    }
+
+    /**
+     * 构建发送信息
+     *
+     * @return 要发送的信息
+     */
+    private String buildSendMessage() {
         JSONObject object = new JSONObject();
         try {
             object.put(TYPE, SAY);
             object.put(CLIENT_ID, verification);
-            object.put(CONTENT, inputMessage);
+            object.put(CONTENT, inputString);
             return object.toString();
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
+
     }
 
+    /**
+     * 添加消息到列表
+     */
+    private void addMessage() {
+        PrivateChat.PrivateChatData privateChatData = new PrivateChat.PrivateChatData();
+        privateChatData.setContent(inputString);
+        privateChatData.setSenderId(verification);
+        privateChatData.setIsRead("");
+        privateChatData.setIsShield("");
+        privateChatData.setReadTime("");
+        privateChatData.setMessageId("");
+        privateChatData.setReceiveId("");
+        privateChatData.setSendTime("");
+        privateChatData.setSessionkey("");
+        privateChatData.setUrl("");
+
+        listAll.add(privateChatData);
+        adapter.notifyItemInserted(listAll.size() - 1);
+    }
+
+    private void addReceiveMessage(String str) {
+        DeBugLog.i(TAG, "接收到的消息:" + str);
+    }
+
+    /**
+     * 获取先前的聊天记录
+     */
     private void sendRequest() {
         if (progressDialog != null && !progressDialog.isShowing()) {
             progressDialog.show();
@@ -255,8 +357,8 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
                     if (TextUtils.isEmpty(response)) {
                         Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                     } else try {
-                        List<PrivateChat> list = JsonUtils.getInstance().fromJSON(new TypeToken<List<PrivateChat>>() {
-                        }.getType(), response);
+                        PrivateChat privateChat = JsonUtils.getInstance().fromJSON(PrivateChat.class, response);
+                        List<PrivateChat.PrivateChatData> list = privateChat.getData();
                         if (list != null && list.size() > 0) {
                             listAll.addAll(list);
                             adapter.setList(listAll);
@@ -304,6 +406,9 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         }
     }
 
+    /**
+     * 隐藏Dialog
+     */
     private void hideDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -324,6 +429,9 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        //mSocket.disconnect();
+        //mSocket.off("new message", newMessageListener);
 
         localBroadcastManager.unregisterReceiver(onConnectBroadcast);
         localBroadcastManager.unregisterReceiver(onStringBroadcast);
@@ -346,8 +454,9 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String str = intent.getStringExtra(SuiuuApplication.STRING_MESSAGE);
-            DeBugLog.i(TAG, "onStringMessage()" + str);
+            addReceiveMessage(str);
         }
+
     }
 
     private class OnByteBroadcast extends BroadcastReceiver {
@@ -355,16 +464,16 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String str = intent.getStringExtra(SuiuuApplication.BYTE_MESSAGE);
-            DeBugLog.i(TAG, "onByteMessage()" + str);
+            addReceiveMessage(str);
         }
+
     }
 
     private class OnDisconnectBroadcast extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String str = intent.getStringExtra(SuiuuApplication.DISCONNECT);
-            DeBugLog.i(TAG, "onDisconnect()" + str);
+
         }
     }
 
@@ -372,8 +481,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String str = intent.getStringExtra(SuiuuApplication.ERROR);
-            DeBugLog.i(TAG, "onError()" + str);
+
         }
     }
 

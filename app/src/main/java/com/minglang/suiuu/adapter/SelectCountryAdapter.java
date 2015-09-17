@@ -64,10 +64,11 @@ public class SelectCountryAdapter extends BaseAdapter implements SectionIndexer 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         CountryAssistData data = list.get(position);
 
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_country, position);
+        convertView = holder.getConvertView();
+
         TextView countryName = holder.getView(R.id.item_country_name);
         TextView indexLetter = holder.getView(R.id.item_country_index_letter);
 
@@ -83,6 +84,7 @@ public class SelectCountryAdapter extends BaseAdapter implements SectionIndexer 
 
         String StrCnName = data.getCname();
         String StrUsName = data.getEname();
+
         if (!TextUtils.isEmpty(StrCnName)) {
             if (!TextUtils.isEmpty(StrUsName)) {
                 countryName.setText(StrCnName + "   " + StrUsName);
@@ -93,7 +95,7 @@ public class SelectCountryAdapter extends BaseAdapter implements SectionIndexer 
             countryName.setText("");
         }
 
-        convertView = holder.getConvertView();
+
         return convertView;
     }
 

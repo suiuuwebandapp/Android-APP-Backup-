@@ -5,6 +5,8 @@
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
+    <string name="action_send">Send</string>
+
     <string name="app_name" translatable="false">随游</string>
 
     <string name="Login" translatable="false">登陆</string>

@@ -257,12 +257,12 @@
         <activity
             android:name=".activity.SelectCountryActivity"
             android:label="@string/title_activity_select_country"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+            android:theme="@style/AppMainTheme"/>
 
         <activity
             android:name=".activity.SelectCityActivity"
             android:label="@string/title_activity_select_city"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
+            android:theme="@style/AppMainTheme"/>
 
         <activity
             android:name=".activity.SuiuuOrderActivity"

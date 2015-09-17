@@ -28,30 +28,36 @@ public class PrivateLetterChatAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private Context context;
 
-    private List<PrivateChat> list;
+    private List<PrivateChat.PrivateChatData> list;
+
+    private String otherHeadImagePath;
 
     private String failureImagePath;
 
     private String verification;
 
-    public PrivateLetterChatAdapter(Context context, List<PrivateChat> list) {
+    public PrivateLetterChatAdapter(Context context, List<PrivateChat.PrivateChatData> list) {
         this.context = context;
         this.list = list;
         failureImagePath = "res://com.minglang.suiuu/" + R.drawable.default_head_image_error;
         verification = SuiuuInfo.ReadVerification(context);
     }
 
-    public void setList(List<PrivateChat> list) {
+    public void setList(List<PrivateChat.PrivateChatData> list) {
         this.list = list;
         notifyDataSetChanged();
     }
 
+    public void setOtherHeadImagePath(String otherHeadImagePath) {
+        this.otherHeadImagePath = otherHeadImagePath;
+    }
+
     @Override
     public int getItemViewType(int position) {
-        if (TextUtils.isEmpty(list.get(position).getSender_id())) {
+        if (TextUtils.isEmpty(list.get(position).getSenderId())) {
             return SEND_MESSAGE;
         } else {
-            if (list.get(position).getSender_id().equals(verification)) {
+            if (list.get(position).getSenderId().equals(verification)) {
                 return SEND_MESSAGE;
             } else {
                 return ACCEPT_MESSAGE;
@@ -96,7 +102,6 @@ public class PrivateLetterChatAdapter extends RecyclerView.Adapter<RecyclerView.
 
             case ACCEPT_MESSAGE:
                 OtherLetterChatViewHolder otherLetterChatViewHolder = (OtherLetterChatViewHolder) holder;
-                String otherHeadImagePath = list.get(position).getSender_HeadImg();
                 if (!TextUtils.isEmpty(otherHeadImagePath)) {
                     otherLetterChatViewHolder.headImageView.setImageURI(Uri.parse(otherHeadImagePath));
                 } else {

@@ -1,58 +1,20 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="com.minglang.suiuu.activity.SelectCountryActivity">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/select_country_title_layout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/mainColor">
-
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="@string/countryDetails"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
-
-        <ImageView
-            android:id="@+id/select_country_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/layout_5dp"
-            android:layout_marginStart="@dimen/layout_5dp"
-            android:src="@drawable/back"/>
-
-        <TextView
-            android:id="@+id/select_country_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/layout_5dp"
-            android:layout_marginRight="@dimen/layout_5dp"
-            android:text="@string/Next"
-            android:textColor="@color/text_color1"
-            android:textSize="16sp"
-            android:visibility="invisible"/>
-    </RelativeLayout>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/select_country_tool_bar"
+        style="@style/AppToolBar"
+        app:navigationIcon="@drawable/back"
+        app:title="@string/countryDetails"/>
 
     <ListView
         android:id="@+id/select_country_index_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/select_country_title_layout"
+        android:layout_below="@+id/select_country_tool_bar"
         android:choiceMode="singleChoice"
         android:scrollbars="none"/>
 
@@ -75,6 +37,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/select_country_title_layout"/>
+        android:layout_below="@+id/select_country_tool_bar"/>
 
 </RelativeLayout>

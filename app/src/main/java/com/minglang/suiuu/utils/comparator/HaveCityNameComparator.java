@@ -1,16 +1,13 @@
-package com.minglang.suiuu.utils;
+package com.minglang.suiuu.utils.comparator;
 
-import com.minglang.suiuu.entity.CityAssistData;
+import com.minglang.suiuu.entity.HaveAssistCity;
 
 import java.util.Comparator;
 
-/**
- * Created by Administrator on 2015/5/13.
- */
-public class CityNameComparator implements Comparator<CityAssistData> {
-    @Override
-    public int compare(CityAssistData lhs, CityAssistData rhs) {
+public class HaveCityNameComparator  implements Comparator<HaveAssistCity> {
 
+    @Override
+    public int compare(HaveAssistCity lhs, HaveAssistCity rhs) {
         String str1 = lhs.getFirstLetter();
         String str2 = rhs.getFirstLetter();
 

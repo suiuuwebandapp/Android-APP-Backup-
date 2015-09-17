@@ -9,7 +9,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.CityAssistData;
+import com.minglang.suiuu.entity.HaveAssistCity;
 import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.List;
@@ -17,13 +17,13 @@ import java.util.List;
 /**
  * 选择城市的数据适配器
  */
-public class SelectCityAdapter extends BaseAdapter implements SectionIndexer {
+public class HaveCityAdapter extends BaseAdapter implements SectionIndexer {
 
     private Context context;
 
-    private List<CityAssistData> list;
+    private List<HaveAssistCity> list;
 
-    public SelectCityAdapter(Context context, List<CityAssistData> list) {
+    public HaveCityAdapter(Context context, List<HaveAssistCity> list) {
         this.context = context;
         this.list = list;
     }
@@ -53,10 +53,11 @@ public class SelectCityAdapter extends BaseAdapter implements SectionIndexer {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        CityAssistData data = list.get(position);
+        HaveAssistCity data = list.get(position);
 
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_city, position);
+        convertView = holder.getConvertView();
+
         TextView indexText = holder.getView(R.id.item_city_index_letter);
         TextView cityName = holder.getView(R.id.item_city_name);
 
@@ -82,7 +83,6 @@ public class SelectCityAdapter extends BaseAdapter implements SectionIndexer {
             cityName.setText("");
         }
 
-        convertView = holder.getConvertView();
         return convertView;
     }
 

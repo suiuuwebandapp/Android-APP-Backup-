@@ -1,4 +1,4 @@
-package com.minglang.suiuu.utils;
+package com.minglang.suiuu.utils.comparator;
 
 import com.minglang.suiuu.entity.CountryAssistData;
 

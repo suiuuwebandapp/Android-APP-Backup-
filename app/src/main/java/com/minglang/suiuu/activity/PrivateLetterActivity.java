@@ -48,6 +48,8 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
 
     private static final String RELATE_ID = "relateId";
 
+    private static final String HEAD_IMAGE_PATH = "headImagePath";
+
     @BindColor(R.color.white)
     int titleColor;
 
@@ -154,8 +156,10 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int location = position - 1;
                 String relateId = listAll.get(location).getRelateId();
+                String headImagePath = listAll.get(location).getHeadImg();
                 Intent intent = new Intent(PrivateLetterActivity.this, PrivateLetterChatActivity.class);
                 intent.putExtra(RELATE_ID, relateId);
+                intent.putExtra(HEAD_IMAGE_PATH, headImagePath);
                 startActivity(intent);
             }
         });

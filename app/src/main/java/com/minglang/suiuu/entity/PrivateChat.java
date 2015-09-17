@@ -1,5 +1,7 @@
 package com.minglang.suiuu.entity;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2015/9/15.
  * 私聊数据实体类
@@ -7,97 +9,154 @@ package com.minglang.suiuu.entity;
 public class PrivateChat {
 
     /**
-     * type : say
-     * sender_id : a4c1406ff4cc382389f19bf6ec3e55c1
-     * sender_name : dorlen
-     * sender_HeadImg : http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg
-     * receive_id : dc03956692f43d209b6b513bc1d627d6
-     * content : 55
-     * time : 2015-09-15 09:27:04
-     * session_key : c3fa009a4105c1624353e7bc20af03e1
-     * to_client_id : a4c1406ff4cc382389f19bf6ec3e55c1
+     * status : 1
+     * data : [{"messageId":"1","sessionkey":"5942d384b13d825e05741a343704ba20","receiveId":"a4c1406ff4cc382389f19bf6ec3e55c1","senderId":"a0390caca8e533a3b16a2f1f8d762766","url":null,"content":"测试 一下\n2","sendTime":"2015-07-13 17:02:48","readTime":"2015-07-13 17:04:34","isRead":"1","isShield":"0"},{"messageId":"2","sessionkey":"5942d384b13d825e05741a343704ba20","receiveId":"a4c1406ff4cc382389f19bf6ec3e55c1","senderId":"a0390caca8e533a3b16a2f1f8d762766","url":null,"content":"3","sendTime":"2015-07-13 17:03:23","readTime":"2015-07-13 17:04:34","isRead":"1","isShield":"0"},{"messageId":"3","sessionkey":"5942d384b13d825e05741a343704ba20","receiveId":"a0390caca8e533a3b16a2f1f8d762766","senderId":"a4c1406ff4cc382389f19bf6ec3e55c1","url":null,"content":"4","sendTime":"2015-07-13 17:04:38","readTime":"2015-07-13 17:04:57","isRead":"1","isShield":"0"},{"messageId":"4","sessionkey":"5942d384b13d825e05741a343704ba20","receiveId":"a4c1406ff4cc382389f19bf6ec3e55c1","senderId":"a0390caca8e533a3b16a2f1f8d762766","url":null,"content":"5","sendTime":"2015-07-13 17:05:00","readTime":"2015-07-13 17:06:01","isRead":"1","isShield":"0"},{"messageId":"5","sessionkey":"5942d384b13d825e05741a343704ba20","receiveId":"a4c1406ff4cc382389f19bf6ec3e55c1","senderId":"a0390caca8e533a3b16a2f1f8d762766","url":null,"content":"6","sendTime":"2015-07-13 17:06:23","readTime":"2015-07-13 17:07:14","isRead":"1","isShield":"0"}]
+     * message :
+     * token : 4a68c697eec1b537215f36bd7670fee1
      */
 
-    private String type;
-    private String sender_id;
-    private String sender_name;
-    private String sender_HeadImg;
-    private String receive_id;
-    private String content;
-    private String time;
-    private String session_key;
-    private String to_client_id;
+    private int status;
+    private String message;
+    private String token;
+    private List<PrivateChatData> data;
 
-    public void setType(String type) {
-        this.type = type;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
-    public void setSender_id(String sender_id) {
-        this.sender_id = sender_id;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public void setSender_name(String sender_name) {
-        this.sender_name = sender_name;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public void setSender_HeadImg(String sender_HeadImg) {
-        this.sender_HeadImg = sender_HeadImg;
+    public void setData(List<PrivateChatData> data) {
+        this.data = data;
     }
 
-    public void setReceive_id(String receive_id) {
-        this.receive_id = receive_id;
+    public int getStatus() {
+        return status;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public String getMessage() {
+        return message;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public String getToken() {
+        return token;
     }
 
-    public void setSession_key(String session_key) {
-        this.session_key = session_key;
+    public List<PrivateChatData> getData() {
+        return data;
     }
 
-    public void setTo_client_id(String to_client_id) {
-        this.to_client_id = to_client_id;
-    }
+    public static class PrivateChatData {
+        /**
+         * messageId : 1
+         * sessionkey : 5942d384b13d825e05741a343704ba20
+         * receiveId : a4c1406ff4cc382389f19bf6ec3e55c1
+         * senderId : a0390caca8e533a3b16a2f1f8d762766
+         * url : null
+         * content : 测试 一下
+         * sendTime : 2015-07-13 17:02:48
+         * readTime : 2015-07-13 17:04:34
+         * isRead : 1
+         * isShield : 0
+         */
 
-    public String getType() {
-        return type;
-    }
+        private String messageId;
+        private String sessionkey;
+        private String receiveId;
+        private String senderId;
+        private Object url;
+        private String content;
+        private String sendTime;
+        private String readTime;
+        private String isRead;
+        private String isShield;
 
-    public String getSender_id() {
-        return sender_id;
-    }
+        public void setMessageId(String messageId) {
+            this.messageId = messageId;
+        }
 
-    public String getSender_name() {
-        return sender_name;
-    }
+        public void setSessionkey(String sessionkey) {
+            this.sessionkey = sessionkey;
+        }
 
-    public String getSender_HeadImg() {
-        return sender_HeadImg;
-    }
+        public void setReceiveId(String receiveId) {
+            this.receiveId = receiveId;
+        }
 
-    public String getReceive_id() {
-        return receive_id;
-    }
+        public void setSenderId(String senderId) {
+            this.senderId = senderId;
+        }
 
-    public String getContent() {
-        return content;
-    }
+        public void setUrl(Object url) {
+            this.url = url;
+        }
 
-    public String getTime() {
-        return time;
-    }
+        public void setContent(String content) {
+            this.content = content;
+        }
 
-    public String getSession_key() {
-        return session_key;
-    }
+        public void setSendTime(String sendTime) {
+            this.sendTime = sendTime;
+        }
 
-    public String getTo_client_id() {
-        return to_client_id;
+        public void setReadTime(String readTime) {
+            this.readTime = readTime;
+        }
+
+        public void setIsRead(String isRead) {
+            this.isRead = isRead;
+        }
+
+        public void setIsShield(String isShield) {
+            this.isShield = isShield;
+        }
+
+        public String getMessageId() {
+            return messageId;
+        }
+
+        public String getSessionkey() {
+            return sessionkey;
+        }
+
+        public String getReceiveId() {
+            return receiveId;
+        }
+
+        public String getSenderId() {
+            return senderId;
+        }
+
+        public Object getUrl() {
+            return url;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public String getSendTime() {
+            return sendTime;
+        }
+
+        public String getReadTime() {
+            return readTime;
+        }
+
+        public String getIsRead() {
+            return isRead;
+        }
+
+        public String getIsShield() {
+            return isShield;
+        }
+
     }
 
 }
