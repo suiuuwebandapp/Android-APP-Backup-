@@ -332,7 +332,18 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
     }
 
     private void addReceiveMessage(String str) {
-        DeBugLog.i(TAG, "接收到的消息:" + str);
+        if (TextUtils.isEmpty(str)) {
+            DeBugLog.e(TAG, "返回数据为Null");
+        } else try {
+            DeBugLog.i(TAG, "接收到的消息:" + str);
+            PrivateChat.PrivateChatData data = JsonUtils.getInstance().fromJSON(PrivateChat.PrivateChatData.class, str);
+            if (data != null)
+                DeBugLog.i(TAG, "Content:" + data.getContent());
+            listAll.add(data);
+            adapter.notifyItemInserted(listAll.size() - 1);
+        } catch (Exception e) {
+            DeBugLog.e(TAG, "数据解析失败:" + e.getMessage());
+        }
     }
 
     /**
