@@ -324,6 +324,10 @@ public class HttpNewServicePath {
      * 普通用户订单详情
      */
     public static String getGeneralUserOrderDetailsPath = RootPath + "/app-user-order/user-order-info";
+    /**
+     * 订单联系人信息
+     */
+    public static String orderContactInformation = RootPath + "/app-user-order/order-contact";
 
 
     //***********************************************侧栏-普通用户-关注**************************************************************\\

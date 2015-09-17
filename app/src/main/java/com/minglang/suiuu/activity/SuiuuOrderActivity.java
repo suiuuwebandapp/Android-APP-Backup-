@@ -155,14 +155,13 @@ public class SuiuuOrderActivity extends BaseActivity {
                 String orderNumber;
                 if ("1".equals(status)) {
                     orderNumber = message.getString("data");
-                    Intent intent = new Intent(SuiuuOrderActivity.this, SuiuuPayActivity.class);
+                    Intent intent = new Intent(SuiuuOrderActivity.this, OrderContackInformationActivity.class);
                     intent.putExtra("peopleNumber", Integer.toString(enjoy_peopleNumber));
                     intent.putExtra("time", tv_travel_date.getText());
                     intent.putExtra("total_price", tv_order_price.getText());
                     intent.putExtra("destination", titleInfo);
                     intent.putExtra("orderNumber", orderNumber);
                     startActivity(intent);
-                    finish();
                 } else if ("-2".equals(status)) {
                     orderNumber = message.getString("data");
                     Toast.makeText(SuiuuOrderActivity.this, orderNumber, Toast.LENGTH_SHORT).show();

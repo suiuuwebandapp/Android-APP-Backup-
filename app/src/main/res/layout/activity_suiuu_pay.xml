@@ -1,55 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_color">
 
     <include
         android:id="@+id/suiuu_order_top"
-        layout="@layout/common_top2_layout"/>
+        layout="@layout/common_top2_layout" />
 
-    <TextView
-        android:id="@+id/tv_suiuu_pay_detail"
+    <LinearLayout
+        android:id="@+id/top"
         style="@style/comment_suiuu_detail"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/suiuu_order_top"
-        android:padding="@dimen/layout_8dp"
-        android:text="订单详情"
-        android:textColor="@color/text_select_true"
-        android:textSize="@dimen/layout_16sp"/>
+        android:orientation="vertical">
 
-    <RelativeLayout
+        <TextView
+            android:id="@+id/tv_suiuu_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/layout_4dp"
+            android:text="法国巴黎包车游"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/layout_18sp" />
+
+        <TextView
+            android:id="@+id/tv_order_create_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/layout_4dp"
+            android:text="订单创建时间 :"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/layout_16sp" />
+
+        <TextView
+            android:id="@+id/tv_order_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/layout_4dp"
+            android:text="订单号 :"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/layout_16sp" />
+
+        <TextView
+            android:id="@+id/tv_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/layout_4dp"
+            android:text="总价 :"
+            android:textColor="@color/btn_1_bg_color"
+            android:textSize="@dimen/layout_16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_center_message"
         style="@style/comment_suiuu_detail"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_suiuu_pay_detail">
+        android:layout_below="@id/top"
+        android:orientation="vertical"/>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom_message"
+        style="@style/comment_suiuu_detail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_center_message"
+        android:orientation="vertical"/>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_pay_choice"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_pay_wechat"
+            android:layout_width="@dimen/layout_170dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:padding="@dimen/layout_5dp"
-            android:text="请选择支付方式"
-            android:textSize="@dimen/layout_15sp"/>
+            android:background="@drawable/btn_main_color"
+            android:text="@string/_AliPay"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/layout_8dp"
+            android:layout_gravity="center"
+            android:textSize="@dimen/layout_20sp"
+            android:padding="@dimen/layout_5dp"/>
 
-        <ImageView
-            android:id="@+id/iv_pay_wechat"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tv_pay_alipay"
+            android:layout_width="@dimen/layout_170dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_pay_choice"
-            android:layout_marginLeft="@dimen/layout_100dp"
-            android:background="@drawable/wechat"/>
+            android:background="@drawable/bt_wechat_bg"
+            android:gravity="center"
+            android:text="@string/WeChatPay"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/layout_8dp"
+            android:textSize="@dimen/layout_20sp"
+            android:padding="@dimen/layout_5dp"/>
 
-        <ImageView
-            android:id="@+id/iv_pay_alipay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/tv_pay_choice"
-            android:layout_marginRight="@dimen/layout_100dp"
-            android:background="@drawable/pay"/>
-
-    </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

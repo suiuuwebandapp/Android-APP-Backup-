@@ -57,6 +57,15 @@ public class GeneralOrderDetails {
          */
         private PublisherBaseEntity publisherBase;
         private InfoEntity info;
+        private ContackEntity contact;
+
+        public ContackEntity getContact() {
+            return contact;
+        }
+
+        public void setContact(ContackEntity contact) {
+            this.contact = contact;
+        }
 
         public void setPublisherBase(PublisherBaseEntity publisherBase) {
             this.publisherBase = publisherBase;
@@ -72,6 +81,119 @@ public class GeneralOrderDetails {
 
         public InfoEntity getInfo() {
             return info;
+        }
+        public static class ContackEntity {
+          /*  "contactId": "5",
+                    "orderId": "138",
+                    "userId": "22e64460c94f3b44bc0a8790ed146d3b",
+                    "username": "hjj",
+                    "phone": "85686556",
+                    "sparePhone": "",
+                    "wechat": "",
+                    "urgentUsername": "fh",
+                    "urgentPhone": "56663556",
+                    "arriveFlyNumber": null,
+                    "leaveFlyNumber": null,
+                    "destination": "和音乐谈场恋爱——维也纳"*/
+            private String contentId;
+            private String userId;
+            private String username;
+            private String phone;
+            private String sparePhone;
+            private String wechat;
+            private String urgentUsername;
+            private String urgentPhone;
+            private String arriveFlyNumber;
+            private String leaveFlyNumber;
+            private String destination;
+
+            public String getContentId() {
+                return contentId;
+            }
+
+            public void setContentId(String contentId) {
+                this.contentId = contentId;
+            }
+
+            public String getUserId() {
+                return userId;
+            }
+
+            public void setUserId(String userId) {
+                this.userId = userId;
+            }
+
+            public String getUsername() {
+                return username;
+            }
+
+            public void setUsername(String username) {
+                this.username = username;
+            }
+
+            public String getPhone() {
+                return phone;
+            }
+
+            public void setPhone(String phone) {
+                this.phone = phone;
+            }
+
+            public String getSparePhone() {
+                return sparePhone;
+            }
+
+            public void setSparePhone(String sparePhone) {
+                this.sparePhone = sparePhone;
+            }
+
+            public String getWechat() {
+                return wechat;
+            }
+
+            public void setWechat(String wechat) {
+                this.wechat = wechat;
+            }
+
+            public String getUrgentUsername() {
+                return urgentUsername;
+            }
+
+            public void setUrgentUsername(String urgentUsername) {
+                this.urgentUsername = urgentUsername;
+            }
+
+            public String getUrgentPhone() {
+                return urgentPhone;
+            }
+
+            public void setUrgentPhone(String urgentPhone) {
+                this.urgentPhone = urgentPhone;
+            }
+
+            public String getArriveFlyNumber() {
+                return arriveFlyNumber;
+            }
+
+            public void setArriveFlyNumber(String arriveFlyNumber) {
+                this.arriveFlyNumber = arriveFlyNumber;
+            }
+
+            public String getLeaveFlyNumber() {
+                return leaveFlyNumber;
+            }
+
+            public void setLeaveFlyNumber(String leaveFlyNumber) {
+                this.leaveFlyNumber = leaveFlyNumber;
+            }
+
+            public String getDestination() {
+                return destination;
+            }
+
+            public void setDestination(String destination) {
+                this.destination = destination;
+            }
         }
 
         public static class PublisherBaseEntity {

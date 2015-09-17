@@ -206,6 +206,7 @@
     <string name="addAttentionFail" translatable="false">添加关注失败！</string>
 
     <string name="Share" translatable="false">分享</string>
+    <string name="confirm" translatable="false">确定</string>
 
     <string name="man" translatable="false">男</string>
     <string name="woman" translatable="false">女</string>
@@ -564,6 +565,7 @@
     <string name="title_activity_account_manage" translatable="false">AccountManageActivity</string>
     <string name="title_activity_suiuu_user_info" translatable="false">SuiuuUserInfoActivity</string>
     <string name="title_activity_order_details" translatable="false">OrderDetailsActivity</string>
+    <string name="title_activity_contack_infromation" translatable="false">OrderContackInformationActivity</string>
     <string name="title_activity_my_order_list" translatable="false">MyOrderListActivity</string>
     <string name="title_activity_about_us">AboutUsActivity</string>
     <string name="title_activity_receivables_way">ReceivablesWayActivity</string>
