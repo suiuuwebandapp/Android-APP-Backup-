@@ -288,22 +288,26 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
                     String tripCount = data.getTpCount();
                     if (!TextUtils.isEmpty(tripCount)) {
-                        tripImageTitle.setText(strTripImage + tripCount);
+                        String str1 = strTripImage + tripCount;
+                        tripImageTitle.setText(str1);
                     }
 
                     String questionsCount = data.getQaCount();
                     if (!TextUtils.isEmpty(questionsCount)) {
-                        questionTitle.setText(strQuestions + questionsCount);
+                        String str2 = strQuestions + questionsCount;
+                        questionTitle.setText(str2);
                     }
 
                     String attentionCount = data.getCollectCount();
                     if (!TextUtils.isEmpty(attentionCount)) {
-                        attentionTitle.setText(strAttention + attentionCount);
+                        String str3 = strAttention + attentionCount;
+                        attentionTitle.setText(str3);
                     }
 
                     String commentNumber = data.getCommentNumb();
                     if (!TextUtils.isEmpty(commentNumber)) {
-                        commentContentNumber.setText(AllComment + " " + commentNumber);
+                        String str4 = AllComment + commentNumber;
+                        commentContentNumber.setText(str4);
                     }
 
                 }
