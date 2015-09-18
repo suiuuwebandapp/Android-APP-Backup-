@@ -123,26 +123,6 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
 
     private OnErrorBroadcast onErrorBroadcast;
 
-    //private Socket mSocket;
-
-    //    private Emitter.Listener newMessageListener = new Emitter.Listener() {
-    //
-    //        @Override
-    //        public void call(final Object... args) {
-    //            runOnUiThread(new Runnable() {
-    //                @Override
-    //                public void run() {
-    //                    DeBugLog.i(TAG, "args:" + args[0].toString());
-    //                }
-    //            });
-    //        }
-    //
-    //    };
-
-    //    {
-    //        mSocket = SuiuuApplication.getSocketClient();
-    //    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,8 +158,6 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         letterDetailsRecyclerView.setAdapter(adapter);
 
         webSocketClient = SuiuuApplication.getWebSocketClient();
-
-        //mSocket.on("new message", newMessageListener);
 
         sendMessage.setEnabled(false);
 
@@ -273,24 +251,6 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         });
 
     }
-
-    //    /**
-    //     * 发送消息
-    //     */
-    //    private void attemptSendMessage() {
-    //        boolean isConnected = !mSocket.connected();
-    //        DeBugLog.i(TAG, "isConnected:" + isConnected);
-    //        if (isConnected) return;
-    //
-    //        if (TextUtils.isEmpty(inputString)) {
-    //            Toast.makeText(context, "请输入信息", Toast.LENGTH_SHORT).show();
-    //        } else {
-    //            String message = buildSendMessage();
-    //            DeBugLog.i(TAG, "message:" + message);
-    //            addMessage();
-    //            mSocket.emit("new message", inputMessageView);
-    //        }
-    //    }
 
     /**
      * 构建发送信息
@@ -440,9 +400,6 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        //mSocket.disconnect();
-        //mSocket.off("new message", newMessageListener);
 
         localBroadcastManager.unregisterReceiver(onConnectBroadcast);
         localBroadcastManager.unregisterReceiver(onStringBroadcast);

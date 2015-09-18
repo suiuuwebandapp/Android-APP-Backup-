@@ -71,8 +71,6 @@ public class SuiuuApplication extends TuSdkApplication {
 
     private LocalBroadcastManager localBroadcastManager;
 
-    //private static Socket mSocket;
-
     public static SuiuuApplication getInstance() {
         if (instance == null) {
             instance = new SuiuuApplication();
@@ -97,7 +95,6 @@ public class SuiuuApplication extends TuSdkApplication {
 
         initAboutOSS();
         initWebSocket();
-        //initSocketClient();
 
         // 设置输出状态
         this.setEnableLog(true);
@@ -152,28 +149,6 @@ public class SuiuuApplication extends TuSdkApplication {
         webSocketClient.connect();
     }
 
-    //    private void initSocketClient() {
-    //        IO.Options opts = new IO.Options();
-    //        opts.reconnection = true;
-    //        opts.reconnectionDelayMax = 5;
-    //        opts.forceNew = true;
-    //
-    //        String url = URI.create(HttpNewServicePath.SocketPath).toString();
-    //        DeBugLog.i(TAG, "url:" + url);
-    //        try {
-    //            mSocket = IO.socket(url, opts);
-    //        } catch (Exception e) {
-    //            e.printStackTrace();
-    //        }
-    //
-    //        try {
-    //            mSocket.connect();
-    //        } catch (Exception e) {
-    //            DeBugLog.e(TAG, "Socket连接失败:" + e.getMessage());
-    //        }
-    //
-    //    }
-
     private String buildLoginMessage() {
         String verification = SuiuuInfo.ReadVerification(this);
 
@@ -190,10 +165,6 @@ public class SuiuuApplication extends TuSdkApplication {
     public static WebSocketClient getWebSocketClient() {
         return webSocketClient;
     }
-
-    //    public static Socket getSocketClient() {
-    //        return mSocket;
-    //    }
 
     private class initListener implements WebSocketClient.Listener {
 
