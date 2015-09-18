@@ -70,7 +70,7 @@ public class PrivateChat {
         private String sessionkey;
         private String receiveId;
         private String senderId;
-        private Object url;
+        private String url;
         private String content;
         private String sendTime;
         private String readTime;
@@ -93,7 +93,7 @@ public class PrivateChat {
             this.senderId = senderId;
         }
 
-        public void setUrl(Object url) {
+        public void setUrl(String url) {
             this.url = url;
         }
 
@@ -133,7 +133,7 @@ public class PrivateChat {
             return senderId;
         }
 
-        public Object getUrl() {
+        public String getUrl() {
             return url;
         }
 

@@ -46,9 +46,9 @@
     <dimen name="layout_80dp">80dp</dimen>
     <dimen name="layout_100dp">100dp</dimen>
     <dimen name="layout_120dp">120dp</dimen>
-    <dimen name="layout_150dp">150dp</dimen>
-    <dimen name="layout_145dp">145dp</dimen>
     <dimen name="layout_140dp">140dp</dimen>
+    <dimen name="layout_145dp">145dp</dimen>
+    <dimen name="layout_150dp">150dp</dimen>
     <dimen name="layout_160dp">160dp</dimen>
     <dimen name="layout_170dp">170dp</dimen>
     <dimen name="layout_180dp">180dp</dimen>
@@ -73,7 +73,6 @@
     <dimen name="layout_25sp">25sp</dimen>
     <dimen name="layout_50sp">50sp</dimen>
     <dimen name="layout_200sp">200sp</dimen>
-
 
 
 </resources>

@@ -7,7 +7,7 @@
     android:orientation="horizontal">
 
     <com.phillipcalvin.iconbutton.IconButton
-        android:id="@+id/item_community_layout_3_attention"
+        android:id="@+id/item_problem_layout_3_attention"
         android:layout_width="0dp"
         android:layout_height="@dimen/layout_50dp"
         android:layout_weight="0.5"
@@ -21,7 +21,7 @@
         app:iconPadding="@dimen/layout_5dp"/>
 
     <com.phillipcalvin.iconbutton.IconButton
-        android:id="@+id/item_community_layout_3_answer"
+        android:id="@+id/item_problem_layout_3_answer"
         android:layout_width="0dp"
         android:layout_height="@dimen/layout_50dp"
         android:layout_weight="0.5"

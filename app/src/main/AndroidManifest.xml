@@ -347,7 +347,7 @@
             android:theme="@style/AppAccountTheme"/>
 
         <activity
-            android:name=".activity.CommunityDetailsActivity"
+            android:name=".activity.ProblemDetailsActivity"
             android:label="@string/title_activity_community_item"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 

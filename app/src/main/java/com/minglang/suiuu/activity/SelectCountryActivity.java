@@ -23,7 +23,7 @@ import com.minglang.suiuu.entity.CountryAssistData;
 import com.minglang.suiuu.entity.CountryData;
 import com.minglang.suiuu.entity.HaveAssistCountry;
 import com.minglang.suiuu.entity.HaveCountry;
-import com.minglang.suiuu.fragment.main.CommunityFragment;
+import com.minglang.suiuu.fragment.main.ProblemFragment;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.CharacterParser;
 import com.minglang.suiuu.utils.comparator.CountryNameComparator;
@@ -125,7 +125,7 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
 
         String otherTag = getIntent().getStringExtra(OTHER_TAG);
         DeBugLog.i(TAG, "otherTag:" + otherTag);
-        if (!TextUtils.isEmpty(otherTag) && otherTag.equals(CommunityFragment.class.getSimpleName())) isAllCountry = true;
+        if (!TextUtils.isEmpty(otherTag) && otherTag.equals(ProblemFragment.class.getSimpleName())) isAllCountry = true;
 
         initView();
         viewAction();

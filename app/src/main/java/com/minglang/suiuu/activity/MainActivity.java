@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -35,7 +36,7 @@ import com.minglang.suiuu.adapter.MainSliderAdapter;
 import com.minglang.suiuu.application.BaseAppManager;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.fragment.main.CommunityFragment;
+import com.minglang.suiuu.fragment.main.ProblemFragment;
 import com.minglang.suiuu.fragment.main.InformationFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
 import com.minglang.suiuu.fragment.main.TripGalleryFragment;
@@ -89,6 +90,10 @@ public class MainActivity extends BaseActivity {
     private static final String CLIENT_TYPE = "clientType";
     private static final String VERSION_ID = "versionId";
     private static final String VERSION_MINI = "versionMini";
+
+    private static final String TYPE = "type";
+    private static final String USER_KEY = "user_key";
+    private static final String LOGIN = "login";
 
     @BindString(R.string.SuiuuAccount)
     String SuiuuAccount;
@@ -157,7 +162,7 @@ public class MainActivity extends BaseActivity {
     /**
      * 问答社区页面
      */
-    private CommunityFragment communityFragment;
+    private ProblemFragment problemFragment;
 
     /**
      * 消息提醒页面
@@ -233,6 +238,8 @@ public class MainActivity extends BaseActivity {
 
     private boolean isConnected;
 
+    private LocalBroadcastManager localBroadcastManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -246,6 +253,10 @@ public class MainActivity extends BaseActivity {
         isConnected = webSocketClient.isConnected();
         DeBugLog.i(TAG, "isConnected:" + isConnected);
 
+        String loginMessage = buildLoginMessage();
+        DeBugLog.i(TAG, "loginMessage:" + loginMessage);
+        webSocketClient.send(loginMessage);
+
         getServiceTime();
         versionCheck();
     }
@@ -254,10 +265,10 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        String network_headImage_path = SuiuuInfo.ReadUserData(this).getHeadImg();
+        String networkHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
 
-        if (!TextUtils.isEmpty(network_headImage_path)) {
-            headImageView.setImageURI(Uri.parse(network_headImage_path));
+        if (!TextUtils.isEmpty(networkHeadImagePath)) {
+            headImageView.setImageURI(Uri.parse(networkHeadImagePath));
         } else {
             headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
         }
@@ -266,6 +277,22 @@ public class MainActivity extends BaseActivity {
         if (!TextUtils.isEmpty(user_name)) {
             nickNameView.setText(user_name);
         }
+
+        if (!isConnected) {
+            webSocketClient.send(buildLoginMessage());
+        }
+
+    }
+
+    private String buildLoginMessage() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put(USER_KEY, "nj4v8a9uassjg4i72davc28045");
+            object.put(TYPE, LOGIN);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return object.toString();
     }
 
     /**
@@ -426,8 +453,8 @@ public class MainActivity extends BaseActivity {
         adapter2.setScreenHeight(screenHeight);
         sideListView2.setAdapter(adapter2);
 
-        initFragment();
         initReceiver();
+        initFragment();
     }
 
     private void initFragment() {
@@ -438,25 +465,22 @@ public class MainActivity extends BaseActivity {
 
         tripGalleryFragment = new TripGalleryFragment();
         informationFragment = InformationFragment.newInstance(userSign, verification, token);
-        communityFragment = CommunityFragment.newInstance(userSign, verification);
+        problemFragment = ProblemFragment.newInstance(userSign, verification);
 
         LoadDefaultFragment();
     }
 
     private void initReceiver() {
+        localBroadcastManager = LocalBroadcastManager.getInstance(context);
+
         exitReceiver = new ExitReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(SettingActivity.class.getSimpleName());
-        this.registerReceiver(exitReceiver, intentFilter);
+        localBroadcastManager.registerReceiver(exitReceiver, new IntentFilter(SettingActivity.class.getSimpleName()));
 
         tokenBroadcastReceiver = new TokenBroadcastReceiver();
-        IntentFilter intentFilter2 = new IntentFilter();
-        intentFilter2.addAction(Intent.ACTION_TIME_TICK);
-        registerReceiver(tokenBroadcastReceiver, intentFilter2);
+        registerReceiver(tokenBroadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
 
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         connectionNetChangeReceiver = new ConnectionNetChangeReceiver();
-        this.registerReceiver(connectionNetChangeReceiver, filter);
+        this.registerReceiver(connectionNetChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     private void versionCheck() {
@@ -551,8 +575,8 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PutQuestionsActivity.class);
-                intent.putExtra(COUNTRY_ID, communityFragment.getCountryId());
-                intent.putExtra(CITY_ID, communityFragment.getCityId());
+                intent.putExtra(COUNTRY_ID, problemFragment.getCountryId());
+                intent.putExtra(CITY_ID, problemFragment.getCityId());
                 startActivity(intent);
             }
         });
@@ -641,9 +665,9 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if (communityFragment != null) {
-            if (communityFragment.isAdded()) {
-                ft.hide(communityFragment);
+        if (problemFragment != null) {
+            if (problemFragment.isAdded()) {
+                ft.hide(problemFragment);
             }
         }
 
@@ -677,9 +701,9 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if (communityFragment != null) {
-            if (communityFragment.isAdded()) {
-                ft.hide(communityFragment);
+        if (problemFragment != null) {
+            if (problemFragment.isAdded()) {
+                ft.hide(problemFragment);
             }
         }
 
@@ -724,14 +748,14 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if (communityFragment == null) {
-            communityFragment = CommunityFragment.newInstance(userSign, verification);
+        if (problemFragment == null) {
+            problemFragment = ProblemFragment.newInstance(userSign, verification);
         }
 
-        if (communityFragment.isAdded()) {
-            ft.show(communityFragment);
+        if (problemFragment.isAdded()) {
+            ft.show(problemFragment);
         } else {
-            ft.add(R.id.show_layout, communityFragment);
+            ft.add(R.id.show_layout, problemFragment);
         }
 
         ft.commit();
@@ -752,9 +776,9 @@ public class MainActivity extends BaseActivity {
                 ft.hide(suiuuFragment);
             }
         }
-        if (communityFragment != null) {
-            if (communityFragment.isAdded()) {
-                ft.hide(communityFragment);
+        if (problemFragment != null) {
+            if (problemFragment.isAdded()) {
+                ft.hide(problemFragment);
             }
         }
 
@@ -853,7 +877,7 @@ public class MainActivity extends BaseActivity {
                 case AppConstant.COMMUNITY_SEARCH_SKIP:
                     String searchString = data.getStringExtra("Search");
                     DeBugLog.i(TAG, "Search Str:" + searchString);
-                    communityFragment.setSearchString(searchString);
+                    problemFragment.setSearchString(searchString);
                     break;
             }
         }
@@ -890,7 +914,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private class MyOnClickListener implements OnClickListener {
-
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -942,7 +965,6 @@ public class MainActivity extends BaseActivity {
                     break;
             }
         }
-
     }
 
     private long exitTime;
@@ -954,7 +976,7 @@ public class MainActivity extends BaseActivity {
                 mDrawerLayout.closeDrawer(sliderView);
             } else {
                 if ((System.currentTimeMillis() - exitTime) > 2000) {
-                    Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "再按一次退出程序", Toast.LENGTH_SHORT).show();
                     exitTime = System.currentTimeMillis();
                 } else {
                     if (isConnected) {
@@ -975,7 +997,7 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
 
         try {
-            unregisterReceiver(exitReceiver);
+            localBroadcastManager.unregisterReceiver(exitReceiver);
         } catch (Exception e) {
             DeBugLog.e(TAG, "反注册ExitBroadcastReceiver失败:" + e.getMessage());
         }

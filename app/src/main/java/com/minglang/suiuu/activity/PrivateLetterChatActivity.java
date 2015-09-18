@@ -13,15 +13,14 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.koushikdutta.WebSocketClient;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.PrivateLetterChatAdapter;
@@ -87,7 +86,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
     Toolbar toolBar;
 
     @Bind(R.id.private_letter_details_recycler_view)
-    RecyclerView letterDetailsRecyclerView;
+    RecyclerView recyclerView;
 
     @Bind(R.id.private_letter_details_send)
     ImageView sendMessage;
@@ -154,8 +153,8 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         adapter = new PrivateLetterChatAdapter(this, listAll);
         adapter.setOtherHeadImagePath(headImagePath);
 
-        letterDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        letterDetailsRecyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
         webSocketClient = SuiuuApplication.getWebSocketClient();
 
@@ -167,10 +166,12 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
             e.printStackTrace();
         }
 
-        verification = SuiuuInfo.ReadVerification(context);
-        DeBugLog.i(TAG, "verification:" + verification);
+        userSign = SuiuuInfo.ReadUserSign(context);
     }
 
+    /**
+     * 初始化LocalBroadcast
+     */
     private void initLocalBroadcast() {
         localBroadcastManager = LocalBroadcastManager.getInstance(context);
 
@@ -207,21 +208,12 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
                     Toast.makeText(context, "请输入信息", Toast.LENGTH_SHORT).show();
                 } else {
                     String message = buildSendMessage();
-                    addMessage();
+                    DeBugLog.i(TAG, "Send Message:" + message);
+                    addSendMessage();
+                    scrollToBottom();
                     webSocketClient.send(message);
+                    inputMessageView.setText("");
                 }
-            }
-        });
-
-        inputMessageView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == R.id.private_letter_details_send || actionId == EditorInfo.IME_NULL) {
-                    //attemptSendMessage();
-                    DeBugLog.i(TAG, "inputString:" + inputString);
-                    return true;
-                }
-                return false;
             }
         });
 
@@ -261,7 +253,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         JSONObject object = new JSONObject();
         try {
             object.put(TYPE, SAY);
-            object.put(CLIENT_ID, verification);
+            object.put(CLIENT_ID, relateId);
             object.put(CONTENT, inputString);
             return object.toString();
         } catch (JSONException e) {
@@ -274,10 +266,10 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
     /**
      * 添加消息到列表
      */
-    private void addMessage() {
+    private void addSendMessage() {
         PrivateChat.PrivateChatData privateChatData = new PrivateChat.PrivateChatData();
         privateChatData.setContent(inputString);
-        privateChatData.setSenderId(verification);
+        privateChatData.setSenderId(userSign);
         privateChatData.setIsRead("");
         privateChatData.setIsShield("");
         privateChatData.setReadTime("");
@@ -291,18 +283,32 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         adapter.notifyItemInserted(listAll.size() - 1);
     }
 
+    /**
+     * 添加接收到的消息
+     *
+     * @param str 接受到的消息字符串
+     */
     private void addReceiveMessage(String str) {
         if (TextUtils.isEmpty(str)) {
             DeBugLog.e(TAG, "返回数据为Null");
         } else try {
             DeBugLog.i(TAG, "接收到的消息:" + str);
-            PrivateChat.PrivateChatData data = JsonUtils.getInstance().fromJSON(PrivateChat.PrivateChatData.class, str);
-            if (data != null)
-                DeBugLog.i(TAG, "Content:" + data.getContent());
-            listAll.add(data);
-            adapter.notifyItemInserted(listAll.size() - 1);
+            parseUnderLineToHumpName(str);
+            PrivateChat.PrivateChatData data = parseUnderLineToHumpName(str);
+            if (data != null && !TextUtils.isEmpty(data.getContent())) {
+                String contentStr = data.getContent();
+                DeBugLog.i(TAG, "Content:" + contentStr);
+                listAll.add(data);
+                adapter.notifyItemInserted(listAll.size() - 1);
+            }
         } catch (Exception e) {
-            DeBugLog.e(TAG, "数据解析失败:" + e.getMessage());
+            try {
+                JSONObject object = new JSONObject(str);
+                DeBugLog.i(TAG, "Type:" + object.get("type"));
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+                DeBugLog.e(TAG, "数据解析失败:" + e.getMessage());
+            }
         }
     }
 
@@ -386,6 +392,38 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         }
     }
 
+    private PrivateChat.PrivateChatData parseUnderLineToHumpName(String json) {
+        JsonParser jp = new JsonParser();
+        JsonObject je = jp.parse(json).getAsJsonObject();
+
+        String senderId = je.get("sender_id").getAsString();
+        String senderHeadImg = je.get("sender_HeadImg").getAsString();
+        String receiveId = je.get("receive_id").getAsString();
+        String content = je.get("content").getAsString();
+        String sessionKey = je.get("session_key").getAsString();
+        String time = je.get("time").getAsString();
+
+        String type = je.get("type").getAsString();
+        String senderName = je.get("sender_name").getAsString();
+
+        PrivateChat.PrivateChatData data = new PrivateChat.PrivateChatData();
+        data.setSessionkey(sessionKey);
+        data.setContent(content);
+        data.setSenderId(senderId);
+        data.setReceiveId(receiveId);
+        data.setUrl(senderHeadImg);
+        data.setReadTime(time);
+
+        return data;
+    }
+
+    /**
+     * 滚动到最底部
+     */
+    private void scrollToBottom() {
+        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -423,6 +461,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String str = intent.getStringExtra(SuiuuApplication.STRING_MESSAGE);
             addReceiveMessage(str);
+            scrollToBottom();
         }
 
     }

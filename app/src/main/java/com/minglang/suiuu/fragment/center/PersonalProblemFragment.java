@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.CommunityDetailsActivity;
+import com.minglang.suiuu.activity.ProblemDetailsActivity;
 import com.minglang.suiuu.adapter.PersonalProblemAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.UserProblem;
@@ -221,7 +221,7 @@ public class PersonalProblemFragment extends BaseFragment {
             @Override
             public void onItemClick(View view, int position) {
                 String id = listAll.get(position).getQId();
-                Intent intent = new Intent(getActivity(), CommunityDetailsActivity.class);
+                Intent intent = new Intent(getActivity(), ProblemDetailsActivity.class);
                 intent.putExtra(ID, id);
                 startActivity(intent);
             }

@@ -165,7 +165,7 @@ public class SuiuuFragment extends BaseFragment
             dialog.dismissDialog();
             suiuuDataList.addAll(JsonUtils.getInstance().fromJSON(SuiuuReturnDate.class, (String) DataCacheUtils.getCacheData(getActivity(), "2").get("data")).getData());
             showList(suiuuDataList);
-            Toast.makeText(getActivity().getApplicationContext(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -181,7 +181,7 @@ public class SuiuuFragment extends BaseFragment
                     SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, response);
                     List<SuiuuDataList> suiuuDataListNew = baseCollection.getData();
                     if (suiuuDataListNew.size() < 1) {
-                        Toast.makeText(getActivity().getApplicationContext(), "数据加载完毕", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "数据加载完毕", Toast.LENGTH_SHORT).show();
                     } else {
                         //缓存数据
                         Map tripGalleryCacheData = DataCacheUtils.getCacheData(getActivity(), "2");
@@ -197,11 +197,11 @@ public class SuiuuFragment extends BaseFragment
                     }
 
                 } else if ("-3".equals(status)) {
-                    Toast.makeText(getActivity().getApplicationContext(), "登录信息过期,请重新登录", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "登录信息过期,请重新登录", Toast.LENGTH_SHORT).show();
                     AppUtils.intentLogin(getActivity());
                     getActivity().finish();
                 } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

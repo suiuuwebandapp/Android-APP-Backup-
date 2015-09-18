@@ -46,6 +46,7 @@
         android:layout_marginStart="@dimen/layout_5dp"
         android:layout_toLeftOf="@+id/imageView4"
         android:layout_toStartOf="@+id/imageView4"
+        android:gravity="end"
         android:padding="@dimen/layout_5dp"
         android:text="@string/app_name"
         android:textColor="@color/textColor"

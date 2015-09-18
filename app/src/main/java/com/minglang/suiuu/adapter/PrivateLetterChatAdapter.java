@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class PrivateLetterChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final String TAG = PrivateLetterChatAdapter.class.getSimpleName();
+
     private static final int SEND_MESSAGE = 1;
     private static final int ACCEPT_MESSAGE = 2;
 
@@ -34,13 +36,13 @@ public class PrivateLetterChatAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private String failureImagePath;
 
-    private String verification;
+    private String userSign;
 
     public PrivateLetterChatAdapter(Context context, List<PrivateChat.PrivateChatData> list) {
         this.context = context;
         this.list = list;
         failureImagePath = "res://com.minglang.suiuu/" + R.drawable.default_head_image_error;
-        verification = SuiuuInfo.ReadVerification(context);
+        userSign = SuiuuInfo.ReadUserSign(context);
     }
 
     public void setList(List<PrivateChat.PrivateChatData> list) {
@@ -54,10 +56,11 @@ public class PrivateLetterChatAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public int getItemViewType(int position) {
-        if (TextUtils.isEmpty(list.get(position).getSenderId())) {
+        String senderId = list.get(position).getSenderId();
+        if (TextUtils.isEmpty(senderId)) {
             return SEND_MESSAGE;
         } else {
-            if (list.get(position).getSenderId().equals(verification)) {
+            if (senderId.equals(userSign)) {
                 return SEND_MESSAGE;
             } else {
                 return ACCEPT_MESSAGE;

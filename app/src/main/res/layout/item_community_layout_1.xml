@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:orientation="horizontal">
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/item_community_layout_1_head_view"
+        android:id="@+id/item_problem_layout_1_head_view"
         android:layout_width="@dimen/layout_50dp"
         android:layout_height="@dimen/layout_50dp"
         android:layout_margin="@dimen/layout_5dp"
@@ -15,7 +15,7 @@
         fresco:failureImageScaleType="fitXY"
         fresco:placeholderImage="@drawable/default_head_image"
         fresco:placeholderImageScaleType="fitCenter"
-        fresco:roundAsCircle="true"/>
+        fresco:roundAsCircle="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,19 +23,19 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/item_community_layout_1_problem"
+            android:id="@+id/item_problem_layout_1_problem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/layout_3dp"
             android:text="@string/Title"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/textColor"/>
+            android:textColor="@color/textColor" />
 
         <com.minglang.suiuu.customview.FlowLayout
-            android:id="@+id/item_community_layout_1_flow_layout"
+            android:id="@+id/item_problem_layout_1_flow_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/layout_2dp"/>
+            android:layout_margin="@dimen/layout_2dp" />
 
     </LinearLayout>
 

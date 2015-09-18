@@ -191,6 +191,7 @@ public class HyperionParser {
     }
 
     private byte[] frame(Object data, int opcode, int errorCode) {
+        Log.i(TAG, "mClosed:" + mClosed);
         if (mClosed) return null;
 
         Log.d(TAG, "Creating frame for: " + data + " op: " + opcode + " err: " + errorCode);

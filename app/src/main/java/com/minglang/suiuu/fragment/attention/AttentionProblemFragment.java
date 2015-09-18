@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.CommunityDetailsActivity;
+import com.minglang.suiuu.activity.ProblemDetailsActivity;
 import com.minglang.suiuu.adapter.AttentionProblemAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.AttentionProblem;
@@ -189,7 +189,7 @@ public class AttentionProblemFragment extends BaseFragment {
                 String strId = listAll.get(location).getQId();
                 String strTitle = listAll.get(location).getQTitle();
 
-                Intent intent = new Intent(getActivity(), CommunityDetailsActivity.class);
+                Intent intent = new Intent(getActivity(), ProblemDetailsActivity.class);
                 intent.putExtra(ID, strId);
                 intent.putExtra(TITLE, strTitle);
                 startActivity(intent);

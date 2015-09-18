@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2013-2014 EaseMob Technologies. All rights reserved.
- * <p>
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -27,14 +27,10 @@ import com.alibaba.sdk.android.oss.model.TokenGenerator;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.koushikdutta.WebSocketClient;
-import com.minglang.suiuu.crash.GlobalCrashHandler;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.SuiuuInfo;
 
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.lasque.tusdk.core.TuSdkApplication;
 
 import java.net.URI;
@@ -56,7 +52,6 @@ public class SuiuuApplication extends TuSdkApplication {
     public static final String DISCONNECT_CODE = "disconnect_code";
     public static final String ERROR = "error";
 
-    public static Context applicationContext;
     private static SuiuuApplication instance;
 
     /**
@@ -84,20 +79,35 @@ public class SuiuuApplication extends TuSdkApplication {
         MultiDex.install(this);//开启多Dex文件支持
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "deprecation"})
     @Override
     public void onCreate() {
         super.onCreate();
-        applicationContext = this;
-        instance = this;
 
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
-
+        initApplication();
         initAboutOSS();
-        initWebSocket();
 
-        // 设置输出状态
-        this.setEnableLog(true);
+        //GlobalCrashHandler.getInstance().init(this);
+
+        List<BasicNameValuePair> extraHeaders = Collections.singletonList(new BasicNameValuePair("", ""));
+
+        try {
+            webSocketClient = new WebSocketClient(URI.create(HttpNewServicePath.SocketPath), new InitListener(), extraHeaders);
+        } catch (Exception e) {
+            DeBugLog.e(TAG, "WebSocketClient初始化异常:" + e.getMessage());
+        }
+
+        try {
+            webSocketClient.connect();
+        } catch (Exception e) {
+            DeBugLog.e(TAG, "WebSocketClient连接异常:" + e.getMessage());
+        }
+
+    }
+
+    private void initApplication() {
+        instance = this;
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
         //fresco图片加载初始化
         Fresco.initialize(this);
@@ -105,13 +115,8 @@ public class SuiuuApplication extends TuSdkApplication {
         //初始化TuSDK
         this.initPreLoader(this, "745f61271fd7f7f7-00-04gxn1");
 
-        GlobalCrashHandler.getInstance().init(this);
-
-        String loginMessage = buildLoginMessage();
-        DeBugLog.i(TAG, "loginMessage:" + loginMessage);
-
-        webSocketClient.send(loginMessage);
-
+        // 设置输出状态
+        this.setEnableLog(false);
     }
 
     /**
@@ -127,14 +132,15 @@ public class SuiuuApplication extends TuSdkApplication {
             @Override
             public String generateToken(String httpMethod, String md5, String type, String date,
                                         String ossHeaders, String resource) {
-                String content = httpMethod + "\n" + md5 + "\n" + type + "\n" + date + "\n" + ossHeaders
-                        + resource;
+                String content = httpMethod + "\n" + md5 + "\n" + type + "\n" + date + "\n" + ossHeaders + resource;
                 return OSSToolKit.generateToken(accessKey, screctKey, content);
             }
         });
+
         ossService.setGlobalDefaultHostId("oss-cn-hongkong.aliyuncs.com");
         ossService.setCustomStandardTimeWithEpochSec(System.currentTimeMillis() / 1000);
         ossService.setGlobalDefaultACL(AccessControlList.PRIVATE); // 默认为private
+
         ClientConfiguration conf = new ClientConfiguration();
         conf.setConnectTimeout(15 * 1000); // 设置全局网络连接超时时间，默认30s
         conf.setSocketTimeout(15 * 1000); // 设置全局socket超时时间，默认30s
@@ -142,31 +148,15 @@ public class SuiuuApplication extends TuSdkApplication {
         ossService.setClientConfiguration(conf);
     }
 
-    @SuppressWarnings("deprecation")
-    private void initWebSocket() {
-        List<BasicNameValuePair> extraHeaders = Collections.singletonList(new BasicNameValuePair("", ""));
-        webSocketClient = new WebSocketClient(URI.create(HttpNewServicePath.SocketPath), new initListener(), extraHeaders);
-        webSocketClient.connect();
-    }
-
-    private String buildLoginMessage() {
-        String verification = SuiuuInfo.ReadVerification(this);
-
-        JSONObject object = new JSONObject();
-        try {
-            object.put(USER_KEY, verification);
-            object.put(TYPE, LOGIN);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return object.toString();
+    public static void setWebSocketClient(WebSocketClient webSocketClient) {
+        SuiuuApplication.webSocketClient = webSocketClient;
     }
 
     public static WebSocketClient getWebSocketClient() {
         return webSocketClient;
     }
 
-    private class initListener implements WebSocketClient.Listener {
+    private class InitListener implements WebSocketClient.Listener {
 
         @Override
         public void onConnect() {

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.PersonalMainPagerActivity;
-import com.minglang.suiuu.entity.CommunityItem.CommunityItemData.AnswerEntity;
+import com.minglang.suiuu.entity.ProblemDetails.CommunityItemData.AnswerEntity;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 
@@ -25,7 +25,7 @@ import java.util.List;
  * <p/>
  * Created by Administrator on 2015/7/3.
  */
-public class CommunityItemAdapter extends BaseAdapter {
+public class ProblemItemAdapter extends BaseAdapter {
 
     private static final String USER_SIGN = "userSign";
 
@@ -35,7 +35,7 @@ public class CommunityItemAdapter extends BaseAdapter {
 
     private final SparseBooleanArray sparseBooleanArray;
 
-    public CommunityItemAdapter(Context context) {
+    public ProblemItemAdapter(Context context) {
         this.context = context;
         sparseBooleanArray = new SparseBooleanArray();
     }

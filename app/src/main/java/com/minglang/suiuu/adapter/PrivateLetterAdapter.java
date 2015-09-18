@@ -81,7 +81,7 @@ public class PrivateLetterAdapter extends BaseHolderAdapter<PrivateLetterData> {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(context, PersonalMainPagerActivity.class);
-            intent.putExtra(USER_SIGN, item.getUserId());
+            intent.putExtra(USER_SIGN, item.getRelateId());
             context.startActivity(intent);
         }
     }

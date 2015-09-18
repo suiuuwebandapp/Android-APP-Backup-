@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MsgQuestionAdapter;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MsgQuestion;
 import com.minglang.suiuu.entity.MsgQuestion.MsgQuestionData.MsgQuestionItemData;
@@ -248,7 +247,7 @@ public class MsgQuestionFragment extends BaseFragment {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
-            Toast.makeText(SuiuuApplication.applicationContext, NoData, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 MsgQuestion msgQuestion = JsonUtils.getInstance().fromJSON(MsgQuestion.class, str);
@@ -259,7 +258,7 @@ public class MsgQuestionFragment extends BaseFragment {
                     adapter.setList(listAll);
                 } else {
                     failureLessPage();
-                    Toast.makeText(SuiuuApplication.applicationContext, NoData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 DeBugLog.e(TAG, "问答消息数据请求失败:" + e.getMessage());

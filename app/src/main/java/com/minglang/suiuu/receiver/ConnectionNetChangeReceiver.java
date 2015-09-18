@@ -25,17 +25,19 @@ public class ConnectionNetChangeReceiver extends BroadcastReceiver {
         NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         NetworkInfo wifiNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-        if (!mobNetInfo.isConnected() && !wifiNetInfo.isConnected()) {
-            listener.connectionBreakOff(context);
-            //改变背景或者 处理网络的全局变量
-        } else {
-            //改变背景或者 处理网络的全局变量
-            listener.connectionResume(context);
-        }
+        if (listener != null)
+            if (!mobNetInfo.isConnected() && !wifiNetInfo.isConnected()) {
+                listener.connectionBreakOff(context);
+                //改变背景或者 处理网络的全局变量
+            } else {
+                //改变背景或者 处理网络的全局变量
+                listener.connectionResume(context);
+            }
     }
 
     public interface ConnectionChangeListener {
         void connectionBreakOff(Context b);
+
         void connectionResume(Context b);
     }
 

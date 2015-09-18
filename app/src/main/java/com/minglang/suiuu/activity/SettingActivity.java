@@ -3,6 +3,7 @@ package com.minglang.suiuu.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,6 +48,8 @@ public class SettingActivity extends BaseAppCompatActivity {
 
     private Context context;
 
+    private LocalBroadcastManager localBroadcastManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +63,8 @@ public class SettingActivity extends BaseAppCompatActivity {
         toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
         context = SettingActivity.this;
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(context);
     }
 
     private void viewAction() {
@@ -100,9 +105,7 @@ public class SettingActivity extends BaseAppCompatActivity {
                 SuiuuInfo.ClearWeChatInfo(context);
                 SuiuuInfo.ClearAliPayInfo(context);
 
-                Intent intent = new Intent();
-                intent.setAction(TAG);
-                sendBroadcast(intent);
+                localBroadcastManager.sendBroadcast(new Intent(TAG));
 
                 SettingActivity.this.finish(); // 重新显示登陆页面
 

@@ -1,45 +1,43 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/community_details_toolbar"
+        android:id="@+id/problem_details_toolbar"
         style="@style/AppToolBar"
         app:navigationIcon="@drawable/back"
-        app:title="@string/answerQuestion"
-        app:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        app:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        app:title="@string/answerQuestion" />
 
-    <com.minglang.pulltorefreshlibrary.PullToRefreshScrollView
-        android:id="@+id/community_details_refresh_scroll_view"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/community_details_toolbar">
+        android:layout_below="@+id/problem_details_toolbar">
 
         <LinearLayout
+            android:id="@+id/problem_details_header_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignTop="@+id/up_load_lo_file_tool_bar"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <!--suppress AndroidElementNotAllowed -->
-            <include layout="@layout/item_community_layout_1"/>
+            <include layout="@layout/item_community_layout_1" />
 
             <!--suppress AndroidElementNotAllowed -->
-            <include layout="@layout/item_community_layout_2"/>
+            <include layout="@layout/item_community_layout_2" />
 
             <!--suppress AndroidElementNotAllowed -->
-            <include layout="@layout/item_community_layout_3"/>
+            <include layout="@layout/item_community_layout_3" />
 
             <com.minglang.suiuu.customview.NoScrollBarListView
                 android:id="@+id/community_details_no_scroll_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 
-    </com.minglang.pulltorefreshlibrary.PullToRefreshScrollView>
+    </ScrollView>
 
 </RelativeLayout>

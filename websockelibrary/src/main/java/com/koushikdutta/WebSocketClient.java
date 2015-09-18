@@ -243,20 +243,24 @@ public class WebSocketClient {
     }
 
     void sendFrame(final byte[] frame) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    synchronized (mSendLock) {
-                        OutputStream outputStream = mSocket.getOutputStream();
-                        outputStream.write(frame);
-                        outputStream.flush();
+        if (mSocket == null) {
+           Log.e(TAG, "mSocket is null");
+        } else {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        synchronized (mSendLock) {
+                            OutputStream outputStream = mSocket.getOutputStream();
+                            outputStream.write(frame);
+                            outputStream.flush();
+                        }
+                    } catch (IOException e) {
+                        mListener.onError(e);
                     }
-                } catch (IOException e) {
-                    mListener.onError(e);
                 }
-            }
-        });
+            });
+        }
     }
 
     public interface Listener {
@@ -269,6 +273,7 @@ public class WebSocketClient {
         void onDisconnect(int code, String reason);
 
         void onError(Exception error);
+
     }
 
     private SSLSocketFactory getSSLSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {

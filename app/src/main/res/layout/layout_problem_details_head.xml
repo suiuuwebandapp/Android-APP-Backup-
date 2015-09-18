@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!--suppress AndroidElementNotAllowed -->
+    <include layout="@layout/item_community_layout_1" />
+
+    <!--suppress AndroidElementNotAllowed -->
+    <include layout="@layout/item_community_layout_2" />
+
+    <!--suppress AndroidElementNotAllowed -->
+    <include layout="@layout/item_community_layout_3" />
+
+</LinearLayout>

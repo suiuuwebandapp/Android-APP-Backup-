@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.CommunityDetailsActivity;
+import com.minglang.suiuu.activity.ProblemDetailsActivity;
 import com.minglang.suiuu.activity.SelectCountryActivity;
 import com.minglang.suiuu.adapter.CommunityAdapter;
 import com.minglang.suiuu.adapter.CommunitySortAdapter;
@@ -48,9 +48,9 @@ import butterknife.ButterKnife;
 /**
  * 问答社区页面
  */
-public class CommunityFragment extends BaseFragment {
+public class ProblemFragment extends BaseFragment {
 
-    private static final String TAG = CommunityFragment.class.getSimpleName();
+    private static final String TAG = ProblemFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -137,8 +137,8 @@ public class CommunityFragment extends BaseFragment {
 
     private CommunityAdapter adapter;
 
-    public static CommunityFragment newInstance(String param1, String param2) {
-        CommunityFragment fragment = new CommunityFragment();
+    public static ProblemFragment newInstance(String param1, String param2) {
+        ProblemFragment fragment = new ProblemFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -146,7 +146,7 @@ public class CommunityFragment extends BaseFragment {
         return fragment;
     }
 
-    public CommunityFragment() {
+    public ProblemFragment() {
 
     }
 
@@ -171,7 +171,7 @@ public class CommunityFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_community, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_problem, container, false);
         ButterKnife.bind(this, rootView);
         initView();
         viewAction();
@@ -259,22 +259,6 @@ public class CommunityFragment extends BaseFragment {
 
         });
 
-        //        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        //            @Override
-        //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //                int location = position - 1;
-        //                String qID = listAll.get(location).getQId();
-        //                String qTitle = listAll.get(location).getQTitle();
-        //                String tags = listAll.get(position).getQTag();
-        //
-        //                Intent intent = new Intent(getActivity(), CommunityDetailsActivity.class);
-        //                intent.putExtra(ID, qID);
-        //                intent.putExtra(TITLE, qTitle);
-        //                intent.putExtra(TAGS, tags);
-        //                startActivity(intent);
-        //            }
-        //        });
-
         adapter.setOnCommunityClickListener(new CommunityAdapter.OnCommunityClickListener() {
             @Override
             public void onClickListener(View itemView, int position) {
@@ -282,7 +266,7 @@ public class CommunityFragment extends BaseFragment {
                 String qTitle = listAll.get(position).getQTitle();
                 String tags = listAll.get(position).getQTag();
 
-                Intent intent = new Intent(getActivity(), CommunityDetailsActivity.class);
+                Intent intent = new Intent(getActivity(), ProblemDetailsActivity.class);
                 intent.putExtra(ID, qID);
                 intent.putExtra(TITLE, qTitle);
                 intent.putExtra(TAGS, tags);
