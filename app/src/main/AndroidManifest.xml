@@ -412,6 +412,11 @@
             android:name=".activity.ShowBigPictureActivity"
             android:label="@string/show_big_picture_activity"
             android:theme="@style/AppMainTheme"/>
+        <activity
+            android:name=".activity.CreateLocationActivity"
+            android:label="@string/create_location_activity"
+            android:windowSoftInputMode="stateAlwaysVisible"
+            android:theme="@style/AppMainTheme"/>
 
         <activity
             android:name=".activity.PersonalSuiuuActivity"

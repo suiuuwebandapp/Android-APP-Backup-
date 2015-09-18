@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -18,13 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.CameraUpdate;
-import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.CameraPosition;
-import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.MarkerOptions;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.minglang.suiuu.R;
@@ -81,8 +73,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
     @BindString(R.string.DataError)
     String DataError;
 
-    @Bind(R.id.mv_trip_gallery_map)
-    MapView mapView;
 
     private AMap aMap;
 
@@ -174,6 +164,11 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
      */
     @Bind(R.id.iv_trip_gallery_detail_heart)
     ImageView trip_gallery_detail_heart;
+    /**
+     * 关注总数
+     */
+    @Bind(R.id.tv_head_count)
+    TextView tv_head_count;
 
     /**
      * 还没有评论布局
@@ -238,11 +233,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
      */
     private void init(Bundle savedInstanceState) {
         id = this.getIntent().getStringExtra(ID);
-        mapView.onCreate(savedInstanceState);//必须要写
-
-        if (aMap == null) {
-            aMap = mapView.getMap();
-        }
         verification = SuiuuInfo.ReadVerification(this);
         tv_top_center.setText("旅图详情");
         tv_top_right_more.setBackgroundResource(R.drawable.btn_suiuu_share_selector);
@@ -257,17 +247,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
         tv_to_comment_activity.setOnClickListener(new MyOnClickListener());
         trip_gallery_details_portrait.setOnClickListener(new MyOnClickListener());
         trip_gallery_detail_heart.setOnClickListener(new MyOnClickListener());
-        aMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
-
-            @Override
-            public void onTouch(MotionEvent arg0) {
-                if (arg0.getAction() == MotionEvent.ACTION_DOWN) {
-                    sv_trip_gallery_detail.requestDisallowInterceptTouchEvent(false);
-                } else {
-                    sv_trip_gallery_detail.requestDisallowInterceptTouchEvent(true);
-                }
-            }
-        });
         //评论点击事件
         suiuu_details_comment_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -283,27 +262,14 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mapView.onResume();
         sv_trip_gallery_detail.smoothScrollTo(0, 0);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mapView.onPause();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
 
     //根据id获得旅图详情
     private void loadTripGalleryDetailDate(String id) {
@@ -442,6 +408,7 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
 
     private void fullData() {
         fullCommentList();
+        tv_head_count.setText(tripGalleryDetailInfo.getAttentionCount());
         trip_gallery_details_name.setText(tripGalleryDetailInfo.getTitle());
         trip_gallery_details_tag.setText(tripGalleryDetailInfo.getTags().replace(",", " "));
 
@@ -464,18 +431,6 @@ public class TripGalleryDetailsActivity extends BaseAppCompatActivity {
             trip_gallery_detail_heart.setBackgroundResource(R.drawable.attention_heart_press);
             attentionId = attentionList.get(0).getAttentionId();
         }
-
-        //初始化地图
-        LatLng lngLat = new LatLng(Double.valueOf(tripGalleryDetailInfo.getLat()), Double.valueOf(tripGalleryDetailInfo.getLon()));
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(
-                lngLat, 16, 30, 0));
-
-        aMap.moveCamera(cameraUpdate);
-        aMap.addMarker(new MarkerOptions()
-                .position(lngLat)
-                .icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-
         trip_gallery_details_content.setAdapter(new showPicDescriptionAdapter(this, picList, picDescription));
         fullGuessYourLove();
     }

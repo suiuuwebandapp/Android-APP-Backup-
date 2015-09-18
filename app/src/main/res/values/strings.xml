@@ -448,6 +448,7 @@
 
     <string name="FeedbackInfoNotNull" translatable="false">反馈意见不能为空！</string>
     <string name="ContactWayNotNull" translatable="false">联系方式不能为空！</string>
+    <string name="Suiuu_dialog" translatable="false">随游设计师仅提供本行程路线的制定,我们会另外安排合适的随友陪伴你游玩</string>
 
     <string name="Agree" translatable="false">同意</string>
     <string name="trip_gallery_publish" translatable="false">旅图发布</string>
@@ -573,6 +574,7 @@
     <string name="title_activity_receivables_way">ReceivablesWayActivity</string>
     <string name="title_activity_add_receivables_way">AddReceivablesWayActivity</string>
     <string name="show_big_picture_activity">ShowBigPictureActivity</string>
+    <string name="create_location_activity">CreateLocationActivity</string>
 
     <string name="title_activity_personal_suiuu">PersonalSuiuuActivity</string>
     <string name="title_activity_personal_problem">PersonalProblemActivity</string>

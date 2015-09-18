@@ -21,7 +21,73 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_8dp">
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/sdv_trip_gallery_details_portrait"
+                    android:layout_width="@dimen/layout_50dp"
+                    android:layout_height="@dimen/layout_50dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/layout_10dp"
+                    android:layout_marginStart="@dimen/layout_10dp"
+                    android:background="@drawable/user_head_image_bg"
+                    fresco:roundAsCircle="true"/>
+                <TextView
+                    android:id="@+id/tv_trip_gallery_details_publisher_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/layout_5dp"
+                    android:layout_toEndOf="@+id/sdv_trip_gallery_details_portrait"
+                    android:layout_toRightOf="@+id/sdv_trip_gallery_details_portrait"
+                    android:text="@string/userName"
+                    android:textColor="@color/textColor"
+                    android:textSize="@dimen/layout_18sp"/>
+                <TextView
+                    android:id="@+id/tv_trip_gallery_details_publish_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_trip_gallery_details_publisher_name"
+                    android:layout_marginLeft="@dimen/layout_5dp"
+                    android:layout_marginStart="@dimen/layout_5dp"
+                    android:layout_toEndOf="@+id/sdv_trip_gallery_details_portrait"
+                    android:layout_toRightOf="@+id/sdv_trip_gallery_details_portrait"
+                    android:drawableLeft="@drawable/icon_location_indicator"
+                    android:drawablePadding="@dimen/layout_6dp"
+                    android:drawableStart="@drawable/icon_location_indicator"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/tempStreet"
+                    android:textColor="@color/mainColor"
+                    android:textSize="@dimen/layout_15sp"/>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="@dimen/layout_10dp">
+                    <ImageView
+                        android:id="@+id/iv_trip_gallery_detail_heart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/attention_heart_normal"
+                        />
+                    <TextView
+                        android:id="@+id/tv_head_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/layout_12sp"
+                        android:text="22"
+                        android:textColor="@color/textColor"
+                        android:layout_below="@+id/iv_trip_gallery_detail_heart"
+                        android:layout_centerHorizontal="true"
+                        />
+                </RelativeLayout>
 
+
+            </RelativeLayout>
+            <include layout="@layout/view_line"/>
             <TextView
                 android:id="@+id/tv_trip_gallery_details_name"
                 android:layout_width="match_parent"
@@ -50,65 +116,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/layout_8dp">
 
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/sdv_trip_gallery_details_portrait"
-                    android:layout_width="@dimen/layout_50dp"
-                    android:layout_height="@dimen/layout_50dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/layout_10dp"
-                    android:layout_marginStart="@dimen/layout_10dp"
-                    android:background="@drawable/user_head_image_bg"
-                    fresco:roundAsCircle="true"/>
 
-                <TextView
-                    android:id="@+id/tv_trip_gallery_details_publisher_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/layout_5dp"
-                    android:layout_toEndOf="@+id/sdv_trip_gallery_details_portrait"
-                    android:layout_toRightOf="@+id/sdv_trip_gallery_details_portrait"
-                    android:text="@string/userName"
-                    android:textColor="@color/textColor"
-                    android:textSize="@dimen/layout_18sp"/>
 
-                <TextView
-                    android:id="@+id/tv_trip_gallery_details_publish_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_trip_gallery_details_publisher_name"
-                    android:layout_marginLeft="@dimen/layout_5dp"
-                    android:layout_marginStart="@dimen/layout_5dp"
-                    android:layout_toEndOf="@+id/sdv_trip_gallery_details_portrait"
-                    android:layout_toRightOf="@+id/sdv_trip_gallery_details_portrait"
-                    android:drawableLeft="@drawable/icon_location_indicator"
-                    android:drawablePadding="@dimen/layout_6dp"
-                    android:drawableStart="@drawable/icon_location_indicator"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:text="@string/tempStreet"
-                    android:textColor="@color/mainColor"
-                    android:textSize="@dimen/layout_15sp"/>
-
-                <ImageView
-                    android:id="@+id/iv_trip_gallery_detail_heart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_margin="@dimen/layout_10dp"
-                    />
-
-            </RelativeLayout>
-
-            <com.amap.api.maps.MapView
-                android:id="@+id/mv_trip_gallery_map"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"/>
 
             <include layout="@layout/view_line"/>
 

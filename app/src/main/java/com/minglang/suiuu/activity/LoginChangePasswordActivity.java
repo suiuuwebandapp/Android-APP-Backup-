@@ -189,7 +189,7 @@ public class LoginChangePasswordActivity extends BaseActivity {
         map.put("phone", phoneNumber);
         map.put("code", verificationCode);
         map.put("password", changePassWord);
-        Log.i("suiuu",phoneNumber + "=="+verificationCode+"=="+changePassWord);
+        Log.i("suiuu", phoneNumber + "==" + verificationCode + "==" + changePassWord);
         try {
             OkHttpManager.onPostAsynRequest(HttpNewServicePath.UpdatePassWord,
                     new updatePassWordCallBack(), map);
@@ -258,10 +258,10 @@ public class LoginChangePasswordActivity extends BaseActivity {
         public void onResponse(String response) {
             try {
                 JSONObject json = new JSONObject(response);
-                String status = (String) json.get("status");
+                int status = (int) json.get("status");
                 String data = (String) json.get("data");
-                Toast.makeText(LoginChangePasswordActivity.this,data,Toast.LENGTH_SHORT).show();
-                if("1".equals(status) && data.equals("修改成功")) {
+                Toast.makeText(LoginChangePasswordActivity.this, data, Toast.LENGTH_SHORT).show();
+                if (status == 1 && data.equals("修改成功")) {
                     finish();
                 }
             } catch (JSONException e) {

@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
@@ -56,6 +58,10 @@ public class AMapActivity extends BaseActivity implements
     ImageView iv_top_callback;
     @Bind(R.id.iv_amp_top_search)
     ImageView iv_amp_top_search;
+    @Bind(R.id.rl_no_data)
+    RelativeLayout rl_no_data;
+    @Bind(R.id.tv_create_location)
+    TextView tv_create_location;
     private String searchKey;
 
     @Override
@@ -138,6 +144,8 @@ public class AMapActivity extends BaseActivity implements
         if (currentPage == 1 && poiResult.getPois().size() < 1) {
             dialog.dismissDialog();
             Toast.makeText(this, R.string.no_search_data, Toast.LENGTH_SHORT).show();
+            lv_location_message.setVisibility(View.GONE);
+            rl_no_data.setVisibility(View.VISIBLE);
         } else {
             showList();
         }
@@ -193,6 +201,12 @@ public class AMapActivity extends BaseActivity implements
                 currentPage = 1;
                 poiItems.clear();
                 keySearch();
+            }
+        });
+        tv_create_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(AMapActivity.this, CreateLocationActivity.class), 11);
             }
         });
 
@@ -263,5 +277,19 @@ public class AMapActivity extends BaseActivity implements
         currentPage = 0;
         doSearchQuery();
         lv_location_message.reflashComplete();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null && requestCode == 11) {
+            String locationAddress = data.getStringExtra("address");
+            Intent intent = AMapActivity.this.getIntent();
+            intent.putExtra("address", locationAddress);
+            AMapActivity.this.setResult(RESULT_OK, intent);
+            finish();
+            overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
+
+        }
     }
 }

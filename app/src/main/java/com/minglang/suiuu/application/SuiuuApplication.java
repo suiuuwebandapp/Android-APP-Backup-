@@ -27,6 +27,7 @@ import com.alibaba.sdk.android.oss.model.TokenGenerator;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.koushikdutta.WebSocketClient;
+import com.minglang.suiuu.crash.GlobalCrashHandler;
 import com.minglang.suiuu.utils.DeBugLog;
 import com.minglang.suiuu.utils.HttpNewServicePath;
 
@@ -40,10 +41,6 @@ import java.util.List;
 public class SuiuuApplication extends TuSdkApplication {
 
     private static final String TAG = SuiuuApplication.class.getSimpleName();
-
-    private static final String TYPE = "type";
-    private static final String USER_KEY = "user_key";
-    private static final String LOGIN = "login";
 
     public static final String CONNECT = "connect";
     public static final String STRING_MESSAGE = "String_Message";
@@ -87,7 +84,7 @@ public class SuiuuApplication extends TuSdkApplication {
         initApplication();
         initAboutOSS();
 
-        //GlobalCrashHandler.getInstance().init(this);
+        GlobalCrashHandler.getInstance().init(this);
 
         List<BasicNameValuePair> extraHeaders = Collections.singletonList(new BasicNameValuePair("", ""));
 
@@ -117,6 +114,8 @@ public class SuiuuApplication extends TuSdkApplication {
 
         // 设置输出状态
         this.setEnableLog(false);
+
+
     }
 
     /**
@@ -202,5 +201,6 @@ public class SuiuuApplication extends TuSdkApplication {
         }
 
     }
+
 
 }
