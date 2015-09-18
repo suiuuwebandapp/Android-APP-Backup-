@@ -24,6 +24,8 @@ import com.minglang.suiuu.utils.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -197,8 +199,9 @@ public class LoginsActivity extends BaseActivity {
             dialog.dismissDialog();
             Log.i("suiuu", response);
             try {
-                UserBack user = JsonUtils.getInstance().fromJSON(UserBack.class, response);
-                if (user.getStatus().equals("1")) {
+                JSONObject json = new JSONObject(response);
+                if (json.getInt("status") == 1) {
+                    UserBack user = JsonUtils.getInstance().fromJSON(UserBack.class, response);
                     UserBack.UserBackData data = user.getData();
                     SuiuuInfo.WriteVerification(LoginsActivity.this, user.getMessage());
                     SuiuuInfo.WriteUserSign(LoginsActivity.this, data.getUserSign());
@@ -206,7 +209,7 @@ public class LoginsActivity extends BaseActivity {
                     startActivity(new Intent(LoginsActivity.this, MainActivity.class));
                     finish();
                 } else {
-                    Toast.makeText(LoginsActivity.this, "登录失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginsActivity.this, json.getString("data"), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
             }

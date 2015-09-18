@@ -33,7 +33,6 @@ import com.koushikdutta.WebSocketClient;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MainSliderAdapter;
 import com.minglang.suiuu.application.BaseAppManager;
-import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.fragment.main.CommunityFragment;
 import com.minglang.suiuu.fragment.main.InformationFragment;
@@ -242,8 +241,8 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         context = MainActivity.this;
 
-        webSocketClient = SuiuuApplication.getWebSocketClient();
-        isConnected = webSocketClient.isConnected();
+//        webSocketClient = SuiuuApplication.getWebSocketClient();
+//        isConnected = webSocketClient.isConnected();
         DeBugLog.i(TAG, "isConnected:" + isConnected);
 
         getServiceTime();

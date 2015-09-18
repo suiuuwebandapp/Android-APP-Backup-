@@ -1,6 +1,7 @@
 package com.minglang.suiuu.activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -145,6 +146,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
      * 加载更多的view
      */
     private TextView textView = null;
+    private AlertDialog setTagDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,6 +250,10 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
             @JavascriptInterface
             public void jsAlert(String s) {
                 Toast.makeText(SuiuuDetailsActivity.this, s, Toast.LENGTH_SHORT).show();
+            }
+            @JavascriptInterface
+            public void showMask() {
+                showSetTagDialog();
             }
 
             @JavascriptInterface
@@ -448,6 +454,23 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
             }
 
         }
+    }
+    /**
+     * 设置自定义标签弹出框
+     */
+    protected void showSetTagDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = View.inflate(this, R.layout.suiuu_dialog, null);
+        ImageView iv_cancel = (ImageView) view.findViewById(R.id.iv_suiuu_dialog_cancel);
+        iv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+             setTagDialog.dismiss();
+            }
+        });
+        setTagDialog = builder.create();
+        setTagDialog.setView(view, 0, 0, 0, 0);
+        setTagDialog.show();
     }
 
 }

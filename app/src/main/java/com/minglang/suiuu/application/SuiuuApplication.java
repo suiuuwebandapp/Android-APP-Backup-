@@ -14,7 +14,6 @@
 package com.minglang.suiuu.application;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.LocalBroadcastManager;
@@ -27,19 +26,12 @@ import com.alibaba.sdk.android.oss.model.TokenGenerator;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.koushikdutta.WebSocketClient;
-import com.minglang.suiuu.crash.GlobalCrashHandler;
 import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.lasque.tusdk.core.TuSdkApplication;
-
-import java.net.URI;
-import java.util.Collections;
-import java.util.List;
 
 public class SuiuuApplication extends TuSdkApplication {
 
@@ -94,7 +86,7 @@ public class SuiuuApplication extends TuSdkApplication {
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
         initAboutOSS();
-        initWebSocket();
+//        initWebSocket();
 
         // 设置输出状态
         this.setEnableLog(true);
@@ -105,12 +97,12 @@ public class SuiuuApplication extends TuSdkApplication {
         //初始化TuSDK
         this.initPreLoader(this, "745f61271fd7f7f7-00-04gxn1");
 
-        GlobalCrashHandler.getInstance().init(this);
+//        GlobalCrashHandler.getInstance().init(this);
 
         String loginMessage = buildLoginMessage();
         DeBugLog.i(TAG, "loginMessage:" + loginMessage);
 
-        webSocketClient.send(loginMessage);
+//        webSocketClient.send(loginMessage);
 
     }
 
@@ -142,12 +134,12 @@ public class SuiuuApplication extends TuSdkApplication {
         ossService.setClientConfiguration(conf);
     }
 
-    @SuppressWarnings("deprecation")
-    private void initWebSocket() {
-        List<BasicNameValuePair> extraHeaders = Collections.singletonList(new BasicNameValuePair("", ""));
-        webSocketClient = new WebSocketClient(URI.create(HttpNewServicePath.SocketPath), new initListener(), extraHeaders);
-        webSocketClient.connect();
-    }
+//    @SuppressWarnings("deprecation")
+//    private void initWebSocket() {
+//        List<BasicNameValuePair> extraHeaders = Collections.singletonList(new BasicNameValuePair("", ""));
+//        webSocketClient = new WebSocketClient(URI.create(HttpNewServicePath.SocketPath), new initListener(), extraHeaders);
+//        webSocketClient.connect();
+//    }
 
     private String buildLoginMessage() {
         String verification = SuiuuInfo.ReadVerification(this);
@@ -166,51 +158,51 @@ public class SuiuuApplication extends TuSdkApplication {
         return webSocketClient;
     }
 
-    private class initListener implements WebSocketClient.Listener {
-
-        @Override
-        public void onConnect() {
-            DeBugLog.i(TAG, "onConnect()");
-            Intent intent = new Intent(CONNECT);
-            intent.putExtra(CONNECT, "Socket连接已建立");
-            localBroadcastManager.sendBroadcast(intent);
-        }
-
-        @Override
-        public void onMessage(String message) {
-            DeBugLog.i(TAG, "String Message:" + message);
-            Intent intent = new Intent(STRING_MESSAGE);
-            intent.putExtra(STRING_MESSAGE, message);
-            localBroadcastManager.sendBroadcast(intent);
-        }
-
-        @Override
-        public void onMessage(byte[] data) {
-            String str = new String(data);
-            DeBugLog.i(TAG, "byte[] Message:" + str);
-
-            Intent intent = new Intent(BYTE_MESSAGE);
-            intent.putExtra(BYTE_MESSAGE, str);
-            localBroadcastManager.sendBroadcast(intent);
-        }
-
-        @Override
-        public void onDisconnect(int code, String reason) {
-            DeBugLog.i(TAG, "onDisconnect(),code:" + code + ",reason:" + reason);
-            Intent intent = new Intent(DISCONNECT);
-            intent.putExtra(DISCONNECT_CODE, code);
-            intent.putExtra(DISCONNECT, reason);
-            localBroadcastManager.sendBroadcast(intent);
-        }
-
-        @Override
-        public void onError(Exception error) {
-            DeBugLog.e(TAG, "onError(),error:" + error.getMessage());
-            Intent intent = new Intent(ERROR);
-            intent.putExtra(ERROR, error);
-            localBroadcastManager.sendBroadcast(intent);
-        }
-
-    }
+//    private class initListener implements WebSocketClient.Listener {
+//
+//        @Override
+//        public void onConnect() {
+//            DeBugLog.i(TAG, "onConnect()");
+//            Intent intent = new Intent(CONNECT);
+//            intent.putExtra(CONNECT, "Socket连接已建立");
+//            localBroadcastManager.sendBroadcast(intent);
+//        }
+//
+//        @Override
+//        public void onMessage(String message) {
+//            DeBugLog.i(TAG, "String Message:" + message);
+//            Intent intent = new Intent(STRING_MESSAGE);
+//            intent.putExtra(STRING_MESSAGE, message);
+//            localBroadcastManager.sendBroadcast(intent);
+//        }
+//
+//        @Override
+//        public void onMessage(byte[] data) {
+//            String str = new String(data);
+//            DeBugLog.i(TAG, "byte[] Message:" + str);
+//
+//            Intent intent = new Intent(BYTE_MESSAGE);
+//            intent.putExtra(BYTE_MESSAGE, str);
+//            localBroadcastManager.sendBroadcast(intent);
+//        }
+//
+//        @Override
+//        public void onDisconnect(int code, String reason) {
+//            DeBugLog.i(TAG, "onDisconnect(),code:" + code + ",reason:" + reason);
+//            Intent intent = new Intent(DISCONNECT);
+//            intent.putExtra(DISCONNECT_CODE, code);
+//            intent.putExtra(DISCONNECT, reason);
+//            localBroadcastManager.sendBroadcast(intent);
+//        }
+//
+//        @Override
+//        public void onError(Exception error) {
+//            DeBugLog.e(TAG, "onError(),error:" + error.getMessage());
+//            Intent intent = new Intent(ERROR);
+//            intent.putExtra(ERROR, error);
+//            localBroadcastManager.sendBroadcast(intent);
+//        }
+//
+//    }
 
 }

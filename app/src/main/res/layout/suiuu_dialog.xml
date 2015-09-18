@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/suiuu_dialog_bg">
+    <ImageView
+        android:id="@+id/iv_suiuu_dialog_face"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/smile_face"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/layout_15dp"/>
+    <ImageView
+        android:id="@+id/iv_suiuu_dialog_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/exit"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/layout_8dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="@dimen/layout_15sp"
+        android:text="@string/Suiuu_dialog"
+        android:layout_below="@+id/iv_suiuu_dialog_face"
+        android:padding="@dimen/layout_20dp"/>
+</RelativeLayout>
