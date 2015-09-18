@@ -115,7 +115,6 @@ public class SuiuuApplication extends TuSdkApplication {
         // 设置输出状态
         this.setEnableLog(false);
 
-
     }
 
     /**
@@ -160,6 +159,7 @@ public class SuiuuApplication extends TuSdkApplication {
         @Override
         public void onConnect() {
             DeBugLog.i(TAG, "onConnect()");
+
             Intent intent = new Intent(CONNECT);
             intent.putExtra(CONNECT, "Socket连接已建立");
             localBroadcastManager.sendBroadcast(intent);
@@ -168,6 +168,7 @@ public class SuiuuApplication extends TuSdkApplication {
         @Override
         public void onMessage(String message) {
             DeBugLog.i(TAG, "String Message:" + message);
+
             Intent intent = new Intent(STRING_MESSAGE);
             intent.putExtra(STRING_MESSAGE, message);
             localBroadcastManager.sendBroadcast(intent);
@@ -186,6 +187,7 @@ public class SuiuuApplication extends TuSdkApplication {
         @Override
         public void onDisconnect(int code, String reason) {
             DeBugLog.i(TAG, "onDisconnect(),code:" + code + ",reason:" + reason);
+
             Intent intent = new Intent(DISCONNECT);
             intent.putExtra(DISCONNECT_CODE, code);
             intent.putExtra(DISCONNECT, reason);
@@ -195,12 +197,12 @@ public class SuiuuApplication extends TuSdkApplication {
         @Override
         public void onError(Exception error) {
             DeBugLog.e(TAG, "onError(),error:" + error.getMessage());
+
             Intent intent = new Intent(ERROR);
             intent.putExtra(ERROR, error);
             localBroadcastManager.sendBroadcast(intent);
         }
 
     }
-
 
 }

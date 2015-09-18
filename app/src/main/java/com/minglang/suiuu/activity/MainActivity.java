@@ -34,9 +34,10 @@ import com.koushikdutta.WebSocketClient;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MainSliderAdapter;
 import com.minglang.suiuu.application.BaseAppManager;
+import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.fragment.main.ProblemFragment;
 import com.minglang.suiuu.fragment.main.InformationFragment;
+import com.minglang.suiuu.fragment.main.ProblemFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
 import com.minglang.suiuu.fragment.main.TripGalleryFragment;
 import com.minglang.suiuu.receiver.ConnectionNetChangeReceiver;
@@ -247,9 +248,10 @@ public class MainActivity extends BaseActivity {
 
         ButterKnife.bind(this);
         context = MainActivity.this;
+        verification = SuiuuInfo.ReadVerification(context);
 
-//        webSocketClient = SuiuuApplication.getWebSocketClient();
-//        isConnected = webSocketClient.isConnected();
+        webSocketClient = SuiuuApplication.getWebSocketClient();
+        isConnected = webSocketClient.isConnected();
         DeBugLog.i(TAG, "isConnected:" + isConnected);
 
         String loginMessage = buildLoginMessage();
@@ -286,7 +288,7 @@ public class MainActivity extends BaseActivity {
     private String buildLoginMessage() {
         JSONObject object = new JSONObject();
         try {
-            object.put(USER_KEY, "nj4v8a9uassjg4i72davc28045");
+            object.put(USER_KEY, verification);
             object.put(TYPE, LOGIN);
         } catch (JSONException e) {
             e.printStackTrace();
