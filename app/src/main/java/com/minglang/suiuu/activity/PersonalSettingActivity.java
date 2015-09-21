@@ -29,13 +29,13 @@ import com.minglang.suiuu.customview.pickerview.OptionsPopupWindow;
 import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import java.io.File;
@@ -168,9 +168,9 @@ public class PersonalSettingActivity extends BaseActivity {
                 case UP_LOAD_SUCCESS:
                     String s = msg.obj.toString();
 
-                    DeBugLog.i(TAG, "图片上传成功:" + s);
+                    L.i(TAG, "图片上传成功:" + s);
                     netWorkImagePath = AppConstant.OSS_ROOT_PATH + s;
-                    DeBugLog.i(TAG, "NetworkImagePath:" + netWorkImagePath);
+                    L.i(TAG, "NetworkImagePath:" + netWorkImagePath);
 
                     SuiuuInfo.WriteUserHeadImagePath(PersonalSettingActivity.this, netWorkImagePath);
 
@@ -325,7 +325,7 @@ public class PersonalSettingActivity extends BaseActivity {
         headImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.selectPicture(PersonalSettingActivity.this);
+                AppUtils.selectPicture(PersonalSettingActivity.this);
             }
         });
 
@@ -380,19 +380,19 @@ public class PersonalSettingActivity extends BaseActivity {
 
                 @Override
                 public void onProgress(String objectKey, int byteCount, int totalSize) {
-                    DeBugLog.i(TAG, "图片上传中:" + objectKey + ",byteCount:" + byteCount + ",totalSize:" + totalSize);
+                    L.i(TAG, "图片上传中:" + objectKey + ",byteCount:" + byteCount + ",totalSize:" + totalSize);
                     handler.sendEmptyMessage(UP_LOADING);
                 }
 
                 @Override
                 public void onFailure(String s, OSSException e) {
-                    DeBugLog.e(TAG, "上传失败:" + s);
-                    DeBugLog.e(TAG, "数据更新异常:" + e.getMessage());
+                    L.e(TAG, "上传失败:" + s);
+                    L.e(TAG, "数据更新异常:" + e.getMessage());
                     handler.sendEmptyMessage(UP_LOAD_FAIL);
                 }
             });
         } catch (Exception e) {
-            DeBugLog.e(TAG, "文件未找到:" + e.getMessage());
+            L.e(TAG, "文件未找到:" + e.getMessage());
         }
     }
 
@@ -436,7 +436,7 @@ public class PersonalSettingActivity extends BaseActivity {
         if (TextUtils.isEmpty(str)) {
             Toast.makeText(PersonalSettingActivity.this, noData, Toast.LENGTH_SHORT).show();
         } else {
-            DeBugLog.i(TAG, "更新成功:" + str);
+            L.i(TAG, "更新成功:" + str);
             try {
                 UserBack userBack = JsonUtils.getInstance().fromJSON(UserBack.class, str);
                 String status = userBack.getStatus();
@@ -452,7 +452,7 @@ public class PersonalSettingActivity extends BaseActivity {
                     }
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "更新个人资料的返回数据解析失败:" + e.getMessage());
+                L.e(TAG, "更新个人资料的返回数据解析失败:" + e.getMessage());
                 Toast.makeText(PersonalSettingActivity.this, dataError, Toast.LENGTH_SHORT).show();
             }
 
@@ -463,28 +463,28 @@ public class PersonalSettingActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
-            DeBugLog.e(TAG, "select picture cancel");
+            L.e(TAG, "select picture cancel");
             return;
         }
 
         if (data == null) {
-            DeBugLog.e(TAG, "back data is null!");
+            L.e(TAG, "back data is null!");
             return;
         }
 
         switch (requestCode) {
             case AppConstant.KITKAT_LESS:
                 Uri uri = data.getData();
-                nativeImagePath = Utils.getPath(PersonalSettingActivity.this, uri);
-                DeBugLog.i(TAG, "uri:" + uri.toString());
-                Utils.cropPicture(PersonalSettingActivity.this, uri);
+                nativeImagePath = AppUtils.getPath(PersonalSettingActivity.this, uri);
+                L.i(TAG, "uri:" + uri.toString());
+                AppUtils.cropPicture(PersonalSettingActivity.this, uri);
                 break;
 
             case AppConstant.KITKAT_ABOVE:
                 Uri uri2 = data.getData();
-                nativeImagePath = Utils.getPath(PersonalSettingActivity.this, uri2);
-                DeBugLog.i(TAG, "ImagePath:" + nativeImagePath);
-                Utils.cropPicture(PersonalSettingActivity.this, Uri.fromFile(new File(nativeImagePath)));
+                nativeImagePath = AppUtils.getPath(PersonalSettingActivity.this, uri2);
+                L.i(TAG, "ImagePath:" + nativeImagePath);
+                AppUtils.cropPicture(PersonalSettingActivity.this, Uri.fromFile(new File(nativeImagePath)));
                 break;
 
             case AppConstant.INTENT_CROP:
@@ -502,7 +502,7 @@ public class PersonalSettingActivity extends BaseActivity {
 
                 localDetails.setText(countryCNname + "," + cityName);
 
-                DeBugLog.i(TAG, "countryId:" + countryId + ",countryCNname:" + countryCNname + ",cityId:"
+                L.i(TAG, "countryId:" + countryId + ",countryCNname:" + countryCNname + ",cityId:"
                         + cityId + ",cityName:" + cityName);
                 break;
         }
@@ -512,14 +512,14 @@ public class PersonalSettingActivity extends BaseActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "返回的数据:" + response);
+            L.i(TAG, "返回的数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.i(TAG, "数据更新异常:" + e.getMessage());
+            L.i(TAG, "数据更新异常:" + e.getMessage());
             hideDialog();
             Toast.makeText(PersonalSettingActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }

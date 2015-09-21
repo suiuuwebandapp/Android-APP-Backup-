@@ -15,12 +15,12 @@ import com.minglang.suiuu.adapter.MsgTripGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MsgTripGallery;
 import com.minglang.suiuu.entity.MsgTripGallery.MsgTripGalleryData.MsgTripGalleryItemData;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -131,7 +131,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
         initView();
         viewAction();
         getData4Service(page);
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
+        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -149,7 +149,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
         progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        int paddingParams = Utils.newInstance().dip2px(15, getActivity());
+        int paddingParams = AppUtils.newInstance().dip2px(15, getActivity());
 
         MaterialHeader header = new MaterialHeader(getActivity());
         int[] colors = getResources().getIntArray(R.array.google_colors);
@@ -186,7 +186,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String relativeId = listAll.get(position).getRelativeId();
-                DeBugLog.i(TAG, "RelativeId:" + relativeId);
+                L.i(TAG, "RelativeId:" + relativeId);
             }
         });
 
@@ -199,7 +199,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
         String[] keyArray = new String[]{HttpServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
         String url = addUrlAndParams(HttpNewServicePath.getTripGalleryMsgDataPath, keyArray, valueArray);
-        DeBugLog.i(TAG, "旅图信息请求URL:" + url);
+        L.i(TAG, "旅图信息请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new MsgTripGalleryResultCallback());
         } catch (IOException e) {
@@ -250,7 +250,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
                     Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "数据解析异常:" + e.getMessage());
+                L.e(TAG, "数据解析异常:" + e.getMessage());
                 failureLessPage();
                 try {
                     JSONObject object = new JSONObject(str);
@@ -272,14 +272,14 @@ public class MsgTripGalleryFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "旅图返回的数据:" + response);
+            L.i(TAG, "旅图返回的数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "获取旅途消息失败:" + e.getMessage());
+            L.e(TAG, "获取旅途消息失败:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();

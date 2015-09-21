@@ -29,10 +29,10 @@ import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.entity.InvitationAnswer;
 import com.minglang.suiuu.entity.InvitationAnswer.InvitationAnswerData.InviteUserEntity;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
@@ -164,7 +164,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
         countryId = getIntent().getStringExtra(COUNTRY_ID);
         cityId = getIntent().getStringExtra(CITY_ID);
-        DeBugLog.i(TAG, "countryId:" + countryId + ",cityId:" + cityId);
+        L.i(TAG, "countryId:" + countryId + ",cityId:" + cityId);
 
         ButterKnife.bind(this);
         initView();
@@ -254,7 +254,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
         adapter.setOnLoadInvitationAnswerUserListener(new OnLoadInvitationAnswerUserListener() {
             @Override
             public void onLoadInvitation(InviteUserEntity inviteUserEntity, long position) {
-                DeBugLog.i(TAG, "第" + position + "条的用户的用户名是" + inviteUserEntity.getNickname()
+                L.i(TAG, "第" + position + "条的用户的用户名是" + inviteUserEntity.getNickname()
                         + ",UserSign是:" + inviteUserEntity.getUserSign());
             }
         });
@@ -304,7 +304,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
         }
 
         String url = buildInvitationUrl();
-        DeBugLog.i(TAG, "Invitation URL:" + url);
+        L.i(TAG, "Invitation URL:" + url);
 
         try {
             OkHttpManager.onGetAsynRequest(url, new InvitationResultCallBack());
@@ -325,7 +325,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
         OkHttpManager.Params params2 = new OkHttpManager.Params(TOKEN, token);
 
         String tagUrl = HttpNewServicePath.addTagInterFacePath + "?" + TOKEN + "=" + token;
-        DeBugLog.i(TAG, "tagUrl:" + tagUrl);
+        L.i(TAG, "tagUrl:" + tagUrl);
 
         try {
             OkHttpManager.onPostAsynRequest(tagUrl, new TagResultCallBack(), params, params2);
@@ -379,7 +379,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
         }
 
         String problemUrl = HttpNewServicePath.addNewProblemInterFacePath + "?" + TOKEN + "=" + token;
-        DeBugLog.i(TAG, "problemUrl:" + problemUrl);
+        L.i(TAG, "problemUrl:" + problemUrl);
 
         try {
             OkHttpManager.onPostAsynRequest(problemUrl, new AddProblemResultCallBack(), buildNewProblemParams());
@@ -403,12 +403,12 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
-            DeBugLog.e(TAG, "select cancel");
+            L.e(TAG, "select cancel");
             return;
         }
 
         if (data == null) {
-            DeBugLog.e(TAG, "back data is null!");
+            L.e(TAG, "back data is null!");
             return;
         }
 
@@ -420,8 +420,8 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
                 countryId = data.getStringExtra(COUNTRY_ID);
                 cityId = data.getStringExtra(CITY_ID);
 
-                DeBugLog.i(TAG, "countryCNname:" + countryCNname + ",cityName:" + cityName);
-                DeBugLog.i(TAG, "countryId:" + countryId + ",cityId:" + cityId);
+                L.i(TAG, "countryCNname:" + countryCNname + ",cityName:" + cityName);
+                L.i(TAG, "countryId:" + countryId + ",cityId:" + cityId);
 
                 if (!TextUtils.isEmpty(countryCNname)) {
                     if (!TextUtils.isEmpty(cityName)) {
@@ -453,7 +453,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
             case R.id.question_confirm:
                 title = inputQuestionTitle.getText().toString().trim();
                 content = inputProblemContent.getText().toString().trim();
-                DeBugLog.i(TAG, "title:" + title + ",content:" + content);
+                L.i(TAG, "title:" + title + ",content:" + content);
 
                 sendNewProblem4Service();
                 break;
@@ -468,14 +468,14 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "获取邀请的用户列表异常:" + e);
+            L.e(TAG, "获取邀请的用户列表异常:" + e);
             hideDialog();
             Toast.makeText(PutQuestionsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "返回的数据:" + response);
+            L.i(TAG, "返回的数据:" + response);
             hideDialog();
 
             try {
@@ -489,7 +489,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
                     Toast.makeText(PutQuestionsActivity.this, NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "解析异常:" + e.getMessage());
+                L.e(TAG, "解析异常:" + e.getMessage());
                 Toast.makeText(PutQuestionsActivity.this, DataError, Toast.LENGTH_SHORT).show();
             }
 
@@ -503,13 +503,13 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "添加标签异常:" + e.getMessage());
+            L.e(TAG, "添加标签异常:" + e.getMessage());
             Toast.makeText(PutQuestionsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "添加标签返回的数据:" + response);
+            L.i(TAG, "添加标签返回的数据:" + response);
             try {
                 JSONObject object = new JSONObject(response);
                 String status = object.getString(STATUS);
@@ -531,7 +531,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "Exception:" + e.getMessage());
+                L.e(TAG, "Exception:" + e.getMessage());
                 Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
             }
         }
@@ -545,13 +545,13 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "添加新问题异常:" + e.getMessage());
+            L.e(TAG, "添加新问题异常:" + e.getMessage());
             Toast.makeText(PutQuestionsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "添加新问题数据:" + response);
+            L.i(TAG, "添加新问题数据:" + response);
         }
 
         @Override

@@ -13,7 +13,7 @@ import com.alibaba.sdk.android.oss.model.OSSException;
 import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSFile;
 import com.google.gson.reflect.TypeToken;
-import com.minglang.suiuu.utils.CompressImageUtil;
+import com.minglang.suiuu.utils.CompressImageUtils;
 import com.minglang.suiuu.utils.JsonUtils;
 
 import java.io.File;
@@ -35,6 +35,7 @@ public class UpdateImageService extends Service {
     private static OSSService ossService = OSSServiceProvider.getService();
     private static OSSBucket bucket = ossService.getOssBucket("suiuu");
     private int successNumber = 0;
+
     @Override
     public void onCreate() {
         Log.i("suiuu", "ExampleService-onCreate");
@@ -43,16 +44,17 @@ public class UpdateImageService extends Service {
 
     @Override
     public void onStart(Intent intent, int startId) {
-        Log.i("suiuu", "ExampleService-onStart");
         imageList = new ArrayList<>();
-        imageList = JsonUtils.getInstance().fromJSON(new TypeToken<ArrayList<String>>(){}.getType(),intent.getStringExtra("imageList"));
+        imageList = JsonUtils.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
+        }.getType(), intent.getStringExtra("imageList"));
         super.onStart(intent, startId);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         imageList = new ArrayList<>();
-        imageList = JsonUtils.getInstance().fromJSON(new TypeToken<ArrayList<String>>(){}.getType(),intent.getStringExtra("imageList"));
+        imageList = JsonUtils.getInstance().fromJSON(new TypeToken<ArrayList<String>>() {
+        }.getType(), intent.getStringExtra("imageList"));
         //执行文件的下载或者播放等操作
         /*
          * 这里返回状态有三个值，分别是:
@@ -61,7 +63,7 @@ public class UpdateImageService extends Service {
          *   但是系统不会重新创建服务，直到startService(Intent intent)方法再次被调用;
          * 3、START_REDELIVER_INTENT：当服务进程在运行时被杀死，它将会在隔一段时间后自动创建，并且最后一个传递的Intent对象将会再次传递过来。
          */
-        for(String path : imageList) {
+        for (String path : imageList) {
             updateImageDate(path);
         }
         return super.onStartCommand(intent, flags, startId);
@@ -76,8 +78,9 @@ public class UpdateImageService extends Service {
     public void onDestroy() {
         super.onDestroy();
     }
+
     private void updateImageDate(final String path) {
-        Log.i("suiuu","上传的path="+path);
+        Log.i("suiuu", "上传的path=" + path);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -85,29 +88,31 @@ public class UpdateImageService extends Service {
                 String name = type.substring(type.lastIndexOf(".") + 1);
                 String newPath = null;
                 try {
-                    newPath = CompressImageUtil.compressImage(path, type, 50);
+                    newPath = CompressImageUtils.compressImage(path, type, 50);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
                 OSSFile bigFile = ossService.getOssFile(bucket, "suiuu_content" + type);
                 try {
-                    bigFile.setUploadFilePath(newPath,name);
+                    bigFile.setUploadFilePath(newPath, name);
                     bigFile.ResumableUploadInBackground(new SaveCallback() {
                         @Override
                         public void onSuccess(String objectKey) {
                             //上传成功删除本地文件
                             File imageDir = Environment.getExternalStorageDirectory();
-                            File outputFile = new File(imageDir,path.substring(path.lastIndexOf("/")));
+                            File outputFile = new File(imageDir, path.substring(path.lastIndexOf("/")));
                             deleteFile(outputFile);
                             successNumber += 1;
-                            if(successNumber == imageList.size()) {
+                            if (successNumber == imageList.size()) {
                                 stopSelf();
                             }
                         }
+
                         @Override
                         public void onProgress(String objectKey, int byteCount, int totalSize) {
                             Log.i("suiuu", "[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
                         }
+
                         @Override
                         public void onFailure(String objectKey, OSSException ossException) {
                             Log.i("suiuu", "[onFailure] - upload " + objectKey + " failed!\n" + ossException.toString());
@@ -121,19 +126,18 @@ public class UpdateImageService extends Service {
             }
         }).start();
     }
+
     public void deleteFile(File file) {
         if (file.exists()) { // 判断文件是否存在
             if (file.isFile()) { // 判断是否是文件
                 file.delete(); // delete()方法 你应该知道 是删除的意思;
             } else if (file.isDirectory()) { // 否则如果它是一个目录
                 File files[] = file.listFiles(); // 声明目录下所有的文件 files[];
-                for (int i = 0; i < files.length; i++) { // 遍历目录下所有的文件
-                    this.deleteFile(files[i]); // 把每个文件 用这个方法进行迭代
+                for (File file1 : files) { // 遍历目录下所有的文件
+                    this.deleteFile(file1); // 把每个文件 用这个方法进行迭代
                 }
             }
             file.delete();
-        } else {
-           //文件不存在
         }
     }
 }

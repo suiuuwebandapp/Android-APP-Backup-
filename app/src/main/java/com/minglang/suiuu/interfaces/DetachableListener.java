@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.view.ViewTreeObserver;
 
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 
 /**
  * Created by Administrator on 2015/9/11.
@@ -39,12 +39,12 @@ public final class DetachableListener implements DialogInterface.OnClickListener
                 .addOnWindowAttachListener(new ViewTreeObserver.OnWindowAttachListener() {
                     @Override
                     public void onWindowAttached() {
-                        DeBugLog.i(getClass().getSimpleName(), "onWindowAttached");
+                        L.i(getClass().getSimpleName(), "onWindowAttached");
                     }
 
                     @Override
                     public void onWindowDetached() {
-                        DeBugLog.i(getClass().getSimpleName(), "onWindowDetached");
+                        L.i(getClass().getSimpleName(), "onWindowDetached");
                         detachableListener = null;
                     }
                 });

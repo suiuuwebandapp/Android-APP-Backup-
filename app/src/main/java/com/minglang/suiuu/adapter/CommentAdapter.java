@@ -3,15 +3,15 @@ package com.minglang.suiuu.adapter;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.customview.CircleImageView;
 import com.minglang.suiuu.entity.LoopArticleCommentList;
+import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.List;
 
@@ -20,13 +20,16 @@ public class CommentAdapter extends BaseAdapter {
     private Context context;
 
     private List<LoopArticleCommentList> list;
+
     public CommentAdapter(Context context) {
         this.context = context;
     }
+
     public void setList(List<LoopArticleCommentList> list) {
         this.list = list;
         notifyDataSetChanged();
     }
+
     @Override
     public int getCount() {
         if (list != null && list.size() > 0) {
@@ -52,40 +55,45 @@ public class CommentAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            holder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_comment, null);
-            holder.headImage = (CircleImageView) convertView.findViewById(R.id.item_comment_head_image);
-            holder.title = (TextView) convertView.findViewById(R.id.item_comment_title);
-            holder.content = (TextView) convertView.findViewById(R.id.item_comment_content);
-            holder.time = (TextView) convertView.findViewById(R.id.tv_time);
-            convertView.setTag(holder);
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_comment, position);
+        convertView = holder.getConvertView();
+
+        SimpleDraweeView headImageView = (SimpleDraweeView) convertView.findViewById(R.id.item_comment_head_image);
+        TextView titleView = (TextView) convertView.findViewById(R.id.item_comment_title);
+        TextView contentView = (TextView) convertView.findViewById(R.id.item_comment_content);
+        TextView timeView = (TextView) convertView.findViewById(R.id.tv_time);
+
+        String headImagePath = list.get(position).getHeadImg();
+        if (!TextUtils.isEmpty(headImagePath)) {
+            headImageView.setImageURI(Uri.parse(headImagePath));
         } else {
-            holder = (ViewHolder) convertView.getTag();
+            headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
         }
 
-        if (!TextUtils.isEmpty(list.get(position).getHeadImg())) {
-            Uri uri = Uri.parse(list.get(position).getHeadImg());
-            holder.headImage.setImageURI(uri);
-        }
-        holder.title.setText(list.get(position).getNickname());
-        holder.time.setText(list.get(position).getcTime());
-        if (!TextUtils.isEmpty(list.get(position).getrTitle())) {
-            holder.content.setText(list.get(position).getrTitle() + "  " + list.get(position).getContent());
+        String title = list.get(position).getrTitle();
+        if (!TextUtils.isEmpty(title)) {
+            titleView.setText(title);
         } else {
-            holder.content.setText(list.get(position).getContent());
+            titleView.setText("");
+        }
+
+        String time = list.get(position).getcTime();
+        if (!TextUtils.isEmpty(time)) {
+            timeView.setText(time);
+        } else {
+            timeView.setText("");
+        }
+
+        String content = list.get(position).getContent();
+        if (!TextUtils.isEmpty(content)) {
+            contentView.setText(content);
+        } else {
+            contentView.setText("");
 
         }
 
         return convertView;
     }
 
-    class ViewHolder {
-        CircleImageView headImage;
-        TextView title;
-        TextView content;
-        TextView time;
-    }
 
 }

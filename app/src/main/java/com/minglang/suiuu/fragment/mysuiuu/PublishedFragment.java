@@ -22,10 +22,10 @@ import com.minglang.suiuu.adapter.PublishedAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.Published;
 import com.minglang.suiuu.entity.Published.PublishedData;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -131,7 +131,7 @@ public class PublishedFragment extends BaseFragment {
         initView();
         viewAction();
         getMyPublishedSuiuuData(page);
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
+        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -208,7 +208,7 @@ public class PublishedFragment extends BaseFragment {
         String[] keyArray = new String[]{USER_SIGN, HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{userSign, verification, String.valueOf(page), String.valueOf(10), token};
         String url = addUrlAndParams(HttpNewServicePath.getMyPublishedSuiuuPath, keyArray, valueArray);
-        DeBugLog.i(TAG, "请求URL:" + url);
+        L.i(TAG, "请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new MyPublishedResultCallback());
         } catch (IOException e) {
@@ -268,7 +268,7 @@ public class PublishedFragment extends BaseFragment {
                 }
             } catch (Exception e) {
                 failureLessPage();
-                DeBugLog.e(TAG, "解析错误:" + e.getMessage());
+                L.e(TAG, "解析错误:" + e.getMessage());
                 try {
                     JSONObject object = new JSONObject(str);
                     String status = object.getString(STATUS);
@@ -291,14 +291,14 @@ public class PublishedFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "已发布的随游数据:" + response);
+            L.i(TAG, "已发布的随游数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             failureLessPage();
             hideDialog();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();

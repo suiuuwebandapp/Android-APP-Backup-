@@ -27,10 +27,10 @@ import com.minglang.suiuu.entity.MainCommunity;
 import com.minglang.suiuu.entity.MainCommunity.MainCommunityData;
 import com.minglang.suiuu.entity.MainCommunity.MainCommunityData.MainCommunityItemData;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
@@ -175,7 +175,7 @@ public class ProblemFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         initView();
         viewAction();
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+        L.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 
@@ -198,7 +198,7 @@ public class ProblemFragment extends BaseFragment {
         listView.setAdapter(this.adapter);
 
         token = SuiuuInfo.ReadAppTimeSign(getActivity());
-        DeBugLog.i(TAG, "Token:" + token);
+        L.i(TAG, "Token:" + token);
     }
 
     /**
@@ -336,7 +336,7 @@ public class ProblemFragment extends BaseFragment {
 
         try {
             String _url = buildUrl(selectedState, page);
-            DeBugLog.i(TAG, "build Url:" + _url);
+            L.i(TAG, "build Url:" + _url);
             OkHttpManager.onGetAsynRequest(_url, new CommunityResultCallBack());
         } catch (IOException e) {
             e.printStackTrace();
@@ -407,22 +407,22 @@ public class ProblemFragment extends BaseFragment {
                             clearDataList();
                             listAll.addAll(list);
                             adapter.setList(listAll);
-                            DeBugLog.i(TAG, "当前数据数量:" + listAll.size());
+                            L.i(TAG, "当前数据数量:" + listAll.size());
                         } else {
-                            DeBugLog.e(TAG, "返回列表数据为Null");
+                            L.e(TAG, "返回列表数据为Null");
                             clearOldDataList();
                             lessPageNumber();
                         }
                     } else {
-                        DeBugLog.e(TAG, "返回二级数据为Null");
+                        L.e(TAG, "返回二级数据为Null");
                         lessPageNumber();
                     }
                 } else {
-                    DeBugLog.e(TAG, "返回一级数据为Null");
+                    L.e(TAG, "返回一级数据为Null");
                     lessPageNumber();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "解析异常:" + e.getMessage());
+                L.e(TAG, "解析异常:" + e.getMessage());
                 lessPageNumber();
                 try {
                     JSONObject object = new JSONObject(str);
@@ -443,9 +443,9 @@ public class ProblemFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
-            DeBugLog.e(TAG, "return information is null");
+            L.e(TAG, "return information is null");
         } else if (data == null) {
-            DeBugLog.e(TAG, "back data is null!");
+            L.e(TAG, "back data is null!");
         } else {
             switch (requestCode) {
                 case AppConstant.SELECT_COUNTRY_OK:
@@ -456,10 +456,10 @@ public class ProblemFragment extends BaseFragment {
                     selectedState = 3;
                     sendRequest();
 
-                    DeBugLog.i(TAG, "countryId:" + countryId);
-                    DeBugLog.i(TAG, "countryCNname:" + data.getStringExtra("countryCNname"));
-                    DeBugLog.i(TAG, "cityId:" + cityId);
-                    DeBugLog.i(TAG, "cityName:" + data.getStringExtra("cityName"));
+                    L.i(TAG, "countryId:" + countryId);
+                    L.i(TAG, "countryCNname:" + data.getStringExtra("countryCNname"));
+                    L.i(TAG, "cityId:" + cityId);
+                    L.i(TAG, "cityName:" + data.getStringExtra("cityName"));
                     break;
             }
         }
@@ -469,14 +469,14 @@ public class ProblemFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "问答社区返回的数据:" + response);
+            L.i(TAG, "问答社区返回的数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             lessPageNumber();
             hideDialog();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();

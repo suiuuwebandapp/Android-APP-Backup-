@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.SuiuuDataList;
+import com.minglang.suiuu.entity.SuiuuItemData;
 import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.List;
@@ -27,12 +27,13 @@ import java.util.List;
  */
 public class ShowSuiuuAdapter extends BaseAdapter {
     private Context context;
-    private List<SuiuuDataList> list;
-    public ShowSuiuuAdapter(Context context, List<SuiuuDataList> list) {
+    private List<SuiuuItemData> list;
+
+    public ShowSuiuuAdapter(Context context, List<SuiuuItemData> list) {
         this.context = context;
         this.list = list;
     }
-    public void onDateChange(List<SuiuuDataList> list) {
+    public void upDateData(List<SuiuuItemData> list) {
         this.list = list;
         this.notifyDataSetChanged();
     }

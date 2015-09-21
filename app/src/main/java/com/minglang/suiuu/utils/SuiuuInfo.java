@@ -529,7 +529,7 @@ public class SuiuuInfo implements Serializable {
         try {
             context.getSharedPreferences(PREFERENCE_WE_CHAT_NAME, Context.MODE_APPEND).edit().clear().apply();
         } catch (Exception e) {
-            DeBugLog.e(TAG, PREFERENCE_WE_CHAT_NAME + "不存在！" + e.getMessage());
+            L.e(TAG, PREFERENCE_WE_CHAT_NAME + "不存在！" + e.getMessage());
         }
     }
 
@@ -617,7 +617,7 @@ public class SuiuuInfo implements Serializable {
         try {
             context.getSharedPreferences(PREFERENCE_ALI_PAY_NAME, Context.MODE_APPEND).edit().clear().apply();
         } catch (Exception e) {
-            DeBugLog.e(TAG, PREFERENCE_ALI_PAY_NAME + "不存在！" + e.getMessage());
+            L.e(TAG, PREFERENCE_ALI_PAY_NAME + "不存在！" + e.getMessage());
         }
     }
 

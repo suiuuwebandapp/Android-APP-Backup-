@@ -24,11 +24,11 @@ import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.entity.ProblemDetails;
 import com.minglang.suiuu.entity.ProblemDetails.CommunityItemData.AnswerEntity;
 import com.minglang.suiuu.entity.ProblemDetails.CommunityItemData.QuestionEntity;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.phillipcalvin.iconbutton.IconButton;
 import com.squareup.okhttp.Request;
@@ -267,7 +267,7 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
         OkHttpManager.Params params = new OkHttpManager.Params(ID, id);
 
         String url = HttpNewServicePath.getAttentionQuestionPath + "?" + TOKEN + "=" + token;
-        DeBugLog.i(TAG, "关注URL:" + url);
+        L.i(TAG, "关注URL:" + url);
 
         try {
             OkHttpManager.onPostAsynRequest(url, new AttentionProblemResultCallback(), params);
@@ -305,10 +305,10 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
                         List<ProblemDetails.CommunityItemData.AttentionEntity> attentionEntityList
                                 = itemData.getAttention();
                         if (attentionEntityList != null && attentionEntityList.size() > 0) {
-                            DeBugLog.i(TAG, "已关注");
+                            L.i(TAG, "已关注");
                             attentionBtn.setCompoundDrawablesWithIntrinsicBounds(isAttentionSelector, null, null, null);
                         } else {
-                            DeBugLog.i(TAG, "未关注");
+                            L.i(TAG, "未关注");
                             attentionBtn.setCompoundDrawablesWithIntrinsicBounds(noAttentionSelector, null, null, null);
                         }
 
@@ -346,7 +346,7 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
                     }
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "解析错误:" + e.getMessage());
+                L.e(TAG, "解析错误:" + e.getMessage());
                 Toast.makeText(this, DataError, Toast.LENGTH_SHORT).show();
             }
         }
@@ -368,13 +368,13 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "问题详情数据异常:" + e.getMessage());
+            L.e(TAG, "问题详情数据异常:" + e.getMessage());
             Toast.makeText(ProblemDetailsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "问题详情数据:" + response);
+            L.i(TAG, "问题详情数据:" + response);
             hideDialog();
             bindData2View(response);
         }
@@ -385,13 +385,13 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "关注问题数据异常:" + e.getMessage());
+            L.e(TAG, "关注问题数据异常:" + e.getMessage());
             Toast.makeText(ProblemDetailsActivity.this, attention_fai, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "关注问题返回的数据:" + response);
+            L.i(TAG, "关注问题返回的数据:" + response);
             try {
                 JSONObject object = new JSONObject(response);
                 String stats = object.getString(STATUS);
@@ -401,7 +401,7 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
                     Toast.makeText(ProblemDetailsActivity.this, attention_fai, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                L.e(TAG, "解析失败:" + e.getMessage());
             }
         }
 

@@ -22,10 +22,10 @@ import com.minglang.suiuu.adapter.ParticipateAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.Participate;
 import com.minglang.suiuu.entity.Participate.ParticipateData;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -134,7 +134,7 @@ public class ParticipateFragment extends BaseFragment {
         initView();
         ViewAction();
         getMyParticipateSuiuuData(page);
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
+        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -212,7 +212,7 @@ public class ParticipateFragment extends BaseFragment {
         String[] keyArray = new String[]{USER_SIGN, HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{userSign, verification, String.valueOf(page), String.valueOf(10), token};
         String url = addUrlAndParams(HttpNewServicePath.MyParticipateSuiuuPath, keyArray, valueArray);
-        DeBugLog.i(TAG, "请求URL:" + url);
+        L.i(TAG, "请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new MyParticipateResultCallback());
         } catch (IOException e) {
@@ -272,7 +272,7 @@ public class ParticipateFragment extends BaseFragment {
                 }
             } catch (Exception e) {
                 failureLessPage();
-                DeBugLog.e(TAG, "解析错误:" + e.getMessage());
+                L.e(TAG, "解析错误:" + e.getMessage());
                 try {
                     JSONObject object = new JSONObject(str);
                     String status = object.getString(STATUS);
@@ -295,14 +295,14 @@ public class ParticipateFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "已参加的随游数据:" + response);
+            L.i(TAG, "已参加的随游数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();

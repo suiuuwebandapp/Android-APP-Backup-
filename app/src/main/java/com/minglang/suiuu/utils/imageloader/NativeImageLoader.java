@@ -1,4 +1,4 @@
-package com.minglang.suiuu.utils;
+package com.minglang.suiuu.utils.imageloader;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

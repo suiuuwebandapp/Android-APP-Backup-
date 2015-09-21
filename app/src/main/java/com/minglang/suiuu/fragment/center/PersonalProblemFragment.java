@@ -19,12 +19,12 @@ import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.UserProblem;
 import com.minglang.suiuu.entity.UserProblem.UserProblemData.UserProblemItemData;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -141,7 +141,7 @@ public class PersonalProblemFragment extends BaseFragment {
         initView();
         viewAction();
         getPersonalSuiuuData();
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
+        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -159,7 +159,7 @@ public class PersonalProblemFragment extends BaseFragment {
         progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        int paddingParams = Utils.newInstance().dip2px(15, getActivity());
+        int paddingParams = AppUtils.newInstance().dip2px(15, getActivity());
 
         MaterialHeader header = new MaterialHeader(getActivity());
         int[] colors = getResources().getIntArray(R.array.google_colors);
@@ -196,7 +196,6 @@ public class PersonalProblemFragment extends BaseFragment {
         //                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
         //                int totalItemCount = adapter.getItemCount();
         //                if (lastVisibleItem >= totalItemCount && dy > 0) {
-        //                    DeBugLog.i(TAG, "准备加载数据");
         //                    page = page + 1;
         //                    getPersonalSuiuuData(buildRequestParams(page));
         //                }
@@ -301,7 +300,7 @@ public class PersonalProblemFragment extends BaseFragment {
                     Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "数据绑定Error:" + e.getMessage());
+                L.e(TAG, "数据绑定Error:" + e.getMessage());
                 failureLessPage();
                 try {
                     JSONObject object = new JSONObject(str);
@@ -323,14 +322,14 @@ public class PersonalProblemFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "Problem:" + response);
+            L.i(TAG, "Problem:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();

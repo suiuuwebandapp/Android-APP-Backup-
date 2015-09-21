@@ -21,12 +21,12 @@ import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.ReFlashListView;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.customview.rangebar.RangeBar;
-import com.minglang.suiuu.entity.SuiuuDataList;
-import com.minglang.suiuu.entity.SuiuuReturnDate;
+import com.minglang.suiuu.entity.SuiuuItemData;
+import com.minglang.suiuu.entity.SuiuuData;
 import com.minglang.suiuu.entity.SuiuuSearchTag;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
@@ -53,7 +53,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
     private JsonUtils jsonUtil = JsonUtils.getInstance();
     private List<String> tagList;
     private RangeBar rangebar;
-    private List<SuiuuDataList> suiuuDataList;
+    private List<SuiuuItemData> suiuuItemData;
     private TextProgressDialog dialog;
     private List<TextView> list = new ArrayList<>();
     private List<TextView> listClick = new ArrayList<>();
@@ -92,7 +92,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
 
     private void initView() {
         dialog = new TextProgressDialog(this);
-        suiuuDataList = new ArrayList<>();
+        suiuuItemData = new ArrayList<>();
         tagList = new ArrayList<>();
         rangebar = (RangeBar) findViewById(R.id.rangeBar);
         rangebar.setTickStart(0);
@@ -133,7 +133,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(SuiuuSearchDetailActivity.this, SuiuuDetailsActivity.class);
-                intent.putExtra("tripId", suiuuDataList.get(position - 1).getTripId());
+                intent.putExtra("tripId", suiuuItemData.get(position - 1).getTripId());
                 startActivity(intent);
             }
         });
@@ -158,15 +158,15 @@ public class SuiuuSearchDetailActivity extends BaseActivity
         }
     }
 
-    private void showList(List<SuiuuDataList> suiuuDataList) {
+    private void showList(List<SuiuuItemData> suiuuItemData) {
         if (adapter == null) {
             lv_search_suiuu.setVisibility(View.VISIBLE);
             lv_search_suiuu.setInterface(this);
             lv_search_suiuu.setLoadMoreInterface(this);
-            adapter = new ShowSuiuuAdapter(this, suiuuDataList);
+            adapter = new ShowSuiuuAdapter(this, suiuuItemData);
             lv_search_suiuu.setAdapter(adapter);
         } else {
-            adapter.onDateChange(suiuuDataList);
+            adapter.upDateData(suiuuItemData);
         }
     }
 
@@ -183,7 +183,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
 
     @Override
     public void onReflash() {
-        suiuuDataList.clear();
+        suiuuItemData.clear();
         page = 1;
         loadDate(searchCountry, "0".equals(enjoyPeopleCount) ? "" :
                         enjoyPeopleCount, "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
@@ -237,9 +237,9 @@ public class SuiuuSearchDetailActivity extends BaseActivity
                 String status = json.getString("status");
                 if ("1".equals(status)) {
 
-                    SuiuuReturnDate baseCollection = jsonUtil.fromJSON(SuiuuReturnDate.class, response);
-                    List<SuiuuDataList> suiuuDataListNew = baseCollection.getData();
-                    if (suiuuDataListNew.size() < 1) {
+                    SuiuuData baseCollection = jsonUtil.fromJSON(SuiuuData.class, response);
+                    List<SuiuuItemData> suiuuItemDataNew = baseCollection.getData();
+                    if (suiuuItemDataNew.size() < 1) {
                         if(page == 1) {
                             lv_search_suiuu.setVisibility(View.GONE);
                             rl_no_data.setVisibility(View.VISIBLE);
@@ -249,8 +249,8 @@ public class SuiuuSearchDetailActivity extends BaseActivity
                     }else {
                         lv_search_suiuu.setVisibility(View.VISIBLE);
                         rl_no_data.setVisibility(View.GONE);
-                        suiuuDataList.addAll(suiuuDataListNew);
-                        showList(suiuuDataList);
+                        suiuuItemData.addAll(suiuuItemDataNew);
+                        showList(suiuuItemData);
                     }
                 } else {
                     Toast.makeText(SuiuuSearchDetailActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
@@ -330,7 +330,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
                     tags = "";
                     page = 1;
                     lv_search_suiuu.setEnabled(true);
-                    suiuuDataList.clear();
+                    suiuuItemData.clear();
                     if (fl_search_more.isShown()) {
                         enjoyPeopleCount = peopleNumber.getText().toString().trim();
 

@@ -22,11 +22,11 @@ import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.CompletedOrder;
 import com.minglang.suiuu.entity.CompletedOrder.CompletedOrderData;
 import com.minglang.suiuu.entity.TripJsonInfo;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -141,7 +141,7 @@ public class CompletedFragment extends BaseFragment {
         initView();
         viewAction();
         sendRequest();
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+        L.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 
@@ -210,7 +210,7 @@ public class CompletedFragment extends BaseFragment {
                     titleImg = jsonUtils.fromJSON(TripJsonInfo.class, listAll.get(location)
                             .getTripJsonInfo()).getInfo().getTitleImg();
                 } catch (Exception e) {
-                    DeBugLog.e(TAG, "获取图片地址失败:" + e.getMessage());
+                    L.e(TAG, "获取图片地址失败:" + e.getMessage());
                 }
 
                 Intent intent = new Intent(getActivity(), GeneralOrderDetailsActivity.class);
@@ -232,7 +232,7 @@ public class CompletedFragment extends BaseFragment {
         String[] keyArray = new String[]{HttpServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
         String url = addUrlAndParams(HttpNewServicePath.getGeneralUserCompletedOrderPath, keyArray, valueArray);
-        DeBugLog.i(TAG, "已完成数据请求URL:" + url);
+        L.i(TAG, "已完成数据请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new CompletedResultCallback());
         } catch (IOException e) {
@@ -292,7 +292,7 @@ public class CompletedFragment extends BaseFragment {
                     }
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                L.e(TAG, "解析失败:" + e.getMessage());
                 failureLessPage();
                 try {
                     JSONObject object = new JSONObject(str);
@@ -314,14 +314,14 @@ public class CompletedFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "获取到的数据:" + response);
+            L.i(TAG, "获取到的数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * 旅图列表的实体
  */
-public class TripGallery {
+public class TripImage {
 
     /**
      * data : {"msg":{"sortName":"id","showAll":false,"startRow":0,"sortType":"DESC","pageSize":10,"currentPage":1,"totalCount":"6"},"data":[{"country":"中国","titleImg":"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150702113931.jpg","headImg":"http://www.suiuu.com/assets/images/user_default.png","city":"北京市","lon":"116.422956","attentionCount":"0","title":"咯你","tags":"购物  自然  ","commentCount":"0","contents":null,"userSign":"22e64460c94f3b44bc0a8790ed146d3b","createTime":"2015-07-23 13:28:28","picList":"[\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150702113931.jpg\"]","id":"6","lat":"39.949118"},{"country":"中国","titleImg":"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150702113931.jpg","headImg":"http://www.suiuu.com/assets/images/user_default.png","city":"北京市","lon":"116.423496","attentionCount":"0","title":"咯你","tags":"购物  ","commentCount":"0","contents":null,"userSign":"22e64460c94f3b44bc0a8790ed146d3b","createTime":"2015-07-23 11:19:57","picList":"[\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150702113931.jpg\"]","id":"5","lat":"39.949469"},{"country":"中国","titleImg":"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150702113931.jpg","headImg":"http://www.suiuu.com/assets/images/user_default.png","city":"北京市","lon":"116.423394","attentionCount":"0","title":"按摩","tags":"家庭  购物  ","commentCount":"0","contents":null,"userSign":"22e64460c94f3b44bc0a8790ed146d3b","createTime":"2015-07-23 11:10:53","picList":"[\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150702113931.jpg\"]","id":"4","lat":"39.949113"},{"country":"43","titleImg":"rewq","headImg":"http://www.suiuu.com/assets/images/user_default.png","city":"3e23","lon":"rf","attentionCount":"0","title":"dksaf","tags":"reqwrewq","commentCount":"0","contents":"reqwrewq","userSign":"22e64460c94f3b44bc0a8790ed146d3b","createTime":"2015-07-23 11:03:37","picList":"rewq","id":"3","lat":"erwqr"},{"country":"test02","titleImg":"","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","city":"test01","lon":"0.152","attentionCount":"0","title":"test02","tags":"test01","commentCount":"0","contents":"sfasdf","userSign":"085963dc0af031709b032725e3ef18f5","createTime":"2015-07-15 17:25:35","picList":"sdsfdfsdf","id":"2","lat":"13.527"},{"country":"test01","titleImg":"","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","city":"test01","lon":"0.152","attentionCount":"0","title":"test01","tags":"test01","commentCount":"2","contents":"sfasdf","userSign":"085963dc0af031709b032725e3ef18f5","createTime":"2015-07-15 17:25:24","picList":"sdsfdfsdf","id":"1","lat":"13.527"}]}
@@ -13,12 +13,12 @@ public class TripGallery {
      * status : 1
      * token : e933b4531e7620a301a198483a7514b4
      */
-    private DataEntity data;
+    private TripImageData data;
     private String message;
     private int status;
     private String token;
 
-    public void setData(DataEntity data) {
+    public void setData(TripImageData data) {
         this.data = data;
     }
 
@@ -34,7 +34,7 @@ public class TripGallery {
         this.token = token;
     }
 
-    public DataEntity getData() {
+    public TripImageData getData() {
         return data;
     }
 
@@ -50,19 +50,19 @@ public class TripGallery {
         return token;
     }
 
-    public class DataEntity {
+    public class TripImageData {
         /**
          * msg : {"sortName":"id","showAll":false,"startRow":0,"sortType":"DESC","pageSize":10,"currentPage":1,"totalCount":"6"}
          * data : [{"country":"中国","titleImg":"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150702113931.jpg","headImg":"http://www.suiuu.com/assets/images/user_default.png","city":"北京市","lon":"116.422956","attentionCount":"0","title":"咯你","tags":"购物  自然  ","commentCount":"0","contents":null,"userSign":"22e64460c94f3b44bc0a8790ed146d3b","createTime":"2015-07-23 13:28:28","picList":"[\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150702113931.jpg\"]","id":"6","lat":"39.949118"},{"country":"中国","titleImg":"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150702113931.jpg","headImg":"http://www.suiuu.com/assets/images/user_default.png","city":"北京市","lon":"116.423496","attentionCount":"0","title":"咯你","tags":"购物  ","commentCount":"0","contents":null,"userSign":"22e64460c94f3b44bc0a8790ed146d3b","createTime":"2015-07-23 11:19:57","picList":"[\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150702113931.jpg\"]","id":"5","lat":"39.949469"},{"country":"中国","titleImg":"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150702113931.jpg","headImg":"http://www.suiuu.com/assets/images/user_default.png","city":"北京市","lon":"116.423394","attentionCount":"0","title":"按摩","tags":"家庭  购物  ","commentCount":"0","contents":null,"userSign":"22e64460c94f3b44bc0a8790ed146d3b","createTime":"2015-07-23 11:10:53","picList":"[\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150702113931.jpg\"]","id":"4","lat":"39.949113"},{"country":"43","titleImg":"rewq","headImg":"http://www.suiuu.com/assets/images/user_default.png","city":"3e23","lon":"rf","attentionCount":"0","title":"dksaf","tags":"reqwrewq","commentCount":"0","contents":"reqwrewq","userSign":"22e64460c94f3b44bc0a8790ed146d3b","createTime":"2015-07-23 11:03:37","picList":"rewq","id":"3","lat":"erwqr"},{"country":"test02","titleImg":"","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","city":"test01","lon":"0.152","attentionCount":"0","title":"test02","tags":"test01","commentCount":"0","contents":"sfasdf","userSign":"085963dc0af031709b032725e3ef18f5","createTime":"2015-07-15 17:25:35","picList":"sdsfdfsdf","id":"2","lat":"13.527"},{"country":"test01","titleImg":"","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","city":"test01","lon":"0.152","attentionCount":"0","title":"test01","tags":"test01","commentCount":"2","contents":"sfasdf","userSign":"085963dc0af031709b032725e3ef18f5","createTime":"2015-07-15 17:25:24","picList":"sdsfdfsdf","id":"1","lat":"13.527"}]
          */
         private MsgEntity msg;
-        private List<TripGalleryDataInfo> data;
+        private List<TripImageItemData> data;
 
         public void setMsg(MsgEntity msg) {
             this.msg = msg;
         }
 
-        public void setData(List<TripGalleryDataInfo> data) {
+        public void setData(List<TripImageItemData> data) {
             this.data = data;
         }
 
@@ -70,7 +70,7 @@ public class TripGallery {
             return msg;
         }
 
-        public List<TripGalleryDataInfo> getData() {
+        public List<TripImageItemData> getData() {
             return data;
         }
 
@@ -149,7 +149,7 @@ public class TripGallery {
             }
         }
 
-        public class TripGalleryDataInfo {
+        public class TripImageItemData {
             /**
              * country : 中国
              * titleImg : http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/20150702113931.jpg

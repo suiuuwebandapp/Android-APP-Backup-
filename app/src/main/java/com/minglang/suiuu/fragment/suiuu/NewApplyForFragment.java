@@ -17,10 +17,10 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.NewApplyForAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.NewApply;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -123,7 +123,7 @@ public class NewApplyForFragment extends BaseFragment {
         initView();
         viewAction();
         getNewApplyForData(page);
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
+        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",tripId:" + tripId);
         return rootView;
     }
 
@@ -247,7 +247,7 @@ public class NewApplyForFragment extends BaseFragment {
                     Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                L.e(TAG, "解析失败:" + e.getMessage());
                 failureComputePage();
                 try {
                     JSONObject object = new JSONObject(str);
@@ -269,14 +269,14 @@ public class NewApplyForFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "返回的数据:" + response);
+            L.i(TAG, "返回的数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             failureComputePage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();

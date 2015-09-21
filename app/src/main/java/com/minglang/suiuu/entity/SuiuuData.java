@@ -7,11 +7,11 @@ import java.util.List;
  * <p/>
  * Created by Administrator on 2015/4/28.
  */
-public class SuiuuReturnDate {
+public class SuiuuData {
 
     public String status;
 
-    public List<SuiuuDataList> data;
+    public List<SuiuuItemData> data;
 
     public SuiuuDataForMessage message;
 
@@ -25,11 +25,11 @@ public class SuiuuReturnDate {
         this.status = status;
     }
 
-    public List<SuiuuDataList> getData() {
+    public List<SuiuuItemData> getData() {
         return data;
     }
 
-    public void setData(List<SuiuuDataList> data) {
+    public void setData(List<SuiuuItemData> data) {
         this.data = data;
     }
 
@@ -47,15 +47,5 @@ public class SuiuuReturnDate {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    @Override
-    public String toString() {
-        return "SuiuuReturnDate{" +
-                "status='" + status + '\'' +
-                ", data=" + data +
-                ", message=" + message +
-                ", token='" + token + '\'' +
-                '}';
     }
 }

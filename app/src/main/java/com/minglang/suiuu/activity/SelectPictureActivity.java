@@ -28,7 +28,7 @@ import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.entity.ImageFolder;
 import com.minglang.suiuu.entity.ImageItem;
 import com.minglang.suiuu.popupwindow.BasePopupWindowForListView;
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.ViewHolder;
 
 import java.io.File;
@@ -242,7 +242,7 @@ public class SelectPictureActivity extends BaseActivity {
 
             for (int i = 0; i < mDirPaths.size(); i++) {
                 ImageFolder folder = mDirPaths.get(i);
-                DeBugLog.d(TAG, i + "-----" + folder.getName() + "---" + folder.images.size());
+                L.d(TAG, i + "-----" + folder.getName() + "---" + folder.images.size());
             }
 
             tmpDir = null;
@@ -273,11 +273,10 @@ public class SelectPictureActivity extends BaseActivity {
      * 用于拍照时获取输出的Uri
      */
     protected Uri getOutputMediaFileUri() {
-        File mediaStorageDir = new File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Night");
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Night");
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                DeBugLog.d(TAG, "failed to create directory");
+                L.d(TAG, "failed to create directory");
                 return null;
             }
         }

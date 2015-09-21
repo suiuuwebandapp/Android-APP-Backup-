@@ -21,7 +21,14 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <style name="AppNewBaseTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
+    <style name="FullScreenTheme" parent="Theme.AppCompat.Light">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="AppNewBaseTheme" parent="Theme.AppCompat.Light.NoActionBar" />
 
     <style name="AppReleaseTheme" parent="AppNewBaseTheme">
         <item name="colorPrimary">@color/backgroundColor</item>
@@ -43,7 +50,7 @@
         <item name="colorPrimary">@color/mainColor</item>
     </style>
 
-    <style name="BaseLayoutTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="BaseLayoutTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppBarLayoutTheme" parent="BaseLayoutTheme">
         <item name="colorPrimary">@color/mainColor</item>
@@ -56,8 +63,10 @@
 
     <!-- 时间选择器popWindow 显示消失动画 -->
     <style name="time_popup_window_anim_style">
-        <item name="android:windowEnterAnimation">@anim/time_picker_anim_enter_bottom</item> <!-- 指定显示的动画xml -->
-        <item name="android:windowExitAnimation">@anim/time_picker_anim_exit_bottom</item> <!-- 指定消失的动画xml -->
+        <item name="android:windowEnterAnimation">@anim/time_picker_anim_enter_bottom</item>
+        <!-- 指定显示的动画xml -->
+        <item name="android:windowExitAnimation">@anim/time_picker_anim_exit_bottom</item>
+        <!-- 指定消失的动画xml -->
     </style>
 
 </resources>

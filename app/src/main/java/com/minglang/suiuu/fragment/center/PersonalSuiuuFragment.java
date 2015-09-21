@@ -16,10 +16,10 @@ import com.minglang.suiuu.adapter.PersonalSuiuuAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.UserSuiuu;
 import com.minglang.suiuu.entity.UserSuiuu.UserSuiuuData;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -125,7 +125,7 @@ public class PersonalSuiuuFragment extends BaseFragment {
         initView();
         viewAction();
         getPersonalSuiuuData();
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
+        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -234,7 +234,7 @@ public class PersonalSuiuuFragment extends BaseFragment {
                         clearDataList();
                         listAll.addAll(list);
                         adapter.setList(listAll);
-                        DeBugLog.i(TAG, "当前页码:" + page + ",当前请求数据数量:" + list.size() + ",总数据数量:" + listAll.size());
+                        L.i(TAG, "当前页码:" + page + ",当前请求数据数量:" + list.size() + ",总数据数量:" + listAll.size());
                     } else {
                         failureLessPage();
                         Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
@@ -244,7 +244,7 @@ public class PersonalSuiuuFragment extends BaseFragment {
                     Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "数据绑定Error:" + e.getMessage());
+                L.e(TAG, "数据绑定Error:" + e.getMessage());
                 failureLessPage();
                 try {
                     JSONObject object = new JSONObject(str);
@@ -266,14 +266,14 @@ public class PersonalSuiuuFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "返回的数据:" + response);
+            L.i(TAG, "返回的数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();

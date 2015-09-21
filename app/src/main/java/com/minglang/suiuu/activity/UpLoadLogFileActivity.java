@@ -17,9 +17,9 @@ import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSFile;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SDCardUtils;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
@@ -103,7 +103,7 @@ public class UpLoadLogFileActivity extends BaseAppCompatActivity {
             hasErrorLog = true;
             File lastFile = logFileArray[logFileArray.length - 1];
             lastFilePath = lastFile.getAbsolutePath();
-            DeBugLog.i(TAG, "lastFilePath:" + lastFilePath);
+            L.i(TAG, "lastFilePath:" + lastFilePath);
         }
     }
 
@@ -134,10 +134,10 @@ public class UpLoadLogFileActivity extends BaseAppCompatActivity {
                     }
 
                     String lastFileName = lastFilePath.substring(lastFilePath.lastIndexOf("/"));
-                    DeBugLog.i(TAG, "lastFileName:" + lastFileName);
+                    L.i(TAG, "lastFileName:" + lastFileName);
 
                     String lastFileType = lastFileName.substring(lastFileName.lastIndexOf(".") + 1);
-                    DeBugLog.i(TAG, "lastFileType:" + lastFileType);
+                    L.i(TAG, "lastFileType:" + lastFileType);
 
                     OSSFile bigFile = ossService.getOssFile(bucket, "suiuu_log" + lastFileName);
                     try {
@@ -146,19 +146,19 @@ public class UpLoadLogFileActivity extends BaseAppCompatActivity {
 
                             @Override
                             public void onSuccess(String s) {
-                                DeBugLog.i(TAG, "上传成功后返回的地址:" + s);
+                                L.i(TAG, "上传成功后返回的地址:" + s);
                                 String logFilePath = HttpNewServicePath.OssRootPath + s;
                                 sendLogPathRequest(logFilePath);
                             }
 
                             @Override
                             public void onProgress(String objectKey, int byteCount, int totalSize) {
-                                DeBugLog.i(TAG, "byteCount:" + byteCount + ",totalSize:" + totalSize);
+                                L.i(TAG, "byteCount:" + byteCount + ",totalSize:" + totalSize);
                             }
 
                             @Override
                             public void onFailure(String s, OSSException e) {
-                                DeBugLog.e(TAG, "上传失败:" + s + ",错误信息:" + e.getMessage());
+                                L.e(TAG, "上传失败:" + s + ",错误信息:" + e.getMessage());
                                 hideDialog();
                             }
 
@@ -186,7 +186,7 @@ public class UpLoadLogFileActivity extends BaseAppCompatActivity {
 
                         @Override
                         public void onResponse(String response) {
-                            DeBugLog.i(TAG, "上传返回数据:" + response);
+                            L.i(TAG, "上传返回数据:" + response);
                             try {
                                 JSONObject object = new JSONObject(response);
                                 String status = object.getString(STATUS);
@@ -211,7 +211,7 @@ public class UpLoadLogFileActivity extends BaseAppCompatActivity {
 
                         @Override
                         public void onError(Request request, Exception e) {
-                            DeBugLog.e(TAG, "上传信息失败:" + e.getMessage());
+                            L.e(TAG, "上传信息失败:" + e.getMessage());
                             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
                         }
 

@@ -7,7 +7,7 @@ import android.util.Log;
  * <p/>
  * Created by Administrator on 2015/5/21.
  */
-public class DeBugLog {
+public class L {
 
     public static boolean DeBug = true;
 

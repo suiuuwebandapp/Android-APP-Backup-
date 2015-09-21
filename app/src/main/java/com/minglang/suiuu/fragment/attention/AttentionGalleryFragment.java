@@ -15,16 +15,16 @@ import android.widget.Toast;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshGridView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.TripGalleryDetailsActivity;
+import com.minglang.suiuu.activity.TripImageDetailsActivity;
 import com.minglang.suiuu.adapter.AttentionGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.AttentionGallery;
 import com.minglang.suiuu.entity.AttentionGallery.AttentionGalleryData;
 import com.minglang.suiuu.entity.AttentionGallery.AttentionGalleryData.AttentionGalleryItemData;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.squareup.okhttp.Request;
 
@@ -128,7 +128,7 @@ public class AttentionGalleryFragment extends BaseFragment {
         initView();
         viewAction();
         getData4Service(page);
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
+        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -182,7 +182,7 @@ public class AttentionGalleryFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String strId = listAll.get(position).getId();
-                Intent intent = new Intent(getActivity(), TripGalleryDetailsActivity.class);
+                Intent intent = new Intent(getActivity(), TripImageDetailsActivity.class);
                 intent.putExtra(ID, strId);
                 startActivity(intent);
             }
@@ -264,22 +264,22 @@ public class AttentionGalleryFragment extends BaseFragment {
                             listAll.addAll(list);
                             adapter.setList(listAll);
                         } else {
-                            DeBugLog.e(TAG, "列表为Null");
+                            L.e(TAG, "列表为Null");
                             failureLessPage();
                             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        DeBugLog.e(TAG, "第二层为Null");
+                        L.e(TAG, "第二层为Null");
                         failureLessPage();
                         Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    DeBugLog.e(TAG, "第一层为Null");
+                    L.e(TAG, "第一层为Null");
                     failureLessPage();
                     Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "数据解析失败:" + e.getMessage());
+                L.e(TAG, "数据解析失败:" + e.getMessage());
                 failureLessPage();
                 try {
                     JSONObject object = new JSONObject(str);
@@ -304,7 +304,7 @@ public class AttentionGalleryFragment extends BaseFragment {
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "关注的圈子数据请求失败:" + e.getMessage());
+            L.e(TAG, "关注的圈子数据请求失败:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
@@ -312,7 +312,7 @@ public class AttentionGalleryFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "关注的旅图数据:" + response);
+            L.i(TAG, "关注的旅图数据:" + response);
             hideDialog();
             bindData2View(response);
         }

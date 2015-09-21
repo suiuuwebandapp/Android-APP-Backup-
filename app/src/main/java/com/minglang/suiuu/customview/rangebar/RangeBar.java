@@ -41,7 +41,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 
 import java.util.HashMap;
 
@@ -478,7 +478,7 @@ public class RangeBar extends View {
             createBar();
             createPins();
         } else {
-            DeBugLog.e(TAG, "tickCount less than 2; invalid tickCount.");
+            L.e(TAG, "tickCount less than 2; invalid tickCount.");
             throw new IllegalArgumentException("tickCount less than 2; invalid tickCount.");
         }
     }
@@ -518,7 +518,7 @@ public class RangeBar extends View {
             createBar();
             createPins();
         } else {
-            DeBugLog.e(TAG, "tickCount less than 2; invalid tickCount.");
+            L.e(TAG, "tickCount less than 2; invalid tickCount.");
             throw new IllegalArgumentException("tickCount less than 2; invalid tickCount.");
         }
     }
@@ -558,7 +558,7 @@ public class RangeBar extends View {
             createBar();
             createPins();
         } else {
-            DeBugLog.e(TAG, "tickCount less than 2; invalid tickCount.");
+            L.e(TAG, "tickCount less than 2; invalid tickCount.");
             throw new IllegalArgumentException("tickCount less than 2; invalid tickCount.");
         }
     }
@@ -718,7 +718,7 @@ public class RangeBar extends View {
      */
     public void setRangePinsByIndices(int leftPinIndex, int rightPinIndex) {
         if (indexOutOfRange(leftPinIndex, rightPinIndex)) {
-            DeBugLog.e(TAG,
+            L.e(TAG,
                     "Pin index left " + leftPinIndex + ", or right " + rightPinIndex
                             + " is out of bounds. Check that it is greater than the minimum ("
                             + mTickStart + ") and less than the maximum value ("
@@ -756,7 +756,7 @@ public class RangeBar extends View {
      */
     public void setSeekPinByIndex(int pinIndex) {
         if (pinIndex < 0 || pinIndex > mTickCount) {
-            DeBugLog.e(TAG,
+            L.e(TAG,
                     "Pin index " + pinIndex
                             + " is out of bounds. Check that it is greater than the minimum ("
                             + 0 + ") and less than the maximum value ("
@@ -792,7 +792,7 @@ public class RangeBar extends View {
      */
     public void setRangePinsByValue(float leftPinValue, float rightPinValue) {
         if (valueOutOfRange(leftPinValue, rightPinValue)) {
-            DeBugLog.e(TAG,
+            L.e(TAG,
                     "Pin value left " + leftPinValue + ", or right " + rightPinValue
                             + " is out of bounds. Check that it is greater than the minimum ("
                             + mTickStart + ") and less than the maximum value ("
@@ -827,7 +827,7 @@ public class RangeBar extends View {
      */
     public void setSeekPinByValue(float pinValue) {
         if (pinValue > mTickEnd || pinValue < mTickStart) {
-            DeBugLog.e(TAG,
+            L.e(TAG,
                     "Pin value " + pinValue
                             + " is out of bounds. Check that it is greater than the minimum ("
                             + mTickStart + ") and less than the maximum value ("
@@ -958,7 +958,7 @@ public class RangeBar extends View {
                 }
 
             } else {
-                DeBugLog.e(TAG, "tickCount less than 2; invalid tickCount. XML input ignored.");
+                L.e(TAG, "tickCount less than 2; invalid tickCount. XML input ignored.");
             }
 
             mTickHeightDP = ta.getDimension(3, DEFAULT_TICK_HEIGHT_DP);

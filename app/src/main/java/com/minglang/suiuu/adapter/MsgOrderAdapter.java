@@ -13,7 +13,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.PersonalMainPagerActivity;
 import com.minglang.suiuu.entity.MsgOrder.MsgOrderData.MsgOrderItemData;
 import com.minglang.suiuu.entity.TripJsonInfo;
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ViewHolder;
 
@@ -55,10 +55,10 @@ public class MsgOrderAdapter extends BaseHolderAdapter<MsgOrderItemData> {
             try {
                 tripJsonInfo = JsonUtils.getInstance().fromJSON(TripJsonInfo.class, strTripInfo);
             } catch (Exception e) {
-                DeBugLog.e(TAG, "Trip数据解析失败:" + e.getMessage());
+                L.e(TAG, "Trip数据解析失败:" + e.getMessage());
             }
         } else {
-            DeBugLog.e(TAG, "第" + position + "Trip数据为空");
+            L.e(TAG, "第" + position + "Trip数据为空");
         }
 
 

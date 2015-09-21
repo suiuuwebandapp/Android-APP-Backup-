@@ -18,12 +18,12 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.UserTravel;
 import com.minglang.suiuu.entity.UserTravel.UserTravelData.UserTravelItemData;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -122,7 +122,7 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
         progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        int paddingParams = Utils.newInstance().dip2px(15, this);
+        int paddingParams = AppUtils.newInstance().dip2px(15, this);
 
         MaterialHeader header = new MaterialHeader(this);
         int[] colors = getResources().getIntArray(R.array.google_colors);
@@ -162,7 +162,7 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
             @Override
             public void onItemClick(View view, int position) {
                 String tripId = listAll.get(position).getId();
-                Intent intent = new Intent(context, TripGalleryDetailsActivity.class);
+                Intent intent = new Intent(context, TripImageDetailsActivity.class);
                 intent.putExtra(ID, tripId);
                 startActivity(intent);
             }
@@ -180,7 +180,7 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
         String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, USER_SIGN, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(10), userSign, token};
         String url = addUrlAndParams(HttpNewServicePath.getPersonalTripDataPath, keyArray, valueArray);
-        DeBugLog.i(TAG, "指定用户旅途请求URL:" + url);
+        L.i(TAG, "指定用户旅途请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new PersonalTripGalleryCallback());
         } catch (IOException e) {
@@ -244,7 +244,7 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
                     }
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "数据解析异常:" + e.getMessage());
+                L.e(TAG, "数据解析异常:" + e.getMessage());
                 failureLessPage();
                 try {
                     JSONObject object = new JSONObject(str);
@@ -277,7 +277,7 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "指定用户返回的旅图数据:" + response);
+            L.i(TAG, "指定用户返回的旅图数据:" + response);
             hideDialog();
             bindData2View(response);
         }

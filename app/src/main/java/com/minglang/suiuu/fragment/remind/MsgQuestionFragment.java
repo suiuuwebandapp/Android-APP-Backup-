@@ -15,12 +15,12 @@ import com.minglang.suiuu.adapter.MsgQuestionAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MsgQuestion;
 import com.minglang.suiuu.entity.MsgQuestion.MsgQuestionData.MsgQuestionItemData;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -132,7 +132,7 @@ public class MsgQuestionFragment extends BaseFragment {
         initView();
         ViewAction();
         getData4Service(page);
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+        L.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 
@@ -150,7 +150,7 @@ public class MsgQuestionFragment extends BaseFragment {
         progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        int paddingParams = Utils.newInstance().dip2px(15, getActivity());
+        int paddingParams = AppUtils.newInstance().dip2px(15, getActivity());
 
         MaterialHeader header = new MaterialHeader(getActivity());
         int[] colors = getResources().getIntArray(R.array.google_colors);
@@ -261,7 +261,7 @@ public class MsgQuestionFragment extends BaseFragment {
                     Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "问答消息数据请求失败:" + e.getMessage());
+                L.e(TAG, "问答消息数据请求失败:" + e.getMessage());
                 failureLessPage();
                 try {
                     JSONObject object = new JSONObject(str);
@@ -283,14 +283,14 @@ public class MsgQuestionFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "问答消息返回的数据:" + response);
+            L.i(TAG, "问答消息返回的数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "问答消息数据请求失败:" + e.getMessage());
+            L.e(TAG, "问答消息数据请求失败:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();

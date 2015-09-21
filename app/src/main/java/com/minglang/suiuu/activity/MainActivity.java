@@ -2,12 +2,15 @@ package com.minglang.suiuu.activity;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
@@ -39,13 +42,14 @@ import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.fragment.main.InformationFragment;
 import com.minglang.suiuu.fragment.main.ProblemFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
-import com.minglang.suiuu.fragment.main.TripGalleryFragment;
+import com.minglang.suiuu.fragment.main.TripImageFragment;
 import com.minglang.suiuu.receiver.ConnectionNetChangeReceiver;
+import com.minglang.suiuu.service.LocationService;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.MD5Utils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 import com.umeng.update.UmengUpdateAgent;
@@ -104,6 +108,9 @@ public class MainActivity extends BaseActivity {
     @BindString(R.string.LoginOverdue)
     String LoginOverdue;
 
+    @BindString(R.string.SystemException)
+    String SystemException;
+
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
@@ -150,9 +157,66 @@ public class MainActivity extends BaseActivity {
     LinearLayout tab4;
 
     /**
+     * 旅图页面按钮布局
+     */
+    @Bind(R.id.travel_image_layout)
+    RelativeLayout travelImageLayout;
+
+    /**
+     * 随游页面按钮布局
+     */
+    @Bind(R.id.suiuu_button_layout)
+    FrameLayout suiuuButtonLayout;
+
+    @Bind(R.id.community_layout)
+    RelativeLayout communityLayout;
+
+    /**
+     * 收件箱页面按钮布局
+     */
+    @Bind(R.id.inbox_button_layout)
+    FrameLayout inboxButtonLayout;
+
+    /**
+     * 旅图页面相册按钮
+     */
+    @Bind(R.id.main_1_album)
+    ImageView main_1_Album;
+
+    /**
+     * 随游页面搜索按钮
+     */
+    @Bind(R.id.main_2_search)
+    ImageView main_2_Search;
+
+    @Bind(R.id.main_3_search)
+    ImageView main_3_Search;
+
+    @Bind(R.id.main_3_questions)
+    ImageView main_3_Questions;
+
+    @Bind(R.id.main_4_search)
+    ImageView main_4_Search;
+
+    @Bind(R.id.img1)
+    ImageView imageTabOne;
+
+    @Bind(R.id.img2)
+    ImageView imageTabTwo;
+
+    @Bind(R.id.img3)
+    ImageView imageTabThree;
+
+    @Bind(R.id.img4)
+    ImageView imageTabFour;
+
+    @Bind(R.id.network_error_view)
+    TextView networkErrorView;
+
+    /**
      * 旅图页面
      */
-    private TripGalleryFragment tripGalleryFragment;
+    private TripImageFragment tripImageFragment;
 
     /**
      * 随游页面
@@ -169,63 +233,6 @@ public class MainActivity extends BaseActivity {
      */
     private InformationFragment informationFragment;
 
-    /**
-     * 旅图页面按钮布局
-     */
-    @Bind(R.id.travel_image_layout)
-    RelativeLayout TravelImageLayout;
-
-    /**
-     * 随游页面按钮布局
-     */
-    @Bind(R.id.suiuu_button_layout)
-    FrameLayout SuiuuButtonLayout;
-
-    @Bind(R.id.community_layout)
-    RelativeLayout CommunityLayout;
-
-    /**
-     * 收件箱页面按钮布局
-     */
-    @Bind(R.id.inbox_button_layout)
-    FrameLayout InboxBtnLayout;
-
-    /**
-     * 旅图页面相册按钮
-     */
-    @Bind(R.id.main_1_album)
-    ImageView Main_1_Album;
-
-    /**
-     * 随游页面搜索按钮
-     */
-    @Bind(R.id.main_2_search)
-    ImageView Main_2_Search;
-
-    @Bind(R.id.main_3_search)
-    ImageView Main_3_Search;
-
-    @Bind(R.id.main_3_questions)
-    ImageView Main_3_Questions;
-
-    @Bind(R.id.main_4_search)
-    ImageView Main_4_Search;
-
-    @Bind(R.id.img1)
-    ImageView iv_tab1;
-
-    @Bind(R.id.img2)
-    ImageView iv_tab2;
-
-    @Bind(R.id.img3)
-    ImageView iv_tab3;
-
-    @Bind(R.id.img4)
-    ImageView iv_tab4;
-
-    @Bind(R.id.rl_net_error)
-    TextView rl_net_error;
-
     private ExitReceiver exitReceiver;
 
     private ConnectionNetChangeReceiver connectionNetChangeReceiver;
@@ -240,6 +247,20 @@ public class MainActivity extends BaseActivity {
 
     private LocalBroadcastManager localBroadcastManager;
 
+    private LocationService.LocationBinder locationBinder;
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            locationBinder = (LocationService.LocationBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            L.i(TAG, "ComponentName:" + name.toString());
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -252,14 +273,16 @@ public class MainActivity extends BaseActivity {
 
         webSocketClient = SuiuuApplication.getWebSocketClient();
         isConnected = webSocketClient.isConnected();
-        DeBugLog.i(TAG, "isConnected:" + isConnected);
+        L.i(TAG, "isConnected:" + isConnected);
 
         String loginMessage = buildLoginMessage();
-        DeBugLog.i(TAG, "loginMessage:" + loginMessage);
+        L.i(TAG, "loginMessage:" + loginMessage);
         webSocketClient.send(loginMessage);
 
         getServiceTime();
         versionCheck();
+
+        bindService(new Intent(context, LocationService.class), serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -288,7 +311,7 @@ public class MainActivity extends BaseActivity {
     private String buildLoginMessage() {
         JSONObject object = new JSONObject();
         try {
-            object.put(USER_KEY, verification);
+            object.put(USER_KEY, "5sfbhr5crgdq0i0n1792us4rh1");
             object.put(TYPE, LOGIN);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -308,24 +331,34 @@ public class MainActivity extends BaseActivity {
                     try {
                         JSONObject object = new JSONObject(response);
                         String status = object.getString(STATUS);
-                        if (status.equals("1")) {
-                            String data = object.getString(DATA);
-                            getAppTimeSign(data);
+                        switch (status) {
+                            case "1":
+                                String data = object.getString(DATA);
+                                getAppTimeSign(data);
+                                break;
+                            case "-1":
+                                L.e(TAG, SystemException);
+                                break;
+                            case "-2":
+                                L.e(TAG, object.getString(DATA));
+                                break;
+                            default:
+                                L.e(TAG, "Data Error");
+                                break;
                         }
                     } catch (JSONException e) {
-                        DeBugLog.e(TAG, "时间数据解析异常:");
-                        e.printStackTrace();
+                        L.e(TAG, "时间数据解析异常:" + e.getMessage());
                     }
                 }
 
                 @Override
                 public void onError(Request request, Exception e) {
-                    DeBugLog.e(TAG, "时间获取错误:" + e.getMessage());
+                    L.e(TAG, "时间获取错误:" + e.getMessage());
                 }
 
                 @Override
                 public void onFinish() {
-                    DeBugLog.i(TAG, "Service Time Request Finish!");
+                    L.i(TAG, "Service Time Request Finish!");
                 }
 
             });
@@ -342,9 +375,11 @@ public class MainActivity extends BaseActivity {
     private void getAppTimeSign(String time) {
         try {
             verification = SuiuuInfo.ReadVerification(this);
+
             String sign = MD5Utils.getMD5(time + verification + HttpNewServicePath.ConfusedCode);
 
-            String _url = addUrlAndParams(HttpNewServicePath.getToken, new String[]{TIME_STAMP, APP_SIGN, SIGN},
+            String _url = addUrlAndParams(HttpNewServicePath.getToken,
+                    new String[]{TIME_STAMP, APP_SIGN, SIGN},
                     new String[]{time, verification, sign});
 
             OkHttpManager.onGetAsynRequest(_url, new OkHttpManager.ResultCallback<String>() {
@@ -357,7 +392,7 @@ public class MainActivity extends BaseActivity {
                         switch (status) {
                             case "1":
                                 String appTimeSign = object.getString(DATA);
-                                DeBugLog.i(TAG, "appTimeSign:" + appTimeSign);
+                                L.i(TAG, "appTimeSign:" + appTimeSign);
                                 SuiuuInfo.WriteAppTimeSign(context, appTimeSign);
                                 break;
                             case "-3":
@@ -367,17 +402,17 @@ public class MainActivity extends BaseActivity {
                                 Toast.makeText(context, LoginOverdue, Toast.LENGTH_SHORT).show();
                                 break;
                             default:
-                                DeBugLog.e(TAG, "获取失败");
+                                L.e(TAG, "获取失败");
                                 break;
                         }
                     } catch (JSONException e) {
-                        DeBugLog.e(TAG, "JSONException:" + e.getMessage());
+                        L.e(TAG, "JSONException:" + e.getMessage());
                     }
                 }
 
                 @Override
                 public void onError(Request request, Exception e) {
-                    DeBugLog.e(TAG, "Network Exception:" + e.getMessage());
+                    L.e(TAG, "Network Exception:" + e.getMessage());
                 }
 
                 @Override
@@ -388,9 +423,9 @@ public class MainActivity extends BaseActivity {
 
             });
         } catch (NoSuchAlgorithmException e) {
-            DeBugLog.e(TAG, "NoSuchAlgorithmException:" + e.getMessage());
+            L.e(TAG, "NoSuchAlgorithmException:" + e.getMessage());
         } catch (IOException e) {
-            DeBugLog.e(TAG, "IOException:" + e.getMessage());
+            L.e(TAG, "IOException:" + e.getMessage());
         }
     }
 
@@ -464,7 +499,7 @@ public class MainActivity extends BaseActivity {
 
         switchViewState(NUMBER1);
 
-        tripGalleryFragment = new TripGalleryFragment();
+        tripImageFragment = new TripImageFragment();
         informationFragment = InformationFragment.newInstance(userSign, verification, token);
         problemFragment = ProblemFragment.newInstance(userSign, verification);
 
@@ -487,7 +522,7 @@ public class MainActivity extends BaseActivity {
     private void versionCheck() {
         TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         String serialNumber = tm.getDeviceId();
-        DeBugLog.i(TAG, "手机串号:" + serialNumber);
+        L.i(TAG, "手机串号:" + serialNumber);
 
         OkHttpManager.Params[] paramArray = new OkHttpManager.Params[4];
         paramArray[0] = new OkHttpManager.Params(APP_ID, serialNumber);
@@ -501,14 +536,14 @@ public class MainActivity extends BaseActivity {
                         @Override
                         public void onResponse(String response) {
                             if (TextUtils.isEmpty(response)) {
-                                DeBugLog.e(TAG, "无返回信息！");
+                                L.e(TAG, "无返回信息！");
                             } else try {
                                 JSONObject object = new JSONObject(response);
                                 String status = object.getString(STATUS);
                                 if (status.equals("1")) {
                                     JSONObject data = object.getJSONObject(DATA);
                                     String versionId = data.getString("vId");
-                                    DeBugLog.i(TAG, "versionId:" + versionId);
+                                    L.i(TAG, "versionId:" + versionId);
                                     SuiuuInfo.WriteVersionId(context, versionId);
                                 }
                             } catch (JSONException e) {
@@ -519,7 +554,7 @@ public class MainActivity extends BaseActivity {
 
                         @Override
                         public void onError(Request request, Exception e) {
-                            DeBugLog.e(TAG, "版本信息请求失败:" + e.getMessage());
+                            L.e(TAG, "版本信息请求失败:" + e.getMessage());
                         }
                     }, paramArray);
         } catch (IOException e) {
@@ -548,7 +583,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        Main_1_Album.setOnClickListener(new OnClickListener() {
+        main_1_Album.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, SelectPictureActivity.class);
@@ -557,14 +592,14 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        Main_2_Search.setOnClickListener(new OnClickListener() {
+        main_2_Search.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
 
-        Main_3_Search.setOnClickListener(new OnClickListener() {
+        main_3_Search.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, CommunitySearchActivity.class);
@@ -572,7 +607,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        Main_3_Questions.setOnClickListener(new OnClickListener() {
+        main_3_Questions.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PutQuestionsActivity.class);
@@ -582,7 +617,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        Main_4_Search.setOnClickListener(new OnClickListener() {
+        main_4_Search.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -634,20 +669,20 @@ public class MainActivity extends BaseActivity {
         connectionNetChangeReceiver.setConnectionChangeListener(new ConnectionNetChangeReceiver.ConnectionChangeListener() {
             @Override
             public void connectionBreakOff(Context b) {
-                rl_net_error.setVisibility(View.VISIBLE);
+                networkErrorView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void connectionResume(Context b) {
-                if (rl_net_error.isEnabled()) {
-                    rl_net_error.setVisibility(View.GONE);
+                if (networkErrorView.isEnabled()) {
+                    networkErrorView.setVisibility(View.GONE);
                 }
             }
 
         });
 
         //跳到设置界面
-        rl_net_error.setOnClickListener(new OnClickListener() {
+        networkErrorView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Settings.ACTION_SETTINGS));
@@ -678,14 +713,14 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        if (tripGalleryFragment == null) {
-            tripGalleryFragment = new TripGalleryFragment();
+        if (tripImageFragment == null) {
+            tripImageFragment = new TripImageFragment();
         }
 
-        if (tripGalleryFragment.isAdded()) {
-            ft.show(tripGalleryFragment);
+        if (tripImageFragment.isAdded()) {
+            ft.show(tripImageFragment);
         } else {
-            ft.add(R.id.show_layout, tripGalleryFragment);
+            ft.add(R.id.show_layout, tripImageFragment);
         }
 
         ft.commit();
@@ -696,9 +731,9 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadSuiuuFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (tripGalleryFragment != null) {
-            if (tripGalleryFragment.isAdded()) {
-                ft.hide(tripGalleryFragment);
+        if (tripImageFragment != null) {
+            if (tripImageFragment.isAdded()) {
+                ft.hide(tripImageFragment);
             }
         }
 
@@ -731,9 +766,9 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadCommunityFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (tripGalleryFragment != null) {
-            if (tripGalleryFragment.isAdded()) {
-                ft.hide(tripGalleryFragment);
+        if (tripImageFragment != null) {
+            if (tripImageFragment.isAdded()) {
+                ft.hide(tripImageFragment);
             }
         }
 
@@ -767,9 +802,9 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadConversationFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (tripGalleryFragment != null) {
-            if (tripGalleryFragment.isAdded()) {
-                ft.hide(tripGalleryFragment);
+        if (tripImageFragment != null) {
+            if (tripImageFragment.isAdded()) {
+                ft.hide(tripImageFragment);
             }
         }
         if (suiuuFragment != null) {
@@ -797,11 +832,11 @@ public class MainActivity extends BaseActivity {
      */
     private void LoadDefaultFragment() {
         FragmentTransaction ft = fm.beginTransaction();
-        if (tripGalleryFragment == null) {
-            tripGalleryFragment = new TripGalleryFragment();
-            ft.add(R.id.show_layout, tripGalleryFragment);
+        if (tripImageFragment == null) {
+            tripImageFragment = new TripImageFragment();
+            ft.add(R.id.show_layout, tripImageFragment);
         } else {
-            ft.add(R.id.show_layout, tripGalleryFragment);
+            ft.add(R.id.show_layout, tripImageFragment);
         }
 
         ft.commit();
@@ -816,50 +851,50 @@ public class MainActivity extends BaseActivity {
 
         switch (number) {
             case NUMBER1:
-                iv_tab1.setImageResource(R.drawable.icon_main_1_green);
-                iv_tab2.setImageResource(R.drawable.icon_main_2_white);
-                iv_tab3.setImageResource(R.drawable.icon_main_3_white);
-                iv_tab4.setImageResource(R.drawable.icon_main_4_white);
+                imageTabOne.setImageResource(R.drawable.icon_main_1_green);
+                imageTabTwo.setImageResource(R.drawable.icon_main_2_white);
+                imageTabThree.setImageResource(R.drawable.icon_main_3_white);
+                imageTabFour.setImageResource(R.drawable.icon_main_4_white);
 
-                TravelImageLayout.setVisibility(View.VISIBLE);
-                SuiuuButtonLayout.setVisibility(View.GONE);
-                CommunityLayout.setVisibility(View.GONE);
-                InboxBtnLayout.setVisibility(View.GONE);
+                travelImageLayout.setVisibility(View.VISIBLE);
+                suiuuButtonLayout.setVisibility(View.GONE);
+                communityLayout.setVisibility(View.GONE);
+                inboxButtonLayout.setVisibility(View.GONE);
                 break;
 
             case NUMBER2:
-                iv_tab1.setImageResource(R.drawable.icon_main_1_white);
-                iv_tab2.setImageResource(R.drawable.icon_main_2_green);
-                iv_tab3.setImageResource(R.drawable.icon_main_3_white);
-                iv_tab4.setImageResource(R.drawable.icon_main_4_white);
+                imageTabOne.setImageResource(R.drawable.icon_main_1_white);
+                imageTabTwo.setImageResource(R.drawable.icon_main_2_green);
+                imageTabThree.setImageResource(R.drawable.icon_main_3_white);
+                imageTabFour.setImageResource(R.drawable.icon_main_4_white);
 
-                TravelImageLayout.setVisibility(View.GONE);
-                SuiuuButtonLayout.setVisibility(View.VISIBLE);
-                CommunityLayout.setVisibility(View.GONE);
-                InboxBtnLayout.setVisibility(View.GONE);
+                travelImageLayout.setVisibility(View.GONE);
+                suiuuButtonLayout.setVisibility(View.VISIBLE);
+                communityLayout.setVisibility(View.GONE);
+                inboxButtonLayout.setVisibility(View.GONE);
                 break;
 
             case NUMBER3:
-                iv_tab1.setImageResource(R.drawable.icon_main_1_white);
-                iv_tab2.setImageResource(R.drawable.icon_main_2_white);
-                iv_tab3.setImageResource(R.drawable.icon_main_3_green);
-                iv_tab4.setImageResource(R.drawable.icon_main_4_white);
+                imageTabOne.setImageResource(R.drawable.icon_main_1_white);
+                imageTabTwo.setImageResource(R.drawable.icon_main_2_white);
+                imageTabThree.setImageResource(R.drawable.icon_main_3_green);
+                imageTabFour.setImageResource(R.drawable.icon_main_4_white);
 
-                TravelImageLayout.setVisibility(View.GONE);
-                SuiuuButtonLayout.setVisibility(View.GONE);
-                CommunityLayout.setVisibility(View.VISIBLE);
-                InboxBtnLayout.setVisibility(View.GONE);
+                travelImageLayout.setVisibility(View.GONE);
+                suiuuButtonLayout.setVisibility(View.GONE);
+                communityLayout.setVisibility(View.VISIBLE);
+                inboxButtonLayout.setVisibility(View.GONE);
                 break;
             case NUMBER4:
-                iv_tab1.setImageResource(R.drawable.icon_main_1_white);
-                iv_tab2.setImageResource(R.drawable.icon_main_2_white);
-                iv_tab3.setImageResource(R.drawable.icon_main_3_white);
-                iv_tab4.setImageResource(R.drawable.icon_main_4_green);
+                imageTabOne.setImageResource(R.drawable.icon_main_1_white);
+                imageTabTwo.setImageResource(R.drawable.icon_main_2_white);
+                imageTabThree.setImageResource(R.drawable.icon_main_3_white);
+                imageTabFour.setImageResource(R.drawable.icon_main_4_green);
 
-                TravelImageLayout.setVisibility(View.GONE);
-                SuiuuButtonLayout.setVisibility(View.GONE);
-                CommunityLayout.setVisibility(View.GONE);
-                InboxBtnLayout.setVisibility(View.VISIBLE);
+                travelImageLayout.setVisibility(View.GONE);
+                suiuuButtonLayout.setVisibility(View.GONE);
+                communityLayout.setVisibility(View.GONE);
+                inboxButtonLayout.setVisibility(View.VISIBLE);
                 break;
 
         }
@@ -869,21 +904,23 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode != Activity.RESULT_OK) {
-            DeBugLog.e(TAG, "return information is null");
+            L.e(TAG, "return information is null");
         } else if (data == null) {
-            DeBugLog.e(TAG, "back data is null!");
+            L.e(TAG, "back data is null!");
         } else {
             switch (requestCode) {
                 case AppConstant.COMMUNITY_SEARCH_SKIP:
                     String searchString = data.getStringExtra("Search");
-                    DeBugLog.i(TAG, "Search Str:" + searchString);
+                    L.i(TAG, "Search Str:" + searchString);
                     problemFragment.setSearchString(searchString);
                     break;
             }
         }
+
         if (requestCode == AppConstant.PUBLISTH_TRIP_GALLERY_SUCCESS) {
-            tripGalleryFragment.onReflash();
+            tripImageFragment.loadFirstPageData();
         }
     }
 
@@ -891,7 +928,7 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            DeBugLog.i(TAG, "action:" + action);
+            L.i(TAG, "action:" + action);
             if (action.equals(SettingActivity.class.getSimpleName())) {
                 MainActivity.this.finish();
             }
@@ -905,7 +942,7 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             count++;
-            DeBugLog.i(TAG, "count:" + count);
+            L.i(TAG, "count:" + count);
             if (count == 120) {
                 getServiceTime();
                 count = 0;
@@ -980,9 +1017,13 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(context, "再按一次退出程序", Toast.LENGTH_SHORT).show();
                     exitTime = System.currentTimeMillis();
                 } else {
+
                     if (isConnected) {
                         webSocketClient.disconnect();
                     }
+
+                    unbindService(serviceConnection);
+                    locationBinder.endService();
 
                     BaseAppManager.getInstance().clear();
                     finish();
@@ -1000,19 +1041,19 @@ public class MainActivity extends BaseActivity {
         try {
             localBroadcastManager.unregisterReceiver(exitReceiver);
         } catch (Exception e) {
-            DeBugLog.e(TAG, "反注册ExitBroadcastReceiver失败:" + e.getMessage());
+            L.e(TAG, "反注册ExitBroadcastReceiver失败:" + e.getMessage());
         }
 
         try {
             unregisterReceiver(connectionNetChangeReceiver);
         } catch (Exception e) {
-            DeBugLog.e(TAG, "反注册ConnectionNetChangeReceiver失败:" + e.getMessage());
+            L.e(TAG, "反注册ConnectionNetChangeReceiver失败:" + e.getMessage());
         }
 
         try {
             unregisterReceiver(tokenBroadcastReceiver);
         } catch (Exception e) {
-            DeBugLog.e(TAG, "反注册TokenBroadcastReceiver失败:" + e.getMessage());
+            L.e(TAG, "反注册TokenBroadcastReceiver失败:" + e.getMessage());
         }
 
     }

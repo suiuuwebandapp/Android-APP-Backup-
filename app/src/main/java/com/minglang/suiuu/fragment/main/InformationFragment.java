@@ -16,7 +16,7 @@ import com.minglang.suiuu.fragment.remind.MsgOrderFragment;
 import com.minglang.suiuu.fragment.remind.MsgQuestionFragment;
 import com.minglang.suiuu.fragment.remind.MsgTripGalleryFragment;
 import com.minglang.suiuu.fragment.remind.MsgSystemFragment;
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +102,7 @@ public class InformationFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_information, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification);
+        L.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 

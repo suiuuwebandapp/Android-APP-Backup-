@@ -13,12 +13,12 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.UserBack;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.MD5Utils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.qq.TencentConstant;
 import com.minglang.suiuu.utils.wechat.WeChatConstant;
@@ -247,13 +247,13 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onStart(SHARE_MEDIA share_media) {
-            DeBugLog.i(TAG, "QQ授权开始");
+            L.i(TAG, "QQ授权开始");
         }
 
         @Override
         public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
             dialog.dismissDialog();
-            DeBugLog.i(TAG, "QQ授权完成");
+            L.i(TAG, "QQ授权完成");
             Toast.makeText(LoginsMainActivity.this, QQAuthorizedComplete, Toast.LENGTH_SHORT).show();
 
             if (bundle != null) {
@@ -265,15 +265,15 @@ public class LoginsMainActivity extends BaseActivity {
         @Override
         public void onError(SocializeException e, SHARE_MEDIA share_media) {
             dialog.dismissDialog();
-            DeBugLog.i(TAG, "QQ授权错误");
-            DeBugLog.e(TAG, "QQ登陆错误:" + e.getMessage() + ",错误代码:" + e.getErrorCode());
+            L.i(TAG, "QQ授权错误");
+            L.e(TAG, "QQ登陆错误:" + e.getMessage() + ",错误代码:" + e.getErrorCode());
             Toast.makeText(LoginsMainActivity.this, QQAuthorizedError, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
             dialog.dismissDialog();
-            DeBugLog.i(TAG, "QQ授权取消");
+            L.i(TAG, "QQ授权取消");
             Toast.makeText(LoginsMainActivity.this, QQAuthorizedCancel, Toast.LENGTH_SHORT).show();
         }
     }
@@ -285,13 +285,13 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onStart() {
-            DeBugLog.i(TAG, "开始获取QQ数据");
+            L.i(TAG, "开始获取QQ数据");
         }
 
         @Override
         public void onComplete(int status, Map<String, Object> info) {
             dialog.dismissDialog();
-            DeBugLog.i(TAG, "QQ数据获取完成");
+            L.i(TAG, "QQ数据获取完成");
             if (status == 200 && info != null) {
                 String sex = info.get("gender").toString();
                 if (!TextUtils.isEmpty(sex)) {
@@ -313,7 +313,7 @@ public class LoginsMainActivity extends BaseActivity {
 //                enterMainBind(qq_head_image_path, qq_nick_Name,"1",qq_open_id);
                 sendQQInfo2Service();
             } else {
-                DeBugLog.e(TAG, "QQ数据获取失败");
+                L.e(TAG, "QQ数据获取失败");
                 Toast.makeText(LoginsMainActivity.this, "数据获取失败,请重试！", Toast.LENGTH_SHORT).show();
             }
         }
@@ -327,13 +327,13 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onStart(SHARE_MEDIA share_media) {
-            DeBugLog.i(TAG, "微信授权开始");
+            L.i(TAG, "微信授权开始");
         }
 
         @Override
         public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
             dialog.dismissDialog();
-            DeBugLog.i(TAG, "微信授权完成");
+            L.i(TAG, "微信授权完成");
             Toast.makeText(LoginsMainActivity.this, WeChatAuthorizedComplete, Toast.LENGTH_SHORT).show();
             mController.getPlatformInfo(LoginsMainActivity.this, SHARE_MEDIA.WEIXIN, new WeChat4UMDataListener());
         }
@@ -341,14 +341,14 @@ public class LoginsMainActivity extends BaseActivity {
         @Override
         public void onError(SocializeException e, SHARE_MEDIA share_media) {
             dialog.dismissDialog();
-            DeBugLog.i(TAG, "微信授权错误:" + e.getMessage() + ",微信授权错误码:" + e.getErrorCode());
+            L.i(TAG, "微信授权错误:" + e.getMessage() + ",微信授权错误码:" + e.getErrorCode());
             Toast.makeText(LoginsMainActivity.this, WeChatAuthorizedError, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
             dialog.dismissDialog();
-            DeBugLog.i(TAG, "微信授权取消");
+            L.i(TAG, "微信授权取消");
             Toast.makeText(LoginsMainActivity.this, WeChatAuthorizedCancel, Toast.LENGTH_SHORT).show();
         }
 
@@ -361,21 +361,21 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onStart(SHARE_MEDIA share_media) {
-            DeBugLog.i(TAG, "新浪微博授权开始！");
+            L.i(TAG, "新浪微博授权开始！");
             Toast.makeText(LoginsMainActivity.this, WeiboAuthorizedStart, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
             dialog.dismissDialog();
-            DeBugLog.i(TAG, "新浪微博授权完成！");
+            L.i(TAG, "新浪微博授权完成！");
             if (bundle != null && !TextUtils.isEmpty(bundle.getString("uid"))) {
-                DeBugLog.i(TAG, "新浪微博授权成功！");
-                DeBugLog.i(TAG, "新浪微博授权信息:" + bundle.toString());
+                L.i(TAG, "新浪微博授权成功！");
+                L.i(TAG, "新浪微博授权信息:" + bundle.toString());
                 Toast.makeText(LoginsMainActivity.this, WeiboAuthorizedComplete, Toast.LENGTH_SHORT).show();
                 mController.getPlatformInfo(LoginsMainActivity.this, SHARE_MEDIA.SINA, new MicroBlog4UMDataListener());
             } else {
-                DeBugLog.i(TAG, "新浪微博授权失败！");
+                L.i(TAG, "新浪微博授权失败！");
                 Toast.makeText(LoginsMainActivity.this, WeiboAuthorizedFailure, Toast.LENGTH_SHORT).show();
             }
         }
@@ -383,16 +383,16 @@ public class LoginsMainActivity extends BaseActivity {
         @Override
         public void onError(SocializeException e, SHARE_MEDIA share_media) {
             dialog.dismissDialog();
-            DeBugLog.e(TAG, "新浪微博授权错误！" + e.getMessage());
-            DeBugLog.e(TAG, "新浪微博错误代码1:" + e.getErrorCode());
-            DeBugLog.e(TAG, "新浪微博错误代码2::" + String.valueOf(share_media.getReqCode()));
+            L.e(TAG, "新浪微博授权错误！" + e.getMessage());
+            L.e(TAG, "新浪微博错误代码1:" + e.getErrorCode());
+            L.e(TAG, "新浪微博错误代码2::" + String.valueOf(share_media.getReqCode()));
             Toast.makeText(LoginsMainActivity.this, WeiboAuthorizedError, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
             dialog.dismissDialog();
-            DeBugLog.i(TAG, "新浪微博授权取消！");
+            L.i(TAG, "新浪微博授权取消！");
             Toast.makeText(LoginsMainActivity.this, WeiboAuthorizedCancel, Toast.LENGTH_SHORT).show();
         }
 
@@ -410,15 +410,15 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onStart() {
-            DeBugLog.i(TAG, "正在获取微信数据");
+            L.i(TAG, "正在获取微信数据");
         }
 
         @Override
         public void onComplete(int status, Map<String, Object> info) {
             dialog.dismissDialog();
-            DeBugLog.i(TAG, "微信数据获取完成");
+            L.i(TAG, "微信数据获取完成");
             if (status == 200 && info != null) {
-                DeBugLog.i(TAG, "微信数据:" + info.toString());
+                L.i(TAG, "微信数据:" + info.toString());
                 wechat_union_id = info.get("unionid").toString();
                 wechat_nick_name = info.get("nickname").toString();
                 String sex = info.get("sex").toString();
@@ -442,7 +442,7 @@ public class LoginsMainActivity extends BaseActivity {
 //                enterMainBind(wechat_head_image_path, wechat_nick_name, "2", wechat_union_id);
                 sendWeChatInfo2Service();
             } else {
-                DeBugLog.i(TAG, "微信数据获取失败");
+                L.i(TAG, "微信数据获取失败");
             }
         }
 
@@ -457,48 +457,48 @@ public class LoginsMainActivity extends BaseActivity {
 
         @Override
         public void onStart() {
-            DeBugLog.i(TAG, "正在获取微博数据");
+            L.i(TAG, "正在获取微博数据");
         }
 
         @Override
         public void onComplete(int status, Map<String, Object> info) {
             dialog.dismissDialog();
-            DeBugLog.i(TAG, "status:" + status);
+            L.i(TAG, "status:" + status);
             if (status == 200 && info != null) {
-                DeBugLog.i(TAG, "微博返回数据为:" + info.toString());
+                L.i(TAG, "微博返回数据为:" + info.toString());
 
                 try {
                     weibo_open_id = info.get(OPEN_ID).toString();
-                    DeBugLog.i(TAG, "openid:" + weibo_open_id);
+                    L.i(TAG, "openid:" + weibo_open_id);
                 } catch (Exception e) {
-                    DeBugLog.e(TAG, "获取openid失败:" + e.getMessage());
+                    L.e(TAG, "获取openid失败:" + e.getMessage());
                 }
 
                 try {
                     weibo_name = info.get("screen_name").toString();
-                    DeBugLog.i(TAG, "获取screenName失败:" + weibo_name);
+                    L.i(TAG, "获取screenName失败:" + weibo_name);
                 } catch (Exception e) {
-                    DeBugLog.e(TAG, "获取screenName失败:" + e.getMessage());
+                    L.e(TAG, "获取screenName失败:" + e.getMessage());
                 }
 
                 try {
                     weibo_gender = info.get("gender").toString();
-                    DeBugLog.i(TAG, "gender:" + weibo_gender);
+                    L.i(TAG, "gender:" + weibo_gender);
                 } catch (Exception e) {
-                    DeBugLog.e(TAG, "获取gender失败:" + e.getMessage());
+                    L.e(TAG, "获取gender失败:" + e.getMessage());
                 }
 
                 try {
                     weibo_head_img = info.get("profile_image_url").toString();
-                    DeBugLog.i(TAG, "image_url:" + weibo_head_img);
+                    L.i(TAG, "image_url:" + weibo_head_img);
                 } catch (Exception e) {
-                    DeBugLog.e(TAG, "获取image_url失败:" + e.getMessage());
+                    L.e(TAG, "获取image_url失败:" + e.getMessage());
                 }
                 SuiuuInfo.WriteQuicklyLoginInfo(LoginsMainActivity.this, weibo_open_id, weibo_name, "3", weibo_head_img);
 //                enterMainBind(weibo_head_img, weibo_name, "3", weibo_open_id);
                 sendWeiBoInfo2Service();
             } else {
-                DeBugLog.e(TAG, "发生错误，未接收到数据！");
+                L.e(TAG, "发生错误，未接收到数据！");
             }
         }
 
@@ -562,11 +562,11 @@ public class LoginsMainActivity extends BaseActivity {
                         enterMainBind(qq_head_image_path, qq_nick_Name,"1",qq_open_id);
                     }
                 } else {
-                    DeBugLog.e(TAG, "TencentResultCallback:返回数据有误！");
+                    L.e(TAG, "TencentResultCallback:返回数据有误！");
                     Toast.makeText(LoginsMainActivity.this, DataError, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "QQ登陆数据解析错误:" + e.getMessage());
+                L.e(TAG, "QQ登陆数据解析错误:" + e.getMessage());
                 Toast.makeText(LoginsMainActivity.this, DataError, Toast.LENGTH_SHORT).show();
                 AbnormalHandle(response, DataError);
             }
@@ -575,7 +575,7 @@ public class LoginsMainActivity extends BaseActivity {
         @Override
         public void onError(Request request, Exception e) {
             dialog.dismissDialog();
-            DeBugLog.e(TAG, "QQ登陆数据解析错误:" + e.getMessage());
+            L.e(TAG, "QQ登陆数据解析错误:" + e.getMessage());
             Toast.makeText(LoginsMainActivity.this, DataError, Toast.LENGTH_SHORT).show();
         }
 
@@ -686,7 +686,7 @@ public class LoginsMainActivity extends BaseActivity {
                         Toast.makeText(LoginsMainActivity.this, NoData, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    DeBugLog.e(TAG, "微博登录错误:" + e.getMessage());
+                    L.e(TAG, "微博登录错误:" + e.getMessage());
                     AbnormalHandle(response, "数据获取失败，请稍候再试！");
                 }
             }
@@ -695,7 +695,7 @@ public class LoginsMainActivity extends BaseActivity {
         @Override
         public void onError(Request request, Exception e) {
             dialog.dismissDialog();
-            DeBugLog.i(TAG, "网络异常:" + e.getMessage());
+            L.i(TAG, "网络异常:" + e.getMessage());
             Toast.makeText(LoginsMainActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }
 
@@ -732,7 +732,7 @@ public class LoginsMainActivity extends BaseActivity {
                     Toast.makeText(LoginsMainActivity.this, "登录失败，请重试！", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "微信数据发送到服务器返回数据解析错误:" + e.getMessage());
+                L.e(TAG, "微信数据发送到服务器返回数据解析错误:" + e.getMessage());
                 AbnormalHandle(response, DataError);
             }
 
@@ -741,7 +741,7 @@ public class LoginsMainActivity extends BaseActivity {
         @Override
         public void onError(Request request, Exception e) {
             dialog.dismissDialog();
-            DeBugLog.e(TAG, "发送微信信息到服务器发生错误:" + e.getMessage());
+            L.e(TAG, "发送微信信息到服务器发生错误:" + e.getMessage());
             Toast.makeText(LoginsMainActivity.this, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }
 

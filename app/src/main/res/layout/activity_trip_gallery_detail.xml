@@ -2,15 +2,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/trip_gallery_detail_title"
         layout="@layout/common_top2_layout"/>
 
     <ScrollView
-        android:id="@+id/sv_trip_gallery_detail"
+        android:id="@+id/trip_image_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/trip_gallery_detail_title"
@@ -26,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/layout_8dp">
                 <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/sdv_trip_gallery_details_portrait"
+                    android:id="@+id/trip_image_details_portrait"
                     android:layout_width="@dimen/layout_50dp"
                     android:layout_height="@dimen/layout_50dp"
                     android:layout_centerVertical="true"
@@ -35,24 +34,24 @@
                     android:background="@drawable/user_head_image_bg"
                     fresco:roundAsCircle="true"/>
                 <TextView
-                    android:id="@+id/tv_trip_gallery_details_publisher_name"
+                    android:id="@+id/trip_image_details_publisher_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/layout_5dp"
-                    android:layout_toEndOf="@+id/sdv_trip_gallery_details_portrait"
-                    android:layout_toRightOf="@+id/sdv_trip_gallery_details_portrait"
+                    android:layout_toEndOf="@+id/trip_image_details_portrait"
+                    android:layout_toRightOf="@+id/trip_image_details_portrait"
                     android:text="@string/userName"
                     android:textColor="@color/textColor"
                     android:textSize="@dimen/layout_18sp"/>
                 <TextView
-                    android:id="@+id/tv_trip_gallery_details_publish_location"
+                    android:id="@+id/trip_image_details_publish_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_trip_gallery_details_publisher_name"
+                    android:layout_below="@+id/trip_image_details_publisher_name"
                     android:layout_marginLeft="@dimen/layout_5dp"
                     android:layout_marginStart="@dimen/layout_5dp"
-                    android:layout_toEndOf="@+id/sdv_trip_gallery_details_portrait"
-                    android:layout_toRightOf="@+id/sdv_trip_gallery_details_portrait"
+                    android:layout_toEndOf="@+id/trip_image_details_portrait"
+                    android:layout_toRightOf="@+id/trip_image_details_portrait"
                     android:drawableLeft="@drawable/icon_location_indicator"
                     android:drawablePadding="@dimen/layout_6dp"
                     android:drawableStart="@drawable/icon_location_indicator"
@@ -68,19 +67,19 @@
                     android:layout_alignParentRight="true"
                     android:layout_margin="@dimen/layout_10dp">
                     <ImageView
-                        android:id="@+id/iv_trip_gallery_detail_heart"
+                        android:id="@+id/trip_image_details_heart"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/attention_heart_normal"
                         />
                     <TextView
-                        android:id="@+id/tv_head_count"
+                        android:id="@+id/headCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/layout_12sp"
                         android:text="22"
                         android:textColor="@color/textColor"
-                        android:layout_below="@+id/iv_trip_gallery_detail_heart"
+                        android:layout_below="@+id/trip_image_details_heart"
                         android:layout_centerHorizontal="true"
                         />
                 </RelativeLayout>
@@ -89,7 +88,7 @@
             </RelativeLayout>
             <include layout="@layout/view_line"/>
             <TextView
-                android:id="@+id/tv_trip_gallery_details_name"
+                android:id="@+id/trip_image_details_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/layout_8dp"
@@ -98,7 +97,7 @@
                 android:textSize="@dimen/layout_18sp"/>
 
             <TextView
-                android:id="@+id/tv_trip_gallery_details_tag"
+                android:id="@+id/trip_image_details_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/layout_5dp"
@@ -112,7 +111,7 @@
                 android:textSize="@dimen/layout_15sp"/>
 
             <com.minglang.suiuu.customview.NoScrollBarListView
-                android:id="@+id/trip_gallery_details_content"
+                android:id="@+id/trip_image_details_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -149,7 +148,7 @@
                 android:scrollbars="none">
 
                 <LinearLayout
-                    android:id="@+id/ll_trip_gallery_details_guess_your_love"
+                    android:id="@+id/trip_image_details_guess_your_love"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/white"

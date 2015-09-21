@@ -28,10 +28,10 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.AccountInfo;
 import com.minglang.suiuu.entity.AccountInfo.AccountInfoData;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.wechat.WeChatConstant;
 import com.squareup.okhttp.Request;
@@ -287,7 +287,7 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
         try {
             String url = HttpNewServicePath.getUserBindAccountListData + "?" + TOKEN + "=" + URLEncoder.encode(token, "UTF-8");
-            DeBugLog.i(TAG, "Request URL:" + url);
+            L.i(TAG, "Request URL:" + url);
             OkHttpManager.onGetAsynRequest(url, new ReceivablesWayResultCallback());
         } catch (Exception e) {
             e.printStackTrace();
@@ -340,7 +340,7 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
                     Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "数据解析错误:" + e.getMessage());
+                L.e(TAG, "数据解析错误:" + e.getMessage());
                 relativeLayout.setVisibility(View.VISIBLE);
                 try {
                     JSONObject object = new JSONObject(str);
@@ -387,11 +387,11 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
             paramsArray[1] = new OkHttpManager.Params(NAME, nickName);
 
             String url = HttpNewServicePath.addWeChatAUserInfo + "?" + TOKEN + "=" + URLEncoder.encode(token, "UTF-8");
-            DeBugLog.i(TAG, "微信绑定接口:" + url);
+            L.i(TAG, "微信绑定接口:" + url);
 
             OkHttpManager.onPostAsynRequest(url, new BindWeChat2SuiuuListener(), paramsArray);
         } catch (Exception e) {
-            DeBugLog.e(TAG, "网络请求过程发生异常:" + e.getMessage());
+            L.e(TAG, "网络请求过程发生异常:" + e.getMessage());
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
@@ -445,14 +445,14 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "返回的数据:" + response);
+            L.i(TAG, "返回的数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "网络请求失败:" + e.getMessage());
+            L.e(TAG, "网络请求失败:" + e.getMessage());
             hideDialog();
             relativeLayout.setVisibility(View.VISIBLE);
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
@@ -467,7 +467,7 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "删除返回信息:" + response);
+            L.i(TAG, "删除返回信息:" + response);
             try {
                 JSONObject object = new JSONObject(response);
                 String status = object.getString(STATUS);
@@ -489,14 +489,14 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
                             break;
                     }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                L.e(TAG, "解析失败:" + e.getMessage());
                 Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "删除失败:" + e.getMessage());
+            L.e(TAG, "删除失败:" + e.getMessage());
             Toast.makeText(context, DeleteFailure, Toast.LENGTH_SHORT).show();
         }
 
@@ -509,7 +509,7 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
         @Override
         public void onStart(SHARE_MEDIA share_media) {
-            DeBugLog.i(TAG, "微信授权开始");
+            L.i(TAG, "微信授权开始");
             if (weChatLoadDialog != null && !weChatLoadDialog.isShowing()) {
                 weChatLoadDialog.show();
             }
@@ -517,7 +517,7 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
         @Override
         public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
-            DeBugLog.i(TAG, "微信授权完成");
+            L.i(TAG, "微信授权完成");
             //hideWeChatDialog();
             Toast.makeText(context, WeChatAuthorizedComplete, Toast.LENGTH_SHORT).show();
             mController.getPlatformInfo(context, SHARE_MEDIA.WEIXIN, new ObtainWeChat4UmDataListener());
@@ -525,14 +525,14 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
         @Override
         public void onError(SocializeException e, SHARE_MEDIA share_media) {
-            DeBugLog.i(TAG, "微信授权错误:" + e.getMessage() + ",微信授权错误码:" + e.getErrorCode());
+            L.i(TAG, "微信授权错误:" + e.getMessage() + ",微信授权错误码:" + e.getErrorCode());
             hideWeChatDialog();
             Toast.makeText(context, WeChatAuthorizedError, Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
-            DeBugLog.i(TAG, "微信授权取消");
+            L.i(TAG, "微信授权取消");
             hideWeChatDialog();
             Toast.makeText(context, WeChatAuthorizedCancel, Toast.LENGTH_SHORT).show();
         }
@@ -546,15 +546,15 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
         @Override
         public void onStart() {
-            DeBugLog.i(TAG, "正在获取微信数据");
+            L.i(TAG, "正在获取微信数据");
         }
 
         @Override
         public void onComplete(int status, Map<String, Object> info) {
-            DeBugLog.i(TAG, "微信数据获取完成");
+            L.i(TAG, "微信数据获取完成");
             hideWeChatDialog();
             if (status == 200 && info != null) {
-                DeBugLog.i(TAG, "微信数据:" + info.toString());
+                L.i(TAG, "微信数据:" + info.toString());
 
                 openId = info.get(UNION_ID).toString();
                 nickName = info.get(NICK_NAME).toString();
@@ -572,7 +572,7 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "微信绑定返回的数据信息:" + response);
+            L.i(TAG, "微信绑定返回的数据信息:" + response);
             try {
                 JSONObject object = new JSONObject(response);
                 String status = object.getString(STATUS);
@@ -594,14 +594,14 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
                     }
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "数据解析失败:" + e.getMessage());
+                L.e(TAG, "数据解析失败:" + e.getMessage());
                 Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "网络请求失败:" + e.getMessage());
+            L.e(TAG, "网络请求失败:" + e.getMessage());
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 

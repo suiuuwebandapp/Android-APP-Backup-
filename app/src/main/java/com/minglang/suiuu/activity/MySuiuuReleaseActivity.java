@@ -22,7 +22,7 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.suiuu.JoinFragment;
 import com.minglang.suiuu.fragment.suiuu.NewApplyForFragment;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
@@ -241,7 +241,7 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
                     String newInfo = data.getStringExtra(NEW_INFO);
                     mySuiuuInfoText.setText(newInfo);
 
-                    DeBugLog.i(TAG, "newInfo:" + newInfo);
+                    L.i(TAG, "newInfo:" + newInfo);
                 }
                 break;
 
@@ -251,7 +251,7 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
                     String newAdditionalPrice = data.getStringExtra(NEW_ADDITIONAL_PRICE);
                     String newOtherPrice = data.getStringExtra(NEW_OTHER_PRICE);
 
-                    DeBugLog.i(TAG, "newBasicPrice:" + newBasicPrice
+                    L.i(TAG, "newBasicPrice:" + newBasicPrice
                             + ",newAdditionalPrice:" + newAdditionalPrice
                             + ",newOtherPrice:" + newOtherPrice);
 

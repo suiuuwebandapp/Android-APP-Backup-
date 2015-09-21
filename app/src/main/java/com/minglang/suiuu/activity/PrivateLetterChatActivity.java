@@ -27,10 +27,10 @@ import com.minglang.suiuu.adapter.PrivateLetterChatAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.PrivateChat;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
@@ -208,7 +208,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
                     Toast.makeText(context, "请输入信息", Toast.LENGTH_SHORT).show();
                 } else {
                     String message = buildSendMessage();
-                    DeBugLog.i(TAG, "Send Message:" + message);
+                    L.i(TAG, "Send Message:" + message);
                     addSendMessage();
                     scrollToBottom();
                     webSocketClient.send(message);
@@ -290,24 +290,24 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
      */
     private void addReceiveMessage(String str) {
         if (TextUtils.isEmpty(str)) {
-            DeBugLog.e(TAG, "返回数据为Null");
+            L.e(TAG, "返回数据为Null");
         } else try {
-            DeBugLog.i(TAG, "接收到的消息:" + str);
+            L.i(TAG, "接收到的消息:" + str);
             parseUnderLineToHumpName(str);
             PrivateChat.PrivateChatData data = parseUnderLineToHumpName(str);
             if (data != null && !TextUtils.isEmpty(data.getContent())) {
                 String contentStr = data.getContent();
-                DeBugLog.i(TAG, "Content:" + contentStr);
+                L.i(TAG, "Content:" + contentStr);
                 listAll.add(data);
                 adapter.notifyItemInserted(listAll.size() - 1);
             }
         } catch (Exception e) {
             try {
                 JSONObject object = new JSONObject(str);
-                DeBugLog.i(TAG, "Type:" + object.get("type"));
+                L.i(TAG, "Type:" + object.get("type"));
             } catch (JSONException e1) {
                 e1.printStackTrace();
-                DeBugLog.e(TAG, "数据解析失败:" + e.getMessage());
+                L.e(TAG, "数据解析失败:" + e.getMessage());
             }
         }
     }
@@ -330,7 +330,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
 
                 @Override
                 public void onResponse(String response) {
-                    DeBugLog.i(TAG, "response:" + response);
+                    L.i(TAG, "response:" + response);
                     if (TextUtils.isEmpty(response)) {
                         Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                     } else try {
@@ -343,7 +343,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
                             Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
-                        DeBugLog.e(TAG, "Exception:" + e.getMessage());
+                        L.e(TAG, "Exception:" + e.getMessage());
                         try {
                             JSONObject object = new JSONObject(response);
                             String status = object.getString(STATUS);
@@ -367,7 +367,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
 
                 @Override
                 public void onError(Request request, Exception e) {
-                    DeBugLog.e(TAG, "Error:" + e.getMessage());
+                    L.e(TAG, "Error:" + e.getMessage());
                     hideDialog();
                 }
 
@@ -451,7 +451,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String str = intent.getStringExtra(SuiuuApplication.CONNECT);
-            DeBugLog.i(TAG, "onConnect()" + str);
+            L.i(TAG, "onConnect()" + str);
         }
     }
 

@@ -27,13 +27,13 @@ import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData.UserAptitudeE
 import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData.UserCardEntity;
 import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData.UserInfoEntity;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.DrawableUtils;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -198,7 +198,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
         String publisher = SuiuuInfo.ReadUserData(this).getIsPublisher();
         isPublisher = !TextUtils.isEmpty(publisher) && publisher.equals("1");
 
-        DeBugLog.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
+        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
     }
 
     private void viewAction() {
@@ -206,7 +206,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
         adapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                DeBugLog.i(TAG, "click position:" + position);
+                L.i(TAG, "click position:" + position);
                 Intent intent = new Intent(PersonalMainPagerActivity.this, SuiuuDetailsActivity.class);
                 intent.putExtra(TRIP_ID, listAll.get(position).getTripId());
                 startActivity(intent);
@@ -259,7 +259,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
         String[] keyArray = new String[]{USER_SIGN, TOKEN};
         String[] valueArray = new String[]{userSign, token};
         String url = addUrlAndParams(HttpNewServicePath.getPersonalMainPagePath, keyArray, valueArray);
-        DeBugLog.i(TAG, "Request Url:" + url);
+        L.i(TAG, "Request Url:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new PersonalCenterResultCallback());
         } catch (IOException e) {
@@ -342,7 +342,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
                     String birthday = userInfo.getBirthday();
                     if (!TextUtils.isEmpty(birthday)) {
-                        String age = Utils.calculateAge(birthday);
+                        String age = AppUtils.calculateAge(birthday);
                         if (!TextUtils.isEmpty(age)) {
                             userAge.setText(age);
                         } else {
@@ -439,7 +439,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
             }
 
         } catch (Exception e) {
-            DeBugLog.e(TAG, "解析异常:" + e.getMessage());
+            L.e(TAG, "解析异常:" + e.getMessage());
             try {
                 JSONObject object = new JSONObject(str);
                 String status = object.getString(STATUS);
@@ -459,15 +459,15 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "个人主页返回的数据:" + response);
+            L.i(TAG, "个人主页返回的数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
-            DeBugLog.i(TAG, "request:" + request.body().toString());
+            L.e(TAG, "Exception:" + e.getMessage());
+            L.i(TAG, "request:" + request.body().toString());
             hideDialog();
             Toast.makeText(PersonalMainPagerActivity.this, NetWorkError, Toast.LENGTH_SHORT).show();
         }

@@ -1,30 +1,25 @@
 package com.minglang.suiuu.fragment.main;
 
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.SuiuuDetailsActivity;
-import com.minglang.suiuu.activity.SuiuuSearchActivity;
-import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
+import com.minglang.suiuu.activity.TripImageDetailsActivity;
+import com.minglang.suiuu.adapter.TripImageAdapter;
 import com.minglang.suiuu.base.BaseFragment;
-import com.minglang.suiuu.customview.TextProgressDialog;
-import com.minglang.suiuu.dbhelper.DataCacheUtils;
-import com.minglang.suiuu.entity.SuiuuData;
-import com.minglang.suiuu.entity.SuiuuItemData;
+import com.minglang.suiuu.entity.TripImage;
+import com.minglang.suiuu.entity.TripImage.TripImageData.TripImageItemData;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
@@ -45,19 +40,33 @@ import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
- * 随游页面
+ * 项目名称：Android-APP-Backup-
+ * 类描述：
+ * 创建人：Administrator
+ * 创建时间：2015/7/8 15:46
+ * 修改人：Administrator
+ * 修改时间：2015/7/8 15:46
+ * 修改备注：
  */
-public class SuiuuFragment extends BaseFragment {
-    private static final String TAG = SuiuuFragment.class.getSimpleName();
+public class TripImageFragment extends BaseFragment {
 
-    private static final String CC = "cc";
-    private static final String PEOPLE_COUNT = "peopleCount";
-    private static final String TAGS = "tag";
-    private static final String START_PRICE = "startPrice";
-    private static final String END_PRICE = "endPrice";
+    private static final String TAG = TripImageFragment.class.getSimpleName();
+
+    private static final String TAGS = "tags";
+    private static final String SORT_NAME = "sortName";
+    private static final String SEARCH = "search";
+    private static final String NUMBER = "number";
+    private static final String PAGES = "page";
+
+    private static final String HOME_PAGE = "homePage";
+
+    private static final String ID = "id";
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
+
+    @BindString(R.string.load_wait)
+    String DialogMsg;
 
     @BindString(R.string.NoData)
     String NoData;
@@ -71,32 +80,33 @@ public class SuiuuFragment extends BaseFragment {
     @BindString(R.string.SystemException)
     String SystemException;
 
+    private ProgressDialog progressDialog;
+
     @Bind(R.id.trip_image_list_view)
-    PullToRefreshListView pullToRefreshListView;
+    PullToRefreshListView tripImageListView;
 
-    private JsonUtils jsonUtil = JsonUtils.getInstance();
+    private TripImageAdapter adapter;
 
-    private List<SuiuuItemData> listAll = new ArrayList<>();
+    private List<TripImageItemData> listAll = new ArrayList<>();
 
     private int page = 1;
 
-    private TextProgressDialog dialog;
+    private String clickTag = "";
 
-    private ImageView et_suiuu;
-
-    private ShowSuiuuAdapter adapter;
+    /**
+     * 点击了的标签集合
+     */
+    private List<String> tagList = new ArrayList<>();
 
     private boolean isPullToRefresh = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Light_NoTitleBar);
-        inflater.cloneInContext(contextThemeWrapper);
         View rootView = inflater.inflate(R.layout.fragment_trip_image, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        sendRequestSuiuuData(null, null, null, null, null, page);
         viewAction();
+        loadTripImageList(null, "0", null, page);
         return rootView;
     }
 
@@ -107,39 +117,28 @@ public class SuiuuFragment extends BaseFragment {
     }
 
     private void initView() {
-        View topView = getActivity().findViewById(R.id.main_show_layout);
-
-        dialog = new TextProgressDialog(getActivity());
-
-        et_suiuu = (ImageView) topView.findViewById(R.id.main_2_search); //处理头部控件
-
         token = SuiuuInfo.ReadAppTimeSign(getActivity());
 
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage(DialogMsg);
 
-        adapter = new ShowSuiuuAdapter(getActivity(), listAll);
-        pullToRefreshListView.setAdapter(adapter);
+        tripImageListView.setMode(PullToRefreshBase.Mode.BOTH);
+
+        adapter = new TripImageAdapter(getActivity(), listAll, HOME_PAGE, tagList);
+        tripImageListView.setAdapter(adapter);
     }
 
     private void viewAction() {
-        et_suiuu.setOnClickListener(new MyOnclick());
 
-        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+        tripImageListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                page = 1;
-
-                isPullToRefresh = false;
-
-                if (listAll != null && listAll.size() > 0) {
-                    listAll.clear();
-                }
-
-                sendRequestSuiuuData(null, null, null, null, null, page);
+                loadFirstPageData();
             }
 
             @Override
@@ -149,83 +148,129 @@ public class SuiuuFragment extends BaseFragment {
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page++;
-
                 isPullToRefresh = false;
-
-                sendRequestSuiuuData(null, null, null, null, null, page);
+                loadTripImageList("".equals(clickTag) ? null : clickTag, "0", null, page);
             }
         });
 
-        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        tripImageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int location = position - 1;
-                if (AppUtils.isNetworkConnected(getActivity())) {
-                    Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
-                    intent.putExtra("tripId", listAll.get(location - 1).getTripId());
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getActivity(), R.string.lsq_network_connection_interruption, Toast.LENGTH_SHORT).show();
+                if (location > 2) {
+                    if (AppUtils.isNetworkConnected(getActivity())) {
+                        Intent intent = new Intent(getActivity(), TripImageDetailsActivity.class);
+                        intent.putExtra(ID, listAll.get(location - 3).getId());
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getActivity(), R.string.lsq_network_connection_interruption, Toast.LENGTH_SHORT).show();
+                    }
+
                 }
+            }
+
+        });
+
+        adapter.setLoadChoiceTagInterface(new TripImageAdapter.LoadChoiceTag() {
+            @Override
+            public void getClickTagList(List<String> tagList) {
+                TripImageFragment.this.tagList = tagList;
+                clickTag = "";
+
+                if (listAll != null && listAll.size() > 0) {
+                    listAll.clear();
+                }
+
+                for (String clickString : tagList) {
+                    clickTag += clickString + ",";
+                }
+
+                page = 1;
+                isPullToRefresh = false;
+                loadTripImageList(clickTag, "0", null, page);
             }
         });
 
     }
 
-    /**
-     * @param countryOrCity 国家或城市
-     * @param peopleCount   人数
-     * @param tags          标签
-     * @param startPrice    起始价格
-     * @param endPrice      目标价格
-     * @param page          页码
-     */
-    private void sendRequestSuiuuData(String countryOrCity, String peopleCount, String tags, String startPrice, String endPrice, int page) {
-        if (isPullToRefresh) {
-            if (dialog != null && !dialog.isShow())
-                dialog.showDialog();
+    public void loadFirstPageData() {
+        page = 1;
+
+        isPullToRefresh = false;
+
+        if (tagList != null && tagList.size() > 0) {
+            tagList.clear();
         }
 
-        String[] keyArray1 = new String[]{CC, PEOPLE_COUNT, TAGS, START_PRICE, END_PRICE, PAGE, NUMBER, TOKEN};
-        String[] valueArray1 = new String[]{countryOrCity, peopleCount, tags, startPrice, endPrice, Integer.toString(page), "10", token};
-        String url = addUrlAndParams(HttpNewServicePath.getSuiuuList, keyArray1, valueArray1);
+        if (listAll != null && listAll.size() > 0) {
+            listAll.clear();
+        }
+
+        loadTripImageList(null, "0", null, page);
+    }
+
+    /**
+     * 加载旅图列表
+     *
+     * @param tags     标签
+     * @param sortName 排序方式
+     * @param search   搜索内容
+     * @param page     页码
+     */
+    private void loadTripImageList(String tags, String sortName, String search, int page) {
+        if (isPullToRefresh) {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
+
+        String newTag = "";
+
+        if (tags != null && tags.length() > 1) {
+            newTag = tags.substring(0, tags.length() - 1);
+        }
+
+        String[] keyArray1 = new String[]{TAGS, SORT_NAME, SEARCH, PAGES, NUMBER, TOKEN};
+        String[] valueArray1 = new String[]{newTag, sortName, search, Integer.toString(page), "10", token};
+        String url = addUrlAndParams(HttpNewServicePath.getTripImageDataPath, keyArray1, valueArray1);
         try {
-            OkHttpManager.onGetAsynRequest(url, new getSuiuuDateCallBack());
+            OkHttpManager.onGetAsynRequest(url, new loadTripImageListCallBack());
         } catch (IOException e) {
             L.e(TAG, "网络请求异常:" + e.getMessage());
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void hideDialog() {
-        if (dialog != null && dialog.isShow()) {
-            dialog.dismissDialog();
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
         }
 
-        pullToRefreshListView.onRefreshComplete();
+        tripImageListView.onRefreshComplete();
     }
 
     /**
-     * 获取随游列表的回调接口
+     * 获取旅图数据回调接口
      */
-    private class getSuiuuDateCallBack extends OkHttpManager.ResultCallback<String> {
+    private class loadTripImageListCallBack extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onResponse(String response) {
-            if (TextUtils.isEmpty(response)) {
+        public void onResponse(String result) {
+            if (TextUtils.isEmpty(result)) {
                 Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
             } else try {
-                SuiuuData suiuuData = jsonUtil.fromJSON(SuiuuData.class, response);
-                List<SuiuuItemData> list = suiuuData.getData();
+                TripImage tripImage = JsonUtils.getInstance().fromJSON(TripImage.class, result);
+                List<TripImageItemData> list = tripImage.getData().getData();
                 if (list != null && list.size() > 0) {
                     listAll.addAll(list);
-                    adapter.upDateData(listAll);
+                    adapter.updateData(listAll, HOME_PAGE, tagList);
                 } else {
                     Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 try {
-                    JSONObject object = new JSONObject(response);
+                    JSONObject object = new JSONObject(result);
                     String status = object.getString(STATUS);
                     switch (status) {
                         case "-1":
@@ -251,27 +296,11 @@ public class SuiuuFragment extends BaseFragment {
         public void onError(Request request, Exception e) {
             L.e(TAG, "网络请求失败:" + e.getMessage());
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
-            listAll.addAll(JsonUtils.getInstance().fromJSON(SuiuuData.class,
-                    (String) DataCacheUtils.getCacheData(getActivity(), "2").get("data")).getData());
         }
 
         @Override
         public void onFinish() {
             hideDialog();
-        }
-    }
-
-    private class MyOnclick implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.main_2_search:
-                    //跳转到搜索页面
-                    Intent intent = new Intent(getActivity(), SuiuuSearchActivity.class);
-                    intent.putExtra("searchClass", 2);
-                    startActivity(intent);
-                    break;
-            }
         }
     }
 

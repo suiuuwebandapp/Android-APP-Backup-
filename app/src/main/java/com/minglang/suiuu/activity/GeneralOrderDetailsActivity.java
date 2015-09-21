@@ -28,13 +28,13 @@ import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.Inf
 import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.PublisherBaseEntity;
 import com.minglang.suiuu.entity.ServiceInfo;
 import com.minglang.suiuu.entity.TripJsonInfo;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -248,7 +248,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        int paddingParams = Utils.newInstance().dip2px(15, this);
+        int paddingParams = AppUtils.newInstance().dip2px(15, this);
 
         MaterialHeader header = new MaterialHeader(this);
         int[] colors = getResources().getIntArray(R.array.google_colors);
@@ -357,7 +357,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         String[] keyArray = new String[]{ORDER_NUMBER, HttpServicePath.key, TOKEN};
         String[] valueArray = new String[]{orderNumber, verification, token};
         String url = addUrlAndParams(HttpNewServicePath.getGeneralUserOrderDetailsPath, keyArray, valueArray);
-        DeBugLog.i(TAG, "订单数据请求URL:" + url);
+        L.i(TAG, "订单数据请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new OrderDetailsResultCallback());
         } catch (IOException e) {
@@ -632,7 +632,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                 }
 
             } catch (Exception e) {
-                DeBugLog.e(TAG, "数据绑定异常:" + e.getMessage());
+                L.e(TAG, "数据绑定异常:" + e.getMessage());
                 try {
                     JSONObject object = new JSONObject(str);
                     String status = object.getString(STATUS);
@@ -653,14 +653,14 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "返回的数据:" + response);
+            L.i(TAG, "返回的数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             Toast.makeText(GeneralOrderDetailsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }

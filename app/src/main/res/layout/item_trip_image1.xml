@@ -10,7 +10,7 @@
         android:background="@drawable/trip_gallery_search_bg"/>
 
     <TextView
-        android:id="@+id/trip_gallery_search"
+        android:id="@+id/trip_image_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

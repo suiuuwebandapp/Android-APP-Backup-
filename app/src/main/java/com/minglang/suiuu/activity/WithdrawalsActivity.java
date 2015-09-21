@@ -20,10 +20,10 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.AccountInfo;
 import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.interfaces.DetachableListener;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
@@ -212,7 +212,7 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
                     String aliPayAccountName = map.get(SuiuuInfo.A_ACCOUNT_NAME);
                     String aliPayUserName = map.get(SuiuuInfo.A_USER_NAME);
                     alipayAccountId = SuiuuInfo.ReadAliPayAccountId(context);
-                    DeBugLog.i(TAG, "支付宝信息:" + map.toString() + ",id:" + alipayAccountId);
+                    L.i(TAG, "支付宝信息:" + map.toString() + ",id:" + alipayAccountId);
                     if (!TextUtils.isEmpty(aliPayAccountName) && !TextUtils.isEmpty(aliPayUserName)
                             && !TextUtils.isEmpty(alipayAccountId)) {
                         sendWithdrawalsRequest(alipayAccountId, inputMoney);
@@ -234,7 +234,7 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
                     String weChatAccountName = map.get(SuiuuInfo.W_ONLY_ID);
                     String weChatUserName = map.get(SuiuuInfo.W_NICK_NAME);
                     weChatAccountId = SuiuuInfo.ReadWeChatAccountId(context);
-                    DeBugLog.i(TAG, "微信信息:" + map.toString() + ",id:" + weChatAccountId);
+                    L.i(TAG, "微信信息:" + map.toString() + ",id:" + weChatAccountId);
                     if (!TextUtils.isEmpty(weChatAccountName) && !TextUtils.isEmpty(weChatUserName)
                             && !TextUtils.isEmpty(weChatAccountId)) {
                         sendWithdrawalsRequest(weChatAccountId, inputMoney);
@@ -260,9 +260,9 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
         weChatAccountId = SuiuuInfo.ReadWeChatAccountId(context);
 
         if (!TextUtils.isEmpty(aliPayAccountName) && !TextUtils.isEmpty(aliPayUserName) && !TextUtils.isEmpty(alipayAccountId)) {
-            DeBugLog.i(TAG, "支付宝已绑定");
+            L.i(TAG, "支付宝已绑定");
         } else if (!TextUtils.isEmpty(weChatAccountName) && !TextUtils.isEmpty(weChatUserName) && !TextUtils.isEmpty(weChatAccountId)) {
-            DeBugLog.i(TAG, "微信已绑定");
+            L.i(TAG, "微信已绑定");
         } else {
             sendObtainReceivablesWayRequest();
         }
@@ -278,7 +278,7 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
 
         try {
             String url = HttpNewServicePath.getUserBindAccountListData + "?" + TOKEN + "=" + URLEncoder.encode(token, "UTF-8");
-            DeBugLog.i(TAG, "获取收款方式的URL:" + url);
+            L.i(TAG, "获取收款方式的URL:" + url);
             OkHttpManager.onGetAsynRequest(url, new ObtainReceivablesWayResultCallback());
         } catch (Exception e) {
             e.printStackTrace();
@@ -321,7 +321,7 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
         paramsArray[1] = new OkHttpManager.Params(NAME, userName);
 
         String url = HttpNewServicePath.addAliPayUserInfo + "?" + TOKEN + "=" + token;
-        DeBugLog.i(TAG, "绑定支付宝:" + url);
+        L.i(TAG, "绑定支付宝:" + url);
 
         try {
             OkHttpManager.onPostAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
@@ -353,14 +353,14 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
                             }
                         }
                     } catch (Exception e) {
-                        DeBugLog.e(TAG, "绑定支付宝数据解析异常:" + e.getMessage());
+                        L.e(TAG, "绑定支付宝数据解析异常:" + e.getMessage());
                         Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onError(Request request, Exception e) {
-                    DeBugLog.e(TAG, "绑定支付宝失败:" + e.getMessage());
+                    L.e(TAG, "绑定支付宝失败:" + e.getMessage());
                     Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
                 }
 
@@ -373,7 +373,7 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
 
         } catch (IOException e) {
             hideBindDialog();
-            DeBugLog.e(TAG, "绑定支付宝网络请求失败:" + e.getMessage());
+            L.e(TAG, "绑定支付宝网络请求失败:" + e.getMessage());
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
@@ -399,14 +399,14 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
         OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[2];
         paramsArray[0] = new OkHttpManager.Params(ACCOUNT_ID, accountName);
         paramsArray[1] = new OkHttpManager.Params(MONEY, money);
-        DeBugLog.i(TAG, "提现请求账户:" + accountName + ",提现请求金额:" + money);
+        L.i(TAG, "提现请求账户:" + accountName + ",提现请求金额:" + money);
 
         try {
             String url = HttpNewServicePath.getDrawMoneyDataPath + "?" + TOKEN + "=" + token;
-            DeBugLog.i(TAG, "提现请求URL:" + url);
+            L.i(TAG, "提现请求URL:" + url);
             OkHttpManager.onPostAsynRequest(url, new WithdrawalsResultCallback(), paramsArray);
         } catch (Exception e) {
-            DeBugLog.e(TAG, "提现请求网络错误:" + e.getMessage());
+            L.e(TAG, "提现请求网络错误:" + e.getMessage());
             Toast.makeText(context, NetworkException, Toast.LENGTH_SHORT).show();
         }
 
@@ -434,7 +434,7 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        DeBugLog.i(TAG, "onDetachedFromWindow");
+        L.i(TAG, "onDetachedFromWindow");
     }
 
     /**
@@ -444,7 +444,7 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "已绑定的收款方式数据:" + response);
+            L.i(TAG, "已绑定的收款方式数据:" + response);
             if (TextUtils.isEmpty(response)) {
                 obtainReceivablesWayFailure();
                 Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
@@ -457,14 +457,14 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
                             if (data.getType().equals("1")) {
                                 String accountName = data.getAccount();
                                 String userName = data.getUsername();
-                                DeBugLog.i(TAG, "WeChatAccountName:" + accountName + ",WeChatUserName:" + userName);
+                                L.i(TAG, "WeChatAccountName:" + accountName + ",WeChatUserName:" + userName);
                                 SuiuuInfo.WriteWeChatInfo(context, accountName, userName);
                                 weChatAccountId = data.getAccountId();
                                 SuiuuInfo.WriteWeChatAccountId(context, weChatAccountId);
                             } else if (data.getType().equals("2")) {
                                 String accountName = data.getAccount();
                                 String userName = data.getUsername();
-                                DeBugLog.i(TAG, "AliPayAccountName:" + accountName + ",AliPayUserName:" + userName);
+                                L.i(TAG, "AliPayAccountName:" + accountName + ",AliPayUserName:" + userName);
                                 SuiuuInfo.WriteAliPayInfo(context, accountName, userName);
                                 alipayAccountId = data.getAccountId();
                                 SuiuuInfo.WriteAliPayAccountId(context, alipayAccountId);
@@ -479,7 +479,7 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
                 }
             } catch (Exception e) {
                 obtainReceivablesWayFailure();
-                DeBugLog.e(TAG, "已绑定的收款方式数据解析错误:" + e.getMessage());
+                L.e(TAG, "已绑定的收款方式数据解析错误:" + e.getMessage());
                 Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
             }
         }
@@ -487,7 +487,7 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
         @Override
         public void onError(Request request, Exception e) {
             obtainReceivablesWayFailure();
-            DeBugLog.e(TAG, "获取已绑定的收款方式网络请求失败:" + e.getMessage());
+            L.e(TAG, "获取已绑定的收款方式网络请求失败:" + e.getMessage());
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
@@ -505,7 +505,7 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "提现请求返回的数据:" + response);
+            L.i(TAG, "提现请求返回的数据:" + response);
             if (TextUtils.isEmpty(response)) {
                 Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
             } else try {
@@ -532,14 +532,14 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
                     }
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "提现请求数据解析错误:" + e.getMessage());
+                L.e(TAG, "提现请求数据解析错误:" + e.getMessage());
                 Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "提现请求网络请求失败:" + e.getMessage());
+            L.e(TAG, "提现请求网络请求失败:" + e.getMessage());
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 

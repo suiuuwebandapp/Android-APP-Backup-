@@ -13,14 +13,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.TripGalleryAdapter;
+import com.minglang.suiuu.adapter.TripImageAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.ReFlashListView;
 import com.minglang.suiuu.customview.TextProgressDialog;
-import com.minglang.suiuu.entity.TripGallery;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.entity.TripImage;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
@@ -55,9 +55,9 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
     private String clickTag;
     private int page = 1;
     private RelativeLayout rl_common_nodata;
-    private TripGalleryAdapter adapter;
+    private TripImageAdapter adapter;
     private ReFlashListView rfv_trip_gallery_search;
-    private List<TripGallery.DataEntity.TripGalleryDataInfo> tripGalleryList;
+    private List<TripImage.TripImageData.TripImageItemData> tripGalleryList;
     private List<ImageView> clickImageList;
     private List<ImageView> imageList;
     private List<String> clickString;
@@ -138,7 +138,7 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
         rfv_trip_gallery_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(TripGallerySearchActivity.this, TripGalleryDetailsActivity.class);
+                Intent intent = new Intent(TripGallerySearchActivity.this, TripImageDetailsActivity.class);
                 intent.putExtra("id", tripGalleryList.get(position-1).getId());
                 startActivity(intent);
             }
@@ -154,7 +154,7 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
         String[] keyArray1 = new String[]{TAGS, SORT_NAME, SEARCH, PAGES, NUMBER, "token"};
         String[] valueArray1 = new String[]{tagnew, sortName, search, Integer.toString(page), "10", SuiuuInfo.ReadAppTimeSign(TripGallerySearchActivity.this)};
         try {
-            OkHttpManager.onGetAsynRequest(addUrlAndParams(HttpNewServicePath.getTripGalleryList, keyArray1, valueArray1), new loadTripGalleryListCallBack());
+            OkHttpManager.onGetAsynRequest(addUrlAndParams(HttpNewServicePath.getTripImageDataPath, keyArray1, valueArray1), new loadTripGalleryListCallBack());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -177,8 +177,8 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
                 JSONObject json = new JSONObject(result);
                 int status = (int) json.get("status");
                 if (status == 1) {
-                    TripGallery tripGallery = JsonUtils.getInstance().fromJSON(TripGallery.class, result);
-                    List<TripGallery.DataEntity.TripGalleryDataInfo> data = tripGallery.getData().getData();
+                    TripImage tripImage = JsonUtils.getInstance().fromJSON(TripImage.class, result);
+                    List<TripImage.TripImageData.TripImageItemData> data = tripImage.getData().getData();
                     if (data.size() < 1) {
                         if (!TextUtils.isEmpty(clickTag) && page == 1) {
                             rfv_trip_gallery_search.setVisibility(View.GONE);
@@ -202,15 +202,15 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
         }
     }
 
-    private void showList(List<TripGallery.DataEntity.TripGalleryDataInfo> tripGalleryList) {
+    private void showList(List<TripImage.TripImageData.TripImageItemData> tripGalleryList) {
         List<String> templeList = new ArrayList<>();
         if (adapter == null) {
             rfv_trip_gallery_search.setInterface(this);
             rfv_trip_gallery_search.setLoadMoreInterface(this);
-            adapter = new TripGalleryAdapter(this, tripGalleryList,"",templeList);
+            adapter = new TripImageAdapter(this, tripGalleryList,"",templeList);
             rfv_trip_gallery_search.setAdapter(adapter);
         } else {
-            adapter.onDateChange(tripGalleryList,"",templeList);
+            adapter.updateData(tripGalleryList, "", templeList);
         }
     }
 

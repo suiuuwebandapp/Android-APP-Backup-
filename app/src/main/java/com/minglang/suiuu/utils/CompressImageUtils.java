@@ -21,12 +21,10 @@ import java.io.IOException;
  * 修改时间：2015/5/21 13:15
  * 修改备注：
  */
-public class CompressImageUtil {
+public class CompressImageUtils {
 
-    /*
-压缩图片，处理某些手机拍照角度旋转的问题
-*/
-    public static String compressImage( String filePath, String fileName, int q) throws FileNotFoundException {
+    //压缩图片，处理某些手机拍照角度旋转的问题
+    public static String compressImage(String filePath, String fileName, int q) throws FileNotFoundException {
 
         Bitmap bm = getSmallBitmap(filePath);
 
@@ -36,13 +34,12 @@ public class CompressImageUtil {
             bm = rotateBitmap(bm, degree);
         }
         File imageDir = Environment.getExternalStorageDirectory();
-//        File imageDir = SDCardUtils.getImageDir(context);
 
         File outputFile = new File(imageDir, fileName);
 
         FileOutputStream out = new FileOutputStream(outputFile);
-        bm.compress(Bitmap.CompressFormat.JPEG, q,out);
-        Log.i("suiuu","保存的路劲是"+out.toString() +"fileName="+fileName +"路径="+outputFile.getPath() );
+        bm.compress(Bitmap.CompressFormat.JPEG, q, out);
+        L.i("suiuu", "保存的路劲是" + out.toString() + "fileName=" + fileName + "路径=" + outputFile.getPath());
         return outputFile.getPath();
     }
 
@@ -99,7 +96,7 @@ public class CompressImageUtil {
         return degree;
     }
 
-    public static Bitmap rotateBitmap(Bitmap bitmap,int degress) {
+    public static Bitmap rotateBitmap(Bitmap bitmap, int degress) {
         if (bitmap != null) {
             Matrix m = new Matrix();
             m.postRotate(degress);
@@ -109,9 +106,9 @@ public class CompressImageUtil {
         }
         return bitmap;
     }
-    public static String getSDCardPath()
-    {
-        return Environment.getExternalStorageDirectory().getAbsolutePath()
-                + File.separator;
+
+    public static String getSDCardPath() {
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
     }
+
 }

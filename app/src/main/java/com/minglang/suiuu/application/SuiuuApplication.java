@@ -28,8 +28,8 @@ import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.koushikdutta.WebSocketClient;
 import com.minglang.suiuu.crash.GlobalCrashHandler;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 
 import org.apache.http.message.BasicNameValuePair;
 import org.lasque.tusdk.core.TuSdkApplication;
@@ -91,13 +91,13 @@ public class SuiuuApplication extends TuSdkApplication {
         try {
             webSocketClient = new WebSocketClient(URI.create(HttpNewServicePath.SocketPath), new InitListener(), extraHeaders);
         } catch (Exception e) {
-            DeBugLog.e(TAG, "WebSocketClient初始化异常:" + e.getMessage());
+            L.e(TAG, "WebSocketClient初始化异常:" + e.getMessage());
         }
 
         try {
             webSocketClient.connect();
         } catch (Exception e) {
-            DeBugLog.e(TAG, "WebSocketClient连接异常:" + e.getMessage());
+            L.e(TAG, "WebSocketClient连接异常:" + e.getMessage());
         }
 
     }
@@ -158,7 +158,7 @@ public class SuiuuApplication extends TuSdkApplication {
 
         @Override
         public void onConnect() {
-            DeBugLog.i(TAG, "onConnect()");
+            L.i(TAG, "onConnect()");
 
             Intent intent = new Intent(CONNECT);
             intent.putExtra(CONNECT, "Socket连接已建立");
@@ -167,7 +167,7 @@ public class SuiuuApplication extends TuSdkApplication {
 
         @Override
         public void onMessage(String message) {
-            DeBugLog.i(TAG, "String Message:" + message);
+            L.i(TAG, "String Message:" + message);
 
             Intent intent = new Intent(STRING_MESSAGE);
             intent.putExtra(STRING_MESSAGE, message);
@@ -177,7 +177,7 @@ public class SuiuuApplication extends TuSdkApplication {
         @Override
         public void onMessage(byte[] data) {
             String str = new String(data);
-            DeBugLog.i(TAG, "byte[] Message:" + str);
+            L.i(TAG, "byte[] Message:" + str);
 
             Intent intent = new Intent(BYTE_MESSAGE);
             intent.putExtra(BYTE_MESSAGE, str);
@@ -186,7 +186,7 @@ public class SuiuuApplication extends TuSdkApplication {
 
         @Override
         public void onDisconnect(int code, String reason) {
-            DeBugLog.i(TAG, "onDisconnect(),code:" + code + ",reason:" + reason);
+            L.i(TAG, "onDisconnect(),code:" + code + ",reason:" + reason);
 
             Intent intent = new Intent(DISCONNECT);
             intent.putExtra(DISCONNECT_CODE, code);
@@ -196,7 +196,7 @@ public class SuiuuApplication extends TuSdkApplication {
 
         @Override
         public void onError(Exception error) {
-            DeBugLog.e(TAG, "onError(),error:" + error.getMessage());
+            L.e(TAG, "onError(),error:" + error.getMessage());
 
             Intent intent = new Intent(ERROR);
             intent.putExtra(ERROR, error);

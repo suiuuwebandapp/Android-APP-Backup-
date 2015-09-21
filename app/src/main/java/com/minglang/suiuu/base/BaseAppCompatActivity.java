@@ -6,7 +6,7 @@ import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 
 import java.net.URLEncoder;
 
@@ -74,7 +74,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             try {
                 value = URLEncoder.encode(valueArray[i], "UTF-8");
             } catch (Exception e) {
-                DeBugLog.e(TAG, e.getMessage());
+                L.e(TAG, e.getMessage());
                 value = "";
             }
 

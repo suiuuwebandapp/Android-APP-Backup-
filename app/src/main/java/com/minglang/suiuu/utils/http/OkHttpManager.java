@@ -1,4 +1,4 @@
-package com.minglang.suiuu.utils;
+package com.minglang.suiuu.utils.http;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.internal.$Gson$Types;
+import com.minglang.suiuu.utils.L;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -284,13 +285,13 @@ public class OkHttpManager {
                     try {
                         if (is != null) is.close();
                     } catch (IOException e) {
-                        DeBugLog.e(TAG, "IOException:" + e.getMessage());
+                        L.e(TAG, "IOException:" + e.getMessage());
                     }
 
                     try {
                         if (fos != null) fos.close();
                     } catch (IOException e) {
-                        DeBugLog.e(TAG, "IOException:" + e.getMessage());
+                        L.e(TAG, "IOException:" + e.getMessage());
                     }
                 }
 
@@ -654,7 +655,7 @@ public class OkHttpManager {
                 try {
                     value = URLEncoder.encode(valueArray[i], "UTF-8");
                 } catch (Exception e) {
-                    DeBugLog.e(TAG, e.getMessage());
+                    L.e(TAG, e.getMessage());
                     value = "";
                 }
                 if (keyArray.length > i + 1) {

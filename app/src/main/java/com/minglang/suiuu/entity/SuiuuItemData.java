@@ -9,7 +9,8 @@ package com.minglang.suiuu.entity;
  * 修改时间：2015/5/4 12:35
  * 修改备注：
  */
-public class SuiuuDataList {
+public class SuiuuItemData {
+
     private String tripId;
     private String createPublisherId;
     private String createTime;
@@ -245,35 +246,4 @@ public class SuiuuDataList {
         return ename;
     }
 
-    @Override
-    public String toString() {
-        return "SuiuuDataList{" +
-                "tripId='" + tripId + '\'' +
-                ", createPublisherId='" + createPublisherId + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", title='" + title + '\'' +
-                ", titleImg='" + titleImg + '\'' +
-                ", countryId='" + countryId + '\'' +
-                ", cityId='" + cityId + '\'' +
-                ", lon='" + lon + '\'' +
-                ", lat='" + lat + '\'' +
-                ", basePrice='" + basePrice + '\'' +
-                ", maxUserCount='" + maxUserCount + '\'' +
-                ", isAirplane='" + isAirplane + '\'' +
-                ", isHotel='" + isHotel + '\'' +
-                ", score='" + score + '\'' +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", travelTime='" + travelTime + '\'' +
-                ", travelTimeType='" + travelTimeType + '\'' +
-                ", intro='" + intro + '\'' +
-                ", info='" + info + '\'' +
-                ", tags='" + tags + '\'' +
-                ", status='" + status + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", headImg='" + headImg + '\'' +
-                ", cname='" + cname + '\'' +
-                ", ename='" + ename + '\'' +
-                '}';
-    }
 }

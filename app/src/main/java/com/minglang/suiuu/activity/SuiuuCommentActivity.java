@@ -17,10 +17,10 @@ import com.minglang.suiuu.adapter.SuiuuCommentAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.SuiuuComment;
 import com.minglang.suiuu.entity.SuiuuComment.SuiuuCommentData.SuiuuCommentItemData;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
@@ -139,7 +139,7 @@ public class SuiuuCommentActivity extends BaseAppCompatActivity {
         String[] keyArray = new String[]{USER_SIGN, TOKEN, PAGE, NUMBER};
         String[] valueArray = new String[]{userSign, token, String.valueOf(page), String.valueOf(10)};
         String url = addUrlAndParams(HttpNewServicePath.getPersonalSuiuuCommentPath, keyArray, valueArray);
-        DeBugLog.i(TAG, "随游评论请求URL:" + url);
+        L.i(TAG, "随游评论请求URL:" + url);
 
         try {
             OkHttpManager.onGetAsynRequest(url, new SuiuuCommentResultCallback());
@@ -202,7 +202,7 @@ public class SuiuuCommentActivity extends BaseAppCompatActivity {
 
             } catch (Exception e) {
                 failureLessPage();
-                DeBugLog.e(TAG, "解析错误:" + e.getMessage());
+                L.e(TAG, "解析错误:" + e.getMessage());
                 try {
                     JSONObject object = new JSONObject(str);
                     String status = object.getString(STATUS);
@@ -236,14 +236,14 @@ public class SuiuuCommentActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "返回的评论数据:" + response);
+            L.i(TAG, "返回的评论数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(SuiuuCommentActivity.this, NetworkError, Toast.LENGTH_SHORT).show();

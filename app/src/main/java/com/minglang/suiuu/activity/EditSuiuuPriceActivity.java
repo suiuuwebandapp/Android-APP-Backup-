@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -55,7 +55,7 @@ public class EditSuiuuPriceActivity extends BaseAppCompatActivity {
 
     private void initView() {
         String oldPrice = oldIntent.getStringExtra(OLD_PRICE);
-        DeBugLog.i(TAG, "Old Price:" + oldPrice);
+        L.i(TAG, "Old Price:" + oldPrice);
 
         toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);

@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_suiuu_details_comment_number"
+        android:id="@+id/suiuu_details_comment_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/layout_5dp"
@@ -19,7 +19,7 @@
     <include layout="@layout/view_line" />
 
     <LinearLayout
-        android:id="@+id/ll_suiuu_details_input_comment"
+        android:id="@+id/suiuu_details_input_comment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/layout_8dp"
@@ -43,7 +43,7 @@
                 fresco:roundAsCircle="true" />
 
             <EditText
-                android:id="@+id/et_suiuu_details_comment"
+                android:id="@+id/suiuu_details_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -60,7 +60,7 @@
         <include layout="@layout/view_line" />
 
         <com.minglang.suiuu.customview.NoScrollBarListView
-            android:id="@+id/lv_suiuu_details_comment"
+            android:id="@+id/suiuu_details_comment_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:cacheColorHint="@color/transparent"
@@ -71,7 +71,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_suiuu_details_no_comment"
+        android:id="@+id/suiuu_details_no_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/layout_15dp"
@@ -94,7 +94,7 @@
             android:textSize="@dimen/layout_15sp" />
 
         <TextView
-            android:id="@+id/tv_to_comment_activity"
+            android:id="@+id/to_comment_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

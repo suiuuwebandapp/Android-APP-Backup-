@@ -14,10 +14,10 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.NewApply;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.HttpServicePath;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.squareup.okhttp.Request;
@@ -199,7 +199,7 @@ public class NewApplyForAdapter extends BaseAdapter {
                         Toast.makeText(context, context.getResources().getString(R.string.NetworkError), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                    L.e(TAG, "解析失败:" + e.getMessage());
                     hideDialog();
                     Toast.makeText(context, context.getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                 }
@@ -208,7 +208,7 @@ public class NewApplyForAdapter extends BaseAdapter {
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             Toast.makeText(context, context.getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }
@@ -244,7 +244,7 @@ public class NewApplyForAdapter extends BaseAdapter {
                         Toast.makeText(context, context.getResources().getString(R.string.DataError), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                    L.e(TAG, "解析失败:" + e.getMessage());
                     Toast.makeText(context, context.getResources().getString(R.string.DataException), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -252,7 +252,7 @@ public class NewApplyForAdapter extends BaseAdapter {
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             Toast.makeText(context, context.getResources().getString(R.string.NetworkAnomaly), Toast.LENGTH_SHORT).show();
         }

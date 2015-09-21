@@ -11,9 +11,9 @@ import android.widget.Toast;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
@@ -71,7 +71,7 @@ public class AnswerActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_answer);
 
         qID = getIntent().getStringExtra(Q_ID);
-        DeBugLog.i(TAG, "问题ID:" + qID);
+        L.i(TAG, "问题ID:" + qID);
 
         ButterKnife.bind(this);
         initView();
@@ -88,7 +88,7 @@ public class AnswerActivity extends BaseAppCompatActivity {
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
 
-        DeBugLog.i(TAG, "verification:" + verification + ",token:" + token);
+        L.i(TAG, "verification:" + verification + ",token:" + token);
     }
 
     /**
@@ -166,7 +166,7 @@ public class AnswerActivity extends BaseAppCompatActivity {
         @Override
         public void onResponse(String response) {
             hideDialog();
-            DeBugLog.i(TAG, "response:" + response);
+            L.i(TAG, "response:" + response);
             try {
                 JSONObject object = new JSONObject(response);
                 String status = object.getString(STATUS);
@@ -177,14 +177,14 @@ public class AnswerActivity extends BaseAppCompatActivity {
                     Toast.makeText(AnswerActivity.this, NetWorkError, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "解析数据异常:" + e.getMessage());
+                L.e(TAG, "解析数据异常:" + e.getMessage());
                 Toast.makeText(AnswerActivity.this, NetWorkError, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "request:" + request.toString() + ",Exception:" + e.getMessage());
+            L.e(TAG, "request:" + request.toString() + ",Exception:" + e.getMessage());
             hideDialog();
             Toast.makeText(AnswerActivity.this, NetWorkError, Toast.LENGTH_SHORT).show();
         }

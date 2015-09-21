@@ -12,7 +12,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.OrderManage.OrderManageData;
 import com.minglang.suiuu.entity.TripJsonInfo;
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ViewHolder;
 
@@ -102,7 +102,7 @@ public class OrderListManageAdapter extends BaseAdapter {
                     titleView.setText("暂无标题");
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "数据绑定Error:" + e.getMessage());
+                L.e(TAG, "数据绑定Error:" + e.getMessage());
             }
 
             String totalPrice = newOrderData.getTotalPrice();

@@ -9,7 +9,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.CompletedOrder;
 import com.minglang.suiuu.entity.TripJsonInfo;
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ViewHolder;
 
@@ -49,7 +49,7 @@ public class CompletedAdapter extends BaseHolderAdapter<CompletedOrder.Completed
             title = tripJsonInfo.getInfo().getTitle();
             beginDate = item.getBeginDate();
         } catch (Exception e) {
-            DeBugLog.e(TAG, "已完成的订单第" + position + "条的数据解析异常:" + e.getMessage());
+            L.e(TAG, "已完成的订单第" + position + "条的数据解析异常:" + e.getMessage());
         } finally {
             if (!TextUtils.isEmpty(mainImagePath)) {
                 Uri uri = Uri.parse(mainImagePath);

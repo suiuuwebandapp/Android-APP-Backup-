@@ -14,9 +14,9 @@ import android.widget.Toast;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
@@ -141,7 +141,7 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
         paramsArray[1] = new OkHttpManager.Params(NAME, userName);
 
         String url = HttpNewServicePath.addAliPayUserInfo + "?" + TOKEN + "=" + token;
-        DeBugLog.i(TAG, "绑定支付宝的URL:" + url);
+        L.i(TAG, "绑定支付宝的URL:" + url);
 
         try {
             OkHttpManager.onPostAsynRequest(url, new AddReceivablesWayResultCallback(), paramsArray);
@@ -184,7 +184,7 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "返回信息:" + response);
+            L.i(TAG, "返回信息:" + response);
             hideDialog();
             if (TextUtils.isEmpty(response)) {
                 Toast.makeText(context, NoData, Toast.LENGTH_LONG).show();
@@ -211,14 +211,14 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
                     }
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "数据解析异常:" + e.getMessage());
+                L.e(TAG, "数据解析异常:" + e.getMessage());
                 Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "添加支付宝账户异常:" + e.getMessage());
+            L.e(TAG, "添加支付宝账户异常:" + e.getMessage());
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 

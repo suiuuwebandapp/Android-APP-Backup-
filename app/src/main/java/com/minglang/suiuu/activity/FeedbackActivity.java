@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -75,7 +75,7 @@ public class FeedbackActivity extends BaseAppCompatActivity {
                 } else if (TextUtils.isEmpty(contactWay)) {
                     Toast.makeText(FeedbackActivity.this, ContactWayNotNull, Toast.LENGTH_SHORT).show();
                 } else {
-                    DeBugLog.i(TAG, "反馈信息:" + feedbackInfo + ",联系方式:" + contactWay);
+                    L.i(TAG, "反馈信息:" + feedbackInfo + ",联系方式:" + contactWay);
                 }
             }
         });

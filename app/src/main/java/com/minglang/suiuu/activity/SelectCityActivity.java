@@ -23,11 +23,11 @@ import com.minglang.suiuu.entity.CityData;
 import com.minglang.suiuu.entity.HaveAssistCity;
 import com.minglang.suiuu.entity.HaveCity;
 import com.minglang.suiuu.utils.CharacterParser;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.comparator.CityNameComparator;
 import com.minglang.suiuu.utils.comparator.HaveCityNameComparator;
@@ -200,7 +200,7 @@ public class SelectCityActivity extends BaseAppCompatActivity {
 
         String baseUrl = isAllCountry ? HttpNewServicePath.getHaveCityPath : HttpNewServicePath.getCityListPath;
         String url = addUrlAndParams(baseUrl, keyArray, valueArray);
-        DeBugLog.i(TAG, "请求城市的URL:" + url);
+        L.i(TAG, "请求城市的URL:" + url);
 
         try {
             OkHttpManager.onGetAsynRequest(url, isAllCountry ? new HaveCountryResultCallback() : new SelectCityResultCallback());
@@ -275,14 +275,14 @@ public class SelectCityActivity extends BaseAppCompatActivity {
                     Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "数据解析错误:" + e.getMessage());
+                L.e(TAG, "数据解析错误:" + e.getMessage());
                 Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             Toast.makeText(context, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }
 
@@ -311,14 +311,14 @@ public class SelectCityActivity extends BaseAppCompatActivity {
                     Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "数据解析错误:" + e.getMessage());
+                L.e(TAG, "数据解析错误:" + e.getMessage());
                 Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             Toast.makeText(context, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }
 

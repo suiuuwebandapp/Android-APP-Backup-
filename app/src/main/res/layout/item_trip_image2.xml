@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -10,9 +12,9 @@
         android:drawablePadding="@dimen/layout_10dp"
         android:drawableStart="@drawable/small_tag"
         android:padding="@dimen/layout_5dp"
-        android:text="标签"
+        android:text="@string/Tag"
         android:textColor="@color/mainColor"
-        android:textSize="@dimen/layout_18sp"/>
+        android:textSize="@dimen/layout_18sp" />
 
     <HorizontalScrollView
         android:layout_width="wrap_content"
@@ -20,12 +22,12 @@
         android:scrollbars="none">
 
         <LinearLayout
-            android:id="@+id/galleryLinearLayout"
+            android:id="@+id/show_image_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/white"
             android:gravity="center_horizontal"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal" />
 
     </HorizontalScrollView>
 

@@ -27,11 +27,11 @@ import com.minglang.suiuu.fragment.main.ProblemFragment;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.CharacterParser;
 import com.minglang.suiuu.utils.comparator.CountryNameComparator;
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.comparator.HaveCountryNameComparator;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
@@ -124,7 +124,7 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
         ButterKnife.bind(this);
 
         String otherTag = getIntent().getStringExtra(OTHER_TAG);
-        DeBugLog.i(TAG, "otherTag:" + otherTag);
+        L.i(TAG, "otherTag:" + otherTag);
         if (!TextUtils.isEmpty(otherTag) && otherTag.equals(ProblemFragment.class.getSimpleName())) isAllCountry = true;
 
         initView();
@@ -199,7 +199,7 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
 
         String baseUrl = isAllCountry ? HttpNewServicePath.getHaveCountryPath : HttpNewServicePath.getCountryData;
         String url = baseUrl + "?" + HttpNewServicePath.key + "=" + verification + "&" + TOKEN + "=" + token;
-        DeBugLog.i(TAG, "请求URL:" + url);
+        L.i(TAG, "请求URL:" + url);
 
         try {
             OkHttpManager.onGetAsynRequest(url,
@@ -225,10 +225,10 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
             String cityId = data.getStringExtra(CITY_ID);
             String cityName = data.getStringExtra(CITY_NAME);
 
-            DeBugLog.i(TAG, "countryId:" + countryId);
-            DeBugLog.i(TAG, "countryCNname:" + countryCNname);
-            DeBugLog.i(TAG, "cityId:" + cityId);
-            DeBugLog.i(TAG, "cityName:" + cityName);
+            L.i(TAG, "countryId:" + countryId);
+            L.i(TAG, "countryCNname:" + countryCNname);
+            L.i(TAG, "cityId:" + cityId);
+            L.i(TAG, "cityName:" + cityName);
 
             setResult(RESULT_OK, data);
             finish();
@@ -280,7 +280,7 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "返回的国家信息数据:" + response);
+            L.i(TAG, "返回的国家信息数据:" + response);
             if (TextUtils.isEmpty(response)) {
                 Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
             } else try {
@@ -295,7 +295,7 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
                     Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                L.e(TAG, "解析失败:" + e.getMessage());
                 Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
             }
 
@@ -303,7 +303,7 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "国家数据请求失败:" + e.getMessage());
+            L.e(TAG, "国家数据请求失败:" + e.getMessage());
             Toast.makeText(context, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }
 
@@ -318,7 +318,7 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "返回已有的国家信息数据:" + response);
+            L.i(TAG, "返回已有的国家信息数据:" + response);
             if (TextUtils.isEmpty(response)) {
                 Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
             } else try {
@@ -333,14 +333,14 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
                     Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "解析失败:" + e.getMessage());
+                L.e(TAG, "解析失败:" + e.getMessage());
                 Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "已有的国家数据请求失败:" + e.getMessage());
+            L.e(TAG, "已有的国家数据请求失败:" + e.getMessage());
             Toast.makeText(context, NetworkAnomaly, Toast.LENGTH_SHORT).show();
         }
 

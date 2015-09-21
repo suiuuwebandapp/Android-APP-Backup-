@@ -21,10 +21,10 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.PrivateLetterAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.PrivateLetter;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
@@ -174,13 +174,13 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
         try {
             String url = HttpNewServicePath.getPrivateLetterListPath + "?" + TOKEN
                     + "=" + URLEncoder.encode(token, "UTF-8");
-            DeBugLog.i(TAG, "请求URL:" + url);
+            L.i(TAG, "请求URL:" + url);
 
             OkHttpManager.onGetAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
 
                 @Override
                 public void onResponse(String response) {
-                    DeBugLog.i(TAG, "私信列表数据:" + response);
+                    L.i(TAG, "私信列表数据:" + response);
                     if (TextUtils.isEmpty(response)) {
                         Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                     } else try {
@@ -193,7 +193,7 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
                             Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
-                        DeBugLog.e(TAG, "数据解析失败:" + e.getMessage());
+                        L.e(TAG, "数据解析失败:" + e.getMessage());
                         try {
                             JSONObject object = new JSONObject(response);
                             String status = object.getString(STATUS);
@@ -213,7 +213,7 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
 
                 @Override
                 public void onError(Request request, Exception e) {
-                    DeBugLog.e(TAG, "网络请求失败:" + e.getMessage());
+                    L.e(TAG, "网络请求失败:" + e.getMessage());
                     Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
                 }
 
@@ -224,7 +224,7 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
 
             });
         } catch (Exception e) {
-            DeBugLog.e(TAG, "网络请求异常:" + e.getMessage());
+            L.e(TAG, "网络请求异常:" + e.getMessage());
             hideDialog();
         }
     }

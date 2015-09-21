@@ -19,10 +19,10 @@ import com.minglang.suiuu.adapter.AccountManageAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.TransferAccounts;
 import com.minglang.suiuu.entity.TransferAccounts.TransferAccountsData.TransferAccountsItemData;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
@@ -159,7 +159,7 @@ public class AccountManagerActivity extends BaseAppCompatActivity {
         }
 
         String url = HttpNewServicePath.getUserAccountInfoPath + "?" + TOKEN + "=" + token;
-        DeBugLog.i(TAG, "提现记录URL:" + url);
+        L.i(TAG, "提现记录URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new AccountManagerResultCallback());
         } catch (IOException e) {
@@ -196,17 +196,17 @@ public class AccountManagerActivity extends BaseAppCompatActivity {
                             listAll.addAll(list);
                             adapter.setList(listAll);
                         } else {
-                            DeBugLog.e(TAG, "集合数据为空");
+                            L.e(TAG, "集合数据为空");
                             Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
-                    DeBugLog.e(TAG, "返回数据为空");
+                    L.e(TAG, "返回数据为空");
                     Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 hideDialog();
-                DeBugLog.e(TAG, "数据解析异常:" + e.getMessage());
+                L.e(TAG, "数据解析异常:" + e.getMessage());
                 try {
                     JSONObject object = new JSONObject(str);
                     String status = object.getString(STATUS);
@@ -239,14 +239,14 @@ public class AccountManagerActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "账户信息:" + response);
+            L.i(TAG, "账户信息:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "错误信息:" + e.getMessage());
+            L.e(TAG, "错误信息:" + e.getMessage());
             hideDialog();
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }

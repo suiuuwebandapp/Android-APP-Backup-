@@ -1,4 +1,4 @@
-package com.minglang.suiuu.utils;
+package com.minglang.suiuu.utils.http;
 
 /**
  * Created by Administrator on 2015/8/25.
@@ -440,7 +440,7 @@ public class HttpNewServicePath {
     /**
      * 得到旅图列表
      */
-    public static String getTripGalleryList = RootPath + "/app-travel-picture/get-list";
+    public static String getTripImageDataPath = RootPath + "/app-travel-picture/get-list";
 
     /**
      * 收藏旅图

@@ -61,6 +61,8 @@
     <string name="UseHelp" translatable="false">使用帮助</string>
     <string name="CheckUpdate" translatable="false">检查更新</string>
 
+    <string name="Tag" translatable="false">标签</string>
+
     <string name="WebSite" translatable="false">网址</string>
     <string name="Phone" translatable="false">电话</string>
     <string name="Address" translatable="false">地址</string>
@@ -510,6 +512,7 @@
     <string name="tempStreet" translatable="false">香榭丽大道</string>
     <string name="tempLove" translatable="false">猜你喜欢</string>
     <string name="tempMoney" translatable="false">2000.0</string>
+    <string name="tempCount" translatable="false">50</string>
 
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
     <string name="pull_to_refresh_release_label">Release rear refresh</string>

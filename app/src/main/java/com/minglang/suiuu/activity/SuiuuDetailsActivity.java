@@ -32,12 +32,11 @@ import com.minglang.suiuu.dbhelper.DbHelper;
 import com.minglang.suiuu.entity.SuiuuDetailsData;
 import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
-import com.minglang.suiuu.utils.AppUtils;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -95,7 +94,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     ImageView back;
 
     //显示评论总数
-    @Bind(R.id.tv_suiuu_details_comment_number)
+    @Bind(R.id.suiuu_details_comment_number)
     TextView tv_suiuu_detail_comment_number;
 
     //评论头像
@@ -103,11 +102,11 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     SimpleDraweeView sdv_comment_head_img;
 
     //评论输入框
-    @Bind(R.id.et_suiuu_details_comment)
+    @Bind(R.id.suiuu_details_comment)
     EditText et_suiuu_detail_comment;
 
     //评论显示列表
-    @Bind(R.id.lv_suiuu_details_comment)
+    @Bind(R.id.suiuu_details_comment_list_view)
     NoScrollBarListView suiuu_detail_comment;
 
     //咨询按钮
@@ -120,13 +119,13 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
     private SuiuuDetailsData detailsData;
 
-    @Bind(R.id.tv_to_comment_activity)
+    @Bind(R.id.to_comment_activity)
     TextView to_comment_activity;
 
-    @Bind(R.id.ll_suiuu_details_no_comment)
+    @Bind(R.id.suiuu_details_no_comment)
     LinearLayout suiuu_detail_no_comment;
 
-    @Bind(R.id.ll_suiuu_details_input_comment)
+    @Bind(R.id.suiuu_details_input_comment)
     LinearLayout suiuu_detail_input_comment;
 
     private CommonCommentAdapter adapter;
@@ -333,7 +332,8 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                     fullCommentList();
                 } else if ("-3".equals(status)) {
                     Toast.makeText(SuiuuDetailsActivity.this, LoginInvalid, Toast.LENGTH_SHORT).show();
-                    AppUtils.intentLogin(SuiuuDetailsActivity.this);
+                    Intent intent = new Intent (SuiuuDetailsActivity.this, LoginsMainActivity.class);
+                    SuiuuDetailsActivity.this.startActivity(intent);
                     SuiuuDetailsActivity.this.finish();
                 } else {
                     Toast.makeText(SuiuuDetailsActivity.this, DataRequestFailure, Toast.LENGTH_SHORT).show();
@@ -382,7 +382,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         if (adapter == null) {
             adapter = new CommonCommentAdapter(this, commentDataList.size() > 5 && !showAllCommnet ? newCommentDataList : commentDataList);
             suiuu_detail_comment.setAdapter(adapter);
-            Utils.setListViewHeightBasedOnChildren(suiuu_detail_comment);
+            AppUtils.setListViewHeightBasedOnChildren(suiuu_detail_comment);
         } else {
             adapter.onDateChange(commentDataList.size() > 5 && !showAllCommnet ? newCommentDataList : commentDataList);
         }
@@ -397,13 +397,13 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                 case R.id.sdv_comment_head_img:
                     //跳到个人中心
                     break;
-                case R.id.et_suiuu_details_comment:
+                case R.id.suiuu_details_comment:
                     //跳到评论页
                     Intent intent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
                     intent.putExtra(TRIP_ID, tripId);
                     startActivityForResult(intent, COMMENT_SUCCESS);
                     break;
-                case R.id.tv_to_comment_activity:
+                case R.id.to_comment_activity:
                     //跳到评论页
                     Intent commentIntent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
                     commentIntent.putExtra(TRIP_ID, tripId);

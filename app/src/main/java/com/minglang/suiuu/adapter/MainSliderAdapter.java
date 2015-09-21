@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.ViewHolder;
 
 public class MainSliderAdapter extends BaseAdapter {
@@ -25,7 +25,7 @@ public class MainSliderAdapter extends BaseAdapter {
 
     public void setScreenHeight(int screenHeight) {
         int tempScreenHeight1 = screenHeight / 12;
-        int tempScreenHeight2 = Utils.newInstance().px2dip(60, context);
+        int tempScreenHeight2 = AppUtils.newInstance().px2dip(60, context);
         itemScreenHeight = tempScreenHeight1 > tempScreenHeight2 ? tempScreenHeight1 : tempScreenHeight2;
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
  * 修改时间：2015/7/24 12:11
  * 修改备注：
  */
-public class TripGalleryDetail {
+public class TripImageDetails {
 
     /**
      * data : {"like":[{"country":"中国","titleImg":"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037235_7476.jpg","address":"","headImg":"http://www.suiuu.com/assets/images/user_default.png","city":"北京市","lon":"116.423511","attentionCount":"0","title":"如此的美","tags":"购物  惊险  浪漫  ","commentCount":"1","contents":null,"userSign":"22e64460c94f3b44bc0a8790ed146d3b","createTime":"2015-07-23 16:22:01","picList":"[\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037235_7476.jpg\",\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037235_9280.jpg\",\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037234_3539.jpg\"]","id":"4","lat":"39.949467"}],"attention":[],"comment":[{"tpId":"4","supportCount":"0","headImg":"http://www.suiuu.com/assets/images/user_default.png","userSign":"22e64460c94f3b44bc0a8790ed146d3b","createTime":"2015-07-24 12:10:05","nickname":"15111993537","comment":"哎哟 不错哦","id":"8"}],"info":{"country":"中国","titleImg":"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037235_7476.jpg","address":"","headImg":"http://www.suiuu.com/assets/images/user_default.png","city":"北京市","lon":"116.423511","attentionCount":"0","title":"如此的美","tags":"购物  惊险  浪漫  ","commentCount":"1","contents":null,"userSign":"22e64460c94f3b44bc0a8790ed146d3b","createTime":"2015-07-23 16:22:01","picList":"[\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037235_7476.jpg\",\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037235_9280.jpg\",\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037234_3539.jpg\"]","nickname":"15111993537","id":"4","lat":"39.949467"}}
@@ -19,12 +19,12 @@ public class TripGalleryDetail {
      * status : 1
      * token : 02d4ac6d4814e6dadac076c2197ecf99
      */
-    private DataEntity data;
+    private TripImageDetailsData data;
     private String message;
     private int status;
     private String token;
 
-    public void setData(DataEntity data) {
+    public void setData(TripImageDetailsData data) {
         this.data = data;
     }
 
@@ -40,7 +40,7 @@ public class TripGalleryDetail {
         this.token = token;
     }
 
-    public DataEntity getData() {
+    public TripImageDetailsData getData() {
         return data;
     }
 
@@ -56,7 +56,7 @@ public class TripGalleryDetail {
         return token;
     }
 
-    public class DataEntity {
+    public class TripImageDetailsData {
         /**
          * like : [{"country":"中国","titleImg":"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037235_7476.jpg","address":"","headImg":"http://www.suiuu.com/assets/images/user_default.png","city":"北京市","lon":"116.423511","attentionCount":"0","title":"如此的美","tags":"购物  惊险  浪漫  ","commentCount":"1","contents":null,"userSign":"22e64460c94f3b44bc0a8790ed146d3b","createTime":"2015-07-23 16:22:01","picList":"[\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037235_7476.jpg\",\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037235_9280.jpg\",\"http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037234_3539.jpg\"]","id":"4","lat":"39.949467"}]
          * attention : []
@@ -66,7 +66,7 @@ public class TripGalleryDetail {
         private List<LikeEntity> like;
         private List<AttentionEntity> attention;
         private List<CommentEntity> comment;
-        private InfoEntity info;
+        private TripImageDetailsInfo info;
 
         public void setLike(List<LikeEntity> like) {
             this.like = like;
@@ -80,7 +80,7 @@ public class TripGalleryDetail {
             this.comment = comment;
         }
 
-        public void setInfo(InfoEntity info) {
+        public void setInfo(TripImageDetailsInfo info) {
             this.info = info;
         }
 
@@ -96,7 +96,7 @@ public class TripGalleryDetail {
             return comment;
         }
 
-        public InfoEntity getInfo() {
+        public TripImageDetailsInfo getInfo() {
             return info;
         }
 
@@ -417,7 +417,7 @@ public class TripGalleryDetail {
             }
         }
 
-        public class InfoEntity {
+        public class TripImageDetailsInfo {
             /**
              * country : 中国
              * titleImg : http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_content/1378037235_7476.jpg

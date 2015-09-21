@@ -22,13 +22,13 @@ import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.customview.swipelistview.SwipeListView;
 import com.minglang.suiuu.service.UpdateImageService;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.ScreenUtils;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -183,14 +183,14 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
 
 
         lv_pic_description.setAdapter(adapter);
-        Utils.setListViewHeightBasedOnChildren(lv_pic_description);
+        AppUtils.setListViewHeightBasedOnChildren(lv_pic_description);
 
         verification = SuiuuInfo.ReadVerification(this);
         int layout100dp = (int) getResources().getDimension(R.dimen.layout_100dp);
         int layout16dp = (int) getResources().getDimension(R.dimen.layout_16dp);
-        int itemRemoveBtnWidth = Utils.newInstance().px2dip(layout100dp, this);
+        int itemRemoveBtnWidth = AppUtils.newInstance().px2dip(layout100dp, this);
         int screenWidth = new ScreenUtils(this).getScreenWidth();
-        DeBugLog.i(TAG, "layout100DpToPx=" + layout100dp + ",layout16Dp:" + layout16dp
+        L.i(TAG, "layout100DpToPx=" + layout100dp + ",layout16Dp:" + layout16dp
                 + ",itemRemoveBtnWidthPx=" + itemRemoveBtnWidth + ",screenWidth=" + screenWidth);
         lv_pic_description.setOffsetLeft(screenWidth - layout100dp - layout16dp * 2);
     }
@@ -211,7 +211,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
             EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, picList);
             adapter.setSwipeListView(lv_pic_description);
             lv_pic_description.setAdapter(adapter);
-            Utils.setListViewHeightBasedOnChildren(lv_pic_description);
+            AppUtils.setListViewHeightBasedOnChildren(lv_pic_description);
 
         } else if (data != null && requestCode == REQUEST_CODE_MAP) {
             latitude = data.getDoubleExtra("latitude", 0);
@@ -296,7 +296,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
     class CreateLoopCallBack extends OkHttpManager.ResultCallback<String> {
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + e.toString());
+            L.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + e.toString());
         }
 
         @Override

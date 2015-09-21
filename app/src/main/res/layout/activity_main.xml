@@ -24,7 +24,7 @@
             <include layout="@layout/common_top_layout"/>
 
             <TextView
-                android:id="@+id/rl_net_error"
+                android:id="@+id/network_error_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/layout_50dp"
                 android:drawableLeft="@drawable/icon_main_2_green"

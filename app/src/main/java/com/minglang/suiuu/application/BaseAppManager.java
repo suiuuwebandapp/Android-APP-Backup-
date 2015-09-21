@@ -19,7 +19,7 @@ public class BaseAppManager {
     private static final String TAG = BaseAppManager.class.getSimpleName();
 
     private static BaseAppManager instance = null;
-    private static List<Activity> mActivities = new LinkedList<Activity>();
+    private static List<Activity> mActivities = new LinkedList<>();
 
     private BaseAppManager() {
 

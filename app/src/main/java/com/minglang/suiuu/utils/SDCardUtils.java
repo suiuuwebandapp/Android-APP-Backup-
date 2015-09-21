@@ -56,7 +56,7 @@ public class SDCardUtils {
             }
 
         } catch (Exception e) {
-            DeBugLog.e(TAG, "error:" + e.getMessage());
+            L.e(TAG, "error:" + e.getMessage());
             return null;
         } finally {
             try {
@@ -64,7 +64,7 @@ public class SDCardUtils {
                     fileInputStream.close();
                 }
             } catch (IOException e) {
-                DeBugLog.e(TAG, "I/O stream close error:" + e.getMessage());
+                L.e(TAG, "I/O stream close error:" + e.getMessage());
             }
         }
     }
@@ -97,7 +97,7 @@ public class SDCardUtils {
 
                     if (testWritable.mkdirs()) {
                         if (testWritable.delete()) {
-                            DeBugLog.i(TAG, "Delete Success!");
+                            L.i(TAG, "Delete Success!");
                         }
                     } else {
                         path = null;

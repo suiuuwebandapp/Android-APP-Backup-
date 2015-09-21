@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.text.TextUtils;
 
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SDCardUtils;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
@@ -101,7 +101,7 @@ public class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
                 infoMap.put("versionCode", versionCode);
             }
         } catch (PackageManager.NameNotFoundException e) {
-            DeBugLog.e(TAG, "an error occur when collect package info", e);
+            L.e(TAG, "an error occur when collect package info", e);
         }
 
         Field[] fields = Build.class.getDeclaredFields();
@@ -109,9 +109,8 @@ public class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
             try {
                 field.setAccessible(true);
                 infoMap.put(field.getName(), field.get(null).toString());
-                //DeBugLog.d(TAG, field.getName() + " : " + field.get(null));
             } catch (Exception e) {
-                DeBugLog.e(TAG, "an error occur when collect crash info", e);
+                L.e(TAG, "an error occur when collect crash info", e);
             }
         }
     }
@@ -162,7 +161,7 @@ public class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
                         fos.write(sb.toString().getBytes());
                         fos.close();
                     } else {//创建路径失败
-                        DeBugLog.e(TAG, "Folder creation failed! Unable to write log!");
+                        L.e(TAG, "Folder creation failed! Unable to write log!");
                     }
                 } else {
                     FileOutputStream fos = new FileOutputStream(new File(path, fileName));
@@ -172,7 +171,7 @@ public class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
             }
             return fileName;
         } catch (Exception e) {
-            DeBugLog.e(TAG, "an error occur while writing file...", e);
+            L.e(TAG, "an error occur while writing file...", e);
         }
         return null;
     }
@@ -183,10 +182,10 @@ public class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
             //如果用户没有处理则让系统默认的异常处理器来处理
             mDefaultHandler.uncaughtException(thread, ex);
         } else {
-            DeBugLog.i(TAG, "应用发生异常，退出!");
-            DeBugLog.e(TAG, "Throwable1:" + ex.getMessage());
-            DeBugLog.e(TAG, "Throwable2:" + ex.toString());
-            DeBugLog.e(TAG, "Throwable3:" + ex.getLocalizedMessage());
+            L.i(TAG, "应用发生异常，退出!");
+            L.e(TAG, "Throwable1:" + ex.getMessage());
+            L.e(TAG, "Throwable2:" + ex.toString());
+            L.e(TAG, "Throwable3:" + ex.getLocalizedMessage());
 
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(1);

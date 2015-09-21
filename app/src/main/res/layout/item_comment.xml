@@ -15,9 +15,9 @@
         android:layout_marginLeft="@dimen/layout_5dp"
         android:layout_marginStart="@dimen/layout_5dp"
         fresco:failureImage="@drawable/default_head_image_error"
-        fresco:failureImageScaleType="fitXY"
+        fresco:failureImageScaleType="fitCenter"
         fresco:placeholderImage="@drawable/default_head_image"
-        fresco:placeholderImageScaleType="fitXY"
+        fresco:placeholderImageScaleType="fitCenter"
         fresco:roundAsCircle="true"/>
 
     <TextView

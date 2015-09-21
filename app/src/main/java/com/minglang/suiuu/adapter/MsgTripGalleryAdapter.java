@@ -11,9 +11,9 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.PersonalMainPagerActivity;
-import com.minglang.suiuu.activity.TripGalleryDetailsActivity;
+import com.minglang.suiuu.activity.TripImageDetailsActivity;
 import com.minglang.suiuu.entity.MsgTripGallery.MsgTripGalleryData.MsgTripGalleryItemData;
-import com.minglang.suiuu.utils.DeBugLog;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.List;
@@ -136,8 +136,8 @@ public class MsgTripGalleryAdapter extends BaseHolderAdapter<MsgTripGalleryItemD
 
         @Override
         public void onClick(View v) {
-            DeBugLog.i(getClass().getSimpleName(), "RelativeId:" + item.getRelativeId());
-            Intent intent = new Intent(context, TripGalleryDetailsActivity.class);
+            L.i(getClass().getSimpleName(), "RelativeId:" + item.getRelativeId());
+            Intent intent = new Intent(context, TripImageDetailsActivity.class);
             intent.putExtra(ID, item.getRelativeId());
             context.startActivity(intent);
         }

@@ -25,13 +25,13 @@ import com.minglang.suiuu.entity.OrderDetails;
 import com.minglang.suiuu.entity.OrderDetails.OrderDetailsData.InfoEntity;
 import com.minglang.suiuu.entity.OrderDetails.OrderDetailsData.UserInfoEntity;
 import com.minglang.suiuu.entity.TripJsonInfo;
-import com.minglang.suiuu.utils.DeBugLog;
-import com.minglang.suiuu.utils.HttpNewServicePath;
-import com.minglang.suiuu.utils.HttpServicePath;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.OkHttpManager;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.Utils;
+import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
@@ -230,7 +230,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         Intent oldIntent = getIntent();
         strID = oldIntent.getStringExtra(ID);
         String selectOrderStatus = oldIntent.getStringExtra(ORDER_STATUS);
-        DeBugLog.i(TAG, "订单ID:" + strID + ",orderStatus:" + selectOrderStatus);
+        L.i(TAG, "订单ID:" + strID + ",orderStatus:" + selectOrderStatus);
 
         if (selectOrderStatus.equals(NEW)) {
             bottomLayout1.setVisibility(View.VISIBLE);
@@ -245,7 +245,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
 
-        int paddingParams = Utils.newInstance().dip2px(15, this);
+        int paddingParams = AppUtils.newInstance().dip2px(15, this);
 
         MaterialHeader header = new MaterialHeader(this);
         int[] colors = getResources().getIntArray(R.array.google_colors);
@@ -338,7 +338,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 cancelOrderReason = editText.getText().toString().trim();
-                                DeBugLog.i(TAG, "退款理由:" + cancelOrderReason);
+                                L.i(TAG, "退款理由:" + cancelOrderReason);
 
                                 if (TextUtils.isEmpty(cancelOrderPath)) {
                                     Toast.makeText(context, refundReasonNotNull, Toast.LENGTH_SHORT).show();
@@ -583,7 +583,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                 }
 
             } catch (Exception e) {
-                DeBugLog.e(TAG, "绑定数据异常:" + e.getMessage());
+                L.e(TAG, "绑定数据异常:" + e.getMessage());
                 handleException(str, DataError);
             }
 
@@ -617,7 +617,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                     Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "解析异常:" + e.getMessage());
+                L.e(TAG, "解析异常:" + e.getMessage());
                 handleException(str, DataException);
             }
         } else {
@@ -651,7 +651,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                     Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "解析异常:" + e.getMessage());
+                L.e(TAG, "解析异常:" + e.getMessage());
                 handleException(str, DataException);
             }
         } else {
@@ -685,7 +685,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                     Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                DeBugLog.e(TAG, "解析异常:" + e.getMessage());
+                L.e(TAG, "解析异常:" + e.getMessage());
                 handleException(str, DataException);
             }
         } else {
@@ -709,7 +709,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                     break;
             }
         } catch (Exception e) {
-            DeBugLog.e(TAG, "二次解析异常:" + e.getMessage());
+            L.e(TAG, "二次解析异常:" + e.getMessage());
             Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
         }
     }
@@ -718,14 +718,14 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "订单详情数据:" + response);
+            L.i(TAG, "订单详情数据:" + response);
             hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Exception:" + e.getMessage());
+            L.e(TAG, "Exception:" + e.getMessage());
             hideDialog();
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
@@ -736,7 +736,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "取消订单数据:" + response);
+            L.i(TAG, "取消订单数据:" + response);
             hideDialog();
             cancelOrder(response);
         }
@@ -744,7 +744,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         @Override
         public void onError(Request request, Exception e) {
             hideDialog();
-            DeBugLog.e(TAG, "Cancel Exception:" + e.getMessage());
+            L.e(TAG, "Cancel Exception:" + e.getMessage());
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
@@ -754,14 +754,14 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "确认订单返回的数据:" + response);
+            L.i(TAG, "确认订单返回的数据:" + response);
             hideDialog();
             confirmOrder(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Confirm Exception:" + e.getMessage());
+            L.e(TAG, "Confirm Exception:" + e.getMessage());
             hideDialog();
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
@@ -772,14 +772,14 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            DeBugLog.i(TAG, "忽略订单数据:" + response);
+            L.i(TAG, "忽略订单数据:" + response);
             hideDialog();
             ignoreOrder(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            DeBugLog.e(TAG, "Ignore Exception:" + e.getMessage());
+            L.e(TAG, "Ignore Exception:" + e.getMessage());
             hideDialog();
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
