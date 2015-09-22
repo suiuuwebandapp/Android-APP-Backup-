@@ -39,29 +39,46 @@ public class AMapActivity extends BaseActivity implements
         AMapLocationListener, PoiSearch.OnPoiSearchListener, ReFlashListView.IReflashListener, ReFlashListView.ILoadMoreDataListener {
     private double latitude;
     private double longitude;
+
     private String country;
     private String city;
+
     private String address;
+
     private int currentPage = 0;// 当前页面，从0开始计数
+
     private PoiSearch.Query query;// Poi查询条件类
+
     private int searchType = 0;// 搜索类型
+
     private PoiSearch poiSearch;
+
     private PoiResult poiResult; // poi返回的结果
+
     private List<PoiItem> poiItems;// poi数据
+
     private SearchNearMessageAdapter adapter;
+
     private TextProgressDialog dialog;
+
     @Bind(R.id.et_amp_location_search)
     EditText et_amp_location_search;
+
     @Bind(R.id.lv_location_message)
     ReFlashListView lv_location_message;
+
     @Bind(R.id.iv_top_callback)
     ImageView iv_top_callback;
+
     @Bind(R.id.iv_amp_top_search)
     ImageView iv_amp_top_search;
+
     @Bind(R.id.rl_no_data)
     RelativeLayout rl_no_data;
+
     @Bind(R.id.tv_create_location)
     TextView tv_create_location;
+
     private String searchKey;
 
     @Override
@@ -83,13 +100,11 @@ public class AMapActivity extends BaseActivity implements
         //注意设置合适的定位时间的间隔，并且在合适时间调用removeUpdates()方法来取消定位请求
         //在定位结束后，在合适的生命周期调用destroy()方法
         //其中如果间隔时间为-1，则定位只定一次
-        mLocationManagerProxy.requestLocationData(
-                LocationProviderProxy.AMapNetwork, -1, 15, this);
+        mLocationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, -1, 15, this);
         mLocationManagerProxy.setGpsEnable(false);
+
         dialog = new TextProgressDialog(this);
         poiItems = new ArrayList<>();
-
-
     }
 
     /**
@@ -166,7 +181,6 @@ public class AMapActivity extends BaseActivity implements
     @Override
     public void onPoiItemDetailSearched(PoiItemDetail poiItemDetail, int i) {
     }
-
 
     private void viewAction() {
         lv_location_message.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -292,4 +306,5 @@ public class AMapActivity extends BaseActivity implements
 
         }
     }
+
 }

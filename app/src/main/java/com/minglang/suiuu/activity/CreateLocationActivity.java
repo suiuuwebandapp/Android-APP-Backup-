@@ -24,10 +24,13 @@ import butterknife.ButterKnife;
  * 修改备注：
  */
 public class CreateLocationActivity extends BaseActivity {
+
     @Bind(R.id.iv_create_location_callback)
     ImageView iv_create_location_callback;
+
     @Bind(R.id.iv_create_location_ok)
     ImageView iv_create_location_ok;
+
     @Bind(R.id.et_create_location)
     EditText et_create_location;
 
@@ -43,18 +46,19 @@ public class CreateLocationActivity extends BaseActivity {
         iv_create_location_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              String location =   et_create_location.getText().toString().trim();
-                if(TextUtils.isEmpty(location)) {
+                String location = et_create_location.getText().toString().trim();
+                if (TextUtils.isEmpty(location)) {
                     Toast.makeText(CreateLocationActivity.this, "创建地点不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
                 Intent intent = CreateLocationActivity.this.getIntent();
                 intent.putExtra("address", location);
                 CreateLocationActivity.this.setResult(RESULT_OK, intent);
                 finish();
-                overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
             }
         });
+
         iv_create_location_callback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

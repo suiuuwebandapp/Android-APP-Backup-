@@ -424,7 +424,7 @@
     <string name="NoInfo" translatable="false">暂无详细信息</string>
 
     <string name="notify" translatable="false">新消息提醒</string>
-    <string name="newnotify" translatable="false">接收新消息</string>
+    <string name="newNotify" translatable="false">接收新消息</string>
     <string name="voice" translatable="false">声音</string>
     <string name="shake" translatable="false">震动</string>
     <string name="chatset" translatable="false">聊天设置</string>
@@ -521,6 +521,11 @@
 
     <string name="DialogTitle" translatable="false">设置自定义标签</string>
     <string name="InputTagHint" translatable="false">请输入标签</string>
+
+    <string name="NoFoundAboutLocation" translatable="false">没有找到相关地点</string>
+    <string name="CreateLocation" translatable="false">创建位置</string>
+
+    <string name="InputCreateLocationName" translatable="false">输入你想要创建的位置的名称</string>
 
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
     <string name="pull_to_refresh_release_label">Release rear refresh</string>

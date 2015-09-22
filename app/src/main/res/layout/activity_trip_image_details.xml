@@ -86,8 +86,8 @@
                         android:text="22"
                         android:textColor="@color/textColor"
                         android:textSize="@dimen/layout_12sp" />
-                </RelativeLayout>
 
+                </RelativeLayout>
 
             </RelativeLayout>
 

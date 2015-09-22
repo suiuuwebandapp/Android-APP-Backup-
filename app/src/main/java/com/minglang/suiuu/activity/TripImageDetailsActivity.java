@@ -168,7 +168,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
      * 关注总数
      */
     @Bind(R.id.headCount)
-    TextView tv_head_count;
+    TextView headCount;
 
     /**
      * 还没有评论布局
@@ -374,6 +374,12 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
                 if ("1".equals(status)) {
                     attentionId = data;
                     tripGalleryDetailsHeart.setBackgroundResource(R.drawable.attention_heart_press);
+                    String headCountStr = headCount.getText().toString().trim();
+                    if (!TextUtils.isEmpty(headCountStr)) {
+                        int headCountNumber = Integer.valueOf(headCountStr);
+                        headCountNumber = headCountNumber + 1;
+                        headCount.setText(String.valueOf(headCountNumber));
+                    }
                     Toast.makeText(context, "收藏文章成功", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
@@ -416,7 +422,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
 
     private void fullData() {
         fullCommentList();
-        tv_head_count.setText(tripGalleryDetailInfo.getAttentionCount());
+        headCount.setText(tripGalleryDetailInfo.getAttentionCount());
         tripImageDetailsName.setText(tripGalleryDetailInfo.getTitle());
         tripImageDetailsTag.setText(tripGalleryDetailInfo.getTags().replace(",", " "));
 

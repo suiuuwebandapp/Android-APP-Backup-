@@ -57,7 +57,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:paddingLeft="@dimen/layout_10dp"
-                        android:text="@string/newnotify"
+                        android:text="@string/newNotify"
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
                         android:typeface="serif"/>

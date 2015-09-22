@@ -61,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:paddingStart="@dimen/layout_10dp"
-                        android:text="@string/newnotify"
+                        android:text="@string/newNotify"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/layout_14sp"
                         android:typeface="serif"/>
