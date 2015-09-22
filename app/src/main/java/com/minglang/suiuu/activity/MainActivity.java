@@ -22,13 +22,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,11 +44,11 @@ import com.minglang.suiuu.fragment.main.TripImageFragment;
 import com.minglang.suiuu.receiver.ConnectionNetChangeReceiver;
 import com.minglang.suiuu.service.LocationService;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.MD5Utils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -105,6 +103,12 @@ public class MainActivity extends BaseActivity {
     @BindString(R.string.OrdinaryAccount)
     String OrdinaryAccount;
 
+    @BindString(R.string.SuiuuUser)
+    String SuiuuUser;
+
+    @BindString(R.string.GeneralUser)
+    String GeneralUser;
+
     @BindString(R.string.LoginOverdue)
     String LoginOverdue;
 
@@ -129,14 +133,14 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.head_image)
     SimpleDraweeView headImageView;
 
-    @Bind(R.id.switch_suiuu)
-    Switch switchSuiuu;
-
     @Bind(R.id.side_list_view)
     ListView sideListView;
 
     @Bind(R.id.side_list_view_2)
     ListView sideListView2;
+
+    @Bind(R.id.switch_text_view)
+    TextView switchUser;
 
     @Bind(R.id.titleInfo)
     TextView titleInfo;
@@ -260,6 +264,8 @@ public class MainActivity extends BaseActivity {
             L.i(TAG, "ComponentName:" + name.toString());
         }
     };
+
+    private boolean isPublisher = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -459,23 +465,30 @@ public class MainActivity extends BaseActivity {
 
         String publisher = SuiuuInfo.ReadUserData(this).getIsPublisher();
         if (TextUtils.isEmpty(publisher)) {
-            switchSuiuu.setChecked(false);
-            switchSuiuu.setText(OrdinaryAccount);
-            switchSuiuu.setEnabled(false);
             sideListView.setVisibility(View.GONE);
             sideListView2.setVisibility(View.VISIBLE);
+
+            isPublisher = false;
+
+            switchUser.setText(GeneralUser);
+
         } else {
             if (publisher.equals("1")) {
-                switchSuiuu.setChecked(true);
-                switchSuiuu.setText(SuiuuAccount);
                 sideListView.setVisibility(View.VISIBLE);
                 sideListView2.setVisibility(View.GONE);
+
+                isPublisher = true;
+
+                switchUser.setText(SuiuuUser);
+
             } else {
-                switchSuiuu.setChecked(false);
-                switchSuiuu.setText(OrdinaryAccount);
-                switchSuiuu.setEnabled(false);
                 sideListView.setVisibility(View.GONE);
                 sideListView2.setVisibility(View.VISIBLE);
+
+                isPublisher = false;
+
+                switchUser.setText(GeneralUser);
+
             }
         }
 
@@ -568,17 +581,21 @@ public class MainActivity extends BaseActivity {
      */
     private void viewAction() {
 
-        switchSuiuu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        switchUser.setOnClickListener(new OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    switchSuiuu.setText(SuiuuAccount);
-                    sideListView.setVisibility(View.VISIBLE);
-                    sideListView2.setVisibility(View.GONE);
-                } else {
-                    switchSuiuu.setText(OrdinaryAccount);
+            public void onClick(View v) {
+                if (isPublisher) {
+                    isPublisher = false;
+                    switchUser.setText(GeneralUser);
+
                     sideListView.setVisibility(View.GONE);
                     sideListView2.setVisibility(View.VISIBLE);
+                } else {
+                    isPublisher = true;
+                    switchUser.setText(SuiuuUser);
+
+                    sideListView.setVisibility(View.VISIBLE);
+                    sideListView2.setVisibility(View.GONE);
                 }
             }
         });

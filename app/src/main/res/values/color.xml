@@ -69,6 +69,8 @@
     <color name="backgroundColor2">#F7F7F7</color>
     <color name="remindColor">#ffeb78</color>
 
+    <color name="TripImageDividerColor">#dddddd</color>
+
     <color name="AcceptBackgroundColor">#94C9FF</color>
 
     <color name="click_red">#ff7a45</color>

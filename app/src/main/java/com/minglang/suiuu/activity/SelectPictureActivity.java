@@ -41,11 +41,14 @@ import java.util.Locale;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class SelectPictureActivity extends BaseActivity {
 
     private static final String TAG = SelectPictureActivity.class.getSimpleName();
+
+    private static final String PICTURE_MESSAGE = "pictureMessage";
 
     private static final int OPEN_CAMERA = 100;
 
@@ -68,6 +71,9 @@ public class SelectPictureActivity extends BaseActivity {
     private ArrayList<String> selectedPicture = new ArrayList<>();
 
     private Context context = this;
+
+    @BindString(R.string.choice_picture)
+    String choicePicture;
 
     /**
      * 返回键
@@ -162,16 +168,16 @@ public class SelectPictureActivity extends BaseActivity {
             public void onClick(View v) {
                 if (1 == state) {
                     if (selectedPicture.size() < 1) {
-                        Toast.makeText(SelectPictureActivity.this, R.string.choice_picture, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SelectPictureActivity.this, choicePicture, Toast.LENGTH_SHORT).show();
                     } else {
                         Intent intent = new Intent(SelectPictureActivity.this, EasyTackPhotoActivity.class);
-                        intent.putStringArrayListExtra("pictureMessage", selectedPicture);
+                        intent.putStringArrayListExtra(PICTURE_MESSAGE, selectedPicture);
                         startActivity(intent);
                         finish();
                     }
                 } else {
                     Intent intent = new Intent();
-                    intent.putStringArrayListExtra("pictureMessage", selectedPicture);
+                    intent.putStringArrayListExtra(PICTURE_MESSAGE, selectedPicture);
                     setResult(result, intent);
                     finish();
                 }

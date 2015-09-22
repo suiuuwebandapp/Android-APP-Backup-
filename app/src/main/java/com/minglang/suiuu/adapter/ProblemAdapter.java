@@ -24,7 +24,7 @@ import java.util.List;
  * <p/>
  * Created by Administrator on 2015/7/3.
  */
-public class CommunityAdapter extends BaseAdapter {
+public class ProblemAdapter extends BaseAdapter {
 
     private Context context;
 
@@ -34,7 +34,7 @@ public class CommunityAdapter extends BaseAdapter {
 
     private OnCommunityClickListener onCommunityClickListener;
 
-    public CommunityAdapter(Context context) {
+    public ProblemAdapter(Context context) {
         this.context = context;
         sparseBooleanArray = new SparseBooleanArray();
     }
@@ -73,13 +73,13 @@ public class CommunityAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_community, position);
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_problem, position);
         convertView = holder.getConvertView();
 
-        SimpleDraweeView headImageView = holder.getView(R.id.item_community_header_image);
-        TextView countView = holder.getView(R.id.item_community_count);
-        TextView titleView = holder.getView(R.id.item_community_title);
-        ExpandableTextView cotentView = holder.getView(R.id.item_community_expandable_content);
+        SimpleDraweeView headImageView = holder.getView(R.id.item_problem_header_image);
+        TextView countView = holder.getView(R.id.item_problem_count);
+        TextView titleView = holder.getView(R.id.item_problem_title);
+        ExpandableTextView cotentView = holder.getView(R.id.item_problem_expandable_content);
 
         MainCommunityItemData itemData = list.get(position);
 

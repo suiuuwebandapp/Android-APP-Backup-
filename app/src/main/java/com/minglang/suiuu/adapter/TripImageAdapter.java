@@ -283,7 +283,7 @@ public class TripImageAdapter extends BaseAdapter {
             textView.setText(mTagIntArray[i]);
 
             if (clickString.contains(mTagIntArray[i])) {
-                imageView.setBackgroundResource(R.drawable.imageview_border_style);
+                imageView.setBackgroundResource(R.drawable.image_view_border_style);
             } else {
                 imageView.setBackgroundResource(0);
             }
@@ -298,7 +298,7 @@ public class TripImageAdapter extends BaseAdapter {
                         clickImageList.remove(imageList.get(tag));
                         clickString.remove(mTagIntArray[tag]);
                     } else {
-                        imageList.get(tag).setBackgroundResource(R.drawable.imageview_border_style);
+                        imageList.get(tag).setBackgroundResource(R.drawable.image_view_border_style);
                         clickImageList.add(imageList.get(tag));
                         clickString.add(mTagIntArray[tag]);
                     }

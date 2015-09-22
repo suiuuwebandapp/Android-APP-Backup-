@@ -2,6 +2,7 @@ package com.minglang.suiuu.fragment.main;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -20,12 +21,11 @@ import com.minglang.suiuu.adapter.TripImageAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.TripImage;
 import com.minglang.suiuu.entity.TripImage.TripImageData.TripImageItemData;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.AppUtils;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -64,6 +65,9 @@ public class TripImageFragment extends BaseFragment {
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
+
+    @BindDrawable(R.color.TripImageDividerColor)
+    Drawable Divider;
 
     @BindString(R.string.load_wait)
     String DialogMsg;
@@ -124,6 +128,9 @@ public class TripImageFragment extends BaseFragment {
         progressDialog.setMessage(DialogMsg);
 
         tripImageListView.setMode(PullToRefreshBase.Mode.BOTH);
+        ListView listView = tripImageListView.getRefreshableView();
+        listView.setDivider(Divider);
+        listView.setDividerHeight((int) getResources().getDimension(R.dimen.layout_10dp));
 
         adapter = new TripImageAdapter(getActivity(), listAll, HOME_PAGE, tagList);
         tripImageListView.setAdapter(adapter);
@@ -156,17 +163,11 @@ public class TripImageFragment extends BaseFragment {
         tripImageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int location = position - 1;
-                if (location > 2) {
-                    if (AppUtils.isNetworkConnected(getActivity())) {
-                        Intent intent = new Intent(getActivity(), TripImageDetailsActivity.class);
-                        intent.putExtra(ID, listAll.get(location - 3).getId());
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(getActivity(), R.string.lsq_network_connection_interruption, Toast.LENGTH_SHORT).show();
-                    }
-
-                }
+                int location = position - 3;
+                L.i(TAG, "location:" + location);
+                Intent intent = new Intent(getActivity(), TripImageDetailsActivity.class);
+                intent.putExtra(ID, listAll.get(location).getId());
+                startActivity(intent);
             }
 
         });
@@ -257,6 +258,7 @@ public class TripImageFragment extends BaseFragment {
 
         @Override
         public void onResponse(String result) {
+            L.i(TAG, "旅途返回的数据:" + result);
             if (TextUtils.isEmpty(result)) {
                 Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
             } else try {

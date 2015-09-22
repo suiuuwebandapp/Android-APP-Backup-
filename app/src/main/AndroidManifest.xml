@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.minglang.suiuu" >
+    package="com.minglang.suiuu">
 
     <!-- 内置SD卡的写入权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -70,7 +70,7 @@
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme"
-        tools:replace="android:label,android:theme,android:name" >
+        tools:replace="android:label,android:theme,android:name">
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="554c2a0567e58e074f00054e" />
@@ -81,7 +81,7 @@
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/FullScreenTheme" >
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -98,15 +98,8 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <!-- 登陆页面 -->
-        <!-- <activity -->
-        <!-- android:name=".activity.LoginActivity" -->
-        <!-- android:label="@string/app_name" -->
-        <!-- android:launchMode="singleTask" -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:theme="@style/AppMainTheme"/> -->
-
         <activity
-            android:name=".activity.LoginsMainActivity"
+            android:name=".activity.LoginMainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme" />
@@ -212,7 +205,7 @@
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true" >
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -385,7 +378,7 @@
             android:label="@string/title_activity_personal_problem"
             android:theme="@style/AppMainTheme" />
         <activity
-            android:name=".activity.PersonalTripGalleryActivity"
+            android:name=".activity.PersonalTripImageActivity"
             android:label="@string/title_activity_personal_trip_gallery"
             android:theme="@style/AppMainTheme" />
         <activity
@@ -394,7 +387,7 @@
             android:theme="@style/AppMainTheme" />
         <activity
             android:name=".activity.WithdrawalsActivity"
-            android:label="@string/title_activity_with_drawals"
+            android:label="@string/title_activity_withdrawals"
             android:theme="@style/AppMainTheme" />
         <activity
             android:name=".activity.UpLoadLogFileActivity"
@@ -412,8 +405,7 @@
         <service
             android:name=".service.LocationService"
             android:enabled="true"
-            android:exported="true" >
-        </service>
+            android:exported="true"></service>
     </application>
 
 </manifest>

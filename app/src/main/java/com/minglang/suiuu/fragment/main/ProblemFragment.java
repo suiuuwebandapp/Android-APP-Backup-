@@ -20,7 +20,7 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.ProblemDetailsActivity;
 import com.minglang.suiuu.activity.SelectCountryActivity;
-import com.minglang.suiuu.adapter.CommunityAdapter;
+import com.minglang.suiuu.adapter.ProblemAdapter;
 import com.minglang.suiuu.adapter.CommunitySortAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MainCommunity;
@@ -135,7 +135,7 @@ public class ProblemFragment extends BaseFragment {
 
     private List<MainCommunityItemData> listAll = new ArrayList<>();
 
-    private CommunityAdapter adapter;
+    private ProblemAdapter adapter;
 
     public static ProblemFragment newInstance(String param1, String param2) {
         ProblemFragment fragment = new ProblemFragment();
@@ -194,7 +194,7 @@ public class ProblemFragment extends BaseFragment {
         CommunitySortAdapter adapter = new CommunitySortAdapter(stringArray, getActivity());
         spinner.setAdapter(adapter);
 
-        this.adapter = new CommunityAdapter(getActivity());
+        this.adapter = new ProblemAdapter(getActivity());
         listView.setAdapter(this.adapter);
 
         token = SuiuuInfo.ReadAppTimeSign(getActivity());
@@ -259,7 +259,7 @@ public class ProblemFragment extends BaseFragment {
 
         });
 
-        adapter.setOnCommunityClickListener(new CommunityAdapter.OnCommunityClickListener() {
+        adapter.setOnCommunityClickListener(new ProblemAdapter.OnCommunityClickListener() {
             @Override
             public void onClickListener(View itemView, int position) {
                 String qID = listAll.get(position).getQId();

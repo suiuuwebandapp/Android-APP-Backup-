@@ -212,6 +212,7 @@ public class SuiuuFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response) {
+            L.i(TAG, "随游返回的数据:" + response);
             if (TextUtils.isEmpty(response)) {
                 Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
             } else try {

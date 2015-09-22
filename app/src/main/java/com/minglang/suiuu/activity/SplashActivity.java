@@ -11,14 +11,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseAppCompatActivity;
+import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.service.LocationService;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SplashActivity extends BaseAppCompatActivity{
+public class SplashActivity extends BaseActivity {
 
     @Bind(R.id.splash_root_layout)
     RelativeLayout rootLayout;
@@ -97,7 +97,7 @@ public class SplashActivity extends BaseAppCompatActivity{
                 if (!TextUtils.isEmpty(SuiuuInfo.ReadUserData(SplashActivity.this).getNickname())) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 } else {
-                    startActivity(new Intent(SplashActivity.this, LoginsMainActivity.class));
+                    startActivity(new Intent(SplashActivity.this, LoginMainActivity.class));
                 }
                 finish();
             }

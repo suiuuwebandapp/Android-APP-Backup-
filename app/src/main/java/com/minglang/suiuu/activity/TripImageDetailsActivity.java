@@ -223,10 +223,10 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_gallery_detail);
+        setContentView(R.layout.activity_trip_image_details);
         ButterKnife.bind(this);
         init();
-        loadTripGalleryDetailDate(id);
+        loadTripGalleryDetailsData(id);
         viewAction();
         tripImageDetails.smoothScrollTo(0, 0);
     }
@@ -236,14 +236,17 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
      */
     private void init() {
         id = this.getIntent().getStringExtra(ID);
+
         verification = SuiuuInfo.ReadVerification(this);
+
         tv_top_center.setText("旅图详情");
         tv_top_right_more.setBackgroundResource(R.drawable.btn_suiuu_share_selector);
+
         dialog = new TextProgressDialog(this);
 
         token = SuiuuInfo.ReadAppTimeSign(TripImageDetailsActivity.this);
 
-        context = context;
+        context = TripImageDetailsActivity.this;
     }
 
     private void viewAction() {
@@ -271,19 +274,14 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
         tripImageDetails.smoothScrollTo(0, 0);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-
     //根据id获得旅图详情
-    private void loadTripGalleryDetailDate(String id) {
+    private void loadTripGalleryDetailsData(String id) {
         dialog.showDialog();
-        String[] keyArray1 = new String[]{"id", "token"};
+        String[] keyArray1 = new String[]{"id", TOKEN};
         String[] valueArray1 = new String[]{id, token};
+        String url = addUrlAndParams(HttpNewServicePath.getTripGalleryDetailById, keyArray1, valueArray1);
         try {
-            OkHttpManager.onGetAsynRequest(addUrlAndParams(HttpNewServicePath.getTripGalleryDetailById, keyArray1, valueArray1), new loadTripGalleryDetailDateCallBack());
+            OkHttpManager.onGetAsynRequest(url, new loadTripGalleryDetailDateCallBack());
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
@@ -333,8 +331,6 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String resultData) {
-            dialog.dismissDialog();
-            L.i(TAG, resultData);
             try {
                 TripImageDetails tripImageDetails = JsonUtils.getInstance().fromJSON(TripImageDetails.class, resultData);
                 if (tripImageDetails.getStatus() == 1) {
@@ -351,6 +347,10 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
             }
         }
 
+        @Override
+        public void onFinish() {
+            dialog.dismissDialog();
+        }
     }
 
     /**
@@ -477,7 +477,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
     public void fullCommentList() {
         if (commentContentList.size() >= 1) {
             int commentContentListSize = commentContentList.size();
-            suiuuDetailsCommentNumber.setText("全部评论 (共" + String.valueOf(commentContentListSize) + "条评论)");
+            suiuuDetailsCommentNumber.setText(String.format("%s%s%s", "全部评论 (共", commentContentListSize, "条评论)"));
             suiuuDetailsInputComment.setVisibility(View.VISIBLE);
             suiuuDetailsNoComment.setVisibility(View.GONE);
             showCommentList(commentContentList);

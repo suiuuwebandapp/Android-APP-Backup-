@@ -13,6 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.UserTravel.UserTravelData.UserTravelItemData;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
+import com.minglang.suiuu.interfaces.RecyclerViewOnItemLongClickListener;
 
 import java.util.List;
 
@@ -21,15 +22,17 @@ import java.util.List;
  * <p/>
  * 用户个人主页旅图数据适配器
  */
-public class PersonalTripGalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PersonalTripImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<UserTravelItemData> list;
 
     private RecyclerViewOnItemClickListener onItemClickListener;
 
-    private String failureImagePath,failureImagePath2;
+    private RecyclerViewOnItemLongClickListener onItemLongClickListener;
 
-    public PersonalTripGalleryAdapter() {
+    private String failureImagePath, failureImagePath2;
+
+    public PersonalTripImageAdapter() {
         failureImagePath = "res://com.minglang.suiuu/" + R.drawable.loading_error;
         failureImagePath2 = "res://com.minglang.suiuu/" + R.drawable.default_head_image_error;
     }
@@ -41,6 +44,31 @@ public class PersonalTripGalleryAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void setOnItemClickListener(RecyclerViewOnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public void setOnItemLongClickListener(RecyclerViewOnItemLongClickListener onItemLongClickListener) {
+        this.onItemLongClickListener = onItemLongClickListener;
+    }
+
+    /**
+     * 添加Item到指定位置
+     *
+     * @param itemData 指定位置Item数据
+     * @param position 位置
+     */
+    public void addItem(UserTravelItemData itemData, int position) {
+        list.add(position, itemData);
+        notifyItemInserted(position);
+    }
+
+    /**
+     * 移除指定位置Item
+     *
+     * @param position 位置
+     */
+    public void remove(int position) {
+        list.remove(position);
+        notifyItemRemoved(position);
     }
 
     @Override
@@ -64,7 +92,7 @@ public class PersonalTripGalleryAdapter extends RecyclerView.Adapter<RecyclerVie
         String headImagePath = list.get(position).getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {
             travelViewHolder.headImageView.setImageURI(Uri.parse(headImagePath));
-        }else{
+        } else {
             travelViewHolder.headImageView.setImageURI(Uri.parse(failureImagePath2));
         }
 
@@ -77,11 +105,22 @@ public class PersonalTripGalleryAdapter extends RecyclerView.Adapter<RecyclerVie
 
         final View itemView = travelViewHolder.itemView;
         final int location = travelViewHolder.getLayoutPosition();
+
         if (onItemClickListener != null) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onItemClick(itemView, location);
+                }
+            });
+        }
+
+        if (onItemLongClickListener != null) {
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onItemLongClickListener.onItemLongClick(itemView, location);
+                    return false;
                 }
             });
         }

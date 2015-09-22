@@ -19,7 +19,7 @@ public class HttpNewServicePath {
     /**
      * 服务器地址
      */
-    public static String RootPath = "http://api.suiuu.com/v1";
+    public static String RootPath = "http://app.suiuu.com/v1";
 
     /**
      * OSS服务器地址

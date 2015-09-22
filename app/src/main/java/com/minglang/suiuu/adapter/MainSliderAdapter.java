@@ -62,7 +62,7 @@ public class MainSliderAdapter extends BaseAdapter {
                 new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, itemScreenHeight);
         convertView.setLayoutParams(params);
 
-        TextView textView = holder.getView(R.id.itemSliderText);
+        TextView textView = holder.getView(R.id.item_slider_text);
         textView.setText(str);
         return convertView;
     }

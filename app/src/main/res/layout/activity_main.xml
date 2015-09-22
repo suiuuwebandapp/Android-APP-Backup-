@@ -1,6 +1,6 @@
 <android.support.v4.widget.DrawerLayout
-    android:id="@+id/drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -21,7 +21,7 @@
             android:layout_alignParentStart="true"
             android:orientation="vertical">
 
-            <include layout="@layout/common_top_layout"/>
+            <include layout="@layout/common_top_layout" />
 
             <TextView
                 android:id="@+id/network_error_view"
@@ -33,7 +33,7 @@
                 android:text="@string/NetworkError"
                 android:textColor="@color/warning_color"
                 android:textSize="@dimen/layout_16sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -44,11 +44,11 @@
             android:layout_above="@+id/tab_select_card_layout"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/topTitleLayout"/>
+            android:layout_below="@+id/topTitleLayout" />
 
         <include
             android:id="@+id/tab_select_card_layout"
-            layout="@layout/layout_main_bottom_bar"/>
+            layout="@layout/layout_main_bottom_bar" />
 
     </RelativeLayout>
 
@@ -61,24 +61,54 @@
         android:background="@color/tr_write2">
 
         <include
-            android:id="@+id/include"
+            android:id="@+id/slider_head_layout"
             layout="@layout/layout_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
+            android:layout_alignParentTop="true" />
 
-        <ListView
-            android:id="@+id/side_list_view"
+        <FrameLayout
+            android:id="@+id/slider_content_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/include"/>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/slider_head_layout">
 
-        <ListView
-            android:id="@+id/side_list_view_2"
+            <ListView
+                android:id="@+id/side_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ListView
+                android:id="@+id/side_list_view_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/include"
-            android:visibility="gone"/>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/slider_content_layout"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/textColor" />
+
+            <TextView
+                android:id="@+id/switch_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/layout_10dp"
+                android:layout_marginLeft="@dimen/layout_15dp"
+                android:layout_marginStart="@dimen/layout_15dp"
+                android:layout_marginTop="@dimen/layout_10dp"
+                android:text="@string/app_name"
+                android:textSize="20sp" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

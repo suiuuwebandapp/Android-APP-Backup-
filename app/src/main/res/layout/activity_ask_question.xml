@@ -102,7 +102,7 @@
                 android:verticalSpacing="@dimen/layout_10dp"/>
 
             <TextView
-                android:id="@+id/tv_show_your_location"
+                android:id="@+id/selected_your_location"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/layout_16dp"
@@ -113,7 +113,7 @@
                 android:drawableStart="@drawable/show_your_location"
                 android:gravity="center_vertical"
                 android:padding="@dimen/layout_8dp"
-                android:text="@string/show_location"
+                android:text="@string/SelectedYourLocation"
                 android:textColor="@color/textColor"
                 android:textSize="@dimen/layout_15sp"/>
 

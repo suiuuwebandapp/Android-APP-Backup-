@@ -2,8 +2,11 @@ package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,17 +16,18 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.PersonalTripGalleryAdapter;
+import com.minglang.suiuu.adapter.PersonalTripImageAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.UserTravel;
 import com.minglang.suiuu.entity.UserTravel.UserTravelData.UserTravelItemData;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
-import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.interfaces.RecyclerViewOnItemLongClickListener;
 import com.minglang.suiuu.utils.AppUtils;
+import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -43,9 +47,9 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.header.MaterialHeader;
 
-public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
+public class PersonalTripImageActivity extends BaseAppCompatActivity {
 
-    private static final String TAG = PersonalTripGalleryActivity.class.getSimpleName();
+    private static final String TAG = PersonalTripImageActivity.class.getSimpleName();
 
     private static final String USER_SIGN = "userSign";
 
@@ -75,6 +79,9 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
     @BindString(R.string.SystemException)
     String SystemException;
 
+    @BindString(R.string.ConfirmDelete)
+    String ConfirmDelete;
+
     @Bind(R.id.personal_trip_gallery_tool_bar)
     Toolbar toolBar;
 
@@ -92,7 +99,7 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
 
     private ProgressDialog progressDialog;
 
-    private PersonalTripGalleryAdapter adapter;
+    private PersonalTripImageAdapter adapter;
 
     private GridLayoutManager layoutManager;
 
@@ -137,8 +144,9 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
 
         layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new PersonalTripGalleryAdapter();
+        adapter = new PersonalTripImageAdapter();
         recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     private void viewAction() {
@@ -165,6 +173,22 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
                 Intent intent = new Intent(context, TripImageDetailsActivity.class);
                 intent.putExtra(ID, tripId);
                 startActivity(intent);
+            }
+        });
+
+        adapter.setOnItemLongClickListener(new RecyclerViewOnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(View view, int position) {
+                new AlertDialog.Builder(context)
+                        .setMessage(ConfirmDelete)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .create().show();
             }
         });
 
@@ -286,7 +310,7 @@ public class PersonalTripGalleryActivity extends BaseAppCompatActivity {
         public void onError(Request request, Exception e) {
             hideDialog();
             failureLessPage();
-            Toast.makeText(PersonalTripGalleryActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(PersonalTripImageActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
     }

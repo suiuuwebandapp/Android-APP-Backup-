@@ -332,7 +332,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                     fullCommentList();
                 } else if ("-3".equals(status)) {
                     Toast.makeText(SuiuuDetailsActivity.this, LoginInvalid, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent (SuiuuDetailsActivity.this, LoginsMainActivity.class);
+                    Intent intent = new Intent (SuiuuDetailsActivity.this, LoginMainActivity.class);
                     SuiuuDetailsActivity.this.startActivity(intent);
                     SuiuuDetailsActivity.this.finish();
                 } else {

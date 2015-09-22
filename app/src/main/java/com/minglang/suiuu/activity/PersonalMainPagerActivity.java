@@ -216,7 +216,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
         tripImageTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PersonalMainPagerActivity.this, PersonalTripGalleryActivity.class);
+                Intent intent = new Intent(PersonalMainPagerActivity.this, PersonalTripImageActivity.class);
                 intent.putExtra(USER_SIGN, userSign);
                 startActivity(intent);
             }

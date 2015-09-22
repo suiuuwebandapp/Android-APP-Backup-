@@ -66,19 +66,4 @@
 
     </RelativeLayout>
 
-    <Switch
-        android:id="@+id/switch_suiuu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="@dimen/layout_10dp"
-        android:layout_marginRight="@dimen/layout_10dp"
-        android:text="@string/SuiuuAccount"
-        android:textColor="@color/textColor"
-        android:textOff=" "
-        android:textOn=" "
-        android:textSize="@dimen/layout_18sp"
-        android:thumb="@drawable/widget_switch_selector"
-        android:track="@drawable/widget_switch_background"/>
-
 </LinearLayout>

@@ -27,6 +27,11 @@
     <string name="MainTitle3" translatable="false">问答社区</string>
     <string name="MainTitle4" translatable="false">收件箱</string>
 
+    <string name="SwitchIdentity" translatable="false">身份切换</string>
+
+    <string name="SuiuuUser" translatable="false">随游用户</string>
+    <string name="GeneralUser" translatable="false">普通用户</string>
+
     <string name="PrivateLetter" translatable="false">私信</string>
 
     <string name="SuiuuAccount" translatable="false">随友账户</string>
@@ -132,7 +137,7 @@
 
     <string name="search_question" translatable="false">写下你的问题</string>
     <string name="question_description" translatable="false">问题的描述</string>
-    <string name="show_location" translatable="false">显示你的位置</string>
+    <string name="SelectedYourLocation" translatable="false">选择你的位置</string>
     <string name="image_theme" translatable="false">想个标题吧</string>
     <string name="activity_description" translatable="false">活动描述</string>
     <string name="picture_description" translatable="false">图片描述</string>
@@ -514,6 +519,9 @@
     <string name="tempMoney" translatable="false">2000.0</string>
     <string name="tempCount" translatable="false">50</string>
 
+    <string name="DialogTitle" translatable="false">设置自定义标签</string>
+    <string name="InputTagHint" translatable="false">请输入标签</string>
+
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
     <string name="pull_to_refresh_release_label">Release rear refresh</string>
     <string name="pull_to_refresh_refreshing_label">refresh\u2026</string>
@@ -583,7 +591,7 @@
     <string name="title_activity_personal_problem">PersonalProblemActivity</string>
     <string name="title_activity_personal_trip_gallery">PersonalTripGalleryActivity</string>
     <string name="title_activity_suiuu_comment">SuiuuCommentActivity</string>
-    <string name="title_activity_with_drawals">WithDrawalsActivity</string>
+    <string name="title_activity_withdrawals">WithdrawalsActivity</string>
     <string name="title_activity_up_load_log_file">UpLoadLogFileActivity</string>
     <string name="title_activity_private_letter">PrivateLetterActivity</string>
     <string name="title_activity_private_letter_chat">PrivateLetterChatActivity</string>

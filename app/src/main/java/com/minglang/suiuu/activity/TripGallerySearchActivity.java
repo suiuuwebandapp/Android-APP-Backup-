@@ -114,7 +114,7 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
                         clickImageList.remove(imageList.get(tag));
                         clickString.remove(mTagIntArray[tag]);
                     } else {
-                        imageList.get(tag).setBackgroundResource(R.drawable.imageview_border_style);
+                        imageList.get(tag).setBackgroundResource(R.drawable.image_view_border_style);
                         clickImageList.add(imageList.get(tag));
                         clickString.add(mTagIntArray[tag]);
                     }
