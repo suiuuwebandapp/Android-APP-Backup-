@@ -94,11 +94,11 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
         ImageView imageView = null;
         TextView textView;
         for (int i = 0; i < mPhotosIntArray.length; i++) {
-            itemView = LayoutInflater.from(this).inflate(R.layout.item_trip_gallery_tag, null);
+            itemView = LayoutInflater.from(this).inflate(R.layout.item_trip_image_tag, null);
             itemView.setTag(i);
-            imageView = (ImageView) itemView.findViewById(R.id.iv_item_trip_gallery_tag);
+            imageView = (ImageView) itemView.findViewById(R.id.item_trip_image_tag);
             imageList.add(imageView);
-            textView = (TextView) itemView.findViewById(R.id.tv_item_trip_gallery_tag);
+            textView = (TextView) itemView.findViewById(R.id.item_trip_text_tag);
             imageView.setImageResource(mPhotosIntArray[i]);
             textView.setText(mTagIntArray[i]);
             itemView.setPadding(10, 0, 0, 0);

@@ -99,7 +99,7 @@
 
         <!-- 登陆页面 -->
         <activity
-            android:name=".activity.LoginMainActivity"
+            android:name=".activity.FirstLoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme" />
@@ -111,10 +111,11 @@
 
         <!-- 登陆页面 -->
         <activity
-            android:name=".activity.LoginsActivity"
+            android:name=".activity.SecondLoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.MainBindActivity"
             android:label="@string/app_name"

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -12,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:scaleType="centerCrop"
         fresco:placeholderImage="@drawable/loading"
-        fresco:placeholderImageScaleType="fitXY"/>
+        fresco:placeholderImageScaleType="fitXY" />
 
     <RelativeLayout
         android:id="@+id/item_recommend_travel_content_layout"
@@ -24,53 +23,55 @@
         android:background="@drawable/gray_translate_back">
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/ci_suiuu_img"
+            android:id="@+id/item_suiuu_head_image_view"
             android:layout_width="@dimen/layout_50dp"
             android:layout_height="@dimen/layout_50dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_10dp"
             android:background="@drawable/default_head_image"
-            fresco:roundAsCircle="true"/>
+            fresco:roundAsCircle="true" />
 
         <TextView
-            android:id="@+id/tv_item_suiuu_name"
+            android:id="@+id/item_suiuu_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/layout_5dp"
+            android:layout_marginStart="@dimen/layout_5dp"
             android:layout_marginTop="@dimen/layout_5dp"
-            android:layout_toRightOf="@+id/ci_suiuu_img"
+            android:layout_toEndOf="@+id/item_suiuu_head_image_view"
+            android:layout_toRightOf="@+id/item_suiuu_head_image_view"
             android:singleLine="true"
-            android:text="New Text"
+            android:text="@string/app_name"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            />
+            android:textSize="18sp" />
 
         <RatingBar
-            android:id="@+id/rb_suiuu_star"
+            android:id="@+id/item_suiuu_star_bar"
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/tv_item_suiuu_name"
+            android:layout_alignLeft="@+id/item_suiuu_name"
             android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/item_suiuu_name"
             android:layout_marginBottom="@dimen/layout_8dp"
             android:isIndicator="true"
             android:numStars="5"
             android:progressDrawable="@drawable/food_rating_bar_full"
-            android:rating="2"
-            />
+            android:rating="2" />
 
         <TextView
-            android:id="@+id/tv_item_suiuu_price"
+            android:id="@+id/item_suiuu_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_margin="@dimen/layout_8dp"
             android:text="8000"
             android:textColor="@color/orange"
-            android:textSize="18sp"
+            android:textSize="18sp" />
 
-            />
     </RelativeLayout>
 
 </RelativeLayout>

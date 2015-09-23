@@ -36,8 +36,6 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
 
     private static final String TAG = AddReceivablesWayActivity.class.getSimpleName();
 
-    private static final String KEY = "key";
-
     private static final String ACCOUNT = "account";
     private static final String NAME = "name";
 
@@ -87,8 +85,6 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
     private String account;
 
     private String userName;
-
-    private String accountId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,8 +137,6 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
         paramsArray[1] = new OkHttpManager.Params(NAME, userName);
 
         String url = HttpNewServicePath.addAliPayUserInfo + "?" + TOKEN + "=" + token;
-        L.i(TAG, "绑定支付宝的URL:" + url);
-
         try {
             OkHttpManager.onPostAsynRequest(url, new AddReceivablesWayResultCallback(), paramsArray);
         } catch (IOException e) {
@@ -156,11 +150,6 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -184,7 +173,6 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            L.i(TAG, "返回信息:" + response);
             hideDialog();
             if (TextUtils.isEmpty(response)) {
                 Toast.makeText(context, NoData, Toast.LENGTH_LONG).show();

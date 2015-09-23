@@ -1,5 +1,6 @@
 package com.minglang.suiuu.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,13 +17,10 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SuiuuSearchActivity;
 import com.minglang.suiuu.entity.TripImage.TripImageData.TripImageItemData;
-import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -48,8 +46,8 @@ public class TripImageAdapter extends BaseAdapter {
     private Context context;
     private List<TripImageItemData> list;
 
-    private String lat;
-    private String lng;
+    //private String lat;
+    //private String lng;
 
     private List<ImageView> clickImageList = new ArrayList<>();
     private List<ImageView> imageList = new ArrayList<>();
@@ -61,12 +59,11 @@ public class TripImageAdapter extends BaseAdapter {
     public TripImageAdapter(Context context, List<TripImageItemData> list, String type, List<String> clickString) {
         this.context = context;
         this.list = list;
-        Map map = SuiuuInfo.ReadUserLocation(context);
-        this.lat = (String) map.get(LAT);
-        this.lng = (String) map.get(LNG);
+        //Map map = SuiuuInfo.ReadUserLocation(context);
+        //this.lat = (String) map.get(LAT);
+        //this.lng = (String) map.get(LNG);
         this.type = type;
         this.clickString = clickString;
-
     }
 
     public void updateData(List<TripImageItemData> list, String type, List<String> clickString) {
@@ -137,23 +134,23 @@ public class TripImageAdapter extends BaseAdapter {
 
                     SimpleDraweeView picContent = holderData.getView(R.id.trip_image_item_picture);
                     SimpleDraweeView headImageView = holderData.getView(R.id.trip_image_head_portrait);
-                    TextView distanceView = holderData.getView(R.id.trip_image_location_distance);
+                    //TextView distanceView = holderData.getView(R.id.trip_image_location_distance);
                     TextView titleView = holderData.getView(R.id.trip_image_title);
                     TextView tagView = holderData.getView(R.id.trip_image_tag);
                     TextView loveNumberView = holderData.getView(R.id.trip_image_love_number);
 
                     TripImageItemData itemData = list.get(position - 2);
 
-                    String longitude = itemData.getLon();
-                    String latitude = itemData.getLat();
-                    String cityName = itemData.getCity();
-                    if (!TextUtils.isEmpty(longitude) && !TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(cityName)) {
-                        double distance = AppUtils.distanceByLngLat(Double.valueOf(lng), Double.valueOf(lat),
-                                Double.valueOf(longitude), Double.valueOf(latitude));
-                        distanceView.setText(cityName + "\n" + distance + "KM");
-                    } else {
-                        distanceView.setText("");
-                    }
+                    //String longitude = itemData.getLon();
+                    //String latitude = itemData.getLat();
+                    //String cityName = itemData.getCity();
+                    //if (!TextUtils.isEmpty(longitude) && !TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(cityName)) {
+                    //double distance = AppUtils.distanceByLngLat(Double.valueOf(lng), Double.valueOf(lat),
+                    //Double.valueOf(longitude), Double.valueOf(latitude));
+                    //distanceView.setText(String.format("%s%s%s%s", cityName, "\n", distance, "KM"));
+                    //} else {
+                    //distanceView.setText("");
+                    //}
 
                     String title = itemData.getTitle();
                     if (!TextUtils.isEmpty(title)) {
@@ -202,23 +199,23 @@ public class TripImageAdapter extends BaseAdapter {
 
             SimpleDraweeView picContent = holderData.getView(R.id.trip_image_item_picture);
             SimpleDraweeView headImageView = holderData.getView(R.id.trip_image_head_portrait);
-            TextView distanceView = holderData.getView(R.id.trip_image_location_distance);
+            //TextView distanceView = holderData.getView(R.id.trip_image_location_distance);
             TextView titleView = holderData.getView(R.id.trip_image_title);
             TextView tagView = holderData.getView(R.id.trip_image_tag);
             TextView loveNumberView = holderData.getView(R.id.trip_image_love_number);
 
             TripImageItemData itemData = list.get(position);
 
-            String longitude = itemData.getLon();
-            String latitude = itemData.getLat();
-            String cityName = itemData.getCity();
-            if (!TextUtils.isEmpty(longitude) && !TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(cityName)) {
-                double distance = AppUtils.distanceByLngLat(Double.valueOf(lng), Double.valueOf(lat),
-                        Double.valueOf(longitude), Double.valueOf(latitude));
-                distanceView.setText(cityName + "\n" + distance + "KM");
-            } else {
-                distanceView.setText("");
-            }
+            //String longitude = itemData.getLon();
+            //String latitude = itemData.getLat();
+            //String cityName = itemData.getCity();
+            //if (!TextUtils.isEmpty(longitude) && !TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(cityName)) {
+            //double distance = AppUtils.distanceByLngLat(Double.valueOf(lng), Double.valueOf(lat),
+            //Double.valueOf(longitude), Double.valueOf(latitude));
+            //distanceView.setText(String.format("%s%s%s%s", cityName, "\n", distance, "KM"));
+            //} else {
+            //distanceView.setText("");
+            //}
 
             String title = itemData.getTitle();
             if (!TextUtils.isEmpty(title)) {
@@ -259,6 +256,7 @@ public class TripImageAdapter extends BaseAdapter {
         }
     }
 
+    @SuppressLint("InflateParams")
     private void showTag(LinearLayout mGalleryLinearLayout) {
         mGalleryLinearLayout.removeAllViews();
 
@@ -272,11 +270,11 @@ public class TripImageAdapter extends BaseAdapter {
         TextView textView;
 
         for (int i = 0; i < mPhotosIntArray.length; i++) {
-            itemView = LayoutInflater.from(context).inflate(R.layout.item_trip_gallery_tag, null);
+            itemView = LayoutInflater.from(context).inflate(R.layout.item_trip_image_tag, null);
             itemView.setTag(i);
 
-            imageView = (ImageView) itemView.findViewById(R.id.iv_item_trip_gallery_tag);
-            textView = (TextView) itemView.findViewById(R.id.tv_item_trip_gallery_tag);
+            imageView = (ImageView) itemView.findViewById(R.id.item_trip_image_tag);
+            textView = (TextView) itemView.findViewById(R.id.item_trip_text_tag);
 
             imageList.add(imageView);
             imageView.setImageResource(mPhotosIntArray[i]);

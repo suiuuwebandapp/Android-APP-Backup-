@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,13 +28,13 @@ import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData.UserAptitudeE
 import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData.UserCardEntity;
 import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData.UserInfoEntity;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.DrawableUtils;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
-import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.AppUtils;
+import com.minglang.suiuu.utils.DrawableUtils;
+import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -62,6 +63,9 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
     private static final String DATA = "data";
 
     private static final String TRIP_ID = "tripId";
+
+    private static final String RELATE_ID = "relateId";
+    private static final String HEAD_IMAGE_PATH = "headImagePath";
 
     @BindColor(R.color.transparent)
     int titleColor;
@@ -98,6 +102,9 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.personal_center_toolbar)
     Toolbar toolbar;
+
+    @Bind(R.id.personal_center_chat_view)
+    ImageView chatView;
 
     @Bind(R.id.personal_center_recycler_header_view)
     RecyclerViewHeader recyclerViewHeader;
@@ -164,6 +171,8 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
     private PersonalMainPagerAdapter adapter;
 
+    private String headImagePath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,6 +185,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
     private void initView() {
         userSign = getIntent().getStringExtra(USER_SIGN);
+        String oneselfUserSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
 
@@ -198,10 +208,25 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
         String publisher = SuiuuInfo.ReadUserData(this).getIsPublisher();
         isPublisher = !TextUtils.isEmpty(publisher) && publisher.equals("1");
 
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
+        if (oneselfUserSign.equals(userSign)) {
+            chatView.setVisibility(View.GONE);
+        }else{
+            chatView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void viewAction() {
+
+        chatView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                L.i(TAG, "userSign:" + userSign + ",headImagePath:" + headImagePath);
+                Intent intent = new Intent(PersonalMainPagerActivity.this, PrivateLetterChatActivity.class);
+                intent.putExtra(RELATE_ID, userSign);
+                intent.putExtra(HEAD_IMAGE_PATH, headImagePath);
+                startActivity(intent);
+            }
+        });
 
         adapter.setOnItemClickListener(new RecyclerViewOnItemClickListener() {
             @Override
@@ -316,7 +341,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
                 UserInfoEntity userInfo = personalCenter.getData().getUserInfo();
                 if (userInfo != null) {
 
-                    String headImagePath = userInfo.getHeadImg();
+                    headImagePath = userInfo.getHeadImg();
                     if (!TextUtils.isEmpty(headImagePath)) {
                         headImageView.setImageURI(Uri.parse(headImagePath));
                     }
@@ -332,7 +357,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
                     String cityName = userInfo.getCityCname();
                     if (!TextUtils.isEmpty(countryName)) {
                         if (!TextUtils.isEmpty(cityName)) {
-                            userLocation.setText(countryName + "," + cityName);
+                            userLocation.setText(String.format("%s%s%s", countryName, ",", cityName));
                         } else {
                             userLocation.setText(countryName);
                         }

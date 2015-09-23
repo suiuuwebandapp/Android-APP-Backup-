@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,13 +37,13 @@ import com.squareup.okhttp.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
@@ -51,13 +53,32 @@ import butterknife.ButterKnife;
  * <p/>
  * Created by Administrator on 2015/4/24.
  */
-public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View.OnClickListener {
+public class EasyTackPhotoActivity extends BaseAppCompatActivity {
 
     private static final String TAG = EasyTackPhotoActivity.class.getSimpleName();
+
+    private static final String PICTURE_MESSAGE = "pictureMessage";
+
+    private static final String TITLE = "title";
+    private static final String CONTENTS = "contents";
+    private static final String COUNTRY = "country";
+    private static final String CITY = "city";
+    private static final String LON = "lon";
+    private static final String LAT = "lat";
+    private static final String TAGS = "tags";
+    private static final String ADDRESS = "address";
+    private static final String PIC_LIST = "picList";
+    private static final String TITLE_IMG = "titleImg";
+
+    private static final String LATITUDE = "latitude";
+    private static final String LONGITUDE = "longitude";
 
     int status = 0;
 
     private String[] suiuuTag = {"家庭", "购物", "自然", "惊险", "浪漫", "博物馆", "猎奇"};
+
+    @BindColor(R.color.white)
+    int titleColor;
 
     @BindDrawable(R.drawable.shape_trip_image_publish_tag)
     Drawable tripImagePublishTag;
@@ -68,77 +89,64 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
     @BindString(R.string.unable_to_get_location)
     String NoLocation;
 
-    /**
-     * 取消按钮
-     */
-    @Bind(R.id.tv_top_cancel)
-    TextView tv_cancel;
-
-    private ArrayList<String> picList = new ArrayList<>();
-
-    /**
-     * 显示选择的照片
-     */
-    @Bind(R.id.lv_picture_description)
-    SwipeListView lv_pic_description;
-
-    /**
-     * 完成按钮
-     */
-    @Bind(R.id.tv_top_right)
-    TextView tv_top_right;
-
-    /**
-     * 保存照片描述的List集合
-     */
-    private List<String> picDescriptionList = new ArrayList<>();
-
-    /**
-     * 标题描写
-     */
-    @Bind(R.id.search_question)
-    EditText search_question;
-
-    private static final int REQUEST_CODE_MAP = 8;
-
-    /**
-     * 选择位置
-     */
-    @Bind(R.id.selected_your_location)
-    TextView selected_your_location;
-
-    private TextProgressDialog dialog;
-
-    @Bind(R.id.iv_top_back)
-    ImageView iv_top_back;
-
-    private JsonUtils jsonUtil = JsonUtils.getInstance();
-
-    private List<TextView> suiuuTagClick = new ArrayList<>();
-    private List<TextView> suiuuTagList = new ArrayList<>();
-
-    private String tagText;
-
     @BindString(R.string.DialogTitle)
     String DialogTitle;
 
     @BindString(R.string.InputTagHint)
     String InputTagHint;
 
-    @Bind(R.id.fl_easy_take_photo)
-    FlowLayout easyTakePhotoLayout;
+    @Bind(R.id.easy_tack_photo_tool_bar)
+    Toolbar toolbar;
 
-    @Bind(R.id.tv_top_center)
-    TextView tv_top_center;
+    @Bind(R.id.easy_tack_photo_scroll_view)
+    ScrollView scrollView;
+
+    /**
+     * 显示选择的照片
+     */
+    @Bind(R.id.lv_picture_description)
+    SwipeListView picDescription;
 
     @Bind(R.id.tv_show_tag)
     TextView tv_show_tag;
 
-    @Bind(R.id.tv_top_right_more)
-    ImageView tv_top_right_more;
+    @Bind(R.id.fl_easy_take_photo)
+    FlowLayout easyTakePhotoLayout;
 
-    @Bind(R.id.sll)
-    ScrollView scrollView;
+    /**
+     * 旅途图片地址集合
+     */
+    private ArrayList<String> picList = new ArrayList<>();
+
+    /**
+     * 旅途图片描述List集合
+     */
+    private List<String> picDescriptionList = new ArrayList<>();
+
+    /**
+     * 标题描写
+     */
+    @Bind(R.id.input_trip_image_title)
+    EditText inputTripImageTitle;
+
+    /**
+     * 选择位置
+     */
+    @Bind(R.id.selected_your_location)
+    TextView selectedYourLocation;
+
+    private static final int REQUEST_CODE_MAP = 8;
+
+    private TextProgressDialog dialog;
+
+    private JsonUtils jsonUtil = JsonUtils.getInstance();
+
+    private List<TextView> suiuuTagClick = new ArrayList<>();
+    private List<TextView> suiuuTagList = new ArrayList<>();
+
+    private String tripImageTitle;
+
+    private String tagText;
 
     /**
      * 位置相关
@@ -157,170 +165,134 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_easy_tackphoto);
 
-        picList = this.getIntent().getStringArrayListExtra("pictureMessage");
         ButterKnife.bind(this);
+        picList = getIntent().getStringArrayListExtra(PICTURE_MESSAGE);
+
         initView();
         setSuiuuTag();
         viewAction();
     }
 
     private void initView() {
+        toolbar.setTitleTextColor(titleColor);
+        setSupportActionBar(toolbar);
+
         dialog = new TextProgressDialog(this);
-        iv_top_back.setVisibility(View.GONE);
-        tv_top_right.setVisibility(View.VISIBLE);
-        tv_top_right_more.setVisibility(View.GONE);
-        tv_top_center.setText(R.string.trip_gallery_publish);
-        //判断如果文章详情信息不为空就是修改文章的图片反之为新文章图片
-        //iv_cancel.setVisibility(View.GONE);
-        tv_cancel.setVisibility(View.VISIBLE);
 
         scrollView.smoothScrollTo(0, 0);
 
         dialog = new TextProgressDialog(this);
 
         EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, picList);
-        adapter.setSwipeListView(lv_pic_description);
+        adapter.setSwipeListView(picDescription);
 
-
-        lv_pic_description.setAdapter(adapter);
-        AppUtils.setListViewHeightBasedOnChildren(lv_pic_description);
+        picDescription.setAdapter(adapter);
+        AppUtils.setListViewHeightBasedOnChildren(picDescription);
 
         verification = SuiuuInfo.ReadVerification(this);
+        token = SuiuuInfo.ReadAppTimeSign(this);
+
         int layout100dp = (int) getResources().getDimension(R.dimen.layout_100dp);
         int layout16dp = (int) getResources().getDimension(R.dimen.layout_16dp);
         int itemRemoveBtnWidth = AppUtils.newInstance().px2dip(layout100dp, this);
         int screenWidth = new ScreenUtils(this).getScreenWidth();
-        L.i(TAG, "layout100DpToPx=" + layout100dp + ",layout16Dp:" + layout16dp
-                + ",itemRemoveBtnWidthPx=" + itemRemoveBtnWidth + ",screenWidth=" + screenWidth);
-        lv_pic_description.setOffsetLeft(screenWidth - layout100dp - layout16dp * 2);
+        L.i(TAG, "layout100DpToPx=" + layout100dp
+                + ",layout16Dp:" + layout16dp
+                + ",itemRemoveBtnWidthPx=" + itemRemoveBtnWidth
+                + ",screenWidth=" + screenWidth);
+        picDescription.setOffsetLeft(screenWidth - layout100dp - layout16dp * 2);
     }
 
     private void viewAction() {
-        tv_cancel.setOnClickListener(this);
-        tv_top_right.setOnClickListener(this);
-        iv_top_back.setOnClickListener(this);
-        selected_your_location.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && resultCode == 9) {
-            picList = data.getStringArrayListExtra("pictureMessage");
-            EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, picList);
-            adapter.setSwipeListView(lv_pic_description);
-            lv_pic_description.setAdapter(adapter);
-            AppUtils.setListViewHeightBasedOnChildren(lv_pic_description);
-
-        } else if (data != null && requestCode == REQUEST_CODE_MAP) {
-            latitude = data.getDoubleExtra("latitude", 0);
-            longitude = data.getDoubleExtra("longitude", 0);
-            locationAddress = data.getStringExtra("address");
-            locationCountry = data.getStringExtra("country");
-            locationCity = data.getStringExtra("city");
-
-            if (locationAddress != null && !locationAddress.equals("")) {
-                selected_your_location.setText(locationAddress);
-            } else {
-                Toast.makeText(this, NoLocation, Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        int mId = v.getId();
-        switch (mId) {
-            case R.id.tv_top_cancel:
-                finish();
-                break;
-
-            case R.id.tv_top_right:
-                loadDate();
-                break;
-
-            case R.id.selected_your_location:
+        selectedYourLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 startActivityForResult(new Intent(EasyTackPhotoActivity.this, AMapActivity.class), REQUEST_CODE_MAP);
-                break;
+            }
+        });
+    }
 
-            case R.id.iv_top_back:
-                finish();
-                break;
+    private boolean judgeTripImageInfo() {
+        tripImageTitle = inputTripImageTitle.getText().toString().trim();
+
+        if (TextUtils.isEmpty(tripImageTitle)) {
+            Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
+            return false;
         }
+
+        if (TextUtils.isEmpty(locationAddress)) {
+            Toast.makeText(this, R.string.choice_location, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(tagText)) {
+            Toast.makeText(this, R.string.please_choice_tag, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * 发布旅图
      */
-    private void loadDate() {
-        for (int i = 0; i < lv_pic_description.getChildCount(); i++) {
-            FrameLayout layout = (FrameLayout) lv_pic_description.getChildAt(i);// 获得子item的layout
-            EditText et = (EditText) layout.findViewById(R.id.item_tack_description);// 从layout中获得控件,根据其id
-            // EditText et = (EditText) layout.getChildAt(1)//或者根据Y位置,在这我假设TextView在前，EditText在后
-            picDescriptionList.add(et.getText().toString());
-        }
-        if (TextUtils.isEmpty(search_question.getText().toString().trim())) {
-            Toast.makeText(this, R.string.title_is_empty, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(locationAddress)) {
-            Toast.makeText(this, R.string.choice_location, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(tagText)) {
-            Toast.makeText(this, R.string.please_choice_tag, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        //访问网络相关
-        dialog.showDialog();
-        Map<String, String> map = new HashMap<>();
-        map.put("title", search_question.getText().toString().trim());
-        map.put("contents", jsonUtil.toJSON(picDescriptionList));
-        map.put("country", locationCountry);
-        map.put("city", locationCity);
-        map.put("lon", String.valueOf(longitude));
-        map.put("lat", String.valueOf(latitude));
-        map.put("tags", tagText.replace(" ", ","));
-        map.put("address", locationAddress);
-        List<String> picNameList = new ArrayList<>();
-        for (String string : picList) {
-            String substring = string.substring(string.lastIndexOf("/"));
-            picNameList.add(AppConstant.OSS_ROOT_PATH + "suiuu_content" + substring);
-        }
-        map.put("picList", jsonUtil.toJSON(picNameList));
-        map.put("titleImg", picNameList.get(0));
-        try {
-            OkHttpManager.onPostAsynRequest(HttpNewServicePath.createTripGallery + "?token=" + SuiuuInfo.ReadAppTimeSign(EasyTackPhotoActivity.this), new CreateLoopCallBack(), map);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private void releaseTripImage() {
+        if (judgeTripImageInfo()) {
 
-    /**
-     * 发布圈子文章回调接口
-     */
-    class CreateLoopCallBack extends OkHttpManager.ResultCallback<String> {
-        @Override
-        public void onError(Request request, Exception e) {
-            L.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + e.toString());
-        }
+            for (int i = 0; i < picDescription.getChildCount(); i++) {
+                FrameLayout layout = (FrameLayout) picDescription.getChildAt(i);// 获得子item的layout
+                EditText et = (EditText) layout.findViewById(R.id.item_tack_description);// 从layout中获得控件,根据其id
+                picDescriptionList.add(et.getText().toString());
+            }
 
-        @Override
-        public void onResponse(String result) {
+            dialog.showDialog();
+
+            String strLongitude = "0";
+            String strLatitude = "0";
             try {
-                JSONObject json = new JSONObject(result);
-                status = (int) json.get("status");
-                if (status == 1) {
-                    Intent intent = new Intent(EasyTackPhotoActivity.this, UpdateImageService.class);
-                    intent.putExtra("imageList", jsonUtil.toJSON(picList));
-                    startService(intent);
-                    Toast.makeText(EasyTackPhotoActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
-                    finish();
-                } else {
-                    Toast.makeText(EasyTackPhotoActivity.this, "发布没有成功,请重试", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+                L.i(TAG, "longitude:" + longitude);
+                L.i(TAG, "latitude:" + latitude);
+
+                strLongitude = String.valueOf(longitude);
+                strLatitude = String.valueOf(latitude);
+            } catch (Exception e) {
+                L.e(TAG, "类型转换异常:" + e.getMessage());
+            }
+
+            Map<String, String> map = new HashMap<>();
+            map.put(TITLE, tripImageTitle);
+            map.put(CONTENTS, jsonUtil.toJSON(picDescriptionList));
+
+            if (!TextUtils.isEmpty(locationCountry)) {
+                map.put(COUNTRY, locationCountry);
+            }
+
+            if (!TextUtils.isEmpty(locationCity)) {
+                map.put(CITY, locationCity);
+            }
+
+            map.put(LON, strLongitude);
+            map.put(LAT, strLatitude);
+            map.put(TAGS, tagText.replace(" ", ","));
+            map.put(ADDRESS, locationAddress);
+
+            List<String> picNameList = new ArrayList<>();
+            for (String string : picList) {
+                String substring = string.substring(string.lastIndexOf("/"));
+                picNameList.add(AppConstant.OSS_ROOT_PATH + "suiuu_content" + substring);
+            }
+
+            map.put(PIC_LIST, jsonUtil.toJSON(picNameList));
+            map.put(TITLE_IMG, picNameList.get(0));
+
+            L.e(TAG, "参数集合:" + map.toString());
+
+            String url = HttpNewServicePath.createTripImagePath + "?" + TOKEN + "=" + token;
+
+            try {
+                OkHttpManager.onPostAsynRequest(url, new CreateLoopCallBack(), map);
+            } catch (Exception e) {
+                L.e(TAG, "网络请求异常:" + e.getMessage());
             }
         }
     }
@@ -412,6 +384,87 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity implements View
         AlertDialog alertDialog = builder.create();
         alertDialog.setView(inputTagEdit);
         alertDialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        L.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
+
+        if (data != null && resultCode == 9) {
+            picList = data.getStringArrayListExtra(PICTURE_MESSAGE);
+            EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, picList);
+            adapter.setSwipeListView(picDescription);
+            picDescription.setAdapter(adapter);
+
+            AppUtils.setListViewHeightBasedOnChildren(picDescription);
+
+        } else if (data != null && requestCode == REQUEST_CODE_MAP) {
+            latitude = data.getDoubleExtra(LATITUDE, 0);
+            longitude = data.getDoubleExtra(LONGITUDE, 0);
+            locationAddress = data.getStringExtra(ADDRESS);
+            locationCountry = data.getStringExtra(COUNTRY);
+            locationCity = data.getStringExtra(CITY);
+
+            if (locationAddress != null && !locationAddress.equals("")) {
+                selectedYourLocation.setText(locationAddress);
+            } else {
+                Toast.makeText(this, NoLocation, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_easy_task_photo, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+
+            case R.id.easy_tack_photo_accomplish:
+                releaseTripImage();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 发布圈子文章回调接口
+     */
+    private class CreateLoopCallBack extends OkHttpManager.ResultCallback<String> {
+
+        @Override
+        public void onError(Request request, Exception e) {
+            L.e(TAG, "HttpException:" + e.getMessage() + ",Error:" + e.toString());
+        }
+
+        @Override
+        public void onResponse(String result) {
+            try {
+                JSONObject json = new JSONObject(result);
+                status = (int) json.get("status");
+                if (status == 1) {
+                    Intent intent = new Intent(EasyTackPhotoActivity.this, UpdateImageService.class);
+                    intent.putExtra("imageList", jsonUtil.toJSON(picList));
+                    startService(intent);
+                    Toast.makeText(EasyTackPhotoActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(EasyTackPhotoActivity.this, "发布没有成功,请重试", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
 }

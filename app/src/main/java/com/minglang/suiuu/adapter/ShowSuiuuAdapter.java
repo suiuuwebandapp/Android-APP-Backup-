@@ -26,6 +26,7 @@ import java.util.List;
  * 修改备注：
  */
 public class ShowSuiuuAdapter extends BaseAdapter {
+
     private Context context;
     private List<SuiuuItemData> list;
 
@@ -33,40 +34,77 @@ public class ShowSuiuuAdapter extends BaseAdapter {
         this.context = context;
         this.list = list;
     }
+
     public void upDateData(List<SuiuuItemData> list) {
         this.list = list;
         this.notifyDataSetChanged();
     }
+
     @Override
     public int getCount() {
-        return list.size();
+        if (list != null && list.size() > 0) {
+            return list.size();
+        } else {
+            return 0;
+        }
     }
+
     @Override
     public Object getItem(int position) {
-        return null;
+        if (list != null && list.size() > 0) {
+            return list.get(position);
+        } else {
+            return null;
+        }
     }
+
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.adapter_suiuu, position);
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_suiuu, position);
         convertView = holder.getConvertView();
-        SimpleDraweeView picContent = holder.getView(R.id.item_attention_dynamic_image);
-        SimpleDraweeView cirleImage = holder.getView(R.id.ci_suiuu_img);
-        TextView tv_suiuu_name = holder.getView(R.id.tv_item_suiuu_name);
-        TextView tv_item_suiuu_price = holder.getView(R.id.tv_item_suiuu_price);
-        RatingBar rb_suiuu_star = holder.getView(R.id.rb_suiuu_star);
-        rb_suiuu_star.setRating(Math.round(Double.valueOf(list.get(position).getScore().replace(".", ""))/2));
-        tv_item_suiuu_price.setText("￥:  " + list.get(position).getBasePrice());
-        tv_suiuu_name.setText(list.get(position).getTitle().trim().toString());
-        Uri uri = Uri.parse(list.get(position).getTitleImg());
-        picContent.setImageURI(uri);
-        if(!TextUtils.isEmpty(list.get(position).getHeadImg())) {
-            Uri uri1 = Uri.parse(list.get(position).getHeadImg());
-            cirleImage.setImageURI(uri1);
+
+        SimpleDraweeView mainImageView = holder.getView(R.id.item_attention_dynamic_image);
+        SimpleDraweeView headImageView = holder.getView(R.id.item_suiuu_head_image_view);
+        TextView suiuuNameView = holder.getView(R.id.item_suiuu_name);
+        TextView itemSuiuuPrice = holder.getView(R.id.item_suiuu_price);
+        RatingBar rb_suiuu_star = holder.getView(R.id.item_suiuu_star_bar);
+
+        rb_suiuu_star.setRating(Math.round(Double.valueOf(list.get(position).getScore().replace(".", "")) / 2));
+
+        String basePrice = list.get(position).getBasePrice();
+        if (!TextUtils.isEmpty(basePrice)) {
+            itemSuiuuPrice.setText(String.format("%s%s", "￥:  ", basePrice));
+        } else {
+            itemSuiuuPrice.setText("0");
         }
+
+        String title = list.get(position).getTitle().trim();
+        if (!TextUtils.isEmpty(title)) {
+            suiuuNameView.setText(title);
+        } else {
+            suiuuNameView.setText("");
+        }
+
+        String titleImagePath = list.get(position).getTitleImg();
+        if (!TextUtils.isEmpty(titleImagePath)) {
+            mainImageView.setImageURI(Uri.parse(titleImagePath));
+        } else {
+            mainImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.loading_error));
+        }
+
+        String headImagePath = list.get(position).getHeadImg();
+        if (!TextUtils.isEmpty(headImagePath)) {
+            headImageView.setImageURI(Uri.parse(headImagePath));
+        } else {
+            headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
+        }
+
         return convertView;
     }
+
 }

@@ -27,6 +27,7 @@ import com.minglang.suiuu.adapter.SearchNearMessageAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.ReFlashListView;
 import com.minglang.suiuu.customview.TextProgressDialog;
+import com.minglang.suiuu.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,9 @@ import butterknife.ButterKnife;
 
 public class AMapActivity extends BaseActivity implements
         AMapLocationListener, PoiSearch.OnPoiSearchListener, ReFlashListView.IReflashListener, ReFlashListView.ILoadMoreDataListener {
+
+    private static final String TAG = AMapActivity.class.getSimpleName();
+
     private double latitude;
     private double longitude;
 
@@ -296,14 +300,15 @@ public class AMapActivity extends BaseActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        L.i(TAG, "requestCode:" + requestCode + ",resultCode:" + resultCode);
+
         if (data != null && requestCode == 11) {
             String locationAddress = data.getStringExtra("address");
             Intent intent = AMapActivity.this.getIntent();
             intent.putExtra("address", locationAddress);
             AMapActivity.this.setResult(RESULT_OK, intent);
             finish();
-            overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
-
         }
     }
 

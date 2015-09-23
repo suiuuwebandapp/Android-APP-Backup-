@@ -328,7 +328,7 @@ public class RegisterActivity extends BaseActivity {
                         SuiuuInfo.WriteUserData(RegisterActivity.this, data);
                         startActivity(new Intent(RegisterActivity.this,MainActivity.class));
                     }else {
-                        startActivity(new Intent(RegisterActivity.this, LoginsActivity.class));
+                        startActivity(new Intent(RegisterActivity.this, SecondLoginActivity.class));
                     }
                 } else {
                     Toast.makeText(RegisterActivity.this, "注册失败，请稍候再试！", Toast.LENGTH_SHORT).show();

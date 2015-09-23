@@ -19,7 +19,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="@dimen/layout_20dp"
-        android:background="@drawable/item_trip_gallery_back">
+        android:background="@drawable/item_trip_image_back"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/trip_image_location_distance"
@@ -30,9 +31,9 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/layout_5dp"
             android:layout_marginRight="@dimen/layout_5dp"
-            android:drawableLeft="@drawable/trip_gallery_location"
+            android:drawableLeft="@drawable/trip_image_location"
             android:drawablePadding="@dimen/layout_10dp"
-            android:drawableStart="@drawable/trip_gallery_location"
+            android:drawableStart="@drawable/trip_image_location"
             android:padding="@dimen/layout_5dp"
             android:textColor="@color/white" />
 
@@ -93,8 +94,8 @@
             android:layout_alignParentRight="true"
             android:layout_margin="@dimen/layout_5dp"
             android:drawableLeft="@drawable/small_heat"
-            android:drawableStart="@drawable/small_heat"
             android:drawablePadding="@dimen/layout_5dp"
+            android:drawableStart="@drawable/small_heat"
             android:text="@string/tempCount" />
 
     </RelativeLayout>

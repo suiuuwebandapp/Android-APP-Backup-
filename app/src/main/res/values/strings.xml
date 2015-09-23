@@ -458,7 +458,7 @@
     <string name="Suiuu_dialog" translatable="false">随游设计师仅提供本行程路线的制定,我们会另外安排合适的随友陪伴你游玩</string>
 
     <string name="Agree" translatable="false">同意</string>
-    <string name="trip_gallery_publish" translatable="false">旅图发布</string>
+    <string name="trip_image_publish" translatable="false">旅图发布</string>
     <string name="Loading" translatable="false">请稍候&#8230;</string>
 
     <string name="AllComment" translatable="false">全部评论</string>

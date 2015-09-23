@@ -3,6 +3,7 @@ package com.minglang.suiuu.activity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -47,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -67,6 +69,11 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
     private static final int COMMENT_SUCCESS = 20;
 
     private static final String ID = "id";
+
+    private static final String ATTENTION_ID = "attentionId";
+
+    @BindDrawable(R.drawable.attention_heart_normal)
+    Drawable AttentionHeartNormal;
 
     @BindString(R.string.NetworkError)
     String NetworkError;
@@ -251,9 +258,13 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
 
     private void viewAction() {
         iv_top_back.setOnClickListener(new MyOnClickListener());
+
         suiuuDetailsComment.setOnClickListener(new MyOnClickListener());
+
         toCommentActivity.setOnClickListener(new MyOnClickListener());
+
         tripImageDetailsPortrait.setOnClickListener(new MyOnClickListener());
+
         tripGalleryDetailsHeart.setOnClickListener(new MyOnClickListener());
 
         //评论点击事件
@@ -291,9 +302,9 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
     /**
      * 收藏旅图
      */
-    private void collectionTripGallery() {
+    private void collectionTripImage() {
         OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[1];
-        paramsArray[0] = new OkHttpManager.Params("id", id);
+        paramsArray[0] = new OkHttpManager.Params(ID, id);
         try {
             OkHttpManager.onPostAsynRequest(HttpNewServicePath.CollectionTripGalleryPath + "?token=" + token,
                     new CollectionTripGalleryRequestCallback(), paramsArray);
@@ -306,9 +317,9 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
     /**
      * 取消旅图收藏
      */
-    private void collectionTripGalleryCancel(String cancelId) {
+    private void collectionTripImageCancel(String cancelId) {
         OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[1];
-        paramsArray[0] = new OkHttpManager.Params("attentionId", cancelId);
+        paramsArray[0] = new OkHttpManager.Params(ATTENTION_ID, cancelId);
         try {
             OkHttpManager.onPostAsynRequest(HttpNewServicePath.CollectionArticleCancelPath + "?token=" + token,
                     new CollectionGalleryCancelRequestCallback(), paramsArray);
@@ -404,11 +415,20 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
         public void onResponse(String response) {
             try {
                 JSONObject json = new JSONObject(response);
-                String status = json.getString("status");
-                String data = json.getString("data");
+                String status = json.getString(STATUS);
+                String data = json.getString(DATA);
                 if ("1".equals(status) && "success".equals(data)) {
                     attentionId = null;
-                    tripGalleryDetailsHeart.setBackgroundResource(R.drawable.attention_heart_normal);
+                    String headCountStr = headCount.getText().toString().trim();
+                    if (!TextUtils.isEmpty(headCountStr)) {
+                        int headCountNumber = Integer.valueOf(headCountStr);
+                        headCountNumber = headCountNumber - 1;
+                        if (headCountNumber < 0) {
+                            headCountNumber = 0;
+                        }
+                        headCount.setText(String.valueOf(headCountNumber));
+                    }
+                    tripGalleryDetailsHeart.setBackground(AttentionHeartNormal);
                     Toast.makeText(context, "取消收藏成功", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
@@ -556,9 +576,9 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
                 case R.id.trip_image_details_heart:
                     //关注按钮
                     if (TextUtils.isEmpty(attentionId)) {
-                        collectionTripGallery();
+                        collectionTripImage();
                     } else {
-                        collectionTripGalleryCancel(attentionId);
+                        collectionTripImageCancel(attentionId);
                     }
                     break;
             }

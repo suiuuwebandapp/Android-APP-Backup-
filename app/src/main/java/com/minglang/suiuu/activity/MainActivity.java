@@ -2,15 +2,12 @@ package com.minglang.suiuu.activity;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
@@ -22,6 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,7 +32,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.koushikdutta.WebSocketClient;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MainSliderAdapter;
-import com.minglang.suiuu.application.BaseAppManager;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.fragment.main.InformationFragment;
@@ -42,7 +39,6 @@ import com.minglang.suiuu.fragment.main.ProblemFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
 import com.minglang.suiuu.fragment.main.TripImageFragment;
 import com.minglang.suiuu.receiver.ConnectionNetChangeReceiver;
-import com.minglang.suiuu.service.LocationService;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.MD5Utils;
@@ -97,12 +93,6 @@ public class MainActivity extends BaseActivity {
     private static final String USER_KEY = "user_key";
     private static final String LOGIN = "login";
 
-    @BindString(R.string.SuiuuAccount)
-    String SuiuuAccount;
-
-    @BindString(R.string.OrdinaryAccount)
-    String OrdinaryAccount;
-
     @BindString(R.string.SuiuuUser)
     String SuiuuUser;
 
@@ -139,8 +129,8 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.side_list_view_2)
     ListView sideListView2;
 
-    @Bind(R.id.switch_text_view)
-    TextView switchUser;
+    @Bind(R.id.switch_view)
+    Button switchUser;
 
     @Bind(R.id.titleInfo)
     TextView titleInfo;
@@ -251,19 +241,21 @@ public class MainActivity extends BaseActivity {
 
     private LocalBroadcastManager localBroadcastManager;
 
-    private LocationService.LocationBinder locationBinder;
-
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            locationBinder = (LocationService.LocationBinder) service;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            L.i(TAG, "ComponentName:" + name.toString());
-        }
-    };
+    //    private LocationService.LocationBinder locationBinder;
+    //
+    //    private ServiceConnection serviceConnection = new ServiceConnection() {
+    //
+    //        @Override
+    //        public void onServiceConnected(ComponentName name, IBinder service) {
+    //            locationBinder = (LocationService.LocationBinder) service;
+    //        }
+    //
+    //        @Override
+    //        public void onServiceDisconnected(ComponentName name) {
+    //            L.i(TAG, "ComponentName:" + name.toString());
+    //        }
+    //
+    //    };
 
     private boolean isPublisher = false;
 
@@ -288,7 +280,8 @@ public class MainActivity extends BaseActivity {
         getServiceTime();
         versionCheck();
 
-        bindService(new Intent(context, LocationService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        //暂停使用定位服务
+        //bindService(new Intent(context, LocationService.class), serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -317,7 +310,7 @@ public class MainActivity extends BaseActivity {
     private String buildLoginMessage() {
         JSONObject object = new JSONObject();
         try {
-            object.put(USER_KEY, "5sfbhr5crgdq0i0n1792us4rh1");
+            object.put(USER_KEY, verification);
             object.put(TYPE, LOGIN);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -443,7 +436,7 @@ public class MainActivity extends BaseActivity {
 
         ViewGroup.LayoutParams sliderNavigationViewParams = sliderView.getLayoutParams();
         sliderNavigationViewParams.width = screenWidth / 4 * 3;
-        sliderNavigationViewParams.height = screenHeight;
+        sliderNavigationViewParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
         sliderView.setLayoutParams(sliderNavigationViewParams);
 
         String strNickName = SuiuuInfo.ReadUserData(this).getNickname();
@@ -1034,15 +1027,14 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(context, "再按一次退出程序", Toast.LENGTH_SHORT).show();
                     exitTime = System.currentTimeMillis();
                 } else {
-
                     if (isConnected) {
                         webSocketClient.disconnect();
                     }
 
-                    unbindService(serviceConnection);
-                    locationBinder.endService();
+                    //定位服务相关
+                    //unbindService(serviceConnection);
+                    //locationBinder.endService();
 
-                    BaseAppManager.getInstance().clear();
                     finish();
                 }
             }

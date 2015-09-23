@@ -1,6 +1,7 @@
 package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -12,9 +13,9 @@ import android.widget.Toast;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
-import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
@@ -45,6 +46,9 @@ public class AnswerActivity extends BaseAppCompatActivity {
     @BindString(R.string.Waiting)
     String DialogMsg;
 
+    @BindString(R.string.NoData)
+    String NoData;
+
     @BindString(R.string.AnswerSuccess)
     String success;
 
@@ -65,13 +69,16 @@ public class AnswerActivity extends BaseAppCompatActivity {
 
     private ProgressDialog progressDialog;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer);
 
+        context = this;
+
         qID = getIntent().getStringExtra(Q_ID);
-        L.i(TAG, "问题ID:" + qID);
 
         ButterKnife.bind(this);
         initView();
@@ -87,8 +94,6 @@ public class AnswerActivity extends BaseAppCompatActivity {
 
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
-
-        L.i(TAG, "verification:" + verification + ",token:" + token);
     }
 
     /**
@@ -117,7 +122,6 @@ public class AnswerActivity extends BaseAppCompatActivity {
         }
 
         String url = HttpNewServicePath.setAnswerToQuestionPath + "?" + TOKEN + "=" + token;
-
         try {
             OkHttpManager.onPostAsynRequest(url, new AnswerResultCallback(), buildNewParams(qID, content));
         } catch (IOException e) {
@@ -151,7 +155,6 @@ public class AnswerActivity extends BaseAppCompatActivity {
             case R.id.answer_confirm:
                 String str = editText.getText().toString().trim();
                 if (!TextUtils.isEmpty(str)) {
-                    //setAnswerContent2Service(buildRequestParams(qID, str));
                     sendRequest(str);
                 } else {
                     Toast.makeText(this, AnswerNoNull, Toast.LENGTH_SHORT).show();
@@ -165,9 +168,9 @@ public class AnswerActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            hideDialog();
-            L.i(TAG, "response:" + response);
-            try {
+            if (TextUtils.isEmpty(response)) {
+                Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
+            } else try {
                 JSONObject object = new JSONObject(response);
                 String status = object.getString(STATUS);
                 if (status.equals(SUC_VALUE)) {
@@ -185,10 +188,13 @@ public class AnswerActivity extends BaseAppCompatActivity {
         @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "request:" + request.toString() + ",Exception:" + e.getMessage());
-            hideDialog();
             Toast.makeText(AnswerActivity.this, NetWorkError, Toast.LENGTH_SHORT).show();
         }
 
+        @Override
+        public void onFinish() {
+            hideDialog();
+        }
     }
 
 }

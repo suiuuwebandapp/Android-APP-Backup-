@@ -71,7 +71,7 @@ public class AboutSuiuuActivity extends BaseAppCompatActivity {
 
         try {
             String name = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-            aboutSuiuuVersion.setText(versionNameBefore + name);
+            aboutSuiuuVersion.setText(String.format("%s%s", versionNameBefore, name));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             aboutSuiuuVersion.setText(versionNameFailure);

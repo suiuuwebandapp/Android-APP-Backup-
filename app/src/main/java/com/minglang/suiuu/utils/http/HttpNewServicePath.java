@@ -431,7 +431,7 @@ public class HttpNewServicePath {
     /**
      * 发布旅图文章
      */
-    public static String createTripGallery = RootPath + "/app-travel-picture/add-travel-picture";
+    public static String createTripImagePath = RootPath + "/app-travel-picture/add-travel-picture";
     /**
      * 根据id获得旅图详情
      */

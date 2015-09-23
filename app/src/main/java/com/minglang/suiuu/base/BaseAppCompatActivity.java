@@ -6,9 +6,13 @@ import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 
+import com.minglang.suiuu.R;
 import com.minglang.suiuu.utils.L;
 
 import java.net.URLEncoder;
+
+import butterknife.BindString;
+import butterknife.ButterKnife;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
 
@@ -24,12 +28,25 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     public static final String PAGE = "page";
     public static final String NUMBER = "number";
 
+    @BindString(R.string.NoData)
+    String NoData;
+
+    @BindString(R.string.DataError)
+    String DataError;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
+
     public DisplayMetrics dm;
 
     /**
      * 屏幕宽度
      */
     public int screenWidth;
+
     /**
      * 屏幕高度
      */
@@ -54,6 +71,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
+        ButterKnife.bind(this);
+        L.i(TAG, this.getClass().getSimpleName());
         initScreen();
     }
 

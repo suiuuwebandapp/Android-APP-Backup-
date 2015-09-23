@@ -109,7 +109,7 @@ public class SettingActivity extends BaseAppCompatActivity {
 
                 SettingActivity.this.finish(); // 重新显示登陆页面
 
-                startActivity(new Intent(context, LoginsActivity.class));
+                startActivity(new Intent(context, FirstLoginActivity.class));
             }
         });
 

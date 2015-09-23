@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.application.BaseAppManager;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
@@ -67,8 +66,6 @@ public class BaseActivity extends FragmentActivity {
         initSundry();
 
         isZhCnLanguage = isCNLanguage();
-
-        BaseAppManager.getInstance().addActivity(this);
     }
 
     private void initScreen() {

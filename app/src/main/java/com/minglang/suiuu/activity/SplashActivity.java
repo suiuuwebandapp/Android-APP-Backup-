@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
-import com.minglang.suiuu.service.LocationService;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import butterknife.Bind;
@@ -53,7 +52,8 @@ public class SplashActivity extends BaseActivity {
         transAnim.setFillAfter(true);
         transAnim.setDuration(2500);
 
-        startService(new Intent(this, LocationService.class));
+        //暂停使用定位服务
+        //startService(new Intent(this, LocationService.class));
     }
 
     private void viewAction() {
@@ -97,7 +97,7 @@ public class SplashActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(SuiuuInfo.ReadUserData(SplashActivity.this).getNickname())) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                 } else {
-                    startActivity(new Intent(SplashActivity.this, LoginMainActivity.class));
+                    startActivity(new Intent(SplashActivity.this, FirstLoginActivity.class));
                 }
                 finish();
             }

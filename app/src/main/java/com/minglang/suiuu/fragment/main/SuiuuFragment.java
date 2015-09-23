@@ -1,7 +1,9 @@
 package com.minglang.suiuu.fragment.main;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -17,20 +19,19 @@ import android.widget.Toast;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.FirstLoginActivity;
 import com.minglang.suiuu.activity.SuiuuDetailsActivity;
 import com.minglang.suiuu.activity.SuiuuSearchActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.base.BaseFragment;
-import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.dbhelper.DataCacheUtils;
 import com.minglang.suiuu.entity.SuiuuData;
 import com.minglang.suiuu.entity.SuiuuItemData;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.AppUtils;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -48,6 +50,7 @@ import butterknife.ButterKnife;
  * 随游页面
  */
 public class SuiuuFragment extends BaseFragment {
+
     private static final String TAG = SuiuuFragment.class.getSimpleName();
 
     private static final String CC = "cc";
@@ -58,6 +61,12 @@ public class SuiuuFragment extends BaseFragment {
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
+
+    @BindDrawable(R.color.TripImageDividerColor)
+    Drawable Divider;
+
+    @BindString(R.string.load_wait)
+    String DialogMsg;
 
     @BindString(R.string.NoData)
     String NoData;
@@ -71,6 +80,8 @@ public class SuiuuFragment extends BaseFragment {
     @BindString(R.string.SystemException)
     String SystemException;
 
+    private ProgressDialog progressDialog;
+
     @Bind(R.id.trip_image_list_view)
     PullToRefreshListView pullToRefreshListView;
 
@@ -79,8 +90,6 @@ public class SuiuuFragment extends BaseFragment {
     private List<SuiuuItemData> listAll = new ArrayList<>();
 
     private int page = 1;
-
-    private TextProgressDialog dialog;
 
     private ImageView et_suiuu;
 
@@ -107,15 +116,20 @@ public class SuiuuFragment extends BaseFragment {
     }
 
     private void initView() {
-        View topView = getActivity().findViewById(R.id.main_show_layout);
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage(DialogMsg);
 
-        dialog = new TextProgressDialog(getActivity());
+        View topView = getActivity().findViewById(R.id.main_show_layout);
 
         et_suiuu = (ImageView) topView.findViewById(R.id.main_2_search); //处理头部控件
 
         token = SuiuuInfo.ReadAppTimeSign(getActivity());
 
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        ListView listView = pullToRefreshListView.getRefreshableView();
+        listView.setDivider(Divider);
+        listView.setDividerHeight((int) getResources().getDimension(R.dimen.layout_10dp));
 
         adapter = new ShowSuiuuAdapter(getActivity(), listAll);
         pullToRefreshListView.setAdapter(adapter);
@@ -160,13 +174,9 @@ public class SuiuuFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int location = position - 1;
-                if (AppUtils.isNetworkConnected(getActivity())) {
-                    Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
-                    intent.putExtra("tripId", listAll.get(location - 1).getTripId());
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getActivity(), R.string.lsq_network_connection_interruption, Toast.LENGTH_SHORT).show();
-                }
+                Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
+                intent.putExtra("tripId", listAll.get(location).getTripId());
+                startActivity(intent);
             }
         });
 
@@ -182,15 +192,16 @@ public class SuiuuFragment extends BaseFragment {
      */
     private void sendRequestSuiuuData(String countryOrCity, String peopleCount, String tags, String startPrice, String endPrice, int page) {
         if (isPullToRefresh) {
-            if (dialog != null && !dialog.isShow())
-                dialog.showDialog();
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
         }
 
         String[] keyArray1 = new String[]{CC, PEOPLE_COUNT, TAGS, START_PRICE, END_PRICE, PAGE, NUMBER, TOKEN};
         String[] valueArray1 = new String[]{countryOrCity, peopleCount, tags, startPrice, endPrice, Integer.toString(page), "10", token};
         String url = addUrlAndParams(HttpNewServicePath.getSuiuuList, keyArray1, valueArray1);
         try {
-            OkHttpManager.onGetAsynRequest(url, new getSuiuuDateCallBack());
+            OkHttpManager.onGetAsynRequest(url, new SuiuuDataCallBack());
         } catch (IOException e) {
             L.e(TAG, "网络请求异常:" + e.getMessage());
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
@@ -198,8 +209,8 @@ public class SuiuuFragment extends BaseFragment {
     }
 
     private void hideDialog() {
-        if (dialog != null && dialog.isShow()) {
-            dialog.dismissDialog();
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
         }
 
         pullToRefreshListView.onRefreshComplete();
@@ -208,11 +219,10 @@ public class SuiuuFragment extends BaseFragment {
     /**
      * 获取随游列表的回调接口
      */
-    private class getSuiuuDateCallBack extends OkHttpManager.ResultCallback<String> {
+    private class SuiuuDataCallBack extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String response) {
-            L.i(TAG, "随游返回的数据:" + response);
             if (TextUtils.isEmpty(response)) {
                 Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
             } else try {
@@ -235,6 +245,11 @@ public class SuiuuFragment extends BaseFragment {
 
                         case "-2":
                             Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case "-3":
+                            getActivity().startActivity(new Intent(getActivity(), FirstLoginActivity.class));
+                            getActivity().finish();
                             break;
 
                         default:
@@ -260,6 +275,7 @@ public class SuiuuFragment extends BaseFragment {
         public void onFinish() {
             hideDialog();
         }
+
     }
 
     private class MyOnclick implements View.OnClickListener {

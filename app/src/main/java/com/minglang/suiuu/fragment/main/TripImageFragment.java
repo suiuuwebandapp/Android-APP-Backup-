@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.FirstLoginActivity;
 import com.minglang.suiuu.activity.TripImageDetailsActivity;
 import com.minglang.suiuu.adapter.TripImageAdapter;
 import com.minglang.suiuu.base.BaseFragment;
@@ -281,6 +282,11 @@ public class TripImageFragment extends BaseFragment {
 
                         case "-2":
                             Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case "-3":
+                            getActivity().startActivity(new Intent(getActivity(), FirstLoginActivity.class));
+                            getActivity().finish();
                             break;
 
                         default:

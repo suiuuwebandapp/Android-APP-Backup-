@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:swipe="http://schemas.android.com/apk/res-auto"
     android:id="@+id/tack_photo_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/common_top2_layout" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/easy_tack_photo_tool_bar"
+        style="@style/AppToolBar"
+        app:navigationIcon="@drawable/back"
+        app:title="@string/trip_image_publish"
+        app:theme="@style/Theme.AppCompat.NoActionBar"/>
 
     <ScrollView
-        android:id="@+id/sll"
+        android:id="@+id/easy_tack_photo_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -23,7 +28,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/search_question"
+                android:id="@+id/input_trip_image_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/layout_16dp"
@@ -70,7 +75,7 @@
 
             <TextView
                 android:id="@+id/tv_show_tag"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/layout_16dp"
                 android:layout_marginRight="@dimen/layout_16dp"

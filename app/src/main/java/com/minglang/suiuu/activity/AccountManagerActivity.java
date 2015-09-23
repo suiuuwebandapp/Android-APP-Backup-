@@ -102,7 +102,7 @@ public class AccountManagerActivity extends BaseAppCompatActivity {
     protected void onResume() {
         super.onResume();
         String strBalance = SuiuuInfo.ReadBalance(this);
-        accountBalanceNumber.setText("￥" + strBalance);
+        accountBalanceNumber.setText(String.format("%s%s", "￥", strBalance));
     }
 
     /**
@@ -159,7 +159,6 @@ public class AccountManagerActivity extends BaseAppCompatActivity {
         }
 
         String url = HttpNewServicePath.getUserAccountInfoPath + "?" + TOKEN + "=" + token;
-        L.i(TAG, "提现记录URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new AccountManagerResultCallback());
         } catch (IOException e) {
@@ -239,7 +238,6 @@ public class AccountManagerActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            L.i(TAG, "账户信息:" + response);
             hideDialog();
             bindData2View(response);
         }

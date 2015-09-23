@@ -70,7 +70,7 @@ public class MainBindActivity extends BaseActivity {
         tv_account_exist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainBindActivity.this, LoginsActivity.class);
+                Intent intent = new Intent(MainBindActivity.this, SecondLoginActivity.class);
                 intent.putExtra("isQuicklyLogin", true);
                 startActivity(intent);
             }
