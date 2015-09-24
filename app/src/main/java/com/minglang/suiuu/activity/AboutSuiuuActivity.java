@@ -105,7 +105,7 @@ public class AboutSuiuuActivity extends BaseAppCompatActivity {
         aboutSuiuuHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(context,UsingSuiuuActivity.class));
             }
         });
 

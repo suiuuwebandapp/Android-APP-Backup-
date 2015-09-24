@@ -465,7 +465,7 @@ public class MainActivity extends BaseActivity {
 
             isPublisher = false;
 
-            switchUser.setText(GeneralUser);
+            switchUser.setText(SuiuuUser);
             switchUser.setEnabled(false);
         } else {
             if (publisher.equals("1")) {
@@ -474,7 +474,7 @@ public class MainActivity extends BaseActivity {
 
                 isPublisher = true;
 
-                switchUser.setText(SuiuuUser);
+                switchUser.setText(GeneralUser);
                 switchUser.setEnabled(true);
             } else {
                 sideListView.setVisibility(View.GONE);
@@ -482,7 +482,7 @@ public class MainActivity extends BaseActivity {
 
                 isPublisher = false;
 
-                switchUser.setText(GeneralUser);
+                switchUser.setText(SuiuuUser);
                 switchUser.setEnabled(false);
             }
         }
@@ -581,13 +581,13 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isPublisher) {
                     isPublisher = false;
-                    switchUser.setText(GeneralUser);
+                    switchUser.setText(SuiuuUser);
 
                     sideListView.setVisibility(View.GONE);
                     sideListView2.setVisibility(View.VISIBLE);
                 } else {
                     isPublisher = true;
-                    switchUser.setText(SuiuuUser);
+                    switchUser.setText(GeneralUser);
 
                     sideListView.setVisibility(View.VISIBLE);
                     sideListView2.setVisibility(View.GONE);
