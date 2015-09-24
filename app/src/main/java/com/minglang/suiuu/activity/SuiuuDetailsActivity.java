@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -25,18 +24,18 @@ import android.widget.Toast;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.CommonCommentAdapter;
+import com.minglang.suiuu.adapter.SuiuuDetailsCommentAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.dbhelper.DbHelper;
 import com.minglang.suiuu.entity.SuiuuDetailsData;
 import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.AppUtils;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -60,6 +59,8 @@ import butterknife.ButterKnife;
  */
 public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
+    private static final String TAG = SuiuuDetailsActivity.class.getSimpleName();
+
     private static final int COMMENT_SUCCESS = 20;
 
     private static final String TRIP_ID = "tripId";
@@ -78,6 +79,9 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     @BindString(R.string.DataRequestFailure)
     String DataRequestFailure;
 
+    @BindString(R.string.SystemException)
+    String SystemException;
+
     private String tripId;
 
     @Bind(R.id.suiuu_detail_web_view)
@@ -93,7 +97,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
     //显示评论总数
     @Bind(R.id.suiuu_details_comment_number)
-    TextView tv_suiuu_detail_comment_number;
+    TextView suiuuDetailsCommentNumber;
 
     //评论头像
     @Bind(R.id.sdv_comment_head_img)
@@ -105,7 +109,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
     //评论显示列表
     @Bind(R.id.suiuu_details_comment_list_view)
-    NoScrollBarListView suiuu_detail_comment;
+    NoScrollBarListView suiuuDetailsComment;
 
     //咨询按钮
     @Bind(R.id.bb_consult)
@@ -126,7 +130,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     @Bind(R.id.suiuu_details_input_comment)
     LinearLayout suiuu_detail_input_comment;
 
-    private CommonCommentAdapter adapter;
+    private SuiuuDetailsCommentAdapter adapter;
 
     WebSettings webSettings;
 
@@ -139,10 +143,12 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
      * 是否显示全部评论的状态
      */
     private boolean showAllComment = false;
+
     /**
      * 加载更多的view
      */
     private TextView textView = null;
+
     private AlertDialog setTagDialog;
 
     @Override
@@ -170,6 +176,9 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
+
+        adapter = new SuiuuDetailsCommentAdapter(this, listAll);
+        suiuuDetailsComment.setAdapter(adapter);
     }
 
     private void viewAction() {
@@ -190,19 +199,19 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
         schedule.setOnClickListener(new MyOnClickListener());
 
-        suiuu_detail_comment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        suiuuDetailsComment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!showAllComment && position == 5) {
-                    showAllComment = true;
-                    showList(listAll);
-                } else {
-                    Intent intent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
-                    intent.putExtra(TRIP_ID, tripId);
-                    intent.putExtra(R_ID, listAll.get(position).getCommentId());
-                    intent.putExtra(NICK_NAME, listAll.get(position).getNickname());
-                    startActivityForResult(intent, COMMENT_SUCCESS);
-                }
+                //if (!showAllComment && position == 5) {
+                //showAllComment = true;
+                //showList(listAll);
+                //} else {
+                Intent intent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
+                intent.putExtra(TRIP_ID, tripId);
+                intent.putExtra(R_ID, listAll.get(position).getCommentId());
+                intent.putExtra(NICK_NAME, listAll.get(position).getNickname());
+                startActivityForResult(intent, COMMENT_SUCCESS);
+                //}
             }
         });
     }
@@ -306,8 +315,10 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     private void getSuiuuDetailsData(String tripId) {
         String[] keyArray1 = new String[]{TRIP_ID, "token"};
         String[] valueArray1 = new String[]{tripId, token};
+        String url = addUrlAndParams(HttpNewServicePath.getSuiuuItemInfo, keyArray1, valueArray1);
+        L.i(TAG, "请求URL:" + url);
         try {
-            OkHttpManager.onGetAsynRequest(addUrlAndParams(HttpNewServicePath.getSuiuuItemInfo, keyArray1, valueArray1), new SuiuuItemInfoCallBack());
+            OkHttpManager.onGetAsynRequest(url, new SuiuuItemInfoCallBack());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -317,6 +328,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
      * 请求数据网络接口回调
      */
     class SuiuuItemInfoCallBack extends OkHttpManager.ResultCallback<String> {
+
         @Override
         public void onError(Request request, Exception e) {
             Toast.makeText(SuiuuDetailsActivity.this, DataRequestFailure, Toast.LENGTH_SHORT).show();
@@ -328,17 +340,31 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                 JSONObject jsonObject = new JSONObject(str);
                 String status = jsonObject.getString(STATUS);
 
-                if ("1".equals(status)) {
-                    detailsData = JsonUtils.getInstance().fromJSON(SuiuuDetailsData.class, str);
-                    listAll = detailsData.getData().getComment().getData();
-                    fullCommentList();
-                } else if ("-3".equals(status)) {
-                    Toast.makeText(SuiuuDetailsActivity.this, LoginInvalid, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(SuiuuDetailsActivity.this, FirstLoginActivity.class);
-                    SuiuuDetailsActivity.this.startActivity(intent);
-                    SuiuuDetailsActivity.this.finish();
-                } else {
-                    Toast.makeText(SuiuuDetailsActivity.this, DataRequestFailure, Toast.LENGTH_SHORT).show();
+                switch (status) {
+                    case "1":
+                        detailsData = JsonUtils.getInstance().fromJSON(SuiuuDetailsData.class, str);
+                        listAll = detailsData.getData().getComment().getData();
+                        fullCommentList();
+                        break;
+
+                    case "-1":
+                        Toast.makeText(SuiuuDetailsActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-2":
+                        Toast.makeText(SuiuuDetailsActivity.this, jsonObject.getString("data"), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-3":
+                        Toast.makeText(SuiuuDetailsActivity.this, LoginInvalid, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(SuiuuDetailsActivity.this, FirstLoginActivity.class);
+                        SuiuuDetailsActivity.this.startActivity(intent);
+                        SuiuuDetailsActivity.this.finish();
+                        break;
+
+                    default:
+                        Toast.makeText(SuiuuDetailsActivity.this, DataRequestFailure, Toast.LENGTH_SHORT).show();
+                        break;
                 }
 
             } catch (Exception e) {
@@ -348,47 +374,47 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
         }
 
-
     }
 
     public void fullCommentList() {
         if (listAll != null && listAll.size() > 0) {
-            tv_suiuu_detail_comment_number.setText(String.format("%s%s%s", "全部评论 (共", listAll.size(), "条评论)"));
+            suiuuDetailsCommentNumber.setText(String.format("%s%s%s", "全部评论 (共", listAll.size(), "条评论)"));
             suiuu_detail_input_comment.setVisibility(View.VISIBLE);
             suiuu_detail_no_comment.setVisibility(View.GONE);
-            showList(listAll);
+            //showList(listAll);
+            adapter.setList(listAll);
         } else {
             suiuu_detail_no_comment.setVisibility(View.VISIBLE);
             suiuu_detail_input_comment.setVisibility(View.GONE);
         }
     }
 
-    private void showList(List<CommentDataEntity> commentDataList) {
-        List<CommentDataEntity> newCommentDataList = new ArrayList<>();
-        if (!showAllComment) {
-            if (commentDataList.size() > 5) {
-                if (textView == null) {
-                    textView = new TextView(this);
-                    textView.setText("点击加载更多");
-                    textView.setPadding(0, 10, 0, 0);
-                    textView.setGravity(Gravity.CENTER);
-                    textView.setTextSize(18);
-                }
-                suiuu_detail_comment.addFooterView(textView);
-                newCommentDataList.addAll(commentDataList);
-                newCommentDataList.subList(5, commentDataList.size()).clear();
-            }
-        } else {
-            suiuu_detail_comment.removeFooterView(textView);
-        }
-        if (adapter == null) {
-            adapter = new CommonCommentAdapter(this, commentDataList.size() > 5 && !showAllComment ? newCommentDataList : commentDataList);
-            suiuu_detail_comment.setAdapter(adapter);
-            AppUtils.setListViewHeightBasedOnChildren(suiuu_detail_comment);
-        } else {
-            adapter.onDateChange(commentDataList.size() > 5 && !showAllComment ? newCommentDataList : commentDataList);
-        }
-    }
+    //    private void showList(List<CommentDataEntity> commentDataList) {
+    //        List<CommentDataEntity> newCommentDataList = new ArrayList<>();
+    //        if (!showAllComment) {
+    //            if (commentDataList.size() > 5) {
+    //                if (textView == null) {
+    //                    textView = new TextView(this);
+    //                    textView.setText("点击加载更多");
+    //                    textView.setPadding(0, 10, 0, 0);
+    //                    textView.setGravity(Gravity.CENTER);
+    //                    textView.setTextSize(18);
+    //                }
+    //                suiuuDetailsComment.addFooterView(textView);
+    //                newCommentDataList.addAll(commentDataList);
+    //                newCommentDataList.subList(5, commentDataList.size()).clear();
+    //            }
+    //        } else {
+    //            suiuuDetailsComment.removeFooterView(textView);
+    //        }
+    //
+    //        if (adapter == null) {
+    //            adapter = new SuiuuDetailsCommentAdapter(this, commentDataList.size() > 5 && !showAllComment ? newCommentDataList : commentDataList);
+    //            suiuuDetailsComment.setAdapter(adapter);
+    //        } else {
+    //            adapter.setList(commentDataList.size() > 5 && !showAllComment ? newCommentDataList : commentDataList);
+    //        }
+    //    }
 
     private class MyOnClickListener implements View.OnClickListener {
 

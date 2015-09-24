@@ -18,7 +18,7 @@
             android:layout_weight="0.3"/>
 
         <FrameLayout
-            android:id="@+id/selectLayout"
+            android:id="@+id/select_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.7">
@@ -46,7 +46,7 @@
         android:background="@color/tr_black"/>
 
     <com.minglang.pulltorefreshlibrary.PullToRefreshListView
-        android:id="@+id/CommunityListView"
+        android:id="@+id/problem_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"/>

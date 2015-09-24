@@ -4,8 +4,8 @@
     android:id="@+id/suiuu_detail_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
-    >
+    android:background="@color/DefaultGray2">
+
         <RelativeLayout
             android:id="@+id/suiuu_details_title_layout"
             android:layout_width="match_parent"
@@ -52,13 +52,12 @@
             <WebView
                 android:id="@+id/suiuu_detail_web_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
+
             <include layout="@layout/common_comment_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/suiuu_detail_web_view"
-                />
+                android:layout_below="@+id/suiuu_detail_web_view" />
 
         </RelativeLayout>
 

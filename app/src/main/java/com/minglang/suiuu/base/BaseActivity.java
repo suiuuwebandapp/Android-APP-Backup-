@@ -1,7 +1,6 @@
 package com.minglang.suiuu.base;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -18,7 +17,16 @@ import java.util.Locale;
 public class BaseActivity extends FragmentActivity {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
+
     public static final String TOKEN = "token";
+
+    public static final String USER_SIGN = "userSign";
+
+    public static final String STATUS = "status";
+    public static final String DATA = "data";
+
+    public static final String PAGE = "page";
+    public static final String NUMBER = "number";
 
     public DisplayMetrics dm;
 
@@ -46,8 +54,6 @@ public class BaseActivity extends FragmentActivity {
 
     public FragmentManager fm;
 
-    public int sliderImageWidth;
-
     public String userSign;
     public String verification;
     public String token;
@@ -58,9 +64,6 @@ public class BaseActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-
-        long maxMemorySize = Runtime.getRuntime().maxMemory() / 1024 / 1024;
-        L.i(TAG, "应用程序可用最大内存:" + maxMemorySize);
 
         initScreen();
         initSundry();
@@ -75,11 +78,12 @@ public class BaseActivity extends FragmentActivity {
         screenHeight = dm.heightPixels;
         density = dm.density;
         densityDPI = dm.densityDpi;
+
+        L.i(TAG, "屏幕宽度:" + screenWidth + ",屏幕高度:" + screenHeight + ",屏幕密度:" + density + ",屏幕DPI:" + densityDPI);
     }
 
     private void initSundry() {
         fm = getSupportFragmentManager();
-        sliderImageWidth = BitmapFactory.decodeResource(getResources(), R.drawable.slider).getWidth();
         userSign = SuiuuInfo.ReadUserSign(this);
         verification = SuiuuInfo.ReadVerification(this);
     }

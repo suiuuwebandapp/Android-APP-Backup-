@@ -1119,6 +1119,21 @@ public class SuiuuDetailsData {
                 public String getStatus() {
                     return status;
                 }
+
+                @Override
+                public String toString() {
+                    return "CommentDataEntity{" +
+                            "headImg='" + headImg + '\'' +
+                            ", userSign='" + userSign + '\'' +
+                            ", travelCount='" + travelCount + '\'' +
+                            ", isTravel='" + isTravel + '\'' +
+                            ", nickname='" + nickname + '\'' +
+                            ", commentId='" + commentId + '\'' +
+                            ", content='" + content + '\'' +
+                            ", rTitle='" + rTitle + '\'' +
+                            ", status='" + status + '\'' +
+                            '}';
+                }
             }
         }
 

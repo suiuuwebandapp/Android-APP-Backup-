@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="match_parent"
     android:background="@color/white">
 
     <RelativeLayout
@@ -18,91 +17,93 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/back"/>
+            android:layout_marginLeft="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_10dp"
+            android:contentDescription="@string/a"
+            android:src="@drawable/back" />
 
-        <RelativeLayout
-            android:id="@+id/rl_top_info"
+        <EditText
+            android:id="@+id/et_suiuu_search"
             android:layout_width="@dimen/layout_200dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/et_search"
-            android:visibility="visible">
-
-            <EditText
-                android:id="@+id/et_suiuu_search"
-                android:layout_width="@dimen/layout_200dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="@color/transparent"
-                android:hint="输入你感兴趣的国家,城市"
-                android:padding="@dimen/layout_5dp"
-                android:singleLine="true"
-                android:textSize="@dimen/layout_15sp"/>
-        </RelativeLayout>
+            android:layout_marginBottom="@dimen/layout_5dp"
+            android:layout_marginTop="@dimen/layout_5dp"
+            android:background="@drawable/shape_suiuu_search_edit_background"
+            android:hint="@string/SuiuuSearchHint"
+            android:padding="@dimen/layout_8dp"
+            android:singleLine="true"
+            android:textSize="@dimen/layout_15sp" />
 
         <ImageView
             android:id="@+id/iv_top_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/layout_5dp"
             android:layout_marginRight="@dimen/layout_5dp"
-            android:src="@drawable/suiuu_search"/>
+            android:contentDescription="@string/Search"
+            android:src="@drawable/suiuu_search" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_commend"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_suiuu_search_top">
 
         <TextView
-            android:id="@+id/tv_suiuu_commend_contry"
+            android:id="@+id/tv_suiuu_commend_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_10dp"
             android:layout_marginTop="@dimen/layout_10dp"
             android:text="推荐"
             android:textColor="@color/gray"
-            android:textSize="@dimen/layout_18sp"/>
+            android:textSize="@dimen/layout_18sp" />
 
         <com.minglang.suiuu.customview.FlowLayout
-            android:id="@+id/fl_suiuu_commend_country"
+            android:id="@+id/suiuu_commend_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_suiuu_commend_contry"
+            android:layout_below="@+id/tv_suiuu_commend_country"
             android:layout_marginLeft="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_10dp"
             android:background="@color/transparent"
-            android:padding="5dp"/>
+            android:padding="5dp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_asia"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_commend">
 
         <TextView
-            android:id="@+id/tv_suiuu_asia_contry"
+            android:id="@+id/tv_suiuu_asia_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_10dp"
             android:text="亚洲"
             android:textColor="@color/gray"
-            android:textSize="@dimen/layout_18sp"/>
+            android:textSize="@dimen/layout_18sp" />
 
         <com.minglang.suiuu.customview.FlowLayout
-            android:id="@+id/fl_suiuu_asia_country"
+            android:id="@+id/suiuu_asia_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_suiuu_asia_contry"
+            android:layout_below="@+id/tv_suiuu_asia_country"
             android:layout_marginLeft="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_10dp"
             android:background="@color/transparent"
-            android:padding="5dp"/>
+            android:padding="5dp" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -112,21 +113,25 @@
         android:layout_below="@+id/rl_asia">
 
         <TextView
-            android:id="@+id/tv_suiuu_european_contry"
+            android:id="@+id/tv_suiuu_european_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_10dp"
             android:text="欧洲"
             android:textColor="@color/gray"
-            android:textSize="@dimen/layout_18sp"/>
+            android:textSize="@dimen/layout_18sp" />
 
         <com.minglang.suiuu.customview.FlowLayout
-            android:id="@+id/fl_suiuu_european_country"
+            android:id="@+id/suiuu_european_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_suiuu_european_contry"
+            android:layout_below="@+id/tv_suiuu_european_country"
             android:layout_marginLeft="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_10dp"
             android:background="@color/transparent"
-            android:padding="5dp"/>
+            android:padding="5dp" />
+
     </RelativeLayout>
+
 </RelativeLayout>

@@ -60,7 +60,7 @@
                 android:scrollbars="none">
 
                 <LinearLayout
-                    android:id="@+id/show_image_layout"
+                    android:id="@+id/trip_image_tag_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:background="@color/white"

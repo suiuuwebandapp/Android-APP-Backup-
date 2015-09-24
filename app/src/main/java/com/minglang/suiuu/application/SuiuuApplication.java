@@ -27,7 +27,6 @@ import com.alibaba.sdk.android.oss.model.TokenGenerator;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.koushikdutta.WebSocketClient;
-import com.minglang.suiuu.crash.GlobalCrashHandler;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 
@@ -84,7 +83,7 @@ public class SuiuuApplication extends TuSdkApplication {
         initApplication();
         initAboutOSS();
 
-        GlobalCrashHandler.getInstance().init(this);
+        //GlobalCrashHandler.getInstance().init(this);
 
         List<BasicNameValuePair> extraHeaders = Collections.singletonList(new BasicNameValuePair("", ""));
 

@@ -432,6 +432,8 @@ public class MainActivity extends BaseActivity {
      * 初始化方法
      */
     private void initView() {
+        fm = getSupportFragmentManager();
+
         mDrawerLayout.setFocusableInTouchMode(true);
 
         ViewGroup.LayoutParams sliderNavigationViewParams = sliderView.getLayoutParams();
@@ -464,7 +466,7 @@ public class MainActivity extends BaseActivity {
             isPublisher = false;
 
             switchUser.setText(GeneralUser);
-
+            switchUser.setEnabled(false);
         } else {
             if (publisher.equals("1")) {
                 sideListView.setVisibility(View.VISIBLE);
@@ -473,7 +475,7 @@ public class MainActivity extends BaseActivity {
                 isPublisher = true;
 
                 switchUser.setText(SuiuuUser);
-
+                switchUser.setEnabled(true);
             } else {
                 sideListView.setVisibility(View.GONE);
                 sideListView2.setVisibility(View.VISIBLE);
@@ -481,7 +483,7 @@ public class MainActivity extends BaseActivity {
                 isPublisher = false;
 
                 switchUser.setText(GeneralUser);
-
+                switchUser.setEnabled(false);
             }
         }
 
@@ -930,7 +932,7 @@ public class MainActivity extends BaseActivity {
         }
 
         if (requestCode == AppConstant.PUBLISTH_TRIP_GALLERY_SUCCESS) {
-            tripImageFragment.loadFirstPageData();
+            tripImageFragment.loadFirstPageData(null);
         }
     }
 

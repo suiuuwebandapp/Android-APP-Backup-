@@ -6,9 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -17,7 +17,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.minglang.suiuu.R;
@@ -28,13 +27,13 @@ import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.Inf
 import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.PublisherBaseEntity;
 import com.minglang.suiuu.entity.ServiceInfo;
 import com.minglang.suiuu.entity.TripJsonInfo;
+import com.minglang.suiuu.utils.AppUtils;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.http.OkHttpManager;
-import com.minglang.suiuu.utils.SuiuuInfo;
-import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -183,13 +182,13 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
      * 底部左边按钮
      */
     @Bind(R.id.order_details_repay)
-    BootstrapButton orderDetailsRepay;
+    Button orderDetailsRepay;
 
     /**
      * 底部左边按钮
      */
     @Bind(R.id.order_details_cancel)
-    BootstrapButton orderDetailsCancel;
+    Button orderDetailsCancel;
 
     /**
      * 底部按钮布局
@@ -453,7 +452,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             //随游人数
                             String personCount = infoEntity.getPersonCount();
                             if (!TextUtils.isEmpty(personCount)) {
-                                orderDetailsSuiuuNumber.setText(personCount + "人");
+                                orderDetailsSuiuuNumber.setText(String.format("%s%s", personCount, "人"));
                             } else {
                                 orderDetailsSuiuuNumber.setText("0人");
                             }
@@ -515,7 +514,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             //订单总价
                             TextView totalOrderPriceView = (TextView) inflater
                                     .inflate(R.layout.item_service_location_layout2, serviceLayout, false);
-                            totalOrderPriceView.setText("总价:" + totalOrderPrice);
+                            totalOrderPriceView.setText(String.format("%s%s", "总价:", totalOrderPrice));
 
                             serviceLayout.addView(totalOrderPriceView);
 
@@ -539,9 +538,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                                     case "3":
                                         orderDetailsBottomLayout.setVisibility(View.VISIBLE);
                                         orderDetailsCancel.setVisibility(View.GONE);
-                                        orderDetailsRepay.setBootstrapType("danger");
                                         orderDetailsRepay.setText(DeleteOrder);
-                                        orderDetailsRepay.setForegroundGravity(Gravity.CENTER);
                                         orderStatus.setText("未支付 已取消");
                                         break;
 
@@ -552,7 +549,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                                     case "5":
                                         orderDetailsBottomLayout.setVisibility(View.VISIBLE);
                                         orderDetailsCancel.setVisibility(View.GONE);
-                                        orderDetailsCancel.setBootstrapType("danger");
                                         orderDetailsCancel.setText(DeleteOrder);
                                         orderStatus.setText("退款成功");
                                         break;

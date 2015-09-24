@@ -23,15 +23,18 @@ import com.minglang.suiuu.entity.CityData;
 import com.minglang.suiuu.entity.HaveAssistCity;
 import com.minglang.suiuu.entity.HaveCity;
 import com.minglang.suiuu.utils.CharacterParser;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.comparator.CityNameComparator;
 import com.minglang.suiuu.utils.comparator.HaveCityNameComparator;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.HttpServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -170,7 +173,7 @@ public class SelectCityActivity extends BaseAppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectCityName = isAllCountry ? haveList.get(position).getCname() : list.get(position).getCname();
-                selectCityId =isAllCountry ? haveList.get(position).getqCityId() : list.get(position).getId();
+                selectCityId = isAllCountry ? haveList.get(position).getqCityId() : list.get(position).getId();
 
                 Toast.makeText(context, "您选择的城市为:" + selectCityName, Toast.LENGTH_SHORT).show();
 
@@ -200,7 +203,6 @@ public class SelectCityActivity extends BaseAppCompatActivity {
 
         String baseUrl = isAllCountry ? HttpNewServicePath.getHaveCityPath : HttpNewServicePath.getCityListPath;
         String url = addUrlAndParams(baseUrl, keyArray, valueArray);
-        L.i(TAG, "请求城市的URL:" + url);
 
         try {
             OkHttpManager.onGetAsynRequest(url, isAllCountry ? new HaveCountryResultCallback() : new SelectCityResultCallback());
@@ -297,6 +299,7 @@ public class SelectCityActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
+            L.i(TAG, "返回已有的国家的城市的数据:" + response);
             if (TextUtils.isEmpty(response)) {
                 Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
             } else try {
@@ -308,11 +311,43 @@ public class SelectCityActivity extends BaseAppCompatActivity {
                     haveCityAdapter = new HaveCityAdapter(context, haveList);
                     cityListView.setAdapter(haveCityAdapter);
                 } else {
-                    Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    intent.putExtra(COUNTRY_ID, countryId);
+                    intent.putExtra(COUNTRY_CN_NAME, countryCNname);
+                    intent.putExtra(CITY_ID, "");
+                    intent.putExtra(CITY_NAME, "");
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
             } catch (Exception e) {
-                L.e(TAG, "数据解析错误:" + e.getMessage());
-                Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject object = new JSONObject(response);
+                    JSONArray data = object.getJSONArray("data");
+                    String city = data.get(0).toString();
+                    JSONObject cityObject = new JSONObject(city);
+
+                    String cityId = cityObject.get("qCityId").toString();
+                    String cCityName = cityObject.get("cname").toString();
+
+                    Intent intent = new Intent();
+                    intent.putExtra(COUNTRY_ID, countryId);
+                    intent.putExtra(COUNTRY_CN_NAME, countryCNname);
+
+                    if (TextUtils.isEmpty(cityId)) {
+                        intent.putExtra(CITY_ID, "");
+                        intent.putExtra(CITY_NAME, "");
+                    } else {
+                        intent.putExtra(CITY_ID, "");
+                        intent.putExtra(CITY_NAME, cCityName);
+                    }
+                    setResult(RESULT_OK, intent);
+                    finish();
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    L.e(TAG, "数据解析错误:" + ex.getMessage());
+                    Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
+                }
             }
         }
 

@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/layout_15dp"
-            android:background="@color/backgroundColor"
+            android:background="@color/DefaultGray2"
             android:orientation="vertical">
 
             <EditText

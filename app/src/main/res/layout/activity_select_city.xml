@@ -1,5 +1,4 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -8,7 +7,7 @@
         android:id="@+id/select_city_tool_bar"
         style="@style/AppToolBar"
         app:navigationIcon="@drawable/back"
-        app:title="@string/countryDetails"/>
+        app:title="@string/PleaseSelectCity" />
 
     <ListView
         android:id="@+id/select_city_list_view"
@@ -16,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/select_city_tool_bar"
         android:layout_centerHorizontal="true"
-        android:choiceMode="none"/>
+        android:choiceMode="none" />
 
     <com.minglang.suiuu.customview.SideBar
         android:id="@+id/select_city_sidebar"
@@ -24,6 +23,6 @@
         android:layout_height="match_parent"
         android:layout_alignEnd="@+id/select_city_tool_bar"
         android:layout_alignRight="@+id/select_city_tool_bar"
-        android:layout_below="@+id/select_city_tool_bar"/>
+        android:layout_below="@+id/select_city_tool_bar" />
 
 </RelativeLayout>

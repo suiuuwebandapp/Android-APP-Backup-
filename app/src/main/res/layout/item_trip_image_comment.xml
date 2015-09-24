@@ -9,7 +9,7 @@
     android:layout_marginRight="@dimen/layout_20dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/iv_show_pic"
+        android:id="@+id/trip_image_comment_head_image_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_200dp"
         fresco:failureImage="@drawable/loading_error"
@@ -17,7 +17,7 @@
         fresco:placeholderImage="@drawable/loading"/>
 
     <TextView
-        android:id="@+id/tv_show_text_description"
+        android:id="@+id/trip_image_comment_content"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/layout_10dp"

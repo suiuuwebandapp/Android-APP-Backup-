@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@color/backgroundColor"
+            android:background="@color/DefaultGray2"
             android:orientation="horizontal">
 
             <TextView
@@ -53,7 +53,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/layout_10dp"
             android:layout_marginTop="@dimen/layout_10dp"
-            android:background="@color/backgroundColor"
+            android:background="@color/DefaultGray2"
             android:orientation="horizontal">
 
             <TextView
@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@color/backgroundColor"
+            android:background="@color/DefaultGray2"
             android:orientation="horizontal">
 
             <TextView

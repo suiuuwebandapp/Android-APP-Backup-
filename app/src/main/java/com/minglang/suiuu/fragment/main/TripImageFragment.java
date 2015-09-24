@@ -1,8 +1,9 @@
 package com.minglang.suiuu.fragment.main;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -10,16 +11,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
-import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
+import com.minglang.pulltorefreshlibrary.PullToRefreshScrollView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.FirstLoginActivity;
+import com.minglang.suiuu.activity.SuiuuSearchActivity;
 import com.minglang.suiuu.activity.TripImageDetailsActivity;
 import com.minglang.suiuu.adapter.TripImageAdapter;
 import com.minglang.suiuu.base.BaseFragment;
+import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.entity.TripImage;
 import com.minglang.suiuu.entity.TripImage.TripImageData.TripImageItemData;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -37,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -60,15 +66,10 @@ public class TripImageFragment extends BaseFragment {
     private static final String NUMBER = "number";
     private static final String PAGES = "page";
 
-    private static final String HOME_PAGE = "homePage";
-
     private static final String ID = "id";
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
-
-    @BindDrawable(R.color.TripImageDividerColor)
-    Drawable Divider;
 
     @BindString(R.string.load_wait)
     String DialogMsg;
@@ -87,8 +88,17 @@ public class TripImageFragment extends BaseFragment {
 
     private ProgressDialog progressDialog;
 
+    @Bind(R.id.trip_image_scroll_view)
+    PullToRefreshScrollView pullToRefreshScrollView;
+
+    @Bind(R.id.trip_image_search)
+    TextView tripImageSearch;
+
+    @Bind(R.id.trip_image_tag_layout)
+    LinearLayout tripImageTagLayout;
+
     @Bind(R.id.trip_image_list_view)
-    PullToRefreshListView tripImageListView;
+    NoScrollBarListView noScrollBarListView;
 
     private TripImageAdapter adapter;
 
@@ -96,14 +106,15 @@ public class TripImageFragment extends BaseFragment {
 
     private int page = 1;
 
-    private String clickTag = "";
-
-    /**
-     * 点击了的标签集合
-     */
-    private List<String> tagList = new ArrayList<>();
-
     private boolean isPullToRefresh = true;
+
+    private String[] mTagIntArray;
+
+    private List<ImageView> imageViewList = new ArrayList<>();
+    private List<ImageView> clickImageList = new ArrayList<>();
+    private List<String> clickTagList = new ArrayList<>();
+
+    private String AddTag = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -128,87 +139,146 @@ public class TripImageFragment extends BaseFragment {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMessage(DialogMsg);
 
-        tripImageListView.setMode(PullToRefreshBase.Mode.BOTH);
-        ListView listView = tripImageListView.getRefreshableView();
-        listView.setDivider(Divider);
-        listView.setDividerHeight((int) getResources().getDimension(R.dimen.layout_10dp));
+        pullToRefreshScrollView.setMode(PullToRefreshBase.Mode.BOTH);
 
-        adapter = new TripImageAdapter(getActivity(), listAll, HOME_PAGE, tagList);
-        tripImageListView.setAdapter(adapter);
+        adapter = new TripImageAdapter(getActivity(), listAll);
+        noScrollBarListView.setAdapter(adapter);
+
+        mTagIntArray = getResources().getStringArray(R.array.tripGalleryTagName);
+
+        initTagLayout();
+    }
+
+    @SuppressLint("InflateParams")
+    private void initTagLayout() {
+        int[] mPhotosIntArray = new int[]{R.drawable.tag_family, R.drawable.tag_shopping, R.drawable.tag_nature,
+                R.drawable.tag_dangerous, R.drawable.tag_romantic, R.drawable.tag_museam, R.drawable.tag_novelty};
+
+        SimpleDraweeView imageView;
+        TextView textView;
+
+        for (int i = 0; i < mPhotosIntArray.length; i++) {
+            View itemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_trip_image_tag, null);
+            itemView.setTag(i);
+
+            imageView = (SimpleDraweeView) itemView.findViewById(R.id.item_trip_image_tag);
+            textView = (TextView) itemView.findViewById(R.id.item_trip_text_tag);
+
+            imageViewList.add(imageView);
+            imageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + mPhotosIntArray[i]));
+            textView.setText(mTagIntArray[i]);
+
+            tripImageTagLayout.addView(itemView);
+
+            //if (clickTagList.contains(mTagIntArray[i])) {
+            //imageView.setBackgroundResource(R.drawable.image_view_border_style);
+            //} else {
+            //imageView.setBackgroundResource(0);
+            //}
+
+            itemView.setPadding(10, 0, 0, 0);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int tag = (int) v.getTag();
+
+                    if (clickTagList.contains(mTagIntArray[tag])) {
+                        imageViewList.get(tag).setBackgroundResource(0);
+                        clickImageList.remove(imageViewList.get(tag));
+                        clickTagList.remove(mTagIntArray[tag]);
+                    } else {
+                        imageViewList.get(tag).setBackgroundResource(R.drawable.image_view_border_style);
+                        clickImageList.add(imageViewList.get(tag));
+                        clickTagList.add(mTagIntArray[tag]);
+                    }
+
+                    int clickTagListSize = clickTagList.size();
+                    switch (clickTagListSize) {
+                        case 0:
+                            AddTag = "";
+                            break;
+                        case 1:
+                            AddTag = clickTagList.get(0);
+                            break;
+                        default:
+                            AddTag = "";
+                            for (int i = 0; i < clickTagListSize; i++) {
+                                if (i == clickTagListSize - 1) {
+                                    AddTag = AddTag + clickTagList.get(i);
+                                } else {
+                                    AddTag = AddTag + clickTagList.get(i) + ",";
+                                }
+                            }
+                            break;
+                    }
+
+                    L.i(TAG, "已点击的标签:" + AddTag);
+
+                    loadFirstPageData(null);
+                }
+            });
+
+        }
+
     }
 
     private void viewAction() {
 
-        tripImageListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+        tripImageSearch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SuiuuSearchActivity.class);
+                intent.putExtra("searchClass", 1);
+                startActivity(intent);
+            }
+        });
+
+
+        pullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
                 String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                loadFirstPageData();
+                loadFirstPageData(null);
             }
 
             @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+            public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
                 String label = DateUtils.formatDateTime(getActivity(), System.currentTimeMillis(),
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
                 page++;
                 isPullToRefresh = false;
-                loadTripImageList("".equals(clickTag) ? null : clickTag, "0", null, page);
+                loadTripImageList(AddTag, "0", null, page);
             }
+
         });
 
-        tripImageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        noScrollBarListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int location = position - 3;
-                L.i(TAG, "location:" + location);
                 Intent intent = new Intent(getActivity(), TripImageDetailsActivity.class);
-                intent.putExtra(ID, listAll.get(location).getId());
+                intent.putExtra(ID, listAll.get(position).getId());
                 startActivity(intent);
-            }
-
-        });
-
-        adapter.setLoadChoiceTagInterface(new TripImageAdapter.LoadChoiceTag() {
-            @Override
-            public void getClickTagList(List<String> tagList) {
-                TripImageFragment.this.tagList = tagList;
-                clickTag = "";
-
-                if (listAll != null && listAll.size() > 0) {
-                    listAll.clear();
-                }
-
-                for (String clickString : tagList) {
-                    clickTag += clickString + ",";
-                }
-
-                page = 1;
-                isPullToRefresh = false;
-                loadTripImageList(clickTag, "0", null, page);
             }
         });
 
     }
 
-    public void loadFirstPageData() {
+    public void loadFirstPageData(String search) {
         page = 1;
 
         isPullToRefresh = false;
-
-        if (tagList != null && tagList.size() > 0) {
-            tagList.clear();
-        }
 
         if (listAll != null && listAll.size() > 0) {
             listAll.clear();
         }
 
-        loadTripImageList(null, "0", null, page);
+        loadTripImageList(AddTag, "0", search, page);
     }
 
     /**
@@ -249,7 +319,7 @@ public class TripImageFragment extends BaseFragment {
             progressDialog.dismiss();
         }
 
-        tripImageListView.onRefreshComplete();
+        pullToRefreshScrollView.onRefreshComplete();
     }
 
     /**
@@ -267,7 +337,7 @@ public class TripImageFragment extends BaseFragment {
                 List<TripImageItemData> list = tripImage.getData().getData();
                 if (list != null && list.size() > 0) {
                     listAll.addAll(list);
-                    adapter.updateData(listAll, HOME_PAGE, tagList);
+                    adapter.updateData(listAll);
                 } else {
                     Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }

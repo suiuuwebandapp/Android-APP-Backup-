@@ -31,7 +31,7 @@
     <style name="AppNewBaseTheme" parent="Theme.AppCompat.Light.NoActionBar" />
 
     <style name="AppReleaseTheme" parent="AppNewBaseTheme">
-        <item name="colorPrimary">@color/backgroundColor</item>
+        <item name="colorPrimary">@color/DefaultGray2</item>
     </style>
 
     <style name="AppAccountTheme" parent="AppNewBaseTheme">

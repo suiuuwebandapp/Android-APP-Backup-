@@ -68,6 +68,8 @@
 
     <string name="Tag" translatable="false">标签</string>
 
+    <string name="TripImageDetails" translatable="false">旅途详情</string>
+
     <string name="WebSite" translatable="false">网址</string>
     <string name="Phone" translatable="false">电话</string>
     <string name="Address" translatable="false">地址</string>
@@ -526,6 +528,8 @@
     <string name="CreateLocation" translatable="false">创建位置</string>
 
     <string name="InputCreateLocationName" translatable="false">输入你想要创建的位置的名称</string>
+
+    <string name="SuiuuSearchHint" translatable="false">输入你感兴趣的国家,城市</string>
 
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
     <string name="pull_to_refresh_release_label">Release rear refresh</string>

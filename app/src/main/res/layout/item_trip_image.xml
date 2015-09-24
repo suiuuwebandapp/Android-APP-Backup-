@@ -53,7 +53,11 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/layout_10dp"
             android:layout_marginStart="@dimen/layout_10dp"
-            android:background="@drawable/default_head_image"
+            android:clickable="false"
+            fresco:failureImage="@drawable/default_head_image_error"
+            fresco:failureImageScaleType="fitCenter"
+            fresco:placeholderImage="@drawable/default_head_image"
+            fresco:placeholderImageScaleType="fitCenter"
             fresco:roundAsCircle="true" />
 
         <TextView

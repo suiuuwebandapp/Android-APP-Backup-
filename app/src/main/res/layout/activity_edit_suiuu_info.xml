@@ -18,7 +18,7 @@
         android:layout_below="@+id/edit_suiuu_info_tool_bar"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/layout_10dp"
-        android:background="@color/backgroundColor"
+        android:background="@color/DefaultGray2"
         android:gravity="top|start"
         android:hint="@string/HintEditSuiuuInfo"
         android:padding="@dimen/layout_2dp"

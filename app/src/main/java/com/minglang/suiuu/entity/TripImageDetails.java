@@ -65,7 +65,7 @@ public class TripImageDetails {
          */
         private List<LikeEntity> like;
         private List<AttentionEntity> attention;
-        private List<CommentEntity> comment;
+        private List<CommentData> comment;
         private TripImageDetailsInfo info;
 
         public void setLike(List<LikeEntity> like) {
@@ -76,7 +76,7 @@ public class TripImageDetails {
             this.attention = attention;
         }
 
-        public void setComment(List<CommentEntity> comment) {
+        public void setComment(List<CommentData> comment) {
             this.comment = comment;
         }
 
@@ -92,7 +92,7 @@ public class TripImageDetails {
             return attention;
         }
 
-        public List<CommentEntity> getComment() {
+        public List<CommentData> getComment() {
             return comment;
         }
 
@@ -332,7 +332,7 @@ public class TripImageDetails {
             }
         }
 
-        public class CommentEntity {
+        public class CommentData {
             /**
              * tpId : 4
              * supportCount : 0

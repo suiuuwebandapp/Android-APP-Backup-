@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/layout_160dp"
     android:layout_height="@dimen/layout_100dp"
     android:layout_margin="@dimen/layout_8dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_trip_gallery_detail_like_titleimg"
+        android:id="@+id/trip_image_details_like_title_img"
         android:layout_width="@dimen/layout_160dp"
         android:layout_height="@dimen/layout_80dp"
         android:layout_centerVertical="true"
-        fresco:actualImageScaleType="focusCrop"
         fresco:failureImage="@drawable/loading_error"
+        fresco:failureImageScaleType="fitCenter"
         fresco:placeholderImage="@drawable/loading"
-        fresco:roundedCornerRadius="5dp"/>
+        fresco:placeholderImageScaleType="fitCenter"
+        fresco:roundedCornerRadius="5dp" />
 
     <TextView
-        android:id="@+id/tv_item_trip_gallery_like_tag"
+        android:id="@+id/item_trip_image_like_tag"
         android:layout_width="@dimen/layout_160dp"
         android:layout_height="@dimen/layout_30dp"
         android:layout_alignParentBottom="true"
@@ -25,6 +25,5 @@
         android:background="@drawable/tag_bg"
         android:gravity="center"
         android:singleLine="true"
-        android:text="dd"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white" />
 </RelativeLayout>

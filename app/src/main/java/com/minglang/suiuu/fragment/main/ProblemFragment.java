@@ -127,10 +127,10 @@ public class ProblemFragment extends BaseFragment {
     @Bind(R.id.spinner)
     Spinner spinner;
 
-    @Bind(R.id.selectLayout)
+    @Bind(R.id.select_layout)
     FrameLayout selectLayout;
 
-    @Bind(R.id.CommunityListView)
+    @Bind(R.id.problem_list_view)
     PullToRefreshListView pullToRefreshListView;
 
     private List<MainCommunityItemData> listAll = new ArrayList<>();
@@ -336,7 +336,6 @@ public class ProblemFragment extends BaseFragment {
 
         try {
             String _url = buildUrl(selectedState, page);
-            L.i(TAG, "build Url:" + _url);
             OkHttpManager.onGetAsynRequest(_url, new CommunityResultCallBack());
         } catch (IOException e) {
             e.printStackTrace();

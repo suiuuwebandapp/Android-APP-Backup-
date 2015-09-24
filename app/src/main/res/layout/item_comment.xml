@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/layout_5dp">
 
     <!--评论Item-->
-
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/item_comment_head_image"
         android:layout_width="@dimen/layout_50dp"
         android:layout_height="@dimen/layout_50dp"
         android:layout_marginLeft="@dimen/layout_5dp"
         android:layout_marginStart="@dimen/layout_5dp"
+        android:clickable="false"
         fresco:failureImage="@drawable/default_head_image_error"
         fresco:failureImageScaleType="fitCenter"
         fresco:placeholderImage="@drawable/default_head_image"
         fresco:placeholderImageScaleType="fitCenter"
-        fresco:roundAsCircle="true"/>
+        fresco:roundAsCircle="true" />
 
     <TextView
         android:id="@+id/item_comment_title"
@@ -31,7 +30,7 @@
         android:layout_toRightOf="@+id/item_comment_head_image"
         android:singleLine="true"
         android:textColor="@color/mainColor"
-        android:textSize="@dimen/layout_15sp"/>
+        android:textSize="@dimen/layout_15sp" />
 
     <TextView
         android:id="@+id/tv_time"
@@ -43,7 +42,7 @@
         android:layout_marginRight="@dimen/layout_10dp"
         android:layout_marginTop="@dimen/layout_10dp"
         android:textColor="@color/tr_black"
-        android:textSize="@dimen/layout_15sp"/>
+        android:textSize="@dimen/layout_15sp" />
 
     <TextView
         android:id="@+id/item_comment_content"
@@ -53,6 +52,6 @@
         android:layout_alignStart="@+id/item_comment_title"
         android:layout_below="@+id/item_comment_title"
         android:textColor="@color/tr_black"
-        android:textSize="@dimen/layout_16sp"/>
+        android:textSize="@dimen/layout_16sp" />
 
 </RelativeLayout>

@@ -62,7 +62,7 @@ public class SuiuuFragment extends BaseFragment {
     private static final String STATUS = "status";
     private static final String DATA = "data";
 
-    @BindDrawable(R.color.TripImageDividerColor)
+    @BindDrawable(R.color.DefaultGray1)
     Drawable Divider;
 
     @BindString(R.string.load_wait)
@@ -82,7 +82,7 @@ public class SuiuuFragment extends BaseFragment {
 
     private ProgressDialog progressDialog;
 
-    @Bind(R.id.trip_image_list_view)
+    @Bind(R.id.suiuu_list_view)
     PullToRefreshListView pullToRefreshListView;
 
     private JsonUtils jsonUtil = JsonUtils.getInstance();
@@ -101,7 +101,7 @@ public class SuiuuFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Light_NoTitleBar);
         inflater.cloneInContext(contextThemeWrapper);
-        View rootView = inflater.inflate(R.layout.fragment_trip_image, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_suiuu, container, false);
         ButterKnife.bind(this, rootView);
         initView();
         sendRequestSuiuuData(null, null, null, null, null, page);

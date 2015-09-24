@@ -1,17 +1,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/trip_gallery_detail_title"
-        layout="@layout/common_top2_layout" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/trip_image_details_tool_bar"
+        style="@style/AppToolBar"
+        app:navigationIcon="@drawable/back"
+        app:title="@string/TripImageDetails" />
 
     <ScrollView
         android:id="@+id/trip_image_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/trip_gallery_detail_title"
+        android:layout_below="@+id/trip_image_details_tool_bar"
         android:background="@color/white"
         android:scrollbars="none">
 
@@ -42,7 +45,6 @@
                     android:layout_margin="@dimen/layout_5dp"
                     android:layout_toEndOf="@+id/trip_image_details_portrait"
                     android:layout_toRightOf="@+id/trip_image_details_portrait"
-                    android:text="@string/userName"
                     android:textColor="@color/textColor"
                     android:textSize="@dimen/layout_18sp" />
 
@@ -60,7 +62,6 @@
                     android:drawableStart="@drawable/icon_location_indicator"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text="@string/tempStreet"
                     android:textColor="@color/mainColor"
                     android:textSize="@dimen/layout_15sp" />
 
@@ -83,7 +84,6 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/trip_image_details_heart"
                         android:layout_centerHorizontal="true"
-                        android:text="22"
                         android:textColor="@color/textColor"
                         android:textSize="@dimen/layout_12sp" />
 
@@ -98,7 +98,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/layout_8dp"
-                android:text="@string/tempFranceTrip"
                 android:textColor="@color/textColor"
                 android:textSize="@dimen/layout_18sp" />
 
@@ -112,7 +111,6 @@
                 android:drawableLeft="@drawable/icon_tag"
                 android:drawablePadding="@dimen/layout_6dp"
                 android:drawableStart="@drawable/icon_tag"
-                android:text="@string/tempMuseumTag"
                 android:textColor="@color/mainColor"
                 android:textSize="@dimen/layout_15sp" />
 
@@ -120,7 +118,7 @@
                 android:id="@+id/trip_image_details_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@color/TripImageDividerColor"
+                android:divider="@color/DefaultGray1"
                 android:dividerHeight="@dimen/layout_10dp" />
 
             <include layout="@layout/view_line" />
@@ -129,34 +127,42 @@
 
             <include layout="@layout/view_line" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/trip_image_details_your_love_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/layout_8dp"
-                android:layout_marginLeft="@dimen/layout_8dp"
-                android:layout_marginStart="@dimen/layout_8dp"
-                android:background="@color/white"
-                android:drawableLeft="@drawable/icon_guess_your_love_sun"
-                android:drawablePadding="@dimen/layout_6dp"
-                android:drawableStart="@drawable/icon_guess_your_love_sun"
-                android:text="@string/tempLove"
-                android:textColor="@color/mainColor"
-                android:textSize="@dimen/layout_15sp" />
+                android:orientation="vertical">
 
-            <HorizontalScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/layout_15dp"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:id="@+id/trip_image_details_guess_your_love"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/layout_8dp"
+                    android:layout_marginLeft="@dimen/layout_8dp"
+                    android:layout_marginStart="@dimen/layout_8dp"
                     android:background="@color/white"
-                    android:orientation="horizontal" />
+                    android:drawableLeft="@drawable/icon_guess_your_love_sun"
+                    android:drawablePadding="@dimen/layout_6dp"
+                    android:drawableStart="@drawable/icon_guess_your_love_sun"
+                    android:text="@string/tempLove"
+                    android:textColor="@color/mainColor"
+                    android:textSize="@dimen/layout_15sp" />
 
-            </HorizontalScrollView>
+                <HorizontalScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/layout_15dp"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/trip_image_details_guess_your_love"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:orientation="horizontal" />
+
+                </HorizontalScrollView>
+
+            </LinearLayout>
 
         </LinearLayout>
 

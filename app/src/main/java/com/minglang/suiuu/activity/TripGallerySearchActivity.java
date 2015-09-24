@@ -46,18 +46,23 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
     private static final String SEARCH = "search";
     private static final String NUMBER = "number";
     private static final String PAGES = "page";
-    private LinearLayout ll_trip_gallery_search_tag;
+
     private ImageView iv_top_back;
-    private ImageView tv_top_right_more;
-    private TextView tv_top_center;
+
     private String searchCountry;
     private TextProgressDialog dialog;
+
     private String clickTag;
     private int page = 1;
-    private RelativeLayout rl_common_nodata;
+
+    private RelativeLayout common_no_data;
+
     private TripImageAdapter adapter;
+
     private ReFlashListView rfv_trip_gallery_search;
+
     private List<TripImage.TripImageData.TripImageItemData> tripGalleryList;
+
     private List<ImageView> clickImageList;
     private List<ImageView> imageList;
     private List<String> clickString;
@@ -74,17 +79,19 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
 
     private void initView() {
         dialog = new TextProgressDialog(this);
+
         tripGalleryList = new ArrayList<>();
         clickImageList = new ArrayList<>();
         clickString = new ArrayList<>();
         imageList = new ArrayList<>();
+
         rfv_trip_gallery_search = (ReFlashListView) findViewById(R.id.rfv_trip_gallery_search);
-        rl_common_nodata = (RelativeLayout) findViewById(R.id.rl_common_no_data);
-        ll_trip_gallery_search_tag = (LinearLayout) findViewById(R.id.ll_trip_gallery_search_tag);
+        common_no_data = (RelativeLayout) findViewById(R.id.rl_common_no_data);
+        LinearLayout ll_trip_gallery_search_tag = (LinearLayout) findViewById(R.id.ll_trip_gallery_search_tag);
         iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
-        tv_top_right_more = (ImageView) findViewById(R.id.tv_top_right_more);
+        ImageView tv_top_right_more = (ImageView) findViewById(R.id.tv_top_right_more);
         tv_top_right_more.setVisibility(View.INVISIBLE);
-        tv_top_center = (TextView) findViewById(R.id.tv_top_center);
+        TextView tv_top_center = (TextView) findViewById(R.id.tv_top_center);
         tv_top_center.setText("旅 图");
 
         //初始化标签内容
@@ -182,16 +189,16 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
                     if (data.size() < 1) {
                         if (!TextUtils.isEmpty(clickTag) && page == 1) {
                             rfv_trip_gallery_search.setVisibility(View.GONE);
-                            rl_common_nodata.setVisibility(View.VISIBLE);
+                            common_no_data.setVisibility(View.VISIBLE);
                         } else if (page == 1) {
                             rfv_trip_gallery_search.setVisibility(View.GONE);
-                            rl_common_nodata.setVisibility(View.VISIBLE);
+                            common_no_data.setVisibility(View.VISIBLE);
                         } else {
                             Toast.makeText(TripGallerySearchActivity.this, "没有更多数据显示", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         rfv_trip_gallery_search.setVisibility(View.VISIBLE);
-                        rl_common_nodata.setVisibility(View.GONE);
+                        common_no_data.setVisibility(View.GONE);
                         tripGalleryList.addAll(data);
                         showList(tripGalleryList);
                     }
@@ -207,10 +214,10 @@ public class TripGallerySearchActivity extends BaseActivity implements ReFlashLi
         if (adapter == null) {
             rfv_trip_gallery_search.setInterface(this);
             rfv_trip_gallery_search.setLoadMoreInterface(this);
-            adapter = new TripImageAdapter(this, tripGalleryList,"",templeList);
+            adapter = new TripImageAdapter(this, tripGalleryList);
             rfv_trip_gallery_search.setAdapter(adapter);
         } else {
-            adapter.updateData(tripGalleryList, "", templeList);
+            adapter.updateData(tripGalleryList);
         }
     }
 

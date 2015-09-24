@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/layout_5dp"
                 android:layout_marginTop="@dimen/layout_5dp"
-                android:background="@color/backgroundColor">
+                android:background="@color/DefaultGray2">
 
                 <TextView
                     android:id="@+id/personal_sex"
@@ -104,7 +104,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/layout_10dp"
                 android:layout_marginTop="@dimen/layout_5dp"
-                android:background="@color/backgroundColor">
+                android:background="@color/DefaultGray2">
 
                 <EditText
                     android:id="@+id/editNickName"
@@ -121,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/layout_10dp"
                 android:layout_marginTop="@dimen/layout_10dp"
-                android:background="@color/backgroundColor">
+                android:background="@color/DefaultGray2">
 
                 <TextView
                     android:id="@+id/localDetails"
@@ -141,7 +141,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/layout_10dp"
                 android:layout_marginTop="@dimen/layout_10dp"
-                android:background="@color/backgroundColor">
+                android:background="@color/DefaultGray2">
 
                 <EditText
                     android:id="@+id/editTrade"
@@ -158,7 +158,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/layout_5dp"
                 android:layout_marginTop="@dimen/layout_5dp"
-                android:background="@color/backgroundColor">
+                android:background="@color/DefaultGray2">
 
                 <EditText
                     android:id="@+id/editSign"

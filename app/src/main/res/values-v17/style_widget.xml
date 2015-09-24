@@ -4,7 +4,7 @@
     <style name="settingDividingLine">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/layout_1dp</item>
-        <item name="android:background">@color/backgroundColor</item>
+        <item name="android:background">@color/DefaultGray2</item>
         <item name="android:layout_marginTop">0.5dp</item>
         <item name="android:layout_marginBottom">0.5dp</item>
         <item name="android:layout_marginLeft">@dimen/layout_3dp</item>

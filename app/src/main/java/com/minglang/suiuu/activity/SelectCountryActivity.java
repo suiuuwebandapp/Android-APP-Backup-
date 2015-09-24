@@ -125,7 +125,8 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
 
         String otherTag = getIntent().getStringExtra(OTHER_TAG);
         L.i(TAG, "otherTag:" + otherTag);
-        if (!TextUtils.isEmpty(otherTag) && otherTag.equals(ProblemFragment.class.getSimpleName())) isAllCountry = true;
+        if (!TextUtils.isEmpty(otherTag) && otherTag.equals(ProblemFragment.class.getSimpleName()))
+            isAllCountry = true;
 
         initView();
         viewAction();
@@ -175,6 +176,7 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
         countryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 selectCountryId = isAllCountry ? haveList.get(position).getQCountryId() : list.get(position).getId();
                 selectCountryCNname = isAllCountry ? haveList.get(position).getCname() : list.get(position).getCname();
                 selectCountryUSname = isAllCountry ? haveList.get(position).getCname() : list.get(position).getEname();
@@ -199,7 +201,6 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
 
         String baseUrl = isAllCountry ? HttpNewServicePath.getHaveCountryPath : HttpNewServicePath.getCountryData;
         String url = baseUrl + "?" + HttpNewServicePath.key + "=" + verification + "&" + TOKEN + "=" + token;
-        L.i(TAG, "请求URL:" + url);
 
         try {
             OkHttpManager.onGetAsynRequest(url,
@@ -280,7 +281,6 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            L.i(TAG, "返回的国家信息数据:" + response);
             if (TextUtils.isEmpty(response)) {
                 Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
             } else try {
@@ -318,7 +318,7 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            L.i(TAG, "返回已有的国家信息数据:" + response);
+            L.i(TAG, "返回已有的国家的数据:" + response);
             if (TextUtils.isEmpty(response)) {
                 Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
             } else try {

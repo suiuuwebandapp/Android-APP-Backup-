@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor">
+    android:background="@color/DefaultGray2">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/feed_back_tool_bar"
@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/feed_back_commit"
         android:layout_below="@+id/feed_back_tool_bar"
-        android:background="@color/backgroundColor"
+        android:background="@color/DefaultGray2"
         android:orientation="vertical">
 
         <EditText

@@ -65,11 +65,11 @@
     <color name="login_bg">#baefff</color>
 
     <color name="titleColor">#e1e1e1</color>
-    <color name="backgroundColor">#eeeeee</color>
     <color name="backgroundColor2">#F7F7F7</color>
     <color name="remindColor">#ffeb78</color>
 
-    <color name="TripImageDividerColor">#dddddd</color>
+    <color name="DefaultGray1">#dddddd</color>
+    <color name="DefaultGray2">#eeeeee</color>
 
     <color name="AcceptBackgroundColor">#94C9FF</color>
 

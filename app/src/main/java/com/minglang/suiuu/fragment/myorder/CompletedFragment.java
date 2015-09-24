@@ -141,7 +141,6 @@ public class CompletedFragment extends BaseFragment {
         initView();
         viewAction();
         sendRequest();
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 
@@ -232,7 +231,6 @@ public class CompletedFragment extends BaseFragment {
         String[] keyArray = new String[]{HttpServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
         String url = addUrlAndParams(HttpNewServicePath.getGeneralUserCompletedOrderPath, keyArray, valueArray);
-        L.i(TAG, "已完成数据请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new CompletedResultCallback());
         } catch (IOException e) {
@@ -314,7 +312,6 @@ public class CompletedFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response) {
-            L.i(TAG, "获取到的数据:" + response);
             hideDialog();
             bindData2View(response);
         }
