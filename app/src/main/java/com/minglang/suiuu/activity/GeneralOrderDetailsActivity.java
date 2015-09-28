@@ -32,7 +32,6 @@ import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
@@ -353,7 +352,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             }
         }
 
-        String[] keyArray = new String[]{ORDER_NUMBER, HttpServicePath.key, TOKEN};
+        String[] keyArray = new String[]{ORDER_NUMBER, HttpNewServicePath.key, TOKEN};
         String[] valueArray = new String[]{orderNumber, verification, token};
         String url = addUrlAndParams(HttpNewServicePath.getGeneralUserOrderDetailsPath, keyArray, valueArray);
         L.i(TAG, "订单数据请求URL:" + url);

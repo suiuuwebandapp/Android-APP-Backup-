@@ -16,6 +16,10 @@ public class BaseFragment extends Fragment {
     public static final String NUMBER ="number";
     public static final String TOKEN = "token";
 
+    public static final String USER_SIGN = "userSign";
+
+    public static final String HEAD_IMG = "headImagePath";
+
     public String userSign;
     public String verification;
     public String token;

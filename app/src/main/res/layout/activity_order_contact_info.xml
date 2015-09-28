@@ -5,23 +5,24 @@
     android:background="@color/DefaultGray2"
     android:orientation="vertical">
 
-    <include layout="@layout/common_top2_layout"
-        android:id="@+id/top"/>
+    <include
+        android:id="@+id/top"
+        layout="@layout/common_top2_layout" />
 
     <ScrollView
-        android:layout_below="@+id/top"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top">
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/layout_8dp"
             android:layout_marginRight="@dimen/layout_8dp"
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="@dimen/layout_8dp"
@@ -32,14 +33,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_5dp"
                 android:text="@string/connection_name"
                 android:textColor="@color/textColor"
-                android:layout_margin="@dimen/layout_5dp"
                 android:textSize="@dimen/layout_14sp" />
 
             <EditText
                 android:id="@+id/et_your_name"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:hint="@string/input_name"
@@ -50,14 +51,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="微信号"
                 android:layout_margin="@dimen/layout_5dp"
+                android:text="微信号"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/layout_14sp"/>
+                android:textSize="@dimen/layout_14sp" />
 
             <EditText
                 android:id="@+id/et_we_chat"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:hint="选填"
@@ -75,7 +76,7 @@
 
             <EditText
                 android:id="@+id/et_native_phone_phone"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:hint="国内手机号"
@@ -93,7 +94,7 @@
 
             <EditText
                 android:id="@+id/et_standby_phone_number"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:hint="选填"
@@ -102,31 +103,32 @@
                 android:textSize="@dimen/layout_15sp" />
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="紧急联系方式"
-                android:gravity="center"
-                android:textColor="@color/textColor"
-                android:textSize="@dimen/layout_18sp"
                 android:layout_marginTop="@dimen/layout_15dp"
-                />
+                android:gravity="center"
+                android:text="紧急联系方式"
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/layout_18sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/layout_5dp"
                 android:text="@string/connection_name"
                 android:textColor="@color/textColor"
-                android:layout_margin="@dimen/layout_5dp"
                 android:textSize="@dimen/layout_14sp" />
 
             <EditText
                 android:id="@+id/et_actual_name"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:hint="@string/input_name"
                 android:padding="@dimen/layout_8dp"
                 android:textColor="@color/textColor"
                 android:textSize="@dimen/layout_15sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -137,35 +139,39 @@
 
             <EditText
                 android:id="@+id/et_contack_phone_number"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:padding="@dimen/layout_8dp"
                 android:hint="紧急联系人手机号"
+                android:padding="@dimen/layout_8dp"
                 android:textColor="@color/textColor"
                 android:textSize="@dimen/layout_15sp" />
         </LinearLayout>
+
     </ScrollView>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_50dp"
         android:layout_alignParentBottom="true"
         android:background="@color/white">
+
         <TextView
             android:id="@+id/tv_confirm_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:text="@string/confirm"
-            android:background="@drawable/btn_main_color"
             android:layout_centerHorizontal="true"
-            android:textSize="@dimen/layout_20sp"
             android:layout_centerVertical="true"
-            android:textColor="@color/white"
-            android:paddingRight="@dimen/layout_35dp"
-            android:paddingLeft="@dimen/layout_35dp"
-            android:paddingTop="@dimen/layout_5dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/btn_main_color"
             android:paddingBottom="@dimen/layout_5dp"
-            />
+            android:paddingLeft="@dimen/layout_35dp"
+            android:paddingRight="@dimen/layout_35dp"
+            android:paddingTop="@dimen/layout_5dp"
+            android:text="@string/confirm"
+            android:textColor="@color/white"
+            android:textSize="@dimen/layout_20sp" />
+
     </RelativeLayout>
+
 </RelativeLayout>

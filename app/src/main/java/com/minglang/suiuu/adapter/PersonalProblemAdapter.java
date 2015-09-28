@@ -60,7 +60,7 @@ public class PersonalProblemAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             problemViewHolder.headImageView.setImageURI(Uri.parse(failureImagePath));
         }
 
-        String strCount = list.get(position).getAttentionNumber();
+        String strCount = list.get(position).getaNumber();
         if (!TextUtils.isEmpty(strCount)) {
             problemViewHolder.problemCountView.setText(strCount);
         } else {

@@ -284,7 +284,6 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
         String[] keyArray = new String[]{USER_SIGN, TOKEN};
         String[] valueArray = new String[]{userSign, token};
         String url = addUrlAndParams(HttpNewServicePath.getPersonalMainPagePath, keyArray, valueArray);
-        L.i(TAG, "Request Url:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new PersonalCenterResultCallback());
         } catch (IOException e) {

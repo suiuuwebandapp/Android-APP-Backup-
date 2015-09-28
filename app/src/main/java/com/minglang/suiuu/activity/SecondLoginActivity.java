@@ -18,6 +18,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.UserBack;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -44,6 +45,8 @@ import butterknife.ButterKnife;
  * 修改备注：
  */
 public class SecondLoginActivity extends BaseActivity {
+
+    private static final String TAG = SecondLoginActivity.class.getSimpleName();
 
     private static final String PASSWORD = "password";
     private static final String USER_NAME = "username";
@@ -118,8 +121,10 @@ public class SecondLoginActivity extends BaseActivity {
 
         View user = findViewById(R.id.user);
         View passWord = findViewById(R.id.password);
+
         et_userName = (EditText) user.findViewById(R.id.et_value);
         et_passWord = (EditText) passWord.findViewById(R.id.et_value);
+
         et_passWord.setHint(R.string.password);
         et_passWord.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
     }
@@ -140,6 +145,7 @@ public class SecondLoginActivity extends BaseActivity {
                     break;
                 case R.id.tv_register:
                     startActivity(new Intent(SecondLoginActivity.this, RegisterActivity.class));
+                    finish();
                     break;
                 case R.id.tv_login:
                     //登陆用户名
@@ -204,7 +210,6 @@ public class SecondLoginActivity extends BaseActivity {
         @Override
         public void onResponse(String response) {
             dialog.dismissDialog();
-            Log.i("suiuu", response);
             try {
                 JSONObject json = new JSONObject(response);
                 if (json.getInt("status") == 1) {
@@ -219,6 +224,7 @@ public class SecondLoginActivity extends BaseActivity {
                     Toast.makeText(SecondLoginActivity.this, json.getString("data"), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
+                L.e(TAG,"LoginResultCallback Exception"+e.getMessage());
             }
         }
 

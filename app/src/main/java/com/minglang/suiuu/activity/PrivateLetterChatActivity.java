@@ -62,8 +62,6 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
     private static final String CLIENT_ID = "to_client_id";
     private static final String CONTENT = "content";
 
-    private static final String HEAD_IMAGE_PATH = "headImagePath";
-
     @BindString(R.string.load_wait)
     String DialogMsg;
 
@@ -128,7 +126,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_private_letter_chat);
 
         relateId = getIntent().getStringExtra(RELATE_ID);
-        headImagePath = getIntent().getStringExtra(HEAD_IMAGE_PATH);
+        headImagePath = getIntent().getStringExtra(HEAD_IMG);
 
         ButterKnife.bind(this);
         initView();

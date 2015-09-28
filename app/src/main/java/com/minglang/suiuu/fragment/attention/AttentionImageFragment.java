@@ -42,9 +42,9 @@ import butterknife.ButterKnife;
 /**
  * 关注的旅图页面
  */
-public class AttentionGalleryFragment extends BaseFragment {
+public class AttentionImageFragment extends BaseFragment {
 
-    private static final String TAG = AttentionGalleryFragment.class.getSimpleName();
+    private static final String TAG = AttentionImageFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -98,8 +98,8 @@ public class AttentionGalleryFragment extends BaseFragment {
      * @param param3 Parameter 3.
      * @return A new instance of fragment AttentionThemeFragment.
      */
-    public static AttentionGalleryFragment newInstance(String param1, String param2, String param3) {
-        AttentionGalleryFragment fragment = new AttentionGalleryFragment();
+    public static AttentionImageFragment newInstance(String param1, String param2, String param3) {
+        AttentionImageFragment fragment = new AttentionImageFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -108,7 +108,7 @@ public class AttentionGalleryFragment extends BaseFragment {
         return fragment;
     }
 
-    public AttentionGalleryFragment() {
+    public AttentionImageFragment() {
     }
 
     @Override
@@ -123,12 +123,11 @@ public class AttentionGalleryFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_attention_loop, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_attention_trip_image, container, false);
         ButterKnife.bind(this, rootView);
         initView();
         viewAction();
         getData4Service(page);
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -199,8 +198,8 @@ public class AttentionGalleryFragment extends BaseFragment {
             }
         }
 
-        String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
-        String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(20), token};
+        String[] keyArray = new String[]{USER_SIGN, PAGE, NUMBER, TOKEN};
+        String[] valueArray = new String[]{userSign, String.valueOf(page), String.valueOf(20), token};
         String url = addUrlAndParams(HttpNewServicePath.getAttentionTripPath, keyArray, valueArray);
 
         try {
@@ -295,6 +294,10 @@ public class AttentionGalleryFragment extends BaseFragment {
                 }
             }
         }
+    }
+
+    public String getVerification() {
+        return verification;
     }
 
     /**

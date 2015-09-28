@@ -15,12 +15,11 @@ import com.minglang.suiuu.adapter.MsgTripGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MsgTripGallery;
 import com.minglang.suiuu.entity.MsgTripGallery.MsgTripGalleryData.MsgTripGalleryItemData;
+import com.minglang.suiuu.utils.AppUtils;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.http.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.http.OkHttpManager;
-import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -196,7 +195,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
      * 从网络获取数据
      */
     private void getData4Service(int page) {
-        String[] keyArray = new String[]{HttpServicePath.key, PAGE, NUMBER, TOKEN};
+        String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
         String url = addUrlAndParams(HttpNewServicePath.getTripGalleryMsgDataPath, keyArray, valueArray);
         L.i(TAG, "旅图信息请求URL:" + url);

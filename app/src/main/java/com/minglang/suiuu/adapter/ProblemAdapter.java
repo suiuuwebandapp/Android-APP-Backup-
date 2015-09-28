@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,7 +14,6 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.MainCommunity;
 import com.minglang.suiuu.entity.MainCommunity.MainCommunityData.MainCommunityItemData;
 import com.minglang.suiuu.utils.ViewHolder;
-import com.ms.square.android.expandabletextview.ExpandableTextView;
 
 import java.util.List;
 
@@ -30,13 +28,10 @@ public class ProblemAdapter extends BaseAdapter {
 
     private List<MainCommunityItemData> list;
 
-    private final SparseBooleanArray sparseBooleanArray;
-
     private OnCommunityClickListener onCommunityClickListener;
 
     public ProblemAdapter(Context context) {
         this.context = context;
-        sparseBooleanArray = new SparseBooleanArray();
     }
 
     public void setList(List<MainCommunity.MainCommunityData.MainCommunityItemData> list) {
@@ -72,14 +67,14 @@ public class ProblemAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_problem, position);
         convertView = holder.getConvertView();
 
         SimpleDraweeView headImageView = holder.getView(R.id.item_problem_header_image);
         TextView countView = holder.getView(R.id.item_problem_count);
         TextView titleView = holder.getView(R.id.item_problem_title);
-        ExpandableTextView cotentView = holder.getView(R.id.item_problem_expandable_content);
+        TextView cotentView = holder.getView(R.id.item_problem_expandable_content);
 
         MainCommunityItemData itemData = list.get(position);
 
@@ -106,7 +101,7 @@ public class ProblemAdapter extends BaseAdapter {
 
         String strCotent = itemData.getQContent();
         if (!TextUtils.isEmpty(strCotent)) {
-            cotentView.setText(Html.fromHtml(strCotent), sparseBooleanArray, position);
+            cotentView.setText(Html.fromHtml(strCotent));
         } else {
             cotentView.setText("");
         }

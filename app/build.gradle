@@ -65,6 +65,7 @@ dependencies {
     compile 'com.githang:com-phillipcalvin-iconbutton:1.0.1@aar'
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
     compile 'com.ms-square:expandableTextView:0.1.4'
+    compile 'cn.edu.zafu:coreprogress:0.0.2'
     compile files('libs/picasso-2.4.0.jar')
     compile files('libs/umeng-analytics-v5.2.4.jar')
     compile files('libs/gson-2.3.1.jar')
@@ -84,4 +85,5 @@ dependencies {
     compile files('libs/AMap_Services_V2.4.0.jar')
     compile project(':TuSDK-for-Android-1.8.11')
     compile project(':WebSockeLibrary')
+    compile files('libs/alipaysdk.jar')
 }

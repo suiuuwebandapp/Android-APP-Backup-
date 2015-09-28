@@ -17,11 +17,10 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.PersonalMainPagerActivity;
 import com.minglang.suiuu.entity.ConfirmJoinSuiuu.ConfirmJoinSuiuuData.PublisherListEntity;
 import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.http.HttpServicePath;
-import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.ViewHolder;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
@@ -160,7 +159,7 @@ public class JoinAdapter extends BaseAdapter {
             String tripId = list.get(index).getTripId();
             String tripPublisherId = list.get(index).getTripPublisherId();
 
-            String[] keyArray = new String[]{"userSign", HttpServicePath.key, "tripId", "tripPublisherId", "token"};
+            String[] keyArray = new String[]{"userSign", HttpNewServicePath.key, "tripId", "tripPublisherId", "token"};
             String[] valueArray = new String[]{SuiuuInfo.ReadUserSign(context), SuiuuInfo.ReadVerification(context),
                     tripId, tripPublisherId, SuiuuInfo.ReadAppTimeSign(context)};
 

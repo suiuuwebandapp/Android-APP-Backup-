@@ -56,6 +56,9 @@
     <!--注册按钮背景色-->
     <color name="btn_2_bg_color">#95cafe</color>
 
+    <color name="SuiuuDetailsColor1">#5CD6C3</color>
+    <color name="SuiuuDetailsColor2">#FFA91B</color>
+
     <!--文字颜色-->
     <color name="text_color1">#ffe986</color>
     <color name="text_color2">#ffe987</color>

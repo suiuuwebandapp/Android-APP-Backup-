@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.AttentionPagerAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.fragment.attention.AttentionGalleryFragment;
+import com.minglang.suiuu.fragment.attention.AttentionImageFragment;
 import com.minglang.suiuu.fragment.attention.AttentionProblemFragment;
 import com.minglang.suiuu.fragment.attention.AttentionSuiuuFragment;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -27,8 +27,6 @@ import butterknife.ButterKnife;
  * 关注页面
  */
 public class AttentionActivity extends BaseAppCompatActivity {
-
-    private static final String USER_SIGN = "userSign";
 
     @BindColor(R.color.white)
     int titleColor;
@@ -92,14 +90,14 @@ public class AttentionActivity extends BaseAppCompatActivity {
         viewPager.setOffscreenPageLimit(3);
 
         //关注的旅图
-        AttentionGalleryFragment attentionGalleryFragment = AttentionGalleryFragment.newInstance(userSign, verification, token);
+        AttentionImageFragment attentionImageFragment = AttentionImageFragment.newInstance(userSign, verification, token);
         //关注的随游
         AttentionSuiuuFragment attentionSuiuuFragment = AttentionSuiuuFragment.newInstance(userSign, verification, token);
         //关注的问答
         AttentionProblemFragment attentionProblemFragment = AttentionProblemFragment.newInstance(userSign, verification, token);
 
         List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(attentionGalleryFragment);
+        fragmentList.add(attentionImageFragment);
         fragmentList.add(attentionSuiuuFragment);
         fragmentList.add(attentionProblemFragment);
 

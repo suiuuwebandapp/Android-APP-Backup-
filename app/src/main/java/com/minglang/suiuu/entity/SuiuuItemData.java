@@ -37,6 +37,7 @@ public class SuiuuItemData {
     private String headImg;
     private String cname;
     private String ename;
+    private String userSign;
 
     public void setTripId(String tripId) {
         this.tripId = tripId;
@@ -142,6 +143,10 @@ public class SuiuuItemData {
         this.ename = ename;
     }
 
+    public void setUserSign(String userSign) {
+        this.userSign = userSign;
+    }
+
     public String getTripId() {
         return tripId;
     }
@@ -244,6 +249,10 @@ public class SuiuuItemData {
 
     public String getEname() {
         return ename;
+    }
+
+    public String getUserSign() {
+        return userSign;
     }
 
 }

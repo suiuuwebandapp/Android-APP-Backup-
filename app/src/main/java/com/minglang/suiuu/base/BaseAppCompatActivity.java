@@ -29,6 +29,12 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     public static final String PAGE = "page";
     public static final String NUMBER = "number";
 
+    public static final String ID = "id";
+
+    public static final String COUNTRY = "country";
+
+    public static final String HEAD_IMG = "headImagePath";
+
     @BindString(R.string.NoData)
     String NoData;
 

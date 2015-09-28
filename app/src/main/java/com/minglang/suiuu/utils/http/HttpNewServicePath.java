@@ -447,14 +447,7 @@ public class HttpNewServicePath {
      */
     public static String CollectionTripGalleryPath = RootPath + "/app-attention/attention-tp";
 
-    /**
-     * 取消收藏文章
-     * <p/>
-     * 请求方式:POST
-     * <p/>
-     * 请求参数:需要收藏文章的attentionId
-     */
-    public static String CollectionArticleCancelPath = RootPath + "/app-attention/delete-attention";
+    public static String getCancelAttentionPath = RootPath + "/app-attention/delete-attention";
 
     /**
      * 创建一条旅图评论

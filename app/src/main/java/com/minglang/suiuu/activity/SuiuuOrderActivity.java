@@ -13,9 +13,9 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.utils.DateTimePickDialogUtils;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
-import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
@@ -41,23 +41,35 @@ public class SuiuuOrderActivity extends BaseActivity {
 
     private TextView tv_travel_date;
     private TextView tv_travel_time;
+
     private String initTime; // 初始化结束时间
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm",Locale.getDefault());
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.getDefault());
+
     private ImageView iv_release;
+
     private TextView tv_enjoy_number;
+
     private ImageView iv_plus;
+
     private String titleInfo;
     private String titleImg;
+
     private SimpleDraweeView iv_suiuu_order_titlePic;
+
     private TextView tv_suiuu_order_title;
+
     private ImageView suiuu_order_back;
+
     private BootstrapButton bb_suiuu_order_pay;
+
     private Float price;
+
     private TextView tv_order_price;
+
     private String tripId;
 
     private int enjoy_peopleNumber;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,19 +84,30 @@ public class SuiuuOrderActivity extends BaseActivity {
     }
 
     private void initView() {
+        token = SuiuuInfo.ReadAppTimeSign(SuiuuOrderActivity.this);
+
         initTime = sdf.format(new Date());
         String[] split = initTime.split(" ");
         tv_travel_date = (TextView) findViewById(R.id.tv_travel_date);
         tv_travel_time = (TextView) findViewById(R.id.tv_travel_time);
+
         tv_travel_date.setText(split[0].replace("年", "-").replace("月", "-").replace("日", ""));
         tv_travel_time.setText(split[1]);
+
         iv_release = (ImageView) findViewById(R.id.iv_release);
+
         tv_enjoy_number = (TextView) findViewById(R.id.tv_enjoy_number);
+
         iv_plus = (ImageView) findViewById(R.id.iv_plus);
+
         iv_suiuu_order_titlePic = (SimpleDraweeView) findViewById(R.id.iv_suiuu_order_titlePic);
+
         tv_suiuu_order_title = (TextView) findViewById(R.id.tv_suiuu_order_title);
+
         suiuu_order_back = (ImageView) findViewById(R.id.suiuu_order_back);
+
         bb_suiuu_order_pay = (BootstrapButton) findViewById(R.id.bb_suiuu_order_pay);
+
         tv_order_price = (TextView) findViewById(R.id.tv_order_price);
 
     }
@@ -99,7 +122,7 @@ public class SuiuuOrderActivity extends BaseActivity {
         iv_plus.setOnClickListener(new MyClick());
         suiuu_order_back.setOnClickListener(new MyClick());
         bb_suiuu_order_pay.setOnClickListener(new MyClick());
-        tv_order_price.setText("总价: " + Float.toString(price));
+        tv_order_price.setText(String.format("%s%s", "总价: ", Float.toString(price)));
     }
 
     //获取订单的接口
@@ -132,7 +155,7 @@ public class SuiuuOrderActivity extends BaseActivity {
         map.put("startTime", tv_travel_time.getText().toString());
         map.put("type", "2");
         try {
-            OkHttpManager.onPostAsynRequest(HttpNewServicePath.createOrderNumber + "?token=" + SuiuuInfo.ReadAppTimeSign(SuiuuOrderActivity.this), new createOrderCallBack(), map);
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.createOrderNumber + "?token=" + token, new createOrderCallBack(), map);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -147,6 +170,7 @@ public class SuiuuOrderActivity extends BaseActivity {
         public void onError(Request request, Exception e) {
             Toast.makeText(SuiuuOrderActivity.this, "访问失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
+
         @Override
         public void onResponse(String response) {
             try {
@@ -207,8 +231,6 @@ public class SuiuuOrderActivity extends BaseActivity {
                     break;
                 case R.id.bb_suiuu_order_pay:
                     createOrderNumber();
-
-
                     break;
                 default:
                     break;

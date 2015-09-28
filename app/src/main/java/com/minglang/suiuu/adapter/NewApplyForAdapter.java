@@ -15,11 +15,10 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.NewApply;
 import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.http.HttpServicePath;
-import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.ViewHolder;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
@@ -123,7 +122,7 @@ public class NewApplyForAdapter extends BaseAdapter {
         public void onClick(View v) {
             String applyId = list.get(index).getApplyId();
 
-            String[] keyArray = new String[]{"applyId", "userSign", HttpServicePath.key, "token"};
+            String[] keyArray = new String[]{"applyId", "userSign", HttpNewServicePath.key, "token"};
             String[] valueArray = new String[]{applyId, SuiuuInfo.ReadUserSign(context),
                     SuiuuInfo.ReadVerification(context), SuiuuInfo.ReadAppTimeSign(context)};
 
@@ -153,7 +152,7 @@ public class NewApplyForAdapter extends BaseAdapter {
             String applyId = list.get(index).getApplyId();
             String publisherId = list.get(index).getPublisherId();
 
-            String[] keyArray = new String[]{"applyId", "publisherId", "userSign", HttpServicePath.key, "token"};
+            String[] keyArray = new String[]{"applyId", "publisherId", "userSign", HttpNewServicePath.key, "token"};
             String[] valueArray = new String[]{applyId, publisherId, SuiuuInfo.ReadUserSign(context),
                     SuiuuInfo.ReadVerification(context), SuiuuInfo.ReadAppTimeSign(context)};
 

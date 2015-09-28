@@ -187,6 +187,7 @@ public class UserProblem {
             private String qCountryId;
             private String qTag;
             private String info;
+            private String aNumber;
 
             public void setQTitle(String qTitle) {
                 this.qTitle = qTitle;
@@ -252,6 +253,10 @@ public class UserProblem {
                 this.info = info;
             }
 
+            public void setaNumber(String aNumber) {
+                this.aNumber = aNumber;
+            }
+
             public String getQTitle() {
                 return qTitle;
             }
@@ -314,6 +319,10 @@ public class UserProblem {
 
             public String getInfo() {
                 return info;
+            }
+
+            public String getaNumber() {
+                return aNumber;
             }
         }
 

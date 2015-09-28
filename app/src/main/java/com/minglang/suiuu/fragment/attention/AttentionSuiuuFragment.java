@@ -129,7 +129,6 @@ public class AttentionSuiuuFragment extends BaseFragment {
         initView();
         viewAction();
         getData4Service(page);
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -187,7 +186,6 @@ public class AttentionSuiuuFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String tripId = listAll.get(position).getTripId();
-                L.i(TAG, "position:" + position + ",tripId:" + tripId);
 
                 Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
                 intent.putExtra(TRIP_ID, tripId);
@@ -207,8 +205,8 @@ public class AttentionSuiuuFragment extends BaseFragment {
             }
         }
 
-        String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
-        String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(20), token};
+        String[] keyArray = new String[]{USER_SIGN, PAGE, NUMBER, TOKEN};
+        String[] valueArray = new String[]{userSign, String.valueOf(page), String.valueOf(20), token};
         String url = addUrlAndParams(HttpNewServicePath.getAttentionSuiuuPath, keyArray, valueArray);
 
         try {
@@ -303,6 +301,10 @@ public class AttentionSuiuuFragment extends BaseFragment {
                 }
             }
         }
+    }
+
+    public String getVerification() {
+        return verification;
     }
 
     private class AttentionSuiuuResultCallback extends OkHttpManager.ResultCallback<String> {

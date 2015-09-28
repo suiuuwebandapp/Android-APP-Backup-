@@ -29,7 +29,6 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.comparator.CityNameComparator;
 import com.minglang.suiuu.utils.comparator.HaveCityNameComparator;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
@@ -198,7 +197,7 @@ public class SelectCityActivity extends BaseAppCompatActivity {
             progressDialog.show();
         }
 
-        String[] keyArray = new String[]{HttpServicePath.key, COUNTRY_ID, TOKEN};
+        String[] keyArray = new String[]{HttpNewServicePath.key, COUNTRY_ID, TOKEN};
         String[] valueArray = new String[]{verification, countryId, token};
 
         String baseUrl = isAllCountry ? HttpNewServicePath.getHaveCityPath : HttpNewServicePath.getCityListPath;

@@ -33,7 +33,7 @@ import java.util.Set;
 
 /**
  * Created by Administrator on 2015/8/25.
- * <p/>
+ * <p>
  * OkHttp封装
  */
 public class OkHttpManager {
@@ -61,6 +61,10 @@ public class OkHttpManager {
             }
         }
         return okHttpManager;
+    }
+
+    public OkHttpClient getOkHttpClient() {
+        return mOkHttpClient;
     }
 
     /**
@@ -300,7 +304,6 @@ public class OkHttpManager {
         });
 
     }
-
 
     //***********************************************对外公布的方法*****************************************************************\\
 

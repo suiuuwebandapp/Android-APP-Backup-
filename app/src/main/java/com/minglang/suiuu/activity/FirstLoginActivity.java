@@ -13,13 +13,12 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.UserBack;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.MD5Utils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.qq.TencentConstant;
 import com.minglang.suiuu.utils.wechat.WeChatConstant;
 import com.squareup.okhttp.Request;
@@ -205,10 +204,12 @@ public class FirstLoginActivity extends BaseActivity {
 
                 case R.id.bt_login:
                     startActivity(new Intent(FirstLoginActivity.this, SecondLoginActivity.class));
+                    finish();
                     break;
 
                 case R.id.bt_register:
                     startActivity(new Intent(FirstLoginActivity.this, RegisterActivity.class));
+                    finish();
                     break;
 
                 case R.id.iv_sina:
@@ -596,7 +597,7 @@ public class FirstLoginActivity extends BaseActivity {
         dialog.showDialog();
         String sign = null;
         try {
-            sign = MD5Utils.getMD5(wechat_union_id + type + HttpServicePath.ConfusedCode);
+            sign = MD5Utils.getMD5(wechat_union_id + type + HttpNewServicePath.ConfusedCode);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }

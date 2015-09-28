@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.CommonCommentAdapter;
+import com.minglang.suiuu.adapter.TripImageDetailsCommentAdapter;
 import com.minglang.suiuu.adapter.TripImageCommentAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.NoScrollBarListView;
@@ -72,8 +72,6 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
     private TextProgressDialog dialog;
 
     private static final int COMMENT_SUCCESS = 20;
-
-    private static final String ID = "id";
 
     private static final String ATTENTION_ID = "attentionId";
 
@@ -199,7 +197,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
      */
     private String id;
 
-    private CommonCommentAdapter adapter;
+    private TripImageDetailsCommentAdapter adapter;
 
     /**
      * 猜你喜欢的布局
@@ -265,6 +263,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
     }
 
     private void viewAction() {
+
         suiuuDetailsComment.setOnClickListener(new MyOnClickListener());
 
         toCommentActivity.setOnClickListener(new MyOnClickListener());
@@ -327,7 +326,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
         OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[1];
         paramsArray[0] = new OkHttpManager.Params(ATTENTION_ID, cancelId);
         try {
-            OkHttpManager.onPostAsynRequest(HttpNewServicePath.CollectionArticleCancelPath + "?token=" + token,
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.getCancelAttentionPath + "?token=" + token,
                     new CollectionGalleryCancelRequestCallback(), paramsArray);
         } catch (IOException e) {
             e.printStackTrace();
@@ -593,7 +592,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
         }
         
         if (adapter == null) {
-            adapter = new CommonCommentAdapter(this, commentDataList.size() > 5 && !showAllComment ? newCommentDataList : commentDataList, "1");
+            adapter = new TripImageDetailsCommentAdapter(this, commentDataList.size() > 5 && !showAllComment ? newCommentDataList : commentDataList);
             suiuuDetailsCommentListView.setAdapter(adapter);
             AppUtils.setListViewHeightBasedOnChildren(suiuuDetailsCommentListView);
         } else {

@@ -185,6 +185,7 @@ public class AttentionProblem {
             private String qContent;
             private String qCountryId;
             private String qTag;
+            private String aNumber;
 
             public void setQTitle(String qTitle) {
                 this.qTitle = qTitle;
@@ -246,6 +247,10 @@ public class AttentionProblem {
                 this.qTag = qTag;
             }
 
+            public void setaNumber(String aNumber) {
+                this.aNumber = aNumber;
+            }
+
             public String getQTitle() {
                 return qTitle;
             }
@@ -304,6 +309,10 @@ public class AttentionProblem {
 
             public String getQTag() {
                 return qTag;
+            }
+
+            public String getaNumber() {
+                return aNumber;
             }
         }
 

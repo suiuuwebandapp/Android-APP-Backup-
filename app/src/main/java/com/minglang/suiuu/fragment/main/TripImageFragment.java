@@ -3,6 +3,7 @@ package com.minglang.suiuu.fragment.main;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,7 +23,7 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshScrollView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.FirstLoginActivity;
-import com.minglang.suiuu.activity.SuiuuSearchActivity;
+import com.minglang.suiuu.activity.SearchActivity;
 import com.minglang.suiuu.activity.TripImageDetailsActivity;
 import com.minglang.suiuu.adapter.TripImageAdapter;
 import com.minglang.suiuu.base.BaseFragment;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -70,6 +72,11 @@ public class TripImageFragment extends BaseFragment {
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
+
+    private static final String SEARCH_CLASS = "searchClass";
+
+    @BindDrawable(R.drawable.image_view_border_style)
+    Drawable Frame;
 
     @BindString(R.string.load_wait)
     String DialogMsg;
@@ -144,15 +151,15 @@ public class TripImageFragment extends BaseFragment {
         adapter = new TripImageAdapter(getActivity(), listAll);
         noScrollBarListView.setAdapter(adapter);
 
-        mTagIntArray = getResources().getStringArray(R.array.tripGalleryTagName);
+        mTagIntArray = getResources().getStringArray(R.array.tripImageTagName);
 
         initTagLayout();
     }
 
     @SuppressLint("InflateParams")
     private void initTagLayout() {
-        int[] mPhotosIntArray = new int[]{R.drawable.tag_family, R.drawable.tag_shopping, R.drawable.tag_nature,
-                R.drawable.tag_dangerous, R.drawable.tag_romantic, R.drawable.tag_museam, R.drawable.tag_novelty};
+        int[] mPhotosIntArray = new int[]{R.drawable.tag_0, R.drawable.tag_1, R.drawable.tag_2,
+                R.drawable.tag_3, R.drawable.tag_4, R.drawable.tag_5, R.drawable.tag_6};
 
         SimpleDraweeView imageView;
         TextView textView;
@@ -188,7 +195,7 @@ public class TripImageFragment extends BaseFragment {
                         clickImageList.remove(imageViewList.get(tag));
                         clickTagList.remove(mTagIntArray[tag]);
                     } else {
-                        imageViewList.get(tag).setBackgroundResource(R.drawable.image_view_border_style);
+                        imageViewList.get(tag).setBackground(Frame);
                         clickImageList.add(imageViewList.get(tag));
                         clickTagList.add(mTagIntArray[tag]);
                     }
@@ -213,8 +220,6 @@ public class TripImageFragment extends BaseFragment {
                             break;
                     }
 
-                    L.i(TAG, "已点击的标签:" + AddTag);
-
                     loadFirstPageData(null);
                 }
             });
@@ -228,8 +233,8 @@ public class TripImageFragment extends BaseFragment {
         tripImageSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SuiuuSearchActivity.class);
-                intent.putExtra("searchClass", 1);
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.putExtra(SEARCH_CLASS, 1);
                 startActivity(intent);
             }
         });
@@ -329,7 +334,6 @@ public class TripImageFragment extends BaseFragment {
 
         @Override
         public void onResponse(String result) {
-            L.i(TAG, "旅途返回的数据:" + result);
             if (TextUtils.isEmpty(result)) {
                 Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
             } else try {

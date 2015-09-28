@@ -24,7 +24,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/layout_120dp"
-                    android:background="@drawable/trip_gallery_search_bg"/>
+                    android:background="@drawable/background_trip_image"/>
 
                 <TextView
                     android:id="@+id/trip_image_search"

@@ -12,9 +12,10 @@ import android.widget.Toast;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.TextProgressDialog;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
-import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -37,10 +38,15 @@ import butterknife.ButterKnife;
  * 修改备注：
  */
 public class OrderContackInformationActivity extends BaseActivity {
+
+    private static final String TAG = OrderContackInformationActivity.class.getSimpleName();
+
     @Bind(R.id.iv_top_back)
     ImageView iv_top_back;
+
     @Bind(R.id.tv_top_right_more)
     ImageView tv_top_right_more;
+
     @Bind(R.id.tv_top_center)
     TextView tv_top_center;
     /**
@@ -91,16 +97,20 @@ public class OrderContackInformationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_contact_info);
         ButterKnife.bind(this);
+
         peopleNumber = this.getIntent().getStringExtra("peopleNumber");
         time = this.getIntent().getStringExtra("time");
         total_price = this.getIntent().getStringExtra("total_price");
         destination = this.getIntent().getStringExtra("destination");
         orderNumber = this.getIntent().getStringExtra("orderNumber");
+
         initView();
         viewAction();
     }
 
     private void initView() {
+        token = SuiuuInfo.ReadAppTimeSign(OrderContackInformationActivity.this);
+
         tv_top_center.setText("个人信息完整");
         tv_top_right_more.setVisibility(View.GONE);
         dialog = new TextProgressDialog(this);
@@ -127,29 +137,35 @@ public class OrderContackInformationActivity extends BaseActivity {
         String nativePhoneNumber = et_native_phone_phone.getText().toString().trim();
         String urgentName = et_actual_name.getText().toString().trim();
         String contactPhoneNumber = et_contack_phone_number.getText().toString().trim();
-        if(TextUtils.isEmpty(userName) || TextUtils.isEmpty(nativePhoneNumber) || TextUtils.isEmpty(urgentName) || TextUtils.isEmpty(contactPhoneNumber)) {
-            Toast.makeText(this,"请完善信息",Toast.LENGTH_SHORT).show();
+
+        if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(nativePhoneNumber) || TextUtils.isEmpty(urgentName) || TextUtils.isEmpty(contactPhoneNumber)) {
+            dialog.dismissDialog();
+            Toast.makeText(this, "请完善信息", Toast.LENGTH_SHORT).show();
             return;
         }
+
         String wechatNumber = et_we_chat.getText().toString().trim();
         String sparePhoneNumber = et_standby_phone_number.getText().toString().trim();
-        Map<String,String> map = new HashMap<>();
-        map.put("orderNumber",orderNumber);
-        map.put("username",userName);
-        map.put("phone",nativePhoneNumber);
-        map.put("sparePhone",sparePhoneNumber);
-        map.put("wechat",wechatNumber);
-        map.put("urgentUsername",urgentName);
-        map.put("urgentPhone",contactPhoneNumber);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("orderNumber", orderNumber);
+        map.put("username", userName);
+        map.put("phone", nativePhoneNumber);
+        map.put("sparePhone", sparePhoneNumber);
+        map.put("wechat", wechatNumber);
+        map.put("urgentUsername", urgentName);
+        map.put("urgentPhone", contactPhoneNumber);
 //        map.put("arriveFlyNumber",);
 //        map.put("leaveFlyNumber",);
-        map.put("destination",destination);
+        map.put("destination", destination);
         try {
-            OkHttpManager.onPostAsynRequest(HttpNewServicePath.orderContactInformation + "?token=" + SuiuuInfo.ReadAppTimeSign(OrderContackInformationActivity.this), new PushInformationCallBack(), map);
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.orderContactInformation + "?token=" + token, new PushInformationCallBack(), map);
         } catch (IOException e) {
-            e.printStackTrace();
+            L.e(TAG, "发送数据到服务器异常:" + e.getMessage());
+            dialog.dismissDialog();
         }
     }
+
     /**
      * 提交信息回调接口
      */
@@ -172,12 +188,12 @@ public class OrderContackInformationActivity extends BaseActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if(status == 1 && "".equals(data)) {
+            if (status == 1 && "".equals(data)) {
                 Toast.makeText(OrderContackInformationActivity.this, "提交成功", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(OrderContackInformationActivity.this, SuiuuPayActivity.class);
                 intent.putExtra("orderNumber", orderNumber);
                 startActivity(intent);
-            }else {
+            } else {
                 Toast.makeText(OrderContackInformationActivity.this, data, Toast.LENGTH_SHORT).show();
             }
         }

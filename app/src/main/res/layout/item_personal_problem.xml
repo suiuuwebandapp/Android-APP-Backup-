@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -28,7 +27,7 @@
                 fresco:failureImageScaleType="fitCenter"
                 fresco:placeholderImage="@drawable/default_head_image"
                 fresco:placeholderImageScaleType="fitCenter"
-                fresco:roundAsCircle="true"/>
+                fresco:roundAsCircle="true" />
 
             <TextView
                 android:id="@+id/item_personal_problem_count"
@@ -43,7 +42,7 @@
                 android:drawableStart="@drawable/icon_comment"
                 android:gravity="center_horizontal"
                 android:text="@string/Zero"
-                android:textSize="@dimen/layout_18sp"/>
+                android:textSize="@dimen/layout_18sp" />
 
         </RelativeLayout>
 
@@ -61,8 +60,8 @@
             android:maxEms="20"
             android:singleLine="true"
             android:text="@string/app_name"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/textColor"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/textColor" />
 
         <TextView
             android:id="@+id/item_personal_problem_content"
@@ -77,7 +76,7 @@
             android:ellipsize="end"
             android:maxLines="3"
             android:text="@string/tempText"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textSize="@dimen/layout_14sp" />
 
     </RelativeLayout>
 

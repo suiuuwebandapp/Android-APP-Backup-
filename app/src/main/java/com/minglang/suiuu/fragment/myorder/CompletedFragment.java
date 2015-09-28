@@ -22,10 +22,9 @@ import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.CompletedOrder;
 import com.minglang.suiuu.entity.CompletedOrder.CompletedOrderData;
 import com.minglang.suiuu.entity.TripJsonInfo;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.http.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
@@ -228,7 +227,7 @@ public class CompletedFragment extends BaseFragment {
             }
         }
 
-        String[] keyArray = new String[]{HttpServicePath.key, PAGE, NUMBER, TOKEN};
+        String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
         String url = addUrlAndParams(HttpNewServicePath.getGeneralUserCompletedOrderPath, keyArray, valueArray);
         try {

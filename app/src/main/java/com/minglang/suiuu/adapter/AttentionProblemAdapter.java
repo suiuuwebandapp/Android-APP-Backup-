@@ -37,7 +37,7 @@ public class AttentionProblemAdapter extends BaseHolderAdapter<AttentionProblemI
             headView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image));
         }
 
-        String strCommentNumber = item.getAttentionNumber();
+        String strCommentNumber = item.getaNumber();
         if (!TextUtils.isEmpty(strCommentNumber)) {
             commentNumber.setText(strCommentNumber);
         } else {

@@ -25,13 +25,12 @@ import com.minglang.suiuu.entity.OrderDetails;
 import com.minglang.suiuu.entity.OrderDetails.OrderDetailsData.InfoEntity;
 import com.minglang.suiuu.entity.OrderDetails.OrderDetailsData.UserInfoEntity;
 import com.minglang.suiuu.entity.TripJsonInfo;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.http.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
-import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.AppUtils;
+import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
@@ -220,7 +219,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         initView();
         viewAction();
 
-        String[] keyArray = new String[]{ORDER_NUMBER, HttpServicePath.key, TOKEN};
+        String[] keyArray = new String[]{ORDER_NUMBER, HttpNewServicePath.key, TOKEN};
         String[] valueArray = new String[]{strID, verification, token};
         getData4Service(orderDetailsDataPath, keyArray, valueArray, orderDetailsResultCallback);
 
@@ -230,7 +229,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         Intent oldIntent = getIntent();
         strID = oldIntent.getStringExtra(ID);
         String selectOrderStatus = oldIntent.getStringExtra(ORDER_STATUS);
-        L.i(TAG, "订单ID:" + strID + ",orderStatus:" + selectOrderStatus);
 
         if (selectOrderStatus.equals(NEW)) {
             bottomLayout1.setVisibility(View.VISIBLE);
@@ -279,7 +277,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
             @Override
             public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
                 isPullToRefresh = false;
-                String[] keyArray = new String[]{ORDER_NUMBER, HttpServicePath.key, TOKEN};
+                String[] keyArray = new String[]{ORDER_NUMBER, HttpNewServicePath.key, TOKEN};
                 String[] valueArray = new String[]{strID, verification, token};
                 getData4Service(orderDetailsDataPath, keyArray, valueArray, orderDetailsResultCallback);
             }
@@ -322,8 +320,12 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
             public void onClick(View v) {
                 String phoneNumber = phoneNumberView.getText().toString();
                 if (!TextUtils.isEmpty(phoneNumber)) {
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
-                    context.startActivity(intent);
+                    try {
+                        context.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber)));
+                    } catch (SecurityException e) {
+                        L.e(TAG, "拨打电话异常:" + e.getMessage());
+                        Toast.makeText(context, "拨打电话时发生错误", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -338,12 +340,11 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 cancelOrderReason = editText.getText().toString().trim();
-                                L.i(TAG, "退款理由:" + cancelOrderReason);
 
                                 if (TextUtils.isEmpty(cancelOrderPath)) {
                                     Toast.makeText(context, refundReasonNotNull, Toast.LENGTH_SHORT).show();
                                 } else {
-                                    String[] keyArray = new String[]{ORDER_NUMBER, HttpServicePath.key, TOKEN};
+                                    String[] keyArray = new String[]{ORDER_NUMBER, HttpNewServicePath.key, TOKEN};
                                     String[] valueArray = new String[]{strID, cancelOrderReason, token};
                                     getData4Service(cancelOrderPath, keyArray, valueArray, new CancelOrderResultCallback());
                                 }
@@ -375,8 +376,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
     }
 
-    private void getData4Service(String path, String[] keyArray, String[] valueArray,
-                                 OkHttpManager.ResultCallback<String> requestCallBack) {
+    private void getData4Service(String path, String[] keyArray, String[] valueArray, OkHttpManager.ResultCallback<String> requestCallBack) {
         if (isPullToRefresh) {
             if (progressDialog != null && !progressDialog.isShowing()) {
                 progressDialog.show();
@@ -718,7 +718,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            L.i(TAG, "订单详情数据:" + response);
             hideDialog();
             bindData2View(response);
         }
@@ -736,7 +735,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            L.i(TAG, "取消订单数据:" + response);
             hideDialog();
             cancelOrder(response);
         }
@@ -754,7 +752,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            L.i(TAG, "确认订单返回的数据:" + response);
             hideDialog();
             confirmOrder(response);
         }
@@ -772,7 +769,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            L.i(TAG, "忽略订单数据:" + response);
             hideDialog();
             ignoreOrder(response);
         }

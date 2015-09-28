@@ -1,6 +1,7 @@
 package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -23,13 +24,13 @@ import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.entity.ProblemDetails;
 import com.minglang.suiuu.entity.ProblemDetails.CommunityItemData.AnswerEntity;
+import com.minglang.suiuu.entity.ProblemDetails.CommunityItemData.AttentionEntity;
 import com.minglang.suiuu.entity.ProblemDetails.CommunityItemData.QuestionEntity;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.http.HttpServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.phillipcalvin.iconbutton.IconButton;
 import com.squareup.okhttp.Request;
 
@@ -60,7 +61,8 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
     private static final String Q_ID = "qId";
 
     private static final String STATUS = "status";
-    private static final String SUC_VALUE = "1";
+
+    private static final String ATTENTION_ID = "attentionId";
 
     private String qID;
 
@@ -88,11 +90,23 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
     @BindString(R.string.NetworkAnomaly)
     String NetworkError;
 
-    @BindString(R.string.AttentionQuestion_SUC)
-    String attention_suc;
+    @BindString(R.string.AttentionQuestionSuccess)
+    String AttentionSuccess;
 
-    @BindString(R.string.AttentionQuestion_FAI)
-    String attention_fai;
+    @BindString(R.string.AttentionQuestionFailure)
+    String AttentionFailure;
+
+    @BindString(R.string.AttentionQuestionException)
+    String AttentionException;
+
+    @BindString(R.string.CancelAttentionSuccess)
+    String CancelAttentionSuccess;
+
+    @BindString(R.string.CancelAttentionFailure)
+    String CancelAttentionFailure;
+
+    @BindString(R.string.CancelAttentionException)
+    String CancelAttentionException;
 
     /**
      * 未关注的Selector
@@ -136,6 +150,12 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
 
     private ProblemDetails problemDetails;
 
+    private Context context;
+
+    private boolean isAttention = false;
+
+    private String attentionId = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,6 +186,8 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
+        context = this;
+
         verification = SuiuuInfo.ReadVerification(this);
 
         try {
@@ -220,7 +242,11 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
         attentionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getAttentionProblem(qID);
+                if (isAttention) {
+                    getCancelAttentionProblem(attentionId);
+                } else {
+                    getAttentionProblem(qID);
+                }
             }
         });
 
@@ -245,7 +271,7 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
      * @return 带参数的URL
      */
     private String buildUrl(String baseUrl, String id) {
-        String[] keyArray = new String[]{HttpServicePath.key, ID, TOKEN};
+        String[] keyArray = new String[]{HttpNewServicePath.key, ID, TOKEN};
         String[] valueArray = new String[]{verification, id, token};
         return addUrlAndParams(baseUrl, keyArray, valueArray);
     }
@@ -260,20 +286,149 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
             OkHttpManager.onGetAsynRequest(url, new ProblemDetailsResultCallback());
         } catch (IOException e) {
             e.printStackTrace();
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * 关注问题
+     *
+     * @param id 问题ID
+     */
     private void getAttentionProblem(String id) {
         OkHttpManager.Params params = new OkHttpManager.Params(ID, id);
-
         String url = HttpNewServicePath.getAttentionQuestionPath + "?" + TOKEN + "=" + token;
-        L.i(TAG, "关注URL:" + url);
 
         try {
-            OkHttpManager.onPostAsynRequest(url, new AttentionProblemResultCallback(), params);
+            OkHttpManager.onPostAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
+
+                @Override
+                public void onResponse(String response) {
+                    L.i(TAG, "关注问题返回的数据:" + response);
+                    if (TextUtils.isEmpty(response)) {
+                        Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
+                    } else try {
+                        JSONObject object = new JSONObject(response);
+                        String stats = object.getString(STATUS);
+                        switch (stats) {
+                            case "1":
+                                isAttention = true;
+                                attentionId = object.getString(DATA);
+                                attentionBtn.setCompoundDrawablesWithIntrinsicBounds(isAttentionSelector, null, null, null);
+                                Toast.makeText(context, AttentionSuccess, Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case "-1":
+                                isAttention = false;
+                                attentionBtn.setCompoundDrawablesWithIntrinsicBounds(noAttentionSelector, null, null, null);
+                                Toast.makeText(context, AttentionException, Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case "-2":
+                                isAttention = false;
+                                attentionBtn.setCompoundDrawablesWithIntrinsicBounds(noAttentionSelector, null, null, null);
+                                Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                                break;
+
+                            default:
+                                isAttention = false;
+                                attentionBtn.setCompoundDrawablesWithIntrinsicBounds(noAttentionSelector, null, null, null);
+                                Toast.makeText(context, AttentionFailure, Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    } catch (Exception e) {
+                        L.e(TAG, "解析失败:" + e.getMessage());
+                        isAttention = false;
+                        attentionBtn.setCompoundDrawablesWithIntrinsicBounds(noAttentionSelector, null, null, null);
+                        Toast.makeText(context, AttentionException, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Exception e) {
+                    L.e(TAG, "关注问题数据异常:" + e.getMessage());
+                    isAttention = false;
+                    attentionBtn.setCompoundDrawablesWithIntrinsicBounds(noAttentionSelector, null, null, null);
+                    Toast.makeText(context, AttentionFailure, Toast.LENGTH_SHORT).show();
+                }
+
+            }, params);
         } catch (IOException e) {
-            e.printStackTrace();
+            L.e(TAG, "关注问题失败:" + e.getMessage());
+            isAttention = false;
+            attentionBtn.setCompoundDrawablesWithIntrinsicBounds(noAttentionSelector, null, null, null);
+            Toast.makeText(context, AttentionFailure, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * 取消关注
+     *
+     * @param id 问题ID
+     */
+    private void getCancelAttentionProblem(String id) {
+        OkHttpManager.Params params = new OkHttpManager.Params(ATTENTION_ID, id);
+        String url = HttpNewServicePath.getCancelAttentionPath + "?" + TOKEN + "=" + token;
+        try {
+            OkHttpManager.onPostAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
+
+                @Override
+                public void onResponse(String response) {
+                    L.i(TAG, "取消关注返回的数据:" + response);
+                    if (TextUtils.isEmpty(response)) {
+                        Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
+                    } else try {
+                        JSONObject object = new JSONObject(response);
+                        String status = object.getString(STATUS);
+                        switch (status) {
+                            case "1":
+                                isAttention = false;
+                                attentionBtn.setCompoundDrawablesWithIntrinsicBounds(noAttentionSelector, null, null, null);
+                                Toast.makeText(context, CancelAttentionSuccess, Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case "-1":
+                                isAttention = true;
+                                attentionBtn.setCompoundDrawablesWithIntrinsicBounds(isAttentionSelector, null, null, null);
+                                Toast.makeText(context, CancelAttentionException, Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case "-2":
+                                isAttention = true;
+                                attentionBtn.setCompoundDrawablesWithIntrinsicBounds(isAttentionSelector, null, null, null);
+                                Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                                break;
+
+                            default:
+                                isAttention = true;
+                                attentionBtn.setCompoundDrawablesWithIntrinsicBounds(isAttentionSelector, null, null, null);
+                                Toast.makeText(context, CancelAttentionException, Toast.LENGTH_SHORT).show();
+                                break;
+
+                        }
+                    } catch (Exception e) {
+                        L.e(TAG, "取消关注数据解析失败:" + e.getMessage());
+                        isAttention = true;
+                        attentionBtn.setCompoundDrawablesWithIntrinsicBounds(isAttentionSelector, null, null, null);
+                        Toast.makeText(context, CancelAttentionException, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Exception e) {
+                    isAttention = true;
+                    attentionBtn.setCompoundDrawablesWithIntrinsicBounds(isAttentionSelector, null, null, null);
+                    Toast.makeText(context, CancelAttentionFailure, Toast.LENGTH_SHORT).show();
+                }
+
+            }, params);
+        } catch (Exception e) {
+            L.e(TAG, "取消关注错误:" + e.getMessage());
+            isAttention = true;
+            attentionBtn.setCompoundDrawablesWithIntrinsicBounds(isAttentionSelector, null, null, null);
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     /**
@@ -283,8 +438,6 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-
-        //        frameLayout.refreshComplete();
     }
 
     /**
@@ -300,20 +453,21 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
                 problemDetails = JsonUtils.getInstance().fromJSON(ProblemDetails.class, str);
                 if (problemDetails != null) {
                     ProblemDetails.CommunityItemData itemData = problemDetails.getData();
-
                     if (itemData != null) {
-                        List<ProblemDetails.CommunityItemData.AttentionEntity> attentionEntityList
-                                = itemData.getAttention();
+
+                        List<AttentionEntity> attentionEntityList = itemData.getAttention();
                         if (attentionEntityList != null && attentionEntityList.size() > 0) {
                             L.i(TAG, "已关注");
+                            isAttention = true;
+                            attentionId = attentionEntityList.get(0).getAttentionId();
                             attentionBtn.setCompoundDrawablesWithIntrinsicBounds(isAttentionSelector, null, null, null);
                         } else {
                             L.i(TAG, "未关注");
+                            isAttention = false;
                             attentionBtn.setCompoundDrawablesWithIntrinsicBounds(noAttentionSelector, null, null, null);
                         }
 
                         List<QuestionEntity> questionList = itemData.getQuestion();
-
                         if (questionList != null && questionList.size() > 0) {
                             QuestionEntity questionEntity = questionList.get(0);
 
@@ -343,6 +497,7 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
                         if (list != null && list.size() > 0) {
                             adapter.setList(list);
                         }
+
                     }
                 }
             } catch (Exception e) {
@@ -367,42 +522,20 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
     private class ProblemDetailsResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
+        public void onResponse(String response) {
+            L.i(TAG, "问题详情数据:" + response);
+            bindData2View(response);
+        }
+
+        @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "问题详情数据异常:" + e.getMessage());
             Toast.makeText(ProblemDetailsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        public void onResponse(String response) {
-            L.i(TAG, "问题详情数据:" + response);
+        public void onFinish() {
             hideDialog();
-            bindData2View(response);
-        }
-
-    }
-
-    private class AttentionProblemResultCallback extends OkHttpManager.ResultCallback<String> {
-
-        @Override
-        public void onError(Request request, Exception e) {
-            L.e(TAG, "关注问题数据异常:" + e.getMessage());
-            Toast.makeText(ProblemDetailsActivity.this, attention_fai, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onResponse(String response) {
-            L.i(TAG, "关注问题返回的数据:" + response);
-            try {
-                JSONObject object = new JSONObject(response);
-                String stats = object.getString(STATUS);
-                if (stats.equals(SUC_VALUE)) {
-                    Toast.makeText(ProblemDetailsActivity.this, attention_suc, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ProblemDetailsActivity.this, attention_fai, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                L.e(TAG, "解析失败:" + e.getMessage());
-            }
         }
 
     }

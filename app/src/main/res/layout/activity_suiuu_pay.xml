@@ -59,7 +59,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/top"
-        android:orientation="vertical"/>
+        android:orientation="vertical" />
 
     <LinearLayout
         android:id="@+id/ll_bottom_message"
@@ -67,7 +67,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_center_message"
-        android:orientation="vertical"/>
+        android:orientation="vertical" />
 
 
     <LinearLayout
@@ -81,26 +81,27 @@
             android:id="@+id/tv_pay_wechat"
             android:layout_width="@dimen/layout_170dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_main_color"
-            android:text="@string/_AliPay"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:layout_marginTop="@dimen/layout_8dp"
             android:layout_gravity="center"
-            android:textSize="@dimen/layout_20sp"
-            android:padding="@dimen/layout_5dp"/>
+            android:layout_marginTop="@dimen/layout_8dp"
+            android:background="@drawable/btn_main_color"
+            android:gravity="center"
+            android:padding="@dimen/layout_5dp"
+            android:text="@string/WeChatPay"
+            android:textColor="@color/white"
+            android:textSize="@dimen/layout_18sp" />
 
         <TextView
             android:id="@+id/tv_pay_alipay"
             android:layout_width="@dimen/layout_170dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/bt_wechat_bg"
-            android:gravity="center"
-            android:text="@string/WeChatPay"
             android:layout_gravity="center"
             android:layout_margin="@dimen/layout_8dp"
-            android:textSize="@dimen/layout_20sp"
-            android:padding="@dimen/layout_5dp"/>
+            android:background="@drawable/bt_wechat_bg"
+            android:gravity="center"
+            android:padding="@dimen/layout_5dp"
+            android:text="@string/_AliPay"
+            android:textColor="@color/white"
+            android:textSize="@dimen/layout_18sp" />
 
     </LinearLayout>
 </RelativeLayout>

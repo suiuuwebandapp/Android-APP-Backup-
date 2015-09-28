@@ -15,12 +15,11 @@ import com.minglang.suiuu.adapter.MsgSystemAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MsgSystem;
 import com.minglang.suiuu.entity.MsgSystem.MsgSystemData.MsgSystemItemData;
+import com.minglang.suiuu.utils.AppUtils;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.http.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.http.OkHttpManager;
-import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -198,7 +197,7 @@ public class MsgSystemFragment extends BaseFragment {
             progressDialog.show();
         }
 
-        String[] keyArray = new String[]{HttpServicePath.key, PAGE, NUMBER, TOKEN};
+        String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
         String url = addUrlAndParams(HttpNewServicePath.getSystemMsgDataPath, keyArray, valueArray);
 

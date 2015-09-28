@@ -75,14 +75,14 @@
         <item>关于我们</item>
     </string-array>
 
-    <string-array name="tripGalleryTagName">
-        <item>家庭</item>
-        <item>购物</item>
-        <item>自然</item>
-        <item>惊险</item>
-        <item>浪漫</item>
+    <string-array name="tripImageTagName">
+        <item>美食</item>
+        <item>建筑</item>
+        <item>电影</item>
         <item>博物馆</item>
-        <item>猎奇</item>
+        <item>景点</item>
+        <item>购物</item>
+        <item>酒吧</item>
     </string-array>
 
 </resources>

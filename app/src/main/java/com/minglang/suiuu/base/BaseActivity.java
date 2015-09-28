@@ -28,6 +28,8 @@ public class BaseActivity extends FragmentActivity {
     public static final String PAGE = "page";
     public static final String NUMBER = "number";
 
+    public static final String HEAD_IMG = "headImagePath";
+
     public DisplayMetrics dm;
 
     /**

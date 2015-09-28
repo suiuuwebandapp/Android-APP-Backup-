@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,6 +12,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,13 +20,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.SuiuuDetailsCommentAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.NoScrollBarListView;
-import com.minglang.suiuu.dbhelper.DbHelper;
 import com.minglang.suiuu.entity.SuiuuDetailsData;
 import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
@@ -66,8 +63,6 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     private static final String TRIP_ID = "tripId";
     private static final String R_ID = "rId";
     private static final String NICK_NAME = "nickName";
-
-    private static final String STATUS = "status";
 
     private static final String CONTENT = "content";
     private static final String HEAD_IMG = "headImg";
@@ -112,12 +107,12 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     NoScrollBarListView suiuuDetailsComment;
 
     //咨询按钮
-    @Bind(R.id.bb_consult)
-    BootstrapButton consult;
+    @Bind(R.id.suiuu_details_advisory)
+    Button consult;
 
     //预定按钮
-    @Bind(R.id.bb_schedule)
-    BootstrapButton schedule;
+    @Bind(R.id.suiuu_details_booking)
+    Button schedule;
 
     private SuiuuDetailsData detailsData;
 
@@ -139,17 +134,9 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
      */
     private List<CommentDataEntity> listAll = new ArrayList<>();
 
-    /**
-     * 是否显示全部评论的状态
-     */
-    private boolean showAllComment = false;
-
-    /**
-     * 加载更多的view
-     */
-    private TextView textView = null;
-
     private AlertDialog setTagDialog;
+
+    private String headImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +152,8 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     @SuppressLint("SetJavaScriptEnabled")
     private void initView() {
         tripId = getIntent().getStringExtra(TRIP_ID);
+        userSign = getIntent().getStringExtra(USER_SIGN);
+        headImagePath = getIntent().getStringExtra(HEAD_IMG);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -279,36 +268,6 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
         };
         return insertObj;
-    }
-
-    /**
-     * 添加一条记录
-     */
-    public void addUser() {
-        DbHelper helper = new DbHelper(this);
-        //得到可读可写数据库
-        SQLiteDatabase db = helper.getReadableDatabase();
-        //执行sql语句
-        db.execSQL("insert into user (userId,nikename,titleImg) values (?,?,?)",
-                new Object[]{detailsData.getData().getPublisherList().get(0).getUserSign(),
-                        detailsData.getData().getPublisherList().get(0).getNickname(),
-                        detailsData.getData().getPublisherList().get(0).getHeadImg()});
-        db.close();
-    }
-
-    public boolean isExistUser(String userId) {
-        boolean isExist = false;
-        DbHelper helper = new DbHelper(this);
-        //得到可读数据库
-        SQLiteDatabase db = helper.getReadableDatabase();
-        //得到数据库查询的结果集的游标（指针）
-        Cursor cursor = db.rawQuery("select * from user where userid = ? ", new String[]{userId});
-        while (cursor.moveToNext()) {
-            isExist = true;
-        }
-        cursor.close();
-        db.close();
-        return isExist;
     }
 
     //访问网络
@@ -437,13 +396,14 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                     commentIntent.putExtra(TRIP_ID, tripId);
                     startActivityForResult(commentIntent, COMMENT_SUCCESS);
                     break;
-                case R.id.bb_consult:
+                case R.id.suiuu_details_advisory:
                     //跳到会话页面
-//                    if (!isExistUser(detailsData.getData().getPublisherList().get(0).getUserSign())) {
-//                        addUser();
-//                    }
+                    Intent intentChat = new Intent(SuiuuDetailsActivity.this, PrivateLetterChatActivity.class);
+                    intentChat.putExtra("relateId", userSign);
+                    intentChat.putExtra(HEAD_IMG, headImagePath);
+                    startActivity(intentChat);
                     break;
-                case R.id.bb_schedule:
+                case R.id.suiuu_details_booking:
                     //跳到预定页面
                     Intent intentSchedule = new Intent(SuiuuDetailsActivity.this, SuiuuOrderActivity.class);
                     intentSchedule.putExtra("titleInfo", detailsData.getData().getInfo().getTitle());
@@ -472,10 +432,8 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                 json.put(NICK_NAME_, userBackData.getNickname());
                 json.put(CONTENT, content);
 
-                CommentDataEntity newCommentData =
-                        JsonUtils.getInstance().fromJSON(CommentDataEntity.class, json.toString());
+                CommentDataEntity newCommentData = JsonUtils.getInstance().fromJSON(CommentDataEntity.class, json.toString());
                 listAll.add(0, newCommentData);
-                showAllComment = false;
                 fullCommentList();
             } catch (JSONException e) {
                 e.printStackTrace();

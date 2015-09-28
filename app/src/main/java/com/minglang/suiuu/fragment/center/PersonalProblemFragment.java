@@ -19,12 +19,11 @@ import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.UserProblem;
 import com.minglang.suiuu.entity.UserProblem.UserProblemData.UserProblemItemData;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
+import com.minglang.suiuu.utils.AppUtils;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.http.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.http.OkHttpManager;
-import com.minglang.suiuu.utils.AppUtils;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -238,9 +237,8 @@ public class PersonalProblemFragment extends BaseFragment {
             }
         }
 
-        String[] keyArray = new String[]{PAGE, NUMBER, USERSIGN, HttpServicePath.key, TOKEN};
-        String[] valueArray = new String[]{String.valueOf(page), String.valueOf(10),
-                userSign, verification, token};
+        String[] keyArray = new String[]{PAGE, NUMBER, USERSIGN, HttpNewServicePath.key, TOKEN};
+        String[] valueArray = new String[]{String.valueOf(page), String.valueOf(10), userSign, verification, token};
         String url = addUrlAndParams(HttpNewServicePath.getPersonalProblemDataPath, keyArray, valueArray);
 
         try {
@@ -279,41 +277,40 @@ public class PersonalProblemFragment extends BaseFragment {
     }
 
     private void bindData2View(String str) {
+        L.i(TAG, "关注问题返回结果:" + str);
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                UserProblem userProblem = JsonUtils.getInstance().fromJSON(UserProblem.class, str);
-                if (userProblem != null) {
-                    List<UserProblemItemData> list = userProblem.getData().getData();
-                    if (list != null && list.size() > 0) {
-                        clearDataList();
-                        listAll.addAll(list);
-                        adapter.setList(listAll);
-                    } else {
-                        failureLessPage();
-                        Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                    }
+        } else try {
+            UserProblem userProblem = JsonUtils.getInstance().fromJSON(UserProblem.class, str);
+            if (userProblem != null) {
+                List<UserProblemItemData> list = userProblem.getData().getData();
+                if (list != null && list.size() > 0) {
+                    clearDataList();
+                    listAll.addAll(list);
+                    adapter.setList(listAll);
                 } else {
                     failureLessPage();
                     Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                L.e(TAG, "数据绑定Error:" + e.getMessage());
+            } else {
                 failureLessPage();
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            L.e(TAG, "数据绑定Error:" + e.getMessage());
+            failureLessPage();
+            try {
+                JSONObject object = new JSONObject(str);
+                String status = object.getString(STATUS);
+                if (status.equals("-1")) {
+                    Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                } else if (status.equals("-2")) {
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
                 }
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+                Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
             }
         }
     }

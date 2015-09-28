@@ -63,7 +63,7 @@
             android:layout_marginLeft="@dimen/layout_10dp"
             android:layout_marginStart="@dimen/layout_10dp"
             android:layout_marginTop="@dimen/layout_10dp"
-            android:text="推荐"
+            android:text="@string/Recommend"
             android:textColor="@color/gray"
             android:textSize="@dimen/layout_18sp" />
 

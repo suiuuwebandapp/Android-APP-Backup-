@@ -343,15 +343,20 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
      * @return Params value
      */
     private String buildTagParams() {
-        String tags = null;
-        for (int i = 0; i < tagList.size(); i++) {
-            if (tagList.size() > i + 1) {
-                tags = tags + tagList.get(i) + ",";
-            } else {
-                tags = tags + tagList.get(i);
+        String tags = "";
+        if (tagList != null && tagList.size() > 0) {
+            for (int i = 0; i < tagList.size(); i++) {
+                if (tagList.size() > i + 1) {
+                    tags = tags + tagList.get(i) + ",";
+                } else {
+                    tags = tags + tagList.get(i);
+                }
             }
+            return tags;
+        } else {
+            Toast.makeText(context, "标签不能为空！", Toast.LENGTH_SHORT).show();
+            return "";
         }
-        return tags;
     }
 
     /**
@@ -379,12 +384,12 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
         }
 
         String problemUrl = HttpNewServicePath.addNewProblemInterFacePath + "?" + TOKEN + "=" + token;
-        L.i(TAG, "problemUrl:" + problemUrl);
-
+        OkHttpManager.Params[] paramsArray = buildNewProblemParams();
         try {
-            OkHttpManager.onPostAsynRequest(problemUrl, new AddProblemResultCallBack(), buildNewProblemParams());
-        } catch (IOException e) {
-            e.printStackTrace();
+            OkHttpManager.onPostAsynRequest(problemUrl, new AddProblemResultCallBack(), paramsArray);
+        } catch (Exception e) {
+            L.e(TAG, "提问请求异常:" + e.getMessage());
+            hideDialog();
             Toast.makeText(PutQuestionsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
     }
@@ -425,7 +430,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
                 if (!TextUtils.isEmpty(countryCNname)) {
                     if (!TextUtils.isEmpty(cityName)) {
-                        questionLocation.setText(countryCNname + "," + cityName);
+                        questionLocation.setText(String.format("%s%s%s", countryCNname, ",", cityName));
                     } else {
                         questionLocation.setText(countryCNname);
                     }
@@ -453,9 +458,15 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
             case R.id.question_confirm:
                 title = inputQuestionTitle.getText().toString().trim();
                 content = inputProblemContent.getText().toString().trim();
-                L.i(TAG, "title:" + title + ",content:" + content);
-
-                sendNewProblem4Service();
+                if (TextUtils.isEmpty(title)) {
+                    Toast.makeText(context, "标题不能为空！", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(content)) {
+                    Toast.makeText(context, "内容不能为空！", Toast.LENGTH_SHORT).show();
+                } else if (tagList == null || tagList.size() < 1) {
+                    Toast.makeText(context, "标签不能为空！", Toast.LENGTH_SHORT).show();
+                } else {
+                    sendNewProblem4Service();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -552,6 +563,17 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
         @Override
         public void onResponse(String response) {
             L.i(TAG, "添加新问题数据:" + response);
+            try {
+                JSONObject object = new JSONObject(response);
+                String status = object.getString(STATUS);
+                switch (status) {
+                    case "1":
+                        finish();
+                        break;
+                }
+            } catch (Exception e) {
+                Toast.makeText(PutQuestionsActivity.this, "添加问题失败！", Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override

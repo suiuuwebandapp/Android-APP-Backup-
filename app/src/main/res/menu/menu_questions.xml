@@ -8,6 +8,6 @@
         android:icon="@drawable/icon_confirm_white"
         android:orderInCategory="100"
         android:title=""
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
 </menu>

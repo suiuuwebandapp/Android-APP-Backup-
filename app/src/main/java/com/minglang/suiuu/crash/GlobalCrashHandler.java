@@ -151,7 +151,7 @@ public class GlobalCrashHandler implements Thread.UncaughtExceptionHandler {
 
             if (SDCardUtils.isMounted()) {
 
-                String path = SDCardUtils.getExternalSdCardPath() + "/Suiuu";
+                String path = SDCardUtils.getExternalSdCardPath() + "/SuiuuLog";
                 File dir = new File(path);
 
                 if (!dir.exists()) {//目录不存在

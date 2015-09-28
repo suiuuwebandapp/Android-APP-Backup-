@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -28,10 +29,13 @@ import butterknife.ButterKnife;
  * 修改时间：2015/7/2 17:26
  * 修改备注：
  */
-public class SuiuuSearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity {
 
     private static final String SEARCH_CLASS = "searchClass";
     private static final String COUNTRY = "country";
+
+    @BindString(R.string.please_enter_search_content)
+    String searchContent;
 
     @Bind(R.id.suiuu_commend_country)
     FlowLayout suiuuCommendCountry;
@@ -49,10 +53,10 @@ public class SuiuuSearchActivity extends BaseActivity {
     private List<TextView> list = new ArrayList<>();
 
     @Bind(R.id.et_suiuu_search)
-    EditText et_suiuu_search;
+    EditText inputSearchView;
 
     @Bind(R.id.iv_top_search)
-    ImageView searchView;
+    ImageView searchClickView;
 
     @Bind(R.id.iv_top_back)
     ImageView iv_top_back;
@@ -63,7 +67,6 @@ public class SuiuuSearchActivity extends BaseActivity {
     private int searchClass = -1;
 
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suiuu_search);
@@ -83,7 +86,7 @@ public class SuiuuSearchActivity extends BaseActivity {
     }
 
     private void viewAction() {
-        searchView.setOnClickListener(new MyOnClick());
+        searchClickView.setOnClickListener(new MyOnClick());
         iv_top_back.setOnClickListener(new MyOnClick());
     }
 
@@ -151,11 +154,11 @@ public class SuiuuSearchActivity extends BaseActivity {
                     break;
 
                 case R.id.iv_top_search:
-                    if ("".equals(et_suiuu_search.getText().toString().trim())) {
-                        Toast.makeText(SuiuuSearchActivity.this, R.string.please_enter_search_content, Toast.LENGTH_SHORT).show();
+                    if ("".equals(inputSearchView.getText().toString().trim())) {
+                        Toast.makeText(SearchActivity.this, searchContent, Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    judgeIntent(et_suiuu_search.getText().toString().trim());
+                    judgeIntent(inputSearchView.getText().toString().trim());
                     break;
 
                 default:
@@ -165,8 +168,8 @@ public class SuiuuSearchActivity extends BaseActivity {
     }
 
     public void judgeIntent(String country) {
-        Intent intentSuiuu = new Intent(SuiuuSearchActivity.this, SuiuuSearchDetailActivity.class);
-        Intent intentGallery = new Intent(SuiuuSearchActivity.this, TripGallerySearchActivity.class);
+        Intent intentSuiuu = new Intent(SearchActivity.this, SuiuuSearchDetailActivity.class);
+        Intent intentGallery = new Intent(SearchActivity.this, TripImageSearchActivity.class);
         if (searchClass == 1) {
             intentGallery.putExtra(COUNTRY, country);
             startActivity(intentGallery);

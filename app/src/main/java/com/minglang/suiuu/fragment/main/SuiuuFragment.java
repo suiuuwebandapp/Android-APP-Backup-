@@ -21,7 +21,7 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.FirstLoginActivity;
 import com.minglang.suiuu.activity.SuiuuDetailsActivity;
-import com.minglang.suiuu.activity.SuiuuSearchActivity;
+import com.minglang.suiuu.activity.SearchActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.dbhelper.DataCacheUtils;
@@ -61,6 +61,8 @@ public class SuiuuFragment extends BaseFragment {
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
+
+    private static final String TRIP_ID = "tripId";
 
     @BindDrawable(R.color.DefaultGray1)
     Drawable Divider;
@@ -175,7 +177,9 @@ public class SuiuuFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int location = position - 1;
                 Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
-                intent.putExtra("tripId", listAll.get(location).getTripId());
+                intent.putExtra(TRIP_ID, listAll.get(location).getTripId());
+                intent.putExtra(USER_SIGN, listAll.get(location).getUserSign());
+                intent.putExtra(HEAD_IMG,listAll.get(location).getHeadImg());
                 startActivity(intent);
             }
         });
@@ -284,7 +288,7 @@ public class SuiuuFragment extends BaseFragment {
             switch (v.getId()) {
                 case R.id.main_2_search:
                     //跳转到搜索页面
-                    Intent intent = new Intent(getActivity(), SuiuuSearchActivity.class);
+                    Intent intent = new Intent(getActivity(), SearchActivity.class);
                     intent.putExtra("searchClass", 2);
                     startActivity(intent);
                     break;

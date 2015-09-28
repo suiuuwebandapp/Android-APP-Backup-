@@ -68,7 +68,7 @@
 
     <string name="Tag" translatable="false">标签</string>
 
-    <string name="TripImageDetails" translatable="false">旅途详情</string>
+    <string name="TripImageDetails" translatable="false">旅图详情</string>
 
     <string name="WebSite" translatable="false">网址</string>
     <string name="Phone" translatable="false">电话</string>
@@ -338,8 +338,13 @@
 
     <string name="Waiting" translatable="false">请稍候&#8230;</string>
 
-    <string name="AttentionQuestion_SUC" translatable="false">关注成功！</string>
-    <string name="AttentionQuestion_FAI" translatable="false">关注失败,请稍候再试！</string>
+    <string name="AttentionQuestionSuccess" translatable="false">关注成功！</string>
+    <string name="AttentionQuestionFailure" translatable="false">关注失败！</string>
+    <string name="AttentionQuestionException" translatable="false">关注异常！</string>
+
+    <string name="CancelAttentionSuccess" translatable="false">取消关注成功！</string>
+    <string name="CancelAttentionFailure" translatable="false">取消关注失败！</string>
+    <string name="CancelAttentionException" translatable="false">取消关注异常！</string>
 
     <string name="orderManager" translatable="false">订单管理</string>
     <string name="accountManager" translatable="false">账号管理</string>
@@ -530,6 +535,10 @@
     <string name="InputCreateLocationName" translatable="false">输入你想要创建的位置的名称</string>
 
     <string name="SuiuuSearchHint" translatable="false">输入你感兴趣的国家,城市</string>
+
+    <string name="Recommend" translatable="false">推荐</string>
+    <string name="Advisory" translatable="false">咨询</string>
+    <string name="Booking" translatable="false">预订</string>
 
     <string name="pull_to_refresh_pull_label">Drop down refresh</string>
     <string name="pull_to_refresh_release_label">Release rear refresh</string>

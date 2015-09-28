@@ -50,34 +50,71 @@ import butterknife.ButterKnife;
  */
 public class SuiuuSearchDetailActivity extends BaseActivity
         implements ReFlashListView.IReflashListener, ReFlashListView.ILoadMoreDataListener {
+
     private JsonUtils jsonUtil = JsonUtils.getInstance();
-    private List<String> tagList;
-    private RangeBar rangebar;
-    private List<SuiuuItemData> suiuuItemData;
+
+    private List<String> tagList = new ArrayList<>();
+
+    @Bind(R.id.rangeBar)
+    RangeBar rangebar;
+
+    private List<SuiuuItemData> suiuuItemData = new ArrayList<>();
+
     private TextProgressDialog dialog;
+
     private List<TextView> list = new ArrayList<>();
     private List<TextView> listClick = new ArrayList<>();
+
     private String tags = "";
+
     private String enjoyPeopleCount;
-    private ImageView iv_top_back;
-    private TextView tv_price_range;
+
+    @Bind(R.id.iv_top_back)
+    ImageView iv_top_back;
+
+    @Bind(R.id.tv_price_range)
+    TextView tv_price_range;
+
     private int startTick = 0;
     private int endTick = 10000;
-    private EditText peopleNumber;
-    private FlowLayout flowLayout;
-    private FrameLayout fl_search_more;
-    private ReFlashListView lv_search_suiuu;
+
+    @Bind(R.id.et_people_number)
+    EditText peopleNumber;
+
+    @Bind(R.id.id_flowLayout)
+    FlowLayout flowLayout;
+
+    @Bind(R.id.fl_search_more)
+    FrameLayout fl_search_more;
+
+    @Bind(R.id.lv_search_suiuu)
+    ReFlashListView lv_search_suiuu;
+
     private int page = 1;
+
     //处理头部
-    private TextView titleInfo;
+    @Bind(R.id.tv_top_center)
+    TextView titleInfo;
+
     private ShowSuiuuAdapter adapter = null;
-    private ImageView iv_suiuu_search_more;
-    private ImageButton ib_plus;
-    private ImageButton ib_release;
+
+    @Bind(R.id.tv_top_right_more)
+    ImageView iv_suiuu_search_more;
+
+    @Bind(R.id.ib_plus)
+    ImageButton ib_plus;
+
+    @Bind(R.id.ib_release)
+    ImageButton ib_release;
+
     private String searchCountry;
-    private BootstrapButton bb_search_confire;
-    @Bind(R.id.rl_common_no_data)
+
+    @Bind(R.id.bb_search_confire)
+    BootstrapButton bb_search_confirm;
+
+    @Bind(R.id.common_no_data)
     RelativeLayout rl_no_data;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,33 +128,29 @@ public class SuiuuSearchDetailActivity extends BaseActivity
     }
 
     private void initView() {
+        token = SuiuuInfo.ReadAppTimeSign(SuiuuSearchDetailActivity.this);
+
         dialog = new TextProgressDialog(this);
-        suiuuItemData = new ArrayList<>();
-        tagList = new ArrayList<>();
-        rangebar = (RangeBar) findViewById(R.id.rangeBar);
+
         rangebar.setTickStart(0);
         rangebar.setTickEnd(10);
         rangebar.setTickInterval(1);
-        iv_top_back = (ImageView) findViewById(R.id.iv_top_back);
-        lv_search_suiuu = (ReFlashListView) findViewById(R.id.lv_search_suiuu);
-        fl_search_more = (FrameLayout) findViewById(R.id.fl_search_more);
-        tv_price_range = (TextView) findViewById(R.id.tv_price_range);
-        peopleNumber = (EditText) findViewById(R.id.et_people_number);
+
         peopleNumber.setKeyListener(null);
-        flowLayout = (FlowLayout) findViewById(R.id.id_flowLayout);
-        titleInfo = (TextView) findViewById(R.id.tv_top_center);
-        bb_search_confire = (BootstrapButton) findViewById(R.id.bb_search_confire);
-        iv_suiuu_search_more = (ImageView) findViewById(R.id.tv_top_right_more);
+
         iv_suiuu_search_more.setVisibility(View.VISIBLE);
-        ib_plus = (ImageButton) findViewById(R.id.ib_plus);
-        ib_release = (ImageButton) findViewById(R.id.ib_release);
+
     }
 
     private void viewAction() {
         iv_top_back.setOnClickListener(new MyOnclick());
+
         ib_release.setOnClickListener(new MyOnclick());
-        bb_search_confire.setOnClickListener(new MyOnclick());
+
+        bb_search_confirm.setOnClickListener(new MyOnclick());
+
         ib_plus.setOnClickListener(new MyOnclick());
+
         iv_suiuu_search_more.setOnClickListener(new MyOnclick());
 
         rangebar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
@@ -126,14 +159,17 @@ public class SuiuuSearchDetailActivity extends BaseActivity
                                               String rightPinValue) {
                 startTick = leftPinIndex * 1000;
                 endTick = rightPinIndex * 1000;
-                tv_price_range.setText(leftPinIndex * 1000 + "--" + rightPinIndex * 1000);
+                tv_price_range.setText(String.format("%s%s%s", leftPinIndex * 1000, "--", rightPinIndex * 1000));
             }
         });
+
         lv_search_suiuu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(SuiuuSearchDetailActivity.this, SuiuuDetailsActivity.class);
                 intent.putExtra("tripId", suiuuItemData.get(position - 1).getTripId());
+                intent.putExtra(USER_SIGN, suiuuItemData.get(position - 1).getUserSign());
+                intent.putExtra(HEAD_IMG, suiuuItemData.get(position - 1).getHeadImg());
                 startActivity(intent);
             }
         });
@@ -141,8 +177,8 @@ public class SuiuuSearchDetailActivity extends BaseActivity
 
     private void loadDate(String countryOrCity, String peopleCount, String tags, String startPrice, String endPrice, int page) {
         dialog.showDialog();
-        String[] keyArray1 = new String[]{"cc", "peopleCount","tag","startPrice","endPrice","page","number", "token"};
-        String[] valueArray1 = new String[]{countryOrCity, peopleCount, tags,  startPrice, endPrice,Integer.toString(page),"10", SuiuuInfo.ReadAppTimeSign(SuiuuSearchDetailActivity.this)};
+        String[] keyArray1 = new String[]{"cc", "peopleCount", "tag", "startPrice", "endPrice", "page", "number", "token"};
+        String[] valueArray1 = new String[]{countryOrCity, peopleCount, tags, startPrice, endPrice, Integer.toString(page), "10", token};
         try {
             OkHttpManager.onGetAsynRequest(addUrlAndParams(HttpNewServicePath.getSuiuuList, keyArray1, valueArray1), new getSuiuuDateCallBack());
         } catch (IOException e) {
@@ -152,7 +188,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
 
     private void getSuiuuSearchTag() {
         try {
-        OkHttpManager.onGetAsynRequest(HttpNewServicePath.getSuiuuSearchTag+"?token="+SuiuuInfo.ReadAppTimeSign(SuiuuSearchDetailActivity.this), new getSuiuuSearchTagCallBack());
+            OkHttpManager.onGetAsynRequest(HttpNewServicePath.getSuiuuSearchTag + "?token=" + token, new getSuiuuSearchTagCallBack());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -240,13 +276,13 @@ public class SuiuuSearchDetailActivity extends BaseActivity
                     SuiuuData baseCollection = jsonUtil.fromJSON(SuiuuData.class, response);
                     List<SuiuuItemData> suiuuItemDataNew = baseCollection.getData();
                     if (suiuuItemDataNew.size() < 1) {
-                        if(page == 1) {
+                        if (page == 1) {
                             lv_search_suiuu.setVisibility(View.GONE);
                             rl_no_data.setVisibility(View.VISIBLE);
-                        }else {
+                        } else {
                             Toast.makeText(SuiuuSearchDetailActivity.this, "没有更多数据显示", Toast.LENGTH_SHORT).show();
                         }
-                    }else {
+                    } else {
                         lv_search_suiuu.setVisibility(View.VISIBLE);
                         rl_no_data.setVisibility(View.GONE);
                         suiuuItemData.addAll(suiuuItemDataNew);

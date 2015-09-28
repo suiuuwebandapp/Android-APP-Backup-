@@ -29,13 +29,12 @@ import com.minglang.suiuu.customview.pickerview.OptionsPopupWindow;
 import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.http.HttpServicePath;
-import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
-import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.AppUtils;
+import com.minglang.suiuu.utils.JsonUtils;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import java.io.File;
@@ -413,7 +412,7 @@ public class PersonalSettingActivity extends BaseActivity {
         paramsArray[8] = new OkHttpManager.Params(LON, data.getLon());
         paramsArray[9] = new OkHttpManager.Params(LAT, data.getLat());
         paramsArray[10] = new OkHttpManager.Params(PROFESSION, str_Trade);
-        paramsArray[11] = new OkHttpManager.Params(HttpServicePath.key, verification);
+        paramsArray[11] = new OkHttpManager.Params(HttpNewServicePath.key, verification);
 
         String url = HttpNewServicePath.upDatePersonalStatus + "?" + TOKEN + "=" + token;
 

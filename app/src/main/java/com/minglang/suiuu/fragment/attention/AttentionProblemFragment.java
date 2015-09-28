@@ -132,7 +132,6 @@ public class AttentionProblemFragment extends BaseFragment {
         initView();
         ViewAction();
         getProblemData4Service(page);
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -210,12 +209,12 @@ public class AttentionProblemFragment extends BaseFragment {
             }
         }
 
-        String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
-        String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(20), token};
+        String[] keyArray = new String[]{USER_SIGN, PAGE, NUMBER, TOKEN};
+        String[] valueArray = new String[]{userSign, String.valueOf(page), String.valueOf(20), token};
         String url = addUrlAndParams(HttpNewServicePath.getAttentionProblemInfoPath, keyArray, valueArray);
 
         try {
-            OkHttpManager.onGetAsynRequest(url,new AttentionProblemResultCallback());
+            OkHttpManager.onGetAsynRequest(url, new AttentionProblemResultCallback());
         } catch (IOException e) {
             e.printStackTrace();
             hideDialog();
@@ -282,10 +281,13 @@ public class AttentionProblemFragment extends BaseFragment {
                 try {
                     JSONObject object = new JSONObject(str);
                     String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    switch (status) {
+                        case "-1":
+                            Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "-2":
+                            Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                            break;
                     }
                 } catch (JSONException e1) {
                     e1.printStackTrace();
@@ -299,7 +301,6 @@ public class AttentionProblemFragment extends BaseFragment {
 
         @Override
         public void onResponse(String response) {
-            L.i(TAG, "关注的问答数据:" + response);
             hideDialog();
             bindData2View(response);
         }
