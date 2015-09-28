@@ -292,7 +292,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
 
     //根据id获得旅图详情
     private void loadTripGalleryDetailsData(String id) {
-        dialog.showDialog();
+        dialog.show();
         String[] keyArray1 = new String[]{ID, TOKEN};
         String[] valueArray1 = new String[]{id, token};
         String url = addUrlAndParams(HttpNewServicePath.getTripGalleryDetailById, keyArray1, valueArray1);
@@ -365,7 +365,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onFinish() {
-            dialog.dismissDialog();
+            dialog.dismiss();
         }
 
     }

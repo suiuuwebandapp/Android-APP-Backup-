@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:id="@+id/top"
-        style="@style/comment_suiuu_detail"
+        style="@style/comment_suiuu_details"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/suiuu_order_top"
@@ -55,7 +55,7 @@
 
     <LinearLayout
         android:id="@+id/ll_center_message"
-        style="@style/comment_suiuu_detail"
+        style="@style/comment_suiuu_details"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/top"
@@ -63,7 +63,7 @@
 
     <LinearLayout
         android:id="@+id/ll_bottom_message"
-        style="@style/comment_suiuu_detail"
+        style="@style/comment_suiuu_details"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_center_message"

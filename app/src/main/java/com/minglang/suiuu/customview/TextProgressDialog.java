@@ -17,6 +17,7 @@ import com.minglang.suiuu.R;
 public class TextProgressDialog {
 
     private static Dialog loadingDialog;
+
     private TextView tipTextView;
 
     private Context context;
@@ -53,16 +54,16 @@ public class TextProgressDialog {
 
         loadingDialog.setContentView(layout, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局
-        loadingDialog.setCancelable(false);
+        loadingDialog.setCancelable(true);
         loadingDialog.setCanceledOnTouchOutside(false);
     }
 
     /**
      * 显示loadingDialog
      */
-    public void showDialog() {
+    public void show() {
         try {
-            if (loadingDialog != null) {
+            if (loadingDialog != null && !loadingDialog.isShowing()) {
                 loadingDialog.show();
             }
         } catch (Exception e) {
@@ -73,8 +74,8 @@ public class TextProgressDialog {
     /**
      * 关闭loadingDialog
      */
-    public void dismissDialog() {
-        if (loadingDialog != null) {
+    public void dismiss() {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
     }

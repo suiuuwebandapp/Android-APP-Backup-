@@ -3,6 +3,7 @@ package com.minglang.suiuu.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,14 +25,24 @@ import butterknife.ButterKnife;
  * 修改备注：
  */
 public class MainBindActivity extends BaseActivity {
+
+    private static final String HEAD_IMG = "headImg";
+    private static final String NICK_NAME = "nickname";
+    private static final String TYPE = "type";
+    private static final String OPEN_ID = "openId";
+
     @Bind(R.id.iv_bind_back)
     ImageView iv_bind_back;
-    @Bind(R.id.sdv_bind_head_image)
+
+    @Bind(R.id.second_login_bind_head_image)
     SimpleDraweeView sdv_bind_head_image;
+
     @Bind(R.id.tv_username)
     TextView tv_username;
+
     @Bind(R.id.tv_account_exist)
     TextView tv_account_exist;
+
     @Bind(R.id.tv_join_suiuu)
     TextView tv_join_suiuu;
 
@@ -45,18 +56,21 @@ public class MainBindActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_binding);
         ButterKnife.bind(this);
-        headImage = this.getIntent().getStringExtra("headImage");
-        nickName = this.getIntent().getStringExtra("nickName");
-        type = this.getIntent().getStringExtra("type");
-        openId = this.getIntent().getStringExtra("openId");
+
+        headImage = this.getIntent().getStringExtra(HEAD_IMG);
+        nickName = this.getIntent().getStringExtra(NICK_NAME);
+        type = this.getIntent().getStringExtra(TYPE);
+        openId = this.getIntent().getStringExtra(OPEN_ID);
+
         initView();
         viewAction();
 
     }
 
     private void initView() {
-        Uri uri = Uri.parse(headImage);
-        sdv_bind_head_image.setImageURI(uri);
+        if (!TextUtils.isEmpty(headImage)) {
+            sdv_bind_head_image.setImageURI(Uri.parse(headImage));
+        }
         tv_username.setText(nickName);
     }
 
@@ -67,6 +81,7 @@ public class MainBindActivity extends BaseActivity {
                 finish();
             }
         });
+
         tv_account_exist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +90,7 @@ public class MainBindActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
         tv_join_suiuu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,5 +99,7 @@ public class MainBindActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
     }
+
 }

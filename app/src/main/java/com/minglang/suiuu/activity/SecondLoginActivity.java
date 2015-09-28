@@ -3,9 +3,7 @@ package com.minglang.suiuu.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,11 +16,11 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.UserBack;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
@@ -53,8 +51,11 @@ public class SecondLoginActivity extends BaseActivity {
     private static final String TYPE = "type";
     private static final String OPENID = "unionID";
 
-    private EditText et_userName;
-    private EditText et_passWord;
+    @Bind(R.id.second_login_user_name)
+    EditText inputUserName;
+
+    @Bind(R.id.second_login_password)
+    EditText inputPassword;
 
     @BindString(R.string.User_name_cannot_be_empty)
     String UserNameNotNull;
@@ -62,29 +63,29 @@ public class SecondLoginActivity extends BaseActivity {
     @BindString(R.string.Password_cannot_be_empty)
     String PasswordNotNull;
 
-    @Bind(R.id.iv_back)
+    @Bind(R.id.second_login_back)
     ImageView iv_back;
 
-    @Bind(R.id.iv_suiuu_info_image)
+    @Bind(R.id.second_login_logo)
     ImageView iv_suiuu_info_image;
 
-    @Bind(R.id.tv_register)
-    TextView tv_register;
+    @Bind(R.id.second_login_register)
+    TextView RegisterButton;
 
-    @Bind(R.id.tv_login)
-    TextView tv_login;
+    @Bind(R.id.second_login_button)
+    TextView LoginButton;
 
-    @Bind(R.id.tv_quickly_login_name)
+    @Bind(R.id.second_login_name)
     TextView tv_quickly_login_name;
 
-    @Bind(R.id.tv_find_password)
+    @Bind(R.id.second_login_find_password)
     TextView tv_find_password;
 
-    @Bind(R.id.ll_is_quicky_login)
-    LinearLayout ll_is_quicky_login;
+    @Bind(R.id.second_login_is_login)
+    LinearLayout isLoginLayout;
 
-    @Bind(R.id.sdv_bind_head_image)
-    SimpleDraweeView sdv_bind_head_image;
+    @Bind(R.id.second_login_bind_head_image)
+    SimpleDraweeView bindHeadImage;
 
     private boolean isQuicklyLogin;
 
@@ -95,44 +96,38 @@ public class SecondLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_logins);
+        setContentView(R.layout.activity_second_login);
         ButterKnife.bind(this);
         isQuicklyLogin = this.getIntent().getBooleanExtra("isQuicklyLogin", false);
         initView();
         viewAction();
     }
 
-
     private void initView() {
         dialog = new TextProgressDialog(this);
+
         if (isQuicklyLogin) {
             Map<String, String> map = SuiuuInfo.ReadQuicklyLoginInfo(this);
             openId = map.get("openId");
             String headImage = map.get("headImage");
             String nickName = map.get("nickname");
             type = map.get("type");
-            ll_is_quicky_login.setVisibility(View.VISIBLE);
+
+            isLoginLayout.setVisibility(View.VISIBLE);
             iv_suiuu_info_image.setVisibility(View.GONE);
+
             tv_quickly_login_name.setText(nickName);
             Uri uri = Uri.parse(headImage);
-            sdv_bind_head_image.setImageURI(uri);
-            tv_login.setText("绑 定");
+            bindHeadImage.setImageURI(uri);
+            LoginButton.setText("绑 定");
         }
 
-        View user = findViewById(R.id.user);
-        View passWord = findViewById(R.id.password);
-
-        et_userName = (EditText) user.findViewById(R.id.et_value);
-        et_passWord = (EditText) passWord.findViewById(R.id.et_value);
-
-        et_passWord.setHint(R.string.password);
-        et_passWord.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
     }
 
     private void viewAction() {
         iv_back.setOnClickListener(new MyOnClickListener());
-        tv_register.setOnClickListener(new MyOnClickListener());
-        tv_login.setOnClickListener(new MyOnClickListener());
+        RegisterButton.setOnClickListener(new MyOnClickListener());
+        LoginButton.setOnClickListener(new MyOnClickListener());
         tv_find_password.setOnClickListener(new MyOnClickListener());
     }
 
@@ -140,18 +135,18 @@ public class SecondLoginActivity extends BaseActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.iv_back:
+                case R.id.second_login_back:
                     finish();
                     break;
-                case R.id.tv_register:
+                case R.id.second_login_register:
                     startActivity(new Intent(SecondLoginActivity.this, RegisterActivity.class));
                     finish();
                     break;
-                case R.id.tv_login:
+                case R.id.second_login_button:
                     //登陆用户名
-                    String loginUserName = et_userName.getText().toString().trim();
+                    String loginUserName = inputUserName.getText().toString().trim();
                     //登陆密码
-                    String loginPassword = et_passWord.getText().toString().trim();
+                    String loginPassword = inputPassword.getText().toString().trim();
 
                     if (TextUtils.isEmpty(loginUserName)) {
                         Toast.makeText(SecondLoginActivity.this, UserNameNotNull, Toast.LENGTH_SHORT).show();
@@ -161,7 +156,7 @@ public class SecondLoginActivity extends BaseActivity {
                         suiuuLogin(loginUserName, loginPassword);
                     }
                     break;
-                case R.id.tv_find_password:
+                case R.id.second_login_find_password:
                     Intent intent2ChangePassWord = new Intent(SecondLoginActivity.this, LoginChangePasswordActivity.class);
                     intent2ChangePassWord.putExtra("isQuicklyLogin", isQuicklyLogin);
                     startActivity(intent2ChangePassWord);
@@ -177,29 +172,22 @@ public class SecondLoginActivity extends BaseActivity {
      * @param password 密码
      */
     private void suiuuLogin(String userName, String password) {
-        dialog.showDialog();
+        dialog.show();
         Map<String, String> map = new HashMap<>();
         map.put(USER_NAME, userName);
         map.put(PASSWORD, password);
 
-       /* OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[]{};
-        paramsArray[0] = new OkHttpManager.Params(USER_NAME, userName);
-        paramsArray[1] = new OkHttpManager.Params(PASSWORD, password);*/
         if (isQuicklyLogin) {
-//            paramsArray[2] = new OkHttpManager.Params(TYPE, type);
-//            paramsArray[3] = new OkHttpManager.Params(OPENID, openId);
             map.put(TYPE, type);
             map.put(OPENID, openId);
             try {
-                OkHttpManager.onPostAsynRequest(HttpNewServicePath.BindLoginPath,
-                        new LoginResultCallback(), map);
+                OkHttpManager.onPostAsynRequest(HttpNewServicePath.BindLoginPath, new LoginResultCallback(), map);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             try {
-                OkHttpManager.onPostAsynRequest(HttpNewServicePath.SelfLoginPath,
-                        new LoginResultCallback(), map);
+                OkHttpManager.onPostAsynRequest(HttpNewServicePath.SelfLoginPath, new LoginResultCallback(), map);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -209,7 +197,7 @@ public class SecondLoginActivity extends BaseActivity {
     private class LoginResultCallback extends OkHttpManager.ResultCallback<String> {
         @Override
         public void onResponse(String response) {
-            dialog.dismissDialog();
+            dialog.dismiss();
             try {
                 JSONObject json = new JSONObject(response);
                 if (json.getInt("status") == 1) {
@@ -224,13 +212,13 @@ public class SecondLoginActivity extends BaseActivity {
                     Toast.makeText(SecondLoginActivity.this, json.getString("data"), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                L.e(TAG,"LoginResultCallback Exception"+e.getMessage());
+                L.e(TAG, "LoginResultCallback Exception" + e.getMessage());
             }
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            dialog.dismissDialog();
+            dialog.dismiss();
             Toast.makeText(SecondLoginActivity.this, "登录失败，请稍候再试", Toast.LENGTH_SHORT).show();
         }
 

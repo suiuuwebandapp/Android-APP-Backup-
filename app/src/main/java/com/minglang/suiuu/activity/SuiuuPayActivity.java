@@ -172,7 +172,7 @@ public class SuiuuPayActivity extends BaseActivity {
      * 获取订单详情
      */
     private void getOrderDetail() {
-        dialog.showDialog();
+        dialog.show();
         String[] keyArray = new String[]{ORDER_NUMBER, HttpNewServicePath.key, TOKEN};
         String[] valueArray = new String[]{orderNumber, verification, token};
         String url = addUrlAndParams(HttpNewServicePath.getGeneralUserOrderDetailsPath, keyArray, valueArray);
@@ -180,7 +180,7 @@ public class SuiuuPayActivity extends BaseActivity {
             OkHttpManager.onGetAsynRequest(url, new OrderDetailsResultCallback());
         } catch (IOException e) {
             e.printStackTrace();
-            dialog.dismissDialog();
+            dialog.dismiss();
             Toast.makeText(SuiuuPayActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
     }
@@ -227,7 +227,7 @@ public class SuiuuPayActivity extends BaseActivity {
 
         @Override
         public void onFinish() {
-            dialog.dismissDialog();
+            dialog.dismiss();
         }
     }
 
@@ -266,7 +266,6 @@ public class SuiuuPayActivity extends BaseActivity {
         }
 
     }
-
 
     /**
      * 处理返回值

@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/DefaultGray2"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/top"
-        layout="@layout/common_top2_layout" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/order_contact_information_toolbar"
+        style="@style/AppToolBar"
+        app:navigationIcon="@drawable/back"
+        app:title="@string/InputPersonalInformation" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/top">
+        android:layout_below="@+id/order_contact_information_toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:hint="国内手机号"
+                android:inputType="phone"
                 android:padding="@dimen/layout_8dp"
                 android:textColor="@color/textColor"
                 android:textSize="@dimen/layout_15sp" />
@@ -98,6 +102,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:hint="选填"
+                android:inputType="phone"
                 android:padding="@dimen/layout_8dp"
                 android:textColor="@color/textColor"
                 android:textSize="@dimen/layout_15sp" />
@@ -138,7 +143,7 @@
                 android:textSize="@dimen/layout_14sp" />
 
             <EditText
-                android:id="@+id/et_contack_phone_number"
+                android:id="@+id/et_contact_phone_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -149,29 +154,5 @@
         </LinearLayout>
 
     </ScrollView>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_50dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white">
-
-        <TextView
-            android:id="@+id/tv_confirm_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="bottom"
-            android:background="@drawable/btn_main_color"
-            android:paddingBottom="@dimen/layout_5dp"
-            android:paddingLeft="@dimen/layout_35dp"
-            android:paddingRight="@dimen/layout_35dp"
-            android:paddingTop="@dimen/layout_5dp"
-            android:text="@string/confirm"
-            android:textColor="@color/white"
-            android:textSize="@dimen/layout_20sp" />
-
-    </RelativeLayout>
 
 </RelativeLayout>

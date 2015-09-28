@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/trip_image_details_shape"
-        android:icon="@drawable/icon_share"
-        android:title="@string/Share"
-        app:showAsAction="always" />
+        android:id="@+id/confirm_information"
+        android:orderInCategory="100"
+        android:title="@string/confirm"
+        app:showAsAction="always"/>
 
 </menu>

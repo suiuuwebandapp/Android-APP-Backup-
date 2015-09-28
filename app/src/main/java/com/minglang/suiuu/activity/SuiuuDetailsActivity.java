@@ -26,6 +26,7 @@ import com.minglang.suiuu.adapter.SuiuuDetailsCommentAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.entity.SuiuuDetailsData;
+import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.ServiceListEntity;
 import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -39,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
@@ -96,23 +98,27 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
     //评论头像
     @Bind(R.id.sdv_comment_head_img)
-    SimpleDraweeView sdv_comment_head_img;
+    SimpleDraweeView commentHeadImageView;
 
     //评论输入框
     @Bind(R.id.suiuu_details_comment)
-    EditText et_suiuu_detail_comment;
+    EditText inputSuiuuCommentView;
 
     //评论显示列表
     @Bind(R.id.suiuu_details_comment_list_view)
-    NoScrollBarListView suiuuDetailsComment;
+    NoScrollBarListView suiuuDetailsCommentListView;
 
-    //咨询按钮
+    /**
+     * 咨询按钮
+     */
     @Bind(R.id.suiuu_details_advisory)
-    Button consult;
+    Button AdvisoryButton;
 
-    //预定按钮
+    /**
+     * 预订按钮
+     */
     @Bind(R.id.suiuu_details_booking)
-    Button schedule;
+    Button ReservationsButton;
 
     private SuiuuDetailsData detailsData;
 
@@ -137,6 +143,12 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     private AlertDialog setTagDialog;
 
     private String headImagePath;
+
+    private List<ServiceListEntity> serviceList;
+
+    private String[] serviceNameArray;
+    private String[] serviceIdArray;
+    private String[] servicePriceArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,10 +179,11 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         token = SuiuuInfo.ReadAppTimeSign(this);
 
         adapter = new SuiuuDetailsCommentAdapter(this, listAll);
-        suiuuDetailsComment.setAdapter(adapter);
+        suiuuDetailsCommentListView.setAdapter(adapter);
     }
 
     private void viewAction() {
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,29 +191,25 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
             }
         });
 
-        sdv_comment_head_img.setOnClickListener(new MyOnClickListener());
+        commentHeadImageView.setOnClickListener(new MyOnClickListener());
 
-        et_suiuu_detail_comment.setOnClickListener(new MyOnClickListener());
+        inputSuiuuCommentView.setOnClickListener(new MyOnClickListener());
 
         to_comment_activity.setOnClickListener(new MyOnClickListener());
 
-        consult.setOnClickListener(new MyOnClickListener());
+        AdvisoryButton.setOnClickListener(new MyOnClickListener());
 
-        schedule.setOnClickListener(new MyOnClickListener());
+        ReservationsButton.setOnClickListener(new MyOnClickListener());
 
-        suiuuDetailsComment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        suiuuDetailsCommentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //if (!showAllComment && position == 5) {
-                //showAllComment = true;
-                //showList(listAll);
-                //} else {
                 Intent intent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
                 intent.putExtra(TRIP_ID, tripId);
                 intent.putExtra(R_ID, listAll.get(position).getCommentId());
                 intent.putExtra(NICK_NAME, listAll.get(position).getNickname());
                 startActivityForResult(intent, COMMENT_SUCCESS);
-                //}
+
             }
         });
     }
@@ -286,12 +295,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     /**
      * 请求数据网络接口回调
      */
-    class SuiuuItemInfoCallBack extends OkHttpManager.ResultCallback<String> {
-
-        @Override
-        public void onError(Request request, Exception e) {
-            Toast.makeText(SuiuuDetailsActivity.this, DataRequestFailure, Toast.LENGTH_SHORT).show();
-        }
+    private class SuiuuItemInfoCallBack extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String str) {
@@ -303,7 +307,24 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                     case "1":
                         detailsData = JsonUtils.getInstance().fromJSON(SuiuuDetailsData.class, str);
                         listAll = detailsData.getData().getComment().getData();
+                        serviceList = detailsData.getData().getServiceList();
                         fullCommentList();
+                        serviceNameArray = getServiceNameArray();
+                        serviceIdArray = getServiceIdArray();
+                        servicePriceArray = getServicePriceArray();
+
+                        if (serviceNameArray != null) {
+                            L.i(TAG,"ServiceName Array:"+ Arrays.toString(serviceNameArray));
+                        }
+
+                        if(serviceIdArray!=null){
+                            L.i(TAG,"ServiceId Array:"+ Arrays.toString(serviceIdArray));
+                        }
+
+                        if(servicePriceArray!=null){
+                            L.i(TAG,"ServicePrice Array:"+ Arrays.toString(servicePriceArray));
+                        }
+
                         break;
 
                     case "-1":
@@ -333,6 +354,11 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
         }
 
+        @Override
+        public void onError(Request request, Exception e) {
+            Toast.makeText(SuiuuDetailsActivity.this, DataRequestFailure, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void fullCommentList() {
@@ -348,32 +374,65 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         }
     }
 
-    //    private void showList(List<CommentDataEntity> commentDataList) {
-    //        List<CommentDataEntity> newCommentDataList = new ArrayList<>();
-    //        if (!showAllComment) {
-    //            if (commentDataList.size() > 5) {
-    //                if (textView == null) {
-    //                    textView = new TextView(this);
-    //                    textView.setText("点击加载更多");
-    //                    textView.setPadding(0, 10, 0, 0);
-    //                    textView.setGravity(Gravity.CENTER);
-    //                    textView.setTextSize(18);
-    //                }
-    //                suiuuDetailsComment.addFooterView(textView);
-    //                newCommentDataList.addAll(commentDataList);
-    //                newCommentDataList.subList(5, commentDataList.size()).clear();
-    //            }
-    //        } else {
-    //            suiuuDetailsComment.removeFooterView(textView);
-    //        }
-    //
-    //        if (adapter == null) {
-    //            adapter = new SuiuuDetailsCommentAdapter(this, commentDataList.size() > 5 && !showAllComment ? newCommentDataList : commentDataList);
-    //            suiuuDetailsComment.setAdapter(adapter);
-    //        } else {
-    //            adapter.setList(commentDataList.size() > 5 && !showAllComment ? newCommentDataList : commentDataList);
-    //        }
-    //    }
+    /**
+     * 得到单项服务Title数组
+     *
+     * @return 单项服务Title数组
+     */
+    private String[] getServiceNameArray() {
+        String[] serviceNameArray;
+        if (serviceList != null && serviceList.size() > 0) {
+            serviceNameArray = new String[serviceList.size()];
+
+            for (int i = 0; i < serviceList.size(); i++) {
+                serviceNameArray[i] = serviceList.get(i).getTitle();
+            }
+
+            return serviceNameArray;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 得到单项服务ID数组
+     *
+     * @return 单项服务ID数组
+     */
+    private String[] getServiceIdArray() {
+        String[] serviceIdArray;
+        if (serviceList != null && serviceList.size() > 0) {
+            serviceIdArray = new String[serviceList.size()];
+
+            for (int i = 0; i < serviceList.size(); i++) {
+                serviceIdArray[i] = serviceList.get(i).getServiceId();
+            }
+
+            return serviceIdArray;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 得到单项服务价格数组
+     *
+     * @return 单项服务价格数组
+     */
+    private String[] getServicePriceArray() {
+        String[] servicePriceArray;
+        if (serviceList != null && serviceList.size() > 0) {
+            servicePriceArray = new String[serviceList.size()];
+
+            for (int i = 0; i < serviceList.size(); i++) {
+                servicePriceArray[i] = serviceList.get(i).getMoney();
+            }
+
+            return servicePriceArray;
+        } else {
+            return null;
+        }
+    }
 
     private class MyOnClickListener implements View.OnClickListener {
 
@@ -384,18 +443,21 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                 case R.id.sdv_comment_head_img:
                     //跳到个人中心
                     break;
+
                 case R.id.suiuu_details_comment:
                     //跳到评论页
                     Intent intent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
                     intent.putExtra(TRIP_ID, tripId);
                     startActivityForResult(intent, COMMENT_SUCCESS);
                     break;
+
                 case R.id.to_comment_activity:
                     //跳到评论页
                     Intent commentIntent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
                     commentIntent.putExtra(TRIP_ID, tripId);
                     startActivityForResult(commentIntent, COMMENT_SUCCESS);
                     break;
+
                 case R.id.suiuu_details_advisory:
                     //跳到会话页面
                     Intent intentChat = new Intent(SuiuuDetailsActivity.this, PrivateLetterChatActivity.class);
@@ -403,13 +465,18 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                     intentChat.putExtra(HEAD_IMG, headImagePath);
                     startActivity(intentChat);
                     break;
+
                 case R.id.suiuu_details_booking:
-                    //跳到预定页面
-                    Intent intentSchedule = new Intent(SuiuuDetailsActivity.this, SuiuuOrderActivity.class);
+                    //跳到预订页面
+                    Intent intentSchedule = new Intent(SuiuuDetailsActivity.this, SuiuuOrderConfirmActivity.class);
                     intentSchedule.putExtra("titleInfo", detailsData.getData().getInfo().getTitle());
                     intentSchedule.putExtra("titleImg", detailsData.getData().getInfo().getTitleImg());
                     intentSchedule.putExtra("price", detailsData.getData().getInfo().getBasePrice());
                     intentSchedule.putExtra("tripId", detailsData.getData().getInfo().getTripId());
+                    intentSchedule.putExtra("serviceName", serviceNameArray);
+                    intentSchedule.putExtra("serviceId", serviceIdArray);
+                    intentSchedule.putExtra("servicePrice", servicePriceArray);
+                    intentSchedule.putExtra("serviceListSize", serviceList.size() > 0 ? serviceList.size() : 0);
                     startActivity(intentSchedule);
                     break;
 

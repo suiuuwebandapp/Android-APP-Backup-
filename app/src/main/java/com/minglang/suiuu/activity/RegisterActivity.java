@@ -1,13 +1,12 @@
 package com.minglang.suiuu.activity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -25,10 +24,11 @@ import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.AreaCode;
 import com.minglang.suiuu.entity.AreaCodeData;
 import com.minglang.suiuu.entity.UserBack;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -53,31 +53,53 @@ import butterknife.ButterKnife;
  * 修改备注：
  */
 public class RegisterActivity extends BaseActivity {
+
+    private static final String TAG = RegisterActivity.class.getSimpleName();
+
     private TimeCount time;
+
+    @BindString(R.string.NoData)
+    String NoData;
+
     @BindString(R.string.InternationalCodeFailure)
     String RepeatAreaCode;
-    @Bind(R.id.iv_back)
+
+    @BindString(R.string.DataError)
+    String DataError;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
+
+    @Bind(R.id.second_login_back)
     ImageView iv_back;
+
     @Bind(R.id.et_input_phone_number)
     EditText et_input_phone_number;
+
     @Bind(R.id.tv_get_confirm_number)
     TextView tv_get_confirm_number;
-    @Bind(R.id.tv_register)
+
+    @Bind(R.id.second_login_register)
     TextView tv_register;
+
     @Bind(R.id.tv_zone)
     TextView tv_zone;
+
     @Bind(R.id.iv_suiuu_info_head)
     ImageView iv_suiuu_info_head;
+
     /**
      * 快速登录头部布局
      */
     @Bind(R.id.ll_register_is_quicky_login)
     LinearLayout ll_register_is_quicky_login;
+
     /**
      * 头像
      */
     @Bind(R.id.sdv_register_bind_head_image)
     SimpleDraweeView sdv_register_bind_head_image;
+
     /**
      * 名字
      */
@@ -87,6 +109,7 @@ public class RegisterActivity extends BaseActivity {
     private EditText et_register_user;
     private EditText et_register_password;
     private EditText et_register_confirm_number;
+
     private static final String AREA_CODE = "areaCode";
     private static final String PHONE = "phone";
     private static final String PASSWORD = "password";
@@ -110,12 +133,13 @@ public class RegisterActivity extends BaseActivity {
     private String type;
 
     private TextProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
-        isQuicklyLogin = this.getIntent().getBooleanExtra("isQuicklyLogin",false);
+        isQuicklyLogin = this.getIntent().getBooleanExtra("isQuicklyLogin", false);
         initView();
         viewAction();
     }
@@ -123,12 +147,13 @@ public class RegisterActivity extends BaseActivity {
     private void initView() {
         dialog = new TextProgressDialog(this);
         //判断是否为快速登录
-        if(isQuicklyLogin) {
+        if (isQuicklyLogin) {
             Map<String, String> map = SuiuuInfo.ReadQuicklyLoginInfo(this);
             openId = map.get("openId");
             headImage = map.get("headImage");
             nickName = map.get("nickname");
             type = map.get("type");
+
             iv_suiuu_info_head.setVisibility(View.GONE);
             ll_register_is_quicky_login.setVisibility(View.VISIBLE);
             sdv_register_bind_head_image.setImageURI(Uri.parse(headImage));
@@ -138,11 +163,14 @@ public class RegisterActivity extends BaseActivity {
         View register_user = findViewById(R.id.register_user);
         View register_password = findViewById(R.id.register_password);
         View register_confirm_number = findViewById(R.id.register_confirm_number);
+
         et_register_user = (EditText) register_user.findViewById(R.id.et_value);
         et_register_user.setHint(R.string.NickName);
+
         et_register_password = (EditText) register_password.findViewById(R.id.et_value);
         et_register_password.setHint(R.string.password);
         et_register_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
         et_register_confirm_number = (EditText) register_confirm_number.findViewById(R.id.et_value);
         et_register_confirm_number.setHint(R.string.please_input_obtain_captcha);
     }
@@ -160,7 +188,7 @@ public class RegisterActivity extends BaseActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 //注册按钮
-                case R.id.tv_register:
+                case R.id.second_login_register:
                     registerService();
                     break;
                 //获取验证码
@@ -171,7 +199,7 @@ public class RegisterActivity extends BaseActivity {
                 case R.id.tv_zone:
                     getAreaCode();
                     break;
-                case R.id.iv_back:
+                case R.id.second_login_back:
                     finish();
                     break;
             }
@@ -182,7 +210,7 @@ public class RegisterActivity extends BaseActivity {
      * 注册
      */
     public void registerService() {
-        dialog.showDialog();
+        dialog.show();
         String user = et_register_user.getText().toString().trim();
         String passWord = et_register_password.getText().toString().trim();
         String phoneNumber = et_input_phone_number.getText().toString().trim();
@@ -199,15 +227,16 @@ public class RegisterActivity extends BaseActivity {
         } else {
             SuiuuInfo.ClearSuiuuInfo(RegisterActivity.this);
         }
-        if(isQuicklyLogin) {
-            Map<String,String> map = new HashMap<>();
-            map.put("code",confirmNumber);
-            map.put(PHONE,phoneNumber);
-            map.put(PASSWORD,passWord);
-            map.put("nickname",user);
-            map.put(AREA_CODE,tv_zone.getText().toString().trim());
-            map.put("type",type);
-            map.put("unionID",openId);
+
+        if (isQuicklyLogin) {
+            Map<String, String> map = new HashMap<>();
+            map.put("code", confirmNumber);
+            map.put(PHONE, phoneNumber);
+            map.put(PASSWORD, passWord);
+            map.put("nickname", user);
+            map.put(AREA_CODE, tv_zone.getText().toString().trim());
+            map.put("type", type);
+            map.put("unionID", openId);
             try {
                 OkHttpManager.onPostAsynRequest(HttpNewServicePath.AccessRegister,
                         new RegisterResultCallback(), map);
@@ -215,19 +244,21 @@ public class RegisterActivity extends BaseActivity {
                 e.printStackTrace();
             }
 
-        }else {
+        } else {
             OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[5];
             paramsArray[0] = new OkHttpManager.Params(PHONE, phoneNumber);
             paramsArray[1] = new OkHttpManager.Params(PASSWORD, passWord);
             paramsArray[2] = new OkHttpManager.Params(C_PASSWORD, passWord);
             paramsArray[3] = new OkHttpManager.Params(NICK, user);
             paramsArray[4] = new OkHttpManager.Params(VALIDATE_CODE, confirmNumber);
+
             try {
                 OkHttpManager.onPostAsynRequest(HttpNewServicePath.Register4SuiuuPath,
                         new RegisterResultCallback(), paramsArray);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
     }
 
@@ -237,18 +268,19 @@ public class RegisterActivity extends BaseActivity {
     private void setPhoneNumber4Service() {
         String zone = tv_zone.getText().toString().trim();
         String phoneNumber = et_input_phone_number.getText().toString().trim();
+
         if (TextUtils.isEmpty(phoneNumber)) {
             Toast.makeText(RegisterActivity.this, "电话号码不能为空！", Toast.LENGTH_SHORT).show();
             return;
         } else {
             time.start();//开始计时
         }
+
         OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[2];
         paramsArray[0] = new OkHttpManager.Params(AREA_CODE, zone);
         paramsArray[1] = new OkHttpManager.Params(PHONE, phoneNumber);
         try {
-            OkHttpManager.onPostAsynRequest(HttpNewServicePath.SendAreaCodeAndPhoneNumber,
-                    new PhoneNumberResultCallback(), paramsArray);
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.SendAreaCodeAndPhoneNumber, new PhoneNumberResultCallback(), paramsArray);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -261,7 +293,7 @@ public class RegisterActivity extends BaseActivity {
         try {
             OkHttpManager.onGetAsynRequest(HttpNewServicePath.getAreaCodeDataPath, new AreaCodeResultCallback());
         } catch (IOException e) {
-            e.printStackTrace();
+            L.e(TAG, "国际电话区号数据请求异常:" + e.getMessage());
         }
     }
 
@@ -269,6 +301,7 @@ public class RegisterActivity extends BaseActivity {
 
         @Override
         public void onError(Request request, Exception e) {
+            L.e(TAG, "国际电话区号数据获取异常:" + e.getMessage());
             Toast.makeText(RegisterActivity.this, RepeatAreaCode, Toast.LENGTH_SHORT).show();
         }
 
@@ -283,6 +316,7 @@ public class RegisterActivity extends BaseActivity {
                     Toast.makeText(RegisterActivity.this, RepeatAreaCode, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
+                L.e(TAG, "国际电话区号数据解析失败:" + e.getMessage());
             }
         }
 
@@ -291,16 +325,21 @@ public class RegisterActivity extends BaseActivity {
     public void showAreaDialog() {
         AreaCodeAdapter areaCodeAdapter;
         final AlertDialog setTagDialog;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = View.inflate(this, R.layout.dialog_choice_area_code, null);
+
         ListView lv_choice_country = (ListView) view.findViewById(R.id.lv_choice_country);
         areaCodeAdapter = new AreaCodeAdapter(this);
+
         areaCodeAdapter.setList(areaCodeDataList);
         areaCodeAdapter.setZhCNLanguage(isZhCnLanguage);
         lv_choice_country.setAdapter(areaCodeAdapter);
+
         setTagDialog = builder.create();
         setTagDialog.setView(view, 0, 0, 0, 0);
         setTagDialog.show();
+
         lv_choice_country.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -311,38 +350,73 @@ public class RegisterActivity extends BaseActivity {
 
     }
 
+    private void AbnormalHandle(String AbnormalField, String showInfo) {
+        try {
+            JSONObject object = new JSONObject(AbnormalField);
+            String status = object.getString(STATUS);
+            String data = object.getString(DATA);
+            switch (status) {
+                case "-1":
+                    Toast.makeText(this, TextUtils.isEmpty(data) ? SystemException : data, Toast.LENGTH_SHORT).show();
+                    break;
+                case "-2":
+                    Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, showInfo, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private class RegisterResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String response) {
-            dialog.dismissDialog();
-            Log.i("suiuu", response);
-            try {
+            L.i(TAG, "注册返回数据:" + response);
+            if (TextUtils.isEmpty(response)) {
+                Toast.makeText(RegisterActivity.this, NoData, Toast.LENGTH_SHORT).show();
+            } else try {
                 UserBack user = JsonUtils.getInstance().fromJSON(UserBack.class, response);
-                if (user.getStatus().equals("1")) {
+                String status = user.getStatus();
+                switch (status) {
+                    case "1":
+                        if (isQuicklyLogin) {
+                            UserBack.UserBackData data = user.getData();
+                            SuiuuInfo.WriteVerification(RegisterActivity.this, user.getMessage());
+                            SuiuuInfo.WriteUserSign(RegisterActivity.this, user.getData().getUserSign());
+                            SuiuuInfo.WriteUserData(RegisterActivity.this, data);
+                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                        } else {
+                            startActivity(new Intent(RegisterActivity.this, SecondLoginActivity.class));
+                        }
+                        break;
 
-                    if(isQuicklyLogin) {
-                        UserBack.UserBackData data = user.getData();
-                        SuiuuInfo.WriteVerification(RegisterActivity.this, user.getMessage());
-                        SuiuuInfo.WriteUserSign(RegisterActivity.this, user.getData().getUserSign());
-                        SuiuuInfo.WriteUserData(RegisterActivity.this, data);
-                        startActivity(new Intent(RegisterActivity.this,MainActivity.class));
-                    }else {
-                        startActivity(new Intent(RegisterActivity.this, SecondLoginActivity.class));
-                    }
-                } else {
-                    Toast.makeText(RegisterActivity.this, "注册失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                    case "-1":
+                        Toast.makeText(RegisterActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    default:
+                        Toast.makeText(RegisterActivity.this, "注册失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                        break;
                 }
             } catch (Exception e) {
+                L.e(TAG, "注册数据解析错误:" + e.getMessage());
+                AbnormalHandle(response, DataError);
+
             }
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            dialog.dismissDialog();
+            L.e(TAG, "注册网络请求异常:" + e.getMessage());
             Toast.makeText(RegisterActivity.this, "注册失败，请检查网络后再试！", Toast.LENGTH_SHORT).show();
         }
 
+        @Override
+        public void onFinish() {
+            dialog.dismiss();
+        }
     }
 
     private class PhoneNumberResultCallback extends OkHttpManager.ResultCallback<String> {
@@ -358,7 +432,6 @@ public class RegisterActivity extends BaseActivity {
                 JSONObject object = new JSONObject(response);
                 String status = object.getString(STATUS);
                 if ("1".equals(status.trim())) {
-//                    popupWindowRegister2.showAtLocation(popupRegisterView2, Gravity.CENTER_HORIZONTAL, 0, 0);
                     Toast.makeText(RegisterActivity.this, "发送成功！", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(RegisterActivity.this, "发送失败，请检查手机号码是否填写正确！", Toast.LENGTH_SHORT).show();
@@ -384,7 +457,8 @@ public class RegisterActivity extends BaseActivity {
         @Override
         public void onTick(long millisUntilFinished) {//计时过程显示
             tv_get_confirm_number.setClickable(false);
-            tv_get_confirm_number.setText(millisUntilFinished / 1000 + "秒");
+            tv_get_confirm_number.setText(String.format("%s%s", millisUntilFinished / 1000, "秒"));
         }
     }
+
 }

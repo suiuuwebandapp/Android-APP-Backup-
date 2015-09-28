@@ -92,7 +92,7 @@ public class AMapActivity extends BaseActivity implements
         ButterKnife.bind(this);
         init();
         viewAction();
-        dialog.showDialog();
+        dialog.show();
     }
 
     /**
@@ -131,7 +131,7 @@ public class AMapActivity extends BaseActivity implements
     }
 
     public void keySearch() {
-        dialog.showDialog();
+        dialog.show();
         query = new PoiSearch.Query(searchKey, "", city);
         // keyWord表示搜索字符串，
         // 第二个参数表示POI搜索类型，二者选填其一，
@@ -161,7 +161,7 @@ public class AMapActivity extends BaseActivity implements
             }
         }
         if (currentPage == 1 && poiResult.getPois().size() < 1) {
-            dialog.dismissDialog();
+            dialog.dismiss();
             Toast.makeText(this, R.string.no_search_data, Toast.LENGTH_SHORT).show();
             lv_location_message.setVisibility(View.GONE);
             rl_no_data.setVisibility(View.VISIBLE);
@@ -179,7 +179,7 @@ public class AMapActivity extends BaseActivity implements
         } else {
             adapter.onDateChange(poiItems);
         }
-        dialog.dismissDialog();
+        dialog.dismiss();
     }
 
     @Override
@@ -278,7 +278,7 @@ public class AMapActivity extends BaseActivity implements
 
     @Override
     public void onLoadMoreData() {
-        dialog.showDialog();
+        dialog.show();
         currentPage += 1;
         if (TextUtils.isEmpty(searchKey)) {
             doSearchQuery();
@@ -290,7 +290,7 @@ public class AMapActivity extends BaseActivity implements
 
     @Override
     public void onReflash() {
-        dialog.showDialog();
+        dialog.show();
         poiItems.clear();
         currentPage = 0;
         doSearchQuery();

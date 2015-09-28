@@ -245,7 +245,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
                 picDescriptionList.add(et.getText().toString());
             }
 
-            dialog.showDialog();
+            dialog.show();
 
             String strLongitude = "0";
             String strLatitude = "0";

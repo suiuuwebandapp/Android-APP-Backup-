@@ -71,9 +71,11 @@
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme"
         tools:replace="android:label,android:theme,android:name,android:allowBackup" >
+
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="554c2a0567e58e074f00054e" />
+
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="e305ef7850d9f5d2e8f7b0c3c3fbb16c" />
@@ -257,7 +259,7 @@
             android:theme="@style/AppMainTheme" />
 
         <activity
-            android:name=".activity.SuiuuOrderActivity"
+            android:name=".activity.SuiuuOrderConfirmActivity"
             android:label="@string/title_activity_suiuu_order"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
 
@@ -278,34 +280,42 @@
         <activity
             android:name="com.umeng.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <activity
             android:name=".activity.MySuiuuInfoActivity"
             android:label="@string/title_activity_my_suiuu"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity
             android:name=".activity.MySuiuuReleaseActivity"
             android:label="@string/title_activity_my_suiuu_details"
             android:theme="@style/AppReleaseTheme" />
+
         <activity
             android:name=".activity.EditSuiuuInfoActivity"
             android:label="@string/title_activity_edit_suiuu_info"
             android:theme="@style/AppMainTheme2" />
+
         <activity
             android:name=".activity.EditSuiuuPriceActivity"
             android:label="@string/title_activity_edit_suiuu_price"
             android:theme="@style/AppMainTheme2" />
+
         <activity
             android:name=".activity.OrderManageActivity"
             android:label="@string/title_activity_order_manage"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity
             android:name=".activity.SuiuuSearchDetailActivity"
             android:label="@string/title_activity_suiuu_search_detail"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+
         <activity
             android:name=".activity.SearchActivity"
             android:label="@string/title_activity_suiuu_search"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+
         <activity
             android:name=".activity.CommonCommentActivity"
             android:label="@string/title_activity_common_comment"
@@ -343,29 +353,36 @@
             android:name=".activity.AccountManagerActivity"
             android:label="@string/title_activity_account_manage"
             android:theme="@style/AppAccountTheme" />
+
         <activity
             android:name=".activity.ProblemDetailsActivity"
             android:label="@string/title_activity_community_item"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity
             android:name=".activity.PutQuestionsActivity"
             android:label="@string/title_activity_questions"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.AnswerActivity"
             android:label="@string/title_activity_answer"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.CommunitySearchActivity"
             android:label="@string/title_activity_community_search"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.PersonalMainPagerActivity"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.GeneralOrderDetailsActivity"
             android:label="@string/title_activity_order_details"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.GeneralOrderListActivity"
             android:label="@string/title_activity_my_order_list"
@@ -378,60 +395,73 @@
             android:name=".activity.OrderDetailsActivity"
             android:label="@string/title_activity_order_details"
             android:theme="@style/AppMainTheme" />
+
         <activity
-            android:name=".activity.OrderContackInformationActivity"
-            android:label="@string/title_activity_contack_infromation"
-            android:theme="@style/AppMainTheme"
-            android:windowSoftInputMode="adjustPan" />
+            android:name=".activity.OrderContactInformationActivity"
+            android:label="@string/title_activity_contact_information"
+            android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.AboutSuiuuActivity"
             android:label="@string/title_activity_about_us"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.ReceivablesWayActivity"
             android:label="@string/title_activity_receivables_way"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.AddReceivablesWayActivity"
             android:label="@string/title_activity_add_receivables_way"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.ShowBigPictureActivity"
             android:label="@string/show_big_picture_activity"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.CreateLocationActivity"
             android:label="@string/create_location_activity"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="stateAlwaysVisible" />
+
         <activity
             android:name=".activity.PersonalSuiuuActivity"
             android:label="@string/title_activity_personal_suiuu"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.PersonalProblemActivity"
             android:label="@string/title_activity_personal_problem"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.PersonalTripImageActivity"
             android:label="@string/title_activity_personal_trip_gallery"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.SuiuuCommentActivity"
             android:label="@string/title_activity_suiuu_comment"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.WithdrawalsActivity"
             android:label="@string/title_activity_withdrawals"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.UpLoadLogFileActivity"
             android:label="@string/title_activity_up_load_log_file"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.PrivateLetterActivity"
             android:label="@string/title_activity_private_letter"
             android:theme="@style/AppMainTheme" />
+
         <activity
             android:name=".activity.PrivateLetterChatActivity"
             android:label="@string/title_activity_private_letter_chat"

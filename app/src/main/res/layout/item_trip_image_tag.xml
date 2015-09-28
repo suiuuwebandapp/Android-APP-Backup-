@@ -18,6 +18,7 @@
         android:layout_height="@dimen/layout_30dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:background="@drawable/background_gray_translate"
         android:gravity="center"
         android:textColor="@color/white" />
 

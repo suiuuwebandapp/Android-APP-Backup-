@@ -2,15 +2,15 @@ package com.minglang.suiuu.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 /**
@@ -37,57 +38,52 @@ import butterknife.ButterKnife;
  * 修改时间：2015/9/17 10:29
  * 修改备注：
  */
-public class OrderContackInformationActivity extends BaseActivity {
+public class OrderContactInformationActivity extends BaseAppCompatActivity {
 
-    private static final String TAG = OrderContackInformationActivity.class.getSimpleName();
+    private static final String TAG = OrderContactInformationActivity.class.getSimpleName();
 
-    @Bind(R.id.iv_top_back)
-    ImageView iv_top_back;
+    @Bind(R.id.order_contact_information_toolbar)
+    Toolbar toolbar;
 
-    @Bind(R.id.tv_top_right_more)
-    ImageView tv_top_right_more;
+    @BindColor(R.color.white)
+    int titleColor;
 
-    @Bind(R.id.tv_top_center)
-    TextView tv_top_center;
     /**
      * 微信号
      */
     @Bind(R.id.et_we_chat)
-    EditText et_we_chat;
+    EditText weChatNumber;
+
     /**
      * 名字
      */
     @Bind(R.id.et_your_name)
-    EditText et_your_name;
+    EditText yourName;
+
     /**
      * 国内手机号
      */
     @Bind(R.id.et_native_phone_phone)
-    EditText et_native_phone_phone;
+    EditText NativePhoneNumber;
+
     /**
      * 常用联系号码
      */
     @Bind(R.id.et_standby_phone_number)
-    EditText et_standby_phone_number;
+    EditText StandbyPhoneNumber;
+
     /**
      * 实际姓名
      */
     @Bind(R.id.et_actual_name)
-    EditText et_actual_name;
+    EditText ActualName;
+
     /**
      * 联系人手机
      */
-    @Bind(R.id.et_contack_phone_number)
-    EditText et_contack_phone_number;
-    /**
-     * 确认按钮
-     */
-    @Bind(R.id.tv_confirm_btn)
-    TextView tv_confirm_btn;
+    @Bind(R.id.et_contact_phone_number)
+    EditText inputContactPhoneNumber;
 
-    private String peopleNumber;
-    private String time;
-    private String total_price;
     private String destination;
     private String orderNumber;
     private TextProgressDialog dialog;
@@ -98,54 +94,39 @@ public class OrderContackInformationActivity extends BaseActivity {
         setContentView(R.layout.activity_order_contact_info);
         ButterKnife.bind(this);
 
-        peopleNumber = this.getIntent().getStringExtra("peopleNumber");
-        time = this.getIntent().getStringExtra("time");
-        total_price = this.getIntent().getStringExtra("total_price");
+        String peopleNumber = this.getIntent().getStringExtra("peopleNumber");
+        String time = this.getIntent().getStringExtra("time");
+        String total_price = this.getIntent().getStringExtra("total_price");
         destination = this.getIntent().getStringExtra("destination");
         orderNumber = this.getIntent().getStringExtra("orderNumber");
 
         initView();
-        viewAction();
     }
 
     private void initView() {
-        token = SuiuuInfo.ReadAppTimeSign(OrderContackInformationActivity.this);
+        token = SuiuuInfo.ReadAppTimeSign(OrderContactInformationActivity.this);
 
-        tv_top_center.setText("个人信息完整");
-        tv_top_right_more.setVisibility(View.GONE);
+        toolbar.setTitleTextColor(titleColor);
+        setSupportActionBar(toolbar);
+
         dialog = new TextProgressDialog(this);
     }
 
-    private void viewAction() {
-        iv_top_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        tv_confirm_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pushData2Service();
-            }
-        });
-    }
-
     private void pushData2Service() {
-        dialog.showDialog();
-        String userName = et_your_name.getText().toString().trim();
-        String nativePhoneNumber = et_native_phone_phone.getText().toString().trim();
-        String urgentName = et_actual_name.getText().toString().trim();
-        String contactPhoneNumber = et_contack_phone_number.getText().toString().trim();
+        dialog.show();
+        String userName = yourName.getText().toString().trim();
+        String nativePhoneNumber = NativePhoneNumber.getText().toString().trim();
+        String urgentName = ActualName.getText().toString().trim();
+        String contactPhoneNumber = inputContactPhoneNumber.getText().toString().trim();
 
         if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(nativePhoneNumber) || TextUtils.isEmpty(urgentName) || TextUtils.isEmpty(contactPhoneNumber)) {
-            dialog.dismissDialog();
+            dialog.dismiss();
             Toast.makeText(this, "请完善信息", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String wechatNumber = et_we_chat.getText().toString().trim();
-        String sparePhoneNumber = et_standby_phone_number.getText().toString().trim();
+        String wechatNumber = weChatNumber.getText().toString().trim();
+        String sparePhoneNumber = StandbyPhoneNumber.getText().toString().trim();
 
         Map<String, String> map = new HashMap<>();
         map.put("orderNumber", orderNumber);
@@ -162,7 +143,7 @@ public class OrderContackInformationActivity extends BaseActivity {
             OkHttpManager.onPostAsynRequest(HttpNewServicePath.orderContactInformation + "?token=" + token, new PushInformationCallBack(), map);
         } catch (IOException e) {
             L.e(TAG, "发送数据到服务器异常:" + e.getMessage());
-            dialog.dismissDialog();
+            dialog.dismiss();
         }
     }
 
@@ -170,15 +151,9 @@ public class OrderContackInformationActivity extends BaseActivity {
      * 提交信息回调接口
      */
     class PushInformationCallBack extends OkHttpManager.ResultCallback<String> {
-        @Override
-        public void onError(Request request, Exception e) {
-            dialog.dismissDialog();
-            Toast.makeText(OrderContackInformationActivity.this, "提交失败,请重试", Toast.LENGTH_SHORT).show();
-        }
 
         @Override
         public void onResponse(String response) {
-            dialog.dismissDialog();
             int status = 0;
             String data = null;
             try {
@@ -189,13 +164,45 @@ public class OrderContackInformationActivity extends BaseActivity {
                 e.printStackTrace();
             }
             if (status == 1 && "".equals(data)) {
-                Toast.makeText(OrderContackInformationActivity.this, "提交成功", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(OrderContackInformationActivity.this, SuiuuPayActivity.class);
+                Toast.makeText(OrderContactInformationActivity.this, "提交成功", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(OrderContactInformationActivity.this, SuiuuPayActivity.class);
                 intent.putExtra("orderNumber", orderNumber);
                 startActivity(intent);
             } else {
-                Toast.makeText(OrderContackInformationActivity.this, data, Toast.LENGTH_SHORT).show();
+                Toast.makeText(OrderContactInformationActivity.this, data, Toast.LENGTH_SHORT).show();
             }
         }
+
+        @Override
+        public void onError(Request request, Exception e) {
+            L.e(TAG, "提交信息请求失败:" + e.getMessage());
+            Toast.makeText(OrderContactInformationActivity.this, "提交失败,请重试", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinish() {
+            dialog.dismiss();
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_answer, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+
+            case R.id.confirm_information:
+                pushData2Service();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

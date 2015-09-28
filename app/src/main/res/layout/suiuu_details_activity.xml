@@ -6,7 +6,7 @@
     android:background="@color/DefaultGray2">
 
     <RelativeLayout
-        android:id="@+id/suiuu_details_title_layout"
+        android:id="@+id/suiuu_order_top_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/mainColor">
@@ -23,16 +23,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginEnd="@dimen/layout_5dp"
-            android:layout_marginRight="@dimen/layout_5dp"
-            android:background="@drawable/btn_suiuu_share_selector" />
+            android:layout_centerVertical="true"
+            android:padding="@dimen/layout_10dp"
+            android:src="@drawable/icon_share" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="随游详情"
+            android:text="@string/SuiuuDetails"
             android:textColor="@color/white"
             android:textSize="@dimen/layout_22sp" />
 
@@ -42,7 +42,7 @@
         android:id="@+id/suiuu_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/suiuu_details_title_layout"
+        android:layout_below="@+id/suiuu_order_top_layout"
         android:layout_marginBottom="@dimen/layout_50dp">
 
         <RelativeLayout
@@ -58,7 +58,7 @@
 
             <include
                 layout="@layout/common_comment_layout"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/suiuu_detail_web_view" />
 

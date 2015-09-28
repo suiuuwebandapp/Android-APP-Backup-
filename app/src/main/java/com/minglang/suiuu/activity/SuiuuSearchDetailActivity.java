@@ -176,7 +176,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
     }
 
     private void loadDate(String countryOrCity, String peopleCount, String tags, String startPrice, String endPrice, int page) {
-        dialog.showDialog();
+        dialog.show();
         String[] keyArray1 = new String[]{"cc", "peopleCount", "tag", "startPrice", "endPrice", "page", "number", "token"};
         String[] valueArray1 = new String[]{countryOrCity, peopleCount, tags, startPrice, endPrice, Integer.toString(page), "10", token};
         try {
@@ -234,7 +234,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
 
         @Override
         public void onError(Request request, Exception e) {
-            dialog.dismissDialog();
+            dialog.dismiss();
             Toast.makeText(SuiuuSearchDetailActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
 
@@ -267,7 +267,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity
 
         @Override
         public void onResponse(String response) {
-            dialog.dismissDialog();
+            dialog.dismiss();
             try {
                 JSONObject json = new JSONObject(response);
                 String status = json.getString("status");
