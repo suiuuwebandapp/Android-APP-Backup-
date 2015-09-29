@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.PersonalMainPagerActivity;
+import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
 import com.minglang.suiuu.entity.PrivateLetter.PrivateLetterData;
 import com.minglang.suiuu.utils.ViewHolder;
 

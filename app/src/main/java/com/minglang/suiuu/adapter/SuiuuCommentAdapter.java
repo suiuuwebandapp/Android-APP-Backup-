@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
 import com.minglang.suiuu.entity.SuiuuComment.SuiuuCommentData.SuiuuCommentItemData;
 import com.minglang.suiuu.utils.ViewHolder;
 

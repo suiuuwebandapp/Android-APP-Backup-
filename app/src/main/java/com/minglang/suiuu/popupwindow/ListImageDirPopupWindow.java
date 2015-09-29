@@ -6,7 +6,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.BaseHolderAdapter;
+import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
 import com.minglang.suiuu.entity.ImageFolder;
 import com.minglang.suiuu.utils.ViewHolder;
 

@@ -1,6 +1,6 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:zhy="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,7 +8,7 @@
         android:id="@+id/question_tool_bar"
         style="@style/AppToolBar"
         app:navigationIcon="@drawable/back"
-        app:title="@string/Question"/>
+        app:title="@string/Question" />
 
     <ScrollView
         android:id="@+id/questions_scroll_view"
@@ -34,7 +34,7 @@
                     android:id="@+id/input_problem_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/inputProblemTitle"/>
+                    android:hint="@string/inputProblemTitle" />
 
             </FrameLayout>
 
@@ -50,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/layout_100dp"
                     android:gravity="top"
-                    android:hint="@string/inputProblemContent"/>
+                    android:hint="@string/inputProblemContent" />
 
             </FrameLayout>
 
@@ -69,7 +69,7 @@
                     android:layout_margin="@dimen/layout_5dp"
                     android:padding="@dimen/layout_5dp"
                     android:text="@string/Location"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </FrameLayout>
 
@@ -89,7 +89,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/layout_8dp"
                     android:layout_marginStart="@dimen/layout_8dp"
-                    android:src="@drawable/icon_tag"/>
+                    android:src="@drawable/icon_tag" />
 
                 <TextView
                     android:id="@+id/question_location"
@@ -100,50 +100,18 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="@string/AddTag"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
             </LinearLayout>
 
             <!--显示标签的Layout-->
-            <com.minglang.suiuu.customview.FlowLayout
-                android:id="@+id/question_flow_layout"
+            <com.minglang.suiuu.customview.TagFlowLayout
+                android:id="@+id/question_tag_flow_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/layout_5dp"
-                android:padding="@dimen/layout_5dp"/>
-
-            <LinearLayout
-                android:id="@+id/answer_user_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_5dp"
-                android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="@dimen/layout_5dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/layout_20dp"
-                    android:layout_marginStart="@dimen/layout_20dp"
-                    android:text="@string/InvitationAnswer"
-                    android:textSize="@dimen/layout_20sp"/>
-
-            </LinearLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/layout_8dp">
-
-                <com.minglang.suiuu.customview.NoScrollBarListView
-                    android:id="@+id/answer_user_list_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </FrameLayout>
+                android:padding="@dimen/layout_5dp"
+                zhy:max_select="-1" />
 
         </LinearLayout>
 

@@ -9,31 +9,25 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.InvitationAnswerAdapter;
-import com.minglang.suiuu.adapter.InvitationAnswerAdapter.OnLoadInvitationAnswerUserListener;
+import com.minglang.suiuu.adapter.QuestionsTagAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.customview.FlowLayout;
-import com.minglang.suiuu.customview.NoScrollBarListView;
-import com.minglang.suiuu.entity.InvitationAnswer;
-import com.minglang.suiuu.entity.InvitationAnswer.InvitationAnswerData.InviteUserEntity;
+import com.minglang.suiuu.customview.TagFlowLayout;
+import com.minglang.suiuu.entity.Tag;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
@@ -42,7 +36,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -98,9 +94,6 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
     @BindString(R.string.TagNameNotNull)
     String TagNameNotNull;
 
-    @BindString(R.string.PleaseSelectCountry)
-    String PleaseSelectCountry;
-
     @BindColor(R.color.white)
     int titleTextColor;
 
@@ -116,46 +109,35 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
     @Bind(R.id.input_problem_content)
     EditText inputProblemContent;
 
-    @Bind(R.id.location_layout)
-    FrameLayout locationLayout;
-
     @Bind(R.id.question_location_view)
     TextView questionLocation;
 
-    @Bind(R.id.question_flow_layout)
-    FlowLayout questionFlowLayout;
-
-    @Bind(R.id.answer_user_list_view)
-    NoScrollBarListView invitationAnswerUserListView;
+    @Bind(R.id.question_tag_flow_layout)
+    TagFlowLayout questionTagFlowLayout;
 
     @Bind(R.id.question_location)
     TextView addTagView;
-
-    private String countryCNname;
-
-    private String cityName;
 
     private String countryId;
 
     private String cityId;
 
-    private String title;
-
-    private String content;
-
     private ProgressDialog loadDialog;
 
-    private ProgressDialog questionDialog;
-
-    private List<InviteUserEntity> listAll = new ArrayList<>();
-
-    private InvitationAnswerAdapter adapter;
-
+    /**
+     * 全部Tag的List集合
+     */
     private List<String> tagList = new ArrayList<>();
+
+    private ArrayList<String> clickTagList = new ArrayList<>();
+
+    private String address;
 
     private Context context;
 
     private String tagName;
+
+    private QuestionsTagAdapter tagAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,47 +151,48 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
         ButterKnife.bind(this);
         initView();
         viewAction();
-
-        if (TextUtils.isEmpty(countryId) && TextUtils.isEmpty(cityId)) {
-            promptSelectCountry();
-        } else {
-            getInvitation4Service();
-        }
+        getDefaultTagList();
     }
 
     /**
      * 初始化方法
      */
     private void initView() {
-        loadDialog = new ProgressDialog(this);
-        loadDialog.setMessage(LoadMsg);
-        loadDialog.setCanceledOnTouchOutside(false);
-
-        questionDialog = new ProgressDialog(this);
-        questionDialog.setMessage(QuestionMsg);
-        questionDialog.setCanceledOnTouchOutside(false);
-
-        toolbar.setTitleTextColor(titleTextColor);
-        setSupportActionBar(toolbar);
-
-        scrollView.smoothScrollTo(0, 0);
 
         context = this;
-
-        adapter = new InvitationAnswerAdapter(this, listAll, R.layout.item_invitation_answer);
-        invitationAnswerUserListView.setAdapter(adapter);
 
         try {
             token = URLEncoder.encode(SuiuuInfo.ReadAppTimeSign(this), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
+        loadDialog = new ProgressDialog(this);
+        loadDialog.setMessage(LoadMsg);
+        loadDialog.setCanceledOnTouchOutside(false);
+
+        toolbar.setTitleTextColor(titleTextColor);
+        setSupportActionBar(toolbar);
+
+        scrollView.smoothScrollTo(0, 0);
+
+        tagAdapter = new QuestionsTagAdapter(tagList, context);
+        questionTagFlowLayout.setAdapter(tagAdapter);
     }
 
     /**
      * 控件动作
      */
     private void viewAction() {
+
+        questionLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PutQuestionsActivity.this, SelectCountryActivity.class);
+                intent.putExtra(OTHER_TAG, TAG);
+                startActivityForResult(intent, AppConstant.SELECT_COUNTRY_OK);
+            }
+        });
 
         addTagView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,7 +206,6 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 tagName = editText.getText().toString().trim();
                                 if (!TextUtils.isEmpty(tagName)) {
-                                    tagList.add(tagName);
                                     sendTag2Service(tagName);
                                 } else {
                                     Toast.makeText(PutQuestionsActivity.this, TagNameNotNull, Toast.LENGTH_SHORT).show();
@@ -235,84 +217,73 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
             }
         });
 
-        invitationAnswerUserListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        questionTagFlowLayout.setOnSelectListener(new TagFlowLayout.OnSelectListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onSelected(Set<Integer> selectPosSet) {
+                if (clickTagList != null && clickTagList.size() > 0) {
+                    clickTagList.clear();
+                }
 
-            }
-        });
+                for (Integer integer : selectPosSet) {
+                    clickTagList.add(tagList.get(integer));
+                }
 
-        locationLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PutQuestionsActivity.this, SelectCountryActivity.class);
-                intent.putExtra(OTHER_TAG, TAG);
-                startActivityForResult(intent, AppConstant.SELECT_COUNTRY_OK);
-            }
-        });
-
-        adapter.setOnLoadInvitationAnswerUserListener(new OnLoadInvitationAnswerUserListener() {
-            @Override
-            public void onLoadInvitation(InviteUserEntity inviteUserEntity, long position) {
-                L.i(TAG, "第" + position + "条的用户的用户名是" + inviteUserEntity.getNickname()
-                        + ",UserSign是:" + inviteUserEntity.getUserSign());
+                L.i(TAG, "clickTagList:" + clickTagList);
             }
         });
 
     }
 
-    /**
-     * 提示选择国家
-     */
-    private void promptSelectCountry() {
-        new AlertDialog.Builder(this)
-                .setMessage(PleaseSelectCountry)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(PutQuestionsActivity.this, SelectCountryActivity.class);
-                        intent.putExtra(OTHER_TAG, TAG);
-                        startActivityForResult(intent, AppConstant.SELECT_COUNTRY_OK);
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
-                .create().show();
-    }
-
-    /**
-     * 构造请求邀请URL
-     *
-     * @return 带参URL
-     */
-    private String buildInvitationUrl() {
-        String[] keyArray = new String[]{COUNTRY_ID, CITY_ID, TOKEN};
-        String[] valueArray = new String[]{countryId, cityId, token};
-        return addUrlAndParams(HttpNewServicePath.getInvitationAnswerUserPath, keyArray, valueArray);
-    }
-
-    /**
-     * 获取可被邀请的用户列表
-     */
-    private void getInvitation4Service() {
+    private void getDefaultTagList() {
         if (loadDialog != null && !loadDialog.isShowing()) {
             loadDialog.show();
         }
 
-        String url = buildInvitationUrl();
-        L.i(TAG, "Invitation URL:" + url);
+        String url = HttpNewServicePath.getDefaultTagListPath + "?" + TOKEN + "=" + token;
+        L.i(TAG, "获取Tag的URL:" + url);
 
         try {
-            OkHttpManager.onGetAsynRequest(url, new InvitationResultCallBack());
-        } catch (IOException e) {
-            e.printStackTrace();
+            OkHttpManager.onGetAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
+
+                @Override
+                public void onResponse(String response) {
+                    L.i(TAG, "标签数据:" + response);
+                    if (TextUtils.isEmpty(response)) {
+                        Toast.makeText(context, "暂无标签可用！", Toast.LENGTH_SHORT).show();
+                    } else try {
+                        Tag tag = JsonUtils.getInstance().fromJSON(Tag.class, response);
+                        List<Tag.TagData> list = tag.getData();
+                        if (list != null && list.size() > 0) {
+                            for (Tag.TagData data : list) {
+                                tagList.add(data.getTName());
+                            }
+                            tagAdapter.setTagList(tagList);
+                        } else {
+                            Toast.makeText(context, "暂无标签可用！", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        L.e(TAG, "标签数据解析异常:" + e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Exception e) {
+                    L.e(TAG, "获取标签请求失败:" + e.getMessage());
+                    Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFinish() {
+                    hideDialog();
+                }
+
+            });
+        } catch (Exception e) {
+            L.e(TAG, "获取Tag异常:" + e.getMessage());
             hideDialog();
-            Toast.makeText(PutQuestionsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "标签获取失败！", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     /**
@@ -337,72 +308,22 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
     }
 
-    /**
-     * TAG的list集合转为请求参数值
-     *
-     * @return Params value
-     */
-    private String buildTagParams() {
-        String tags = "";
-        if (tagList != null && tagList.size() > 0) {
-            for (int i = 0; i < tagList.size(); i++) {
-                if (tagList.size() > i + 1) {
-                    tags = tags + tagList.get(i) + ",";
-                } else {
-                    tags = tags + tagList.get(i);
-                }
-            }
-            return tags;
-        } else {
-            Toast.makeText(context, "标签不能为空！", Toast.LENGTH_SHORT).show();
-            return "";
-        }
-    }
-
-    /**
-     * 构造提问参数
-     *
-     * @return 提问参数数组
-     */
-    private OkHttpManager.Params[] buildNewProblemParams() {
-        OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[6];
-        paramsArray[0] = new OkHttpManager.Params(TITLE, title);
-        paramsArray[1] = new OkHttpManager.Params(CONTENT, content);
-        paramsArray[2] = new OkHttpManager.Params(ADDR, countryCNname + "," + cityName);
-        paramsArray[3] = new OkHttpManager.Params(COUNTRY_ID, countryId);
-        paramsArray[4] = new OkHttpManager.Params(CITY_ID, cityId);
-        paramsArray[5] = new OkHttpManager.Params(TAG_S, buildTagParams());
-        return paramsArray;
-    }
-
-    /**
-     * 发起提问网络请求
-     */
-    private void sendNewProblem4Service() {
-        if (questionDialog != null && !questionDialog.isShowing()) {
-            questionDialog.show();
-        }
-
-        String problemUrl = HttpNewServicePath.addNewProblemInterFacePath + "?" + TOKEN + "=" + token;
-        OkHttpManager.Params[] paramsArray = buildNewProblemParams();
-        try {
-            OkHttpManager.onPostAsynRequest(problemUrl, new AddProblemResultCallBack(), paramsArray);
-        } catch (Exception e) {
-            L.e(TAG, "提问请求异常:" + e.getMessage());
-            hideDialog();
-            Toast.makeText(PutQuestionsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void hideDialog() {
         if (loadDialog != null && loadDialog.isShowing()) {
             loadDialog.dismiss();
         }
 
-        if (questionDialog != null && questionDialog.isShowing()) {
-            questionDialog.dismiss();
-        }
+    }
 
+    private ArrayList<String> clearRepeatElement() {
+        ArrayList<String> list = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        for (String aClickTagList : clickTagList) {
+            if (set.add(aClickTagList)) {
+                list.add(aClickTagList);
+            }
+        }
+        return list;
     }
 
     @Override
@@ -419,18 +340,21 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
         switch (requestCode) {
             case AppConstant.SELECT_COUNTRY_OK:
-                countryCNname = data.getStringExtra(COUNTRY_CN_NAME);
-                cityName = data.getStringExtra(CITY_NAME);
+                String countryCNname = data.getStringExtra(COUNTRY_CN_NAME);
+                String cityName = data.getStringExtra(CITY_NAME);
 
                 countryId = data.getStringExtra(COUNTRY_ID);
                 cityId = data.getStringExtra(CITY_ID);
 
+                address = String.format("%s%s%s", countryCNname, ",", cityName);
+
                 L.i(TAG, "countryCNname:" + countryCNname + ",cityName:" + cityName);
                 L.i(TAG, "countryId:" + countryId + ",cityId:" + cityId);
+                L.i(TAG, "Address:" + address);
 
                 if (!TextUtils.isEmpty(countryCNname)) {
                     if (!TextUtils.isEmpty(cityName)) {
-                        questionLocation.setText(String.format("%s%s%s", countryCNname, ",", cityName));
+                        questionLocation.setText(address);
                     } else {
                         questionLocation.setText(countryCNname);
                     }
@@ -455,17 +379,30 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
+
             case R.id.question_confirm:
-                title = inputQuestionTitle.getText().toString().trim();
-                content = inputProblemContent.getText().toString().trim();
+                String title = inputQuestionTitle.getText().toString().trim();
+                String content = inputProblemContent.getText().toString().trim();
+                ArrayList<String> hashClickTagList = clearRepeatElement();
+                L.i(TAG, "已选择的标签:" + hashClickTagList);
+
                 if (TextUtils.isEmpty(title)) {
                     Toast.makeText(context, "标题不能为空！", Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(content)) {
                     Toast.makeText(context, "内容不能为空！", Toast.LENGTH_SHORT).show();
-                } else if (tagList == null || tagList.size() < 1) {
+                } else if (TextUtils.isEmpty(countryId) && TextUtils.isEmpty(cityId)) {
+                    Toast.makeText(context, "请选择国家城市！", Toast.LENGTH_SHORT).show();
+                } else if (hashClickTagList == null || hashClickTagList.size() < 1) {
                     Toast.makeText(context, "标签不能为空！", Toast.LENGTH_SHORT).show();
                 } else {
-                    sendNewProblem4Service();
+                    Intent intent = new Intent(context, SelectBeInvitedActivity.class);
+                    intent.putExtra(TITLE, title);
+                    intent.putExtra(CONTENT, content);
+                    intent.putExtra(ADDR, address);
+                    intent.putExtra(COUNTRY_ID, countryId);
+                    intent.putExtra(CITY_ID, cityId);
+                    intent.putStringArrayListExtra(TAG_S, hashClickTagList);
+                    startActivity(intent);
                 }
                 break;
         }
@@ -473,50 +410,9 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
     }
 
     /**
-     * 获取关注用户的回调接口
-     */
-    private class InvitationResultCallBack extends OkHttpManager.ResultCallback<String> {
-
-        @Override
-        public void onError(Request request, Exception e) {
-            L.e(TAG, "获取邀请的用户列表异常:" + e);
-            hideDialog();
-            Toast.makeText(PutQuestionsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onResponse(String response) {
-            L.i(TAG, "返回的数据:" + response);
-            hideDialog();
-
-            try {
-                InvitationAnswer invitationAnswer
-                        = JsonUtils.getInstance().fromJSON(InvitationAnswer.class, response);
-                List<InviteUserEntity> list = invitationAnswer.getData().getInviteUser();
-                if (list != null && list.size() > 0) {
-                    listAll.addAll(list);
-                    adapter.setList(listAll);
-                } else {
-                    Toast.makeText(PutQuestionsActivity.this, NoData, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                L.e(TAG, "解析异常:" + e.getMessage());
-                Toast.makeText(PutQuestionsActivity.this, DataError, Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    }
-
-    /**
      * 添加标签的回调接口
      */
     private class TagResultCallBack extends OkHttpManager.ResultCallback<String> {
-
-        @Override
-        public void onError(Request request, Exception e) {
-            L.e(TAG, "添加标签异常:" + e.getMessage());
-            Toast.makeText(PutQuestionsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
-        }
 
         @Override
         public void onResponse(String response) {
@@ -526,10 +422,8 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
                 String status = object.getString(STATUS);
                 switch (status) {
                     case "1":
-                        TextView tagView = (TextView) LayoutInflater.from(context).inflate(R.layout.layout_text_tag,
-                                questionFlowLayout, false);
-                        tagView.setText(tagName);
-                        questionFlowLayout.addView(tagView);
+                        tagList.add(tagName);
+                        tagAdapter.setTagList(tagList);
                         break;
 
                     case "-1":
@@ -547,39 +441,12 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
             }
         }
 
-    }
-
-    /**
-     * 提问的回调接口
-     */
-    private class AddProblemResultCallBack extends OkHttpManager.ResultCallback<String> {
-
         @Override
         public void onError(Request request, Exception e) {
-            L.e(TAG, "添加新问题异常:" + e.getMessage());
+            L.e(TAG, "添加标签异常:" + e.getMessage());
             Toast.makeText(PutQuestionsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
-        @Override
-        public void onResponse(String response) {
-            L.i(TAG, "添加新问题数据:" + response);
-            try {
-                JSONObject object = new JSONObject(response);
-                String status = object.getString(STATUS);
-                switch (status) {
-                    case "1":
-                        finish();
-                        break;
-                }
-            } catch (Exception e) {
-                Toast.makeText(PutQuestionsActivity.this, "添加问题失败！", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onFinish() {
-            hideDialog();
-        }
     }
 
 }

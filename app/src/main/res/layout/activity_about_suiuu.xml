@@ -1,5 +1,4 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -8,7 +7,7 @@
         android:id="@+id/about_suiuu_tool_bar"
         style="@style/AppToolBar"
         app:navigationIcon="@drawable/back"
-        app:title="@string/AboutSuiuu"/>
+        app:title="@string/AboutSuiuu" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,7 +26,7 @@
                 android:layout_gravity="center_horizontal"
                 android:contentDescription="@string/logo"
                 android:padding="@dimen/layout_15dp"
-                android:src="@drawable/icon_about_logo"/>
+                android:src="@drawable/icon_about_logo" />
 
             <TextView
                 android:id="@+id/about_suiuu_version"
@@ -36,31 +35,50 @@
                 android:layout_gravity="center_horizontal"
                 android:padding="@dimen/layout_8dp"
                 android:text="@string/VersionName"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/about_suiuu_evaluation"
                 style="@style/settingTextView"
-                android:text="@string/Evaluation"/>
+                android:text="@string/Evaluation" />
 
-            <TextView style="@style/settingDividingLine"/>
+            <TextView style="@style/settingDividingLine" />
 
             <TextView
                 android:id="@+id/about_suiuu_help"
                 style="@style/settingTextView"
-                android:text="@string/UseHelp"/>
+                android:text="@string/UseHelp" />
 
-            <TextView style="@style/settingDividingLine"/>
+            <TextView style="@style/settingDividingLine" />
 
             <TextView
                 android:id="@+id/about_suiuu_update"
                 style="@style/settingTextView"
-                android:text="@string/CheckUpdate"/>
+                android:text="@string/CheckUpdate" />
 
-            <TextView style="@style/settingDividingLine"/>
+            <TextView style="@style/settingDividingLine" />
 
         </LinearLayout>
 
     </ScrollView>
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView13"
+        android:layout_centerHorizontal="true"
+        android:text="@string/CopyRight"
+        android:textColor="@color/textColor" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/layout_30dp"
+        android:text="@string/CopyRight2"
+        android:textColor="@color/textColor" />
 
 </RelativeLayout>

@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.BaseHolderAdapter;
+import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
 import com.minglang.suiuu.adapter.SelectPictureAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.entity.ImageFolder;

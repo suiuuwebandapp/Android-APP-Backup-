@@ -399,7 +399,7 @@
         <activity
             android:name=".activity.OrderContactInformationActivity"
             android:label="@string/title_activity_contact_information"
-            android:theme="@style/AppMainTheme" />
+            android:theme="@style/AppMainTheme2" />
 
         <activity
             android:name=".activity.AboutSuiuuActivity"
@@ -476,6 +476,11 @@
             android:name=".activity.UsingSuiuuActivity"
             android:label="@string/title_activity_using_suiuu"
             android:theme="@style/AppMainTheme" />
+
+        <activity
+            android:name=".activity.SelectBeInvitedActivity"
+            android:label="@string/title_activity_select_be_invited"
+            android:theme="@style/AppMainTheme"/>
 
     </application>
 

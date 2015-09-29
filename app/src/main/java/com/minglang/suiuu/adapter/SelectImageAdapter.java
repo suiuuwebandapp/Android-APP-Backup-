@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
 import com.minglang.suiuu.entity.CheckImgBean;
 import com.minglang.suiuu.utils.ViewHolder;
 import com.minglang.suiuu.R;

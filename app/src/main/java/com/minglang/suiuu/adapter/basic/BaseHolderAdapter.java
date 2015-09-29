@@ -1,4 +1,4 @@
-package com.minglang.suiuu.adapter;
+package com.minglang.suiuu.adapter.basic;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
 import com.minglang.suiuu.entity.MsgSystem.MsgSystemData.MsgSystemItemData;
 import com.minglang.suiuu.utils.ViewHolder;
 

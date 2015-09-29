@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
 import com.minglang.suiuu.entity.MsgQuestion.MsgQuestionData.MsgQuestionItemData;
 import com.minglang.suiuu.utils.ViewHolder;
 

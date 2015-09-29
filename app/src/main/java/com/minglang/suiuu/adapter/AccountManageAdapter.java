@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
 import com.minglang.suiuu.entity.TransferAccounts.TransferAccountsData.TransferAccountsItemData;
 import com.minglang.suiuu.utils.ViewHolder;
 

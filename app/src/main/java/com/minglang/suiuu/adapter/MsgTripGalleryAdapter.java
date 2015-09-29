@@ -12,6 +12,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.PersonalMainPagerActivity;
 import com.minglang.suiuu.activity.TripImageDetailsActivity;
+import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
 import com.minglang.suiuu.entity.MsgTripGallery.MsgTripGalleryData.MsgTripGalleryItemData;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.ViewHolder;

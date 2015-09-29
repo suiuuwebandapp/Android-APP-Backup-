@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.TextView;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
 import com.minglang.suiuu.entity.Contact;
 import com.minglang.suiuu.utils.ViewHolder;
 

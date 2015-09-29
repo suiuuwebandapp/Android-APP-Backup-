@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.PersonalMainPagerActivity;
+import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
 import com.minglang.suiuu.entity.MsgOrder.MsgOrderData.MsgOrderItemData;
 import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.L;

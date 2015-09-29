@@ -119,7 +119,13 @@ public class OrderContactInformationActivity extends BaseAppCompatActivity {
         String urgentName = ActualName.getText().toString().trim();
         String contactPhoneNumber = inputContactPhoneNumber.getText().toString().trim();
 
-        if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(nativePhoneNumber) || TextUtils.isEmpty(urgentName) || TextUtils.isEmpty(contactPhoneNumber)) {
+        L.i(TAG, "userName:" + userName + ",nativePhoneNumber:" + nativePhoneNumber +
+                ",urgentName:" + urgentName + ",contactPhoneNumber:" + contactPhoneNumber);
+
+        if (TextUtils.isEmpty(userName)
+                || TextUtils.isEmpty(nativePhoneNumber)
+                || TextUtils.isEmpty(urgentName)
+                || TextUtils.isEmpty(contactPhoneNumber)) {
             dialog.dismiss();
             Toast.makeText(this, "请完善信息", Toast.LENGTH_SHORT).show();
             return;
@@ -154,6 +160,7 @@ public class OrderContactInformationActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
+            L.i(TAG, "提交个人信息数据:" + response);
             int status = 0;
             String data = null;
             try {
@@ -188,7 +195,7 @@ public class OrderContactInformationActivity extends BaseAppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_answer, menu);
+        getMenuInflater().inflate(R.menu.menu_input_information, menu);
         return true;
     }
 

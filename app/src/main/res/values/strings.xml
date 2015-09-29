@@ -562,6 +562,11 @@
 
     <string name="InputPersonalInformation" translatable="false">完善个人信息</string>
 
+    <string name="InvitationUser" translatable="false">邀请用户</string>
+
+    <string name="CopyRight" translatable="false">© 2015 Suiuu.com All Rights Reserved.</string>
+    <string name="CopyRight2" translatable="false">沪ICP备15030059号-1</string>
+
     <string name="year" translatable="false">年</string>
     <string name="month" translatable="false">月</string>
     <string name="day" translatable="false">日</string>
@@ -628,5 +633,6 @@
     <string name="title_activity_private_letter">PrivateLetterActivity</string>
     <string name="title_activity_private_letter_chat">PrivateLetterChatActivity</string>
     <string name="title_activity_using_suiuu">UsingSuiuuActivity</string>
+    <string name="title_activity_select_be_invited">SelectBeInvitedActivity</string>
 
 </resources>

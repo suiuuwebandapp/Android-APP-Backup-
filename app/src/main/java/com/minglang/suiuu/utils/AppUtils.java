@@ -343,13 +343,18 @@ public class AppUtils {
      * @return 年龄
      */
     public static String calculateAge(String birthday) {
+        L.i(TAG, "birthday:" + birthday);
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
             Date date = format.parse(birthday);
+            L.i(TAG, "Date:" + date.toString());
+
             Calendar calendar = Calendar.getInstance();
             int yearNow = calendar.get(Calendar.YEAR);
+
             calendar.setTime(date);
             int yearBirth = calendar.get(Calendar.YEAR);
+
             L.i(TAG, "yearNow:" + yearNow + ",yearBirth:" + yearBirth);
             if (yearNow > yearBirth) {
                 return String.valueOf(yearNow - yearBirth);
