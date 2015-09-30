@@ -289,7 +289,7 @@ public class AMapActivity extends BaseActivity implements
     }
 
     @Override
-    public void onReflash() {
+    public void onRefresh() {
         dialog.show();
         poiItems.clear();
         currentPage = 0;

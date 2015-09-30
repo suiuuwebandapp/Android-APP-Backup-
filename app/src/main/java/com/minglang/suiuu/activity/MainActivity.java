@@ -607,7 +607,9 @@ public class MainActivity extends BaseActivity {
         main_2_Search.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(context, SearchActivity.class);
+                intent.putExtra("searchClass", 2);
+                startActivity(intent);
             }
         });
 

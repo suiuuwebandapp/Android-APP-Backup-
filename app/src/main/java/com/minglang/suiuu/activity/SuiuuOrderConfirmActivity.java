@@ -47,6 +47,8 @@ public class SuiuuOrderConfirmActivity extends BaseActivity {
 
     private static final String TAG = SuiuuOrderConfirmActivity.class.getSimpleName();
 
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.CHINA);
+
     @Bind(R.id.select_travel_date)
     TextView travelDate;
 
@@ -54,8 +56,6 @@ public class SuiuuOrderConfirmActivity extends BaseActivity {
     TextView travelTime;
 
     private String initTime; // 初始化结束时间
-
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm", Locale.getDefault());
 
     @Bind(R.id.add_personal_number)
     ImageView iv_plus;
@@ -246,6 +246,7 @@ public class SuiuuOrderConfirmActivity extends BaseActivity {
                     intent.putExtra("destination", titleInfo);
                     intent.putExtra("orderNumber", orderNumber);
                     startActivity(intent);
+                    finish();
                 } else if ("-2".equals(status)) {
                     orderNumber = message.getString("data");
                     Toast.makeText(SuiuuOrderConfirmActivity.this, orderNumber, Toast.LENGTH_SHORT).show();

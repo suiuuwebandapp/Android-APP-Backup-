@@ -3,7 +3,6 @@ package com.minglang.suiuu.adapter;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.SparseBooleanArray;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -15,9 +14,8 @@ import com.minglang.suiuu.entity.InvitationAnswer.InvitationAnswerData.InviteUse
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.ViewHolder;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Administrator on 2015/8/18.
@@ -28,22 +26,14 @@ public class InvitationAnswerAdapter extends BaseHolderAdapter<InviteUserEntity>
 
     private static final String TAG = InvitationAnswerAdapter.class.getSimpleName();
 
-    private Set<Integer> set;
-
-    private SparseBooleanArray sparseBooleanArray;
+    private final List<String> userSignList = new ArrayList<>();
 
     public InvitationAnswerAdapter(Context context, List<InviteUserEntity> list, int itemLayoutId) {
         super(context, list, itemLayoutId);
-        set = new HashSet<>();
-        sparseBooleanArray = new SparseBooleanArray();
     }
 
-    public Set<Integer> getSet() {
-        return set;
-    }
-
-    public SparseBooleanArray getSparseBooleanArray() {
-        return sparseBooleanArray;
+    public  List<String> getUserSignList() {
+        return userSignList;
     }
 
     @Override
@@ -67,33 +57,27 @@ public class InvitationAnswerAdapter extends BaseHolderAdapter<InviteUserEntity>
 
         userContentView.setText("");
 
-        selectUser.setOnCheckedChangeListener(new SelectCheckedChangeListener(position));
+        selectUser.setOnCheckedChangeListener(new SelectCheckedChangeListener(item));
 
     }
 
     private class SelectCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
 
-        private long position;
+        private InviteUserEntity item;
 
-        private SelectCheckedChangeListener(long position) {
-            this.position = position;
+        private SelectCheckedChangeListener(InviteUserEntity item) {
+            this.item = item;
         }
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            L.i(TAG, "position:" + position);
-
             if (isChecked) {
-                set.add(Long.bitCount(position));
+                userSignList.add(item.getUserSign());
             } else {
-                set.remove(Long.bitCount(position));
+                userSignList.remove(item.getUserSign());
             }
 
-            L.i(TAG, "Set<Integer> set:" + set.toString());
-
-            sparseBooleanArray.put(Long.bitCount(position), isChecked);
-
-            L.i(TAG, "sparseBooleanArray:" + sparseBooleanArray.toString());
+            L.i(TAG, "userSignList:" + userSignList.toString());
 
         }
 

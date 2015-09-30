@@ -1,147 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/top"
-        layout="@layout/common_top2_layout"/>
+    <RelativeLayout
+        android:id="@+id/suiuu_search_tool_bar"
+        style="@style/AppToolBar">
+
+        <ImageButton
+            android:id="@+id/suiuu_search_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/back"
+            android:contentDescription="@string/Back" />
+
+        <ImageButton
+            android:id="@+id/suiuu_search_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/high_search_normal"
+            android:contentDescription="@string/More" />
+
+        <TextView
+            android:id="@+id/suiuu_search_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/suiuu_search_back"
+            android:layout_toEndOf="@+id/suiuu_search_back"
+            android:text="@string/MainTitle2"
+            android:textColor="@color/white"
+            android:textSize="@dimen/layout_20sp"
+            android:layout_toLeftOf="@+id/suiuu_search_more"
+            android:layout_toStartOf="@+id/suiuu_search_more" />
+
+    </RelativeLayout>
 
     <com.minglang.suiuu.customview.ReFlashListView
         android:id="@+id/lv_search_suiuu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/top"
+        android:layout_below="@+id/suiuu_search_tool_bar"
         android:background="@color/white"
         android:scrollbars="none"
-        android:visibility="visible"/>
-    <include layout="@layout/common_no_data_layout"/>
+        android:visibility="visible" />
 
-    <FrameLayout
-        android:id="@+id/fl_search_more"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/top"
-        android:layout_marginLeft="@dimen/layout_5dp"
-        android:layout_marginRight="@dimen/layout_5dp"
-        android:background="@drawable/suiuu_framlayout_bg"
+    <!--无数据提示Layout-->
+    <include layout="@layout/common_no_data_layout" />
+
+    <!--搜索Layout-->
+    <RelativeLayout
+        android:id="@+id/search_more_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/suiuu_search_tool_bar"
+        android:background="@color/backgroundColor2"
+        android:padding="@dimen/layout_10dp"
         android:visibility="gone">
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/tv_people_number"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:padding="@dimen/layout_5dp"
+            android:text="@string/TripPeopleNumber"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/layout_15sp" />
 
-            <TextView
-                android:id="@+id/tv_people_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/layout_5dp"
-                android:text="@string/people_number"
-                android:textColor="@color/textColor"
-                android:textSize="@dimen/layout_15sp"/>
+        <RelativeLayout
+            android:id="@+id/suiuu_search_select_people_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_people_number"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:padding="@dimen/layout_5dp">
 
             <ImageButton
-                android:id="@+id/ib_release"
+                android:id="@+id/suiuu_search_less_people_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_people_number"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/layout_5dp"
                 android:layout_marginStart="@dimen/layout_5dp"
-                android:background="@drawable/btn_release"/>
+                android:background="@drawable/icon_less_personal"
+                android:contentDescription="@string/Less" />
 
             <EditText
                 android:id="@+id/et_people_number"
                 android:layout_width="@dimen/layout_50dp"
                 android:layout_height="@dimen/layout_25dp"
-                android:layout_below="@+id/tv_people_number"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/layout_5dp"
                 android:layout_marginStart="@dimen/layout_5dp"
-                android:layout_toEndOf="@+id/ib_release"
-                android:layout_toRightOf="@+id/ib_release"
+                android:layout_toEndOf="@+id/suiuu_search_less_people_number"
+                android:layout_toLeftOf="@+id/suiuu_search_add_people_number"
+                android:layout_toRightOf="@+id/suiuu_search_less_people_number"
+                android:layout_toStartOf="@+id/suiuu_search_add_people_number"
                 android:background="@color/white"
                 android:gravity="center"
                 android:inputType="number"
                 android:text="@string/Zero"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
 
             <ImageButton
-                android:id="@+id/ib_plus"
+                android:id="@+id/suiuu_search_add_people_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_people_number"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/layout_5dp"
                 android:layout_marginStart="@dimen/layout_5dp"
-                android:layout_toEndOf="@+id/et_people_number"
-                android:layout_toRightOf="@+id/et_people_number"
-                android:background="@drawable/btn_plus"/>
+                android:background="@drawable/icon_add_personal"
+                android:contentDescription="@string/Add" />
 
-            <TextView
-                android:id="@+id/tv_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ib_release"
-                android:layout_marginTop="@dimen/layout_8dp"
-                android:padding="@dimen/layout_5dp"
-                android:text="@string/type"
-                android:textColor="@color/textColor"
-                android:textSize="@dimen/layout_15sp"/>
-
-            <com.minglang.suiuu.customview.FlowLayout
-                android:id="@+id/id_flowLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_type"
-                android:background="@color/transparent"
-                android:padding="5dp"/>
-
-            <TextView
-                android:id="@+id/tv_price_show"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/id_flowLayout"
-                android:padding="@dimen/layout_5dp"
-                android:text="@string/price"
-                android:textColor="@color/textColor"
-                android:textSize="@dimen/layout_15sp"/>
-
-            <TextView
-                android:id="@+id/tv_price_range"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/id_flowLayout"
-                android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_marginStart="@dimen/layout_5dp"
-                android:layout_toEndOf="@+id/tv_price_show"
-                android:layout_toRightOf="@+id/tv_price_show"
-                android:padding="@dimen/layout_5dp"
-                android:text="@string/zeroForTenKilo"
-                android:textColor="@color/btn_1_bg_color"
-                android:textSize="@dimen/layout_15sp"/>
-
-            <com.minglang.suiuu.customview.rangebar.RangeBar
-                android:id="@+id/rangeBar"
-                android:layout_width="match_parent"
-                android:layout_height="70dip"
-                android:layout_below="@+id/tv_price_show"
-                android:layout_marginBottom="@dimen/layout_10dp"
-                android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_marginRight="@dimen/layout_5dp"/>
-
-            <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/bb_search_confire"
-                android:layout_width="@dimen/layout_100dp"
-                android:layout_height="40dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="33dp"
-                android:text="确定"
-                bootstrapbutton:bb_roundedCorners="true"
-                bootstrapbutton:bb_size="small"
-                bootstrapbutton:bb_type="info"/>
         </RelativeLayout>
-    </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/suiuu_search_select_people_number"
+            android:layout_marginTop="@dimen/layout_8dp"
+            android:padding="@dimen/layout_5dp"
+            android:text="@string/type"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/layout_15sp" />
+
+        <com.minglang.suiuu.customview.FlowLayout
+            android:id="@+id/id_flowLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_type"
+            android:background="@color/transparent"
+            android:padding="5dp" />
+
+        <TextView
+            android:id="@+id/tv_price_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/id_flowLayout"
+            android:padding="@dimen/layout_5dp"
+            android:text="@string/Price_"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/layout_15sp" />
+
+        <TextView
+            android:id="@+id/tv_price_range"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/id_flowLayout"
+            android:layout_marginLeft="@dimen/layout_5dp"
+            android:layout_marginStart="@dimen/layout_5dp"
+            android:layout_toEndOf="@+id/tv_price_show"
+            android:layout_toRightOf="@+id/tv_price_show"
+            android:padding="@dimen/layout_5dp"
+            android:text="@string/zeroForTenKilo"
+            android:textColor="@color/mainColor"
+            android:textSize="@dimen/layout_15sp" />
+
+        <com.minglang.suiuu.customview.rangebar.RangeBar
+            android:id="@+id/rangeBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_price_show"
+            android:layout_marginBottom="@dimen/layout_10dp"
+            android:layout_marginLeft="@dimen/layout_5dp"
+            android:layout_marginRight="@dimen/layout_5dp" />
+
+        <Button
+            android:id="@+id/search_confirm_button"
+            android:layout_width="@dimen/layout_120dp"
+            android:layout_height="@dimen/layout_40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="33dp"
+            android:background="@color/mainColor"
+            android:text="@string/confirm" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

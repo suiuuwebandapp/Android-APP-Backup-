@@ -138,10 +138,19 @@ public class NotFinishedFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_not_finished, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        viewAction();
-        sendRequest();
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewAction();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sendRequest();
     }
 
     @Override
@@ -309,6 +318,10 @@ public class NotFinishedFragment extends BaseFragment {
                 }
             }
         }
+    }
+
+    public String getUserSign() {
+        return userSign;
     }
 
     private class NotFinishedResultCallback extends OkHttpManager.ResultCallback<String> {

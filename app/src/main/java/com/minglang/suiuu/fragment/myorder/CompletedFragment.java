@@ -138,9 +138,19 @@ public class CompletedFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_completed, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        viewAction();
-        sendRequest();
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewAction();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sendRequest();
     }
 
     @Override
@@ -305,6 +315,10 @@ public class CompletedFragment extends BaseFragment {
                 }
             }
         }
+    }
+
+    public String getUserSign() {
+        return userSign;
     }
 
     private class CompletedResultCallback extends OkHttpManager.ResultCallback<String> {

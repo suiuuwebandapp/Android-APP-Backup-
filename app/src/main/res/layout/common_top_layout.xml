@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="@string/Title1"
+        android:text="@string/MainTitle1"
         android:textColor="@color/white"
         android:textSize="@dimen/layout_22sp"/>
 

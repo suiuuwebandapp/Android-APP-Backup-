@@ -5,10 +5,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,12 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.QuestionsTagAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
-import com.minglang.suiuu.customview.TagFlowLayout;
-import com.minglang.suiuu.entity.Tag;
+import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
@@ -36,12 +35,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.BindColor;
+import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -73,8 +71,14 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
     @BindString(R.string.load_wait)
     String LoadMsg;
 
-    @BindString(R.string.question_wait)
-    String QuestionMsg;
+    @BindString(R.string.SelectTag)
+    String SelectTag;
+
+    @BindDrawable(R.drawable.shape_trip_image_publish_tag)
+    Drawable tripImagePublishTag;
+
+    @BindDrawable(R.drawable.shape_trip_image_publish_press_tag)
+    Drawable tripImagePublishPressTag;
 
     @BindString(R.string.NoData)
     String NoData;
@@ -113,10 +117,10 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
     TextView questionLocation;
 
     @Bind(R.id.question_tag_flow_layout)
-    TagFlowLayout questionTagFlowLayout;
+    FlowLayout questionTagFlowLayout;
 
-    @Bind(R.id.question_location)
-    TextView addTagView;
+    @Bind(R.id.question_tag)
+    TextView showSelectTagView;
 
     private String countryId;
 
@@ -124,20 +128,34 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
     private ProgressDialog loadDialog;
 
-    /**
-     * 全部Tag的List集合
-     */
-    private List<String> tagList = new ArrayList<>();
+    //    /**
+    //     * 全部Tag的List集合
+    //     */
+    //    private List<String> tagList = new ArrayList<>();
 
+    /**
+     * 点击选择的Tag集合
+     */
     private ArrayList<String> clickTagList = new ArrayList<>();
 
     private String address;
 
     private Context context;
 
-    private String tagName;
+    /**
+     * 自定义添加的标签
+     */
+    private String customTagName = "";
 
-    private QuestionsTagAdapter tagAdapter;
+    /**
+     * 所有显示Tag的TextView的集合
+     */
+    private List<TextView> tagViewList = new ArrayList<>();
+    private List<TextView> clickTagViewList = new ArrayList<>();
+
+    private String tagText = "";
+
+    private String[] tagArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +169,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
         ButterKnife.bind(this);
         initView();
         viewAction();
-        getDefaultTagList();
+        showDefaultTag2View();
     }
 
     /**
@@ -176,8 +194,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
         scrollView.smoothScrollTo(0, 0);
 
-        tagAdapter = new QuestionsTagAdapter(tagList, context);
-        questionTagFlowLayout.setAdapter(tagAdapter);
+        tagArray = getResources().getStringArray(R.array.tripImageTagName);
     }
 
     /**
@@ -194,100 +211,145 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
             }
         });
 
-        addTagView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final EditText editText = new EditText(PutQuestionsActivity.this);
-                new AlertDialog.Builder(PutQuestionsActivity.this)
-                        .setTitle(AddTag)
-                        .setView(editText)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                tagName = editText.getText().toString().trim();
-                                if (!TextUtils.isEmpty(tagName)) {
-                                    sendTag2Service(tagName);
-                                } else {
-                                    Toast.makeText(PutQuestionsActivity.this, TagNameNotNull, Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .create().show();
-            }
-        });
-
-        questionTagFlowLayout.setOnSelectListener(new TagFlowLayout.OnSelectListener() {
-            @Override
-            public void onSelected(Set<Integer> selectPosSet) {
-                if (clickTagList != null && clickTagList.size() > 0) {
-                    clickTagList.clear();
-                }
-
-                for (Integer integer : selectPosSet) {
-                    clickTagList.add(tagList.get(integer));
-                }
-
-                L.i(TAG, "clickTagList:" + clickTagList);
-            }
-        });
-
-    }
-
-    private void getDefaultTagList() {
-        if (loadDialog != null && !loadDialog.isShowing()) {
-            loadDialog.show();
-        }
-
-        String url = HttpNewServicePath.getDefaultTagListPath + "?" + TOKEN + "=" + token;
-        L.i(TAG, "获取Tag的URL:" + url);
-
-        try {
-            OkHttpManager.onGetAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
-
-                @Override
-                public void onResponse(String response) {
-                    L.i(TAG, "标签数据:" + response);
-                    if (TextUtils.isEmpty(response)) {
-                        Toast.makeText(context, "暂无标签可用！", Toast.LENGTH_SHORT).show();
-                    } else try {
-                        Tag tag = JsonUtils.getInstance().fromJSON(Tag.class, response);
-                        List<Tag.TagData> list = tag.getData();
-                        if (list != null && list.size() > 0) {
-                            for (Tag.TagData data : list) {
-                                tagList.add(data.getTName());
-                            }
-                            tagAdapter.setTagList(tagList);
-                        } else {
-                            Toast.makeText(context, "暂无标签可用！", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        L.e(TAG, "标签数据解析异常:" + e.getMessage());
-                    }
-                }
-
-                @Override
-                public void onError(Request request, Exception e) {
-                    L.e(TAG, "获取标签请求失败:" + e.getMessage());
-                    Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onFinish() {
-                    hideDialog();
-                }
-
-            });
-        } catch (Exception e) {
-            L.e(TAG, "获取Tag异常:" + e.getMessage());
-            hideDialog();
-            Toast.makeText(context, "标签获取失败！", Toast.LENGTH_SHORT).show();
-        }
-
     }
 
     /**
-     * 发送标签到服务器
+     * 弹出添加Tag的Dialog
+     */
+    private void showTagDialog() {
+        final EditText editText = new EditText(PutQuestionsActivity.this);
+        new AlertDialog.Builder(PutQuestionsActivity.this)
+                .setTitle(AddTag)
+                .setView(editText)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        customTagName = editText.getText().toString().trim();
+                        if (!TextUtils.isEmpty(customTagName)) {
+                            sendTag2Service(customTagName);
+                        } else {
+                            Toast.makeText(PutQuestionsActivity.this, TagNameNotNull, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .create().show();
+    }
+
+    //    /**
+    //     * 获取默认Tag
+    //     */
+    //    private void getDefaultTagList() {
+    //        if (loadDialog != null && !loadDialog.isShowing()) {
+    //            loadDialog.show();
+    //        }
+    //
+    //        String url = HttpNewServicePath.getDefaultTagListPath + "?" + TOKEN + "=" + token;
+    //        try {
+    //            OkHttpManager.onGetAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
+    //
+    //                @Override
+    //                public void onResponse(String response) {
+    //                    if (TextUtils.isEmpty(response)) {
+    //                        Toast.makeText(context, "暂无标签可用！", Toast.LENGTH_SHORT).show();
+    //                    } else try {
+    //                        Tag tag = JsonUtils.getInstance().fromJSON(Tag.class, response);
+    //                        List<Tag.TagData> list = tag.getData();
+    //                        for (Tag.TagData data : list) {
+    //                            tagList.add(data.getTName());
+    //                        }
+    //                        showDefaultTag2View(tagList);
+    //                    } catch (Exception e) {
+    //                        L.e(TAG, "标签数据解析异常:" + e.getMessage());
+    //                    }
+    //                }
+    //
+    //                @Override
+    //                public void onError(Request request, Exception e) {
+    //                    L.e(TAG, "获取标签请求失败:" + e.getMessage());
+    //                    Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
+    //                }
+    //
+    //                @Override
+    //                public void onFinish() {
+    //                    hideDialog();
+    //                }
+    //
+    //            });
+    //        } catch (Exception e) {
+    //            L.e(TAG, "获取Tag异常:" + e.getMessage());
+    //            hideDialog();
+    //            Toast.makeText(context, "标签获取失败！", Toast.LENGTH_SHORT).show();
+    //        }
+    //
+    //    }
+
+    /**
+     * 把默认Tag加载到View上
+     */
+    @SuppressWarnings("deprecation")
+    private void showDefaultTag2View() {
+        questionTagFlowLayout.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (int i = 0; i < tagArray.length + 1; i++) {
+            TextView textView = (TextView) inflater.inflate(R.layout.tv, questionTagFlowLayout, false);
+            if (tagArray.length == i) {
+                textView.setBackgroundResource(R.drawable.icon_plus);
+            } else {
+                textView.setBackground(tripImagePublishTag);
+                textView.setText(tagArray[i]);
+            }
+
+            textView.setTag(i);
+            tagViewList.add(textView);
+
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tagText = "";
+                    int tagNumber = (int) v.getTag();
+                    if (tagNumber == tagArray.length) {
+                        showTagDialog();
+                    } else {
+                        if (clickTagViewList.contains(tagViewList.get(tagNumber))) {
+                            tagViewList.get(tagNumber).setBackground(tripImagePublishTag);
+                            tagViewList.get(tagNumber).setTextColor(getResources().getColor(R.color.gray));
+                            clickTagViewList.remove(tagViewList.get(tagNumber));
+                        } else {
+                            tagViewList.get(tagNumber).setBackground(tripImagePublishPressTag);
+                            tagViewList.get(tagNumber).setTextColor(getResources().getColor(R.color.white));
+                            clickTagViewList.add(tagViewList.get(tagNumber));
+                        }
+                        showSelectTag2View();
+                    }
+                }
+            });
+            questionTagFlowLayout.addView(textView);
+        }
+    }
+
+    /**
+     * 把选择的Tag加载到View上
+     */
+    private void showSelectTag2View() {
+        for (TextView tv : clickTagViewList) {
+            tagText += tv.getText() + " ";
+        }
+
+        tagText += customTagName;
+        if (TextUtils.isEmpty(tagText)) {
+            if (TextUtils.isEmpty(customTagName)) {
+                showSelectTagView.setText(SelectTag);
+            } else {
+                showSelectTagView.setText(customTagName);
+            }
+        } else {
+            showSelectTagView.setText(tagText);
+        }
+    }
+
+    /**
+     * 发送Tag到服务器
      *
      * @param tagName 标签名
      */
@@ -296,8 +358,6 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
         OkHttpManager.Params params2 = new OkHttpManager.Params(TOKEN, token);
 
         String tagUrl = HttpNewServicePath.addTagInterFacePath + "?" + TOKEN + "=" + token;
-        L.i(TAG, "tagUrl:" + tagUrl);
-
         try {
             OkHttpManager.onPostAsynRequest(tagUrl, new TagResultCallBack(), params, params2);
         } catch (IOException e) {
@@ -313,17 +373,6 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
             loadDialog.dismiss();
         }
 
-    }
-
-    private ArrayList<String> clearRepeatElement() {
-        ArrayList<String> list = new ArrayList<>();
-        Set<String> set = new HashSet<>();
-        for (String aClickTagList : clickTagList) {
-            if (set.add(aClickTagList)) {
-                list.add(aClickTagList);
-            }
-        }
-        return list;
     }
 
     @Override
@@ -383,8 +432,6 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
             case R.id.question_confirm:
                 String title = inputQuestionTitle.getText().toString().trim();
                 String content = inputProblemContent.getText().toString().trim();
-                ArrayList<String> hashClickTagList = clearRepeatElement();
-                L.i(TAG, "已选择的标签:" + hashClickTagList);
 
                 if (TextUtils.isEmpty(title)) {
                     Toast.makeText(context, "标题不能为空！", Toast.LENGTH_SHORT).show();
@@ -392,7 +439,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
                     Toast.makeText(context, "内容不能为空！", Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(countryId) && TextUtils.isEmpty(cityId)) {
                     Toast.makeText(context, "请选择国家城市！", Toast.LENGTH_SHORT).show();
-                } else if (hashClickTagList == null || hashClickTagList.size() < 1) {
+                } else if (TextUtils.isEmpty(tagText)) {
                     Toast.makeText(context, "标签不能为空！", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(context, SelectBeInvitedActivity.class);
@@ -401,8 +448,9 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
                     intent.putExtra(ADDR, address);
                     intent.putExtra(COUNTRY_ID, countryId);
                     intent.putExtra(CITY_ID, cityId);
-                    intent.putStringArrayListExtra(TAG_S, hashClickTagList);
+                    intent.putExtra(TAG_S, tagText.replace(" ", ","));
                     startActivity(intent);
+                    finish();
                 }
                 break;
         }
@@ -422,8 +470,8 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
                 String status = object.getString(STATUS);
                 switch (status) {
                     case "1":
-                        tagList.add(tagName);
-                        tagAdapter.setTagList(tagList);
+                        customTagName = customTagName + " ";
+                        showSelectTag2View();
                         break;
 
                     case "-1":

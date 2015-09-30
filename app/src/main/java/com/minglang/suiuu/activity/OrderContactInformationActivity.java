@@ -156,11 +156,10 @@ public class OrderContactInformationActivity extends BaseAppCompatActivity {
     /**
      * 提交信息回调接口
      */
-    class PushInformationCallBack extends OkHttpManager.ResultCallback<String> {
+    private class PushInformationCallBack extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String response) {
-            L.i(TAG, "提交个人信息数据:" + response);
             int status = 0;
             String data = null;
             try {
@@ -175,6 +174,7 @@ public class OrderContactInformationActivity extends BaseAppCompatActivity {
                 Intent intent = new Intent(OrderContactInformationActivity.this, SuiuuPayActivity.class);
                 intent.putExtra("orderNumber", orderNumber);
                 startActivity(intent);
+                finish();
             } else {
                 Toast.makeText(OrderContactInformationActivity.this, data, Toast.LENGTH_SHORT).show();
             }
@@ -212,4 +212,5 @@ public class OrderContactInformationActivity extends BaseAppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

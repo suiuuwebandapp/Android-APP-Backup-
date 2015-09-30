@@ -238,7 +238,7 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 					// 加载最新数据；
 					tempCount = 0;
 					reflashViewByState();
-					iReflashListener.onReflash();
+					iReflashListener.onRefresh();
 				} else if (state == PULL) {
 					state = NONE;
 					isRemark = false;
@@ -258,7 +258,7 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 		tempCount = 0;
 		post(showRefresh);
 		reflashViewByState();
-		iReflashListener.onReflash();
+		iReflashListener.onRefresh();
 	}
 
 	/**
@@ -389,7 +389,7 @@ public class ReFlashListView extends ListView implements OnScrollListener {
 	 * @author Administrator
 	 */
 	public interface IReflashListener{
-		void onReflash();
+		void onRefresh();
 	}
 	public interface ILoadMoreDataListener{
 		void onLoadMoreData();

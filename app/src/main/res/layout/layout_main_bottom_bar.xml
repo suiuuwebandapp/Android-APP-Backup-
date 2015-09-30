@@ -20,7 +20,7 @@
             <ImageView
                 android:id="@+id/img1"
                 style="@style/mainBottomBarImage"
-                android:contentDescription="@string/TripGallery"
+                android:contentDescription="@string/TripImage"
                 android:src="@drawable/icon_main_1_green"/>
 
         </LinearLayout>

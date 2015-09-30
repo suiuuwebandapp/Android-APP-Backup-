@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,7 +20,6 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.FirstLoginActivity;
 import com.minglang.suiuu.activity.SuiuuDetailsActivity;
-import com.minglang.suiuu.activity.SearchActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.dbhelper.DataCacheUtils;
@@ -93,8 +91,6 @@ public class SuiuuFragment extends BaseFragment {
 
     private int page = 1;
 
-    private ImageView et_suiuu;
-
     private ShowSuiuuAdapter adapter;
 
     private boolean isPullToRefresh = true;
@@ -122,10 +118,6 @@ public class SuiuuFragment extends BaseFragment {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMessage(DialogMsg);
 
-        View topView = getActivity().findViewById(R.id.main_show_layout);
-
-        et_suiuu = (ImageView) topView.findViewById(R.id.main_2_search); //处理头部控件
-
         token = SuiuuInfo.ReadAppTimeSign(getActivity());
 
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -138,7 +130,6 @@ public class SuiuuFragment extends BaseFragment {
     }
 
     private void viewAction() {
-        et_suiuu.setOnClickListener(new MyOnclick());
 
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -280,20 +271,6 @@ public class SuiuuFragment extends BaseFragment {
             hideDialog();
         }
 
-    }
-
-    private class MyOnclick implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.main_2_search:
-                    //跳转到搜索页面
-                    Intent intent = new Intent(getActivity(), SearchActivity.class);
-                    intent.putExtra("searchClass", 2);
-                    startActivity(intent);
-                    break;
-            }
-        }
     }
 
 }

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +20,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.InvitationAnswerAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.InvitationAnswer;
+import com.minglang.suiuu.entity.InvitationAnswer.InvitationAnswerData.SysUserEntity;
 import com.minglang.suiuu.entity.InvitationAnswer.InvitationAnswerData.InviteUserEntity;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
@@ -36,7 +36,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -53,11 +52,11 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
     private static final String TAG_S = "tags";
     private static final String COUNTRY_ID = "countryId";
     private static final String CITY_ID = "cityId";
+    private static final String USER_LIST = "userList";
 
     private String title;
     private String content;
     private String address;
-    private ArrayList<String> tagList = new ArrayList<>();
     private String countryId;
     private String cityId;
 
@@ -98,6 +97,10 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
 
     private List<InviteUserEntity> listAll = new ArrayList<>();
 
+    private List<String> userSignList;
+
+    private String tags;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,11 +112,11 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
         title = intent.getStringExtra(TITLE);
         content = intent.getStringExtra(CONTENT);
         address = intent.getStringExtra(ADDR);
-        tagList = intent.getStringArrayListExtra(TAG_S);
+        tags = intent.getStringExtra(TAG_S);
         countryId = intent.getStringExtra(COUNTRY_ID);
         cityId = intent.getStringExtra(CITY_ID);
-        L.i(TAG, "title:" + title + ",content:" + content + ",address:" + address
-                + ",tagList:" + tagList.toString() + ",countryId:" + countryId + ",cityId:" + cityId);
+        L.i(TAG, "title:" + title + ",content:" + content + ",address:" + address +
+                ",tags:" + tags + ",countryId:" + countryId + ",cityId:" + cityId);
 
         initView();
         viewAction();
@@ -206,26 +209,19 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
         }
     }
 
-    /**
-     * TAG的list集合转为请求参数值
-     *
-     * @return Params value
-     */
-    private String buildTagParams() {
-        String tags = "";
-        if (tagList != null && tagList.size() > 0) {
-            for (int i = 0; i < tagList.size(); i++) {
-                if (tagList.size() > i + 1) {
-                    tags = tags + tagList.get(i) + ",";
+    private String buildUserSignParams() {
+        String userSigns = "";
+        if (userSignList != null && userSignList.size() > 0) {
+            for (int i = 0; i < userSignList.size(); i++) {
+                if (userSignList.size() > i + 1) {
+                    userSigns = userSigns + userSignList.get(i) + ",";
                 } else {
-                    tags = tags + tagList.get(i);
+                    userSigns = userSigns + userSignList.get(i);
                 }
             }
-            return tags;
-        } else {
-            Toast.makeText(context, "标签不能为空！", Toast.LENGTH_SHORT).show();
-            return "";
         }
+        L.i(TAG, "userSigns:" + userSigns);
+        return userSigns;
     }
 
     /**
@@ -234,14 +230,25 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
      * @return 提问参数数组
      */
     private OkHttpManager.Params[] buildNewProblemParams() {
-        OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[6];
-        paramsArray[0] = new OkHttpManager.Params(TITLE, title);
-        paramsArray[1] = new OkHttpManager.Params(CONTENT, content);
-        paramsArray[2] = new OkHttpManager.Params(ADDR, address);
-        paramsArray[3] = new OkHttpManager.Params(COUNTRY_ID, countryId);
-        paramsArray[4] = new OkHttpManager.Params(CITY_ID, cityId);
-        paramsArray[5] = new OkHttpManager.Params(TAG_S, buildTagParams());
-        return paramsArray;
+        String userSigns = buildUserSignParams();
+
+        if (TextUtils.isEmpty(tags)) {
+            Toast.makeText(context, "标签不能为空！", Toast.LENGTH_SHORT).show();
+            return null;
+        } else if (TextUtils.isEmpty(userSigns)) {
+            Toast.makeText(context, "至少邀请一位用户！", Toast.LENGTH_SHORT).show();
+            return null;
+        } else {
+            OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[7];
+            paramsArray[0] = new OkHttpManager.Params(TITLE, title);
+            paramsArray[1] = new OkHttpManager.Params(CONTENT, content);
+            paramsArray[2] = new OkHttpManager.Params(ADDR, address);
+            paramsArray[3] = new OkHttpManager.Params(COUNTRY_ID, countryId);
+            paramsArray[4] = new OkHttpManager.Params(CITY_ID, cityId);
+            paramsArray[5] = new OkHttpManager.Params(TAG_S, tags);
+            paramsArray[6] = new OkHttpManager.Params(USER_LIST, userSigns);
+            return paramsArray;
+        }
     }
 
     /**
@@ -254,12 +261,14 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
 
         String problemUrl = HttpNewServicePath.addNewProblemInterFacePath + "?" + TOKEN + "=" + token;
         OkHttpManager.Params[] paramsArray = buildNewProblemParams();
-        try {
-            OkHttpManager.onPostAsynRequest(problemUrl, new AddProblemResultCallBack(), paramsArray);
-        } catch (Exception e) {
-            L.e(TAG, "提问请求异常:" + e.getMessage());
-            hideDialog();
-            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
+        if (paramsArray != null && paramsArray.length > 0) {
+            try {
+                OkHttpManager.onPostAsynRequest(problemUrl, new AddProblemResultCallBack(), paramsArray);
+            } catch (Exception e) {
+                L.e(TAG, "提问请求异常:" + e.getMessage());
+                hideDialog();
+                Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -277,7 +286,7 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_questions, menu);
+        getMenuInflater().inflate(R.menu.menu_select_be_invited, menu);
         return true;
     }
 
@@ -289,8 +298,7 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
                 break;
 
             case R.id.question_confirm_commit:
-                Set<Integer> set = adapter.getSet();
-                SparseBooleanArray sparseBooleanArray = adapter.getSparseBooleanArray();
+                userSignList = adapter.getUserSignList();
                 sendNewProblem4Service();
                 break;
         }
@@ -309,6 +317,16 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
                 Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
             } else try {
                 InvitationAnswer invitationAnswer = JsonUtils.getInstance().fromJSON(InvitationAnswer.class, response);
+                SysUserEntity sysUserEntity = invitationAnswer.getData().getSysUser();
+
+                if (sysUserEntity != null) {
+                    InviteUserEntity inviteUserEntity = new InviteUserEntity();
+                    inviteUserEntity.setHeadImg(sysUserEntity.getHeadImg());
+                    inviteUserEntity.setNickname(sysUserEntity.getNickname());
+                    inviteUserEntity.setUserSign(sysUserEntity.getUserSign());
+                    listAll.add(inviteUserEntity);
+                }
+
                 List<InviteUserEntity> list = invitationAnswer.getData().getInviteUser();
                 if (list != null && list.size() > 0) {
                     listAll.addAll(list);
@@ -356,12 +374,6 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
     private class AddProblemResultCallBack extends OkHttpManager.ResultCallback<String> {
 
         @Override
-        public void onError(Request request, Exception e) {
-            L.e(TAG, "添加新问题异常:" + e.getMessage());
-            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
         public void onResponse(String response) {
             L.i(TAG, "添加新问题数据:" + response);
             try {
@@ -384,6 +396,12 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
                 L.e(TAG, "数据解析失败:" + e.getMessage());
                 Toast.makeText(context, "添加问题失败！", Toast.LENGTH_SHORT).show();
             }
+        }
+
+        @Override
+        public void onError(Request request, Exception e) {
+            L.e(TAG, "添加新问题异常:" + e.getMessage());
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
         @Override

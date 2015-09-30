@@ -1,62 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_color">
 
-    <include
-        android:id="@+id/suiuu_order_top"
-        layout="@layout/common_top2_layout" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/suiuu_pay_tool_bar"
+        style="@style/AppToolBar"
+        app:navigationIcon="@drawable/back"
+        app:title="@string/Pay"
+        app:titleTextColor="@color/white" />
 
     <LinearLayout
         android:id="@+id/top"
         style="@style/comment_suiuu_details"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/suiuu_order_top"
+        android:layout_below="@+id/suiuu_pay_tool_bar"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_suiuu_name"
-            android:layout_width="fill_parent"
+            android:id="@+id/suiuu_order_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/layout_4dp"
-            android:text="法国巴黎包车游"
             android:textColor="@color/textColor"
             android:textSize="@dimen/layout_18sp" />
 
         <TextView
-            android:id="@+id/tv_order_create_time"
+            android:id="@+id/suiuu_order_create_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/layout_4dp"
-            android:text="订单创建时间 :"
+            android:text="@string/OrderCreateTime"
             android:textColor="@color/textColor"
             android:textSize="@dimen/layout_16sp" />
 
         <TextView
-            android:id="@+id/tv_order_number"
+            android:id="@+id/suiuu_order_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/layout_4dp"
-            android:text="订单号 :"
+            android:text="@string/OrderNumber"
             android:textColor="@color/textColor"
             android:textSize="@dimen/layout_16sp" />
 
         <TextView
-            android:id="@+id/tv_total_price"
+            android:id="@+id/suiuu_total_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/layout_4dp"
-            android:text="总价 :"
-            android:textColor="@color/btn_1_bg_color"
+            android:text="@string/TotalPrices"
+            android:textColor="@color/mainColor"
             android:textSize="@dimen/layout_16sp" />
+
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_center_message"
         style="@style/comment_suiuu_details"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/top"
         android:orientation="vertical" />
@@ -64,14 +68,13 @@
     <LinearLayout
         android:id="@+id/ll_bottom_message"
         style="@style/comment_suiuu_details"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_center_message"
         android:orientation="vertical" />
 
-
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
@@ -104,4 +107,5 @@
             android:textSize="@dimen/layout_18sp" />
 
     </LinearLayout>
+
 </RelativeLayout>

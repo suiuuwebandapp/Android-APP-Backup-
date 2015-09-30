@@ -125,6 +125,7 @@
 
     <string name="Post" translatable="false">帖子</string>
     <string name="Back" translatable="false">返回</string>
+    <string name="More" translatable="false">More</string>
 
     <string name="Search" translatable="false">Search</string>
 
@@ -235,17 +236,21 @@
 
     <string name="Next" translatable="false">下一步</string>
     <string name="a" translatable="false">A</string>
-    <string name="people_number" translatable="false">人数</string>
+
+    <string name="TripPeopleNumber" translatable="false">出游人数</string>
     <string name="type" translatable="false">类型</string>
-    <string name="price" translatable="false">价格</string>
+    <string name="Price_" translatable="false">价格:</string>
+
     <string name="refreshData" translatable="false">点击重新加载数据</string>
     <string name="please_enter_search_content" translatable="false">请输入搜索内容</string>
+
     <string name="search_location" translatable="false">搜索地点</string>
     <string name="no_search_data" translatable="false">没有搜索结果请重新输入</string>
+
     <string name="login_message" translatable="false">现在开始 随心所欲畅游世界</string>
     <string name="join_suiuu" translatable="false">立即加入随游</string>
 
-    <string name="TripGallery" translatable="false">旅图</string>
+    <string name="TripImage" translatable="false">旅图</string>
     <string name="SuiuuPage" translatable="false">随游</string>
     <string name="CommunityPage" translatable="false">问答社区</string>
     <string name="ChatPage" translatable="false">消息</string>
@@ -447,7 +452,6 @@
     <string name="Password_cannot_be_empty" translatable="false">密码不能为空！</string>
     <string name="button_logout" translatable="false">退出登录</string>
     <string name="show_comments" translatable="false">显示评论</string>
-    <string name="Add" translatable="false">Add</string>
 
     <string name="PleaseSelectCountry" translatable="false">请选择国家</string>
     <string name="please_choice_tag" translatable="false">请选择标签</string>
@@ -559,10 +563,15 @@
     <string name="loadDataComplete" translatable="false">Data load, click refresh</string>
 
     <string name="One" translatable="false">1</string>
+    <string name="Add" translatable="false">Add</string>
+    <string name="Less" translatable="false">Less</string>
 
     <string name="InputPersonalInformation" translatable="false">完善个人信息</string>
 
     <string name="InvitationUser" translatable="false">邀请用户</string>
+
+    <string name="OrderCreateTime" translatable="false">订单创建时间:</string>
+    <string name="OrderNumber" translatable="false">订单号</string>
 
     <string name="CopyRight" translatable="false">© 2015 Suiuu.com All Rights Reserved.</string>
     <string name="CopyRight2" translatable="false">沪ICP备15030059号-1</string>

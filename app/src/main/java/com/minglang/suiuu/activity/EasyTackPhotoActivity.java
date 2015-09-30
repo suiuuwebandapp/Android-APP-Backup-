@@ -108,7 +108,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
     SwipeListView picDescription;
 
     @Bind(R.id.tv_show_tag)
-    TextView tv_show_tag;
+    TextView showSelectTagView;
 
     @Bind(R.id.fl_easy_take_photo)
     FlowLayout easyTakePhotoLayout;
@@ -141,8 +141,8 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
 
     private JsonUtils jsonUtil = JsonUtils.getInstance();
 
-    private List<TextView> suiuuTagClick = new ArrayList<>();
-    private List<TextView> suiuuTagList = new ArrayList<>();
+    private List<TextView> clickTagViewList = new ArrayList<>();
+    private List<TextView> tagViewList = new ArrayList<>();
 
     private String tripImageTitle;
 
@@ -158,7 +158,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
     private String locationCountry;
     private String locationCity;
 
-    private String setCustomerTag = "";
+    private String customerTag = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -302,18 +302,18 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
         LayoutInflater mInflater = LayoutInflater.from(this);
 
         for (int i = 0; i < suiuuTag.length + 1; i++) {
-            TextView tv = (TextView) mInflater.inflate(R.layout.tv, easyTakePhotoLayout, false);
+            TextView textView = (TextView) mInflater.inflate(R.layout.tv, easyTakePhotoLayout, false);
             if (suiuuTag.length == i) {
-                tv.setBackgroundResource(R.drawable.icon_plus);
+                textView.setBackgroundResource(R.drawable.icon_plus);
             } else {
-                tv.setBackground(tripImagePublishTag);
-                tv.setText(suiuuTag[i]);
+                textView.setBackground(tripImagePublishTag);
+                textView.setText(suiuuTag[i]);
             }
 
-            tv.setTag(i);
-            suiuuTagList.add(tv);
+            textView.setTag(i);
+            tagViewList.add(textView);
 
-            tv.setOnClickListener(new View.OnClickListener() {
+            textView.setOnClickListener(new View.OnClickListener() {
                 @SuppressWarnings("deprecation")
                 @Override
                 public void onClick(View v) {
@@ -322,37 +322,40 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
                     if (suiuuTag.length == tagNumber) {
                         showSetTagDialog();
                     } else {
-                        if (suiuuTagClick.contains(suiuuTagList.get(tagNumber))) {
-                            suiuuTagList.get(tagNumber).setBackground(tripImagePublishTag);
-                            suiuuTagList.get(tagNumber).setTextColor(getResources().getColor(R.color.gray));
-                            suiuuTagClick.remove(suiuuTagList.get(tagNumber));
+                        if (clickTagViewList.contains(tagViewList.get(tagNumber))) {
+                            tagViewList.get(tagNumber).setBackground(tripImagePublishTag);
+                            tagViewList.get(tagNumber).setTextColor(getResources().getColor(R.color.gray));
+                            clickTagViewList.remove(tagViewList.get(tagNumber));
                         } else {
-                            suiuuTagList.get(tagNumber).setBackground(tripImagePublishPressTag);
-                            suiuuTagList.get(tagNumber).setTextColor(getResources().getColor(R.color.white));
-                            suiuuTagClick.add(suiuuTagList.get(tagNumber));
+                            tagViewList.get(tagNumber).setBackground(tripImagePublishPressTag);
+                            tagViewList.get(tagNumber).setTextColor(getResources().getColor(R.color.white));
+                            clickTagViewList.add(tagViewList.get(tagNumber));
                         }
                         showTag();
                     }
                 }
             });
-            easyTakePhotoLayout.addView(tv);
+            easyTakePhotoLayout.addView(textView);
         }
     }
 
+    /**
+     * Tag加载到View上
+     */
     public void showTag() {
-        for (TextView tv : suiuuTagClick) {
+        for (TextView tv : clickTagViewList) {
             tagText += tv.getText() + " ";
         }
 
-        tagText += setCustomerTag;
+        tagText += customerTag;
         if ("".equals(tagText)) {
-            if ("".equals(setCustomerTag)) {
-                tv_show_tag.setText(R.string.please_choice_tag);
+            if ("".equals(customerTag)) {
+                showSelectTagView.setText(R.string.please_choice_tag);
             } else {
-                tv_show_tag.setText(setCustomerTag);
+                showSelectTagView.setText(customerTag);
             }
         } else {
-            tv_show_tag.setText(tagText);
+            showSelectTagView.setText(tagText);
         }
     }
 
@@ -372,7 +375,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
                 if (TextUtils.isEmpty(inputTag)) {
                     Toast.makeText(EasyTackPhotoActivity.this, "你的输入不能为空,请重新输入", Toast.LENGTH_SHORT).show();
                 } else {
-                    setCustomerTag += inputTag + " ";
+                    customerTag += inputTag + " ";
                     showTag();
                 }
             }

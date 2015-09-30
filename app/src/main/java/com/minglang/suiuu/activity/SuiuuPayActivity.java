@@ -5,16 +5,17 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.GeneralOrderDetails;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -42,69 +43,65 @@ import butterknife.ButterKnife;
  * 修改时间：2015/6/12 15:46
  * 修改备注：
  */
-public class SuiuuPayActivity extends BaseActivity {
+public class SuiuuPayActivity extends BaseAppCompatActivity {
 
     private static final String TAG = SuiuuPayActivity.class.getSimpleName();
+
+    private static final String ORDER_NUMBER = "orderNumber";
+    private static final String CHANNEL = "channel";
+
+    private static final int REQUEST_CODE_PAYMENT = 111;
 
     @BindString(R.string.NetworkAnomaly)
     String NetworkError;
 
-    private static final int REQUEST_CODE_PAYMENT = 111;
-
-    @Bind(R.id.iv_top_back)
-    ImageView iv_top_back;
-
-    @Bind(R.id.tv_top_center)
-    TextView tv_top_center;
-
-    @Bind(R.id.tv_top_right_more)
-    ImageView tv_top_right_more;
-
-    private String orderNumber;
+    @Bind(R.id.suiuu_pay_tool_bar)
+    Toolbar toolbar;
 
     @Bind(R.id.tv_pay_wechat)
-    TextView tv_pay_wechat;
+    TextView wechatPayButton;
 
     @Bind(R.id.tv_pay_alipay)
-    TextView tv_pay_alipay;
+    TextView aliPayButton;
 
     /**
      * 随游名字
      */
-    @Bind(R.id.tv_suiuu_name)
-    TextView tv_suiuu_name;
+    @Bind(R.id.suiuu_order_title)
+    TextView suiuuOrderTitle;
 
     /**
      * 随游订单创建时间
      */
-    @Bind(R.id.tv_order_create_time)
-    TextView tv_order_create_time;
+    @Bind(R.id.suiuu_order_create_time)
+    TextView suiuuOrderCreateTime;
 
     /**
      * 随游订单号
      */
-    @Bind(R.id.tv_order_number)
-    TextView tv_order_number;
+    @Bind(R.id.suiuu_order_number)
+    TextView suiuuOrderNumber;
 
     /**
-     * 随游订单号
+     * 订单总价
      */
-    @Bind(R.id.tv_total_price)
-    TextView tv_total_price;
+    @Bind(R.id.suiuu_total_price)
+    TextView suiuuOrderTotalPrice;
 
     /**
      * 中间信息
      */
     @Bind(R.id.ll_center_message)
-    LinearLayout ll_center_message;
+    LinearLayout suiuuOrderCenterMessage;
 
     /**
      * 底部信息
      */
     @Bind(R.id.ll_bottom_message)
-    LinearLayout ll_bottom_message;
+    LinearLayout suiuuOrderBottomMessage;
 
-    private static final String ORDER_NUMBER = "orderNumber";
+    private String orderNumber;
+
     private TextProgressDialog dialog;
 
     @Override
@@ -112,7 +109,9 @@ public class SuiuuPayActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suiuu_pay);
         ButterKnife.bind(this);
-        orderNumber = this.getIntent().getStringExtra("orderNumber");
+
+        orderNumber = this.getIntent().getStringExtra(ORDER_NUMBER);
+
         initView();
         viewAction();
         getOrderDetail();
@@ -121,18 +120,15 @@ public class SuiuuPayActivity extends BaseActivity {
     private void initView() {
         dialog = new TextProgressDialog(this);
 
-        tv_top_right_more.setVisibility(View.GONE);
-        tv_pay_alipay = (TextView) findViewById(R.id.tv_pay_alipay);
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
+
+        setSupportActionBar(toolbar);
     }
 
     private void viewAction() {
-        iv_top_back.setOnClickListener(new PayClickListener());
-        tv_pay_alipay.setOnClickListener(new PayClickListener());
-        tv_pay_wechat.setOnClickListener(new PayClickListener());
-        tv_top_center.setVisibility(View.VISIBLE);
-        tv_top_center.setText("支付");
+        aliPayButton.setOnClickListener(new PayClickListener());
+        wechatPayButton.setOnClickListener(new PayClickListener());
     }
 
     class PayClickListener implements View.OnClickListener {
@@ -140,9 +136,6 @@ public class SuiuuPayActivity extends BaseActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.iv_top_back:
-                    finish();
-                    break;
 
                 case R.id.tv_pay_alipay:
                     getCharge(orderNumber, "alipay");
@@ -159,12 +152,12 @@ public class SuiuuPayActivity extends BaseActivity {
     //获取订单的接口
     private void getCharge(String orderNumber, String payWay) {
         Map<String, String> map = new HashMap<>();
-        map.put("orderNumber", orderNumber);
-        map.put("channel", payWay);
+        map.put(ORDER_NUMBER, orderNumber);
+        map.put(CHANNEL, payWay);
         try {
-            OkHttpManager.onPostAsynRequest(HttpNewServicePath.getCharge + "?token=" + token, new getChargeCallBack(), map);
+            OkHttpManager.onPostAsynRequest(HttpNewServicePath.getCharge + "?" + TOKEN + "=" + token, new getChargeCallBack(), map);
         } catch (IOException e) {
-            e.printStackTrace();
+            L.e(TAG, "获取订单网络请求异常:" + e.getMessage());
         }
     }
 
@@ -179,7 +172,7 @@ public class SuiuuPayActivity extends BaseActivity {
         try {
             OkHttpManager.onGetAsynRequest(url, new OrderDetailsResultCallback());
         } catch (IOException e) {
-            e.printStackTrace();
+            L.e(TAG, "获取订单详情网络请求异常:" + e.getMessage());
             dialog.dismiss();
             Toast.makeText(SuiuuPayActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
@@ -192,12 +185,12 @@ public class SuiuuPayActivity extends BaseActivity {
 
         @Override
         public void onError(Request request, Exception e) {
+            L.e(TAG, "获得charge网络请求错误:" + e.getMessage());
             Toast.makeText(SuiuuPayActivity.this, "请稍候再试！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onResponse(String response) {
-            L.i(TAG, "Charge:" + response);
             try {
                 Intent intent = new Intent();
                 String packageName = getPackageName();
@@ -213,6 +206,9 @@ public class SuiuuPayActivity extends BaseActivity {
 
     }
 
+    /**
+     * 订单详情回调
+     */
     private class OrderDetailsResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
@@ -222,6 +218,7 @@ public class SuiuuPayActivity extends BaseActivity {
 
         @Override
         public void onError(Request request, Exception e) {
+            L.e(TAG, "获得订单详情网络请求错误:" + e.getMessage());
             Toast.makeText(SuiuuPayActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
@@ -229,6 +226,7 @@ public class SuiuuPayActivity extends BaseActivity {
         public void onFinish() {
             dialog.dismiss();
         }
+
     }
 
     @SuppressLint("InflateParams")
@@ -238,10 +236,10 @@ public class SuiuuPayActivity extends BaseActivity {
         GeneralOrderDetails.GeneralOrderDetailsData.InfoEntity info = details.getData().getInfo();
         GeneralOrderDetails.GeneralOrderDetailsData.ContackEntity contact = details.getData().getContact();
 
-        tv_suiuu_name.setText(contact.getDestination());
-        tv_order_create_time.setText(String.format("%s%s", "创建时间:", info.getCreateTime()));
-        tv_order_number.setText(String.format("%s%s", "订单号:", info.getOrderNumber()));
-        tv_total_price.setText(String.format("%s%s", "总价:", info.getTotalPrice()));
+        suiuuOrderTitle.setText(contact.getDestination());
+        suiuuOrderCreateTime.setText(String.format("%s%s", "创建时间:", info.getCreateTime()));
+        suiuuOrderNumber.setText(String.format("%s%s", "订单号:", info.getOrderNumber()));
+        suiuuOrderTotalPrice.setText(String.format("%s%s", "总价:", info.getTotalPrice()));
 
         String[] centerMessage = {"目的地:" + contact.getDestination()};
         String[] bottomMessage = {"主要联系人:" + contact.getUsername(), "微信号:" + contact.getWechat(),
@@ -255,14 +253,14 @@ public class SuiuuPayActivity extends BaseActivity {
             itemView = LayoutInflater.from(this).inflate(R.layout.suiuu_pay_textview, null);
             tv = (TextView) itemView.findViewById(R.id.tv);
             tv.setText(aCenterMessage);
-            ll_center_message.addView(tv);
+            suiuuOrderCenterMessage.addView(tv);
         }
 
         for (String aBottomMessage : bottomMessage) {
             itemView = LayoutInflater.from(this).inflate(R.layout.suiuu_pay_textview, null);
             tv = (TextView) itemView.findViewById(R.id.tv);
             tv.setText(aBottomMessage);
-            ll_bottom_message.addView(tv);
+            suiuuOrderBottomMessage.addView(tv);
         }
 
     }
@@ -279,11 +277,8 @@ public class SuiuuPayActivity extends BaseActivity {
         //支付页面返回处理
         if (requestCode == REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
+
                 String result = data.getExtras().getString("pay_result");
-
-
-                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
-                L.e(TAG, "回调错误信息:" + errorMsg);
 
                 if (!TextUtils.isEmpty(result)) {
                     Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
@@ -295,6 +290,9 @@ public class SuiuuPayActivity extends BaseActivity {
                     }
                 }
 
+                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
+                L.e(TAG, "回调错误信息:" + errorMsg);
+
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(this, "User canceled", Toast.LENGTH_SHORT).show();
             } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
@@ -302,6 +300,17 @@ public class SuiuuPayActivity extends BaseActivity {
                 finish();
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(new Intent(SuiuuPayActivity.this, GeneralOrderListActivity.class));
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

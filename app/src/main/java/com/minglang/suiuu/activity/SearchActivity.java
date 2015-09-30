@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.FlowLayout;
+import com.minglang.suiuu.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,8 @@ import butterknife.ButterKnife;
  * 修改备注：
  */
 public class SearchActivity extends BaseActivity {
+
+    private static final String TAG = SearchActivity.class.getSimpleName();
 
     private static final String SEARCH_CLASS = "searchClass";
     private static final String COUNTRY = "country";
@@ -144,7 +147,9 @@ public class SearchActivity extends BaseActivity {
             int clickId = v.getId();
             for (int i = 0; i < list.size(); i++) {
                 if (clickId == i) {
-                    judgeIntent(list.get(i).getText().toString());
+                    String clickViewText = list.get(i).getText().toString().trim();
+                    L.i(TAG, "clickViewText:" + clickViewText);
+                    judgeIntent(clickViewText);
                 }
             }
 
@@ -154,11 +159,14 @@ public class SearchActivity extends BaseActivity {
                     break;
 
                 case R.id.iv_top_search:
-                    if ("".equals(inputSearchView.getText().toString().trim())) {
+                    String inputSearchText = inputSearchView.getText().toString().trim();
+                    L.i(TAG, "inputSearchText:" + inputSearchText);
+                    if ("".equals(inputSearchText)) {
                         Toast.makeText(SearchActivity.this, searchContent, Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    judgeIntent(inputSearchView.getText().toString().trim());
+
+                    judgeIntent(inputSearchText);
                     break;
 
                 default:
@@ -168,12 +176,12 @@ public class SearchActivity extends BaseActivity {
     }
 
     public void judgeIntent(String country) {
-        Intent intentSuiuu = new Intent(SearchActivity.this, SuiuuSearchDetailActivity.class);
-        Intent intentGallery = new Intent(SearchActivity.this, TripImageSearchActivity.class);
         if (searchClass == 1) {
+            Intent intentGallery = new Intent(SearchActivity.this, TripImageSearchActivity.class);
             intentGallery.putExtra(COUNTRY, country);
             startActivity(intentGallery);
         } else if (searchClass == 2) {
+            Intent intentSuiuu = new Intent(SearchActivity.this, SuiuuSearchDetailActivity.class);
             intentSuiuu.putExtra(COUNTRY, country);
             startActivity(intentSuiuu);
         }

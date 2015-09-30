@@ -105,7 +105,7 @@ public class JoinAdapter extends BaseAdapter {
 
         if (!TextUtils.isEmpty(countryName)) {
             if (!TextUtils.isEmpty(cityName)) {
-                locationView.setText(countryName + " " + cityName);
+                locationView.setText(String.format("%s%s%s", countryName, " ", cityName));
             } else {
                 locationView.setText(countryName);
             }

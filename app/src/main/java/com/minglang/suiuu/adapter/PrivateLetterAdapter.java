@@ -14,7 +14,10 @@ import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
 import com.minglang.suiuu.entity.PrivateLetter.PrivateLetterData;
 import com.minglang.suiuu.utils.ViewHolder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Administrator on 2015/9/11.
@@ -27,9 +30,13 @@ public class PrivateLetterAdapter extends BaseHolderAdapter<PrivateLetterData> {
 
     private Context context;
 
+    private SimpleDateFormat format;
+
     public PrivateLetterAdapter(Context context, List<PrivateLetterData> list, int itemLayoutId) {
         super(context, list, itemLayoutId);
         this.context = context;
+        format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+
     }
 
     @Override
@@ -55,7 +62,12 @@ public class PrivateLetterAdapter extends BaseHolderAdapter<PrivateLetterData> {
 
         String lastTime = item.getLastConcatTime();
         if (!TextUtils.isEmpty(lastTime)) {
-            dateView.setText(lastTime);
+            try {
+                String str = format.format(format.parse(lastTime));
+                dateView.setText(str);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         } else {
             dateView.setText("");
         }

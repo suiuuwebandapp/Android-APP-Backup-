@@ -104,7 +104,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/layout_10dp"
                                 android:layout_marginStart="@dimen/layout_10dp"
-                                android:text="@string/price"
+                                android:text="@string/Price_"
                                 android:textColor="@color/textColor"
                                 android:textSize="@dimen/layout_18sp"/>
 

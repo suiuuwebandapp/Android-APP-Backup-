@@ -215,43 +215,45 @@ public class SelectPictureActivity extends BaseActivity {
                 new String[]{MediaStore.Images.ImageColumns.DATA}, "", null,
                 MediaStore.MediaColumns.DATE_ADDED + " DESC");
 
-        if (mCursor.moveToFirst()) {
-            int _date = mCursor.getColumnIndex(MediaStore.Images.Media.DATA);
-            do {
-                // 获取图片的路径
-                String path = mCursor.getString(_date);
-                imageAll.images.add(new ImageItem(path));
+        if (mCursor != null) {
+            if (mCursor.moveToFirst()) {
+                int _date = mCursor.getColumnIndex(MediaStore.Images.Media.DATA);
+                do {
+                    // 获取图片的路径
+                    String path = mCursor.getString(_date);
+                    imageAll.images.add(new ImageItem(path));
 
-                // 获取该图片的父路径名
-                File parentFile = new File(path).getParentFile();
+                    // 获取该图片的父路径名
+                    File parentFile = new File(path).getParentFile();
 
-                if (parentFile == null) {
-                    continue;
+                    if (parentFile == null) {
+                        continue;
+                    }
+
+                    ImageFolder imageFolder;
+                    String dirPath = parentFile.getAbsolutePath();
+                    if (!tmpDir.containsKey(dirPath)) {
+                        // 初始化imageFolder
+                        imageFolder = new ImageFolder();
+                        imageFolder.setDir(dirPath);
+                        imageFolder.setFirstImagePath(path);
+                        mDirPaths.add(imageFolder);
+                        tmpDir.put(dirPath, mDirPaths.indexOf(imageFolder));
+                    } else {
+                        imageFolder = mDirPaths.get(tmpDir.get(dirPath));
+                    }
+                    imageFolder.images.add(new ImageItem(path));
+                } while (mCursor.moveToNext());
+
+                mCursor.close();
+
+                for (int i = 0; i < mDirPaths.size(); i++) {
+                    ImageFolder folder = mDirPaths.get(i);
+                    L.d(TAG, i + "-----" + folder.getName() + "---" + folder.images.size());
                 }
 
-                ImageFolder imageFolder;
-                String dirPath = parentFile.getAbsolutePath();
-                if (!tmpDir.containsKey(dirPath)) {
-                    // 初始化imageFolder
-                    imageFolder = new ImageFolder();
-                    imageFolder.setDir(dirPath);
-                    imageFolder.setFirstImagePath(path);
-                    mDirPaths.add(imageFolder);
-                    tmpDir.put(dirPath, mDirPaths.indexOf(imageFolder));
-                } else {
-                    imageFolder = mDirPaths.get(tmpDir.get(dirPath));
-                }
-                imageFolder.images.add(new ImageItem(path));
-            } while (mCursor.moveToNext());
-
-            mCursor.close();
-
-            for (int i = 0; i < mDirPaths.size(); i++) {
-                ImageFolder folder = mDirPaths.get(i);
-                L.d(TAG, i + "-----" + folder.getName() + "---" + folder.images.size());
+                tmpDir = null;
             }
-
-            tmpDir = null;
         }
 
     }
