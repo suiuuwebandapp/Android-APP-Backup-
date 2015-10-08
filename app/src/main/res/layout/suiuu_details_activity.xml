@@ -24,6 +24,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:contentDescription="@string/Share"
             android:padding="@dimen/layout_10dp"
             android:src="@drawable/icon_share" />
 

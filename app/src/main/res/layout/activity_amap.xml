@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/layout_12dp"
-            android:background="@drawable/btn_main_color"
+            android:background="@drawable/btn_wechat_pay"
             android:gravity="center"
             android:paddingBottom="@dimen/layout_8dp"
             android:paddingTop="@dimen/layout_8dp"

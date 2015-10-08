@@ -128,16 +128,6 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
     private ProgressDialog loadDialog;
 
-    //    /**
-    //     * 全部Tag的List集合
-    //     */
-    //    private List<String> tagList = new ArrayList<>();
-
-    /**
-     * 点击选择的Tag集合
-     */
-    private ArrayList<String> clickTagList = new ArrayList<>();
-
     private String address;
 
     private Context context;
@@ -235,54 +225,6 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
                 .setNegativeButton(android.R.string.cancel, null)
                 .create().show();
     }
-
-    //    /**
-    //     * 获取默认Tag
-    //     */
-    //    private void getDefaultTagList() {
-    //        if (loadDialog != null && !loadDialog.isShowing()) {
-    //            loadDialog.show();
-    //        }
-    //
-    //        String url = HttpNewServicePath.getDefaultTagListPath + "?" + TOKEN + "=" + token;
-    //        try {
-    //            OkHttpManager.onGetAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
-    //
-    //                @Override
-    //                public void onResponse(String response) {
-    //                    if (TextUtils.isEmpty(response)) {
-    //                        Toast.makeText(context, "暂无标签可用！", Toast.LENGTH_SHORT).show();
-    //                    } else try {
-    //                        Tag tag = JsonUtils.getInstance().fromJSON(Tag.class, response);
-    //                        List<Tag.TagData> list = tag.getData();
-    //                        for (Tag.TagData data : list) {
-    //                            tagList.add(data.getTName());
-    //                        }
-    //                        showDefaultTag2View(tagList);
-    //                    } catch (Exception e) {
-    //                        L.e(TAG, "标签数据解析异常:" + e.getMessage());
-    //                    }
-    //                }
-    //
-    //                @Override
-    //                public void onError(Request request, Exception e) {
-    //                    L.e(TAG, "获取标签请求失败:" + e.getMessage());
-    //                    Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
-    //                }
-    //
-    //                @Override
-    //                public void onFinish() {
-    //                    hideDialog();
-    //                }
-    //
-    //            });
-    //        } catch (Exception e) {
-    //            L.e(TAG, "获取Tag异常:" + e.getMessage());
-    //            hideDialog();
-    //            Toast.makeText(context, "标签获取失败！", Toast.LENGTH_SHORT).show();
-    //        }
-    //
-    //    }
 
     /**
      * 把默认Tag加载到View上

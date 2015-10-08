@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/layout_5dp"
-        android:src="@drawable/back_icon" />
+        android:src="@drawable/back" />
 
     <ImageView
         android:id="@+id/iv_suiuu_info_head"
@@ -20,50 +20,53 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/layout_50dp"
         android:src="@drawable/login_portrait" />
+
     <LinearLayout
-        android:id="@+id/ll_register_is_quicky_login"
-        android:layout_width="fill_parent"
+        android:id="@+id/register_is_quick_login"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
+
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/sdv_register_bind_head_image"
             android:layout_width="@dimen/layout_60dp"
             android:layout_height="@dimen/layout_60dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/default_head_image"
-            fresco:roundAsCircle="true"/>
+            fresco:roundAsCircle="true" />
+
         <TextView
-            android:id="@+id/tv_register_quickly_login_name"
+            android:id="@+id/register_quick_login_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lestin"
-            android:textSize="@dimen/layout_15sp"
-            android:textColor="@color/white"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/layout_15dp"/>
+            android:layout_marginTop="@dimen/layout_15dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/layout_15sp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/layout_15sp"
-            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/layout_5dp"
             android:text="@string/welcome_to_suiuu"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/layout_5dp"/>
+            android:textColor="@color/white"
+            android:textSize="@dimen/layout_15sp" />
+
     </LinearLayout>
 
     <include
         android:id="@+id/register_user"
         layout="@layout/edittext_white_line"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/layout_20dp"
         android:layout_marginRight="@dimen/layout_20dp"
         android:layout_marginTop="@dimen/layout_25dp" />
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/layout_20dp"
         android:layout_marginRight="@dimen/layout_20dp"
@@ -74,24 +77,28 @@
             android:id="@+id/tv_zone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/arrow_down"
             android:drawablePadding="@dimen/layout_5dp"
             android:drawableRight="@drawable/arrow_down"
-            android:text="+86"
+            android:text="@string/ChinaCode"
             android:textColor="@color/white"
             android:textSize="@dimen/layout_15sp" />
 
         <EditText
             android:id="@+id/et_input_phone_number"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_10dp"
             android:background="@null"
             android:hint="@string/please_input_number"
+            android:inputType="phone"
             android:textColorHint="@color/white" />
+
     </LinearLayout>
 
     <View
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/layout_1dp"
         android:layout_marginLeft="@dimen/layout_20dp"
         android:layout_marginRight="@dimen/layout_20dp"
@@ -101,19 +108,20 @@
     <include
         android:id="@+id/register_password"
         layout="@layout/edittext_white_line"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/layout_20dp"
         android:layout_marginRight="@dimen/layout_20dp"
         android:layout_marginTop="@dimen/layout_5dp" />
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/layout_20dp"
         android:layout_marginRight="@dimen/layout_20dp"
         android:layout_marginTop="@dimen/layout_5dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/layout_3dp">
 
         <include
             android:id="@+id/register_confirm_number"
@@ -138,16 +146,15 @@
         android:id="@+id/second_login_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/mainColor"
-        android:textSize="@dimen/layout_15sp"
-        android:background="@drawable/btn_login_press_style"
-        android:text="@string/Register"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/layout_40dp"
-        android:paddingTop="@dimen/layout_10dp"
+        android:background="@drawable/btn_login_press_style"
         android:paddingBottom="@dimen/layout_10dp"
         android:paddingLeft="@dimen/layout_55dp"
         android:paddingRight="@dimen/layout_55dp"
-        android:layout_gravity="center_horizontal"
-        />
+        android:paddingTop="@dimen/layout_10dp"
+        android:text="@string/Register"
+        android:textColor="@color/mainColor"
+        android:textSize="@dimen/layout_15sp" />
 
 </LinearLayout>

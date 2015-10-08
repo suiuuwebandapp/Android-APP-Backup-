@@ -11,7 +11,49 @@
         app:navigationIcon="@drawable/back"
         app:title="@string/InvitationUser" />
 
-    <com.minglang.pulltorefreshlibrary.PullToRefreshListView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_60dp"
+        android:background="@color/white">
+
+        <EditText
+            android:id="@+id/input_your_invited_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/layout_10dp"
+            android:layout_marginLeft="@dimen/layout_30dp"
+            android:layout_marginRight="@dimen/layout_10dp"
+            android:layout_marginStart="@dimen/layout_30dp"
+            android:layout_toLeftOf="@+id/search_select_be_invited"
+            android:layout_toStartOf="@+id/search_select_be_invited"
+            android:background="@drawable/shape_input_invited_user_background"
+            android:hint="@string/InputYourWantInvitedUser"
+            android:imeActionLabel="@string/Search"
+            android:imeOptions="actionSearch"
+            android:padding="@dimen/layout_10dp"
+            android:singleLine="true" />
+
+        <ImageButton
+            android:id="@+id/search_select_be_invited"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/layout_25dp"
+            android:layout_marginRight="@dimen/layout_25dp"
+            android:background="@color/transparent"
+            android:contentDescription="@string/Search"
+            android:paddingEnd="@dimen/layout_10dp"
+            android:paddingLeft="@dimen/layout_10dp"
+            android:paddingRight="@dimen/layout_10dp"
+            android:paddingStart="@dimen/layout_10dp"
+            android:src="@drawable/main_search" />
+
+    </RelativeLayout>
+
+    <ListView
         android:id="@+id/select_be_invited_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

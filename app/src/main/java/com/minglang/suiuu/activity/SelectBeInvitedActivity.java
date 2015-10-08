@@ -5,23 +5,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
-import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.InvitationAnswerAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.InvitationAnswer;
-import com.minglang.suiuu.entity.InvitationAnswer.InvitationAnswerData.SysUserEntity;
 import com.minglang.suiuu.entity.InvitationAnswer.InvitationAnswerData.InviteUserEntity;
+import com.minglang.suiuu.entity.InvitationAnswer.InvitationAnswerData.SysUserEntity;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -83,11 +86,23 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
     @BindString(R.string.SystemException)
     String SystemException;
 
+    @BindString(R.string.NoFindAboutUser)
+    String NoFindAboutUser;
+
+    @BindString(R.string.PleaseInputWantSearchContent)
+    String PleaseInputWantSearchContent;
+
     @Bind(R.id.select_be_invited_tool_bar)
     Toolbar toolbar;
 
+    @Bind(R.id.input_your_invited_user)
+    EditText inputYourInvitedUserView;
+
+    @Bind(R.id.search_select_be_invited)
+    ImageButton confirmSearch;
+
     @Bind(R.id.select_be_invited_list_view)
-    PullToRefreshListView pullToRefreshListView;
+    ListView pullToRefreshListView;
 
     private ProgressDialog loadDialog;
 
@@ -100,6 +115,8 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
     private List<String> userSignList;
 
     private String tags;
+
+    private String inputString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +154,6 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
         toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
 
         adapter = new InvitationAnswerAdapter(this, listAll, R.layout.item_invitation_answer);
         pullToRefreshListView.setAdapter(adapter);
@@ -151,30 +167,57 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
 
     private void viewAction() {
 
-        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+        inputYourInvitedUserView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    if (listAll != null && listAll.size() > 0) {
+                        String str = v.getText().toString();
+                        L.i(TAG, "输入框内容:" + str);
+                        FiltrationUserList(str);
+                    } else {
+                        Toast.makeText(SelectBeInvitedActivity.this, NoFindAboutUser, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                return false;
+            }
+        });
+
+        inputYourInvitedUserView.addTextChangedListener(new TextWatcher() {
 
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label = DateUtils.formatDateTime(context, System.currentTimeMillis(),
-                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
-                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
             @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                String label = DateUtils.formatDateTime(context, System.currentTimeMillis(),
-                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
-                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                inputString = s.toString();
+                if (TextUtils.isEmpty(s)) {
+                    adapter.setList(listAll);
+                }
             }
 
         });
 
-        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        confirmSearch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+            public void onClick(View v) {
+                FiltrationUserList(inputString);
             }
         });
+
+        //        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //            @Override
+        //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //
+        //            }
+        //        });
 
     }
 
@@ -209,6 +252,11 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
         }
     }
 
+    /**
+     * 根据已选择的用户构造UserSign参数
+     *
+     * @return UserSign参数
+     */
     private String buildUserSignParams() {
         String userSigns = "";
         if (userSignList != null && userSignList.size() > 0) {
@@ -281,7 +329,33 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
             questionDialog.dismiss();
         }
 
-        pullToRefreshListView.onRefreshComplete();
+        //pullToRefreshListView.onRefreshComplete();
+    }
+
+    /**
+     * 根据输入的字符串来过滤用户列表
+     *
+     * @param userName 用户名
+     */
+    private void FiltrationUserList(String userName) {
+        if (TextUtils.isEmpty(userName)) {
+            Toast.makeText(SelectBeInvitedActivity.this, PleaseInputWantSearchContent, Toast.LENGTH_SHORT).show();
+        } else {
+            List<InviteUserEntity> list = new ArrayList<>();
+            for (InviteUserEntity userEntity : listAll) {
+                String name = userEntity.getNickname();
+                if (name.contains(userName)) {
+                    list.add(userEntity);
+                }
+            }
+
+            if (list.size() > 0) {
+                adapter.setList(list);
+            } else {
+                Toast.makeText(SelectBeInvitedActivity.this, NoFindAboutUser, Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
 
     @Override

@@ -131,6 +131,9 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     @Bind(R.id.suiuu_details_input_comment)
     LinearLayout suiuu_detail_input_comment;
 
+    @Bind(R.id.suiuu_details_share)
+    ImageView ShareSuiuuDetails;
+
     private SuiuuDetailsCommentAdapter adapter;
 
     WebSettings webSettings;
@@ -212,6 +215,14 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
             }
         });
+
+        ShareSuiuuDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
     }
 
     @SuppressLint({"JavascriptInterface", "AddJavascriptInterface"})
@@ -314,15 +325,15 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                         servicePriceArray = getServicePriceArray();
 
                         if (serviceNameArray != null) {
-                            L.i(TAG,"ServiceName Array:"+ Arrays.toString(serviceNameArray));
+                            L.i(TAG, "ServiceName Array:" + Arrays.toString(serviceNameArray));
                         }
 
-                        if(serviceIdArray!=null){
-                            L.i(TAG,"ServiceId Array:"+ Arrays.toString(serviceIdArray));
+                        if (serviceIdArray != null) {
+                            L.i(TAG, "ServiceId Array:" + Arrays.toString(serviceIdArray));
                         }
 
-                        if(servicePriceArray!=null){
-                            L.i(TAG,"ServicePrice Array:"+ Arrays.toString(servicePriceArray));
+                        if (servicePriceArray != null) {
+                            L.i(TAG, "ServicePrice Array:" + Arrays.toString(servicePriceArray));
                         }
 
                         break;

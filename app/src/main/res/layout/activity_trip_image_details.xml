@@ -35,7 +35,10 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/layout_10dp"
                     android:layout_marginStart="@dimen/layout_10dp"
-                    android:background="@drawable/user_head_image_bg"
+                    fresco:failureImage="@drawable/default_head_image_error"
+                    fresco:failureImageScaleType="fitCenter"
+                    fresco:placeholderImage="@drawable/default_head_image"
+                    fresco:placeholderImageScaleType="fitCenter"
                     fresco:roundAsCircle="true" />
 
                 <TextView

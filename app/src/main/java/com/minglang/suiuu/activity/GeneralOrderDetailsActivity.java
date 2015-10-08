@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +27,6 @@ import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.Inf
 import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.PublisherBaseEntity;
 import com.minglang.suiuu.entity.ServiceInfo;
 import com.minglang.suiuu.entity.TripJsonInfo;
-import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -46,11 +45,6 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
-import in.srain.cube.views.ptr.PtrDefaultHandler;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.header.MaterialHeader;
 
 /**
  * 订单详情页面-普通用户
@@ -90,8 +84,8 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     @BindString(R.string.deleteOrder)
     String DeleteOrder;
 
-    @Bind(R.id.general_order_details_head_frame)
-    PtrClassicFrameLayout mPtrFrame;
+//    @Bind(R.id.general_order_details_head_frame)
+//    PtrClassicFrameLayout mPtrFrame;
 
     @Bind(R.id.general_order_details_parent_view)
     ScrollView scrollView;
@@ -193,7 +187,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
      * 底部按钮布局
      */
     @Bind(R.id.order_details_bottom_layout)
-    RelativeLayout orderDetailsBottomLayout;
+    CardView orderDetailsBottomLayout;
 
     private boolean isPullToRefresh = true;
 
@@ -246,19 +240,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        int paddingParams = AppUtils.newInstance().dip2px(15, this);
-
-        MaterialHeader header = new MaterialHeader(this);
-        int[] colors = getResources().getIntArray(R.array.google_colors);
-        header.setColorSchemeColors(colors);
-        header.setLayoutParams(new PtrFrameLayout.LayoutParams(-1, -2));
-        header.setPadding(0, paddingParams, 0, paddingParams);
-        header.setPtrFrameLayout(mPtrFrame);
-
-        mPtrFrame.setHeaderView(header);
-        mPtrFrame.addPtrUIHandler(header);
-        mPtrFrame.setPinContent(true);
-
         inflater = LayoutInflater.from(this);
 
         if (!TextUtils.isEmpty(titleImg)) {
@@ -274,20 +255,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             public void onClick(View v) {
                 finish();
             }
-        });
-
-        mPtrFrame.setPtrHandler(new PtrHandler() {
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View view, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, scrollView, header);
-            }
-
-            @Override
-            public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
-                isPullToRefresh = false;
-                getGeneralUserOrderData4Service();
-            }
-
         });
 
         //重新支付按钮
@@ -316,6 +283,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
             }
         });
+
         //取消订单
         orderDetailsCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -323,6 +291,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                 cancelOrder();
             }
         });
+
     }
 
     private void cancelOrder() {
@@ -370,7 +339,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             progressDialog.dismiss();
         }
 
-        mPtrFrame.refreshComplete();
     }
 
     private void bindData2View(String str) {
@@ -397,26 +365,30 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             String jsonInfo = infoEntity.getTripJsonInfo();
 
                             if (!TextUtils.isEmpty(jsonInfo)) {
-                                tripJsonInfo = jsonUtils.fromJSON(TripJsonInfo.class, jsonInfo);
-                                if (tripJsonInfo != null) {
+                                try {
+                                    tripJsonInfo = jsonUtils.fromJSON(TripJsonInfo.class, jsonInfo);
+                                    if (tripJsonInfo != null) {
 
-                                    //标题
-                                    String title = tripJsonInfo.getInfo().getTitle();
-                                    if (!TextUtils.isEmpty(title)) {
-                                        orderDetailsTitle.setText(title);
-                                    } else {
-                                        orderDetailsTitle.setText("");
+                                        //标题
+                                        String title = tripJsonInfo.getInfo().getTitle();
+                                        if (!TextUtils.isEmpty(title)) {
+                                            orderDetailsTitle.setText(title);
+                                        } else {
+                                            orderDetailsTitle.setText("");
+                                        }
+
+                                        //星级评价
+                                        String strOrderScore = tripJsonInfo.getInfo().getScore();
+                                        if (!TextUtils.isEmpty(strOrderScore)) {
+                                            float score = Float.valueOf(strOrderScore);
+                                            orderStarIndicator.setRating(score);
+                                        } else {
+                                            orderStarIndicator.setRating(DEFAULT_SCORE);
+                                        }
+
                                     }
-
-                                    //星级评价
-                                    String strOrderScore = tripJsonInfo.getInfo().getScore();
-                                    if (!TextUtils.isEmpty(strOrderScore)) {
-                                        float score = Float.valueOf(strOrderScore);
-                                        orderStarIndicator.setRating(score);
-                                    } else {
-                                        orderStarIndicator.setRating(DEFAULT_SCORE);
-                                    }
-
+                                } catch (Exception exception) {
+                                    L.e(TAG, "旅图数据解析失败:" + exception.getMessage());
                                 }
                             } else {
                                 orderDetailsTitle.setText("");
@@ -461,47 +433,50 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             if (!TextUtils.isEmpty(strServiceInfo)) {
 
                                 if (!strServiceInfo.equals("[]")) {
-                                    List<ServiceInfo> serviceInfoList
-                                            = jsonUtils.fromJSON(new TypeToken<ServiceInfo>() {
-                                    }.getType(), strServiceInfo);
+                                    try {
+                                        List<ServiceInfo> serviceInfoList = jsonUtils.fromJSON(new TypeToken<List<ServiceInfo>>() {
+                                        }.getType(), strServiceInfo);
 
-                                    if (serviceInfoList != null && serviceInfoList.size() > 0) {
-                                        orderDetailsService.setText(String.valueOf(serviceInfoList.size()));
+                                        if (serviceInfoList != null && serviceInfoList.size() > 0) {
+                                            orderDetailsService.setText(String.valueOf(serviceInfoList.size()));
 
-                                        //所有附加服务的总价
-                                        float allServicePrice = 0f;
+                                            //所有附加服务的总价
+                                            float allServicePrice = 0f;
 
-                                        for (int i = 0; i < serviceInfoList.size(); i++) {
-                                            View serviceItemLayout = inflater.inflate
-                                                    (R.layout.item_service_location_layout, serviceLayout, false);
-                                            TextView serviceNameView = (TextView) serviceItemLayout
-                                                    .findViewById(R.id.order_details_service_name);
-                                            TextView servicePriceView = (TextView) serviceItemLayout
-                                                    .findViewById(R.id.order_details_service_prices);
+                                            for (int i = 0; i < serviceInfoList.size(); i++) {
+                                                View serviceItemLayout = inflater.inflate
+                                                        (R.layout.item_service_location_layout, serviceLayout, false);
+                                                TextView serviceNameView = (TextView) serviceItemLayout
+                                                        .findViewById(R.id.order_details_service_name);
+                                                TextView servicePriceView = (TextView) serviceItemLayout
+                                                        .findViewById(R.id.order_details_service_prices);
 
-                                            //单项附加服务名称
-                                            String serviceItemTitle = serviceInfoList.get(i).getTitle();
-                                            if (!TextUtils.isEmpty(serviceItemTitle)) {
-                                                serviceNameView.setText(serviceItemTitle);
+                                                //单项附加服务名称
+                                                String serviceItemTitle = serviceInfoList.get(i).getTitle();
+                                                if (!TextUtils.isEmpty(serviceItemTitle)) {
+                                                    serviceNameView.setText(serviceItemTitle);
+                                                }
+
+                                                //单项附加服务价格
+                                                String strServiceItemPrice = serviceInfoList.get(i).getMoney();
+                                                float serviceItemPrice = 0f;
+                                                if (!TextUtils.isEmpty(strServiceItemPrice)) {
+                                                    serviceItemPrice = Float.valueOf(strServiceItemPrice);
+                                                    servicePriceView.setText(strServiceItemPrice);
+                                                }
+
+                                                allServicePrice = allServicePrice + serviceItemPrice;
+                                                serviceLayout.addView(serviceItemLayout);
                                             }
 
-                                            //单项附加服务价格
-                                            String strServiceItemPrice = serviceInfoList.get(i).getMoney();
-                                            float serviceItemPrice = 0f;
-                                            if (!TextUtils.isEmpty(strServiceItemPrice)) {
-                                                serviceItemPrice = Float.valueOf(strServiceItemPrice);
-                                                servicePriceView.setText(strServiceItemPrice);
-                                            }
+                                            totalOrderPrice = baseOrderPrice + allServicePrice;
 
-                                            allServicePrice = allServicePrice + serviceItemPrice;
-                                            serviceLayout.addView(serviceItemLayout);
+                                        } else {
+                                            totalOrderPrice = baseOrderPrice;
+                                            orderDetailsService.setText("0");
                                         }
-
-                                        totalOrderPrice = baseOrderPrice + allServicePrice;
-
-                                    } else {
-                                        totalOrderPrice = baseOrderPrice;
-                                        orderDetailsService.setText("0");
+                                    } catch (Exception ex) {
+                                        L.e(TAG, "附加服务数据解析失败:" + ex.getMessage());
                                     }
                                 } else {
                                     totalOrderPrice = baseOrderPrice;

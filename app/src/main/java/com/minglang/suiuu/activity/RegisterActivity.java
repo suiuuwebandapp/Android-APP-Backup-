@@ -91,7 +91,7 @@ public class RegisterActivity extends BaseActivity {
     /**
      * 快速登录头部布局
      */
-    @Bind(R.id.ll_register_is_quicky_login)
+    @Bind(R.id.register_is_quick_login)
     LinearLayout ll_register_is_quicky_login;
 
     /**
@@ -103,7 +103,7 @@ public class RegisterActivity extends BaseActivity {
     /**
      * 名字
      */
-    @Bind(R.id.tv_register_quickly_login_name)
+    @Bind(R.id.register_quick_login_name)
     TextView tv_register_quickly_login_name;
 
     private EditText et_register_user;

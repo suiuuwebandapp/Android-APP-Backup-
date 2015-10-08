@@ -65,4 +65,5 @@ public class ContactUsActivity extends BaseAppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

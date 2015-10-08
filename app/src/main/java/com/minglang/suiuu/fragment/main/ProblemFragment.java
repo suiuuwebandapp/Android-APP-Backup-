@@ -241,7 +241,6 @@ public class ProblemFragment extends BaseFragment {
 
                 page = 1;
                 isPullToRefresh = false;
-                //                getProblemList(buildRequestParams(selectedState, page));
                 sendRequest();
             }
 
@@ -253,7 +252,6 @@ public class ProblemFragment extends BaseFragment {
 
                 page = page + 1;
                 isPullToRefresh = false;
-                //                getProblemList(buildRequestParams(selectedState, page));
                 sendRequest();
             }
 

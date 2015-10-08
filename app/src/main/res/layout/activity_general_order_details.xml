@@ -1,301 +1,303 @@
-<in.srain.cube.views.ptr.PtrClassicFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bootstrapbutton="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/tools"
-    android:id="@+id/general_order_details_head_frame"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/DefaultGray2">
 
-    <RelativeLayout
+    <ScrollView
+        android:id="@+id/general_order_details_parent_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/order_details_bottom_layout">
 
-        <ScrollView
-            android:id="@+id/general_order_details_parent_view"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/layout_200dp">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/order_details_title_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/layout_200dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    fresco:failureImage="@drawable/loading_error"
+                    fresco:failureImageScaleType="fitXY"
+                    fresco:placeholderImage="@drawable/default_background_image"
+                    fresco:placeholderImageScaleType="fitXY" />
+
+                <TextView
+                    android:id="@+id/order_details_base_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="@dimen/layout_8dp"
+                    android:layout_marginLeft="@dimen/layout_8dp"
+                    android:layout_marginStart="@dimen/layout_8dp"
+                    android:layout_toLeftOf="@+id/order_details_indicator"
+                    android:layout_toStartOf="@+id/order_details_indicator"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/layout_16sp" />
+
+                <TextView
+                    android:id="@+id/order_details_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/order_details_base_price"
+                    android:layout_alignLeft="@+id/order_details_base_price"
+                    android:layout_alignStart="@+id/order_details_base_price"
+                    android:layout_marginBottom="@dimen/layout_5dp"
+                    android:layout_marginEnd="@dimen/layout_8dp"
+                    android:layout_marginRight="@dimen/layout_8dp"
+                    android:singleLine="true"
+                    android:text="@string/app_name"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white" />
+
+                <RatingBar
+                    android:id="@+id/order_details_indicator"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/order_details_base_price"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/layout_8dp"
+                    android:layout_marginRight="@dimen/layout_8dp"
+                    android:isIndicator="true"
+                    android:rating="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/order_details_head_image_view"
+                    android:layout_width="@dimen/layout_60dp"
+                    android:layout_height="@dimen/layout_60dp"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/layout_8dp"
+                    fresco:actualImageScaleType="fitXY"
+                    fresco:failureImage="@drawable/default_head_image_error"
+                    fresco:placeholderImage="@drawable/default_head_image"
+                    fresco:roundAsCircle="true" />
+
+                <TextView
+                    android:id="@+id/order_details_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/order_details_head_image_view"
+                    android:layout_toLeftOf="@+id/textView6"
+                    android:layout_toRightOf="@+id/order_details_head_image_view"
+                    android:layout_toStartOf="@+id/textView6"
+                    android:padding="@dimen/layout_3dp"
+                    android:text="@string/app_name"
+                    android:textSize="@dimen/layout_18sp" />
+
+                <TextView
+                    android:id="@+id/order_details_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/layout_5dp"
+                    android:layout_marginRight="@dimen/layout_5dp"
+                    android:layout_toEndOf="@+id/textView6"
+                    android:layout_toRightOf="@+id/textView6"
+                    android:gravity="end"
+                    android:padding="@dimen/layout_3dp"
+                    android:text="@string/app_name"
+                    android:textSize="@dimen/layout_18sp" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true" />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_10dp"
+                android:background="@color/white"
                 android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/layout_200dp">
-
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:id="@+id/order_details_title_image_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/layout_200dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:contentDescription="@string/app_name"
-                        fresco:actualImageScaleType="fitXY"
-                        fresco:failureImage="@drawable/loading_error"
-                        fresco:placeholderImage="@drawable/default_background_image" />
-
-                    <TextView
-                        android:id="@+id/order_details_base_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginBottom="@dimen/layout_8dp"
-                        android:layout_marginLeft="@dimen/layout_8dp"
-                        android:layout_marginStart="@dimen/layout_8dp"
-                        android:layout_toLeftOf="@+id/order_details_indicator"
-                        android:layout_toStartOf="@+id/order_details_indicator"
-                        android:text="@string/app_name"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/layout_16sp" />
-
-                    <TextView
-                        android:id="@+id/order_details_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/order_details_base_price"
-                        android:layout_alignLeft="@+id/order_details_base_price"
-                        android:layout_alignStart="@+id/order_details_base_price"
-                        android:layout_marginBottom="@dimen/layout_5dp"
-                        android:layout_marginEnd="@dimen/layout_8dp"
-                        android:layout_marginRight="@dimen/layout_8dp"
-                        android:singleLine="true"
-                        android:text="@string/app_name"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/white" />
-
-                    <RatingBar
-                        android:id="@+id/order_details_indicator"
-                        style="?android:attr/ratingBarStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/order_details_base_price"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginEnd="@dimen/layout_8dp"
-                        android:layout_marginRight="@dimen/layout_8dp"
-                        android:isIndicator="true"
-                        android:rating="1" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white">
-
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:id="@+id/order_details_head_image_view"
-                        android:layout_width="@dimen/layout_60dp"
-                        android:layout_height="@dimen/layout_60dp"
-                        android:layout_centerVertical="true"
-                        android:layout_margin="@dimen/layout_8dp"
-                        fresco:actualImageScaleType="fitXY"
-                        fresco:failureImage="@drawable/default_head_image_error"
-                        fresco:placeholderImage="@drawable/default_head_image"
-                        fresco:roundAsCircle="true" />
-
-                    <TextView
-                        android:id="@+id/order_details_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@+id/order_details_head_image_view"
-                        android:layout_toLeftOf="@+id/textView6"
-                        android:layout_toRightOf="@+id/order_details_head_image_view"
-                        android:layout_toStartOf="@+id/textView6"
-                        android:padding="@dimen/layout_3dp"
-                        android:text="@string/app_name"
-                        android:textSize="@dimen/layout_18sp" />
-
-                    <TextView
-                        android:id="@+id/order_details_status"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/layout_5dp"
-                        android:layout_marginRight="@dimen/layout_5dp"
-                        android:layout_toEndOf="@+id/textView6"
-                        android:layout_toRightOf="@+id/textView6"
-                        android:gravity="end"
-                        android:padding="@dimen/layout_3dp"
-                        android:text="@string/app_name"
-                        android:textSize="@dimen/layout_18sp" />
-
-                    <TextView
-                        android:id="@+id/textView6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true" />
-
-                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_10dp"
-                    android:background="@color/white"
-                    android:orientation="vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:text="@string/ContactPhone"
+                        android:textSize="@dimen/layout_16sp" />
 
-                        <TextView
-                            android:id="@+id/textView2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/layout_5dp"
-                            android:singleLine="true"
-                            android:text="@string/ContactPhone"
-                            android:textSize="@dimen/layout_16sp" />
-
-                        <TextView
-                            android:id="@+id/order_details_phone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:text="@string/Zero"
-                            android:textSize="@dimen/layout_16sp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/order_details_phone"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textView8"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/layout_5dp"
-                            android:singleLine="true"
-                            android:text="@string/DepartureDate"
-                            android:textSize="@dimen/layout_16sp" />
-
-                        <TextView
-                            android:id="@+id/order_details_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/tempDate"
-                            android:textSize="@dimen/layout_16sp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textView27"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/layout_5dp"
-                            android:singleLine="true"
-                            android:text="@string/StartTime"
-                            android:textSize="@dimen/layout_16sp" />
-
-                        <TextView
-                            android:id="@+id/order_details_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/tempTime"
-                            android:textSize="@dimen/layout_16sp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textView42"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/layout_5dp"
-                            android:singleLine="true"
-                            android:text="@string/SuiuuNumber"
-                            android:textSize="@dimen/layout_16sp" />
-
-                        <TextView
-                            android:id="@+id/order_details_suiuu_number"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:text="@string/tempNumber"
-                            android:textSize="@dimen/layout_16sp" />
-
-                    </LinearLayout>
+                        android:singleLine="true"
+                        android:text="@string/Zero"
+                        android:textSize="@dimen/layout_16sp" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/order_details_service_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_10dp"
-                    android:background="@color/white"
-                    android:orientation="vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:id="@+id/order_details_additional_service_layout"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:text="@string/DepartureDate"
+                        android:textSize="@dimen/layout_16sp" />
 
-                        <TextView
-                            android:id="@+id/textView43"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/layout_5dp"
-                            android:text="@string/AdditionalServices"
-                            android:textSize="@dimen/layout_16sp" />
+                    <TextView
+                        android:id="@+id/order_details_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tempDate"
+                        android:textSize="@dimen/layout_16sp" />
 
-                        <TextView
-                            android:id="@+id/order_details_additional_service_prices"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/layout_5dp"
-                            android:text="@string/Zero"
-                            android:textSize="@dimen/layout_16sp" />
+                </LinearLayout>
 
-                    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView27"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:text="@string/StartTime"
+                        android:textSize="@dimen/layout_16sp" />
+
+                    <TextView
+                        android:id="@+id/order_details_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tempTime"
+                        android:textSize="@dimen/layout_16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView42"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:text="@string/SuiuuNumber"
+                        android:textSize="@dimen/layout_16sp" />
+
+                    <TextView
+                        android:id="@+id/order_details_suiuu_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:text="@string/tempNumber"
+                        android:textSize="@dimen/layout_16sp" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
-        </ScrollView>
+            <LinearLayout
+                android:id="@+id/order_details_service_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_10dp"
+                android:background="@color/white"
+                android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/order_details_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/back" />
+                <LinearLayout
+                    android:id="@+id/order_details_additional_service_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView43"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:text="@string/AdditionalServices"
+                        android:textSize="@dimen/layout_16sp" />
+
+                    <TextView
+                        android:id="@+id/order_details_additional_service_prices"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:text="@string/Zero"
+                        android:textSize="@dimen/layout_16sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/order_details_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/back" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/order_details_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
         <RelativeLayout
-            android:id="@+id/order_details_bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:background="@color/white"
+            android:padding="@dimen/layout_10dp"
             android:visibility="visible">
 
             <Button
@@ -326,6 +328,6 @@
 
         </RelativeLayout>
 
-    </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
-</in.srain.cube.views.ptr.PtrClassicFrameLayout>
+</RelativeLayout>

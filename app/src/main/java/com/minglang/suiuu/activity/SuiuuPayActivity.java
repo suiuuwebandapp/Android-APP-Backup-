@@ -234,7 +234,7 @@ public class SuiuuPayActivity extends BaseAppCompatActivity {
 
         GeneralOrderDetails details = JsonUtils.getInstance().fromJSON(GeneralOrderDetails.class, st);
         GeneralOrderDetails.GeneralOrderDetailsData.InfoEntity info = details.getData().getInfo();
-        GeneralOrderDetails.GeneralOrderDetailsData.ContackEntity contact = details.getData().getContact();
+        GeneralOrderDetails.GeneralOrderDetailsData.ContactEntity contact = details.getData().getContact();
 
         suiuuOrderTitle.setText(contact.getDestination());
         suiuuOrderCreateTime.setText(String.format("%s%s", "创建时间:", info.getCreateTime()));

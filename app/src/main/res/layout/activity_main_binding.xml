@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/layout_5dp"
-        android:src="@drawable/back_icon" />
+        android:src="@drawable/back" />
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/second_login_bind_head_image"
         android:layout_width="@dimen/layout_50dp"
@@ -24,7 +24,6 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/layout_18sp"
         android:textColor="@color/white"
-        android:text="Lestin"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/layout_10dp"/>
     <TextView
