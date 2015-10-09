@@ -240,7 +240,6 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!-- QQ SDK所需的Activity -->
 
-
         <!-- 微信回调Activity -->
         <activity
             android:name=".wxapi.WXEntryActivity"
@@ -479,6 +478,16 @@
             android:name=".activity.SelectBeInvitedActivity"
             android:label="@string/title_activity_select_be_invited"
             android:theme="@style/AppMainTheme" />
+
+        <!--分享编辑页-->
+        <activity
+            android:name="com.umeng.socialize.view.ShareActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.UMDialog"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+        </activity>
 
     </application>
 

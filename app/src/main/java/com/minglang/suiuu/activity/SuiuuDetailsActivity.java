@@ -35,6 +35,10 @@ import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.sso.SinaSsoHandler;
+import com.umeng.socialize.sso.UMSsoHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -153,6 +157,8 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     private String[] serviceIdArray;
     private String[] servicePriceArray;
 
+    private UMSocialService mController = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,6 +175,10 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         tripId = getIntent().getStringExtra(TRIP_ID);
         userSign = getIntent().getStringExtra(USER_SIGN);
         headImagePath = getIntent().getStringExtra(HEAD_IMG);
+
+        mController = UMServiceFactory.getUMSocialService("com.umeng.share");
+
+        mController.getConfig().setSsoHandler(new SinaSsoHandler());
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -219,7 +229,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         ShareSuiuuDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mController.openShare(SuiuuDetailsActivity.this,false);
             }
         });
 
@@ -499,6 +509,11 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode) ;
+        if(ssoHandler != null){
+            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }
 
         if (data != null && resultCode == COMMENT_SUCCESS) {
             UserBackData userBackData = SuiuuInfo.ReadUserData(this);

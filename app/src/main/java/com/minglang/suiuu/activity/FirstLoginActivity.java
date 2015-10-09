@@ -30,7 +30,9 @@ import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.exception.SocializeException;
+import com.umeng.socialize.sso.SinaSsoHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
+import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 
 import org.json.JSONException;
@@ -69,6 +71,8 @@ public class FirstLoginActivity extends BaseActivity {
     private static final String SIGN = "sign";
 
     private static final String DATA = "data";
+
+    private static final String UID = "uid";
 
     @BindString(R.string.NoInstallWeChat)
     String NoInstallWeChat;
@@ -191,6 +195,8 @@ public class FirstLoginActivity extends BaseActivity {
         iv_sina.setOnClickListener(new MyOnClickListener());
         iv_wechat.setOnClickListener(new MyOnClickListener());
         iv_qq.setOnClickListener(new MyOnClickListener());
+
+        mController.getConfig().setSsoHandler(new SinaSsoHandler());
     }
 
     /**
@@ -488,15 +494,15 @@ public class FirstLoginActivity extends BaseActivity {
                 L.i(TAG, "微博返回数据为:" + info.toString());
 
                 try {
-                    weibo_open_id = info.get(OPEN_ID).toString();
-                    L.i(TAG, "openid:" + weibo_open_id);
+                    weibo_open_id = info.get(UID).toString();
+                    L.i(TAG, "uid:" + weibo_open_id);
                 } catch (Exception e) {
-                    L.e(TAG, "获取openid失败:" + e.getMessage());
+                    L.e(TAG, "获取uid失败:" + e.getMessage());
                 }
 
                 try {
                     weibo_name = info.get("screen_name").toString();
-                    L.i(TAG, "获取screenName失败:" + weibo_name);
+                    L.i(TAG, "获取screenName:" + weibo_name);
                 } catch (Exception e) {
                     L.e(TAG, "获取screenName失败:" + e.getMessage());
                 }
@@ -514,8 +520,9 @@ public class FirstLoginActivity extends BaseActivity {
                 } catch (Exception e) {
                     L.e(TAG, "获取image_url失败:" + e.getMessage());
                 }
+
                 SuiuuInfo.WriteQuicklyLoginInfo(context, weibo_open_id, weibo_name, "3", weibo_head_img);
-//                enterMainBind(weibo_head_img, weibo_name, "3", weibo_open_id);
+
                 sendWeiBoInfo2Service();
             } else {
                 L.e(TAG, "发生错误，未接收到数据！");
@@ -823,8 +830,8 @@ public class FirstLoginActivity extends BaseActivity {
     /**
      * 三方登录后跳入绑定的主界面
      *
-     * @param headImage
-     * @param nickName
+     * @param headImage 头像URL
+     * @param nickName 用户昵称
      */
     public void enterMainBind(String headImage, String nickName, String type, String openId) {
         Intent intent = new Intent(this, MainBindActivity.class);
@@ -834,6 +841,15 @@ public class FirstLoginActivity extends BaseActivity {
         intent.putExtra(OPEN_ID, openId);
         startActivity(intent);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode);
+        if(ssoHandler != null){
+            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }
     }
 
 }
