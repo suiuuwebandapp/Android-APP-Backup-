@@ -35,7 +35,7 @@ public class ShowSuiuuAdapter extends BaseAdapter {
         this.list = list;
     }
 
-    public void upDateData(List<SuiuuItemData> list) {
+    public void setList(List<SuiuuItemData> list) {
         this.list = list;
         this.notifyDataSetChanged();
     }

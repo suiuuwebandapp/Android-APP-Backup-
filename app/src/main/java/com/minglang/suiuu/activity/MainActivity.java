@@ -1,8 +1,10 @@
 package com.minglang.suiuu.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -12,6 +14,7 @@ import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -40,6 +43,7 @@ import com.minglang.suiuu.fragment.main.SuiuuFragment;
 import com.minglang.suiuu.fragment.main.TripImageFragment;
 import com.minglang.suiuu.receiver.ConnectionNetChangeReceiver;
 import com.minglang.suiuu.utils.AppConstant;
+import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.MD5Utils;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -52,7 +56,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 
 import butterknife.Bind;
 import butterknife.BindString;
@@ -104,6 +107,9 @@ public class MainActivity extends BaseActivity {
 
     @BindString(R.string.SystemException)
     String SystemException;
+
+    @BindString(R.string.LoadingVerificationInfo)
+    String LoadingVerificationInfo;
 
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -259,6 +265,8 @@ public class MainActivity extends BaseActivity {
 
     private boolean isPublisher = false;
 
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -269,19 +277,41 @@ public class MainActivity extends BaseActivity {
         context = MainActivity.this;
         verification = SuiuuInfo.ReadVerification(context);
 
-        webSocketClient = SuiuuApplication.getWebSocketClient();
-        isConnected = webSocketClient.isConnected();
-        L.i(TAG, "isConnected:" + isConnected);
+        if (AppUtils.isNetworkConnect(context)) {
+            webSocketClient = SuiuuApplication.getWebSocketClient();
+            isConnected = webSocketClient.isConnected();
+            L.i(TAG, "isConnected:" + isConnected);
 
-        String loginMessage = buildLoginMessage();
-        L.i(TAG, "loginMessage:" + loginMessage);
-        webSocketClient.send(loginMessage);
+            String loginMessage = buildLoginMessage();
+            L.i(TAG, "loginMessage:" + loginMessage);
+            webSocketClient.send(loginMessage);
 
-        getServiceTime();
-        versionCheck();
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage(LoadingVerificationInfo);
+            progressDialog.setCanceledOnTouchOutside(false);
 
-        //暂停使用定位服务
-        //bindService(new Intent(context, LocationService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+            getServiceTime();
+            versionCheck();
+
+            //暂停使用定位服务
+            //bindService(new Intent(context, LocationService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        } else {
+            new AlertDialog.Builder(context)
+                    .setMessage("无可用网络，请检查网络设置！")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(Settings.ACTION_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .create().show();
+        }
     }
 
     @Override
@@ -307,21 +337,14 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    private String buildLoginMessage() {
-        JSONObject object = new JSONObject();
-        try {
-            object.put(USER_KEY, verification);
-            object.put(TYPE, LOGIN);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return object.toString();
-    }
-
     /**
      * 得到服务器时间
      */
     private void getServiceTime() {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
+
         try {
             OkHttpManager.onGetAsynRequest(HttpNewServicePath.getTime, new OkHttpManager.ResultCallback<String>() {
 
@@ -353,6 +376,11 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onError(Request request, Exception e) {
                     L.e(TAG, "时间获取错误:" + e.getMessage());
+                    if (progressDialog != null && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+
+                    showErrorDialog("时间获取失败，请尝试重新获取！");
                 }
 
                 @Override
@@ -362,7 +390,12 @@ public class MainActivity extends BaseActivity {
 
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            L.e(TAG, "获取服务器时间请求错误:" + e.getMessage());
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+
+            showErrorDialog("时间获取失败，请尝试重新获取！");
         }
     }
 
@@ -377,8 +410,7 @@ public class MainActivity extends BaseActivity {
 
             String sign = MD5Utils.getMD5(time + verification + HttpNewServicePath.ConfusedCode);
 
-            String _url = addUrlAndParams(HttpNewServicePath.getToken,
-                    new String[]{TIME_STAMP, APP_SIGN, SIGN},
+            String _url = addUrlAndParams(HttpNewServicePath.getToken, new String[]{TIME_STAMP, APP_SIGN, SIGN},
                     new String[]{time, verification, sign});
 
             OkHttpManager.onGetAsynRequest(_url, new OkHttpManager.ResultCallback<String>() {
@@ -412,20 +444,44 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onError(Request request, Exception e) {
                     L.e(TAG, "Network Exception:" + e.getMessage());
+                    showErrorDialog("身份信息获取失败，请尝试重新获取！");
                 }
 
                 @Override
                 public void onFinish() {
+                    if (progressDialog != null && progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+
                     initView();
                     viewAction();
                 }
 
             });
-        } catch (NoSuchAlgorithmException e) {
-            L.e(TAG, "NoSuchAlgorithmException:" + e.getMessage());
-        } catch (IOException e) {
-            L.e(TAG, "IOException:" + e.getMessage());
+        } catch (Exception e) {
+            L.e(TAG, "获取Token请求错误:" + e.getMessage());
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
         }
+    }
+
+    private void showErrorDialog(String message) {
+        new AlertDialog.Builder(context)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getServiceTime();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create().show();
     }
 
     /**
@@ -702,6 +758,17 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(Settings.ACTION_SETTINGS));
             }
         });
+    }
+
+    private String buildLoginMessage() {
+        JSONObject object = new JSONObject();
+        try {
+            object.put(USER_KEY, verification);
+            object.put(TYPE, LOGIN);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return object.toString();
     }
 
     /**

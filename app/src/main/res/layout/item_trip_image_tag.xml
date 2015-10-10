@@ -9,7 +9,6 @@
         android:id="@+id/item_trip_image_tag"
         android:layout_width="@dimen/layout_80dp"
         android:layout_height="@dimen/layout_80dp"
-        android:padding="@dimen/layout_3dp"
         fresco:roundedCornerRadius="5dp" />
 
     <TextView
@@ -17,7 +16,10 @@
         android:layout_width="@dimen/layout_80dp"
         android:layout_height="@dimen/layout_30dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:background="@drawable/background_gray_translate"
         android:gravity="center"
         android:textColor="@color/white" />

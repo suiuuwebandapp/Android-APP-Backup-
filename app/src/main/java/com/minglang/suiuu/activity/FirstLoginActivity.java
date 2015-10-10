@@ -319,6 +319,7 @@ public class FirstLoginActivity extends BaseActivity {
             dialog.dismiss();
             L.i(TAG, "QQ数据获取完成");
             if (status == 200 && info != null) {
+                L.i(TAG, "QQ返回数据:" + info.toString());
                 String sex = info.get("gender").toString();
                 if (!TextUtils.isEmpty(sex)) {
                     switch (sex) {
@@ -336,7 +337,6 @@ public class FirstLoginActivity extends BaseActivity {
                 qq_nick_Name = info.get("screen_name").toString();
                 qq_head_image_path = info.get("profile_image_url").toString();
                 SuiuuInfo.WriteQuicklyLoginInfo(context, qq_open_id, qq_nick_Name, "1", qq_head_image_path);
-//                enterMainBind(qq_head_image_path, qq_nick_Name,"1",qq_open_id);
                 sendQQInfo2Service();
             } else {
                 L.e(TAG, "QQ数据获取失败");
@@ -495,28 +495,24 @@ public class FirstLoginActivity extends BaseActivity {
 
                 try {
                     weibo_open_id = info.get(UID).toString();
-                    L.i(TAG, "uid:" + weibo_open_id);
                 } catch (Exception e) {
                     L.e(TAG, "获取uid失败:" + e.getMessage());
                 }
 
                 try {
                     weibo_name = info.get("screen_name").toString();
-                    L.i(TAG, "获取screenName:" + weibo_name);
                 } catch (Exception e) {
                     L.e(TAG, "获取screenName失败:" + e.getMessage());
                 }
 
                 try {
                     weibo_gender = info.get("gender").toString();
-                    L.i(TAG, "gender:" + weibo_gender);
                 } catch (Exception e) {
                     L.e(TAG, "获取gender失败:" + e.getMessage());
                 }
 
                 try {
                     weibo_head_img = info.get("profile_image_url").toString();
-                    L.i(TAG, "image_url:" + weibo_head_img);
                 } catch (Exception e) {
                     L.e(TAG, "获取image_url失败:" + e.getMessage());
                 }
@@ -779,7 +775,7 @@ public class FirstLoginActivity extends BaseActivity {
                                 finish();
 
                             } else {
-                                enterMainBind(wechat_head_image_path, wechat_nick_name, "1", wechat_union_id);
+                                enterMainBind(wechat_head_image_path, wechat_nick_name, "2", wechat_union_id);
                             }
                             break;
                         default:
@@ -828,17 +824,33 @@ public class FirstLoginActivity extends BaseActivity {
     }
 
     /**
-     * 三方登录后跳入绑定的主界面
+     * 跳转到绑定页面
      *
      * @param headImage 头像URL
-     * @param nickName 用户昵称
+     * @param nickName  昵称
+     * @param type      判断是哪家登录
+     * @param openId    openId
      */
     public void enterMainBind(String headImage, String nickName, String type, String openId) {
         Intent intent = new Intent(this, MainBindActivity.class);
         intent.putExtra(HEAD_IMG, headImage);
         intent.putExtra(NICK_NAME, nickName);
-        intent.putExtra(TYPE, type);
+        //intent.putExtra(TYPE, type);
         intent.putExtra(OPEN_ID, openId);
+        switch (type) {
+            case "1":
+                intent.putExtra(SEX, qq_gender);
+                break;
+
+            case "2":
+                intent.putExtra(SEX, wechat_gender);
+                break;
+
+            case "3":
+                intent.putExtra(SEX, weibo_gender);
+                break;
+        }
+
         startActivity(intent);
 
     }
@@ -847,7 +859,7 @@ public class FirstLoginActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode);
-        if(ssoHandler != null){
+        if (ssoHandler != null) {
             ssoHandler.authorizeCallBack(requestCode, resultCode, data);
         }
     }

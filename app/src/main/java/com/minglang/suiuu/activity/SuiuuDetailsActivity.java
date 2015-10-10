@@ -26,19 +26,23 @@ import com.minglang.suiuu.adapter.SuiuuDetailsCommentAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.entity.SuiuuDetailsData;
-import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.ServiceListEntity;
 import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity;
+import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.ServiceListEntity;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.qq.TencentConstant;
+import com.minglang.suiuu.utils.wechat.WeChatConstant;
 import com.squareup.okhttp.Request;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.sso.SinaSsoHandler;
+import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.sso.UMSsoHandler;
+import com.umeng.socialize.weixin.controller.UMWXHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -157,7 +161,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     private String[] serviceIdArray;
     private String[] servicePriceArray;
 
-    private UMSocialService mController = null;
+    private UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,9 +180,23 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         userSign = getIntent().getStringExtra(USER_SIGN);
         headImagePath = getIntent().getStringExtra(HEAD_IMG);
 
-        mController = UMServiceFactory.getUMSocialService("com.umeng.share");
-
+        //微博SSO
         mController.getConfig().setSsoHandler(new SinaSsoHandler());
+
+        // 添加微信平台
+        UMWXHandler wxHandler = new UMWXHandler(this, WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
+        wxHandler.addToSocialSDK();
+
+        // 添加微信朋友圈
+        UMWXHandler wxCircleHandler = new UMWXHandler(this, WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
+        wxCircleHandler.setToCircle(true);
+        wxCircleHandler.addToSocialSDK();
+
+        //QQ好友
+        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this, TencentConstant.APP_ID, TencentConstant.APP_KEY);
+        qqSsoHandler.addToSocialSDK();
+
+        mController.setShareContent("http://www.suiuu.com/view-trip/info?trip=" + tripId);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -229,7 +247,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         ShareSuiuuDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mController.openShare(SuiuuDetailsActivity.this,false);
+                mController.openShare(SuiuuDetailsActivity.this, false);
             }
         });
 
@@ -274,6 +292,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
     private Object getHtmlObject() {
         Object insertObj = new Object() {
+
             @JavascriptInterface
             public void jsAlert(String s) {
                 Toast.makeText(SuiuuDetailsActivity.this, s, Toast.LENGTH_SHORT).show();
@@ -291,10 +310,10 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                 startActivity(intent2UserActivity);
             }
 
-            @JavascriptInterface
-            public String HtmlcallJava2(final String param) {
-                return "Html call Java : " + param;
-            }
+            //            @JavascriptInterface
+            //            public String HtmlcallJava2(final String param) {
+            //                return "Html call Java : " + param;
+            //            }
 
         };
         return insertObj;
@@ -510,8 +529,8 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode) ;
-        if(ssoHandler != null){
+        UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode);
+        if (ssoHandler != null) {
             ssoHandler.authorizeCallBack(requestCode, resultCode, data);
         }
 

@@ -181,7 +181,7 @@ public class SearchActivity extends BaseActivity {
             intentGallery.putExtra(COUNTRY, country);
             startActivity(intentGallery);
         } else if (searchClass == 2) {
-            Intent intentSuiuu = new Intent(SearchActivity.this, SuiuuSearchDetailActivity.class);
+            Intent intentSuiuu = new Intent(SearchActivity.this, SuiuuSearchDetailsActivity.class);
             intentSuiuu.putExtra(COUNTRY, country);
             startActivity(intentSuiuu);
         }

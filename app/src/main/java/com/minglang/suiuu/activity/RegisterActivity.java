@@ -56,6 +56,28 @@ public class RegisterActivity extends BaseActivity {
 
     private static final String TAG = RegisterActivity.class.getSimpleName();
 
+    private static final String AREA_CODE = "areaCode";
+    private static final String PHONE = "phone";
+    private static final String PASSWORD = "password";
+    private static final String C_PASSWORD = "cPassword";
+    private static final String NICK = "nick";
+    private static final String VALIDATE_CODE = "validateCode";
+
+    private static final String STATUS = "status";
+
+    private static final String CODE = "code";
+
+    private static final String OPEN_ID = "openId";
+    private static final String HEAD_IMAGE = "headImage";
+    private static final String NICK_NAME = "nickname";
+    private static final String TYPE = "type";
+
+    private static final String UNION_ID = "unionID";
+
+    private static final String SEX = "sex";
+
+    private static final String HEAD_IMG = "headImg";
+
     private TimeCount time;
 
     @BindString(R.string.NoData)
@@ -70,62 +92,74 @@ public class RegisterActivity extends BaseActivity {
     @BindString(R.string.SystemException)
     String SystemException;
 
+    @BindString(R.string.NickName)
+    String NickName;
+
+    @BindString(R.string.password)
+    String Password;
+
+    @BindString(R.string.please_input_obtain_captcha)
+    String inputObtainCaptcha;
+
     @Bind(R.id.second_login_back)
-    ImageView iv_back;
+    ImageView back;
 
     @Bind(R.id.et_input_phone_number)
-    EditText et_input_phone_number;
+    EditText inputPhoneNumberEdit;
 
     @Bind(R.id.tv_get_confirm_number)
-    TextView tv_get_confirm_number;
+    TextView getConfirmNumber;
 
     @Bind(R.id.second_login_register)
-    TextView tv_register;
+    TextView registerButton;
 
     @Bind(R.id.tv_zone)
     TextView tv_zone;
 
     @Bind(R.id.iv_suiuu_info_head)
-    ImageView iv_suiuu_info_head;
+    ImageView suiuuInfoHead;
+
+    @Bind(R.id.register_user)
+    View registerUserView;
+
+    @Bind(R.id.register_password)
+    View registerPasswordView;
+
+    @Bind(R.id.register_confirm_number)
+    View registerConfirmNumberView;
 
     /**
      * 快速登录头部布局
      */
     @Bind(R.id.register_is_quick_login)
-    LinearLayout ll_register_is_quicky_login;
+    LinearLayout registerIsQuickLoginLayout;
 
     /**
      * 头像
      */
     @Bind(R.id.sdv_register_bind_head_image)
-    SimpleDraweeView sdv_register_bind_head_image;
+    SimpleDraweeView registerBindHeadImage;
 
     /**
      * 名字
      */
     @Bind(R.id.register_quick_login_name)
-    TextView tv_register_quickly_login_name;
+    TextView registerQuicklyLoginName;
+    private EditText registerUserEdit;
 
-    private EditText et_register_user;
-    private EditText et_register_password;
-    private EditText et_register_confirm_number;
+    private EditText registerPasswordEdit;
 
-    private static final String AREA_CODE = "areaCode";
-    private static final String PHONE = "phone";
-    private static final String PASSWORD = "password";
-    private static final String C_PASSWORD = "cPassword";
-    private static final String NICK = "nick";
-    private static final String VALIDATE_CODE = "validateCode";
-
-    private static final String STATUS = "status";
-
-    private static final String USER_NAME = "username";
+    private EditText registerConfirmNumberEdit;
 
     /**
      * 国际电话区号数据集合
      */
     private List<AreaCodeData> areaCodeDataList;
+
     private boolean isQuicklyLogin;
+
+    private String headImagePath;
+    private String sex;
 
     private String openId;
     private String headImage;
@@ -139,71 +173,79 @@ public class RegisterActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
-        isQuicklyLogin = this.getIntent().getBooleanExtra("isQuicklyLogin", false);
+
+        isQuicklyLogin = getIntent().getBooleanExtra("isQuicklyLogin", false);
+
+        if (isQuicklyLogin) {
+            headImagePath = getIntent().getStringExtra(HEAD_IMAGE);
+            sex = getIntent().getStringExtra(SEX);
+            L.i(TAG, "头像URL:" + headImagePath + ",性别:" + sex);
+        }
+
         initView();
         viewAction();
     }
 
     private void initView() {
         dialog = new TextProgressDialog(this);
+
         //判断是否为快速登录
         if (isQuicklyLogin) {
             Map<String, String> map = SuiuuInfo.ReadQuicklyLoginInfo(this);
-            openId = map.get("openId");
-            headImage = map.get("headImage");
-            nickName = map.get("nickname");
-            type = map.get("type");
+            openId = map.get(OPEN_ID);
+            headImage = map.get(HEAD_IMAGE);
+            nickName = map.get(NICK_NAME);
+            type = map.get(TYPE);
 
-            iv_suiuu_info_head.setVisibility(View.GONE);
-            ll_register_is_quicky_login.setVisibility(View.VISIBLE);
-            sdv_register_bind_head_image.setImageURI(Uri.parse(headImage));
-            tv_register_quickly_login_name.setText(nickName);
+            suiuuInfoHead.setVisibility(View.GONE);
+            registerIsQuickLoginLayout.setVisibility(View.VISIBLE);
+            registerBindHeadImage.setImageURI(Uri.parse(headImage));
+            registerQuicklyLoginName.setText(nickName);
         }
+
         time = new TimeCount(60000, 1000);//构造CountDownTimer对象
-        View register_user = findViewById(R.id.register_user);
-        View register_password = findViewById(R.id.register_password);
-        View register_confirm_number = findViewById(R.id.register_confirm_number);
 
-        et_register_user = (EditText) register_user.findViewById(R.id.et_value);
-        et_register_user.setHint(R.string.NickName);
+        registerUserEdit = (EditText) registerUserView.findViewById(R.id.et_value);
+        registerUserEdit.setHint(NickName);
 
-        et_register_password = (EditText) register_password.findViewById(R.id.et_value);
-        et_register_password.setHint(R.string.password);
-        et_register_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        registerPasswordEdit = (EditText) registerPasswordView.findViewById(R.id.et_value);
+        registerPasswordEdit.setHint(Password);
+        registerPasswordEdit.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
-        et_register_confirm_number = (EditText) register_confirm_number.findViewById(R.id.et_value);
-        et_register_confirm_number.setHint(R.string.please_input_obtain_captcha);
+        registerConfirmNumberEdit = (EditText) registerConfirmNumberView.findViewById(R.id.et_value);
+        registerConfirmNumberEdit.setHint(inputObtainCaptcha);
     }
 
     private void viewAction() {
-        tv_register.setOnClickListener(new MyOnClickListener());
-        tv_get_confirm_number.setOnClickListener(new MyOnClickListener());
-        tv_zone.setOnClickListener(new MyOnClickListener());
-        iv_back.setOnClickListener(new MyOnClickListener());
-    }
 
-    private class MyOnClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                //注册按钮
-                case R.id.second_login_register:
-                    registerService();
-                    break;
-                //获取验证码
-                case R.id.tv_get_confirm_number:
-                    setPhoneNumber4Service();
-                    break;
-
-                case R.id.tv_zone:
-                    getAreaCode();
-                    break;
-                case R.id.second_login_back:
-                    finish();
-                    break;
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
-        }
+        });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerService();
+            }
+        });
+
+        getConfirmNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setPhoneNumber4Service();
+            }
+        });
+
+        tv_zone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getAreaCode();
+            }
+        });
+
     }
 
     /**
@@ -211,10 +253,11 @@ public class RegisterActivity extends BaseActivity {
      */
     public void registerService() {
         dialog.show();
-        String user = et_register_user.getText().toString().trim();
-        String passWord = et_register_password.getText().toString().trim();
-        String phoneNumber = et_input_phone_number.getText().toString().trim();
-        String confirmNumber = et_register_confirm_number.getText().toString().trim();
+
+        String user = registerUserEdit.getText().toString().trim();
+        String passWord = registerPasswordEdit.getText().toString().trim();
+        String phoneNumber = inputPhoneNumberEdit.getText().toString().trim();
+        String confirmNumber = registerConfirmNumberEdit.getText().toString().trim();
 
         if (TextUtils.isEmpty(confirmNumber)) {
             Toast.makeText(RegisterActivity.this, "验证码不能为空！", Toast.LENGTH_SHORT).show();
@@ -230,16 +273,18 @@ public class RegisterActivity extends BaseActivity {
 
         if (isQuicklyLogin) {
             Map<String, String> map = new HashMap<>();
-            map.put("code", confirmNumber);
+            map.put(CODE, confirmNumber);
             map.put(PHONE, phoneNumber);
             map.put(PASSWORD, passWord);
-            map.put("nickname", user);
+            map.put(NICK_NAME, user);
             map.put(AREA_CODE, tv_zone.getText().toString().trim());
-            map.put("type", type);
-            map.put("unionID", openId);
+            map.put(TYPE, type);
+            map.put(UNION_ID, openId);
+            map.put(SEX,sex);
+            map.put(HEAD_IMG, headImagePath);
+
             try {
-                OkHttpManager.onPostAsynRequest(HttpNewServicePath.AccessRegister,
-                        new RegisterResultCallback(), map);
+                OkHttpManager.onPostAsynRequest(HttpNewServicePath.AccessRegister, new RegisterResultCallback(), map);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -253,8 +298,7 @@ public class RegisterActivity extends BaseActivity {
             paramsArray[4] = new OkHttpManager.Params(VALIDATE_CODE, confirmNumber);
 
             try {
-                OkHttpManager.onPostAsynRequest(HttpNewServicePath.Register4SuiuuPath,
-                        new RegisterResultCallback(), paramsArray);
+                OkHttpManager.onPostAsynRequest(HttpNewServicePath.Register4SuiuuPath, new RegisterResultCallback(), paramsArray);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -267,7 +311,7 @@ public class RegisterActivity extends BaseActivity {
      */
     private void setPhoneNumber4Service() {
         String zone = tv_zone.getText().toString().trim();
-        String phoneNumber = et_input_phone_number.getText().toString().trim();
+        String phoneNumber = inputPhoneNumberEdit.getText().toString().trim();
 
         if (TextUtils.isEmpty(phoneNumber)) {
             Toast.makeText(RegisterActivity.this, "电话号码不能为空！", Toast.LENGTH_SHORT).show();
@@ -443,21 +487,22 @@ public class RegisterActivity extends BaseActivity {
 
     }
 
-    class TimeCount extends CountDownTimer {
+    private class TimeCount extends CountDownTimer {
+
         public TimeCount(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);//参数依次为总时长,和计时的时间间隔
         }
 
         @Override
         public void onFinish() {//计时完毕时触发
-            tv_get_confirm_number.setText("重新验证");
-            tv_get_confirm_number.setClickable(true);
+            getConfirmNumber.setText("重新验证");
+            getConfirmNumber.setClickable(true);
         }
 
         @Override
         public void onTick(long millisUntilFinished) {//计时过程显示
-            tv_get_confirm_number.setClickable(false);
-            tv_get_confirm_number.setText(String.format("%s%s", millisUntilFinished / 1000, "秒"));
+            getConfirmNumber.setClickable(false);
+            getConfirmNumber.setText(String.format("%s%s", millisUntilFinished / 1000, "秒"));
         }
     }
 

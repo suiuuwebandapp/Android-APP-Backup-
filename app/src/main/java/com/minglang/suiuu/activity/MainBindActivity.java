@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.utils.L;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,10 +27,18 @@ import butterknife.ButterKnife;
  */
 public class MainBindActivity extends BaseActivity {
 
+    private static final String TAG = MainBindActivity.class.getSimpleName();
+
+    private static final String IS_QUICKLY_LOGIN = "isQuicklyLogin";
+
     private static final String HEAD_IMG = "headImg";
     private static final String NICK_NAME = "nickname";
-    private static final String TYPE = "type";
-    private static final String OPEN_ID = "openId";
+    //private static final String TYPE = "type";
+    //private static final String OPEN_ID = "openId";
+
+    private static final String HEAD_IMAGE = "headImage";
+
+    private static final String SEX = "sex";
 
     @Bind(R.id.iv_bind_back)
     ImageView iv_bind_back;
@@ -48,8 +57,9 @@ public class MainBindActivity extends BaseActivity {
 
     private String headImage;
     private String nickName;
-    private String type;
-    private String openId;
+    //private String type;
+    //private String openId;
+    private String sex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +67,13 @@ public class MainBindActivity extends BaseActivity {
         setContentView(R.layout.activity_main_binding);
         ButterKnife.bind(this);
 
-        headImage = this.getIntent().getStringExtra(HEAD_IMG);
-        nickName = this.getIntent().getStringExtra(NICK_NAME);
-        type = this.getIntent().getStringExtra(TYPE);
-        openId = this.getIntent().getStringExtra(OPEN_ID);
+        headImage = getIntent().getStringExtra(HEAD_IMG);
+        nickName = getIntent().getStringExtra(NICK_NAME);
+        //type = getIntent().getStringExtra(TYPE);
+        //openId = getIntent().getStringExtra(OPEN_ID);
+        sex = getIntent().getStringExtra(SEX);
+
+        L.i(TAG, "头像URL:" + headImage + ",性别:" + sex);
 
         initView();
         viewAction();
@@ -71,6 +84,7 @@ public class MainBindActivity extends BaseActivity {
         if (!TextUtils.isEmpty(headImage)) {
             sdv_bind_head_image.setImageURI(Uri.parse(headImage));
         }
+
         tv_username.setText(nickName);
     }
 
@@ -86,7 +100,9 @@ public class MainBindActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainBindActivity.this, SecondLoginActivity.class);
-                intent.putExtra("isQuicklyLogin", true);
+                intent.putExtra(IS_QUICKLY_LOGIN, true);
+                //intent.putExtra(HEAD_IMAGE, headImage);
+                //intent.putExtra(SEX, sex);
                 startActivity(intent);
             }
         });
@@ -95,7 +111,9 @@ public class MainBindActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainBindActivity.this, RegisterActivity.class);
-                intent.putExtra("isQuicklyLogin", true);
+                intent.putExtra(IS_QUICKLY_LOGIN, true);
+                intent.putExtra(HEAD_IMAGE, headImage);
+                intent.putExtra(SEX, sex);
                 startActivity(intent);
             }
         });

@@ -42,7 +42,7 @@
 
     </RelativeLayout>
 
-    <com.minglang.suiuu.customview.ReFlashListView
+    <com.minglang.pulltorefreshlibrary.PullToRefreshListView
         android:id="@+id/lv_search_suiuu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

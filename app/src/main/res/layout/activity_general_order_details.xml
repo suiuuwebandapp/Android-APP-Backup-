@@ -145,6 +145,64 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:text="@string/OrderCreateTime"
+                        android:textSize="@dimen/layout_16sp" />
+
+                    <TextView
+                        android:id="@+id/order_details_create_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:textSize="@dimen/layout_16sp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:text="@string/OrderNumber_"
+                        android:textSize="@dimen/layout_16sp" />
+
+                    <TextView
+                        android:id="@+id/order_details_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:textSize="@dimen/layout_16sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_10dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
                         android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -259,7 +317,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/layout_5dp"
                         android:text="@string/AdditionalServices"
-                        android:textSize="@dimen/layout_16sp" />
+                        android:textSize="@dimen/layout_18sp" />
 
                     <TextView
                         android:id="@+id/order_details_additional_service_prices"
@@ -267,6 +325,167 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/layout_5dp"
                         android:text="@string/Zero"
+                        android:textSize="@dimen/layout_18sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/order_details_info_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_10dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/layout_5dp"
+                    android:text="@string/MyInfo"
+                    android:textSize="@dimen/layout_18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/layout_2dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:text="@string/MainContact"
+                        android:textSize="@dimen/layout_16sp" />
+
+                    <TextView
+                        android:id="@+id/order_details_main_contact"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:textSize="@dimen/layout_16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/layout_2dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:text="@string/WeChatNumber"
+                        android:textSize="@dimen/layout_16sp" />
+
+                    <TextView
+                        android:id="@+id/order_details_wechat_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:textSize="@dimen/layout_16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/layout_2dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:text="@string/ContactNumber"
+                        android:textSize="@dimen/layout_16sp" />
+
+                    <TextView
+                        android:id="@+id/order_details_contact_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:textSize="@dimen/layout_16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/layout_2dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:text="@string/StandbyContactNumber"
+                        android:textSize="@dimen/layout_16sp" />
+
+                    <TextView
+                        android:id="@+id/order_details_standby_contact_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:textSize="@dimen/layout_16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/layout_2dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:text="@string/EmergencyContact"
+                        android:textSize="@dimen/layout_16sp" />
+
+                    <TextView
+                        android:id="@+id/order_details_emergency_contact"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:textSize="@dimen/layout_16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/layout_2dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
+                        android:text="@string/EmergencyContactNumber"
+                        android:textSize="@dimen/layout_16sp" />
+
+                    <TextView
+                        android:id="@+id/order_details_emergency_contact_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/layout_5dp"
+                        android:singleLine="true"
                         android:textSize="@dimen/layout_16sp" />
 
                 </LinearLayout>
@@ -297,7 +516,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:padding="@dimen/layout_10dp"
+            android:padding="@dimen/layout_5dp"
             android:visibility="visible">
 
             <Button

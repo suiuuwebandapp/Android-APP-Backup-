@@ -225,7 +225,7 @@ public class SuiuuFragment extends BaseFragment {
                 List<SuiuuItemData> list = suiuuData.getData();
                 if (list != null && list.size() > 0) {
                     listAll.addAll(list);
-                    adapter.upDateData(listAll);
+                    adapter.setList(listAll);
                 } else {
                     Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                 }

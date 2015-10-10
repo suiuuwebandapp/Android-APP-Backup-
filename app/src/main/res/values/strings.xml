@@ -32,6 +32,8 @@
     <string name="SuiuuUser" translatable="false">切换到随友用户</string>
     <string name="GeneralUser" translatable="false">切换到普通用户</string>
 
+    <string name="LoadingVerificationInfo" translatable="false">正在获取数据，请稍候&#8230;</string>
+
     <string name="PrivateLetter" translatable="false">私信</string>
 
     <string name="SuiuuAccount" translatable="false">随友账户</string>
@@ -572,6 +574,7 @@
 
     <string name="OrderCreateTime" translatable="false">订单创建时间:</string>
     <string name="OrderNumber" translatable="false">订单号</string>
+    <string name="OrderNumber_" translatable="false">订单号:</string>
 
     <string name="CopyRight" translatable="false">© 2015 Suiuu.com All Rights Reserved.</string>
     <string name="CopyRight2" translatable="false">沪ICP备15030059号-1</string>
@@ -582,6 +585,15 @@
     <string name="PleaseInputWantSearchContent" translatable="false">请输入要搜索的内容</string>
 
     <string name="ContactUs" translatable="false">联系我们</string>
+
+    <string name="MyInfo" translatable="false">我的信息</string>
+
+    <string name="MainContact" translatable="false">主要联系人:</string>
+    <string name="WeChatNumber" translatable="false">微信号:</string>
+    <string name="ContactNumber" translatable="false">联系号码:</string>
+    <string name="StandbyContactNumber" translatable="false">备用联系号码:</string>
+    <string name="EmergencyContact" translatable="false">紧急联系人:</string>
+    <string name="EmergencyContactNumber" translatable="false">紧急联系号码:</string>
 
     <string name="year" translatable="false">年</string>
     <string name="month" translatable="false">月</string>

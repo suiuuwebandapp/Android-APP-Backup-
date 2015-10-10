@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +24,7 @@ import com.minglang.suiuu.entity.GeneralOrderDetails;
 import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData;
 import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.InfoEntity;
 import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.PublisherBaseEntity;
+import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.ContactEntity;
 import com.minglang.suiuu.entity.ServiceInfo;
 import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -84,12 +84,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     @BindString(R.string.deleteOrder)
     String DeleteOrder;
 
-//    @Bind(R.id.general_order_details_head_frame)
-//    PtrClassicFrameLayout mPtrFrame;
-
-    @Bind(R.id.general_order_details_parent_view)
-    ScrollView scrollView;
-
     @Bind(R.id.order_details_title_image_view)
     SimpleDraweeView titleImageView;
 
@@ -130,6 +124,18 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     TextView orderStatus;
 
     /**
+     * 订单创建时间
+     */
+    @Bind(R.id.order_details_create_time)
+    TextView orderCreateTime;
+
+    /**
+     * 订单号
+     */
+    @Bind(R.id.order_details_number)
+    TextView orderNumberView;
+
+    /**
      * 联系电话
      */
     @Bind(R.id.order_details_phone)
@@ -168,6 +174,42 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     @Bind(R.id.order_details_additional_service_prices)
     TextView orderDetailsService;
 
+    /**
+     * 主要联系人
+     */
+    @Bind(R.id.order_details_main_contact)
+    TextView mainContact;
+
+    /**
+     * 微信号
+     */
+    @Bind(R.id.order_details_wechat_number)
+    TextView weChatNumber;
+
+    /**
+     * 联系号码
+     */
+    @Bind(R.id.order_details_contact_number)
+    TextView ContactNumber;
+
+    /**
+     * 备用联系号码
+     */
+    @Bind(R.id.order_details_standby_contact_number)
+    TextView standbyContactNumber;
+
+    /**
+     * 紧急联系人
+     */
+    @Bind(R.id.order_details_emergency_contact)
+    TextView emergencyContact;
+
+    /**
+     * 紧急联系号码
+     */
+    @Bind(R.id.order_details_emergency_contact_number)
+    TextView emergencyContactNumber;
+
     @Bind(R.id.order_details_back)
     ImageView orderDetailsBack;
 
@@ -188,8 +230,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
      */
     @Bind(R.id.order_details_bottom_layout)
     CardView orderDetailsBottomLayout;
-
-    private boolean isPullToRefresh = true;
 
     private String orderNumber;
 
@@ -217,6 +257,8 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
     private String failureImagePath;
 
+    private JsonUtils jsonUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -235,6 +277,8 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         token = SuiuuInfo.ReadAppTimeSign(this);
 
         failureImagePath = "res://com.minglang.suiuu/" + R.drawable.default_head_image_error;
+
+        jsonUtils = JsonUtils.getInstance();
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(DialogMsg);
@@ -315,10 +359,8 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     }
 
     private void getGeneralUserOrderData4Service() {
-        if (isPullToRefresh) {
-            if (progressDialog != null && !progressDialog.isShowing()) {
-                progressDialog.show();
-            }
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
         }
 
         String[] keyArray = new String[]{ORDER_NUMBER, HttpNewServicePath.key, TOKEN};
@@ -345,7 +387,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         if (TextUtils.isEmpty(str)) {
             Toast.makeText(this, NoData, Toast.LENGTH_SHORT).show();
         } else {
-            JsonUtils jsonUtils = JsonUtils.getInstance();
 
             if (serviceLayout.getChildCount() > 0) {
                 serviceLayout.removeAllViews();
@@ -361,210 +402,10 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                         PublisherBaseEntity publisherBaseEntity = detailsData.getPublisherBase();
                         infoEntity = detailsData.getInfo();
 
-                        if (infoEntity != null) {
-                            String jsonInfo = infoEntity.getTripJsonInfo();
+                        showOrderInfo();
 
-                            if (!TextUtils.isEmpty(jsonInfo)) {
-                                try {
-                                    tripJsonInfo = jsonUtils.fromJSON(TripJsonInfo.class, jsonInfo);
-                                    if (tripJsonInfo != null) {
-
-                                        //标题
-                                        String title = tripJsonInfo.getInfo().getTitle();
-                                        if (!TextUtils.isEmpty(title)) {
-                                            orderDetailsTitle.setText(title);
-                                        } else {
-                                            orderDetailsTitle.setText("");
-                                        }
-
-                                        //星级评价
-                                        String strOrderScore = tripJsonInfo.getInfo().getScore();
-                                        if (!TextUtils.isEmpty(strOrderScore)) {
-                                            float score = Float.valueOf(strOrderScore);
-                                            orderStarIndicator.setRating(score);
-                                        } else {
-                                            orderStarIndicator.setRating(DEFAULT_SCORE);
-                                        }
-
-                                    }
-                                } catch (Exception exception) {
-                                    L.e(TAG, "旅图数据解析失败:" + exception.getMessage());
-                                }
-                            } else {
-                                orderDetailsTitle.setText("");
-                                orderStarIndicator.setRating(DEFAULT_SCORE);
-                            }
-
-                            //订单基础金额
-                            String basePrice = infoEntity.getBasePrice();
-                            if (!TextUtils.isEmpty(basePrice)) {
-                                baseOrderPrice = Float.valueOf(basePrice);
-                                baseOrderPriceView.setText(basePrice);
-                            } else {
-                                baseOrderPriceView.setText("");
-                            }
-
-                            //开始日期
-                            String beginDate = infoEntity.getBeginDate();
-                            if (!TextUtils.isEmpty(beginDate)) {
-                                orderDetailsDate.setText(beginDate);
-                            } else {
-                                orderDetailsDate.setText("");
-                            }
-
-                            //开始时间
-                            String startTime = infoEntity.getStartTime();
-                            if (!TextUtils.isEmpty(startTime)) {
-                                orderDetailsTime.setText(startTime);
-                            } else {
-                                orderDetailsTime.setText("");
-                            }
-
-                            //随游人数
-                            String personCount = infoEntity.getPersonCount();
-                            if (!TextUtils.isEmpty(personCount)) {
-                                orderDetailsSuiuuNumber.setText(String.format("%s%s", personCount, "人"));
-                            } else {
-                                orderDetailsSuiuuNumber.setText("0人");
-                            }
-
-                            //附加服务列表
-                            String strServiceInfo = infoEntity.getServiceInfo();
-                            if (!TextUtils.isEmpty(strServiceInfo)) {
-
-                                if (!strServiceInfo.equals("[]")) {
-                                    try {
-                                        List<ServiceInfo> serviceInfoList = jsonUtils.fromJSON(new TypeToken<List<ServiceInfo>>() {
-                                        }.getType(), strServiceInfo);
-
-                                        if (serviceInfoList != null && serviceInfoList.size() > 0) {
-                                            orderDetailsService.setText(String.valueOf(serviceInfoList.size()));
-
-                                            //所有附加服务的总价
-                                            float allServicePrice = 0f;
-
-                                            for (int i = 0; i < serviceInfoList.size(); i++) {
-                                                View serviceItemLayout = inflater.inflate
-                                                        (R.layout.item_service_location_layout, serviceLayout, false);
-                                                TextView serviceNameView = (TextView) serviceItemLayout
-                                                        .findViewById(R.id.order_details_service_name);
-                                                TextView servicePriceView = (TextView) serviceItemLayout
-                                                        .findViewById(R.id.order_details_service_prices);
-
-                                                //单项附加服务名称
-                                                String serviceItemTitle = serviceInfoList.get(i).getTitle();
-                                                if (!TextUtils.isEmpty(serviceItemTitle)) {
-                                                    serviceNameView.setText(serviceItemTitle);
-                                                }
-
-                                                //单项附加服务价格
-                                                String strServiceItemPrice = serviceInfoList.get(i).getMoney();
-                                                float serviceItemPrice = 0f;
-                                                if (!TextUtils.isEmpty(strServiceItemPrice)) {
-                                                    serviceItemPrice = Float.valueOf(strServiceItemPrice);
-                                                    servicePriceView.setText(strServiceItemPrice);
-                                                }
-
-                                                allServicePrice = allServicePrice + serviceItemPrice;
-                                                serviceLayout.addView(serviceItemLayout);
-                                            }
-
-                                            totalOrderPrice = baseOrderPrice + allServicePrice;
-
-                                        } else {
-                                            totalOrderPrice = baseOrderPrice;
-                                            orderDetailsService.setText("0");
-                                        }
-                                    } catch (Exception ex) {
-                                        L.e(TAG, "附加服务数据解析失败:" + ex.getMessage());
-                                    }
-                                } else {
-                                    totalOrderPrice = baseOrderPrice;
-                                    orderDetailsService.setText("0");
-                                }
-
-                            }
-
-                            //订单总价
-                            TextView totalOrderPriceView = (TextView) inflater
-                                    .inflate(R.layout.item_service_location_layout2, serviceLayout, false);
-                            totalOrderPriceView.setText(String.format("%s%s", "总价:", totalOrderPrice));
-
-                            serviceLayout.addView(totalOrderPriceView);
-
-                            //订单状态
-                            status = infoEntity.getStatus();
-                            if (!TextUtils.isEmpty(status)) {
-                                switch (status) {
-                                    case "0":
-                                        orderStatus.setText("待支付");
-                                        orderDetailsBottomLayout.setVisibility(View.VISIBLE);
-                                        break;
-
-                                    case "1":
-                                        orderStatus.setText("已支付 待确认");
-                                        break;
-
-                                    case "2":
-                                        orderStatus.setText("已支付 已确认");
-                                        break;
-
-                                    case "3":
-                                        orderDetailsBottomLayout.setVisibility(View.VISIBLE);
-                                        orderDetailsCancel.setVisibility(View.GONE);
-                                        orderDetailsRepay.setText(DeleteOrder);
-                                        orderStatus.setText("未支付 已取消");
-                                        break;
-
-                                    case "4":
-                                        orderStatus.setText("待退款");
-                                        break;
-
-                                    case "5":
-                                        orderDetailsBottomLayout.setVisibility(View.VISIBLE);
-                                        orderDetailsCancel.setVisibility(View.GONE);
-                                        orderDetailsCancel.setText(DeleteOrder);
-                                        orderStatus.setText("退款成功");
-                                        break;
-
-                                    case "6":
-                                        orderStatus.setText("游玩结束 待付款给随友");
-                                        break;
-
-                                    case "7":
-                                        orderStatus.setText("结束，已经付款给随友");
-                                        break;
-
-                                    case "8":
-                                        orderStatus.setText("退款审核中");
-                                        break;
-
-                                    case "9":
-                                        orderStatus.setText("退款审核失败");
-                                        break;
-
-                                    case "10":
-                                        orderStatus.setText("随友取消订单");
-                                        break;
-
-                                    default:
-                                        orderStatus.setText("订单状态未知");
-                                        break;
-                                }
-                            } else {
-                                orderStatus.setText("订单状态未知");
-                            }
-
-                        } else {
-                            orderDetailsTitle.setText("");
-                            orderStarIndicator.setRating(DEFAULT_SCORE);
-                            baseOrderPriceView.setText("");
-                            orderDetailsDate.setText("");
-                            orderDetailsTime.setText("");
-                            orderDetailsSuiuuNumber.setText("0人");
-                            orderDetailsService.setText("0");
-                            orderStatus.setText("订单状态未知");
-                        }
+                        ContactEntity contactEntity = detailsData.getContact();
+                        showMyInfo(contactEntity);
 
                         if (publisherBaseEntity != null) {
                             //用户头像
@@ -616,6 +457,275 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                     Toast.makeText(GeneralOrderDetailsActivity.this, DataError, Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+    }
+
+    private void showOrderInfo() {
+        if (infoEntity != null) {
+            String jsonInfo = infoEntity.getTripJsonInfo();
+
+            if (!TextUtils.isEmpty(jsonInfo)) {
+                try {
+                    tripJsonInfo = jsonUtils.fromJSON(TripJsonInfo.class, jsonInfo);
+                    if (tripJsonInfo != null) {
+
+                        //标题
+                        String title = tripJsonInfo.getInfo().getTitle();
+                        if (!TextUtils.isEmpty(title)) {
+                            orderDetailsTitle.setText(title);
+                        } else {
+                            orderDetailsTitle.setText("");
+                        }
+
+                        //星级评价
+                        String strOrderScore = tripJsonInfo.getInfo().getScore();
+                        if (!TextUtils.isEmpty(strOrderScore)) {
+                            float score = Float.valueOf(strOrderScore);
+                            orderStarIndicator.setRating(score);
+                        } else {
+                            orderStarIndicator.setRating(DEFAULT_SCORE);
+                        }
+
+                        //订单创建时间
+                        String strOrderCreateTime = infoEntity.getCreateTime();
+                        if (!TextUtils.isEmpty(strOrderCreateTime)) {
+                            orderCreateTime.setText(strOrderCreateTime);
+                        }
+
+                        //订单号
+                        String strOrderNumber = infoEntity.getOrderNumber();
+                        if (!TextUtils.isEmpty(strOrderNumber)) {
+                            orderNumberView.setText(strOrderNumber);
+                        }
+
+                    }
+                } catch (Exception exception) {
+                    L.e(TAG, "旅图数据解析失败:" + exception.getMessage());
+                }
+            } else {
+                orderDetailsTitle.setText("");
+                orderStarIndicator.setRating(DEFAULT_SCORE);
+            }
+
+            //订单基础金额
+            String basePrice = infoEntity.getBasePrice();
+            if (!TextUtils.isEmpty(basePrice)) {
+                baseOrderPrice = Float.valueOf(basePrice);
+                baseOrderPriceView.setText(basePrice);
+            } else {
+                baseOrderPriceView.setText("");
+            }
+
+            //开始日期
+            String beginDate = infoEntity.getBeginDate();
+            if (!TextUtils.isEmpty(beginDate)) {
+                orderDetailsDate.setText(beginDate);
+            } else {
+                orderDetailsDate.setText("");
+            }
+
+            //开始时间
+            String startTime = infoEntity.getStartTime();
+            if (!TextUtils.isEmpty(startTime)) {
+                orderDetailsTime.setText(startTime);
+            } else {
+                orderDetailsTime.setText("");
+            }
+
+            //随游人数
+            String personCount = infoEntity.getPersonCount();
+            if (!TextUtils.isEmpty(personCount)) {
+                orderDetailsSuiuuNumber.setText(String.format("%s%s", personCount, "人"));
+            } else {
+                orderDetailsSuiuuNumber.setText("0人");
+            }
+
+            //附加服务列表
+            String strServiceInfo = infoEntity.getServiceInfo();
+            bindAdditionalServices(strServiceInfo);
+
+            //订单总价
+            TextView totalOrderPriceView = (TextView) inflater
+                    .inflate(R.layout.item_service_location_layout2, serviceLayout, false);
+            totalOrderPriceView.setText(String.format("%s%s", "总价:", totalOrderPrice));
+
+            serviceLayout.addView(totalOrderPriceView);
+
+            //订单状态
+            status = infoEntity.getStatus();
+            showOrderStatus(status);
+
+        } else {
+            orderDetailsTitle.setText("");
+            orderStarIndicator.setRating(DEFAULT_SCORE);
+            baseOrderPriceView.setText("");
+            orderDetailsDate.setText("");
+            orderDetailsTime.setText("");
+            orderDetailsSuiuuNumber.setText("0人");
+            orderDetailsService.setText("0");
+            orderStatus.setText("订单状态未知");
+        }
+    }
+
+    private void bindAdditionalServices(String strServiceInfo) {
+        if (!TextUtils.isEmpty(strServiceInfo)) {
+
+            if (!strServiceInfo.equals("[]")) {
+                try {
+                    List<ServiceInfo> serviceInfoList =
+                            jsonUtils.fromJSON(new TypeToken<List<ServiceInfo>>() {
+                            }.getType(), strServiceInfo);
+
+                    if (serviceInfoList != null && serviceInfoList.size() > 0) {
+                        orderDetailsService.setText(String.valueOf(serviceInfoList.size()));
+
+                        //所有附加服务的总价
+                        float allServicePrice = 0f;
+
+                        for (int i = 0; i < serviceInfoList.size(); i++) {
+                            View serviceItemLayout = inflater.inflate
+                                    (R.layout.item_service_location_layout, serviceLayout, false);
+                            TextView serviceNameView = (TextView) serviceItemLayout
+                                    .findViewById(R.id.order_details_service_name);
+                            TextView servicePriceView = (TextView) serviceItemLayout
+                                    .findViewById(R.id.order_details_service_prices);
+
+                            //单项附加服务名称
+                            String serviceItemTitle = serviceInfoList.get(i).getTitle();
+                            if (!TextUtils.isEmpty(serviceItemTitle)) {
+                                serviceNameView.setText(serviceItemTitle);
+                            }
+
+                            //单项附加服务价格
+                            String strServiceItemPrice = serviceInfoList.get(i).getMoney();
+                            float serviceItemPrice = 0f;
+                            if (!TextUtils.isEmpty(strServiceItemPrice)) {
+                                serviceItemPrice = Float.valueOf(strServiceItemPrice);
+                                servicePriceView.setText(strServiceItemPrice);
+                            }
+
+                            allServicePrice = allServicePrice + serviceItemPrice;
+                            serviceLayout.addView(serviceItemLayout);
+                        }
+
+                        totalOrderPrice = baseOrderPrice + allServicePrice;
+
+                    } else {
+                        totalOrderPrice = baseOrderPrice;
+                        orderDetailsService.setText("0");
+                    }
+                } catch (Exception ex) {
+                    L.e(TAG, "附加服务数据解析失败:" + ex.getMessage());
+                }
+            } else {
+                totalOrderPrice = baseOrderPrice;
+                orderDetailsService.setText("0");
+            }
+
+        }
+    }
+
+    private void showOrderStatus(String status) {
+        if (!TextUtils.isEmpty(status)) {
+            switch (status) {
+                case "0":
+                    orderStatus.setText("待支付");
+                    orderDetailsBottomLayout.setVisibility(View.VISIBLE);
+                    break;
+
+                case "1":
+                    orderStatus.setText("已支付 待确认");
+                    break;
+
+                case "2":
+                    orderStatus.setText("已支付 已确认");
+                    break;
+
+                case "3":
+                    orderDetailsBottomLayout.setVisibility(View.VISIBLE);
+                    orderDetailsCancel.setVisibility(View.GONE);
+                    orderDetailsRepay.setText(DeleteOrder);
+                    orderStatus.setText("未支付 已取消");
+                    break;
+
+                case "4":
+                    orderStatus.setText("待退款");
+                    break;
+
+                case "5":
+                    orderDetailsBottomLayout.setVisibility(View.VISIBLE);
+                    orderDetailsCancel.setVisibility(View.GONE);
+                    orderDetailsCancel.setText(DeleteOrder);
+                    orderStatus.setText("退款成功");
+                    break;
+
+                case "6":
+                    orderStatus.setText("游玩结束 待付款给随友");
+                    break;
+
+                case "7":
+                    orderStatus.setText("结束，已经付款给随友");
+                    break;
+
+                case "8":
+                    orderStatus.setText("退款审核中");
+                    break;
+
+                case "9":
+                    orderStatus.setText("退款审核失败");
+                    break;
+
+                case "10":
+                    orderStatus.setText("随友取消订单");
+                    break;
+
+                default:
+                    orderStatus.setText("订单状态未知");
+                    break;
+            }
+        } else {
+            orderStatus.setText("订单状态未知");
+        }
+    }
+
+    private void showMyInfo(ContactEntity contactEntity) {
+        if (contactEntity != null) {
+            //主要联系人
+            String strMainContact = contactEntity.getUsername();
+            if (!TextUtils.isEmpty(strMainContact)) {
+                mainContact.setText(strMainContact);
+            }
+
+            //微信号
+            String strWeChatNumber = contactEntity.getWechat();
+            if (!TextUtils.isEmpty(strWeChatNumber)) {
+                weChatNumber.setText(strWeChatNumber);
+            }
+
+            //联系号码
+            String strContactNumber = contactEntity.getPhone();
+            if (!TextUtils.isEmpty(strContactNumber)) {
+                ContactNumber.setText(strContactNumber);
+            }
+
+            //备用联系号码
+            String strStandbyContactNumber = contactEntity.getSparePhone();
+            if (!TextUtils.isEmpty(strStandbyContactNumber)) {
+                standbyContactNumber.setText(strStandbyContactNumber);
+            }
+
+            //紧急联系人
+            String strEmergencyContact = contactEntity.getUrgentUsername();
+            if (!TextUtils.isEmpty(strEmergencyContact)) {
+                emergencyContact.setText(strEmergencyContact);
+            }
+
+            //紧急联系号码
+            String strEmergencyContactNumber = contactEntity.getUrgentPhone();
+            if (!TextUtils.isEmpty(strEmergencyContactNumber)) {
+                emergencyContactNumber.setText(strEmergencyContactNumber);
+            }
+
         }
     }
 

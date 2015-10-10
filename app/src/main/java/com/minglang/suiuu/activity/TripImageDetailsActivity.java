@@ -41,7 +41,15 @@ import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.qq.TencentConstant;
+import com.minglang.suiuu.utils.wechat.WeChatConstant;
 import com.squareup.okhttp.Request;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.sso.SinaSsoHandler;
+import com.umeng.socialize.sso.UMQQSsoHandler;
+import com.umeng.socialize.sso.UMSsoHandler;
+import com.umeng.socialize.weixin.controller.UMWXHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -234,6 +242,8 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
 
     private Context context;
 
+    private UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -260,6 +270,25 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
         dialog = new TextProgressDialog(this);
 
         context = TripImageDetailsActivity.this;
+
+        //微博SSO
+        mController.getConfig().setSsoHandler(new SinaSsoHandler());
+
+        // 添加微信平台
+        UMWXHandler wxHandler = new UMWXHandler(this, WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
+        wxHandler.addToSocialSDK();
+
+        // 添加微信朋友圈
+        UMWXHandler wxCircleHandler = new UMWXHandler(this, WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
+        wxCircleHandler.setToCircle(true);
+        wxCircleHandler.addToSocialSDK();
+
+        //QQ好友
+        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this, TencentConstant.APP_ID, TencentConstant.APP_KEY);
+        qqSsoHandler.addToSocialSDK();
+
+        mController.setShareContent("Test Information");
+
     }
 
     private void viewAction() {
@@ -590,7 +619,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
         } else {
             suiuuDetailsCommentListView.removeFooterView(textView);
         }
-        
+
         if (adapter == null) {
             adapter = new TripImageDetailsCommentAdapter(this, commentDataList.size() > 5 && !showAllComment ? newCommentDataList : commentDataList);
             suiuuDetailsCommentListView.setAdapter(adapter);
@@ -642,6 +671,12 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode);
+        if (ssoHandler != null) {
+            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }
+
         if (data != null && resultCode == COMMENT_SUCCESS) {
             UserBackData userBackData = SuiuuInfo.ReadUserData(this);
             String content = data.getStringExtra("content");
@@ -671,6 +706,10 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+
+            case R.id.trip_image_details_shape:
+                mController.openShare(TripImageDetailsActivity.this, false);
                 break;
         }
         return super.onOptionsItemSelected(item);

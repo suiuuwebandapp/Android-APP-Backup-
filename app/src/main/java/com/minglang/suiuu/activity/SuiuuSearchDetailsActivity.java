@@ -2,21 +2,25 @@ package com.minglang.suiuu.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
+import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.FlowLayout;
-import com.minglang.suiuu.customview.ReFlashListView;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.customview.rangebar.RangeBar;
 import com.minglang.suiuu.entity.SuiuuData;
@@ -36,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -47,24 +52,21 @@ import butterknife.ButterKnife;
  * 修改时间：2015/6/25 15:02
  * 修改备注：
  */
-public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashListView.IReflashListener, ReFlashListView.ILoadMoreDataListener {
+public class SuiuuSearchDetailsActivity extends BaseActivity {
 
-    private static final String TAG = SuiuuSearchDetailActivity.class.getSimpleName();
+    private static final String TAG = SuiuuSearchDetailsActivity.class.getSimpleName();
 
-    private JsonUtils jsonUtil = JsonUtils.getInstance();
+    private JsonUtils jsonUtils = JsonUtils.getInstance();
 
     private List<String> tagList = new ArrayList<>();
 
-    @Bind(R.id.rangeBar)
-    RangeBar rangebar;
-
-    private List<SuiuuItemData> suiuuItemData = new ArrayList<>();
+    private List<SuiuuItemData> listAll = new ArrayList<>();
 
     private TextProgressDialog dialog;
 
     private List<TextView> list = new ArrayList<>();
-    private List<TextView> listClick = new ArrayList<>();
 
+    private List<TextView> listClick = new ArrayList<>();
     private String tags = "";
 
     private String enjoyPeopleCount;
@@ -72,6 +74,18 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
     private int startTick = 0;
 
     private int endTick = 10000;
+
+    @BindString(R.string.NoData)
+    String NoData;
+
+    @BindString(R.string.SystemException)
+    String SystemException;
+
+    @BindString(R.string.NetworkAnomaly)
+    String NetworkError;
+
+    @Bind(R.id.rangeBar)
+    RangeBar rangebar;
 
     @Bind(R.id.suiuu_search_back)
     ImageButton backButton;
@@ -86,13 +100,13 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
     TextView tv_price_range;
 
     @Bind(R.id.id_flowLayout)
-    FlowLayout flowLayout;
+    FlowLayout tagLayout;
 
     @Bind(R.id.search_more_layout)
     RelativeLayout searchMoreLayout;
 
     @Bind(R.id.lv_search_suiuu)
-    ReFlashListView lv_search_suiuu;
+    PullToRefreshListView suiuuSearchListView;
 
     private int page = 1;
 
@@ -125,7 +139,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
     }
 
     private void initView() {
-        token = SuiuuInfo.ReadAppTimeSign(SuiuuSearchDetailActivity.this);
+        token = SuiuuInfo.ReadAppTimeSign(SuiuuSearchDetailsActivity.this);
 
         dialog = new TextProgressDialog(this);
 
@@ -169,13 +183,50 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
             }
         });
 
-        lv_search_suiuu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        suiuuSearchListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                String label = DateUtils.formatDateTime(SuiuuSearchDetailsActivity.this, System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+
+                if (listAll != null && listAll.size() > 0) {
+                    listAll.clear();
+                }
+
+                page = 1;
+                loadDate(searchCountry, "0".equals(enjoyPeopleCount) ? "" : enjoyPeopleCount,
+                        "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
+                        Integer.toString(startTick), Integer.toString(endTick), page);
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                String label = DateUtils.formatDateTime(SuiuuSearchDetailsActivity.this, System.currentTimeMillis(),
+                        DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+                refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+
+                if (!dialog.isShow()) {
+                    page++;
+                    loadDate(searchCountry, "0".equals(enjoyPeopleCount) ? "" : enjoyPeopleCount,
+                            "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
+                            Integer.toString(startTick), Integer.toString(endTick), page);
+                }
+
+            }
+
+        });
+
+        suiuuSearchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(SuiuuSearchDetailActivity.this, SuiuuDetailsActivity.class);
-                intent.putExtra("tripId", suiuuItemData.get(position - 1).getTripId());
-                intent.putExtra(USER_SIGN, suiuuItemData.get(position - 1).getUserSign());
-                intent.putExtra(HEAD_IMG, suiuuItemData.get(position - 1).getHeadImg());
+                Intent intent = new Intent(SuiuuSearchDetailsActivity.this, SuiuuDetailsActivity.class);
+                intent.putExtra("tripId", listAll.get(position - 1).getTripId());
+                intent.putExtra(USER_SIGN, listAll.get(position - 1).getUserSign());
+                intent.putExtra(HEAD_IMG, listAll.get(position - 1).getHeadImg());
                 startActivity(intent);
             }
         });
@@ -186,7 +237,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
         String[] keyArray1 = new String[]{"cc", "peopleCount", "tag", "startPrice", "endPrice", "page", "number", "token"};
         String[] valueArray1 = new String[]{countryOrCity, peopleCount, tags, startPrice, endPrice, Integer.toString(page), "10", token};
         try {
-            OkHttpManager.onGetAsynRequest(addUrlAndParams(HttpNewServicePath.getSuiuuList, keyArray1, valueArray1), new getSuiuuDateCallBack());
+            OkHttpManager.onGetAsynRequest(addUrlAndParams(HttpNewServicePath.getSuiuuList, keyArray1, valueArray1), new SuiuuSearchDetailsCallback());
         } catch (IOException e) {
             L.e(TAG, "数据请求错误:" + e.getMessage());
             dialog.dismiss();
@@ -195,7 +246,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
 
     private void getSuiuuSearchTag() {
         try {
-            OkHttpManager.onGetAsynRequest(HttpNewServicePath.getSuiuuSearchTag + "?token=" + token, new getSuiuuSearchTagCallBack());
+            OkHttpManager.onGetAsynRequest(HttpNewServicePath.getSuiuuSearchTag + "?token=" + token, new SuiuuSearchTagCallback());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -203,102 +254,129 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
 
     private void showList(List<SuiuuItemData> suiuuItemData) {
         if (adapter == null) {
-            lv_search_suiuu.setVisibility(View.VISIBLE);
-            lv_search_suiuu.setInterface(this);
-            lv_search_suiuu.setLoadMoreInterface(this);
+            suiuuSearchListView.setVisibility(View.VISIBLE);
             adapter = new ShowSuiuuAdapter(this, suiuuItemData);
-            lv_search_suiuu.setAdapter(adapter);
+            suiuuSearchListView.setAdapter(adapter);
         } else {
-            adapter.upDateData(suiuuItemData);
+            adapter.setList(suiuuItemData);
         }
     }
 
-    @Override
-    public void onLoadMoreData() {
-        if (!dialog.isShow()) {
-            page += 1;
-            loadDate(searchCountry, "0".equals(enjoyPeopleCount) ? "" : enjoyPeopleCount, "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
-                    Integer.toString(startTick), Integer.toString(endTick), page);
+    public void setTagLayoutContent() {
+        tagLayout.removeAllViews();
+        LayoutInflater mInflater = LayoutInflater.from(this);
+        for (int i = 0; i < tagList.size() - 1; i++) {
+            TextView tv = (TextView) mInflater.inflate(R.layout.tv, tagLayout, false);
+            tv.setText(tagList.get(i));
+            tv.setId(i);
+            tv.setOnClickListener(new MyOnclick());
+            list.add(tv);
+            tagLayout.addView(tv);
         }
-
-        lv_search_suiuu.loadComplete();
     }
 
-    @Override
-    public void onRefresh() {
-        suiuuItemData.clear();
-        page = 1;
-        loadDate(searchCountry, "0".equals(enjoyPeopleCount) ? "" : enjoyPeopleCount, "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
-                Integer.toString(startTick), Integer.toString(endTick), page);
-        lv_search_suiuu.reflashComplete();
+    public void showSearchMore() {
+        if (searchMoreLayout.isShown()) {
+            suiuuSearchListView.setEnabled(true);
+            searchMoreLayout.setVisibility(View.GONE);
+        } else {
+            suiuuSearchListView.setEnabled(false);
+            searchMoreLayout.setVisibility(View.VISIBLE);
+            if (tagList.size() < 1) {
+                getSuiuuSearchTag();
+            }
+        }
     }
 
     /**
      * 获取随游标签回调接口
      */
-    class getSuiuuSearchTagCallBack extends OkHttpManager.ResultCallback<String> {
-
-        @Override
-        public void onError(Request request, Exception e) {
-            dialog.dismiss();
-            Toast.makeText(SuiuuSearchDetailActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
-        }
+    private class SuiuuSearchTagCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String response) {
             try {
-                SuiuuSearchTag suiuuSearchTag = jsonUtil.fromJSON(SuiuuSearchTag.class, response);
-                if ("1".equals(suiuuSearchTag.getStatus())) {
-                    tagList = suiuuSearchTag.getData();
-                    setViewGroup();
-                } else {
-                    tagList.add("家庭");
-                    tagList.add("美食");
+                SuiuuSearchTag suiuuSearchTag = jsonUtils.fromJSON(SuiuuSearchTag.class, response);
+                String status = suiuuSearchTag.getStatus();
+                switch (status) {
+                    case "1":
+                        tagList = suiuuSearchTag.getData();
+                        setTagLayoutContent();
+                        break;
+                    default:
+                        tagList.add("家庭");
+                        tagList.add("美食");
+                        break;
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        @Override
+        public void onError(Request request, Exception e) {
+            Toast.makeText(SuiuuSearchDetailsActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinish() {
+            dialog.dismiss();
         }
     }
 
     /**
      * 获取随游列表的回调接口
      */
-    class getSuiuuDateCallBack extends OkHttpManager.ResultCallback<String> {
+    private class SuiuuSearchDetailsCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String response) {
-            try {
-                JSONObject json = new JSONObject(response);
-                String status = json.getString("status");
-                if ("1".equals(status)) {
-                    SuiuuData baseCollection = jsonUtil.fromJSON(SuiuuData.class, response);
-                    List<SuiuuItemData> suiuuItemDataNew = baseCollection.getData();
-                    if (suiuuItemDataNew.size() < 1) {
-                        if (page == 1) {
-                            lv_search_suiuu.setVisibility(View.GONE);
-                            noDataHintView.setVisibility(View.VISIBLE);
+            if (TextUtils.isEmpty(response)) {
+                Toast.makeText(SuiuuSearchDetailsActivity.this, NoData, Toast.LENGTH_SHORT).show();
+            } else try {
+                JSONObject jsonObject = new JSONObject(response);
+                String status = jsonObject.getString(STATUS);
+                switch (status) {
+                    case "1":
+                        SuiuuData baseCollection = jsonUtils.fromJSON(SuiuuData.class, response);
+                        List<SuiuuItemData> list = baseCollection.getData();
+                        if (list.size() < 1) {
+                            if (page == 1) {
+                                suiuuSearchListView.setVisibility(View.GONE);
+                                noDataHintView.setVisibility(View.VISIBLE);
+                            } else {
+                                Toast.makeText(SuiuuSearchDetailsActivity.this, NoData, Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(SuiuuSearchDetailActivity.this, "没有更多数据显示", Toast.LENGTH_SHORT).show();
+                            suiuuSearchListView.setVisibility(View.VISIBLE);
+                            noDataHintView.setVisibility(View.GONE);
+                            listAll.addAll(list);
+                            showList(listAll);
                         }
-                    } else {
-                        lv_search_suiuu.setVisibility(View.VISIBLE);
-                        noDataHintView.setVisibility(View.GONE);
-                        suiuuItemData.addAll(suiuuItemDataNew);
-                        showList(suiuuItemData);
-                    }
-                } else {
-                    Toast.makeText(SuiuuSearchDetailActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-1":
+                        Toast.makeText(SuiuuSearchDetailsActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-2":
+                        String msg = jsonObject.getString(DATA);
+                        Toast.makeText(SuiuuSearchDetailsActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    default:
+                        Toast.makeText(SuiuuSearchDetailsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
+                        break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                L.e(TAG, "随游数据解析错误:" + e.getMessage());
             }
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            Toast.makeText(SuiuuSearchDetailActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SuiuuSearchDetailsActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -308,34 +386,6 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
 
     }
 
-    public void setViewGroup() {
-        flowLayout.removeAllViews();
-        LayoutInflater mInflater = LayoutInflater.from(this);
-        for (int i = 0; i < tagList.size() - 1; i++) {
-            TextView tv = (TextView) mInflater.inflate(R.layout.tv,
-                    flowLayout, false);
-            tv.setText(tagList.get(i));
-            tv.setId(i);
-            tv.setOnClickListener(new MyOnclick());
-            list.add(tv);
-            flowLayout.addView(tv);
-        }
-    }
-
-    public void showSearchMore() {
-        if (searchMoreLayout.isShown()) {
-            lv_search_suiuu.setEnabled(true);
-            searchMoreLayout.setVisibility(View.GONE);
-        } else {
-            lv_search_suiuu.setEnabled(false);
-            searchMoreLayout.setVisibility(View.VISIBLE);
-            if (tagList.size() < 1) {
-                getSuiuuSearchTag();
-            }
-        }
-    }
-
-    @SuppressWarnings("deprecation")
     private class MyOnclick implements View.OnClickListener {
 
         @Override
@@ -373,8 +423,8 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
                 case R.id.search_confirm_button:
                     tags = "";
                     page = 1;
-                    lv_search_suiuu.setEnabled(true);
-                    suiuuItemData.clear();
+                    suiuuSearchListView.setEnabled(true);
+                    listAll.clear();
                     if (searchMoreLayout.isShown()) {
                         enjoyPeopleCount = peopleNumber.getText().toString().trim();
 
@@ -391,6 +441,7 @@ public class SuiuuSearchDetailActivity extends BaseActivity implements ReFlashLi
                     break;
             }
         }
+
     }
 
 }
