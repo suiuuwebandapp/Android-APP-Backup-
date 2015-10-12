@@ -25,6 +25,7 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.InvitationAnswer;
 import com.minglang.suiuu.entity.InvitationAnswer.InvitationAnswerData.InviteUserEntity;
 import com.minglang.suiuu.entity.InvitationAnswer.InvitationAnswerData.SysUserEntity;
+import com.minglang.suiuu.entity.SearchInvited;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -57,6 +58,8 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
     private static final String CITY_ID = "cityId";
     private static final String USER_LIST = "userList";
 
+    private static final String NAME = "name";
+
     private String title;
     private String content;
     private String address;
@@ -76,6 +79,9 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
 
     @BindString(R.string.NoData)
     String NoData;
+
+    @BindString(R.string.search_wait)
+    String SearchData;
 
     @BindString(R.string.DataError)
     String DataError;
@@ -107,6 +113,8 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
     private ProgressDialog loadDialog;
 
     private ProgressDialog questionDialog;
+
+    private ProgressDialog searchDialog;
 
     private InvitationAnswerAdapter adapter;
 
@@ -151,9 +159,12 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
         questionDialog.setMessage(QuestionMsg);
         questionDialog.setCanceledOnTouchOutside(false);
 
+        searchDialog = new ProgressDialog(this);
+        searchDialog.setMessage(SearchData);
+        searchDialog.setCanceledOnTouchOutside(false);
+
         toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
-
 
         adapter = new InvitationAnswerAdapter(this, listAll, R.layout.item_invitation_answer);
         pullToRefreshListView.setAdapter(adapter);
@@ -171,12 +182,12 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    if (listAll != null && listAll.size() > 0) {
-                        String str = v.getText().toString();
-                        L.i(TAG, "输入框内容:" + str);
-                        FiltrationUserList(str);
+                    String str = v.getText().toString();
+                    L.i(TAG, "输入框内容:" + str);
+                    if (!TextUtils.isEmpty(str)) {
+                        searchAppointUser(str);
                     } else {
-                        Toast.makeText(SelectBeInvitedActivity.this, NoFindAboutUser, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, PleaseInputWantSearchContent, Toast.LENGTH_SHORT).show();
                     }
                 }
                 return false;
@@ -208,7 +219,8 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
         confirmSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FiltrationUserList(inputString);
+                //FiltrationUserList(inputString);
+                searchAppointUser(inputString);
             }
         });
 
@@ -329,32 +341,28 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
             questionDialog.dismiss();
         }
 
+        if (searchDialog != null && searchDialog.isShowing()) {
+            searchDialog.dismiss();
+        }
+
         //pullToRefreshListView.onRefreshComplete();
     }
 
-    /**
-     * 根据输入的字符串来过滤用户列表
-     *
-     * @param userName 用户名
-     */
-    private void FiltrationUserList(String userName) {
-        if (TextUtils.isEmpty(userName)) {
-            Toast.makeText(SelectBeInvitedActivity.this, PleaseInputWantSearchContent, Toast.LENGTH_SHORT).show();
-        } else {
-            List<InviteUserEntity> list = new ArrayList<>();
-            for (InviteUserEntity userEntity : listAll) {
-                String name = userEntity.getNickname();
-                if (name.contains(userName)) {
-                    list.add(userEntity);
-                }
-            }
+    private void searchAppointUser(String userName) {
+        if (searchDialog != null && !searchDialog.isShowing()) {
+            searchDialog.show();
+        }
 
-            if (list.size() > 0) {
-                adapter.setList(list);
-            } else {
-                Toast.makeText(SelectBeInvitedActivity.this, NoFindAboutUser, Toast.LENGTH_SHORT).show();
-            }
+        String[] keyArray = new String[]{NAME, TOKEN};
+        String[] valueArray = new String[]{userName, token};
 
+        String url = addUrlAndParams(HttpNewServicePath.getAppiontUserListPath, keyArray, valueArray);
+        try {
+            OkHttpManager.onGetAsynRequest(url, new SearchResultCallback());
+        } catch (Exception e) {
+            hideDialog();
+            L.e(TAG, "搜索异常:" + e.getMessage());
+            Toast.makeText(SelectBeInvitedActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -475,6 +483,44 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
         @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "添加新问题异常:" + e.getMessage());
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinish() {
+            hideDialog();
+        }
+
+    }
+
+    private class SearchResultCallback extends OkHttpManager.ResultCallback<String> {
+
+        @Override
+        public void onResponse(String response) {
+            if (TextUtils.isEmpty(response)) {
+                Toast.makeText(SelectBeInvitedActivity.this, NoData, Toast.LENGTH_SHORT).show();
+            } else {
+                SearchInvited searchInvited = JsonUtils.getInstance().fromJSON(SearchInvited.class, response);
+                List<SearchInvited.SearchInvitedData> list = searchInvited.getData();
+                List<InviteUserEntity> searchList = new ArrayList<>();
+                if (list != null && list.size() > 0) {
+                    for (SearchInvited.SearchInvitedData data : list) {
+                        InviteUserEntity inviteUser = new InviteUserEntity();
+                        inviteUser.setHeadImg(data.getHeadImg());
+                        inviteUser.setNickname(data.getNickname());
+                        inviteUser.setUserSign(data.getUserSign());
+                        searchList.add(inviteUser);
+                    }
+                    adapter.setList(searchList);
+                } else {
+                    Toast.makeText(context, NoFindAboutUser, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+        @Override
+        public void onError(Request request, Exception e) {
+            L.e(TAG, "搜索错误:" + e.getMessage());
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 

@@ -192,6 +192,10 @@ public class AboutSuiuuActivity extends BaseAppCompatActivity {
                                             String url = object.getString("url");
                                             DownLoadFile(url);
                                             break;
+
+                                        default:
+                                            Toast.makeText(context, "已是最新版本", Toast.LENGTH_SHORT).show();
+                                            break;
                                     }
 
                                 }
@@ -211,8 +215,6 @@ public class AboutSuiuuActivity extends BaseAppCompatActivity {
                     e.printStackTrace();
                     Toast.makeText(context, "版本信息获取失败！", Toast.LENGTH_SHORT).show();
                 }
-
-                //DownLoadFile("http://suiuu.oss-cn-hongkong.aliyuncs.com/suiuu_app/Suiuu.apk");
 
             }
         });

@@ -54,6 +54,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
     private static final String NUMBER = "number";
 
     private static final String TRIP_ID = "tripId";
+    private static final String CLASS_NAME = "className";
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
@@ -189,6 +190,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
 
                 Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
                 intent.putExtra(TRIP_ID, tripId);
+                intent.putExtra(CLASS_NAME,TAG);
                 getActivity().startActivity(intent);
             }
         });

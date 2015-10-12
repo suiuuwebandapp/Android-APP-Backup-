@@ -426,10 +426,10 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
                         headCountNumber = headCountNumber + 1;
                         headCount.setText(String.valueOf(headCountNumber));
                     }
-                    Toast.makeText(context, "收藏文章成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "关注文章成功", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Toast.makeText(context, "收藏失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "关注失败，请稍候再试！", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -464,7 +464,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
                         headCount.setText(String.valueOf(headCountNumber));
                     }
                     tripImageDetailsHeart.setBackground(AttentionHeartNormal);
-                    Toast.makeText(context, "取消收藏成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "取消关注成功", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
                 }

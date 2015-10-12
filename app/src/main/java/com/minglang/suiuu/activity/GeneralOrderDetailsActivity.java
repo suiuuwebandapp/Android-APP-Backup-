@@ -1,18 +1,22 @@
 package com.minglang.suiuu.activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,9 +26,9 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.GeneralOrderDetails;
 import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData;
+import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.ContactEntity;
 import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.InfoEntity;
 import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.PublisherBaseEntity;
-import com.minglang.suiuu.entity.GeneralOrderDetails.GeneralOrderDetailsData.ContactEntity;
 import com.minglang.suiuu.entity.ServiceInfo;
 import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -63,6 +67,8 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
+
+    private static final String RELATE_ID = "relateId";
 
     private static final float DEFAULT_SCORE = 0f;
 
@@ -210,26 +216,62 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     @Bind(R.id.order_details_emergency_contact_number)
     TextView emergencyContactNumber;
 
+    @Bind(R.id.order_details_chat)
+    ImageView chatView;
+
     @Bind(R.id.order_details_back)
     ImageView orderDetailsBack;
 
     /**
-     * 底部左边按钮
+     * 支付
      */
     @Bind(R.id.order_details_repay)
     Button orderDetailsRepay;
 
+    @Bind(R.id.order_details_suiuu_user_layout)
+    RelativeLayout suiuuUserInfoLayout;
+
     /**
-     * 底部左边按钮
+     * 取消订单
      */
     @Bind(R.id.order_details_cancel)
     Button orderDetailsCancel;
 
     /**
-     * 底部按钮布局
+     * 申请退款
      */
-    @Bind(R.id.order_details_bottom_layout)
-    CardView orderDetailsBottomLayout;
+    @Bind(R.id.order_details_apply_refund)
+    Button orderDetailsApplyRefund;
+
+    /**
+     * 确认游玩
+     */
+    @Bind(R.id.order_details_confirm)
+    Button orderDetailsConfirmPlay;
+
+    /**
+     * 删除订单
+     */
+    @Bind(R.id.order_details_delete)
+    Button orderDetailsDelete;
+
+    /**
+     * 支付/取消Layout
+     */
+    @Bind(R.id.order_details_bottom_1_layout)
+    CardView bottom_1_layout;
+
+    /**
+     * 退款/确认Layout
+     */
+    @Bind(R.id.order_details_bottom_2_layout)
+    CardView bottom_2_layout;
+
+    /**
+     * 删除订单Layout
+     */
+    @Bind(R.id.order_details_bottom_3_layout)
+    CardView bottom_3_layout;
 
     private String orderNumber;
 
@@ -247,6 +289,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
      */
     private float totalOrderPrice = 0f;
 
+    private PublisherBaseEntity publisherBaseEntity;
     private InfoEntity infoEntity;
     private TripJsonInfo tripJsonInfo;
 
@@ -258,6 +301,8 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     private String failureImagePath;
 
     private JsonUtils jsonUtils;
+
+    private ProgressDialog commitDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -284,6 +329,10 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
+        commitDialog = new ProgressDialog(this);
+        commitDialog.setMessage("正在提交请求，请稍候...");
+        commitDialog.setCanceledOnTouchOutside(false);
+
         inflater = LayoutInflater.from(this);
 
         if (!TextUtils.isEmpty(titleImg)) {
@@ -301,30 +350,33 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             }
         });
 
+        chatView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (publisherBaseEntity != null) {
+                    String userSign = publisherBaseEntity.getUserSign();
+                    String headImage = publisherBaseEntity.getHeadImg();
+
+                    Intent intent = new Intent(GeneralOrderDetailsActivity.this, PrivateLetterChatActivity.class);
+                    intent.putExtra(RELATE_ID, userSign);
+                    intent.putExtra(HEAD_IMG, headImage);
+                    startActivity(intent);
+                }
+            }
+        });
+
         //重新支付按钮
         orderDetailsRepay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (status) {
-                    case "0":
-                        Intent intent = new Intent(GeneralOrderDetailsActivity.this, SuiuuPayActivity.class);
-                        intent.putExtra(PEOPLE_NUMBER, infoEntity.getPersonCount());
-                        intent.putExtra(TIME, infoEntity.getBeginDate());
-                        intent.putExtra(TOTAL_PRICE, infoEntity.getTotalPrice());
-                        intent.putExtra(DESTINATION, tripJsonInfo.getInfo().getTitle());
-                        intent.putExtra(ORDER_NUMBER, orderNumber);
-                        startActivity(intent);
-                        finish();
-                        break;
-                    case "3":
-                        deleteOrder();
-                        break;
-                    case "5":
-                        deleteOrder();
-                        break;
-                }
-
-
+                Intent intent = new Intent(GeneralOrderDetailsActivity.this, SuiuuPayActivity.class);
+                intent.putExtra(PEOPLE_NUMBER, infoEntity.getPersonCount());
+                intent.putExtra(TIME, infoEntity.getBeginDate());
+                intent.putExtra(TOTAL_PRICE, infoEntity.getTotalPrice());
+                intent.putExtra(DESTINATION, tripJsonInfo.getInfo().getTitle());
+                intent.putExtra(ORDER_NUMBER, orderNumber);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -336,8 +388,43 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             }
         });
 
+        //申请退款
+        orderDetailsApplyRefund.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (status) {
+                    case "1":
+                        userApplyRefund();
+                        break;
+
+                    case "2":
+                        userApplyRefundMessage();
+                        break;
+                }
+            }
+        });
+
+        //确认游玩
+        orderDetailsConfirmPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userConfirmPlay();
+            }
+        });
+
+        //删除订单
+        orderDetailsDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteOrder();
+            }
+        });
+
     }
 
+    /**
+     * 取消订单
+     */
     private void cancelOrder() {
         Map<String, String> map = new HashMap<>();
         map.put("orderId", infoEntity.getOrderId());
@@ -348,16 +435,265 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         }
     }
 
-    private void deleteOrder() {
-        Map<String, String> map = new HashMap<>();
-        map.put("orderId", infoEntity.getOrderId());
+    /**
+     * 申请退款(不需要填写理由)
+     */
+    private void userApplyRefund() {
+        if (commitDialog != null && !commitDialog.isShowing()) {
+            commitDialog.show();
+        }
+
+        OkHttpManager.Params params = new OkHttpManager.Params("orderId", infoEntity.getOrderId());
         try {
-            OkHttpManager.onPostAsynRequest(HttpNewServicePath.userDeleteOrder + "?token=" + token, new CancelOrderCallBack(), map);
-        } catch (IOException e) {
-            e.printStackTrace();
+            String url = HttpNewServicePath.userApplyRefundPath1 + "?" + TOKEN + "=" + token;
+            OkHttpManager.onPostAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
+
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String status = object.getString(STATUS);
+                        switch (status) {
+                            case "1":
+                                Toast.makeText(GeneralOrderDetailsActivity.this, "申请退款成功！", Toast.LENGTH_SHORT).show();
+                                getGeneralUserOrderData4Service();
+                                break;
+
+                            case "-1":
+                                Toast.makeText(GeneralOrderDetailsActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case "-2":
+                                Toast.makeText(GeneralOrderDetailsActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                                break;
+
+                        }
+                    } catch (Exception ex) {
+                        L.e(TAG, "数据解析失败:" + ex.getMessage());
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Exception e) {
+                    Toast.makeText(GeneralOrderDetailsActivity.this, "申请退款失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                    L.e(TAG, "申请退款网络请求失败:" + e.getMessage());
+                }
+
+                @Override
+                public void onFinish() {
+                    hideDialog();
+                }
+
+            }, params);
+        } catch (Exception e) {
+            hideDialog();
+            L.e(TAG, "申请退款网络请求异常:" + e.getMessage());
+            Toast.makeText(GeneralOrderDetailsActivity.this, "申请退款失败，请稍候再试！", Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * 申请退款(需要填写理由)
+     */
+    private void userApplyRefundMessage() {
+        if (commitDialog != null && !commitDialog.isShowing()) {
+            commitDialog.show();
+        }
+
+        final EditText editText = new EditText(this);
+        editText.setHint("请输入退款理由");
+
+        new AlertDialog.Builder(GeneralOrderDetailsActivity.this)
+                .setView(editText)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (commitDialog != null && !commitDialog.isShowing()) {
+                            commitDialog.show();
+                        }
+
+                        String strMessage = editText.getText().toString().trim();
+                        if (TextUtils.isEmpty(strMessage)) {
+                            Toast.makeText(GeneralOrderDetailsActivity.this, "退款理由不能为空！", Toast.LENGTH_SHORT).show();
+                        } else {
+                            OkHttpManager.Params[] paramsArray = new OkHttpManager.Params[2];
+                            paramsArray[0] = new OkHttpManager.Params("orderId", infoEntity.getOrderId());
+                            paramsArray[1] = new OkHttpManager.Params("message", strMessage);
+
+                            try {
+                                String url = HttpNewServicePath.userApplyRefundPath2 + "?" + TOKEN + "=" + token;
+                                OkHttpManager.onPostAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
+
+                                    @Override
+                                    public void onResponse(String response) {
+                                        try {
+                                            JSONObject object = new JSONObject(response);
+                                            String status = object.getString(STATUS);
+                                            switch (status) {
+                                                case "1":
+                                                    Toast.makeText(GeneralOrderDetailsActivity.this, "申请退款成功！", Toast.LENGTH_SHORT).show();
+                                                    getGeneralUserOrderData4Service();
+                                                    break;
+
+                                                case "-1":
+                                                    Toast.makeText(GeneralOrderDetailsActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                                                    break;
+
+                                                case "-2":
+                                                    Toast.makeText(GeneralOrderDetailsActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                                                    break;
+
+                                            }
+                                        } catch (Exception ex) {
+                                            L.e(TAG, "数据解析失败:" + ex.getMessage());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onError(Request request, Exception e) {
+                                        Toast.makeText(GeneralOrderDetailsActivity.this, "申请退款失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                                        L.e(TAG, "申请退款网络请求失败:" + e.getMessage());
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        hideDialog();
+                                    }
+
+                                }, paramsArray);
+                            } catch (Exception e) {
+                                hideDialog();
+                                L.e(TAG, "申请退款网络请求异常:" + e.getMessage());
+                                Toast.makeText(GeneralOrderDetailsActivity.this, "申请退款失败，请稍候再试！", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .create().show();
+    }
+
+    /**
+     * 确认游玩
+     */
+    private void userConfirmPlay() {
+        if (commitDialog != null && !commitDialog.isShowing()) {
+            commitDialog.show();
+        }
+
+        try {
+            String url = HttpNewServicePath.userComfirmPlayPath + "?" + TOKEN + "=" + token;
+            OkHttpManager.onPostAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
+
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String status = object.getString(STATUS);
+                        switch (status) {
+                            case "1":
+                                Toast.makeText(GeneralOrderDetailsActivity.this, "确认游玩成功！", Toast.LENGTH_SHORT).show();
+                                getGeneralUserOrderData4Service();
+                                break;
+
+                            case "-1":
+                                Toast.makeText(GeneralOrderDetailsActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case "-2":
+                                Toast.makeText(GeneralOrderDetailsActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                                break;
+
+                        }
+                    } catch (Exception ex) {
+                        L.e(TAG, "确认游玩数据解析失败:" + ex.getMessage());
+                        Toast.makeText(GeneralOrderDetailsActivity.this, "确认游玩错误，请稍候再试！", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Exception e) {
+                    L.e(TAG, "确认游玩错误:" + e.getMessage());
+                    Toast.makeText(GeneralOrderDetailsActivity.this, "确认游玩错误，请稍候再试！", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFinish() {
+                    hideDialog();
+                }
+
+            }, new OkHttpManager.Params("orderId", infoEntity.getOrderId()));
+        } catch (Exception e) {
+            hideDialog();
+            L.e(TAG, "确认游玩异常:" + e.getMessage());
+            Toast.makeText(GeneralOrderDetailsActivity.this, "确认游玩异常，请稍候再试！", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    /**
+     * 删除订单
+     */
+    private void deleteOrder() {
+        if (commitDialog != null && !commitDialog.isShowing()) {
+            commitDialog.show();
+        }
+
+        Map<String, String> map = new HashMap<>();
+        map.put("orderId", infoEntity.getOrderId());
+        try {
+            String url = HttpNewServicePath.userDeleteOrder + "?" + TOKEN + "=" + token;
+            L.i(TAG, "删除订单URL:" + url);
+            OkHttpManager.onPostAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
+
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String status = object.getString(STATUS);
+                        switch (status) {
+                            case "1":
+                                Toast.makeText(GeneralOrderDetailsActivity.this, "删除订单成功！", Toast.LENGTH_SHORT).show();
+                                finish();
+                                break;
+
+                            case "-1":
+                                Toast.makeText(GeneralOrderDetailsActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case "-2":
+                                Toast.makeText(GeneralOrderDetailsActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    } catch (Exception e) {
+                        L.e(TAG, "删除订单数据解析异常:" + e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onError(Request request, Exception e) {
+                    L.e(TAG, "删除订单错误:" + e.getMessage());
+                    Toast.makeText(GeneralOrderDetailsActivity.this, "订单删除出现错误，请稍候再试", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFinish() {
+                    hideDialog();
+                }
+
+            }, map);
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            Toast.makeText(GeneralOrderDetailsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 得到订单数据
+     */
     private void getGeneralUserOrderData4Service() {
         if (progressDialog != null && !progressDialog.isShowing()) {
             progressDialog.show();
@@ -376,18 +712,29 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         }
     }
 
+    /**
+     * 隐藏进度框
+     */
     private void hideDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
 
+        if (commitDialog != null && commitDialog.isShowing()) {
+            commitDialog.dismiss();
+        }
+
     }
 
+    /**
+     * 数据绑定到View
+     *
+     * @param str 订单数据
+     */
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             Toast.makeText(this, NoData, Toast.LENGTH_SHORT).show();
         } else {
-
             if (serviceLayout.getChildCount() > 0) {
                 serviceLayout.removeAllViews();
                 serviceLayout.addView(serviceTitleLayout);
@@ -397,9 +744,8 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                 GeneralOrderDetails details = jsonUtils.fromJSON(GeneralOrderDetails.class, str);
                 if (details != null) {
                     GeneralOrderDetailsData detailsData = details.getData();
-
                     if (detailsData != null) {
-                        PublisherBaseEntity publisherBaseEntity = detailsData.getPublisherBase();
+                        publisherBaseEntity = detailsData.getPublisherBase();
                         infoEntity = detailsData.getInfo();
 
                         showOrderInfo();
@@ -447,10 +793,13 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                 try {
                     JSONObject object = new JSONObject(str);
                     String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(GeneralOrderDetailsActivity.this, SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(GeneralOrderDetailsActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    switch (status) {
+                        case "-1":
+                            Toast.makeText(GeneralOrderDetailsActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "-2":
+                            Toast.makeText(GeneralOrderDetailsActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                            break;
                     }
                 } catch (JSONException e1) {
                     e1.printStackTrace();
@@ -460,6 +809,9 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         }
     }
 
+    /**
+     * 显示订单信息
+     */
     private void showOrderInfo() {
         if (infoEntity != null) {
             String jsonInfo = infoEntity.getTripJsonInfo();
@@ -554,6 +906,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             //订单状态
             status = infoEntity.getStatus();
             showOrderStatus(status);
+            showBottomLayout(status);
 
         } else {
             orderDetailsTitle.setText("");
@@ -567,9 +920,13 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         }
     }
 
+    /**
+     * 绑定附加服务
+     *
+     * @param strServiceInfo 附加服务Json字符串
+     */
     private void bindAdditionalServices(String strServiceInfo) {
         if (!TextUtils.isEmpty(strServiceInfo)) {
-
             if (!strServiceInfo.equals("[]")) {
                 try {
                     List<ServiceInfo> serviceInfoList =
@@ -625,15 +982,20 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         }
     }
 
+    /**
+     * 显示订单状态
+     *
+     * @param status 订单状态
+     */
     private void showOrderStatus(String status) {
         if (!TextUtils.isEmpty(status)) {
             switch (status) {
                 case "0":
                     orderStatus.setText("待支付");
-                    orderDetailsBottomLayout.setVisibility(View.VISIBLE);
+                    bottom_1_layout.setVisibility(View.VISIBLE);
                     break;
 
-                case "1":
+                case "1"://等待随友接单
                     orderStatus.setText("已支付 待确认");
                     break;
 
@@ -642,7 +1004,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                     break;
 
                 case "3":
-                    orderDetailsBottomLayout.setVisibility(View.VISIBLE);
+                    bottom_1_layout.setVisibility(View.VISIBLE);
                     orderDetailsCancel.setVisibility(View.GONE);
                     orderDetailsRepay.setText(DeleteOrder);
                     orderStatus.setText("未支付 已取消");
@@ -653,7 +1015,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                     break;
 
                 case "5":
-                    orderDetailsBottomLayout.setVisibility(View.VISIBLE);
+                    bottom_1_layout.setVisibility(View.VISIBLE);
                     orderDetailsCancel.setVisibility(View.GONE);
                     orderDetailsCancel.setText(DeleteOrder);
                     orderStatus.setText("退款成功");
@@ -688,6 +1050,108 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
         }
     }
 
+    /**
+     * 显示底部按钮布局
+     *
+     * @param status 订单状态
+     */
+    private void showBottomLayout(String status) {
+        if (!TextUtils.isEmpty(status)) {
+            switch (status) {
+                case "0"://待支付
+                    bottom_1_layout.setVisibility(View.VISIBLE);
+                    bottom_2_layout.setVisibility(View.GONE);
+                    bottom_3_layout.setVisibility(View.GONE);
+                    suiuuUserInfoLayout.setVisibility(View.GONE);
+                    break;
+
+                case "1"://已支付 待确认 等待随友接单
+                    bottom_1_layout.setVisibility(View.GONE);
+                    bottom_2_layout.setVisibility(View.VISIBLE);
+                    bottom_3_layout.setVisibility(View.GONE);
+                    orderDetailsConfirmPlay.setVisibility(View.INVISIBLE);
+                    suiuuUserInfoLayout.setVisibility(View.GONE);
+                    break;
+
+                case "2"://已支付 已确认
+                    bottom_1_layout.setVisibility(View.GONE);
+                    bottom_2_layout.setVisibility(View.VISIBLE);
+                    bottom_3_layout.setVisibility(View.GONE);
+                    break;
+
+                case "3"://未支付 已取消
+                    bottom_1_layout.setVisibility(View.GONE);
+                    bottom_2_layout.setVisibility(View.GONE);
+                    bottom_3_layout.setVisibility(View.VISIBLE);
+                    suiuuUserInfoLayout.setVisibility(View.GONE);
+                    break;
+
+                case "4"://待退款
+                    bottom_1_layout.setVisibility(View.GONE);
+                    bottom_2_layout.setVisibility(View.VISIBLE);
+                    bottom_3_layout.setVisibility(View.GONE);
+                    orderDetailsApplyRefund.setEnabled(false);
+                    orderDetailsConfirmPlay.setEnabled(false);
+                    break;
+
+                case "5"://退款成功
+                    bottom_1_layout.setVisibility(View.GONE);
+                    bottom_2_layout.setVisibility(View.GONE);
+                    bottom_3_layout.setVisibility(View.VISIBLE);
+                    break;
+
+                case "6"://游玩结束 待付款给随友
+                    bottom_1_layout.setVisibility(View.GONE);
+                    bottom_2_layout.setVisibility(View.GONE);
+                    bottom_3_layout.setVisibility(View.VISIBLE);
+                    break;
+
+                case "7"://结束，已经付款给随友
+                    bottom_1_layout.setVisibility(View.GONE);
+                    bottom_2_layout.setVisibility(View.GONE);
+                    bottom_3_layout.setVisibility(View.VISIBLE);
+                    break;
+
+                case "8"://退款审核中
+                    bottom_1_layout.setVisibility(View.GONE);
+                    bottom_2_layout.setVisibility(View.VISIBLE);
+                    bottom_3_layout.setVisibility(View.GONE);
+                    orderDetailsApplyRefund.setEnabled(false);
+                    orderDetailsConfirmPlay.setEnabled(false);
+                    break;
+
+                case "9"://退款审核失败
+                    bottom_1_layout.setVisibility(View.GONE);
+                    bottom_2_layout.setVisibility(View.GONE);
+                    bottom_3_layout.setVisibility(View.VISIBLE);
+                    break;
+
+                case "10"://随友取消订单
+                    bottom_1_layout.setVisibility(View.GONE);
+                    bottom_2_layout.setVisibility(View.GONE);
+                    bottom_3_layout.setVisibility(View.VISIBLE);
+                    break;
+
+                default:
+                    bottom_1_layout.setVisibility(View.VISIBLE);
+                    bottom_2_layout.setVisibility(View.GONE);
+                    bottom_3_layout.setVisibility(View.GONE);
+                    suiuuUserInfoLayout.setVisibility(View.GONE);
+                    break;
+            }
+        } else {
+            bottom_1_layout.setVisibility(View.VISIBLE);
+            bottom_2_layout.setVisibility(View.GONE);
+            bottom_3_layout.setVisibility(View.GONE);
+            suiuuUserInfoLayout.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 显示用户信息
+     *
+     * @param contactEntity 用户信息数据实体类
+     */
     private void showMyInfo(ContactEntity contactEntity) {
         if (contactEntity != null) {
             //主要联系人
@@ -751,28 +1215,22 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onError(Request request, Exception e) {
-            Log.i("suiuu", "---" + e.toString());
+            Log.i(TAG, "取消订单异常" + e.getMessage());
         }
 
         @Override
         public void onResponse(String response) {
             try {
                 JSONObject result = new JSONObject(response);
-                int results = (int) result.get("status");
-                if (results == 1) {
-                    if ("0".equals(status)) {
+                int results = (int) result.get(STATUS);
+                switch (results) {
+                    case 1:
                         Toast.makeText(GeneralOrderDetailsActivity.this, R.string.CancelOrderSuccess, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(GeneralOrderDetailsActivity.this, R.string.DeleteOrderSuccess, Toast.LENGTH_SHORT).show();
-                    }
-                    finish();
-                } else {
-                    if ("0".equals(status)) {
+                        finish();
+                        break;
+                    default:
                         Toast.makeText(GeneralOrderDetailsActivity.this, R.string.CancelOrderFailure, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(GeneralOrderDetailsActivity.this, R.string.DeleteOrderFailure, Toast.LENGTH_SHORT).show();
-
-                    }
+                        break;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

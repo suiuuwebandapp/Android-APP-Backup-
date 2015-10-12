@@ -9,6 +9,7 @@
         android:id="@+id/item_trip_image_tag"
         android:layout_width="@dimen/layout_80dp"
         android:layout_height="@dimen/layout_80dp"
+        android:padding="@dimen/layout_3dp"
         fresco:roundedCornerRadius="5dp" />
 
     <TextView

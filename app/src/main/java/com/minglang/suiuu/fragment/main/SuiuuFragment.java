@@ -62,6 +62,8 @@ public class SuiuuFragment extends BaseFragment {
 
     private static final String TRIP_ID = "tripId";
 
+    private static final String CLASS_NAME = "className";
+
     @BindDrawable(R.color.DefaultGray1)
     Drawable Divider;
 
@@ -171,6 +173,7 @@ public class SuiuuFragment extends BaseFragment {
                 intent.putExtra(TRIP_ID, listAll.get(location).getTripId());
                 intent.putExtra(USER_SIGN, listAll.get(location).getUserSign());
                 intent.putExtra(HEAD_IMG,listAll.get(location).getHeadImg());
+                intent.putExtra(CLASS_NAME,TAG);
                 startActivity(intent);
             }
         });

@@ -56,6 +56,8 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
 
     private static final String TAG = SuiuuSearchDetailsActivity.class.getSimpleName();
 
+    private static final String CLASS_NAME = "className";
+
     private JsonUtils jsonUtils = JsonUtils.getInstance();
 
     private List<String> tagList = new ArrayList<>();
@@ -227,6 +229,7 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
                 intent.putExtra("tripId", listAll.get(position - 1).getTripId());
                 intent.putExtra(USER_SIGN, listAll.get(position - 1).getUserSign());
                 intent.putExtra(HEAD_IMG, listAll.get(position - 1).getHeadImg());
+                intent.putExtra(CLASS_NAME,TAG);
                 startActivity(intent);
             }
         });

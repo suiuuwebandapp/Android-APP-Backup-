@@ -63,6 +63,8 @@ public class PublishedFragment extends BaseFragment {
     private static final String STATUS = "status";
     private static final String DATA = "data";
 
+    private static final String CLASS_NAME = "className";
+
     @BindString(R.string.load_wait)
     String DialogMsg;
 
@@ -187,6 +189,7 @@ public class PublishedFragment extends BaseFragment {
                 int location = position - 1;
                 Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
                 intent.putExtra(TRIP_ID, listAll.get(location).getTripId());
+                intent.putExtra(CLASS_NAME,TAG);
                 startActivity(intent);
             }
         });

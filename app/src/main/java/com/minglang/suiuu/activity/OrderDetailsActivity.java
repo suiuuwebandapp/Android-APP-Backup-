@@ -111,11 +111,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     String refundReasonNotNull;
 
     /**
-     * 订单详情地址
-     */
-    private String orderDetailsDataPath;
-
-    /**
      * 取消订单地址
      */
     private String cancelOrderPath;
@@ -211,6 +206,8 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
     private OrderDetailsResultCallback orderDetailsResultCallback = new OrderDetailsResultCallback();
 
+    private JsonUtils jsonUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -221,7 +218,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
         String[] keyArray = new String[]{ORDER_NUMBER, HttpNewServicePath.key, TOKEN};
         String[] valueArray = new String[]{strID, verification, token};
-        getData4Service(orderDetailsDataPath, keyArray, valueArray, orderDetailsResultCallback);
+        getData4Service(HttpNewServicePath.getOrderDetailsDataPath, keyArray, valueArray, orderDetailsResultCallback);
 
     }
 
@@ -235,6 +232,8 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         } else if (selectOrderStatus.equals(CONFIRM)) {
             bottomLayout2.setVisibility(View.VISIBLE);
         }
+
+        jsonUtils = JsonUtils.getInstance();
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(dialogMsg);
@@ -258,8 +257,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
         context = OrderDetailsActivity.this;
 
-        orderDetailsDataPath = HttpNewServicePath.getOrderDetailsDataPath;
-
         cancelOrderPath = HttpNewServicePath.setCancelOrderDataPath;
         confirmOrderPath = HttpNewServicePath.setConfirmOrderDataPath;
         ignoreOrderPath = HttpNewServicePath.setIgnoreOrderDataPath;
@@ -279,7 +276,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                 isPullToRefresh = false;
                 String[] keyArray = new String[]{ORDER_NUMBER, HttpNewServicePath.key, TOKEN};
                 String[] valueArray = new String[]{strID, verification, token};
-                getData4Service(orderDetailsDataPath, keyArray, valueArray, orderDetailsResultCallback);
+                getData4Service(HttpNewServicePath.getOrderDetailsDataPath, keyArray, valueArray, orderDetailsResultCallback);
             }
 
         });
@@ -384,7 +381,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         }
 
         String url = addUrlAndParams(path, keyArray, valueArray);
-
+        L.e(TAG, "订单详情URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, requestCallBack);
         } catch (IOException e) {
@@ -411,184 +408,186 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             Toast.makeText(this, NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            JsonUtils jsonUtils = JsonUtils.getInstance();
-            try {
-                OrderDetails orderDetails = jsonUtils.fromJSON(OrderDetails.class, str);
-                infoEntity = orderDetails.getData().getInfo();
-                UserInfoEntity userInfo = orderDetails.getData().getUserInfo();
+        } else try {
+            OrderDetails orderDetails = jsonUtils.fromJSON(OrderDetails.class, str);
+            infoEntity = orderDetails.getData().getInfo();
+            UserInfoEntity userInfo = orderDetails.getData().getUserInfo();
 
-                String headImagePath = userInfo.getHeadImg();
-                if (!TextUtils.isEmpty(headImagePath)) {
-                    headImageView.setImageURI(Uri.parse(headImagePath));
-                } else {
-                    headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
-                }
-
-                String strUserName = userInfo.getNickname();
-                if (!TextUtils.isEmpty(strUserName)) {
-                    userNameView.setText(strUserName);
-                } else {
-                    userNameView.setText(strUserName);
-                }
-
-                String beginDate = infoEntity.getBeginDate();
-                if (!TextUtils.isEmpty(beginDate)) {
-                    dateView.setText(beginDate);
-                } else {
-                    dateView.setText("");
-                }
-
-                String startTime = infoEntity.getStartTime();
-                if (!TextUtils.isEmpty(startTime)) {
-                    timeView.setText(startTime);
-                } else {
-                    timeView.setText("");
-                }
-
-                String strPersonalCount = infoEntity.getPersonCount();
-                if (!TextUtils.isEmpty(strPersonalCount)) {
-                    peopleNumberView.setText(strPersonalCount);
-                } else {
-                    peopleNumberView.setText("0");
-                }
-
-                String strOrderPrice = infoEntity.getTotalPrice();
-                if (!TextUtils.isEmpty(strOrderPrice)) {
-                    orderPriceView.setText(strOrderPrice);
-                } else {
-                    orderPriceView.setText("");
-                }
-
-                TripJsonInfo tripJsonInfo = jsonUtils.fromJSON(TripJsonInfo.class, infoEntity.getTripJsonInfo());
-                if (tripJsonInfo != null) {
-
-                    String strTitle = tripJsonInfo.getInfo().getTitle();
-                    if (!TextUtils.isEmpty(strTitle)) {
-                        titleView.setText(strTitle);
-                    } else {
-                        titleView.setText("");
-                    }
-
-                    String status = infoEntity.getStatus();
-                    if (!TextUtils.isEmpty(status)) {
-                        switch (status) {
-                            case "0":
-                                orderStatus.setText("待支付");
-                                break;
-
-                            case "1":
-                                orderStatus.setText("已支付 待确认");
-                                confirmOrderBtn.setEnabled(true);
-                                ignoreOrderBtn.setEnabled(true);
-                                break;
-
-                            case "2":
-                                orderStatus.setText("已支付 已确认");
-                                cancelOrderBtn.setEnabled(true);
-                                confirmOrderBtn.setEnabled(false);
-                                ignoreOrderBtn.setEnabled(false);
-                                break;
-
-                            case "3":
-                                orderStatus.setText("未支付 已取消");
-                                cancelOrderBtn.setEnabled(false);
-                                confirmOrderBtn.setEnabled(false);
-                                ignoreOrderBtn.setEnabled(false);
-                                break;
-
-                            case "4":
-                                orderStatus.setText("待退款");
-                                cancelOrderBtn.setEnabled(false);
-                                confirmOrderBtn.setEnabled(false);
-                                ignoreOrderBtn.setEnabled(false);
-                                break;
-
-                            case "5":
-                                orderStatus.setText("退款成功");
-                                cancelOrderBtn.setEnabled(false);
-                                confirmOrderBtn.setEnabled(false);
-                                ignoreOrderBtn.setEnabled(false);
-                                break;
-
-                            case "6":
-                                orderStatus.setText("游玩结束 待付款给随友");
-                                cancelOrderBtn.setEnabled(false);
-                                confirmOrderBtn.setEnabled(false);
-                                ignoreOrderBtn.setEnabled(false);
-                                break;
-
-                            case "7":
-                                orderStatus.setText("结束，已经付款给随友");
-                                cancelOrderBtn.setEnabled(false);
-                                confirmOrderBtn.setEnabled(false);
-                                ignoreOrderBtn.setEnabled(false);
-                                break;
-
-                            case "8":
-                                orderStatus.setText("退款审核中");
-                                break;
-
-                            case "9":
-                                orderStatus.setText("退款审核失败");
-                                break;
-
-                            case "10":
-                                orderStatus.setText("随友取消订单");
-                                break;
-
-                            default:
-                                orderStatus.setText("订单状态未知");
-                                cancelOrderBtn.setEnabled(false);
-                                confirmOrderBtn.setEnabled(false);
-                                ignoreOrderBtn.setEnabled(false);
-                                break;
-                        }
-                    } else {
-                        orderStatus.setText("订单状态未知");
-                    }
-
-                    String strPhone = tripJsonInfo.getCreatePublisherInfo().getPhone();
-                    if (!TextUtils.isEmpty(strPhone)) {
-                        phoneNumberView.setText(strPhone);
-                    } else {
-                        phoneNumberView.setText("");
-                    }
-
-                    String strEmail = tripJsonInfo.getCreatePublisherInfo().getEmail();
-                    if (!TextUtils.isEmpty(strEmail)) {
-                        emailAddressView.setText(strEmail);
-                    } else {
-                        emailAddressView.setText("");
-                    }
-
-                    List<TripJsonInfo.ServiceListEntity> serviceList = tripJsonInfo.getServiceList();
-                    if (serviceList != null && serviceList.size() > 0) {
-                        String serviceName = null;
-                        for (int i = 0; i < serviceList.size(); i++) {
-                            String serviceTitle = serviceList.get(i).getTitle();
-                            if (!TextUtils.isEmpty(serviceTitle)) {
-                                serviceName = serviceName + " " + serviceTitle;
-                            }
-                        }
-
-                        if (!TextUtils.isEmpty(serviceName)) {
-                            itemServiceName.setText(serviceName);
-                        } else {
-                            itemServiceName.setText("");
-                        }
-
-                    }
-
-                }
-
-            } catch (Exception e) {
-                L.e(TAG, "绑定数据异常:" + e.getMessage());
-                handleException(str, DataError);
+            String headImagePath = userInfo.getHeadImg();
+            if (!TextUtils.isEmpty(headImagePath)) {
+                headImageView.setImageURI(Uri.parse(headImagePath));
+            } else {
+                headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
             }
 
-        }
+            String strUserName = userInfo.getNickname();
+            if (!TextUtils.isEmpty(strUserName)) {
+                userNameView.setText(strUserName);
+            } else {
+                userNameView.setText(strUserName);
+            }
 
+            String beginDate = infoEntity.getBeginDate();
+            if (!TextUtils.isEmpty(beginDate)) {
+                dateView.setText(beginDate);
+            } else {
+                dateView.setText("");
+            }
+
+            String startTime = infoEntity.getStartTime();
+            if (!TextUtils.isEmpty(startTime)) {
+                timeView.setText(startTime);
+            } else {
+                timeView.setText("");
+            }
+
+            String strPersonalCount = infoEntity.getPersonCount();
+            if (!TextUtils.isEmpty(strPersonalCount)) {
+                peopleNumberView.setText(strPersonalCount);
+            } else {
+                peopleNumberView.setText("0");
+            }
+
+            String strOrderPrice = infoEntity.getTotalPrice();
+            if (!TextUtils.isEmpty(strOrderPrice)) {
+                orderPriceView.setText(strOrderPrice);
+            } else {
+                orderPriceView.setText("");
+            }
+
+            showOrderStatus(infoEntity.getTripJsonInfo());
+
+        } catch (Exception e) {
+            L.e(TAG, "绑定数据异常:" + e.getMessage());
+            handleException(str, DataError);
+        }
+    }
+
+    private void showOrderStatus(String strTripJsonInfo) {
+        try {
+            TripJsonInfo tripJsonInfo = jsonUtils.fromJSON(TripJsonInfo.class, strTripJsonInfo);
+            if (tripJsonInfo != null) {
+                String strTitle = tripJsonInfo.getInfo().getTitle();
+                if (!TextUtils.isEmpty(strTitle)) {
+                    titleView.setText(strTitle);
+                } else {
+                    titleView.setText("");
+                }
+
+                String status = infoEntity.getStatus();
+                if (!TextUtils.isEmpty(status)) {
+                    switch (status) {
+                        case "0":
+                            orderStatus.setText("待支付");
+                            break;
+
+                        case "1":
+                            orderStatus.setText("已支付 待确认");
+                            confirmOrderBtn.setEnabled(true);
+                            ignoreOrderBtn.setEnabled(true);
+                            break;
+
+                        case "2":
+                            orderStatus.setText("已支付 已确认");
+                            cancelOrderBtn.setEnabled(true);
+                            confirmOrderBtn.setEnabled(false);
+                            ignoreOrderBtn.setEnabled(false);
+                            break;
+
+                        case "3":
+                            orderStatus.setText("未支付 已取消");
+                            cancelOrderBtn.setEnabled(false);
+                            confirmOrderBtn.setEnabled(false);
+                            ignoreOrderBtn.setEnabled(false);
+                            break;
+
+                        case "4":
+                            orderStatus.setText("待退款");
+                            cancelOrderBtn.setEnabled(false);
+                            confirmOrderBtn.setEnabled(false);
+                            ignoreOrderBtn.setEnabled(false);
+                            break;
+
+                        case "5":
+                            orderStatus.setText("退款成功");
+                            cancelOrderBtn.setEnabled(false);
+                            confirmOrderBtn.setEnabled(false);
+                            ignoreOrderBtn.setEnabled(false);
+                            break;
+
+                        case "6":
+                            orderStatus.setText("游玩结束 待付款给随友");
+                            cancelOrderBtn.setEnabled(false);
+                            confirmOrderBtn.setEnabled(false);
+                            ignoreOrderBtn.setEnabled(false);
+                            break;
+
+                        case "7":
+                            orderStatus.setText("结束，已经付款给随友");
+                            cancelOrderBtn.setEnabled(false);
+                            confirmOrderBtn.setEnabled(false);
+                            ignoreOrderBtn.setEnabled(false);
+                            break;
+
+                        case "8":
+                            orderStatus.setText("退款审核中");
+                            break;
+
+                        case "9":
+                            orderStatus.setText("退款审核失败");
+                            break;
+
+                        case "10":
+                            orderStatus.setText("随友取消订单");
+                            break;
+
+                        default:
+                            orderStatus.setText("订单状态未知");
+                            cancelOrderBtn.setEnabled(false);
+                            confirmOrderBtn.setEnabled(false);
+                            ignoreOrderBtn.setEnabled(false);
+                            break;
+                    }
+                } else {
+                    orderStatus.setText("订单状态未知");
+                }
+
+                String strPhone = tripJsonInfo.getCreatePublisherInfo().getPhone();
+                if (!TextUtils.isEmpty(strPhone)) {
+                    phoneNumberView.setText(strPhone);
+                } else {
+                    phoneNumberView.setText("");
+                }
+
+                String strEmail = tripJsonInfo.getCreatePublisherInfo().getEmail();
+                if (!TextUtils.isEmpty(strEmail)) {
+                    emailAddressView.setText(strEmail);
+                } else {
+                    emailAddressView.setText("");
+                }
+
+                List<TripJsonInfo.ServiceListEntity> serviceList = tripJsonInfo.getServiceList();
+                if (serviceList != null && serviceList.size() > 0) {
+                    String serviceName = "";
+                    for (int i = 0; i < serviceList.size(); i++) {
+                        String serviceTitle = serviceList.get(i).getTitle();
+                        if (!TextUtils.isEmpty(serviceTitle)) {
+                            serviceName = serviceName + " " + serviceTitle;
+                        }
+                    }
+
+                    if (!TextUtils.isEmpty(serviceName)) {
+                        itemServiceName.setText(serviceName);
+                    } else {
+                        itemServiceName.setText("");
+                    }
+
+                }
+
+            }
+        } catch (Exception e) {
+            L.e(TAG, "Trip数据解析失败:" + e.getMessage());
+        }
     }
 
     private void cancelOrder(String str) {
@@ -704,6 +703,9 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                 case "-2":
                     Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
                     break;
+                case "-4":
+                    Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
                 default:
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
                     break;
@@ -718,17 +720,20 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            hideDialog();
+            L.i(TAG, "订单详情数据:" + response);
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "Exception:" + e.getMessage());
-            hideDialog();
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
+        @Override
+        public void onFinish() {
+            hideDialog();
+        }
     }
 
     private class CancelOrderResultCallback extends OkHttpManager.ResultCallback<String> {

@@ -29,6 +29,8 @@ import com.minglang.suiuu.entity.SuiuuDetailsData;
 import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.CommentEntity.CommentDataEntity;
 import com.minglang.suiuu.entity.SuiuuDetailsData.DataEntity.ServiceListEntity;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
+import com.minglang.suiuu.fragment.mysuiuu.ParticipateFragment;
+import com.minglang.suiuu.fragment.mysuiuu.PublishedFragment;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
@@ -77,6 +79,8 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     private static final String CONTENT = "content";
     private static final String HEAD_IMG = "headImg";
     private static final String NICK_NAME_ = "nickname";
+
+    private static final String CLASS_NAME = "className";
 
     @BindString(R.string.LoginInvalid)
     String LoginInvalid;
@@ -142,6 +146,9 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     @Bind(R.id.suiuu_details_share)
     ImageView ShareSuiuuDetails;
 
+    @Bind(R.id.suiuu_details_bottom_layout)
+    RelativeLayout bottomLayout;
+
     private SuiuuDetailsCommentAdapter adapter;
 
     WebSettings webSettings;
@@ -179,6 +186,15 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         tripId = getIntent().getStringExtra(TRIP_ID);
         userSign = getIntent().getStringExtra(USER_SIGN);
         headImagePath = getIntent().getStringExtra(HEAD_IMG);
+        String className = getIntent().getStringExtra(CLASS_NAME);
+
+        if (className.equals(ParticipateFragment.class.getSimpleName())) {
+            bottomLayout.setVisibility(View.GONE);
+        } else if (className.equals(PublishedFragment.class.getSimpleName())) {
+            bottomLayout.setVisibility(View.GONE);
+        } else {
+            bottomLayout.setVisibility(View.VISIBLE);
+        }
 
         //微博SSO
         mController.getConfig().setSsoHandler(new SinaSsoHandler());
@@ -309,11 +325,6 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                 intent2UserActivity.putExtra("userSign", user);
                 startActivity(intent2UserActivity);
             }
-
-            //            @JavascriptInterface
-            //            public String HtmlcallJava2(final String param) {
-            //                return "Html call Java : " + param;
-            //            }
 
         };
         return insertObj;

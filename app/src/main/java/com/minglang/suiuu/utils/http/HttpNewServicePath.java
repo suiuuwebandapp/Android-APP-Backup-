@@ -208,6 +208,11 @@ public class HttpNewServicePath {
      */
     public static String setAnswerToQuestionPath = RootPath + "/app-qa/add-answer";
 
+    /**
+     * 得到指定的可邀请用户
+     */
+    public static String getAppiontUserListPath = RootPath + "/app-qa/get-user-by-name";
+
     //********************************************侧栏-随友-随游查看************************************************************\\
 
     /**
@@ -243,32 +248,32 @@ public class HttpNewServicePath {
     /**
      * 获取新订单
      */
-    public static String getNewOrderDataPath = RootPath + "/app-travel/get-un-confirm-order";
+    public static String getNewOrderDataPath = RootPath + "/app-user-order/get-un-confirm-order";
 
     /**
      * 已接到的订单
      */
-    public static String getConfirmOrderDataPath = RootPath + "/app-travel/get-publisher-order-list";
+    public static String getConfirmOrderDataPath = RootPath + "/app-user-order/get-publisher-order-list";
 
     /**
      * 忽略订单
      */
-    public static String setIgnoreOrderDataPath = RootPath + "/app-travel/publisher-ignore-order";
+    public static String setIgnoreOrderDataPath = RootPath + "/app-user-order/publisher-ignore-order";
 
     /**
      * 接受订单
      */
-    public static String setConfirmOrderDataPath = RootPath + "/app-travel/publisher-confirm-order";
+    public static String setConfirmOrderDataPath = RootPath + "/app-user-order/publisher-confirm-order";
 
     /**
      * 取消订单
      */
-    public static String setCancelOrderDataPath = RootPath + "/app-travel/publisher-cancel-order";
+    public static String setCancelOrderDataPath = RootPath + "/app-user-order/publisher-cancel-order";
 
     /**
      * 得到随游的订单详情
      */
-    public static String getOrderDetailsDataPath = RootPath + "/app-travel/trip-order-info";
+    public static String getOrderDetailsDataPath = RootPath + "/app-user-order/trip-order-info";
 
     //********************************************侧栏-随友-账户管理**************************************************************\\
 
@@ -315,6 +320,22 @@ public class HttpNewServicePath {
      * 取消订单
      */
     public static String userCancelOrder = RootPath + "/app-user-order/cancel-order";
+
+    /**
+     * 用户申请退款(未接单)
+     */
+    public static String userApplyRefundPath1 = RootPath + "/app-user-order/refund-order";
+
+    /**
+     * 用户申请退款(已接单)
+     */
+    public static String userApplyRefundPath2 = RootPath + "/app-user-order/refund-order-by-message";
+
+    /**
+     * 用户确认游玩
+     */
+    public static String userComfirmPlayPath = RootPath + "/app-user-order/user-confirm-play";
+
     /**
      * 删除订单
      */

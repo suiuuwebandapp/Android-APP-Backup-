@@ -165,6 +165,8 @@
     <string name="request_wait" translatable="false">正在请求数据，请稍后&#8230;</string>
     <string name="bind_alipay_wait" translatable="false">正在绑定支付宝，请稍候&#8230;</string>
 
+    <string name="search_wait" translatable="false">正在搜索，请稍候&#8230;</string>
+
     <string name="choice_area" translatable="false">请选择地区</string>
     <string name="choice_location" translatable="false">请选择位置</string>
     <string name="choice_theme" translatable="false">请选择主题</string>
@@ -226,6 +228,8 @@
 
     <string name="Share" translatable="false">分享</string>
     <string name="confirm" translatable="false">确定</string>
+
+    <string name="Chat" translatable="false">Chat</string>
 
     <string name="man" translatable="false">男</string>
     <string name="woman" translatable="false">女</string>
@@ -412,6 +416,9 @@
     <string name="deleteOrder" translatable="false">删除订单</string>
     <string name="inputRefundReason" translatable="false">请输入退款理由</string>
     <string name="refundReasonNotNull" translatable="false">退款理由不能为空!</string>
+
+    <string name="applyRefund" translatable="false">申请退款</string>
+    <string name="confirmPlay" translatable="false">确认游玩</string>
 
     <string name="CancelOrderSuccess" translatable="false">订单已取消</string>
     <string name="DeleteOrderSuccess" translatable="false">订单已删除</string>

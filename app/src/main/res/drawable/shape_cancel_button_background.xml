@@ -3,6 +3,6 @@
 
     <solid android:color="@color/slider_line_color"/>
 
-    <corners android:radius="@dimen/layout_10dp" />
+    <corners android:radius="@dimen/layout_5dp" />
 
 </shape>

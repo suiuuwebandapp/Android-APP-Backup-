@@ -177,11 +177,11 @@ public class TripImageFragment extends BaseFragment {
 
             tripImageTagLayout.addView(itemView);
 
-            //if (clickTagList.contains(mTagIntArray[i])) {
-            //imageView.setBackgroundResource(R.drawable.image_view_border_style);
-            //} else {
-            //imageView.setBackgroundResource(0);
-            //}
+            if (clickTagList.contains(mTagIntArray[i])) {
+                imageView.setBackgroundResource(R.drawable.image_view_border_style);
+            } else {
+                imageView.setBackgroundResource(0);
+            }
 
             itemView.setPadding(10, 0, 0, 0);
 

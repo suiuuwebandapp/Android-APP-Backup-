@@ -77,7 +77,7 @@ public class OrderManageActivity extends BaseAppCompatActivity {
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
 
-        NewOrderFragment newOrderFragment = NewOrderFragment.newInstance(userSign, verification,token);
+        NewOrderFragment newOrderFragment = NewOrderFragment.newInstance(userSign, verification, token);
         ConfirmOrderFragment confirmOrderFragment = ConfirmOrderFragment.newInstance(userSign, verification, token);
 
         List<String> titleList = new ArrayList<>();
