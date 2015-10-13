@@ -29,7 +29,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/layout_10dp"
                 android:divider="@color/DefaultGray1"
-                android:dividerHeight="@dimen/layout_10dp" />
+                android:dividerHeight="@dimen/layout_5dp" />
 
         </LinearLayout>
 

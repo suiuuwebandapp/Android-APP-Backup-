@@ -21,7 +21,7 @@
             android:layout_alignParentStart="true"
             android:orientation="vertical">
 
-            <include layout="@layout/common_top_layout" />
+            <include layout="@layout/layout_main_activity_top" />
 
             <TextView
                 android:id="@+id/network_error_view"

@@ -13,7 +13,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.PersonalMainPagerActivity;
 import com.minglang.suiuu.activity.TripImageDetailsActivity;
 import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
-import com.minglang.suiuu.entity.MsgTripGallery.MsgTripGalleryData.MsgTripGalleryItemData;
+import com.minglang.suiuu.entity.MsgTripImage.MsgTripImageData.MsgTripImageItemData;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.ViewHolder;
 
@@ -24,20 +24,20 @@ import java.util.List;
  * <p/>
  * 旅途消息数据适配器
  */
-public class MsgTripGalleryAdapter extends BaseHolderAdapter<MsgTripGalleryItemData> {
+public class MsgTripImageAdapter extends BaseHolderAdapter<MsgTripImageItemData> {
 
     private static final String USER_SIGN = "userSign";
     private static final String ID = "id";
 
     private Context context;
 
-    public MsgTripGalleryAdapter(Context context, List<MsgTripGalleryItemData> list, int itemLayoutId) {
+    public MsgTripImageAdapter(Context context, List<MsgTripImageItemData> list, int itemLayoutId) {
         super(context, list, itemLayoutId);
         this.context = context;
     }
 
     @Override
-    public void convert(ViewHolder helper, MsgTripGalleryItemData item, long position) {
+    public void convert(ViewHolder helper, MsgTripImageItemData item, long position) {
         SimpleDraweeView headImageView = helper.getView(R.id.item_msg_trip_gallery_head_image_view);
         TextView userNameView = helper.getView(R.id.item_msg_trip_gallery_user_name);
         TextView inView = helper.getView(R.id.item_msg_trip_gallery_in);
@@ -95,9 +95,9 @@ public class MsgTripGalleryAdapter extends BaseHolderAdapter<MsgTripGalleryItemD
 
     private class HeadImageViewClickListener implements View.OnClickListener {
 
-        private MsgTripGalleryItemData item;
+        private MsgTripImageItemData item;
 
-        private HeadImageViewClickListener(MsgTripGalleryItemData item) {
+        private HeadImageViewClickListener(MsgTripImageItemData item) {
             this.item = item;
         }
 
@@ -112,9 +112,9 @@ public class MsgTripGalleryAdapter extends BaseHolderAdapter<MsgTripGalleryItemD
 
     private class UserNameViewClickListener implements View.OnClickListener {
 
-        private MsgTripGalleryItemData item;
+        private MsgTripImageItemData item;
 
-        private UserNameViewClickListener(MsgTripGalleryItemData item) {
+        private UserNameViewClickListener(MsgTripImageItemData item) {
             this.item = item;
         }
 
@@ -129,9 +129,9 @@ public class MsgTripGalleryAdapter extends BaseHolderAdapter<MsgTripGalleryItemD
 
     private class InfoViewClickListener implements View.OnClickListener {
 
-        private MsgTripGalleryItemData item;
+        private MsgTripImageItemData item;
 
-        private InfoViewClickListener(MsgTripGalleryItemData item) {
+        private InfoViewClickListener(MsgTripImageItemData item) {
             this.item = item;
         }
 

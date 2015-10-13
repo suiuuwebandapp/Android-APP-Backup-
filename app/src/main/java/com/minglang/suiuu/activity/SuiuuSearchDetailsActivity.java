@@ -269,7 +269,7 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
         tagLayout.removeAllViews();
         LayoutInflater mInflater = LayoutInflater.from(this);
         for (int i = 0; i < tagList.size() - 1; i++) {
-            TextView tv = (TextView) mInflater.inflate(R.layout.tv, tagLayout, false);
+            TextView tv = (TextView) mInflater.inflate(R.layout.widget_tag_default_text_view, tagLayout, false);
             tv.setText(tagList.get(i));
             tv.setId(i);
             tv.setOnClickListener(new MyOnclick());
@@ -399,10 +399,10 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
             for (int i = 0; i < tagList.size() - 1; i++) {
                 if (v.getId() == i) {
                     if (listClick.contains(list.get(i))) {
-                        list.get(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.tv_bg1));
+                        list.get(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_tag_normal));
                         listClick.remove(list.get(i));
                     } else {
-                        list.get(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.tv_bg));
+                        list.get(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_tag_press));
                         listClick.add(list.get(i));
                     }
                 }

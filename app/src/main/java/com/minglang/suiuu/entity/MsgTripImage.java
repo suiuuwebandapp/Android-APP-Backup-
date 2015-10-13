@@ -7,7 +7,7 @@ import java.util.List;
  * <p/>
  * 旅途消息实体类
  */
-public class MsgTripGallery {
+public class MsgTripImage {
 
     /**
      * data : {"msg":{"sortName":null,"showAll":false,"startRow":0,"sortType":"asc","pageSize":10,"currentPage":1,"totalCount":"1"},"data":[{"rType":"4","headImg":"http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg","remindId":"4","relativeId":"3","nickname":"dorlen","id":null,"title":null,"createUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","content":"","url":"","relativeType":"2"}]}
@@ -15,12 +15,12 @@ public class MsgTripGallery {
      * status : 1
      * token : c0fbd5e61afc603c7056034583da140a
      */
-    private MsgTripGalleryData data;
+    private MsgTripImageData data;
     private String message;
     private int status;
     private String token;
 
-    public void setData(MsgTripGalleryData data) {
+    public void setData(MsgTripImageData data) {
         this.data = data;
     }
 
@@ -36,7 +36,7 @@ public class MsgTripGallery {
         this.token = token;
     }
 
-    public MsgTripGalleryData getData() {
+    public MsgTripImageData getData() {
         return data;
     }
 
@@ -52,20 +52,20 @@ public class MsgTripGallery {
         return token;
     }
 
-    public static class MsgTripGalleryData {
+    public static class MsgTripImageData {
 
         /**
          * msg : {"sortName":null,"showAll":false,"startRow":0,"sortType":"asc","pageSize":10,"currentPage":1,"totalCount":"1"}
          * data : [{"rType":"4","headImg":"http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg","remindId":"4","relativeId":"3","nickname":"dorlen","id":null,"title":null,"createUserSign":"a4c1406ff4cc382389f19bf6ec3e55c1","content":"","url":"","relativeType":"2"}]
          */
         private MsgEntity msg;
-        private List<MsgTripGalleryItemData> data;
+        private List<MsgTripImageItemData> data;
 
         public void setMsg(MsgEntity msg) {
             this.msg = msg;
         }
 
-        public void setData(List<MsgTripGalleryItemData> data) {
+        public void setData(List<MsgTripImageItemData> data) {
             this.data = data;
         }
 
@@ -73,7 +73,7 @@ public class MsgTripGallery {
             return msg;
         }
 
-        public List<MsgTripGalleryItemData> getData() {
+        public List<MsgTripImageItemData> getData() {
             return data;
         }
 
@@ -152,7 +152,7 @@ public class MsgTripGallery {
             }
         }
 
-        public static class MsgTripGalleryItemData {
+        public static class MsgTripImageItemData {
             /**
              * rType : 4
              * headImg : http://image.suiuu.com/suiuu_head/20150519053006_33633.jpg

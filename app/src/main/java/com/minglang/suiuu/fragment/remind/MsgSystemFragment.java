@@ -22,7 +22,6 @@ import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -48,7 +47,6 @@ public class MsgSystemFragment extends BaseFragment {
 
     private static final String TAG = MsgSystemFragment.class.getSimpleName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
@@ -77,10 +75,10 @@ public class MsgSystemFragment extends BaseFragment {
     @BindString(R.string.SystemException)
     String SystemException;
 
-    @Bind(R.id.new_attention_fragment_head_frame)
+    @Bind(R.id.msg_system_fragment_head_frame)
     PtrClassicFrameLayout mPtrFrame;
 
-    @Bind(R.id.newAttentionList)
+    @Bind(R.id.msg_system_list_view)
     ListView systemMsgList;
 
     private List<MsgSystemItemData> listAll = new ArrayList<>();
@@ -200,11 +198,11 @@ public class MsgSystemFragment extends BaseFragment {
         String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
         String url = addUrlAndParams(HttpNewServicePath.getSystemMsgDataPath, keyArray, valueArray);
-
+        L.i(TAG, "系统消息请求URL:" + url);
         try {
-            OkHttpManager.onGetAsynRequest(url, new NewAttentionResultCallback());
+            OkHttpManager.onGetAsynRequest(url, new MsgSystemResultCallback());
         } catch (IOException e) {
-            e.printStackTrace();
+            L.e(TAG, "系统消息请求异常:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
@@ -237,52 +235,69 @@ public class MsgSystemFragment extends BaseFragment {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                MsgSystem msgSystem = JsonUtils.getInstance().fromJSON(MsgSystem.class, str);
-                List<MsgSystemItemData> list = msgSystem.getData().getData();
-                if (list != null && list.size() > 0) {
-                    clearDataList();
-                    listAll.addAll(list);
-                    adapter.setList(listAll);
-                } else {
-                    failureLessPage();
-                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                L.e(TAG, "系统消息解析失败:" + e.getMessage());
-                failureLessPage();
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+        } else try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "1":
+                    MsgSystem msgSystem = JsonUtils.getInstance().fromJSON(MsgSystem.class, str);
+                    List<MsgSystemItemData> list = msgSystem.getData().getData();
+                    if (list != null && list.size() > 0) {
+                        clearDataList();
+                        listAll.addAll(list);
+                        adapter.setList(listAll);
+                    } else {
+                        failureLessPage();
+                        Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
+                    break;
+
+                case "-1":
+                    Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-2":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-3":
+                    ReturnLoginActivity(getActivity());
+                    break;
+
+                case "-4":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                default:
                     Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                }
+                    break;
+
             }
+        } catch (Exception e) {
+            L.e(TAG, "系统消息解析失败:" + e.getMessage());
+            failureLessPage();
+            Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
         }
     }
 
-    private class NewAttentionResultCallback extends OkHttpManager.ResultCallback<String> {
+    private class MsgSystemResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String response) {
             L.i(TAG, "系统消息返回的数据:" + response);
-            hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "系统消息获取失败:" + e.getMessage());
-            hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinish() {
+            hideDialog();
         }
 
     }

@@ -90,13 +90,13 @@ public class SelectPictureActivity extends BaseActivity {
     /**
      * 选择图片
      */
-    @Bind(R.id.selectPicture)
+    @Bind(R.id.select_picture)
     GridView selectImage;
 
     /**
      * 所有图片
      */
-    @Bind(R.id.selectPictureAll)
+    @Bind(R.id.select_picture_all)
     TextView allPicture;
 
     @Bind(R.id.tv_top_right_more)
@@ -275,7 +275,7 @@ public class SelectPictureActivity extends BaseActivity {
         startActivityForResult(openCameraIntent, OPEN_CAMERA);
     }
 
-    private String cameraPath = null;
+    private String cameraPath = "";
 
     /**
      * 用于拍照时获取输出的Uri
@@ -340,7 +340,7 @@ public class SelectPictureActivity extends BaseActivity {
 
                     imageView.setImageURI(Uri.parse("file://com.minglang.suiuu/" + item.getFirstImagePath()));
                     title.setText(item.getName());
-                    count.setText(item.images.size() + "张");
+                    count.setText(String.format("%s%s", item.images.size(), "张"));
                     choose.setVisibility(currentImageFolder == item ? View.VISIBLE : View.GONE);
                 }
             });

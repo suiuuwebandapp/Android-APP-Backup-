@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.remind;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.OrderDetailsActivity;
 import com.minglang.suiuu.adapter.MsgOrderAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MsgOrder;
@@ -22,7 +24,6 @@ import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -48,7 +49,6 @@ public class MsgOrderFragment extends BaseFragment {
 
     private static final String TAG = MsgOrderFragment.class.getSimpleName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
@@ -58,6 +58,11 @@ public class MsgOrderFragment extends BaseFragment {
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
+
+    private static final String ID = "id";
+    private static final String ORDER_STATUS = "orderStatus";
+
+    private static final String NEW = "new";
 
     @BindString(R.string.load_wait)
     String DialogMsg;
@@ -74,11 +79,11 @@ public class MsgOrderFragment extends BaseFragment {
     @BindString(R.string.SystemException)
     String SystemException;
 
-    @Bind(R.id.new_reply_fragment_head_frame)
+    @Bind(R.id.msg_order_fragment_head_frame)
     PtrClassicFrameLayout mPtrFrame;
 
-    @Bind(R.id.newReplyList)
-    ListView newReplyList;
+    @Bind(R.id.msg_order_list_view)
+    ListView msgOrderList;
 
     private List<MsgOrderItemData> listAll = new ArrayList<>();
 
@@ -170,7 +175,9 @@ public class MsgOrderFragment extends BaseFragment {
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
         adapter = new MsgOrderAdapter(getActivity(), listAll, R.layout.item_msg_order);
-        newReplyList.setAdapter(adapter);
+        msgOrderList.setAdapter(adapter);
+
+        L.i(TAG, "Activity Name:" + getActivity().getClass().getSimpleName());
     }
 
     private void viewAction() {
@@ -178,7 +185,7 @@ public class MsgOrderFragment extends BaseFragment {
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame, newReplyList, header);
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, msgOrderList, header);
             }
 
             @Override
@@ -188,10 +195,13 @@ public class MsgOrderFragment extends BaseFragment {
             }
         });
 
-        newReplyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        msgOrderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Intent intent = new Intent(getActivity(), OrderDetailsActivity.class);
+                intent.putExtra(ID, listAll.get(position).getRelativeId());
+                intent.putExtra(ORDER_STATUS, NEW);
+                startActivity(intent);
             }
         });
 
@@ -208,11 +218,11 @@ public class MsgOrderFragment extends BaseFragment {
         String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
         String url = addUrlAndParams(HttpNewServicePath.getOrderMsgDataPath, keyArray, valueArray);
-
+        L.i(TAG, "订单消息数据请求URL:" + url);
         try {
-            OkHttpManager.onGetAsynRequest(url, new NewReplyResultCallback());
+            OkHttpManager.onGetAsynRequest(url, new MsgOrderResultCallback());
         } catch (IOException e) {
-            e.printStackTrace();
+            L.e(TAG, "订单消息数据请求错误:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
@@ -246,52 +256,69 @@ public class MsgOrderFragment extends BaseFragment {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                MsgOrder message = JsonUtils.getInstance().fromJSON(MsgOrder.class, str);
-                List<MsgOrderItemData> list = message.getData().getData();
-                if (list != null && list.size() > 0) {
-                    clearDataList();
-                    listAll.addAll(list);
-                    adapter.setList(listAll);
-                } else {
-                    failureLessPage();
-                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                L.e(TAG, "订单数据解析失败:" + e.getMessage());
-                failureLessPage();
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+        } else try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "1":
+                    MsgOrder message = JsonUtils.getInstance().fromJSON(MsgOrder.class, str);
+                    List<MsgOrderItemData> list = message.getData().getData();
+                    if (list != null && list.size() > 0) {
+                        clearDataList();
+                        listAll.addAll(list);
+                        adapter.setList(listAll);
+                    } else {
+                        failureLessPage();
+                        Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
+                    break;
+
+                case "-1":
+                    Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-2":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-3":
+                    ReturnLoginActivity(getActivity());
+                    break;
+
+                case "-4":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                default:
                     Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                }
+                    break;
+
             }
+        } catch (Exception e) {
+            L.e(TAG, "订单数据解析失败:" + e.getMessage());
+            failureLessPage();
+            Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
         }
     }
 
-    private class NewReplyResultCallback extends OkHttpManager.ResultCallback<String> {
+    private class MsgOrderResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String response) {
             L.i(TAG, "订单返回的数据:" + response);
-            hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "Exception:" + e.getMessage());
-            hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinish() {
+            hideDialog();
         }
 
     }

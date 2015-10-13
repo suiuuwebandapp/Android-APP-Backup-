@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-          android:layout_width="wrap_content"
-          android:layout_height="26dip"
-          android:layout_margin="3dp"
-          android:background="@drawable/tv_group_selector"
-          android:textColor="@color/gray">
-</TextView>

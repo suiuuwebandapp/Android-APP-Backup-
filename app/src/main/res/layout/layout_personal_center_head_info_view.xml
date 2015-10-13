@@ -125,57 +125,66 @@
 
         <TextView
             android:id="@+id/personal_center_other_user_comment_number"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="@dimen/layout_10dp"
             android:layout_marginRight="@dimen/layout_10dp"
             android:drawableEnd="@drawable/icon_little_arrow"
             android:drawableRight="@drawable/icon_little_arrow"
+            android:gravity="end"
             android:padding="@dimen/layout_5dp"
             android:text="@string/AllComment"
             android:textColor="@color/textColor" />
 
-        <RelativeLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/layout_5dp">
+            android:layout_marginBottom="@dimen/layout_5dp"
+            android:layout_marginTop="@dimen/layout_5dp">
 
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/personal_center_other_user_head_image_view"
-                android:layout_width="@dimen/layout_50dp"
-                android:layout_height="@dimen/layout_50dp"
-                android:layout_margin="@dimen/layout_5dp"
-                fresco:failureImage="@drawable/default_head_image_error"
-                fresco:failureImageScaleType="fitCenter"
-                fresco:placeholderImage="@drawable/default_head_image"
-                fresco:placeholderImageScaleType="fitCenter"
-                fresco:roundAsCircle="true" />
-
-            <TextView
-                android:id="@+id/personal_center_other_user_name"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/personal_center_other_user_head_image_view"
-                android:layout_toEndOf="@+id/personal_center_other_user_head_image_view"
-                android:layout_toRightOf="@+id/personal_center_other_user_head_image_view"
-                android:singleLine="true"
-                android:text="@string/userName"
-                android:textColor="@color/textColor" />
+                android:padding="@dimen/layout_5dp">
 
-            <TextView
-                android:id="@+id/personal_center_comment_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/personal_center_other_user_head_image_view"
-                android:layout_toEndOf="@+id/personal_center_other_user_head_image_view"
-                android:layout_toRightOf="@+id/personal_center_other_user_head_image_view"
-                android:singleLine="true"
-                android:text="@string/CommentContent"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/textColor" />
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/personal_center_other_user_head_image_view"
+                    android:layout_width="@dimen/layout_50dp"
+                    android:layout_height="@dimen/layout_50dp"
+                    android:layout_margin="@dimen/layout_5dp"
+                    fresco:failureImage="@drawable/default_head_image_error"
+                    fresco:failureImageScaleType="fitCenter"
+                    fresco:placeholderImage="@drawable/default_head_image"
+                    fresco:placeholderImageScaleType="fitCenter"
+                    fresco:roundAsCircle="true" />
 
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/personal_center_other_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/personal_center_other_user_head_image_view"
+                    android:layout_toEndOf="@+id/personal_center_other_user_head_image_view"
+                    android:layout_toRightOf="@+id/personal_center_other_user_head_image_view"
+                    android:singleLine="true"
+                    android:text="@string/userName"
+                    android:textColor="@color/textColor" />
+
+                <TextView
+                    android:id="@+id/personal_center_comment_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/personal_center_other_user_head_image_view"
+                    android:layout_toEndOf="@+id/personal_center_other_user_head_image_view"
+                    android:layout_toRightOf="@+id/personal_center_other_user_head_image_view"
+                    android:singleLine="true"
+                    android:text="@string/CommentContent"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/textColor" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
 
     </LinearLayout>
 

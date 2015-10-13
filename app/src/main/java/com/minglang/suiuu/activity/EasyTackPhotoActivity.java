@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
@@ -75,16 +74,13 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
 
     int status = 0;
 
-    private String[] suiuuTag = {"家庭", "购物", "自然", "惊险", "浪漫", "博物馆", "猎奇"};
-
-    @BindColor(R.color.white)
-    int titleColor;
+    private String[] tagArray = {"家庭", "购物", "自然", "惊险", "浪漫", "博物馆", "猎奇"};
 
     @BindDrawable(R.drawable.shape_trip_image_publish_tag)
-    Drawable tripImagePublishTag;
+    Drawable tagNormalBackground;
 
     @BindDrawable(R.drawable.shape_trip_image_publish_press_tag)
-    Drawable tripImagePublishPressTag;
+    Drawable tagPressBackground;
 
     @BindString(R.string.unable_to_get_location)
     String NoLocation;
@@ -104,14 +100,14 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
     /**
      * 显示选择的照片
      */
-    @Bind(R.id.lv_picture_description)
-    SwipeListView picDescription;
+    @Bind(R.id.picture_description_list_view)
+    SwipeListView selectPictureListView;
 
     @Bind(R.id.tv_show_tag)
     TextView showSelectTagView;
 
     @Bind(R.id.fl_easy_take_photo)
-    FlowLayout easyTakePhotoLayout;
+    FlowLayout tagFlowLayout;
 
     /**
      * 旅途图片地址集合
@@ -174,7 +170,6 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
     }
 
     private void initView() {
-        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
         dialog = new TextProgressDialog(this);
@@ -184,10 +179,10 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
         dialog = new TextProgressDialog(this);
 
         EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, picList);
-        adapter.setSwipeListView(picDescription);
+        adapter.setSwipeListView(selectPictureListView);
 
-        picDescription.setAdapter(adapter);
-        AppUtils.setListViewHeightBasedOnChildren(picDescription);
+        selectPictureListView.setAdapter(adapter);
+        AppUtils.setListViewHeightBasedOnChildren(selectPictureListView);
 
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
@@ -200,7 +195,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
                 + ",layout16Dp:" + layout16dp
                 + ",itemRemoveBtnWidthPx=" + itemRemoveBtnWidth
                 + ",screenWidth=" + screenWidth);
-        picDescription.setOffsetLeft(screenWidth - layout100dp - layout16dp * 2);
+        selectPictureListView.setOffsetLeft(screenWidth - layout100dp - layout16dp * 2);
     }
 
     private void viewAction() {
@@ -239,8 +234,8 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
     private void releaseTripImage() {
         if (judgeTripImageInfo()) {
 
-            for (int i = 0; i < picDescription.getChildCount(); i++) {
-                FrameLayout layout = (FrameLayout) picDescription.getChildAt(i);// 获得子item的layout
+            for (int i = 0; i < selectPictureListView.getChildCount(); i++) {
+                FrameLayout layout = (FrameLayout) selectPictureListView.getChildAt(i);// 获得子item的layout
                 EditText et = (EditText) layout.findViewById(R.id.item_tack_description);// 从layout中获得控件,根据其id
                 picDescriptionList.add(et.getText().toString());
             }
@@ -298,16 +293,13 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
     }
 
     public void setSuiuuTag() {
-        easyTakePhotoLayout.removeAllViews();
-        LayoutInflater mInflater = LayoutInflater.from(this);
-
-        for (int i = 0; i < suiuuTag.length + 1; i++) {
-            TextView textView = (TextView) mInflater.inflate(R.layout.tv, easyTakePhotoLayout, false);
-            if (suiuuTag.length == i) {
+        tagFlowLayout.removeAllViews();
+        for (int i = 0; i < tagArray.length + 1; i++) {
+            TextView textView = (TextView) LayoutInflater.from(this).inflate(R.layout.widget_tag_default_text_view, tagFlowLayout, false);
+            if (tagArray.length == i) {
                 textView.setBackgroundResource(R.drawable.icon_plus);
             } else {
-                textView.setBackground(tripImagePublishTag);
-                textView.setText(suiuuTag[i]);
+                textView.setText(tagArray[i]);
             }
 
             textView.setTag(i);
@@ -319,15 +311,15 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
                 public void onClick(View v) {
                     tagText = "";
                     int tagNumber = (int) v.getTag();
-                    if (suiuuTag.length == tagNumber) {
+                    if (tagArray.length == tagNumber) {
                         showSetTagDialog();
                     } else {
                         if (clickTagViewList.contains(tagViewList.get(tagNumber))) {
-                            tagViewList.get(tagNumber).setBackground(tripImagePublishTag);
+                            tagViewList.get(tagNumber).setBackground(tagNormalBackground);
                             tagViewList.get(tagNumber).setTextColor(getResources().getColor(R.color.gray));
                             clickTagViewList.remove(tagViewList.get(tagNumber));
                         } else {
-                            tagViewList.get(tagNumber).setBackground(tripImagePublishPressTag);
+                            tagViewList.get(tagNumber).setBackground(tagPressBackground);
                             tagViewList.get(tagNumber).setTextColor(getResources().getColor(R.color.white));
                             clickTagViewList.add(tagViewList.get(tagNumber));
                         }
@@ -335,7 +327,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
                     }
                 }
             });
-            easyTakePhotoLayout.addView(textView);
+            tagFlowLayout.addView(textView);
         }
     }
 
@@ -398,10 +390,10 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
         if (data != null && resultCode == 9) {
             picList = data.getStringArrayListExtra(PICTURE_MESSAGE);
             EasyTackPhotoAdapter adapter = new EasyTackPhotoAdapter(this, picList);
-            adapter.setSwipeListView(picDescription);
-            picDescription.setAdapter(adapter);
+            adapter.setSwipeListView(selectPictureListView);
+            selectPictureListView.setAdapter(adapter);
 
-            AppUtils.setListViewHeightBasedOnChildren(picDescription);
+            AppUtils.setListViewHeightBasedOnChildren(selectPictureListView);
 
         } else if (data != null && requestCode == REQUEST_CODE_MAP) {
             latitude = data.getDoubleExtra(LATITUDE, 0);

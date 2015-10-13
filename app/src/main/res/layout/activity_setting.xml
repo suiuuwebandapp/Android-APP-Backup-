@@ -1,7 +1,7 @@
 <RelativeLayout
-    android:id="@+id/settingRootLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/settingRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,7 +10,7 @@
         android:id="@+id/setting_tool_bar"
         style="@style/AppToolBar"
         app:navigationIcon="@drawable/back"
-        app:title="@string/Setting"/>
+        app:title="@string/Setting" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,30 +27,31 @@
             <TextView
                 android:id="@+id/normal_item_view"
                 style="@style/settingTextView"
-                android:text="@string/NormalSetting"/>
+                android:text="@string/NormalSetting"
+                android:visibility="gone" />
 
-            <TextView style="@style/settingDividingLine"/>
+            <TextView style="@style/settingDividingLine" />
 
             <TextView
                 android:id="@+id/receivables_item_view"
                 style="@style/settingTextView"
-                android:text="@string/ReceivablesMode"/>
+                android:text="@string/ReceivablesMode" />
 
-            <TextView style="@style/settingDividingLine"/>
+            <TextView style="@style/settingDividingLine" />
 
             <TextView
                 android:id="@+id/about_item_view"
                 style="@style/settingTextView"
-                android:text="@string/AboutSuiuu"/>
+                android:text="@string/AboutSuiuu" />
 
-            <TextView style="@style/settingDividingLine"/>
+            <TextView style="@style/settingDividingLine" />
 
             <TextView
                 android:id="@+id/contact_item_view"
                 style="@style/settingTextView"
-                android:text="@string/ContactUs"/>
+                android:text="@string/ContactUs" />
 
-            <TextView style="@style/settingDividingLine"/>
+            <TextView style="@style/settingDividingLine" />
 
         </LinearLayout>
 
@@ -65,6 +66,6 @@
         android:background="@drawable/setting_relevant_btn_selector"
         android:text="@string/LoginOut"
         android:textColor="@drawable/setting_relevant_btn_text_color_selector"
-        android:textSize="@dimen/layout_18sp"/>
+        android:textSize="@dimen/layout_18sp" />
 
 </RelativeLayout>

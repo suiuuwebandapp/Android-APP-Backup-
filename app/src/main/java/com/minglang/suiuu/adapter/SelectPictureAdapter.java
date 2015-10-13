@@ -3,7 +3,6 @@ package com.minglang.suiuu.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,6 +14,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.ImageFolder;
 import com.minglang.suiuu.entity.ImageItem;
+import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.List;
 
@@ -65,29 +65,24 @@ public class SelectPictureAdapter extends BaseAdapter {
     @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            holder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_grid_select_picture, null);
-            holder.iv = (SimpleDraweeView) convertView.findViewById(R.id.iv);
-            holder.checkBox = (Button) convertView.findViewById(R.id.check);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+        ViewHolder holder = ViewHolder.get(context, convertView, parent, R.layout.item_grid_select_picture, position);
+        convertView = holder.getConvertView();
+
+        SimpleDraweeView iv = holder.getView(R.id.iv);
+        Button checkBox = holder.getView(R.id.check);
 
         if (position == 0) {
-            holder.iv.setImageResource(R.drawable.camera);
-            holder.checkBox.setVisibility(View.INVISIBLE);
+            iv.setImageResource(R.drawable.camera);
+            checkBox.setVisibility(View.INVISIBLE);
         } else {
             position = position - 1;
-            holder.checkBox.setVisibility(View.VISIBLE);
+            checkBox.setVisibility(View.VISIBLE);
 
             final ImageItem item = currentImageFolder.images.get(position);
-            holder.iv.setImageURI(Uri.parse("file://com.minglang.suiuu/" + item.path));
+            iv.setImageURI(Uri.parse("file://com.minglang.suiuu/" + item.path));
             boolean isSelected = selectedPicture.contains(item.path);
 
-            holder.checkBox.setOnClickListener(new View.OnClickListener() {
+            checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!v.isSelected() && selectedPicture.size() + 1 > MAX_NUM) {
@@ -99,20 +94,15 @@ public class SelectPictureAdapter extends BaseAdapter {
                     } else {
                         selectedPicture.add(item.path);
                     }
-                    complete.setText("完成" + selectedPicture.size() + "/" + MAX_NUM);
+                    complete.setText(String.format("%s%s%s%s", "完成", selectedPicture.size(), "/", MAX_NUM));
                     v.setSelected(selectedPicture.contains(item.path));
                 }
             });
 
-            holder.checkBox.setSelected(isSelected);
+            checkBox.setSelected(isSelected);
         }
 
         return convertView;
-    }
-
-    class ViewHolder {
-        SimpleDraweeView iv;
-        Button checkBox;
     }
 
 }

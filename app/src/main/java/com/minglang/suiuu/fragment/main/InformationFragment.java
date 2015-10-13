@@ -14,7 +14,7 @@ import com.minglang.suiuu.adapter.NewRemindPageAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.fragment.remind.MsgOrderFragment;
 import com.minglang.suiuu.fragment.remind.MsgQuestionFragment;
-import com.minglang.suiuu.fragment.remind.MsgTripGalleryFragment;
+import com.minglang.suiuu.fragment.remind.MsgTripImageFragment;
 import com.minglang.suiuu.fragment.remind.MsgSystemFragment;
 import com.minglang.suiuu.utils.L;
 
@@ -123,13 +123,13 @@ public class InformationFragment extends BaseFragment {
 
         MsgOrderFragment msgOrderFragment = MsgOrderFragment.newInstance(userSign, verification, token);
         MsgQuestionFragment msgQuestionFragment = MsgQuestionFragment.newInstance(userSign, verification, token);
-        MsgTripGalleryFragment msgTripGalleryFragment = MsgTripGalleryFragment.newInstance(userSign, verification, token);
+        MsgTripImageFragment msgTripImageFragment = MsgTripImageFragment.newInstance(userSign, verification, token);
         MsgSystemFragment msgSystemFragment = MsgSystemFragment.newInstance(userSign, verification, token);
 
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(msgOrderFragment);
         fragmentList.add(msgQuestionFragment);
-        fragmentList.add(msgTripGalleryFragment);
+        fragmentList.add(msgTripImageFragment);
         fragmentList.add(msgSystemFragment);
 
         FragmentManager fm = getChildFragmentManager();

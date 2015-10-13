@@ -251,7 +251,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         suiuuDetailsCommentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
+                Intent intent = new Intent(SuiuuDetailsActivity.this, SendCommentActivity.class);
                 intent.putExtra(TRIP_ID, tripId);
                 intent.putExtra(R_ID, listAll.get(position).getCommentId());
                 intent.putExtra(NICK_NAME, listAll.get(position).getNickname());
@@ -497,14 +497,14 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
                 case R.id.suiuu_details_comment:
                     //跳到评论页
-                    Intent intent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
+                    Intent intent = new Intent(SuiuuDetailsActivity.this, SendCommentActivity.class);
                     intent.putExtra(TRIP_ID, tripId);
                     startActivityForResult(intent, COMMENT_SUCCESS);
                     break;
 
                 case R.id.to_comment_activity:
                     //跳到评论页
-                    Intent commentIntent = new Intent(SuiuuDetailsActivity.this, CommonCommentActivity.class);
+                    Intent commentIntent = new Intent(SuiuuDetailsActivity.this, SendCommentActivity.class);
                     commentIntent.putExtra(TRIP_ID, tripId);
                     startActivityForResult(commentIntent, COMMENT_SUCCESS);
                     break;

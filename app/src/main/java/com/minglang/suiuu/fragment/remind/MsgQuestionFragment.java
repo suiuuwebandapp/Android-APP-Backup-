@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.remind;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.ProblemDetailsActivity;
 import com.minglang.suiuu.adapter.MsgQuestionAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MsgQuestion;
@@ -22,7 +24,6 @@ import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -48,7 +49,6 @@ public class MsgQuestionFragment extends BaseFragment {
 
     private static final String TAG = MsgQuestionFragment.class.getSimpleName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
@@ -58,6 +58,10 @@ public class MsgQuestionFragment extends BaseFragment {
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
+
+    private static final String ID = "id";
+    private static final String TITLE = "title";
+    private static final String TAGS = "tag";
 
     private String userSign;
     private String verification;
@@ -129,7 +133,7 @@ public class MsgQuestionFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_msg_question, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        ViewAction();
+        viewAction();
         getData4Service(page);
         L.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
@@ -176,7 +180,7 @@ public class MsgQuestionFragment extends BaseFragment {
         msgQuestionList.setAdapter(adapter);
     }
 
-    private void ViewAction() {
+    private void viewAction() {
 
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
@@ -194,7 +198,11 @@ public class MsgQuestionFragment extends BaseFragment {
         msgQuestionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Intent intent = new Intent(getActivity(), ProblemDetailsActivity.class);
+                intent.putExtra(ID, listAll.get(position).getRelativeId());
+                intent.putExtra(TITLE, listAll.get(position).getQTitle());
+                intent.putExtra(TAGS, "");
+                startActivity(intent);
             }
         });
     }
@@ -210,9 +218,9 @@ public class MsgQuestionFragment extends BaseFragment {
         String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
         String url = addUrlAndParams(HttpNewServicePath.getQuestionAndAnswerMsgDataPath, keyArray, valueArray);
-
+        L.i(TAG, "问答消息请求URL:" + url);
         try {
-            OkHttpManager.onGetAsynRequest(url, new NewCommentResultCallback());
+            OkHttpManager.onGetAsynRequest(url, new MsgQuestionResultCallback());
         } catch (IOException e) {
             e.printStackTrace();
             hideDialog();
@@ -247,52 +255,69 @@ public class MsgQuestionFragment extends BaseFragment {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                MsgQuestion msgQuestion = JsonUtils.getInstance().fromJSON(MsgQuestion.class, str);
-                List<MsgQuestionItemData> list = msgQuestion.getData().getData();
-                if (list != null && list.size() > 0) {
-                    clearDataList();
-                    listAll.addAll(list);
-                    adapter.setList(listAll);
-                } else {
-                    failureLessPage();
-                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                L.e(TAG, "问答消息数据请求失败:" + e.getMessage());
-                failureLessPage();
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+        } else try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "1":
+                    MsgQuestion msgQuestion = JsonUtils.getInstance().fromJSON(MsgQuestion.class, str);
+                    List<MsgQuestionItemData> list = msgQuestion.getData().getData();
+                    if (list != null && list.size() > 0) {
+                        clearDataList();
+                        listAll.addAll(list);
+                        adapter.setList(listAll);
+                    } else {
+                        failureLessPage();
+                        Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
+                    break;
+
+                case "-1":
+                    Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-2":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-3":
+                    ReturnLoginActivity(getActivity());
+                    break;
+
+                case "-4":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                default:
                     Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                }
+                    break;
+
             }
+        } catch (Exception e) {
+            L.e(TAG, "问答消息数据请求失败:" + e.getMessage());
+            failureLessPage();
+            Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
         }
     }
 
-    private class NewCommentResultCallback extends OkHttpManager.ResultCallback<String> {
+    private class MsgQuestionResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String response) {
             L.i(TAG, "问答消息返回的数据:" + response);
-            hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "问答消息数据请求失败:" + e.getMessage());
-            hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinish() {
+            hideDialog();
         }
 
     }

@@ -1,5 +1,6 @@
 package com.minglang.suiuu.base;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -7,12 +8,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 
-import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.FirstLoginActivity;
 import com.minglang.suiuu.utils.L;
 
 import java.net.URLEncoder;
 
-import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
@@ -34,18 +34,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     public static final String COUNTRY = "country";
 
     public static final String HEAD_IMG = "headImagePath";
-
-    @BindString(R.string.NoData)
-    String NoData;
-
-    @BindString(R.string.DataError)
-    String DataError;
-
-    @BindString(R.string.NetworkAnomaly)
-    String NetworkError;
-
-    @BindString(R.string.SystemException)
-    String SystemException;
 
     public FragmentManager fm;
 
@@ -102,7 +90,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             try {
                 value = URLEncoder.encode(valueArray[i], "UTF-8");
             } catch (Exception e) {
-                L.e(TAG, e.getMessage());
+                L.e(TAG, "参数值Encoder异常:" + e.getMessage());
                 value = "";
             }
 
@@ -113,6 +101,12 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             }
         }
         return _url;
+    }
+
+    public void ReturnLoginActivity(Activity activity) {
+        Intent intent = new Intent(activity, FirstLoginActivity.class);
+        activity.startActivity(intent);
+        activity.finish();
     }
 
     @Override

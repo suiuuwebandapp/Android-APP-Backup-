@@ -171,11 +171,11 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.community_layout)
     RelativeLayout communityLayout;
 
-    /**
-     * 收件箱页面按钮布局
-     */
-    @Bind(R.id.inbox_button_layout)
-    FrameLayout inboxButtonLayout;
+    ///**
+    //* 收件箱页面按钮布局
+    //*/
+    //@Bind(R.id.inbox_button_layout)
+    //FrameLayout inboxButtonLayout;
 
     /**
      * 旅图页面相册按钮
@@ -940,7 +940,7 @@ public class MainActivity extends BaseActivity {
                 travelImageLayout.setVisibility(View.VISIBLE);
                 suiuuButtonLayout.setVisibility(View.GONE);
                 communityLayout.setVisibility(View.GONE);
-                inboxButtonLayout.setVisibility(View.GONE);
+                //inboxButtonLayout.setVisibility(View.GONE);
                 break;
 
             case NUMBER2:
@@ -952,7 +952,7 @@ public class MainActivity extends BaseActivity {
                 travelImageLayout.setVisibility(View.GONE);
                 suiuuButtonLayout.setVisibility(View.VISIBLE);
                 communityLayout.setVisibility(View.GONE);
-                inboxButtonLayout.setVisibility(View.GONE);
+                //inboxButtonLayout.setVisibility(View.GONE);
                 break;
 
             case NUMBER3:
@@ -964,7 +964,7 @@ public class MainActivity extends BaseActivity {
                 travelImageLayout.setVisibility(View.GONE);
                 suiuuButtonLayout.setVisibility(View.GONE);
                 communityLayout.setVisibility(View.VISIBLE);
-                inboxButtonLayout.setVisibility(View.GONE);
+                //inboxButtonLayout.setVisibility(View.GONE);
                 break;
             case NUMBER4:
                 imageTabOne.setImageResource(R.drawable.icon_main_1_white);
@@ -975,7 +975,7 @@ public class MainActivity extends BaseActivity {
                 travelImageLayout.setVisibility(View.GONE);
                 suiuuButtonLayout.setVisibility(View.GONE);
                 communityLayout.setVisibility(View.GONE);
-                inboxButtonLayout.setVisibility(View.VISIBLE);
+                //inboxButtonLayout.setVisibility(View.VISIBLE);
                 break;
 
         }

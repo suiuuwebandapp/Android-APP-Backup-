@@ -164,6 +164,7 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
         strID = getIntent().getStringExtra(ID);
         title = getIntent().getStringExtra(TITLE);
         tags = getIntent().getStringExtra(TAGS);
+        L.i(TAG, "ID:" + strID + ",Title:" + title + ",Tags:" + tags);
 
         ButterKnife.bind(this);
         initView();
@@ -282,6 +283,7 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
      * @param url 问题详情请求URL
      */
     private void getProblemData(String url) {
+        L.i(TAG, "问题详情URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new ProblemDetailsResultCallback());
         } catch (IOException e) {
@@ -448,64 +450,64 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             Toast.makeText(this, NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                problemDetails = JsonUtils.getInstance().fromJSON(ProblemDetails.class, str);
-                if (problemDetails != null) {
-                    ProblemDetails.CommunityItemData itemData = problemDetails.getData();
-                    if (itemData != null) {
+        } else try {
+            problemDetails = JsonUtils.getInstance().fromJSON(ProblemDetails.class, str);
+            if (problemDetails != null) {
+                ProblemDetails.CommunityItemData itemData = problemDetails.getData();
+                if (itemData != null) {
 
-                        List<AttentionEntity> attentionEntityList = itemData.getAttention();
-                        if (attentionEntityList != null && attentionEntityList.size() > 0) {
-                            L.i(TAG, "已关注");
-                            isAttention = true;
-                            attentionId = attentionEntityList.get(0).getAttentionId();
-                            attentionBtn.setCompoundDrawablesWithIntrinsicBounds(isAttentionSelector, null, null, null);
-                        } else {
-                            L.i(TAG, "未关注");
-                            isAttention = false;
-                            attentionBtn.setCompoundDrawablesWithIntrinsicBounds(noAttentionSelector, null, null, null);
-                        }
-
-                        List<QuestionEntity> questionList = itemData.getQuestion();
-                        if (questionList != null && questionList.size() > 0) {
-                            QuestionEntity questionEntity = questionList.get(0);
-
-                            qID = questionEntity.getQId();
-
-                            String headImagePath = questionEntity.getHeadImg();
-                            if (!TextUtils.isEmpty(headImagePath)) {
-                                headImageView.setImageURI(Uri.parse(headImagePath));
-                            }
-
-                            String strTitle = questionEntity.getQTitle();
-                            if (!TextUtils.isEmpty(strTitle)) {
-                                problemTitle.setText(strTitle);
-                            } else {
-                                problemTitle.setText("");
-                            }
-
-                            String strContent = questionEntity.getQContent();
-                            if (!TextUtils.isEmpty(strContent)) {
-                                problemContent.setText(Html.fromHtml(strContent));
-                            } else {
-                                problemContent.setText("");
-                            }
-                        }
-
-                        List<AnswerEntity> list = itemData.getAnswer();
-                        if (list != null && list.size() > 0) {
-                            adapter.setList(list);
-                        }
-
+                    List<AttentionEntity> attentionEntityList = itemData.getAttention();
+                    if (attentionEntityList != null && attentionEntityList.size() > 0) {
+                        L.i(TAG, "已关注");
+                        isAttention = true;
+                        attentionId = attentionEntityList.get(0).getAttentionId();
+                        attentionBtn.setCompoundDrawablesWithIntrinsicBounds(isAttentionSelector, null, null, null);
+                    } else {
+                        L.i(TAG, "未关注");
+                        isAttention = false;
+                        attentionBtn.setCompoundDrawablesWithIntrinsicBounds(noAttentionSelector, null, null, null);
                     }
-                }
-            } catch (Exception e) {
-                L.e(TAG, "解析错误:" + e.getMessage());
-                Toast.makeText(this, DataError, Toast.LENGTH_SHORT).show();
-            }
-        }
 
+                    List<QuestionEntity> questionList = itemData.getQuestion();
+                    if (questionList != null && questionList.size() > 0) {
+                        QuestionEntity questionEntity = questionList.get(0);
+
+                        qID = questionEntity.getQId();
+                        if (TextUtils.isEmpty(tags)) {
+                            tags = questionEntity.getQTag();
+                        }
+
+                        String headImagePath = questionEntity.getHeadImg();
+                        if (!TextUtils.isEmpty(headImagePath)) {
+                            headImageView.setImageURI(Uri.parse(headImagePath));
+                        }
+
+                        String strTitle = questionEntity.getQTitle();
+                        if (!TextUtils.isEmpty(strTitle)) {
+                            problemTitle.setText(strTitle);
+                        } else {
+                            problemTitle.setText("");
+                        }
+
+                        String strContent = questionEntity.getQContent();
+                        if (!TextUtils.isEmpty(strContent)) {
+                            problemContent.setText(Html.fromHtml(strContent));
+                        } else {
+                            problemContent.setText("");
+                        }
+                    }
+
+                    List<AnswerEntity> list = itemData.getAnswer();
+                    if (list != null && list.size() > 0) {
+                        adapter.setList(list);
+                    }
+
+                }
+            }
+        } catch (Exception e) {
+            L.e(TAG, "解析错误:" + e.getMessage());
+            Toast.makeText(this, DataError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

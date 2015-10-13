@@ -234,11 +234,10 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
         questionTagFlowLayout.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
         for (int i = 0; i < tagArray.length + 1; i++) {
-            TextView textView = (TextView) inflater.inflate(R.layout.tv, questionTagFlowLayout, false);
+            TextView textView = (TextView) inflater.inflate(R.layout.widget_tag_default_text_view, questionTagFlowLayout, false);
             if (tagArray.length == i) {
                 textView.setBackgroundResource(R.drawable.icon_plus);
             } else {
-                textView.setBackground(tripImagePublishTag);
                 textView.setText(tagArray[i]);
             }
 

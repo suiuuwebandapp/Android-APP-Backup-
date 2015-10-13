@@ -13,6 +13,7 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.attention.AttentionImageFragment;
 import com.minglang.suiuu.fragment.attention.AttentionProblemFragment;
 import com.minglang.suiuu.fragment.attention.AttentionSuiuuFragment;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
@@ -28,8 +29,7 @@ import butterknife.ButterKnife;
  */
 public class AttentionActivity extends BaseAppCompatActivity {
 
-    @BindColor(R.color.white)
-    int titleColor;
+    private static final String TAG = AttentionActivity.class.getSimpleName();
 
     @BindColor(R.color.tr_black)
     int normalColor;
@@ -61,7 +61,6 @@ public class AttentionActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_attention);
         ButterKnife.bind(this);
         initView();
-        viewAction();
     }
 
     /**
@@ -70,8 +69,8 @@ public class AttentionActivity extends BaseAppCompatActivity {
     private void initView() {
 
         userSign = getIntent().getStringExtra(USER_SIGN);
+        L.i(TAG, "传递的UserSign:" + userSign);
 
-        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
         List<String> titleList = new ArrayList<>();
@@ -109,33 +108,9 @@ public class AttentionActivity extends BaseAppCompatActivity {
         tabLayout.setTabsFromPagerAdapter(attentionPagerAdapter);
     }
 
-    /**
-     * 控件动作
-     */
-    private void viewAction() {
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-
-        });
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;

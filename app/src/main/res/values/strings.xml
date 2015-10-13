@@ -376,7 +376,7 @@
     <string name="SelectLocation" translatable="false">选择位置</string>
     <string name="City" translatable="false">城市</string>
     <string name="PleaseSelectCity" translatable="false">请选择城市</string>
-    <string name="comment" translatable="false">评论</string>
+    <string name="Comment" translatable="false">评论</string>
 
     <string name="PersonalCenter" translatable="false">个人中心</string>
 
@@ -601,6 +601,8 @@
     <string name="StandbyContactNumber" translatable="false">备用联系号码:</string>
     <string name="EmergencyContact" translatable="false">紧急联系人:</string>
     <string name="EmergencyContactNumber" translatable="false">紧急联系号码:</string>
+
+    <string name="PleaseInputComment" translatable="false">请输入评论内容</string>
 
     <string name="year" translatable="false">年</string>
     <string name="month" translatable="false">月</string>

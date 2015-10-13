@@ -20,21 +20,19 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.ProblemDetailsActivity;
 import com.minglang.suiuu.activity.SelectCountryActivity;
-import com.minglang.suiuu.adapter.ProblemAdapter;
 import com.minglang.suiuu.adapter.CommunitySortAdapter;
+import com.minglang.suiuu.adapter.ProblemAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.MainCommunity;
-import com.minglang.suiuu.entity.MainCommunity.MainCommunityData;
 import com.minglang.suiuu.entity.MainCommunity.MainCommunityData.MainCommunityItemData;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -158,8 +156,6 @@ public class ProblemFragment extends BaseFragment {
         return cityId;
     }
 
-    String url;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,6 +173,12 @@ public class ProblemFragment extends BaseFragment {
         viewAction();
         L.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     /**
@@ -198,7 +200,6 @@ public class ProblemFragment extends BaseFragment {
         listView.setAdapter(this.adapter);
 
         token = SuiuuInfo.ReadAppTimeSign(getActivity());
-        L.i(TAG, "Token:" + token);
     }
 
     /**
@@ -276,7 +277,7 @@ public class ProblemFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SelectCountryActivity.class);
-                intent.putExtra(OTHER_TAG,TAG);
+                intent.putExtra(OTHER_TAG, TAG);
                 startActivityForResult(intent, AppConstant.SELECT_COUNTRY_OK);
             }
         });
@@ -291,37 +292,42 @@ public class ProblemFragment extends BaseFragment {
      * @return 网络请求参数
      */
     private String buildUrl(int selected, int page) {
+        String url = "";
         switch (selected) {
             case 0:
                 String[] keyArray0 = new String[]{HttpNewServicePath.key, NUMBER, PAGES, TOKEN};
                 String[] valueArray0 = new String[]{verification, String.valueOf(number), String.valueOf(page), token};
                 url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray0, valueArray0);
                 break;
+
             case 1:
                 String[] keyArray1 = new String[]{HttpNewServicePath.key, NUMBER, PAGES, SORT_NAME, TOKEN};
                 String[] valueArray1 = new String[]{verification, String.valueOf(number), String.valueOf(page), String.valueOf(0), token};
                 url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray1, valueArray1);
                 break;
+
             case 2:
                 String[] keyArray2 = new String[]{HttpNewServicePath.key, NUMBER, PAGES, SORT_NAME, TOKEN};
-                String[] valueArray2 = new String[]{verification, String.valueOf(number),
-                        String.valueOf(page), String.valueOf(1), token};
+                String[] valueArray2 = new String[]{verification, String.valueOf(number), String.valueOf(page), String.valueOf(1), token};
                 url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray2, valueArray2);
                 break;
+
             case 3:
                 String[] keyArray3 = new String[]{HttpNewServicePath.key, NUMBER, PAGES, SORT_NAME, COUNTRY_ID, CITY_ID, TOKEN};
-                String[] valueArray3 = new String[]{verification, String.valueOf(number),
-                        String.valueOf(page), String.valueOf(1), countryId, cityId, token};
+                String[] valueArray3 = new String[]{verification, String.valueOf(number), String.valueOf(page), String.valueOf(1),
+                        countryId, cityId, token};
                 url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray3, valueArray3);
                 break;
+
             case 4:
-                String[] keyArray4 = new String[]{HttpNewServicePath.key, NUMBER, PAGES,
-                        SORT_NAME, COUNTRY_ID, CITY_ID, SEARCH, TOKEN};
-                String[] valueArray4 = new String[]{verification, String.valueOf(number),
-                        String.valueOf(page), String.valueOf(1), countryId, cityId, searchString, token};
+                String[] keyArray4 = new String[]{HttpNewServicePath.key, NUMBER, PAGES, SORT_NAME, COUNTRY_ID, CITY_ID, SEARCH, TOKEN};
+                String[] valueArray4 = new String[]{verification, String.valueOf(number), String.valueOf(page), String.valueOf(1),
+                        countryId, cityId, searchString, token};
                 url = addUrlAndParams(HttpNewServicePath.getMainProblemListPath, keyArray4, valueArray4);
                 break;
+
         }
+        L.i(TAG, "问答社区数据请求URL:" + url);
         return url;
     }
 
@@ -393,47 +399,60 @@ public class ProblemFragment extends BaseFragment {
         if (TextUtils.isEmpty(str)) {
             lessPageNumber();
             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                MainCommunity mainCommunity = JsonUtils.getInstance().fromJSON(MainCommunity.class, str);
-                if (mainCommunity != null) {
-                    MainCommunityData communityData = mainCommunity.getData();
-                    if (communityData != null) {
-                        List<MainCommunityItemData> list = communityData.getData();
-                        if (list != null && list.size() > 0) {
-                            clearDataList();
-                            listAll.addAll(list);
-                            adapter.setList(listAll);
-                            L.i(TAG, "当前数据数量:" + listAll.size());
+        } else try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "1":
+                    MainCommunity mainCommunity = JsonUtils.getInstance().fromJSON(MainCommunity.class, str);
+                    if (mainCommunity != null) {
+                        MainCommunity.MainCommunityData communityData = mainCommunity.getData();
+                        if (communityData != null) {
+                            List<MainCommunityItemData> list = communityData.getData();
+                            if (list != null && list.size() > 0) {
+                                clearDataList();
+                                listAll.addAll(list);
+                                adapter.setList(listAll);
+                            } else {
+                                L.e(TAG, "返回列表数据为Null");
+                                clearOldDataList();
+                                lessPageNumber();
+                            }
                         } else {
-                            L.e(TAG, "返回列表数据为Null");
-                            clearOldDataList();
+                            L.e(TAG, "返回二级数据为Null");
                             lessPageNumber();
                         }
                     } else {
-                        L.e(TAG, "返回二级数据为Null");
+                        L.e(TAG, "返回一级数据为Null");
                         lessPageNumber();
                     }
-                } else {
-                    L.e(TAG, "返回一级数据为Null");
-                    lessPageNumber();
-                }
-            } catch (Exception e) {
-                L.e(TAG, "解析异常:" + e.getMessage());
-                lessPageNumber();
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
+                    break;
+
+                case "-1":
+                    Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-2":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-3":
+                    ReturnLoginActivity(getActivity());
+                    break;
+
+                case "-4":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                default:
                     Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                }
+                    break;
+
             }
+        } catch (Exception e) {
+            L.e(TAG, "解析异常:" + e.getMessage());
+            lessPageNumber();
+            Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -467,7 +486,6 @@ public class ProblemFragment extends BaseFragment {
         @Override
         public void onResponse(String response) {
             L.i(TAG, "问答社区返回的数据:" + response);
-            hideDialog();
             bindData2View(response);
         }
 
@@ -475,8 +493,12 @@ public class ProblemFragment extends BaseFragment {
         public void onError(Request request, Exception e) {
             L.e(TAG, "Exception:" + e.getMessage());
             lessPageNumber();
-            hideDialog();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinish() {
+            hideDialog();
         }
 
     }

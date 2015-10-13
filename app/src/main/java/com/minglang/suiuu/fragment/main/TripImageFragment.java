@@ -1,6 +1,5 @@
 package com.minglang.suiuu.fragment.main;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -22,7 +21,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshScrollView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.FirstLoginActivity;
 import com.minglang.suiuu.activity.SearchActivity;
 import com.minglang.suiuu.activity.TripImageDetailsActivity;
 import com.minglang.suiuu.adapter.TripImageAdapter;
@@ -37,7 +35,6 @@ import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -67,7 +64,6 @@ public class TripImageFragment extends BaseFragment {
     private static final String SEARCH = "search";
     private static final String NUMBER = "number";
     private static final String PAGES = "page";
-
     private static final String ID = "id";
 
     private static final String STATUS = "status";
@@ -156,7 +152,6 @@ public class TripImageFragment extends BaseFragment {
         initTagLayout();
     }
 
-    @SuppressLint("InflateParams")
     private void initTagLayout() {
         int[] mPhotosIntArray = new int[]{R.drawable.tag_0, R.drawable.tag_1, R.drawable.tag_2,
                 R.drawable.tag_3, R.drawable.tag_4, R.drawable.tag_5, R.drawable.tag_6};
@@ -165,7 +160,7 @@ public class TripImageFragment extends BaseFragment {
         TextView textView;
 
         for (int i = 0; i < mPhotosIntArray.length; i++) {
-            View itemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_trip_image_tag, null);
+            View itemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_trip_image_tag, tripImageTagLayout, false);
             itemView.setTag(i);
 
             imageView = (SimpleDraweeView) itemView.findViewById(R.id.item_trip_image_tag);
@@ -310,6 +305,7 @@ public class TripImageFragment extends BaseFragment {
         String[] keyArray1 = new String[]{TAGS, SORT_NAME, SEARCH, PAGES, NUMBER, TOKEN};
         String[] valueArray1 = new String[]{newTag, sortName, search, Integer.toString(page), "10", token};
         String url = addUrlAndParams(HttpNewServicePath.getTripImageDataPath, keyArray1, valueArray1);
+        L.i(TAG, "旅图数据请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new loadTripImageListCallBack());
         } catch (IOException e) {
@@ -334,43 +330,47 @@ public class TripImageFragment extends BaseFragment {
 
         @Override
         public void onResponse(String result) {
+            L.i(TAG, "旅途返回数据:" + result);
             if (TextUtils.isEmpty(result)) {
                 Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
             } else try {
-                TripImage tripImage = JsonUtils.getInstance().fromJSON(TripImage.class, result);
-                List<TripImageItemData> list = tripImage.getData().getData();
-                if (list != null && list.size() > 0) {
-                    listAll.addAll(list);
-                    adapter.updateData(listAll);
-                } else {
-                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
+                JSONObject object = new JSONObject(result);
+                String status = object.getString(STATUS);
+                switch (status) {
+                    case "1":
+                        TripImage tripImage = JsonUtils.getInstance().fromJSON(TripImage.class, result);
+                        List<TripImageItemData> list = tripImage.getData().getData();
+                        if (list != null && list.size() > 0) {
+                            listAll.addAll(list);
+                            adapter.updateData(listAll);
+                        } else {
+                            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+
+                    case "-1":
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-2":
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-3":
+                        ReturnLoginActivity(getActivity());
+                        break;
+
+                    case "-4":
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    default:
+                        Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                        break;
                 }
             } catch (Exception e) {
-                try {
-                    JSONObject object = new JSONObject(result);
-                    String status = object.getString(STATUS);
-                    switch (status) {
-                        case "-1":
-                            Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                            break;
-
-                        case "-2":
-                            Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
-                            break;
-
-                        case "-3":
-                            getActivity().startActivity(new Intent(getActivity(), FirstLoginActivity.class));
-                            getActivity().finish();
-                            break;
-
-                        default:
-                            Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                            break;
-                    }
-                } catch (JSONException e1) {
-                    L.e(TAG, "Error Data Parse Failure:" + e1.getMessage());
-                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                }
+                L.e(TAG, "Error Data Parse Failure:" + e.getMessage());
+                Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -384,6 +384,7 @@ public class TripImageFragment extends BaseFragment {
         public void onFinish() {
             hideDialog();
         }
+
     }
 
 }

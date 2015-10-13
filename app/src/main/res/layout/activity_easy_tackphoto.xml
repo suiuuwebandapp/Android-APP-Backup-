@@ -12,6 +12,7 @@
         style="@style/AppToolBar"
         app:navigationIcon="@drawable/back"
         app:title="@string/trip_image_publish"
+        app:titleTextColor="@color/white"
         app:theme="@style/Theme.AppCompat.NoActionBar"/>
 
     <ScrollView
@@ -57,7 +58,7 @@
                 android:textSize="@dimen/layout_15sp" />
 
             <com.minglang.suiuu.customview.swipelistview.SwipeListView
-                android:id="@+id/lv_picture_description"
+                android:id="@+id/picture_description_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/layout_16dp"

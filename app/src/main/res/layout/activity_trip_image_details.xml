@@ -8,7 +8,8 @@
         android:id="@+id/trip_image_details_tool_bar"
         style="@style/AppToolBar"
         app:navigationIcon="@drawable/back"
-        app:title="@string/TripImageDetails" />
+        app:title="@string/TripImageDetails"
+        app:titleTextColor="@color/white"/>
 
     <ScrollView
         android:id="@+id/trip_image_details"

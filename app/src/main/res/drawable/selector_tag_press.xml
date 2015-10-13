@@ -3,16 +3,12 @@
 
     <solid android:color="@color/mainColor" />
 
-    <corners android:radius="@dimen/layout_5dp" />
+    <corners android:radius="@dimen/layout_10dp" />
 
     <padding
-        android:bottom="@dimen/layout_5dp"
+        android:bottom="@dimen/layout_2dp"
         android:left="@dimen/layout_10dp"
         android:right="@dimen/layout_10dp"
-        android:top="@dimen/layout_5dp" />
-
-    <stroke
-        android:width="@dimen/layout_1dp"
-        android:color="@color/btn_gray_normal" />
+        android:top="@dimen/layout_2dp" />
 
 </shape>

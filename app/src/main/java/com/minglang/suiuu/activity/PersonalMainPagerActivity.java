@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,8 +25,6 @@ import com.minglang.suiuu.entity.PersonalCenter;
 import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData;
 import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData.CommentInfoEntity;
 import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData.TripListEntity;
-import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData.UserAptitudeEntity;
-import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData.UserCardEntity;
 import com.minglang.suiuu.entity.PersonalCenter.PersonalCenterData.UserInfoEntity;
 import com.minglang.suiuu.interfaces.RecyclerViewOnItemClickListener;
 import com.minglang.suiuu.utils.AppUtils;
@@ -37,7 +36,6 @@ import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -63,7 +61,6 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
     private static final String DATA = "data";
 
     private static final String TRIP_ID = "tripId";
-
     private static final String RELATE_ID = "relateId";
     private static final String HEAD_IMAGE_PATH = "headImagePath";
 
@@ -210,7 +207,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
 
         if (oneselfUserSign.equals(userSign)) {
             chatView.setVisibility(View.GONE);
-        }else{
+        } else {
             chatView.setVisibility(View.VISIBLE);
         }
     }
@@ -299,183 +296,223 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
         }
     }
 
+    /**
+     * 将数据绑定到View上
+     *
+     * @param str Json字符串数据
+     */
     private void bindData2View(String str) {
         if (TextUtils.isEmpty(str)) {
             Toast.makeText(PersonalMainPagerActivity.this, NoData, Toast.LENGTH_SHORT).show();
         } else try {
-            PersonalCenter personalCenter = JsonUtils.getInstance().fromJSON(PersonalCenter.class, str);
-            if (personalCenter == null) {
-                Toast.makeText(PersonalMainPagerActivity.this, NoData, Toast.LENGTH_SHORT).show();
-            } else {
-                PersonalCenterData data = personalCenter.getData();
-                if (data != null) {
-
-                    String tripCount = data.getTpCount();
-                    if (!TextUtils.isEmpty(tripCount)) {
-                        String str1 = strTripImage + tripCount;
-                        tripImageTitle.setText(str1);
-                    }
-
-                    String questionsCount = data.getQaCount();
-                    if (!TextUtils.isEmpty(questionsCount)) {
-                        String str2 = strQuestions + questionsCount;
-                        questionTitle.setText(str2);
-                    }
-
-                    String attentionCount = data.getCollectCount();
-                    if (!TextUtils.isEmpty(attentionCount)) {
-                        String str3 = strAttention + attentionCount;
-                        attentionTitle.setText(str3);
-                    }
-
-                    String commentNumber = data.getCommentNumb();
-                    if (!TextUtils.isEmpty(commentNumber)) {
-                        String str4 = AllComment + commentNumber;
-                        commentContentNumber.setText(str4);
-                    }
-
-                }
-
-                //TODO 个人主页 用户信息
-                UserInfoEntity userInfo = personalCenter.getData().getUserInfo();
-                if (userInfo != null) {
-
-                    headImagePath = userInfo.getHeadImg();
-                    if (!TextUtils.isEmpty(headImagePath)) {
-                        headImageView.setImageURI(Uri.parse(headImagePath));
-                    }
-
-                    String userName = userInfo.getNickname();
-                    if (!TextUtils.isEmpty(userName)) {
-                        userNameView.setText(userName);
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "1":
+                    PersonalCenter personalCenter = JsonUtils.getInstance().fromJSON(PersonalCenter.class, str);
+                    if (personalCenter == null) {
+                        Toast.makeText(PersonalMainPagerActivity.this, NoData, Toast.LENGTH_SHORT).show();
                     } else {
-                        userNameView.setText("");
-                    }
+                        //TODO 个人主页 用户信息
+                        UserInfoEntity userInfo = personalCenter.getData().getUserInfo();
+                        bindUserInfo2View(userInfo);
 
-                    String countryName = userInfo.getCountryCname();
-                    String cityName = userInfo.getCityCname();
-                    if (!TextUtils.isEmpty(countryName)) {
-                        if (!TextUtils.isEmpty(cityName)) {
-                            userLocation.setText(String.format("%s%s%s", countryName, ",", cityName));
-                        } else {
-                            userLocation.setText(countryName);
+                        PersonalCenterData data = personalCenter.getData();
+                        bindUserReleaseInfo2View(data);
+
+                        //TODO 绑定评论数据
+                        List<CommentInfoEntity> list = personalCenter.getData().getCommentInfo();
+                        bindCommentInfo2View(list);
+
+                        //TODO 实名验证
+                        PersonalCenterData.UserCardEntity userCard = personalCenter.getData().getUserCard();
+                        if (userCard != null) {
+                            verName.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
                         }
-                    } else {
-                        userLocation.setText("");
-                    }
 
-                    String birthday = userInfo.getBirthday();
-                    if (!TextUtils.isEmpty(birthday)) {
-                        String age = AppUtils.calculateAge(birthday);
-                        if (!TextUtils.isEmpty(age)) {
-                            userAge.setText(age);
-                        } else {
-                            userAge.setText("");
+                        //TODO 经历验证
+                        PersonalCenterData.UserAptitudeEntity userAptitude = personalCenter.getData().getUserAptitude();
+                        if (userAptitude != null) {
+                            verExperience.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
                         }
-                    } else {
-                        userAge.setText("");
+
+                        //TODO 相关随游数据绑定
+                        if (isPublisher) {
+                            List<TripListEntity> tripList = personalCenter.getData().getTripList();
+                            if (tripList != null && tripList.size() > 0) {
+                                listAll.addAll(tripList);
+                                adapter.setList(listAll);
+                            }
+                        }
+
                     }
+                    break;
 
-                    String info = userInfo.getInfo();
-                    if (!TextUtils.isEmpty(info)) {
-                        infoView.setText(info);
-                    } else {
-                        infoView.setText("");
-                    }
+                case "-1":
+                    Toast.makeText(PersonalMainPagerActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                    break;
 
-                    String email = userInfo.getEmail();
-                    if (!TextUtils.isEmpty(email)) {
-                        verEmail.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
-                    }
+                case "-2":
+                    Toast.makeText(PersonalMainPagerActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
 
-                    String phone = userInfo.getPhone();
-                    if (!TextUtils.isEmpty(phone)) {
-                        verPhone.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
-                    }
+                case "-3":
+                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+                    localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
+                    ReturnLoginActivity(this);
+                    break;
 
-                    String profession = userInfo.getProfession();
-                    if (!TextUtils.isEmpty(profession)) {
-                        userProfession.setText(profession);
-                    } else {
-                        userProfession.setText("");
-                    }
-
-                } else {
-                    userNameView.setText("");
-                    infoView.setText("");
-                    userLocation.setText("");
-                    userAge.setText("");
-                }
-
-                //TODO 绑定评论数据
-                List<CommentInfoEntity> list = personalCenter.getData().getCommentInfo();
-                if (list != null && list.size() > 0) {
-                    CommentInfoEntity commentInfo = list.get(0);
-
-                    String otherUserHeadImagePath = commentInfo.getHeadImg();
-                    if (!TextUtils.isEmpty(otherUserHeadImagePath)) {
-                        commentUserHeadImageView.setImageURI(Uri.parse(otherUserHeadImagePath));
-                    }
-
-                    String otherUserName = commentInfo.getNickname();
-                    if (!TextUtils.isEmpty(otherUserHeadImagePath)) {
-                        commentUserNameView.setText(otherUserName);
-                    } else {
-                        commentUserNameView.setText("");
-                    }
-
-                    String otherUserContent = commentInfo.getContent();
-                    if (!TextUtils.isEmpty(otherUserContent)) {
-                        commentContentView.setText(otherUserContent);
-                    } else {
-                        commentContentView.setText("");
-                    }
-                } else {
-                    commentUserNameView.setText("");
-                    commentContentView.setText("");
-                }
-
-                /**
-                 * 实名验证
-                 */
-                UserCardEntity userCard = personalCenter.getData().getUserCard();
-                if (userCard != null) {
-                    verName.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
-                }
-
-                /**
-                 * 经历验证
-                 */
-                UserAptitudeEntity userAptitude = personalCenter.getData().getUserAptitude();
-                if (userAptitude != null) {
-                    verExperience.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
-                }
-
-                //TODO 相关随游数据绑定
-                if (isPublisher) {
-                    List<TripListEntity> tripList = personalCenter.getData().getTripList();
-                    if (tripList != null && tripList.size() > 0) {
-                        listAll.addAll(tripList);
-                        adapter.setList(listAll);
-                    }
-                }
+                case "-4":
+                    Toast.makeText(PersonalMainPagerActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
 
             }
-
         } catch (Exception e) {
             L.e(TAG, "解析异常:" + e.getMessage());
-            try {
-                JSONObject object = new JSONObject(str);
-                String status = object.getString(STATUS);
-                if (status.equals("-1")) {
-                    Toast.makeText(PersonalMainPagerActivity.this, SystemException, Toast.LENGTH_SHORT).show();
-                } else if (status.equals("-2")) {
-                    Toast.makeText(PersonalMainPagerActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e1) {
-                e1.printStackTrace();
-                Toast.makeText(PersonalMainPagerActivity.this, DataError, Toast.LENGTH_SHORT).show();
+            Toast.makeText(PersonalMainPagerActivity.this, DataError, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    /**
+     * 将用户信息绑定到View上
+     *
+     * @param userInfo 用户信息数据实体类
+     */
+    private void bindUserInfo2View(UserInfoEntity userInfo) {
+        if (userInfo != null) {
+            headImagePath = userInfo.getHeadImg();//用户头像
+            if (!TextUtils.isEmpty(headImagePath)) {
+                headImageView.setImageURI(Uri.parse(headImagePath));
             }
+
+            String userName = userInfo.getNickname();//用户昵称
+            if (!TextUtils.isEmpty(userName)) {
+                userNameView.setText(userName);
+            } else {
+                userNameView.setText("");
+            }
+
+            String countryName = userInfo.getCountryCname();//用户所在国家
+            String cityName = userInfo.getCityCname();//用户所在城市
+            if (!TextUtils.isEmpty(countryName)) {
+                if (!TextUtils.isEmpty(cityName)) {
+                    userLocation.setText(String.format("%s%s%s", countryName, ",", cityName));
+                } else {
+                    userLocation.setText(countryName);
+                }
+            } else {
+                userLocation.setText("");
+            }
+
+            String profession = userInfo.getProfession();//用户职业
+            if (!TextUtils.isEmpty(profession)) {
+                userProfession.setText(profession);
+            } else {
+                userProfession.setText("");
+            }
+
+            String birthday = userInfo.getBirthday();//用户生日
+            if (!TextUtils.isEmpty(birthday)) {
+                String age = AppUtils.calculateAge(birthday);
+                if (!TextUtils.isEmpty(age)) {
+                    userAge.setText(age);
+                } else {
+                    userAge.setText("");
+                }
+            } else {
+                userAge.setText("");
+            }
+
+            String info = userInfo.getInfo();//用户个人简介
+            if (!TextUtils.isEmpty(info)) {
+                infoView.setText(info);
+            } else {
+                infoView.setText("");
+            }
+
+            String email = userInfo.getEmail();//用户邮箱
+            if (!TextUtils.isEmpty(email)) {
+                verEmail.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
+            }
+
+            String phone = userInfo.getPhone();//用户电话号码
+            if (!TextUtils.isEmpty(phone)) {
+                verPhone.setCompoundDrawables(null, null, DrawableUtils.setBounds(hook), null);
+            }
+
+        } else {
+            userNameView.setText("");
+            infoView.setText("");
+            userLocation.setText("");
+            userAge.setText("");
+        }
+    }
+
+    /**
+     * 将用户的相关数据绑定到View上
+     *
+     * @param data 用户相关数据
+     */
+    private void bindUserReleaseInfo2View(PersonalCenterData data) {
+        if (data != null) {
+            String tripCount = data.getTpCount();//旅图数量
+            if (!TextUtils.isEmpty(tripCount)) {
+                String str1 = strTripImage + tripCount;
+                tripImageTitle.setText(str1);
+            }
+
+            String questionsCount = data.getQaCount();//问答数量
+            if (!TextUtils.isEmpty(questionsCount)) {
+                String str2 = strQuestions + questionsCount;
+                questionTitle.setText(str2);
+            }
+
+            String attentionCount = data.getCollectCount();//关注数量
+            if (!TextUtils.isEmpty(attentionCount)) {
+                String str3 = strAttention + attentionCount;
+                attentionTitle.setText(str3);
+            }
+
+            String commentNumber = data.getCommentNumb();//评论数量
+            if (!TextUtils.isEmpty(commentNumber)) {
+                String str4 = AllComment + commentNumber;
+                commentContentNumber.setText(str4);
+            }
+
+        }
+    }
+
+    /**
+     * 将评论数据绑定到View上
+     *
+     * @param list 评论数据集合
+     */
+    private void bindCommentInfo2View(List<CommentInfoEntity> list) {
+        if (list != null && list.size() > 0) {
+            CommentInfoEntity commentInfo = list.get(0);
+
+            String otherUserHeadImagePath = commentInfo.getHeadImg();
+            if (!TextUtils.isEmpty(otherUserHeadImagePath)) {
+                commentUserHeadImageView.setImageURI(Uri.parse(otherUserHeadImagePath));
+            }
+
+            String otherUserName = commentInfo.getNickname();
+            if (!TextUtils.isEmpty(otherUserHeadImagePath)) {
+                commentUserNameView.setText(otherUserName);
+            } else {
+                commentUserNameView.setText("");
+            }
+
+            String otherUserContent = commentInfo.getContent();
+            if (!TextUtils.isEmpty(otherUserContent)) {
+                commentContentView.setText(otherUserContent);
+            } else {
+                commentContentView.setText("");
+            }
+        } else {
+            commentUserNameView.setText("");
+            commentContentView.setText("");
         }
     }
 
@@ -484,16 +521,18 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
         @Override
         public void onResponse(String response) {
             L.i(TAG, "个人主页返回的数据:" + response);
-            hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "Exception:" + e.getMessage());
-            L.i(TAG, "request:" + request.body().toString());
-            hideDialog();
             Toast.makeText(PersonalMainPagerActivity.this, NetWorkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinish() {
+            hideDialog();
         }
 
     }

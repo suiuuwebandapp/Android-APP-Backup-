@@ -316,7 +316,7 @@
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
 
         <activity
-            android:name=".activity.CommonCommentActivity"
+            android:name=".activity.SendCommentActivity"
             android:label="@string/title_activity_common_comment"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateVisible" />

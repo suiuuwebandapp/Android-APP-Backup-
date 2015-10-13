@@ -18,11 +18,9 @@ import android.widget.Toast;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.FirstLoginActivity;
 import com.minglang.suiuu.activity.SuiuuDetailsActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.base.BaseFragment;
-import com.minglang.suiuu.dbhelper.DataCacheUtils;
 import com.minglang.suiuu.entity.SuiuuData;
 import com.minglang.suiuu.entity.SuiuuItemData;
 import com.minglang.suiuu.utils.JsonUtils;
@@ -32,7 +30,6 @@ import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -125,7 +122,7 @@ public class SuiuuFragment extends BaseFragment {
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         ListView listView = pullToRefreshListView.getRefreshableView();
         listView.setDivider(Divider);
-        listView.setDividerHeight((int) getResources().getDimension(R.dimen.layout_10dp));
+        listView.setDividerHeight((int) getResources().getDimension(R.dimen.layout_5dp));
 
         adapter = new ShowSuiuuAdapter(getActivity(), listAll);
         pullToRefreshListView.setAdapter(adapter);
@@ -172,8 +169,8 @@ public class SuiuuFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
                 intent.putExtra(TRIP_ID, listAll.get(location).getTripId());
                 intent.putExtra(USER_SIGN, listAll.get(location).getUserSign());
-                intent.putExtra(HEAD_IMG,listAll.get(location).getHeadImg());
-                intent.putExtra(CLASS_NAME,TAG);
+                intent.putExtra(HEAD_IMG, listAll.get(location).getHeadImg());
+                intent.putExtra(CLASS_NAME, TAG);
                 startActivity(intent);
             }
         });
@@ -198,6 +195,7 @@ public class SuiuuFragment extends BaseFragment {
         String[] keyArray1 = new String[]{CC, PEOPLE_COUNT, TAGS, START_PRICE, END_PRICE, PAGE, NUMBER, TOKEN};
         String[] valueArray1 = new String[]{countryOrCity, peopleCount, tags, startPrice, endPrice, Integer.toString(page), "10", token};
         String url = addUrlAndParams(HttpNewServicePath.getSuiuuList, keyArray1, valueArray1);
+        L.i(TAG, "随游数据请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new SuiuuDataCallBack());
         } catch (IOException e) {
@@ -224,40 +222,43 @@ public class SuiuuFragment extends BaseFragment {
             if (TextUtils.isEmpty(response)) {
                 Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
             } else try {
-                SuiuuData suiuuData = jsonUtil.fromJSON(SuiuuData.class, response);
-                List<SuiuuItemData> list = suiuuData.getData();
-                if (list != null && list.size() > 0) {
-                    listAll.addAll(list);
-                    adapter.setList(listAll);
-                } else {
-                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
+                JSONObject object = new JSONObject(response);
+                String status = object.getString(STATUS);
+                switch (status) {
+                    case "1":
+                        SuiuuData suiuuData = jsonUtil.fromJSON(SuiuuData.class, response);
+                        List<SuiuuItemData> list = suiuuData.getData();
+                        if (list != null && list.size() > 0) {
+                            listAll.addAll(list);
+                            adapter.setList(listAll);
+                        } else {
+                            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+
+                    case "-1":
+                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-2":
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-3":
+                        ReturnLoginActivity(getActivity());
+                        break;
+
+                    case "-4":
+                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    default:
+                        Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
+                        break;
                 }
             } catch (Exception e) {
-                try {
-                    JSONObject object = new JSONObject(response);
-                    String status = object.getString(STATUS);
-                    switch (status) {
-                        case "-1":
-                            Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                            break;
-
-                        case "-2":
-                            Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
-                            break;
-
-                        case "-3":
-                            getActivity().startActivity(new Intent(getActivity(), FirstLoginActivity.class));
-                            getActivity().finish();
-                            break;
-
-                        default:
-                            Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                            break;
-                    }
-                } catch (JSONException e1) {
-                    L.e(TAG, "Error Data Parse Failure:" + e1.getMessage());
-                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                }
+                L.e(TAG, "Error Data Parse Failure:" + e.getMessage());
+                Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -265,8 +266,6 @@ public class SuiuuFragment extends BaseFragment {
         public void onError(Request request, Exception e) {
             L.e(TAG, "网络请求失败:" + e.getMessage());
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
-            listAll.addAll(JsonUtils.getInstance().fromJSON(SuiuuData.class,
-                    (String) DataCacheUtils.getCacheData(getActivity(), "2").get("data")).getData());
         }
 
         @Override

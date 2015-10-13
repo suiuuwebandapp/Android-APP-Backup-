@@ -64,7 +64,7 @@
 
                 <RatingBar
                     android:id="@+id/order_details_indicator"
-                    style="@style/MyRatingBar"
+                    style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/order_details_base_price"
@@ -73,6 +73,7 @@
                     android:layout_marginEnd="@dimen/layout_8dp"
                     android:layout_marginRight="@dimen/layout_8dp"
                     android:isIndicator="true"
+                    android:progressDrawable="@drawable/food_rating_bar_full"
                     android:rating="1" />
 
             </RelativeLayout>

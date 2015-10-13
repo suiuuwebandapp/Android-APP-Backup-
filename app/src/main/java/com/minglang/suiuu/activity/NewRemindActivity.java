@@ -14,7 +14,7 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.remind.MsgOrderFragment;
 import com.minglang.suiuu.fragment.remind.MsgQuestionFragment;
 import com.minglang.suiuu.fragment.remind.MsgSystemFragment;
-import com.minglang.suiuu.fragment.remind.MsgTripGalleryFragment;
+import com.minglang.suiuu.fragment.remind.MsgTripImageFragment;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class NewRemindActivity extends BaseAppCompatActivity {
     /**
      * 新@页面
      */
-    private MsgTripGalleryFragment msgTripGalleryFragment;
+    private MsgTripImageFragment msgTripImageFragment;
 
     /**
      * 新评论页面
@@ -109,7 +109,7 @@ public class NewRemindActivity extends BaseAppCompatActivity {
         CreateFragment();
 
         List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(msgTripGalleryFragment);
+        fragmentList.add(msgTripImageFragment);
         fragmentList.add(msgQuestionFragment);
         fragmentList.add(msgOrderFragment);
         fragmentList.add(msgSystemFragment);
@@ -128,7 +128,7 @@ public class NewRemindActivity extends BaseAppCompatActivity {
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
 
-        msgTripGalleryFragment = MsgTripGalleryFragment.newInstance(userSign, verification, token);
+        msgTripImageFragment = MsgTripImageFragment.newInstance(userSign, verification, token);
         msgQuestionFragment = MsgQuestionFragment.newInstance(userSign, verification, token);
         msgOrderFragment = MsgOrderFragment.newInstance(userSign, verification, token);
         msgSystemFragment = MsgSystemFragment.newInstance(userSign, verification, token);

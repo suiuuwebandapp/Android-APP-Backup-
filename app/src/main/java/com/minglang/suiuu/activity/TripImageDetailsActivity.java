@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,8 +23,8 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.TripImageDetailsCommentAdapter;
 import com.minglang.suiuu.adapter.TripImageCommentAdapter;
+import com.minglang.suiuu.adapter.TripImageDetailsCommentAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.NoScrollBarListView;
 import com.minglang.suiuu.customview.TextProgressDialog;
@@ -41,15 +40,7 @@ import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
-import com.minglang.suiuu.utils.qq.TencentConstant;
-import com.minglang.suiuu.utils.wechat.WeChatConstant;
 import com.squareup.okhttp.Request;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.sso.SinaSsoHandler;
-import com.umeng.socialize.sso.UMQQSsoHandler;
-import com.umeng.socialize.sso.UMSsoHandler;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,7 +50,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
@@ -82,9 +72,6 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
     private static final int COMMENT_SUCCESS = 20;
 
     private static final String ATTENTION_ID = "attentionId";
-
-    @BindColor(R.color.white)
-    int titleColor;
 
     @BindDrawable(R.drawable.attention_heart_normal)
     Drawable AttentionHeartNormal;
@@ -238,11 +225,9 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
     /**
      * 加载更多的view
      */
-    private TextView textView = null;
+    private TextView loadMore = null;
 
     private Context context;
-
-    private UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,30 +249,11 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(TripImageDetailsActivity.this);
 
-        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
         dialog = new TextProgressDialog(this);
 
         context = TripImageDetailsActivity.this;
-
-        //微博SSO
-        mController.getConfig().setSsoHandler(new SinaSsoHandler());
-
-        // 添加微信平台
-        UMWXHandler wxHandler = new UMWXHandler(this, WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
-        wxHandler.addToSocialSDK();
-
-        // 添加微信朋友圈
-        UMWXHandler wxCircleHandler = new UMWXHandler(this, WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
-        wxCircleHandler.setToCircle(true);
-        wxCircleHandler.addToSocialSDK();
-
-        //QQ好友
-        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(this, TencentConstant.APP_ID, TencentConstant.APP_KEY);
-        qqSsoHandler.addToSocialSDK();
-
-        mController.setShareContent("Test Information");
 
     }
 
@@ -603,21 +569,21 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
         if (!showAllComment) {
             int commentDataListSize = commentDataList.size();
             if (commentDataListSize > 5) {
-                if (textView == null) {
-                    textView = new TextView(this);
-                    textView.setText("点击加载更多");
-                    textView.setPadding(0, 10, 0, 0);
-                    textView.setGravity(Gravity.CENTER);
-                    textView.setTextSize(18);
+                if (loadMore == null) {
+                    loadMore = new TextView(this);
+                    loadMore.setText("点击加载更多");
+                    loadMore.setPadding(0, 10, 0, 0);
+                    loadMore.setGravity(Gravity.CENTER);
+                    loadMore.setTextSize(18);
                 }
 
-                suiuuDetailsCommentListView.addFooterView(textView);
+                suiuuDetailsCommentListView.addFooterView(loadMore);
 
                 newCommentDataList.addAll(commentDataList);
                 newCommentDataList.subList(5, commentDataListSize).clear();
             }
         } else {
-            suiuuDetailsCommentListView.removeFooterView(textView);
+            suiuuDetailsCommentListView.removeFooterView(loadMore);
         }
 
         if (adapter == null) {
@@ -635,17 +601,17 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
             switch (v.getId()) {
                 case R.id.suiuu_details_comment:
                     if (commentContentList.size() > 5 && !showAllComment) {
-                        suiuuDetailsCommentListView.removeFooterView(textView);
+                        suiuuDetailsCommentListView.removeFooterView(loadMore);
                     }
                     //跳到评论页
-                    Intent intent = new Intent(context, CommonCommentActivity.class);
+                    Intent intent = new Intent(context, SendCommentActivity.class);
                     intent.putExtra("articleId", id);
                     startActivityForResult(intent, COMMENT_SUCCESS);
                     break;
 
                 case R.id.to_comment_activity:
                     //跳到评论页
-                    Intent commentIntent = new Intent(context, CommonCommentActivity.class);
+                    Intent commentIntent = new Intent(context, SendCommentActivity.class);
                     commentIntent.putExtra("articleId", id);
                     startActivityForResult(commentIntent, COMMENT_SUCCESS);
                     break;
@@ -672,11 +638,6 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode);
-        if (ssoHandler != null) {
-            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-        }
-
         if (data != null && resultCode == COMMENT_SUCCESS) {
             UserBackData userBackData = SuiuuInfo.ReadUserData(this);
             String content = data.getStringExtra("content");
@@ -693,12 +654,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
             showAllComment = false;
             fullCommentList();
         }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_trip_image_details, menu);
-        return true;
     }
 
     @Override
@@ -706,10 +662,6 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                break;
-
-            case R.id.trip_image_details_shape:
-                mController.openShare(TripImageDetailsActivity.this, false);
                 break;
         }
         return super.onOptionsItemSelected(item);

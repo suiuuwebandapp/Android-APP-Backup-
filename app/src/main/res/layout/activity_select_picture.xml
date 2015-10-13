@@ -1,14 +1,11 @@
-<RelativeLayout
-    android:id="@+id/selectPicture_root"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/select_picture_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.minglang.suiuu.activity.SelectImageActivity">
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/top_action"
-        layout="@layout/common_top2_layout"/>
+        layout="@layout/common_top2_layout" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout12"
@@ -19,7 +16,7 @@
         android:background="@color/tr_black">
 
         <TextView
-            android:id="@+id/selectPictureAll"
+            android:id="@+id/select_picture_all"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
@@ -30,15 +27,16 @@
             android:gravity="center_vertical"
             android:text="@string/AllPicture"
             android:textColor="@color/white"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
+
     </RelativeLayout>
 
     <GridView
-        android:id="@+id/selectPicture"
+        android:id="@+id/select_picture"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_above="@+id/relativeLayout12"
         android:layout_below="@+id/top_action"
-        android:numColumns="3"/>
+        android:numColumns="3" />
 
 </RelativeLayout>

@@ -97,7 +97,7 @@ public class SearchActivity extends BaseActivity {
         suiuuCommendCountry.removeAllViews();
         LayoutInflater mInflater = LayoutInflater.from(this);
         for (int i = 0; i < commentList.length; i++) {
-            TextView tv = (TextView) mInflater.inflate(R.layout.tv, suiuuCommendCountry, false);
+            TextView tv = (TextView) mInflater.inflate(R.layout.widget_tag_default_text_view, suiuuCommendCountry, false);
 
             tv.setText(commentList[i]);
             tv.setId(i);
@@ -113,7 +113,7 @@ public class SearchActivity extends BaseActivity {
         suiuuAsiaCountry.removeAllViews();
         LayoutInflater mInflater = LayoutInflater.from(this);
         for (int i = 0; i < asiaList.length; i++) {
-            TextView tv = (TextView) mInflater.inflate(R.layout.tv, suiuuAsiaCountry, false);
+            TextView tv = (TextView) mInflater.inflate(R.layout.widget_tag_default_text_view, suiuuAsiaCountry, false);
 
             tv.setText(asiaList[i]);
             tv.setId(commentList.length + i);
@@ -130,7 +130,7 @@ public class SearchActivity extends BaseActivity {
         suiuuEuropeanCountry.removeAllViews();
         LayoutInflater mInflater = LayoutInflater.from(this);
         for (int i = 0; i < europeanList.length; i++) {
-            TextView tv = (TextView) mInflater.inflate(R.layout.tv, suiuuEuropeanCountry, false);
+            TextView tv = (TextView) mInflater.inflate(R.layout.widget_tag_default_text_view, suiuuEuropeanCountry, false);
             tv.setText(europeanList[i]);
 
             tv.setId(commentList.length + asiaList.length + i);

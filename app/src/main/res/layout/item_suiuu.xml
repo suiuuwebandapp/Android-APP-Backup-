@@ -71,7 +71,6 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_margin="@dimen/layout_8dp"
-            android:text="8000"
             android:textColor="@color/orange"
             android:textSize="18sp" />
 

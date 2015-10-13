@@ -1,6 +1,7 @@
 package com.minglang.suiuu.fragment.remind;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,10 +12,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.adapter.MsgTripGalleryAdapter;
+import com.minglang.suiuu.activity.TripImageDetailsActivity;
+import com.minglang.suiuu.adapter.MsgTripImageAdapter;
 import com.minglang.suiuu.base.BaseFragment;
-import com.minglang.suiuu.entity.MsgTripGallery;
-import com.minglang.suiuu.entity.MsgTripGallery.MsgTripGalleryData.MsgTripGalleryItemData;
+import com.minglang.suiuu.entity.MsgTripImage;
+import com.minglang.suiuu.entity.MsgTripImage.MsgTripImageData.MsgTripImageItemData;
 import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
@@ -22,7 +24,6 @@ import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -41,14 +42,13 @@ import in.srain.cube.views.ptr.header.MaterialHeader;
 /**
  * 新@页面
  * <p/>
- * Use the {@link MsgTripGalleryFragment#newInstance} factory method to
+ * Use the {@link MsgTripImageFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MsgTripGalleryFragment extends BaseFragment {
+public class MsgTripImageFragment extends BaseFragment {
 
-    private static final String TAG = MsgTripGalleryFragment.class.getSimpleName();
+    private static final String TAG = MsgTripImageFragment.class.getSimpleName();
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
@@ -81,13 +81,13 @@ public class MsgTripGalleryFragment extends BaseFragment {
     PtrClassicFrameLayout mPtrFrame;
 
     @Bind(R.id.new_at_list)
-    ListView msgTripGalleryList;
+    ListView msgTripImageList;
 
-    private List<MsgTripGalleryItemData> listAll = new ArrayList<>();
+    private List<MsgTripImageItemData> listAll = new ArrayList<>();
 
     private ProgressDialog progressDialog;
 
-    private MsgTripGalleryAdapter adapter;
+    private MsgTripImageAdapter adapter;
 
     private int page = 1;
 
@@ -97,10 +97,10 @@ public class MsgTripGalleryFragment extends BaseFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MsgTripGalleryFragment.
+     * @return A new instance of fragment MsgTripImageFragment.
      */
-    public static MsgTripGalleryFragment newInstance(String param1, String param2, String param3) {
-        MsgTripGalleryFragment fragment = new MsgTripGalleryFragment();
+    public static MsgTripImageFragment newInstance(String param1, String param2, String param3) {
+        MsgTripImageFragment fragment = new MsgTripImageFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -109,7 +109,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
         return fragment;
     }
 
-    public MsgTripGalleryFragment() {
+    public MsgTripImageFragment() {
         // Required empty public constructor
     }
 
@@ -125,12 +125,11 @@ public class MsgTripGalleryFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_msg_trip_gallery, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_msg_trip_image, container, false);
         ButterKnife.bind(this, rootView);
         initView();
         viewAction();
         getData4Service(page);
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -161,8 +160,8 @@ public class MsgTripGalleryFragment extends BaseFragment {
         mPtrFrame.addPtrUIHandler(header);
         mPtrFrame.setPinContent(true);
 
-        adapter = new MsgTripGalleryAdapter(getActivity(), listAll, R.layout.item_msg_trip_gallery);
-        msgTripGalleryList.setAdapter(adapter);
+        adapter = new MsgTripImageAdapter(getActivity(), listAll, R.layout.item_msg_trip_image);
+        msgTripImageList.setAdapter(adapter);
     }
 
     private void viewAction() {
@@ -170,7 +169,7 @@ public class MsgTripGalleryFragment extends BaseFragment {
         mPtrFrame.setPtrHandler(new PtrHandler() {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View view, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, msgTripGalleryList, header);
+                return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, msgTripImageList, header);
             }
 
             @Override
@@ -181,11 +180,13 @@ public class MsgTripGalleryFragment extends BaseFragment {
 
         });
 
-        msgTripGalleryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        msgTripImageList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String relativeId = listAll.get(position).getRelativeId();
-                L.i(TAG, "RelativeId:" + relativeId);
+                Intent intent = new Intent(getActivity(), TripImageDetailsActivity.class);
+                intent.putExtra(ID, relativeId);
+                startActivity(intent);
             }
         });
 
@@ -200,9 +201,9 @@ public class MsgTripGalleryFragment extends BaseFragment {
         String url = addUrlAndParams(HttpNewServicePath.getTripGalleryMsgDataPath, keyArray, valueArray);
         L.i(TAG, "旅图信息请求URL:" + url);
         try {
-            OkHttpManager.onGetAsynRequest(url, new MsgTripGalleryResultCallback());
+            OkHttpManager.onGetAsynRequest(url, new MsgTripImageResultCallback());
         } catch (IOException e) {
-            e.printStackTrace();
+            L.e(TAG, "旅图消息请求异常:" + e.getMessage());
             hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
@@ -236,52 +237,72 @@ public class MsgTripGalleryFragment extends BaseFragment {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                MsgTripGallery msgTripGallery = JsonUtils.getInstance().fromJSON(MsgTripGallery.class, str);
-                List<MsgTripGalleryItemData> list = msgTripGallery.getData().getData();
-                if (list != null && list.size() > 0) {
-                    clearDataList();
-                    listAll.addAll(list);
-                    adapter.setList(listAll);
-                } else {
-                    failureLessPage();
-                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                L.e(TAG, "数据解析异常:" + e.getMessage());
-                failureLessPage();
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+        } else try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "1":
+                    MsgTripImage msgTripImage = JsonUtils.getInstance().fromJSON(MsgTripImage.class, str);
+                    List<MsgTripImageItemData> list = msgTripImage.getData().getData();
+                    if (list != null && list.size() > 0) {
+                        clearDataList();
+                        listAll.addAll(list);
+                        adapter.setList(listAll);
+                    } else {
+                        failureLessPage();
+                        Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
+                    break;
+
+                case "-1":
+                    Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-2":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-3":
+                    ReturnLoginActivity(getActivity());
+                    break;
+
+                case "-4":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                default:
                     Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                }
+                    break;
             }
+        } catch (Exception e) {
+            L.e(TAG, "数据解析异常:" + e.getMessage());
+            failureLessPage();
+            Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
         }
     }
 
-    private class MsgTripGalleryResultCallback extends OkHttpManager.ResultCallback<String> {
+    public String getUserSign() {
+        return userSign;
+    }
+
+    private class MsgTripImageResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String response) {
             L.i(TAG, "旅图返回的数据:" + response);
-            hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "获取旅途消息失败:" + e.getMessage());
-            hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinish() {
+            hideDialog();
         }
 
     }
