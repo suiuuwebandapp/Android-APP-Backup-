@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -17,17 +18,17 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.OrderDetailsActivity;
+import com.minglang.suiuu.activity.SettingActivity;
 import com.minglang.suiuu.adapter.OrderListManageAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.OrderManage;
 import com.minglang.suiuu.entity.OrderManage.OrderManageData;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -58,9 +59,6 @@ public class ConfirmOrderFragment extends BaseFragment {
     private static final String NUMBER = "number";
 
     private static final String ID = "id";
-    private static final String ORDER_STATUS = "orderStatus";
-
-    private static final String CONFIRM = "Confirm";
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
@@ -144,9 +142,13 @@ public class ConfirmOrderFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         initView();
         viewAction();
-        getConfirmOrderData(page);
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getConfirmOrderData(page);
     }
 
     @Override
@@ -206,7 +208,6 @@ public class ConfirmOrderFragment extends BaseFragment {
                 String strID = listAll.get(location).getOrderNumber();
                 Intent intent = new Intent(getActivity(), OrderDetailsActivity.class);
                 intent.putExtra(ID, strID);
-                intent.putExtra(ORDER_STATUS, CONFIRM);
                 startActivity(intent);
             }
         });
@@ -223,7 +224,7 @@ public class ConfirmOrderFragment extends BaseFragment {
         String[] keyArray = new String[]{USER_SIGN, HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{userSign, verification, String.valueOf(page), String.valueOf(15), token};
         String url = addUrlAndParams(HttpNewServicePath.getConfirmOrderDataPath, keyArray, valueArray);
-
+        L.i(TAG, "已确认订单数据请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new ConfirmOrderResultCallback());
         } catch (IOException e) {
@@ -232,7 +233,6 @@ public class ConfirmOrderFragment extends BaseFragment {
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
-
     }
 
     /**
@@ -270,44 +270,55 @@ public class ConfirmOrderFragment extends BaseFragment {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                OrderManage orderManage = JsonUtils.getInstance().fromJSON(OrderManage.class, str);
-                if (orderManage != null) {
-                    List<OrderManageData> list = orderManage.getData();
-                    if (list != null && list.size() > 0) {
-                        clearListData();
-                        listAll.addAll(list);
-                        orderListManageAdapter.setList(listAll);
+        } else try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "1":
+                    OrderManage orderManage = JsonUtils.getInstance().fromJSON(OrderManage.class, str);
+                    if (orderManage != null) {
+                        List<OrderManageData> list = orderManage.getData();
+                        if (list != null && list.size() > 0) {
+                            clearListData();
+                            listAll.addAll(list);
+                            orderListManageAdapter.setList(listAll);
+                        } else {
+                            failureLessPage();
+                            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         failureLessPage();
                         Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    failureLessPage();
-                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                }
+                    break;
 
-            } catch (Exception e) {
-                L.e(TAG, "解析失败:" + e.getMessage());
-                failureLessPage();
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
+                case "-1":
+                    Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-2":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-3":
+                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+                    localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
+                    ReturnLoginActivity(getActivity());
+                    break;
+
+                case "-4":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                default:
                     Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                }
-
+                    break;
             }
-
+        } catch (Exception e) {
+            failureLessPage();
+            L.e(TAG, "解析失败:" + e.getMessage());
+            Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private class ConfirmOrderResultCallback extends OkHttpManager.ResultCallback<String> {
@@ -315,16 +326,19 @@ public class ConfirmOrderFragment extends BaseFragment {
         @Override
         public void onResponse(String response) {
             L.i(TAG, "已接单数据:" + response);
-            hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "Exception:" + e.getMessage());
-            hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinish() {
+            hideDialog();
         }
 
     }

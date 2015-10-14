@@ -179,12 +179,6 @@
             android:theme="@style/AppMainTheme" />
 
         <activity
-            android:name=".activity.CommentsActivity"
-            android:label="@string/title_activity_comments"
-            android:theme="@style/AppMainTheme"
-            android:windowSoftInputMode="adjustResize" />
-
-        <activity
             android:name=".activity.SelectPictureActivity"
             android:label="@string/title_activity_select_picture"
             android:theme="@style/AppMainTheme"
@@ -318,7 +312,7 @@
         <activity
             android:name=".activity.SendCommentActivity"
             android:label="@string/title_activity_common_comment"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="stateVisible" />
 
         <!-- 支付相关 -->
@@ -338,13 +332,13 @@
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind"></activity>
+            android:screenOrientation="behind"/>
 
         <activity
             android:name="com.alipay.sdk.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind"></activity>
+            android:screenOrientation="behind"/>
 
         <activity
             android:name=".activity.AccountManagerActivity"

@@ -189,7 +189,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
 
         int layout100dp = (int) getResources().getDimension(R.dimen.layout_100dp);
         int layout16dp = (int) getResources().getDimension(R.dimen.layout_16dp);
-        int itemRemoveBtnWidth = AppUtils.newInstance().px2dip(layout100dp, this);
+        int itemRemoveBtnWidth = AppUtils.px2dip(layout100dp, this);
         int screenWidth = new ScreenUtils(this).getScreenWidth();
         L.i(TAG, "layout100DpToPx=" + layout100dp
                 + ",layout16Dp:" + layout16dp

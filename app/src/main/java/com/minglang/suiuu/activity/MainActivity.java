@@ -331,9 +331,10 @@ public class MainActivity extends BaseActivity {
             nickNameView.setText(user_name);
         }
 
-        if (!isConnected) {
-            webSocketClient.send(buildLoginMessage());
-        }
+        if (webSocketClient != null)
+            if (!isConnected) {
+                webSocketClient.send(buildLoginMessage());
+            }
 
     }
 

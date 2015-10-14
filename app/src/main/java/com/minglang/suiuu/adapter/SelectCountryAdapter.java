@@ -87,7 +87,7 @@ public class SelectCountryAdapter extends BaseAdapter implements SectionIndexer 
 
         if (!TextUtils.isEmpty(StrCnName)) {
             if (!TextUtils.isEmpty(StrUsName)) {
-                countryName.setText(StrCnName + "   " + StrUsName);
+                countryName.setText(String.format("%s%s%s", StrCnName, "   ", StrUsName));
             } else {
                 countryName.setText(StrCnName);
             }

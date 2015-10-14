@@ -604,6 +604,10 @@
 
     <string name="PleaseInputComment" translatable="false">请输入评论内容</string>
 
+    <string name="AllCommentSize" translatable="false">全部评论 (共0条评论)</string>
+    <string name="NoCommentHint" translatable="false">还没有随友评论,快来抢沙发</string>
+    <string name="PutComment" translatable="false">抢沙发</string>
+
     <string name="year" translatable="false">年</string>
     <string name="month" translatable="false">月</string>
     <string name="day" translatable="false">日</string>

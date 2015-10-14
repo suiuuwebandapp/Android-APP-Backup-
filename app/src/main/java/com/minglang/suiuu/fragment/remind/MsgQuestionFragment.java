@@ -153,7 +153,7 @@ public class MsgQuestionFragment extends BaseFragment {
         progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        int paddingParams = AppUtils.newInstance().dip2px(15, getActivity());
+        int paddingParams = AppUtils.dip2px(15, getActivity());
 
         MaterialHeader header = new MaterialHeader(getActivity());
         int[] colors = getResources().getIntArray(R.array.google_colors);

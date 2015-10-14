@@ -13,10 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
@@ -27,11 +30,12 @@ import com.minglang.suiuu.adapter.PrivateLetterChatAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.PrivateChat;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.entity.PrivateChat.PrivateChatData;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -40,8 +44,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -96,7 +103,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
 
     private ProgressDialog progressDialog;
 
-    private List<PrivateChat.PrivateChatData> listAll = new ArrayList<>();
+    private List<PrivateChatData> listAll = new ArrayList<>();
 
     private PrivateLetterChatAdapter adapter;
 
@@ -119,6 +126,8 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
     private OnDisconnectBroadcast onDisconnectBroadcast;
 
     private OnErrorBroadcast onErrorBroadcast;
+
+    private SimpleDateFormat sdf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +174,8 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         }
 
         userSign = SuiuuInfo.ReadUserSign(context);
+
+        sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
     }
 
     /**
@@ -212,6 +223,26 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
                     webSocketClient.send(message);
                     inputMessageView.setText("");
                 }
+            }
+        });
+
+        inputMessageView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    inputString= v.getText().toString().trim();
+                    if (TextUtils.isEmpty(inputString)) {
+                        Toast.makeText(context, "请输入信息", Toast.LENGTH_SHORT).show();
+                    }else {
+                        String message = buildSendMessage();
+                        L.i(TAG, "Send Message:" + message);
+                        addSendMessage();
+                        scrollToBottom();
+                        webSocketClient.send(message);
+                        inputMessageView.setText("");
+                    }
+                }
+                return false;
             }
         });
 
@@ -273,7 +304,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         privateChatData.setReadTime("");
         privateChatData.setMessageId("");
         privateChatData.setReceiveId("");
-        privateChatData.setSendTime("");
+        privateChatData.setSendTime(sdf.format(new Date(System.currentTimeMillis())));
         privateChatData.setSessionkey("");
         privateChatData.setUrl("");
 
@@ -337,6 +368,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
                         if (list != null && list.size() > 0) {
                             listAll.addAll(list);
                             adapter.setList(listAll);
+                            scrollToBottom();
                         } else {
                             Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                         }

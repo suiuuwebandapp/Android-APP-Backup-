@@ -1,27 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/layout_80dp"
+    android:layout_height="@dimen/layout_60dp"
     android:background="@color/white"
+    android:baselineAligned="false"
     android:orientation="horizontal">
-
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5">
-
-        <Button
-            android:id="@+id/order_details_bottom_2_btn_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/shape_ok_button_background"
-            android:text="@android:string/ok"
-            android:textColor="@color/white"/>
-
-    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -31,12 +14,29 @@
         <Button
             android:id="@+id/order_details_bottom_2_btn_2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/layout_40dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="@drawable/shape_cancel_button_background"
             android:text="@string/Ignore"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5">
+
+        <Button
+            android:id="@+id/order_details_bottom_2_btn_1"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/layout_40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/shape_ok_button_background"
+            android:text="@string/confirm"
+            android:textColor="@color/white" />
 
     </RelativeLayout>
 

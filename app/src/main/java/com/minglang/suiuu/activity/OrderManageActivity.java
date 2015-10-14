@@ -29,9 +29,6 @@ import butterknife.ButterKnife;
  */
 public class OrderManageActivity extends BaseAppCompatActivity {
 
-    @BindColor(R.color.white)
-    int titleTextColor;
-
     @BindString(R.string.NewOrder)
     String newOrder;
 
@@ -44,13 +41,13 @@ public class OrderManageActivity extends BaseAppCompatActivity {
     @BindColor(R.color.mainColor)
     int selectedColor;
 
-    @Bind(R.id.orderManageToolbar)
+    @Bind(R.id.order_manage_tool_bar)
     Toolbar toolbar;
 
-    @Bind(R.id.orderManageTabLayout)
+    @Bind(R.id.order_manage_tab_layout)
     TabLayout tabLayout;
 
-    @Bind(R.id.orderManageViewPager)
+    @Bind(R.id.order_manage_view_pager)
     ViewPager viewPager;
 
     @Override
@@ -59,14 +56,12 @@ public class OrderManageActivity extends BaseAppCompatActivity {
         setContentView(R.layout.activity_order_manage);
         ButterKnife.bind(this);
         initView();
-        ViewAction();
     }
 
     /**
      * 初始化方法
      */
     private void initView() {
-        toolbar.setTitleTextColor(titleTextColor);
         setSupportActionBar(toolbar);
 
         tabLayout.addTab(tabLayout.newTab().setText(newOrder), true);
@@ -92,32 +87,6 @@ public class OrderManageActivity extends BaseAppCompatActivity {
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabsFromPagerAdapter(adapter);
-    }
-
-    /**
-     * 控件动作
-     */
-    private void ViewAction() {
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-
-        });
-
     }
 
     @Override

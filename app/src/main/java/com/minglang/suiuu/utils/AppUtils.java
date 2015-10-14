@@ -43,7 +43,7 @@ public class AppUtils {
      * @param dpValue dp数值
      * @return 对应像素值
      */
-    public int dip2px(float dpValue, Context context) {
+    public static int dip2px(float dpValue, Context context) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
@@ -54,7 +54,7 @@ public class AppUtils {
      * @param pxValue 像素数值
      * @return 对应dp值
      */
-    public int px2dip(float pxValue, Context context) {
+    public static int px2dip(float pxValue, Context context) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
@@ -113,7 +113,6 @@ public class AppUtils {
      *
      * @param context The context.
      * @param uri     The Uri to query.
-     * @author paulburke
      */
     @SuppressLint("NewApi")
     public static String getPath(final Context context, final Uri uri) {
@@ -129,17 +128,13 @@ public class AppUtils {
                 final String type = split[0];
 
                 if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/"
-                            + split[1];
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
                 final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"),
-                        Long.valueOf(id));
-
+                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
                 return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
@@ -275,19 +270,18 @@ public class AppUtils {
     /**
      * 根据两点经纬度计算两点之间的距离  返回的是千米
      *
-     * @param lng1
-     * @param lat1
-     * @param lng2
-     * @param lat2
-     * @return
+     * @param lng1 点1经度
+     * @param lat1 点1纬度
+     * @param lng2 点2经度
+     * @param lat2 点2纬度
+     * @return 相距距离
      */
     public static double distanceByLngLat(double lng1, double lat1, double lng2, double lat2) {
         double radLat1 = lat1 * Math.PI / 180;
         double radLat2 = lat2 * Math.PI / 180;
         double a = radLat1 - radLat2;
         double b = lng1 * Math.PI / 180 - lng2 * Math.PI / 180;
-        double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1)
-                * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+        double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
         s = s * 6378137.0;// 取WGS84标准参考椭球中的地球长半径(单位:m)
         s = Math.round(s * 10000) / 10000;
         return Math.round((int) s / 100d) / 10d;
@@ -296,8 +290,8 @@ public class AppUtils {
     /**
      * 判断网络是否连接
      *
-     * @param context
-     * @return
+     * @param context 上下文对象
+     * @return 网络是否连接
      */
     public static boolean isNetworkConnect(Context context) {
         if (context != null) {
@@ -313,15 +307,15 @@ public class AppUtils {
     /**
      * 比较日期前后
      *
-     * @param DATE1
-     * @param DATE2
-     * @return
+     * @param beforeDate 前一个日期
+     * @param afterDate  后一个日期
+     * @return 结果值
      */
-    public static int compareDate(String DATE1, String DATE2) {
+    public static int compareDate(String beforeDate, String afterDate) {
         DateFormat df = new SimpleDateFormat("yyyy:MM:dd", Locale.getDefault());
         try {
-            Date dt1 = df.parse(DATE1);
-            Date dt2 = df.parse(DATE2);
+            Date dt1 = df.parse(beforeDate);
+            Date dt2 = df.parse(afterDate);
             if (dt1.getTime() > dt2.getTime()) {
                 return 1;
             } else if (dt1.getTime() < dt2.getTime()) {
@@ -362,6 +356,149 @@ public class AppUtils {
             }
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    public static String calculationTime(String timeString) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+            SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm", Locale.CHINA);
+
+            //得到目标日期
+            Date appointDate = sdf.parse(timeString);
+
+            //得到当前日期
+            Date nowDate = sdf.parse(sdf.format(new Date(System.currentTimeMillis())));
+
+            L.i(TAG, "指定时间:" + appointDate.toGMTString());
+            L.i(TAG, "当前时间:" + nowDate.toGMTString());
+
+            Calendar appointCalendar = Calendar.getInstance();
+            Calendar nowCalendar = Calendar.getInstance();
+
+            appointCalendar.setTime(appointDate);
+            nowCalendar.setTime(nowDate);
+
+            //目标年份
+            int appointYear = appointCalendar.get(Calendar.YEAR);
+            //当年年份
+            int nowYear = nowCalendar.get(Calendar.YEAR);
+
+            //目标月份
+            int appointMonth = appointCalendar.get(Calendar.MONTH);
+            //当前月份
+            int nowMonth = nowCalendar.get(Calendar.MONTH);
+
+            //目标在当月第X天
+            int appointDayForMonth = appointCalendar.get(Calendar.DAY_OF_MONTH);
+            //本月第X天
+            int nowDayForMonth = nowCalendar.get(Calendar.DAY_OF_MONTH);
+
+            //目标当天第X小时
+            int appointHourForDay = appointCalendar.get(Calendar.HOUR_OF_DAY);
+            //当天第X小时
+            int nowHourForDay = nowCalendar.get(Calendar.HOUR_OF_DAY);
+
+            if (nowYear > appointYear) {
+                return sdf2.format(sdf2.parse(timeString));
+
+            } else if (nowYear == appointYear) {
+                if (nowMonth < appointMonth) {
+                    return sdf2.format(sdf2.parse(timeString));
+
+                } else if (nowMonth == appointMonth) {
+                    if (nowDayForMonth > appointDayForMonth) {
+                        return sdf2.format(sdf2.parse(timeString));
+
+                    } else if (nowDayForMonth == appointDayForMonth) {
+                        if (nowHourForDay > appointHourForDay) {
+                            return sdf2.format(sdf2.parse(timeString));
+
+                        } else if (nowHourForDay == appointHourForDay) {
+                            return sdf3.format(sdf3.parse(timeString));
+                        } else {
+                            return "";
+                        }
+                    } else {
+                        return "";
+                    }
+                } else {
+                    return "";
+                }
+            } else {
+                return "";
+            }
+
+
+        } catch (Exception e) {
+            L.e(TAG, "日期转换异常:" + e.getMessage());
+            return "";
+        }
+    }
+
+    public static boolean ComparisonTime(String timeString1, String timeString2) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+
+        try {
+            Date date1 = sdf.parse(timeString1);
+            Date date2 = sdf.parse(timeString2);
+
+            Calendar calendar1 = Calendar.getInstance();
+            Calendar calendar2 = Calendar.getInstance();
+
+            calendar1.setTime(date1);
+            calendar2.setTime(date2);
+
+            //目标年份
+            int year1 = calendar1.get(Calendar.YEAR);
+            //当年年份
+            int year2 = calendar2.get(Calendar.YEAR);
+
+            //目标月份
+            int month1 = calendar1.get(Calendar.MONTH);
+            //当前月份
+            int month2 = calendar2.get(Calendar.MONTH);
+
+            //目标在当月第X天
+            int day1 = calendar1.get(Calendar.DAY_OF_MONTH);
+            //本月第X天
+            int day2 = calendar2.get(Calendar.DAY_OF_MONTH);
+
+            //目标当天第X小时
+            int hour1 = calendar1.get(Calendar.HOUR_OF_DAY);
+            //当天第X小时
+            int hour2 = calendar2.get(Calendar.HOUR_OF_DAY);
+
+            if (year2 > year1) {
+                return true;
+            } else if (year2 == year1) {
+                if (month2 > month1) {
+                    return true;
+                } else if (month2 == month1) {
+                    if (day2 > day1) {
+                        return true;
+                    } else if (day2 == day1) {
+                        if (hour2 > hour1) {
+                            return true;
+                        } else if (hour2 == hour1) {
+                            return false;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+
+        } catch (Exception e) {
+            L.e(TAG, "日期解析异常:" + e.getMessage());
+            return false;
         }
     }
 

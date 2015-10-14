@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.SuiuuDetailsCommentAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
@@ -107,10 +106,6 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     //显示评论总数
     @Bind(R.id.suiuu_details_comment_number)
     TextView suiuuDetailsCommentNumber;
-
-    //评论头像
-    @Bind(R.id.sdv_comment_head_img)
-    SimpleDraweeView commentHeadImageView;
 
     //评论输入框
     @Bind(R.id.suiuu_details_comment)
@@ -237,8 +232,6 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
                 finish();
             }
         });
-
-        commentHeadImageView.setOnClickListener(new MyOnClickListener());
 
         inputSuiuuCommentView.setOnClickListener(new MyOnClickListener());
 
@@ -490,11 +483,6 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-
-                case R.id.sdv_comment_head_img:
-                    //跳到个人中心
-                    break;
-
                 case R.id.suiuu_details_comment:
                     //跳到评论页
                     Intent intent = new Intent(SuiuuDetailsActivity.this, SendCommentActivity.class);

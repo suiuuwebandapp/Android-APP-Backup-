@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/layout_80dp">
@@ -16,7 +15,7 @@
         fresco:failureImage="@drawable/default_head_image_error"
         fresco:failureImageScaleType="fitXY"
         fresco:placeholderImage="@drawable/default_head_image"
-        fresco:roundAsCircle="true"/>
+        fresco:roundAsCircle="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +33,7 @@
             android:clickable="false"
             android:focusable="false"
             android:text="@string/userName"
-            android:textSize="@dimen/layout_18sp"/>
+            android:textSize="@dimen/layout_18sp" />
 
         <TextView
             android:id="@+id/item_msg_order_in"
@@ -42,7 +41,7 @@
             android:layout_height="wrap_content"
             android:text="@string/in"
             android:textSize="@dimen/layout_18sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/item_msg_order_purchase"
@@ -50,7 +49,7 @@
             android:layout_height="wrap_content"
             android:text="@string/PurchaseSuiuu"
             android:textSize="@dimen/layout_18sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/item_msg_order_cancel"
@@ -58,7 +57,7 @@
             android:layout_height="wrap_content"
             android:text="@android:string/cancel"
             android:textSize="@dimen/layout_18sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/item_msg_order_confirm_refund"
@@ -66,7 +65,7 @@
             android:layout_height="wrap_content"
             android:text="@string/ConfirmationRefund"
             android:textSize="@dimen/layout_18sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/item_msg_order_confirm"
@@ -74,14 +73,15 @@
             android:layout_height="wrap_content"
             android:text="@string/Confirm"
             android:textSize="@dimen/layout_18sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/item_msg_order_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:text="@string/OrderTitle"
-            android:textSize="@dimen/layout_18sp"/>
+            android:textSize="@dimen/layout_18sp" />
 
     </LinearLayout>
 

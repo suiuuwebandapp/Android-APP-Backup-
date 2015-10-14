@@ -255,6 +255,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
 
         context = TripImageDetailsActivity.this;
 
+        suiuuDetailsComment.setKeyListener(null);
     }
 
     private void viewAction() {

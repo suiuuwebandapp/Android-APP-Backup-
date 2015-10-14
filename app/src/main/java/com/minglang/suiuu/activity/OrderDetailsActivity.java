@@ -7,12 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -47,12 +49,14 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.header.MaterialHeader;
 
+/**
+ * 随友用户订单详情页
+ */
 public class OrderDetailsActivity extends BaseAppCompatActivity {
 
     private static final String TAG = OrderDetailsActivity.class.getSimpleName();
 
     private static final String ID = "id";
-    private static final String ORDER_STATUS = "orderStatus";
 
     private static final String ORDER_NUMBER = "orderNumber";
 
@@ -61,10 +65,9 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     private static final String STATUS = "status";
     private static final String DATA = "data";
 
-    private static final String NEW = "new";
-    private static final String CONFIRM = "Confirm";
-
     private static final String TRIP_ID = "tripId";
+
+    private static final String RELATE_ID = "relateId";
 
     /**
      * 订单ID
@@ -82,9 +85,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
     @BindString(R.string.NetworkAnomaly)
     String NetworkError;
-
-    @BindString(R.string.SystemException)
-    String systemException;
 
     @BindString(R.string.DataException)
     String DataException;
@@ -139,20 +139,26 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     @Bind(R.id.suiuu_order_details_scroll_view)
     ScrollView scrollView;
 
+    @Bind(R.id.suiuu_order_details_base_price)
+    TextView basePriceView;
+
     @Bind(R.id.suiuu_order_details_head_image)
     SimpleDraweeView headImageView;
-
-    @Bind(R.id.suiuu_order_details_status)
-    TextView orderStatus;
 
     @Bind(R.id.suiuu_order_details_user_name)
     TextView userNameView;
 
-    @Bind(R.id.suiuu_order_details_chat)
-    ImageView orderDetailsChat;
+    @Bind(R.id.suiuu_order_details_indicator)
+    RatingBar indicator;
 
-    @Bind(R.id.suiuu_order_details_btn)
-    ImageView orderDetailsBtn;
+    @Bind(R.id.suiuu_order_details_chat)
+    ImageView chatView;
+
+    @Bind(R.id.suiuu_order_details_create_time)
+    TextView orderCreateTimeView;
+
+    @Bind(R.id.suiuu_order_details_number)
+    TextView orderNumberView;
 
     @Bind(R.id.suiuu_order_details_title)
     TextView titleView;
@@ -181,11 +187,11 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     @Bind(R.id.suiuu_order_details_email_address)
     TextView emailAddressView;
 
-    @Bind(R.id.order_details_btn_layout_1)
-    RelativeLayout bottomLayout1;
+    @Bind(R.id.suiuu_order_details_phone_layout)
+    RelativeLayout phoneNumberLayout;
 
     @Bind(R.id.order_details_btn_layout_2)
-    LinearLayout bottomLayout2;
+    LinearLayout bottomLayout;
 
     @Bind(R.id.order_details_bottom_1_btn)
     Button cancelOrderBtn;
@@ -201,6 +207,8 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     private boolean isPullToRefresh = true;
 
     private ProgressDialog progressDialog;
+
+    private UserInfoEntity userInfo;
 
     private InfoEntity infoEntity;
 
@@ -219,19 +227,11 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         String[] keyArray = new String[]{ORDER_NUMBER, HttpNewServicePath.key, TOKEN};
         String[] valueArray = new String[]{strID, verification, token};
         getData4Service(HttpNewServicePath.getOrderDetailsDataPath, keyArray, valueArray, orderDetailsResultCallback);
-
     }
 
     private void initView() {
         Intent oldIntent = getIntent();
         strID = oldIntent.getStringExtra(ID);
-        String selectOrderStatus = oldIntent.getStringExtra(ORDER_STATUS);
-
-        if (selectOrderStatus.equals(NEW)) {
-            bottomLayout1.setVisibility(View.VISIBLE);
-        } else if (selectOrderStatus.equals(CONFIRM)) {
-            bottomLayout2.setVisibility(View.VISIBLE);
-        }
 
         jsonUtils = JsonUtils.getInstance();
 
@@ -242,7 +242,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         verification = SuiuuInfo.ReadVerification(this);
         token = SuiuuInfo.ReadAppTimeSign(this);
 
-        int paddingParams = AppUtils.newInstance().dip2px(15, this);
+        int paddingParams = AppUtils.dip2px(15, this);
 
         MaterialHeader header = new MaterialHeader(this);
         int[] colors = getResources().getIntArray(R.array.google_colors);
@@ -261,11 +261,13 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         confirmOrderPath = HttpNewServicePath.setConfirmOrderDataPath;
         ignoreOrderPath = HttpNewServicePath.setIgnoreOrderDataPath;
 
+        phoneNumberLayout.setVisibility(View.GONE);
     }
 
     private void viewAction() {
 
         mPtrFrame.setPtrHandler(new PtrHandler() {
+
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View view, View header) {
                 return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, scrollView, header);
@@ -288,20 +290,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
             }
         });
 
-        orderDetailsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        orderDetailsChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         titleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -309,6 +297,20 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                 Intent intent = new Intent(OrderDetailsActivity.this, SuiuuDetailsActivity.class);
                 intent.putExtra(TRIP_ID, tripId);
                 startActivity(intent);
+            }
+        });
+
+        chatView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String headImagePath = userInfo.getHeadImg();
+                String userSign = userInfo.getUserSign();
+
+                Intent intent = new Intent(OrderDetailsActivity.this, PrivateLetterChatActivity.class);
+                intent.putExtra(RELATE_ID, userSign);
+                intent.putExtra(HEAD_IMG, headImagePath);
+                startActivity(intent);
+
             }
         });
 
@@ -356,18 +358,20 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         confirmOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] keyArray = new String[]{ORDER_ID, TOKEN};
-                String[] valueArray = new String[]{strID, token};
-                getData4Service(confirmOrderPath, keyArray, valueArray, new ConfirmOrderResultCallback());
+                String orderID = infoEntity.getOrderId();
+                L.i(TAG, "orderID:" + orderID);
+                String url = addUrlAndParams(confirmOrderPath, new String[]{TOKEN}, new String[]{token});
+                postData4Service(url, new ConfirmOrderResultCallback(), new OkHttpManager.Params(ORDER_ID, orderID));
             }
         });
 
         ignoreOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] keyArray = new String[]{ORDER_ID, TOKEN};
-                String[] valueArray = new String[]{strID, token};
-                getData4Service(ignoreOrderPath, keyArray, valueArray, new IgnoreOrderResultCallback());
+                String orderID = infoEntity.getOrderId();
+                L.i(TAG, "orderID:" + orderID);
+                String url = addUrlAndParams(ignoreOrderPath, new String[]{TOKEN}, new String[]{token});
+                postData4Service(url, new IgnoreOrderResultCallback(), new OkHttpManager.Params(ORDER_ID, orderID));
             }
         });
 
@@ -381,7 +385,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         }
 
         String url = addUrlAndParams(path, keyArray, valueArray);
-        L.e(TAG, "订单详情URL:" + url);
+        L.i(TAG, "订单详情URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, requestCallBack);
         } catch (IOException e) {
@@ -390,6 +394,22 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void postData4Service(String path, OkHttpManager.ResultCallback<String> requestCallBack, OkHttpManager.Params... params) {
+        if (isPullToRefresh) {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
+
+        try {
+            OkHttpManager.onPostAsynRequest(path, requestCallBack, params);
+        } catch (IOException e) {
+            e.printStackTrace();
+            hideDialog();
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void hideDialog() {
@@ -409,161 +429,124 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         if (TextUtils.isEmpty(str)) {
             Toast.makeText(this, NoData, Toast.LENGTH_SHORT).show();
         } else try {
-            OrderDetails orderDetails = jsonUtils.fromJSON(OrderDetails.class, str);
-            infoEntity = orderDetails.getData().getInfo();
-            UserInfoEntity userInfo = orderDetails.getData().getUserInfo();
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "1":
+                    OrderDetails orderDetails = jsonUtils.fromJSON(OrderDetails.class, str);
+                    infoEntity = orderDetails.getData().getInfo();
+                    userInfo = orderDetails.getData().getUserInfo();
 
-            String headImagePath = userInfo.getHeadImg();
-            if (!TextUtils.isEmpty(headImagePath)) {
-                headImageView.setImageURI(Uri.parse(headImagePath));
-            } else {
-                headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
+                    showUserInfo();
+                    showOrderInfo();
+                    showTripInfo();
+                    switchOrderStatus();
+                    break;
+
+                case "-1":
+                    Toast.makeText(OrderDetailsActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-2":
+                    Toast.makeText(OrderDetailsActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-3":
+                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+                    localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
+                    ReturnLoginActivity(this);
+                    break;
+
+                case "-4":
+                    Toast.makeText(OrderDetailsActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
             }
-
-            String strUserName = userInfo.getNickname();
-            if (!TextUtils.isEmpty(strUserName)) {
-                userNameView.setText(strUserName);
-            } else {
-                userNameView.setText(strUserName);
-            }
-
-            String beginDate = infoEntity.getBeginDate();
-            if (!TextUtils.isEmpty(beginDate)) {
-                dateView.setText(beginDate);
-            } else {
-                dateView.setText("");
-            }
-
-            String startTime = infoEntity.getStartTime();
-            if (!TextUtils.isEmpty(startTime)) {
-                timeView.setText(startTime);
-            } else {
-                timeView.setText("");
-            }
-
-            String strPersonalCount = infoEntity.getPersonCount();
-            if (!TextUtils.isEmpty(strPersonalCount)) {
-                peopleNumberView.setText(strPersonalCount);
-            } else {
-                peopleNumberView.setText("0");
-            }
-
-            String strOrderPrice = infoEntity.getTotalPrice();
-            if (!TextUtils.isEmpty(strOrderPrice)) {
-                orderPriceView.setText(strOrderPrice);
-            } else {
-                orderPriceView.setText("");
-            }
-
-            showOrderStatus(infoEntity.getTripJsonInfo());
-
         } catch (Exception e) {
             L.e(TAG, "绑定数据异常:" + e.getMessage());
-            handleException(str, DataError);
+            Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void showOrderStatus(String strTripJsonInfo) {
+    private void showUserInfo() {
+        String headImagePath = userInfo.getHeadImg();
+        if (!TextUtils.isEmpty(headImagePath)) {
+            headImageView.setImageURI(Uri.parse(headImagePath));
+        } else {
+            headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
+        }
+
+        String strUserName = userInfo.getNickname();
+        if (!TextUtils.isEmpty(strUserName)) {
+            userNameView.setText(strUserName);
+        } else {
+            userNameView.setText(strUserName);
+        }
+    }
+
+    private void showOrderInfo() {
+        String basePrice = infoEntity.getBasePrice();
+        if (!TextUtils.isEmpty(basePrice)) {
+            basePriceView.setText(basePrice);
+        }
+
+        String strOrderCreateTime = infoEntity.getCreateTime();
+        if (!TextUtils.isEmpty(strOrderCreateTime)) {
+            orderCreateTimeView.setText(strOrderCreateTime);
+        }
+
+        String strOrderNumber = infoEntity.getOrderNumber();
+        if (!TextUtils.isEmpty(strOrderNumber)) {
+            orderNumberView.setText(strOrderNumber);
+        }
+
+        String beginDate = infoEntity.getBeginDate();
+        if (!TextUtils.isEmpty(beginDate)) {
+            dateView.setText(beginDate);
+        }
+
+        String startTime = infoEntity.getStartTime();
+        if (!TextUtils.isEmpty(startTime)) {
+            timeView.setText(startTime);
+        }
+
+        String strPersonalCount = infoEntity.getPersonCount();
+        if (!TextUtils.isEmpty(strPersonalCount)) {
+            peopleNumberView.setText(strPersonalCount);
+        }
+
+        String strOrderPrice = infoEntity.getTotalPrice();
+        if (!TextUtils.isEmpty(strOrderPrice)) {
+            orderPriceView.setText(strOrderPrice);
+        }
+    }
+
+    private void showTripInfo() {
         try {
-            TripJsonInfo tripJsonInfo = jsonUtils.fromJSON(TripJsonInfo.class, strTripJsonInfo);
+            TripJsonInfo tripJsonInfo = jsonUtils.fromJSON(TripJsonInfo.class, infoEntity.getTripJsonInfo());
             if (tripJsonInfo != null) {
                 String strTitle = tripJsonInfo.getInfo().getTitle();
                 if (!TextUtils.isEmpty(strTitle)) {
                     titleView.setText(strTitle);
-                } else {
-                    titleView.setText("");
                 }
 
-                String status = infoEntity.getStatus();
-                if (!TextUtils.isEmpty(status)) {
-                    switch (status) {
-                        case "0":
-                            orderStatus.setText("待支付");
-                            break;
-
-                        case "1":
-                            orderStatus.setText("已支付 待确认");
-                            confirmOrderBtn.setEnabled(true);
-                            ignoreOrderBtn.setEnabled(true);
-                            break;
-
-                        case "2":
-                            orderStatus.setText("已支付 已确认");
-                            cancelOrderBtn.setEnabled(true);
-                            confirmOrderBtn.setEnabled(false);
-                            ignoreOrderBtn.setEnabled(false);
-                            break;
-
-                        case "3":
-                            orderStatus.setText("未支付 已取消");
-                            cancelOrderBtn.setEnabled(false);
-                            confirmOrderBtn.setEnabled(false);
-                            ignoreOrderBtn.setEnabled(false);
-                            break;
-
-                        case "4":
-                            orderStatus.setText("待退款");
-                            cancelOrderBtn.setEnabled(false);
-                            confirmOrderBtn.setEnabled(false);
-                            ignoreOrderBtn.setEnabled(false);
-                            break;
-
-                        case "5":
-                            orderStatus.setText("退款成功");
-                            cancelOrderBtn.setEnabled(false);
-                            confirmOrderBtn.setEnabled(false);
-                            ignoreOrderBtn.setEnabled(false);
-                            break;
-
-                        case "6":
-                            orderStatus.setText("游玩结束 待付款给随友");
-                            cancelOrderBtn.setEnabled(false);
-                            confirmOrderBtn.setEnabled(false);
-                            ignoreOrderBtn.setEnabled(false);
-                            break;
-
-                        case "7":
-                            orderStatus.setText("结束，已经付款给随友");
-                            cancelOrderBtn.setEnabled(false);
-                            confirmOrderBtn.setEnabled(false);
-                            ignoreOrderBtn.setEnabled(false);
-                            break;
-
-                        case "8":
-                            orderStatus.setText("退款审核中");
-                            break;
-
-                        case "9":
-                            orderStatus.setText("退款审核失败");
-                            break;
-
-                        case "10":
-                            orderStatus.setText("随友取消订单");
-                            break;
-
-                        default:
-                            orderStatus.setText("订单状态未知");
-                            cancelOrderBtn.setEnabled(false);
-                            confirmOrderBtn.setEnabled(false);
-                            ignoreOrderBtn.setEnabled(false);
-                            break;
-                    }
+                String strScore = tripJsonInfo.getInfo().getScore();
+                L.i(TAG, "星级评价:" + strScore);
+                if (TextUtils.isEmpty(strScore)) {
+                    indicator.setRating(0f);
                 } else {
-                    orderStatus.setText("订单状态未知");
+                    float score = Float.valueOf(strScore);
+                    indicator.setRating(score);
                 }
 
                 String strPhone = tripJsonInfo.getCreatePublisherInfo().getPhone();
                 if (!TextUtils.isEmpty(strPhone)) {
                     phoneNumberView.setText(strPhone);
-                } else {
-                    phoneNumberView.setText("");
                 }
 
                 String strEmail = tripJsonInfo.getCreatePublisherInfo().getEmail();
                 if (!TextUtils.isEmpty(strEmail)) {
                     emailAddressView.setText(strEmail);
-                } else {
-                    emailAddressView.setText("");
                 }
 
                 List<TripJsonInfo.ServiceListEntity> serviceList = tripJsonInfo.getServiceList();
@@ -590,129 +573,187 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         }
     }
 
-    private void cancelOrder(String str) {
-        if (!TextUtils.isEmpty(str)) {
-            try {
-                JSONObject object = new JSONObject(str);
-                String status = object.getString(STATUS);
-                String returnData = object.getString(DATA);
+    private void switchOrderStatus() {
+        String status = infoEntity.getStatus();
+        if (!TextUtils.isEmpty(status)) {
+            L.i(TAG, "订单状态:" + status);
+            switch (status) {
+                case "1":
+                    bottomLayout.setVisibility(View.VISIBLE);
+                    break;
 
-                if (!TextUtils.isEmpty(status)) {
-                    switch (status) {
-                        case "1":
-                            Toast.makeText(context, cancelOrderSuc, Toast.LENGTH_SHORT).show();
-                            break;
-                        case "-1":
-                            Toast.makeText(context, systemException, Toast.LENGTH_SHORT).show();
-                            break;
-                        case "-2":
-                            Toast.makeText(context, returnData, Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-                            Toast.makeText(context, UnknownError, Toast.LENGTH_SHORT).show();
-                            break;
-                    }
-                } else {
-                    Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                L.e(TAG, "解析异常:" + e.getMessage());
-                handleException(str, DataException);
+                case "2":
+                    phoneNumberLayout.setVisibility(View.VISIBLE);
+                    bottomLayout.setVisibility(View.GONE);
+                    break;
+
+                case "3":
+                    phoneNumberLayout.setVisibility(View.GONE);
+                    bottomLayout.setVisibility(View.GONE);
+                    break;
+
+                case "4":
+
+                case "5":
+                    phoneNumberLayout.setVisibility(View.GONE);
+                    bottomLayout.setVisibility(View.GONE);
+                    break;
+
+                case "6":
+
+                case "7":
+                    phoneNumberLayout.setVisibility(View.VISIBLE);
+                    bottomLayout.setVisibility(View.GONE);
+                    break;
+
+                case "8":
+
+                case "9":
+                    phoneNumberLayout.setVisibility(View.VISIBLE);
+                    bottomLayout.setVisibility(View.GONE);
+                    break;
+
+                case "10":
+                    phoneNumberLayout.setVisibility(View.GONE);
+                    bottomLayout.setVisibility(View.GONE);
+                    break;
+
+                default:
+                    phoneNumberLayout.setVisibility(View.VISIBLE);
+                    bottomLayout.setVisibility(View.GONE);
+                    break;
             }
-        } else {
+        }
+    }
+
+    private void cancelOrder(String str) {
+        if (TextUtils.isEmpty(str)) {
             Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
+        } else try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            if (!TextUtils.isEmpty(status)) {
+                switch (status) {
+                    case "1":
+                        Toast.makeText(context, cancelOrderSuc, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-1":
+                        Toast.makeText(OrderDetailsActivity.this, SystemException, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-2":
+                        Toast.makeText(OrderDetailsActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-3":
+                        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+                        localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
+                        ReturnLoginActivity(this);
+                        break;
+
+                    case "-4":
+                        Toast.makeText(OrderDetailsActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    default:
+                        Toast.makeText(context, UnknownError, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            } else {
+                Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            L.e(TAG, "解析异常:" + e.getMessage());
+            Toast.makeText(context, DataException, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void confirmOrder(String str) {
-        if (!TextUtils.isEmpty(str)) {
-            try {
-                JSONObject object = new JSONObject(str);
-                String status = object.getString(STATUS);
-                String returnData = object.getString(DATA);
-
-                if (!TextUtils.isEmpty(status)) {
-                    switch (status) {
-                        case "1":
-                            Toast.makeText(context, confirmOrderSuc, Toast.LENGTH_SHORT).show();
-                            break;
-                        case "-1":
-                            Toast.makeText(context, systemException, Toast.LENGTH_SHORT).show();
-                            break;
-                        case "-2":
-                            Toast.makeText(context, returnData, Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-                            Toast.makeText(context, UnknownError, Toast.LENGTH_SHORT).show();
-                            break;
-                    }
-                } else {
-                    Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                L.e(TAG, "解析异常:" + e.getMessage());
-                handleException(str, DataException);
-            }
-        } else {
+        if (TextUtils.isEmpty(str)) {
             Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
+        } else try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            if (!TextUtils.isEmpty(status)) {
+                switch (status) {
+                    case "1":
+                        phoneNumberLayout.setVisibility(View.VISIBLE);
+                        Toast.makeText(context, confirmOrderSuc, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-1":
+                        Toast.makeText(context, SystemException, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-2":
+                        Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-3":
+                        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+                        localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
+                        ReturnLoginActivity(this);
+                        break;
+
+                    case "-4":
+                        Toast.makeText(OrderDetailsActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    default:
+                        Toast.makeText(context, UnknownError, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            } else {
+                Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            L.e(TAG, "解析异常:" + e.getMessage());
+            Toast.makeText(context, DataException, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void ignoreOrder(String str) {
-        if (!TextUtils.isEmpty(str)) {
-            try {
-                JSONObject object = new JSONObject(str);
-                String status = object.getString(STATUS);
-                String returnData = object.getString(DATA);
-
-                if (!TextUtils.isEmpty(status)) {
-                    switch (status) {
-                        case "1":
-                            Toast.makeText(context, ignoreOrderSuc, Toast.LENGTH_SHORT).show();
-                            break;
-                        case "-1":
-                            Toast.makeText(context, systemException, Toast.LENGTH_SHORT).show();
-                            break;
-                        case "-2":
-                            Toast.makeText(context, returnData, Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-                            Toast.makeText(context, UnknownError, Toast.LENGTH_SHORT).show();
-                            break;
-                    }
-                } else {
-                    Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                L.e(TAG, "解析异常:" + e.getMessage());
-                handleException(str, DataException);
-            }
-        } else {
+        if (TextUtils.isEmpty(str)) {
             Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void handleException(String str, String error) {
-        try {
+        } else try {
             JSONObject object = new JSONObject(str);
             String status = object.getString(STATUS);
-            switch (status) {
-                case "-1":
-                    Toast.makeText(context, SystemException, Toast.LENGTH_SHORT).show();
-                    break;
-                case "-2":
-                    Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
-                    break;
-                case "-4":
-                    Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
-                    break;
+
+            if (!TextUtils.isEmpty(status)) {
+                switch (status) {
+                    case "1":
+                        Toast.makeText(context, ignoreOrderSuc, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-1":
+                        Toast.makeText(context, SystemException, Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-2":
+                        Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case "-3":
+                        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+                        localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
+                        ReturnLoginActivity(this);
+                        break;
+
+                    case "-4":
+                        Toast.makeText(OrderDetailsActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    default:
+                        Toast.makeText(context, UnknownError, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            } else {
+                Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            L.e(TAG, "二次解析异常:" + e.getMessage());
-            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+            L.e(TAG, "解析异常:" + e.getMessage());
+            Toast.makeText(context, DataException, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -734,21 +775,26 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         public void onFinish() {
             hideDialog();
         }
+
     }
 
     private class CancelOrderResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String response) {
-            hideDialog();
+            L.i(TAG, "取消订单数据:" + response);
             cancelOrder(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
-            hideDialog();
             L.e(TAG, "Cancel Exception:" + e.getMessage());
             Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinish() {
+            hideDialog();
         }
 
     }

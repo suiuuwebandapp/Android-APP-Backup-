@@ -129,7 +129,7 @@ public class PersonalTripImageActivity extends BaseAppCompatActivity {
         progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        int paddingParams = AppUtils.newInstance().dip2px(15, this);
+        int paddingParams = AppUtils.dip2px(15, this);
 
         MaterialHeader header = new MaterialHeader(this);
         int[] colors = getResources().getIntArray(R.array.google_colors);

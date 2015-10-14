@@ -1,5 +1,5 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,7 +7,6 @@
 
     <in.srain.cube.views.ptr.PtrClassicFrameLayout
         android:id="@+id/order_details_head_frame"
-        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/DefaultGray2"
@@ -32,7 +31,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/layout_250dp">
+                    android:layout_height="@dimen/layout_200dp">
 
                     <ImageView
                         android:id="@+id/suiuu_order_details_background_image"
@@ -40,76 +39,62 @@
                         android:layout_height="match_parent"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
+                        android:contentDescription="@string/a"
                         android:scaleType="fitXY"
-                        android:src="@drawable/default_background_image"/>
+                        android:src="@drawable/default_background_image" />
 
-                    <FrameLayout
-                        android:id="@+id/frameLayout"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/background_head_frame"
-                        android:padding="@dimen/layout_2dp">
+                        android:orientation="vertical">
 
-                        <com.facebook.drawee.view.SimpleDraweeView
-                            android:id="@+id/suiuu_order_details_head_image"
-                            android:layout_width="@dimen/layout_60dp"
-                            android:layout_height="@dimen/layout_60dp"
-                            fresco:failureImage="@drawable/default_head_image_error"
-                            fresco:failureImageScaleType="fitCenter"
-                            fresco:placeholderImage="@drawable/default_head_image"
-                            fresco:placeholderImageScaleType="fitCenter"
-                            fresco:roundAsCircle="true"/>
+                        <TextView
+                            android:id="@+id/suiuu_order_details_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/layout_5dp"
+                            android:padding="@dimen/layout_3dp"
+                            android:singleLine="true"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/white" />
 
-                    </FrameLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/suiuu_order_details_status"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginBottom="@dimen/layout_8dp"
-                        android:layout_marginLeft="@dimen/layout_8dp"
-                        android:layout_marginStart="@dimen/layout_8dp"
-                        android:text="@string/app_name"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/layout_16sp"/>
+                            <TextView
+                                android:id="@+id/suiuu_order_details_base_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:layout_margin="@dimen/layout_5dp"
+                                android:layout_toLeftOf="@+id/suiuu_order_details_indicator"
+                                android:layout_toStartOf="@+id/suiuu_order_details_indicator"
+                                android:padding="@dimen/layout_3dp"
+                                android:singleLine="true"
+                                android:textColor="@color/text_color1"
+                                android:textSize="@dimen/layout_16sp" />
 
-                    <TextView
-                        android:id="@+id/suiuu_order_details_user_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/suiuu_order_details_status"
-                        android:layout_alignLeft="@+id/suiuu_order_details_status"
-                        android:layout_alignStart="@+id/suiuu_order_details_status"
-                        android:text="@string/app_name"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/white"/>
+                            <RatingBar
+                                android:id="@+id/suiuu_order_details_indicator"
+                                style="?android:attr/ratingBarStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_margin="@dimen/layout_5dp"
+                                android:isIndicator="true"
+                                android:progressDrawable="@drawable/food_rating_bar_full"
+                                android:rating="0" />
 
-                    <ImageView
-                        android:id="@+id/suiuu_order_details_chat"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_margin="@dimen/layout_5dp"
-                        android:src="@drawable/icon_order_chat"/>
+                        </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/suiuu_order_details_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/suiuu_order_details_chat"
-                        android:layout_marginLeft="@dimen/layout_5dp"
-                        android:layout_marginRight="@dimen/layout_5dp"
-                        android:layout_marginTop="@dimen/layout_5dp"
-                        android:layout_toLeftOf="@+id/suiuu_order_details_chat"
-                        android:layout_toStartOf="@+id/suiuu_order_details_chat"
-                        android:src="@drawable/icon_order_details"/>
+                    </LinearLayout>
 
                 </RelativeLayout>
 
@@ -117,18 +102,97 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/suiuu_order_details_title"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.facebook.drawee.view.SimpleDraweeView
+                            android:id="@+id/suiuu_order_details_head_image"
+                            android:layout_width="@dimen/layout_60dp"
+                            android:layout_height="@dimen/layout_60dp"
+                            android:layout_margin="@dimen/layout_5dp"
+                            fresco:failureImage="@drawable/default_head_image_error"
+                            fresco:failureImageScaleType="fitCenter"
+                            fresco:placeholderImage="@drawable/default_head_image"
+                            fresco:placeholderImageScaleType="fitCenter"
+                            fresco:roundAsCircle="true" />
+
+                        <TextView
+                            android:id="@+id/suiuu_order_details_user_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginBottom="@dimen/layout_5dp"
+                            android:layout_marginTop="@dimen/layout_5dp"
+                            android:layout_toEndOf="@+id/suiuu_order_details_head_image"
+                            android:layout_toLeftOf="@+id/suiuu_order_details_chat"
+                            android:layout_toRightOf="@+id/suiuu_order_details_head_image"
+                            android:layout_toStartOf="@+id/suiuu_order_details_chat"
+                            android:padding="@dimen/layout_3dp"
+                            android:singleLine="true"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/textColor" />
+
+                        <ImageView
+                            android:id="@+id/suiuu_order_details_chat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:contentDescription="@string/Chat"
+                            android:src="@drawable/icon_main_4_green" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/layout_8dp"
-                        android:drawableEnd="@drawable/icon_right_arrow"
-                        android:drawableRight="@drawable/icon_right_arrow"
-                        android:padding="@dimen/layout_8dp"
-                        android:text="@string/suiuu"
-                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/layout_5dp"
+                            android:layout_marginStart="@dimen/layout_5dp"
+                            android:padding="@dimen/layout_3dp"
+                            android:text="@string/OrderCreateTime"
+                            android:textSize="@dimen/layout_16sp" />
+
+                        <TextView
+                            android:id="@+id/suiuu_order_details_create_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/layout_3dp"
+                            android:textSize="@dimen/layout_16sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/layout_5dp"
+                            android:layout_marginStart="@dimen/layout_5dp"
+                            android:padding="@dimen/layout_3dp"
+                            android:text="@string/OrderNumber_"
+                            android:textSize="@dimen/layout_16sp" />
+
+                        <TextView
+                            android:id="@+id/suiuu_order_details_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/layout_3dp"
+                            android:textSize="@dimen/layout_16sp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -153,14 +217,13 @@
                             android:layout_margin="@dimen/layout_5dp"
                             android:singleLine="true"
                             android:text="@string/DepartureDate"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                         <TextView
                             android:id="@+id/suiuu_order_details_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/tempDate"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                     </LinearLayout>
 
@@ -177,14 +240,13 @@
                             android:layout_margin="@dimen/layout_5dp"
                             android:singleLine="true"
                             android:text="@string/StartTime"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                         <TextView
                             android:id="@+id/suiuu_order_details_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/tempTime"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                     </LinearLayout>
 
@@ -201,15 +263,14 @@
                             android:layout_margin="@dimen/layout_5dp"
                             android:singleLine="true"
                             android:text="@string/SuiuuNumber"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                         <TextView
                             android:id="@+id/suiuu_order_details_people_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:text="@string/tempNumber"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                     </LinearLayout>
 
@@ -226,14 +287,13 @@
                             android:layout_margin="@dimen/layout_5dp"
                             android:singleLine="true"
                             android:text="@string/IndividualService"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                         <TextView
                             android:id="@+id/suiuu_order_details_item_service"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/pickup"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                     </LinearLayout>
 
@@ -251,25 +311,26 @@
                             android:layout_margin="@dimen/layout_5dp"
                             android:singleLine="true"
                             android:text="@string/orderPrice"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                         <TextView
                             android:id="@+id/suiuu_order_details_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:text="@string/Zero"
                             android:textColor="@color/text_select_true"
-                            android:textSize="@dimen/layout_16sp"/>
+                            android:textSize="@dimen/layout_16sp" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
+                <!--电话信息-->
                 <RelativeLayout
+                    android:id="@+id/suiuu_order_details_phone_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/layout_8dp"
+                    android:layout_marginTop="@dimen/layout_5dp"
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
@@ -281,7 +342,7 @@
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/layout_5dp"
                         android:text="@string/PhoneNumber_"
-                        android:textSize="@dimen/layout_16sp"/>
+                        android:textSize="@dimen/layout_16sp" />
 
                     <TextView
                         android:id="@+id/suiuu_order_details_phone_number"
@@ -292,8 +353,7 @@
                         android:layout_toEndOf="@+id/textView44"
                         android:layout_toLeftOf="@+id/suiuu_order_details_call_phone"
                         android:layout_toRightOf="@+id/textView44"
-                        android:layout_toStartOf="@+id/suiuu_order_details_call_phone"
-                        android:text="@string/tempPhoneNumber"/>
+                        android:layout_toStartOf="@+id/suiuu_order_details_call_phone" />
 
                     <ImageView
                         android:id="@+id/suiuu_order_details_call_phone"
@@ -303,10 +363,12 @@
                         android:layout_alignParentRight="true"
                         android:layout_gravity="end|center_vertical"
                         android:layout_margin="@dimen/layout_5dp"
-                        android:src="@drawable/icon_call"/>
+                        android:contentDescription="@string/Phone"
+                        android:src="@drawable/icon_call" />
 
                 </RelativeLayout>
 
+                <!--邮箱信息-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -324,26 +386,24 @@
                         android:layout_margin="@dimen/layout_5dp"
                         android:singleLine="true"
                         android:text="@string/Email"
-                        android:textSize="@dimen/layout_16sp"/>
+                        android:textSize="@dimen/layout_16sp" />
 
                     <TextView
                         android:id="@+id/suiuu_order_details_email_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:text="@string/tempEmail"/>
+                        android:singleLine="true" />
 
                 </LinearLayout>
 
                 <include
                     android:id="@+id/order_details_btn_layout_1"
                     layout="@layout/layout_suiuu_order_details_bottom"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <include
                     android:id="@+id/order_details_btn_layout_2"
-                    layout="@layout/layout_suiuu_order_details_bottom_2"
-                    android:visibility="gone"/>
+                    layout="@layout/layout_suiuu_order_details_bottom_2" />
 
             </LinearLayout>
 
@@ -358,6 +418,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/back"/>
+        android:contentDescription="@string/Back"
+        android:src="@drawable/back" />
 
 </RelativeLayout>

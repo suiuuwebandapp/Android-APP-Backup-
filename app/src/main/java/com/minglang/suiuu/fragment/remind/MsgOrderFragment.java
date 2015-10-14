@@ -151,7 +151,7 @@ public class MsgOrderFragment extends BaseFragment {
         progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        int paddingParams = AppUtils.newInstance().dip2px(15, getActivity());
+        int paddingParams = AppUtils.dip2px(15, getActivity());
 
         MaterialHeader header = new MaterialHeader(getActivity());
         int[] colors = getResources().getIntArray(R.array.google_colors);
@@ -200,7 +200,6 @@ public class MsgOrderFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), OrderDetailsActivity.class);
                 intent.putExtra(ID, listAll.get(position).getRelativeId());
-                intent.putExtra(ORDER_STATUS, NEW);
                 startActivity(intent);
             }
         });

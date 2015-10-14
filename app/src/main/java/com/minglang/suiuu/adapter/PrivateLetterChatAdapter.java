@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.entity.PrivateChat;
+import com.minglang.suiuu.entity.PrivateChat.PrivateChatData;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class PrivateLetterChatAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private String userSign;
 
-    public PrivateLetterChatAdapter(Context context, List<PrivateChat.PrivateChatData> list) {
+    public PrivateLetterChatAdapter(Context context, List<PrivateChatData> list) {
         this.context = context;
         this.list = list;
         failureImagePath = "res://com.minglang.suiuu/" + R.drawable.default_head_image_error;
