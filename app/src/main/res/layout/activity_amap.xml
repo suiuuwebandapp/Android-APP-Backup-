@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eee"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -54,15 +53,15 @@
 
     </RelativeLayout>
 
-    <com.minglang.suiuu.customview.ReFlashListView
+    <com.minglang.pulltorefreshlibrary.PullToRefreshListView
         android:id="@+id/lv_location_message"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <RelativeLayout
         android:id="@+id/rl_no_data"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone">
 
         <TextView
@@ -78,7 +77,7 @@
 
         <TextView
             android:id="@+id/tv_create_location"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/layout_12dp"

@@ -175,12 +175,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     LinearLayout serviceTitleLayout;
 
     /**
-     * 附加服务数量
-     */
-    @Bind(R.id.order_details_additional_service_prices)
-    TextView orderDetailsService;
-
-    /**
      * 主要联系人
      */
     @Bind(R.id.order_details_main_contact)
@@ -915,7 +909,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             orderDetailsDate.setText("");
             orderDetailsTime.setText("");
             orderDetailsSuiuuNumber.setText("0人");
-            orderDetailsService.setText("0");
             orderStatus.setText("订单状态未知");
         }
     }
@@ -934,7 +927,6 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
                             }.getType(), strServiceInfo);
 
                     if (serviceInfoList != null && serviceInfoList.size() > 0) {
-                        orderDetailsService.setText(String.valueOf(serviceInfoList.size()));
 
                         //所有附加服务的总价
                         float allServicePrice = 0f;
@@ -969,14 +961,12 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
                     } else {
                         totalOrderPrice = baseOrderPrice;
-                        orderDetailsService.setText("0");
                     }
                 } catch (Exception ex) {
                     L.e(TAG, "附加服务数据解析失败:" + ex.getMessage());
                 }
             } else {
                 totalOrderPrice = baseOrderPrice;
-                orderDetailsService.setText("0");
             }
 
         }

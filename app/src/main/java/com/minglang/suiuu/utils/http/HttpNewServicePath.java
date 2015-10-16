@@ -120,7 +120,7 @@ public class HttpNewServicePath {
     /**
      * 得到旅途消息
      */
-    public static String getTripGalleryMsgDataPath = RootPath + "/app-user-message/get-tp-messages";
+    public static String getTripImageMsgDataPath = RootPath + "/app-user-message/get-tp-messages";
 
     /**
      * 得到问答消息

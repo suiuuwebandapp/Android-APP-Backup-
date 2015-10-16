@@ -96,6 +96,11 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
         ButterKnife.bind(this);
         initView();
         viewAction();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         sendPrivateLetterRequest();
     }
 

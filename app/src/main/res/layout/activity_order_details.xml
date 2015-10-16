@@ -196,6 +196,7 @@
 
                 </LinearLayout>
 
+                <!--订单信息-->
                 <LinearLayout
                     android:id="@+id/suiuu_order_details_item_layout"
                     android:layout_width="match_parent"
@@ -203,6 +204,31 @@
                     android:layout_marginTop="@dimen/layout_2dp"
                     android:background="@color/white"
                     android:orientation="vertical">
+
+                    <!--电话信息-->
+                    <LinearLayout
+                        android:id="@+id/suiuu_order_details_phone_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/layout_5dp"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView44"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/layout_5dp"
+                            android:text="@string/PhoneNumber_"
+                            android:textSize="@dimen/layout_16sp" />
+
+                        <TextView
+                            android:id="@+id/suiuu_order_details_phone_number"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -274,127 +300,40 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textView21"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/layout_5dp"
-                            android:singleLine="true"
-                            android:text="@string/IndividualService"
-                            android:textSize="@dimen/layout_16sp" />
-
-                        <TextView
-                            android:id="@+id/suiuu_order_details_item_service"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/layout_16sp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:id="@+id/textView10"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/layout_5dp"
-                            android:singleLine="true"
-                            android:text="@string/orderPrice"
-                            android:textSize="@dimen/layout_16sp" />
-
-                        <TextView
-                            android:id="@+id/suiuu_order_details_price"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:singleLine="true"
-                            android:textColor="@color/text_select_true"
-                            android:textSize="@dimen/layout_16sp" />
-
-                    </LinearLayout>
-
                 </LinearLayout>
 
-                <!--电话信息-->
-                <RelativeLayout
-                    android:id="@+id/suiuu_order_details_phone_layout"
+                <!--附加服务Layout-->
+                <LinearLayout
+                    android:id="@+id/suiuu_order_details_service_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_5dp"
                     android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/textView44"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_margin="@dimen/layout_5dp"
-                        android:text="@string/PhoneNumber_"
-                        android:textSize="@dimen/layout_16sp" />
-
-                    <TextView
-                        android:id="@+id/suiuu_order_details_phone_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/textView44"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@+id/textView44"
-                        android:layout_toLeftOf="@+id/suiuu_order_details_call_phone"
-                        android:layout_toRightOf="@+id/textView44"
-                        android:layout_toStartOf="@+id/suiuu_order_details_call_phone" />
-
-                    <ImageView
-                        android:id="@+id/suiuu_order_details_call_phone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_gravity="end|center_vertical"
                         android:layout_margin="@dimen/layout_5dp"
-                        android:contentDescription="@string/Phone"
-                        android:src="@drawable/icon_call" />
-
-                </RelativeLayout>
-
-                <!--邮箱信息-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/layout_15dp"
-                    android:layout_marginTop="@dimen/layout_2dp"
-                    android:background="@color/white"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textView45"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="@dimen/layout_5dp"
-                        android:singleLine="true"
-                        android:text="@string/Email"
-                        android:textSize="@dimen/layout_16sp" />
-
-                    <TextView
-                        android:id="@+id/suiuu_order_details_email_address"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true" />
+                        android:padding="@dimen/layout_3dp"
+                        android:text="@string/AdditionalServices_"
+                        android:textSize="@dimen/layout_18sp" />
 
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/suiuu_order_details_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/layout_8dp"
+                    android:layout_marginLeft="@dimen/layout_8dp"
+                    android:layout_marginRight="@dimen/layout_8dp"
+                    android:layout_marginStart="@dimen/layout_8dp"
+                    android:background="@color/white"
+                    android:gravity="end"
+                    android:singleLine="true"
+                    android:textColor="@color/text_select_true"
+                    android:textSize="@dimen/layout_16sp" />
 
                 <include
                     android:id="@+id/order_details_btn_layout_1"

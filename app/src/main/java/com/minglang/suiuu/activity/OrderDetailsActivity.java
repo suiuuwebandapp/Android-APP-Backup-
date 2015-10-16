@@ -9,13 +9,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +27,7 @@ import com.minglang.suiuu.entity.OrderDetails;
 import com.minglang.suiuu.entity.OrderDetails.OrderDetailsData.InfoEntity;
 import com.minglang.suiuu.entity.OrderDetails.OrderDetailsData.UserInfoEntity;
 import com.minglang.suiuu.entity.TripJsonInfo;
+import com.minglang.suiuu.entity.TripJsonInfo.ServiceListEntity;
 import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
@@ -172,23 +173,17 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     @Bind(R.id.suiuu_order_details_people_number)
     TextView peopleNumberView;
 
-    @Bind(R.id.suiuu_order_details_item_service)
-    TextView itemServiceName;
-
     @Bind(R.id.suiuu_order_details_price)
     TextView orderPriceView;
 
     @Bind(R.id.suiuu_order_details_phone_number)
     TextView phoneNumberView;
 
-    @Bind(R.id.suiuu_order_details_call_phone)
-    ImageView callPhoneBtn;
-
-    @Bind(R.id.suiuu_order_details_email_address)
-    TextView emailAddressView;
-
     @Bind(R.id.suiuu_order_details_phone_layout)
-    RelativeLayout phoneNumberLayout;
+    LinearLayout phoneNumberLayout;
+
+    @Bind(R.id.suiuu_order_details_service_layout)
+    LinearLayout serviceLayout;
 
     @Bind(R.id.order_details_btn_layout_2)
     LinearLayout bottomLayout;
@@ -314,21 +309,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
             }
         });
 
-        callPhoneBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String phoneNumber = phoneNumberView.getText().toString();
-                if (!TextUtils.isEmpty(phoneNumber)) {
-                    try {
-                        context.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber)));
-                    } catch (SecurityException e) {
-                        L.e(TAG, "拨打电话异常:" + e.getMessage());
-                        Toast.makeText(context, "拨打电话时发生错误", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
         cancelOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -339,7 +319,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 cancelOrderReason = editText.getText().toString().trim();
-
                                 if (TextUtils.isEmpty(cancelOrderPath)) {
                                     Toast.makeText(context, refundReasonNotNull, Toast.LENGTH_SHORT).show();
                                 } else {
@@ -347,7 +326,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                                     String[] valueArray = new String[]{strID, cancelOrderReason, token};
                                     getData4Service(cancelOrderPath, keyArray, valueArray, new CancelOrderResultCallback());
                                 }
-
                             }
                         })
                         .setNegativeButton(android.R.string.cancel, null)
@@ -359,7 +337,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 String orderID = infoEntity.getOrderId();
-                L.i(TAG, "orderID:" + orderID);
                 String url = addUrlAndParams(confirmOrderPath, new String[]{TOKEN}, new String[]{token});
                 postData4Service(url, new ConfirmOrderResultCallback(), new OkHttpManager.Params(ORDER_ID, orderID));
             }
@@ -369,7 +346,6 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 String orderID = infoEntity.getOrderId();
-                L.i(TAG, "orderID:" + orderID);
                 String url = addUrlAndParams(ignoreOrderPath, new String[]{TOKEN}, new String[]{token});
                 postData4Service(url, new IgnoreOrderResultCallback(), new OkHttpManager.Params(ORDER_ID, orderID));
             }
@@ -517,7 +493,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
         String strOrderPrice = infoEntity.getTotalPrice();
         if (!TextUtils.isEmpty(strOrderPrice)) {
-            orderPriceView.setText(strOrderPrice);
+            orderPriceView.setText(String.format("%s%s", "总价￥", strOrderPrice));
         }
     }
 
@@ -544,29 +520,22 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
                     phoneNumberView.setText(strPhone);
                 }
 
-                String strEmail = tripJsonInfo.getCreatePublisherInfo().getEmail();
-                if (!TextUtils.isEmpty(strEmail)) {
-                    emailAddressView.setText(strEmail);
-                }
-
-                List<TripJsonInfo.ServiceListEntity> serviceList = tripJsonInfo.getServiceList();
+                List<ServiceListEntity> serviceList = tripJsonInfo.getServiceList();
                 if (serviceList != null && serviceList.size() > 0) {
-                    String serviceName = "";
                     for (int i = 0; i < serviceList.size(); i++) {
-                        String serviceTitle = serviceList.get(i).getTitle();
-                        if (!TextUtils.isEmpty(serviceTitle)) {
-                            serviceName = serviceName + " " + serviceTitle;
-                        }
-                    }
+                        View itemServiceView =
+                                LayoutInflater.from(this).inflate(R.layout.layout_order_details_service_item, serviceLayout, false);
+                        TextView serviceName = (TextView) itemServiceView.findViewById(R.id.suiuu_order_details_service_name);
+                        TextView servicePrice = (TextView) itemServiceView.findViewById(R.id.suiuu_order_details_service_price);
 
-                    if (!TextUtils.isEmpty(serviceName)) {
-                        itemServiceName.setText(serviceName);
-                    } else {
-                        itemServiceName.setText("");
-                    }
+                        serviceName.setText(serviceList.get(i).getTitle());
+                        servicePrice.setText(serviceList.get(i).getMoney());
 
+                        serviceLayout.addView(itemServiceView);
+                    }
+                } else {
+                    serviceLayout.setVisibility(View.GONE);
                 }
-
             }
         } catch (Exception e) {
             L.e(TAG, "Trip数据解析失败:" + e.getMessage());

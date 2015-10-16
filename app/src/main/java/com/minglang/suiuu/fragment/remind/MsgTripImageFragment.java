@@ -198,7 +198,7 @@ public class MsgTripImageFragment extends BaseFragment {
     private void getData4Service(int page) {
         String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
-        String url = addUrlAndParams(HttpNewServicePath.getTripGalleryMsgDataPath, keyArray, valueArray);
+        String url = addUrlAndParams(HttpNewServicePath.getTripImageMsgDataPath, keyArray, valueArray);
         L.i(TAG, "旅图信息请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new MsgTripImageResultCallback());

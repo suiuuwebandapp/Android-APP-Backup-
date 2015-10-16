@@ -491,8 +491,6 @@ public class MainActivity extends BaseActivity {
     private void initView() {
         fm = getSupportFragmentManager();
 
-        mDrawerLayout.setFocusableInTouchMode(true);
-
         ViewGroup.LayoutParams sliderNavigationViewParams = sliderView.getLayoutParams();
         sliderNavigationViewParams.width = screenWidth / 4 * 3;
         sliderNavigationViewParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -581,7 +579,7 @@ public class MainActivity extends BaseActivity {
         registerReceiver(tokenBroadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
 
         connectionNetChangeReceiver = new ConnectionNetChangeReceiver();
-        this.registerReceiver(connectionNetChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        registerReceiver(connectionNetChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     private void versionCheck() {
@@ -614,7 +612,6 @@ public class MainActivity extends BaseActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
                         }
 
                         @Override

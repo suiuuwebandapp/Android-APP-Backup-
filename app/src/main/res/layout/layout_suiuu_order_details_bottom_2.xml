@@ -4,6 +4,7 @@
     android:layout_height="@dimen/layout_60dp"
     android:background="@color/white"
     android:baselineAligned="false"
+    android:layout_marginTop="@dimen/layout_5dp"
     android:orientation="horizontal">
 
     <RelativeLayout

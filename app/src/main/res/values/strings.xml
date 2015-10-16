@@ -392,6 +392,7 @@
     <string name="SuiuuNumber" translatable="false">随游人数:</string>
 
     <string name="AdditionalServices" translatable="false">附加服务:</string>
+    <string name="AdditionalServices_" translatable="false">附加服务</string>
     <string name="Shuttle" translatable="false">机场接送:</string>
     <string name="ProvideTickets" translatable="false">提供景区门票:</string>
 
