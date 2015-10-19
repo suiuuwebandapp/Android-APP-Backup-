@@ -307,7 +307,7 @@
                     android:id="@+id/suiuu_order_details_service_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_5dp"
+                    android:layout_marginTop="@dimen/layout_2dp"
                     android:background="@color/white"
                     android:orientation="vertical">
 
@@ -325,10 +325,6 @@
                     android:id="@+id/suiuu_order_details_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/layout_8dp"
-                    android:layout_marginLeft="@dimen/layout_8dp"
-                    android:layout_marginRight="@dimen/layout_8dp"
-                    android:layout_marginStart="@dimen/layout_8dp"
                     android:background="@color/white"
                     android:gravity="end"
                     android:singleLine="true"

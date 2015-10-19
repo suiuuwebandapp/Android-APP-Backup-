@@ -299,7 +299,7 @@ public class TripImageFragment extends BaseFragment {
         String newTag = "";
 
         if (tags != null && tags.length() > 1) {
-            newTag = tags.substring(0, tags.length() - 1);
+            newTag = tags.substring(0, tags.length());
         }
 
         String[] keyArray1 = new String[]{TAGS, SORT_NAME, SEARCH, PAGES, NUMBER, TOKEN};

@@ -36,7 +36,7 @@ import com.koushikdutta.WebSocketClient;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.MainSliderAdapter;
 import com.minglang.suiuu.application.SuiuuApplication;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.main.InformationFragment;
 import com.minglang.suiuu.fragment.main.ProblemFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
@@ -64,7 +64,7 @@ import butterknife.ButterKnife;
 /**
  * 应用程序主界面
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseAppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -117,15 +117,9 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.slider_layout)
     RelativeLayout sliderView;
 
-    /**
-     * 点击修改昵称
-     */
     @Bind(R.id.nick_name)
     TextView nickNameView;
 
-    /**
-     * 点击修改头像
-     */
     @Bind(R.id.head_image)
     SimpleDraweeView headImageView;
 
@@ -170,12 +164,6 @@ public class MainActivity extends BaseActivity {
 
     @Bind(R.id.community_layout)
     RelativeLayout communityLayout;
-
-    ///**
-    //* 收件箱页面按钮布局
-    //*/
-    //@Bind(R.id.inbox_button_layout)
-    //FrameLayout inboxButtonLayout;
 
     /**
      * 旅图页面相册按钮
@@ -268,7 +256,7 @@ public class MainActivity extends BaseActivity {
     private ProgressDialog progressDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         UmengUpdateAgent.update(this);

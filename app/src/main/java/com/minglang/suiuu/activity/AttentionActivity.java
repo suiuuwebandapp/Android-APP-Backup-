@@ -56,7 +56,7 @@ public class AttentionActivity extends BaseAppCompatActivity {
     TabLayout tabLayout;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attention);
         ButterKnife.bind(this);

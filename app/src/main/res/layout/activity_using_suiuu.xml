@@ -12,17 +12,6 @@
         app:title="@string/UseHelp"
         app:titleTextColor="@color/white" />
 
-    <!--<android.support.v4.widget.NestedScrollView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-
-    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
-    <!--&lt;!&ndash;android:id="@+id/using_suiuu_text"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:layout_height="wrap_content" />&ndash;&gt;-->
-
-    <!--</android.support.v4.widget.NestedScrollView>-->
-
     <WebView
         android:id="@+id/using_help_wab_view"
         android:layout_width="match_parent"

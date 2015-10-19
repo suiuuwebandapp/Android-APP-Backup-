@@ -70,6 +70,10 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
 
     private static final String RELATE_ID = "relateId";
 
+    private static final String TRIP_ID = "tripId";
+    private static final String HEAD_IMG = "headImg";
+    private static final String CLASS_NAME = "className";
+
     private static final float DEFAULT_SCORE = 0f;
 
     @BindString(R.string.load_wait)
@@ -299,7 +303,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
     private ProgressDialog commitDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_general_order_details);
         ButterKnife.bind(this);
@@ -341,6 +345,32 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        titleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GeneralOrderDetailsActivity.this, SuiuuDetailsActivity.class);
+                intent.putExtra(TRIP_ID, infoEntity.getTripId());
+                if (publisherBaseEntity == null) {
+                    intent.putExtra(USER_SIGN, "");
+                    intent.putExtra(HEAD_IMG, "");
+                } else {
+                    intent.putExtra(USER_SIGN, publisherBaseEntity.getUserSign());
+                    intent.putExtra(HEAD_IMG, publisherBaseEntity.getHeadImg());
+                }
+                intent.putExtra(CLASS_NAME, TAG);
+                startActivity(intent);
+            }
+        });
+
+        headImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GeneralOrderDetailsActivity.this, PersonalMainPagerActivity.class);
+                intent.putExtra(USER_SIGN, publisherBaseEntity.getUserSign());
+                startActivity(intent);
             }
         });
 
@@ -857,7 +887,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             String basePrice = infoEntity.getBasePrice();
             if (!TextUtils.isEmpty(basePrice)) {
                 baseOrderPrice = Float.valueOf(basePrice);
-                baseOrderPriceView.setText(basePrice);
+                baseOrderPriceView.setText(String.format("%s%s", "￥", basePrice));
             } else {
                 baseOrderPriceView.setText("");
             }
@@ -893,7 +923,7 @@ public class GeneralOrderDetailsActivity extends BaseAppCompatActivity {
             //订单总价
             TextView totalOrderPriceView = (TextView) inflater
                     .inflate(R.layout.item_service_location_layout2, serviceLayout, false);
-            totalOrderPriceView.setText(String.format("%s%s", "总价:", totalOrderPrice));
+            totalOrderPriceView.setText(String.format("%s%s", "总价￥", totalOrderPrice));
 
             serviceLayout.addView(totalOrderPriceView);
 

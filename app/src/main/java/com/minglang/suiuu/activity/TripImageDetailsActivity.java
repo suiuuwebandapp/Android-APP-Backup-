@@ -230,7 +230,7 @@ public class TripImageDetailsActivity extends BaseAppCompatActivity {
     private Context context;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_image_details);
         ButterKnife.bind(this);

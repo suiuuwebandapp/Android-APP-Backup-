@@ -48,7 +48,7 @@ public class FeedbackActivity extends BaseAppCompatActivity {
     Button commit;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
         ButterKnife.bind(this);

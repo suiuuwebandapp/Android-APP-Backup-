@@ -132,7 +132,7 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
     private AlertDialog dialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_withdrawals);
         ButterKnife.bind(this);

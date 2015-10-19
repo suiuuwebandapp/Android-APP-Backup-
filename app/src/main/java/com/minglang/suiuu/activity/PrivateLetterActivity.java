@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -21,16 +22,15 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.PrivateLetterAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.PrivateLetter;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +62,9 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
     @BindString(R.string.DataError)
     String DataError;
 
+    @BindString(R.string.DataException)
+    String DataException;
+
     @BindString(R.string.NetworkAnomaly)
     String NetworkError;
 
@@ -89,8 +92,10 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
         }
     });
 
+    private boolean isPullToRefresh = true;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_letter);
         ButterKnife.bind(this);
@@ -116,7 +121,7 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
 
         adapter = new PrivateLetterAdapter(this, listAll, R.layout.item_private_letter);
 
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         pullToRefreshListView.setAdapter(adapter);
 
         token = SuiuuInfo.ReadAppTimeSign(this);
@@ -131,13 +136,8 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                handler.postAtTime(new Runnable() {
-                    @Override
-                    public void run() {
-                        pullToRefreshListView.onRefreshComplete();
-                    }
-                }, 3000);
-
+                isPullToRefresh = false;
+                sendPrivateLetterRequest();
             }
 
             @Override
@@ -172,13 +172,14 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
     }
 
     private void sendPrivateLetterRequest() {
-        if (progressDialog != null && !progressDialog.isShowing()) {
-            progressDialog.show();
+        if (isPullToRefresh) {
+            if (progressDialog != null && !progressDialog.isShowing()) {
+                progressDialog.show();
+            }
         }
 
         try {
-            String url = HttpNewServicePath.getPrivateLetterListPath + "?" + TOKEN
-                    + "=" + URLEncoder.encode(token, "UTF-8");
+            String url = HttpNewServicePath.getPrivateLetterListPath + "?" + TOKEN + "=" + token;
             L.i(TAG, "请求URL:" + url);
 
             OkHttpManager.onGetAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
@@ -189,30 +190,44 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
                     if (TextUtils.isEmpty(response)) {
                         Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
                     } else try {
-                        PrivateLetter privateLetter = JsonUtils.getInstance().fromJSON(PrivateLetter.class, response);
-                        List<PrivateLetter.PrivateLetterData> list = privateLetter.getData();
-                        if (list != null && list.size() > 0) {
-                            listAll.addAll(list);
-                            adapter.setList(listAll);
-                        } else {
-                            Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
+                        JSONObject object = new JSONObject(response);
+                        String status = object.getString(STATUS);
+                        switch (status) {
+                            case "1":
+                                PrivateLetter privateLetter = JsonUtils.getInstance().fromJSON(PrivateLetter.class, response);
+                                List<PrivateLetter.PrivateLetterData> list = privateLetter.getData();
+                                if (list != null && list.size() > 0) {
+                                    if (listAll.size() > 0) {
+                                        listAll.clear();
+                                    }
+                                    listAll.addAll(list);
+                                    adapter.setList(listAll);
+                                } else {
+                                    Toast.makeText(context, NoData, Toast.LENGTH_SHORT).show();
+                                }
+                                break;
+
+                            case "-1":
+                                Toast.makeText(context, SystemException, Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case "-2":
+                                Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case "-3":
+                                LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(PrivateLetterActivity.this);
+                                localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
+                                ReturnLoginActivity(PrivateLetterActivity.this);
+                                break;
+
+                            case "-4":
+                                Toast.makeText(PrivateLetterActivity.this, object.getString(DATA), Toast.LENGTH_SHORT).show();
+                                break;
                         }
                     } catch (Exception e) {
                         L.e(TAG, "数据解析失败:" + e.getMessage());
-                        try {
-                            JSONObject object = new JSONObject(response);
-                            String status = object.getString(STATUS);
-                            switch (status) {
-                                case "-1":
-                                    Toast.makeText(context, SystemException, Toast.LENGTH_SHORT).show();
-                                    break;
-                                case "-2":
-                                    Toast.makeText(context, object.getString(DATA), Toast.LENGTH_SHORT).show();
-                                    break;
-                            }
-                        } catch (Exception e1) {
-                            Toast.makeText(context, DataError, Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(context, DataException, Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -229,8 +244,9 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
 
             });
         } catch (Exception e) {
-            L.e(TAG, "网络请求异常:" + e.getMessage());
             hideDialog();
+            L.e(TAG, "网络请求异常:" + e.getMessage());
+            Toast.makeText(context, NetworkError, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -238,6 +254,8 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+
+        pullToRefreshListView.onRefreshComplete();
     }
 
     @Override

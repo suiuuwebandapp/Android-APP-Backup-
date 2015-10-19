@@ -86,7 +86,7 @@ public class SendCommentActivity extends BaseAppCompatActivity {
     private String commentContent;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_commnet);
         ButterKnife.bind(this);

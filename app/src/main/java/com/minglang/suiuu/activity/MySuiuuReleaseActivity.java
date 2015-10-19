@@ -107,7 +107,7 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
     TabLayout tabLayout;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_suiuu_release);
         ButterKnife.bind(this);

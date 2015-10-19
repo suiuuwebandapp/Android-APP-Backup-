@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -44,7 +45,7 @@
                     android:layout_toLeftOf="@+id/order_details_indicator"
                     android:layout_toStartOf="@+id/order_details_indicator"
                     android:text="@string/app_name"
-                    android:textColor="@color/white"
+                    android:textColor="@color/remindColor"
                     android:textSize="@dimen/layout_16sp" />
 
                 <TextView
@@ -89,6 +90,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/layout_5dp"
                     android:text="@string/app_name"
+                    android:textColor="@color/slider_line_color"
                     android:textSize="@dimen/layout_16sp" />
 
             </FrameLayout>
@@ -107,7 +109,9 @@
                     android:layout_centerVertical="true"
                     android:layout_margin="@dimen/layout_8dp"
                     fresco:failureImage="@drawable/default_head_image_error"
+                    fresco:failureImageScaleType="fitCenter"
                     fresco:placeholderImage="@drawable/default_head_image"
+                    fresco:placeholderImageScaleType="fitCenter"
                     fresco:roundAsCircle="true" />
 
                 <TextView

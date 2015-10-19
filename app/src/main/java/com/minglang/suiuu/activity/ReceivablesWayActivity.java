@@ -153,7 +153,7 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
     private String openId, nickName;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receivables_way);
         ButterKnife.bind(this);

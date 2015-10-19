@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -166,7 +167,7 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     private UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share");
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suiuu_details_activity);
         ButterKnife.bind(this);
@@ -346,12 +347,12 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
             try {
                 JSONObject jsonObject = new JSONObject(str);
                 String status = jsonObject.getString(STATUS);
-
                 switch (status) {
                     case "1":
                         detailsData = JsonUtils.getInstance().fromJSON(SuiuuDetailsData.class, str);
-                        listAll = detailsData.getData().getComment().getData();
-                        serviceList = detailsData.getData().getServiceList();
+                        SuiuuDetailsData.DataEntity dataEntity = detailsData.getData();
+                        listAll = dataEntity.getComment().getData();
+                        serviceList = dataEntity.getServiceList();
                         fullCommentList();
                         serviceNameArray = getServiceNameArray();
                         serviceIdArray = getServiceIdArray();
@@ -367,6 +368,14 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
 
                         if (servicePriceArray != null) {
                             L.i(TAG, "ServicePrice Array:" + Arrays.toString(servicePriceArray));
+                        }
+
+                        if (TextUtils.isEmpty(userSign)) {
+                            userSign = dataEntity.getPublisherList().get(0).getUserSign();
+                        }
+
+                        if (TextUtils.isEmpty(headImagePath)) {
+                            headImagePath = dataEntity.getPublisherList().get(0).getHeadImg();
                         }
 
                         break;

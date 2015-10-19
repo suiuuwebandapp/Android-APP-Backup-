@@ -79,7 +79,7 @@ public class NewRemindActivity extends BaseAppCompatActivity {
     private MsgSystemFragment msgSystemFragment;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_remind);
         ButterKnife.bind(this);

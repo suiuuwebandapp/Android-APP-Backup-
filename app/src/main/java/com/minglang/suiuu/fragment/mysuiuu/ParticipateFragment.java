@@ -155,7 +155,7 @@ public class ParticipateFragment extends BaseFragment {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(DialogMsg);
 
-        participateAdapter = new ParticipateAdapter(getActivity());
+        participateAdapter = new ParticipateAdapter(getActivity(), listAll, R.layout.item_participate_layout);
         pullToRefreshListView.setAdapter(participateAdapter);
 
     }
@@ -193,7 +193,7 @@ public class ParticipateFragment extends BaseFragment {
                 int location = position - 1;
                 Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
                 intent.putExtra(TRIP_ID, listAll.get(location).getTripId());
-                intent.putExtra(CLASS_NAME,TAG);
+                intent.putExtra(CLASS_NAME, TAG);
                 startActivity(intent);
             }
         });

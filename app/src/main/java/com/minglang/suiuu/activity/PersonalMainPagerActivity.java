@@ -171,7 +171,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
     private String headImagePath;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_main_pager);
         ButterKnife.bind(this);

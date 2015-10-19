@@ -152,7 +152,7 @@ public class PublishedFragment extends BaseFragment {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(DialogMsg);
 
-        publishedAdapter = new PublishedAdapter(getActivity());
+        publishedAdapter = new PublishedAdapter(getActivity(), listAll, R.layout.item_published_layout);
         pullToRefreshListView.setAdapter(publishedAdapter);
     }
 
@@ -189,7 +189,7 @@ public class PublishedFragment extends BaseFragment {
                 int location = position - 1;
                 Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
                 intent.putExtra(TRIP_ID, listAll.get(location).getTripId());
-                intent.putExtra(CLASS_NAME,TAG);
+                intent.putExtra(CLASS_NAME, TAG);
                 startActivity(intent);
             }
         });

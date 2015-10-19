@@ -53,7 +53,7 @@ public class GeneralOrderListActivity extends BaseAppCompatActivity {
     ViewPager viewPager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_general_order_list);
         ButterKnife.bind(this);

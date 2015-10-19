@@ -89,7 +89,7 @@ public class OrderContactInformationActivity extends BaseAppCompatActivity {
     private TextProgressDialog dialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_contact_info);
         ButterKnife.bind(this);

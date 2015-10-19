@@ -3,7 +3,6 @@ package com.minglang.suiuu.base;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -12,8 +11,6 @@ import com.minglang.suiuu.activity.FirstLoginActivity;
 import com.minglang.suiuu.utils.L;
 
 import java.net.URLEncoder;
-
-import butterknife.ButterKnife;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
 
@@ -66,14 +63,12 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     public String token;
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-        ButterKnife.bind(this);
-        L.i(TAG, this.getClass().getSimpleName());
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         initScreen();
     }
 
-    private void initScreen() {
+    public void initScreen() {
         dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         screenWidth = dm.widthPixels;

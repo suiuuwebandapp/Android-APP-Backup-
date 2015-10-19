@@ -157,7 +157,7 @@ public class EasyTackPhotoActivity extends BaseAppCompatActivity {
     private String customerTag = "";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_easy_tackphoto);
 

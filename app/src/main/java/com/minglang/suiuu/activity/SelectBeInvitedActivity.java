@@ -127,7 +127,7 @@ public class SelectBeInvitedActivity extends BaseAppCompatActivity {
     private String inputString;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_be_invited);
 

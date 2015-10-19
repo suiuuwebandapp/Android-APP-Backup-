@@ -130,7 +130,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
     private SimpleDateFormat sdf;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_letter_chat);
 

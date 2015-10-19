@@ -51,7 +51,7 @@ public class OrderManageActivity extends BaseAppCompatActivity {
     ViewPager viewPager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_manage);
         ButterKnife.bind(this);

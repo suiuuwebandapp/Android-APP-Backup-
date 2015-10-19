@@ -45,7 +45,7 @@ public class EditSuiuuPriceActivity extends BaseAppCompatActivity {
     private Intent oldIntent;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_suiuu_price);
         oldIntent = getIntent();

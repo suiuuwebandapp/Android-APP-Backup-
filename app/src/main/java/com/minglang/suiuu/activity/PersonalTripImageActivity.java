@@ -106,7 +106,7 @@ public class PersonalTripImageActivity extends BaseAppCompatActivity {
     private List<UserTravelItemData> listAll = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_trip_gallery);
         ButterKnife.bind(this);

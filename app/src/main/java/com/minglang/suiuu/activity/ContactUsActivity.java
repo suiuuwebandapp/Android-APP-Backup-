@@ -29,7 +29,7 @@ public class ContactUsActivity extends BaseAppCompatActivity {
     Button feedback;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_us);
         ButterKnife.bind(this);
