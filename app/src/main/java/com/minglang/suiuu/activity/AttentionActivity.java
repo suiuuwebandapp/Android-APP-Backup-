@@ -14,6 +14,7 @@ import com.minglang.suiuu.fragment.attention.AttentionImageFragment;
 import com.minglang.suiuu.fragment.attention.AttentionProblemFragment;
 import com.minglang.suiuu.fragment.attention.AttentionSuiuuFragment;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
@@ -59,7 +60,10 @@ public class AttentionActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attention);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
     }
 

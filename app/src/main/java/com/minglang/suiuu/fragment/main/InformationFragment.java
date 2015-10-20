@@ -2,8 +2,8 @@ package com.minglang.suiuu.fragment.main;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +14,13 @@ import com.minglang.suiuu.adapter.NewRemindPageAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.fragment.remind.MsgOrderFragment;
 import com.minglang.suiuu.fragment.remind.MsgQuestionFragment;
-import com.minglang.suiuu.fragment.remind.MsgTripImageFragment;
 import com.minglang.suiuu.fragment.remind.MsgSystemFragment;
-import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.fragment.remind.MsgTripImageFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -34,8 +32,6 @@ import butterknife.ButterKnife;
  * 消息页面
  */
 public class InformationFragment extends BaseFragment {
-
-    private static final String TAG = InformationFragment.class.getSimpleName();
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -52,12 +48,6 @@ public class InformationFragment extends BaseFragment {
 
     @BindString(R.string.SystemMsg)
     String str4;
-
-    @BindColor(R.color.tr_black)
-    int normalColor;
-
-    @BindColor(R.color.mainColor)
-    int selectedColor;
 
     @Bind(R.id.info_tab_layout)
     TabLayout tabLayout;
@@ -102,7 +92,6 @@ public class InformationFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_information, container, false);
         ButterKnife.bind(this, rootView);
         initView();
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 
@@ -119,7 +108,6 @@ public class InformationFragment extends BaseFragment {
         tabLayout.addTab(tabLayout.newTab().setText(str2), false);
         tabLayout.addTab(tabLayout.newTab().setText(str3), false);
         tabLayout.addTab(tabLayout.newTab().setText(str4), false);
-        tabLayout.setTabTextColors(normalColor, selectedColor);
 
         MsgOrderFragment msgOrderFragment = MsgOrderFragment.newInstance(userSign, verification, token);
         MsgQuestionFragment msgQuestionFragment = MsgQuestionFragment.newInstance(userSign, verification, token);

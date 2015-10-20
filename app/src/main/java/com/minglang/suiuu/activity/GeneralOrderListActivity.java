@@ -13,6 +13,7 @@ import com.minglang.suiuu.adapter.GeneralOrderPagerAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.myorder.CompletedFragment;
 import com.minglang.suiuu.fragment.myorder.NotFinishedFragment;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
@@ -27,9 +28,6 @@ import butterknife.ButterKnife;
  * 普通用户查看订单的页面
  */
 public class GeneralOrderListActivity extends BaseAppCompatActivity {
-
-    @BindColor(R.color.white)
-    int titleColor;
 
     @BindColor(R.color.tr_black)
     int normalColor;
@@ -56,12 +54,14 @@ public class GeneralOrderListActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_general_order_list);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
     }
 
     private void initView() {
-        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
         tabLayout.setTabTextColors(normalColor, selectedColor);

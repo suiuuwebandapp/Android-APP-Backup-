@@ -12,6 +12,7 @@ import com.minglang.suiuu.adapter.OrderManageAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.order.ConfirmOrderFragment;
 import com.minglang.suiuu.fragment.order.NewOrderFragment;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
@@ -54,7 +55,10 @@ public class OrderManageActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_manage);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
     }
 

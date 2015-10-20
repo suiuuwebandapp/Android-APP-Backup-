@@ -8,7 +8,7 @@
     android:descendantFocusability="blocksDescendants">
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/item_msg_trip_gallery_head_image_view"
+        android:id="@+id/item_msg_trip_image_head_image_view"
         android:layout_width="@dimen/layout_50dp"
         android:layout_height="@dimen/layout_50dp"
         android:layout_centerVertical="true"
@@ -21,46 +21,48 @@
         fresco:roundAsCircle="true"/>
 
     <TextView
-        android:id="@+id/item_msg_trip_gallery_user_name"
+        android:id="@+id/item_msg_trip_image_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/item_msg_trip_gallery_head_image_view"
-        android:layout_toRightOf="@+id/item_msg_trip_gallery_head_image_view"
+        android:layout_toEndOf="@+id/item_msg_trip_image_head_image_view"
+        android:layout_toRightOf="@+id/item_msg_trip_image_head_image_view"
         android:clickable="false"
         android:focusable="false"
         android:text="@string/userName"
+        android:textColor="@color/mainColor"
         android:textSize="@dimen/layout_18sp"/>
 
     <TextView
-        android:id="@+id/item_msg_trip_gallery_in"
+        android:id="@+id/item_msg_trip_image_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/item_msg_trip_gallery_user_name"
-        android:layout_toRightOf="@+id/item_msg_trip_gallery_user_name"
+        android:layout_toEndOf="@+id/item_msg_trip_image_user_name"
+        android:layout_toRightOf="@+id/item_msg_trip_image_user_name"
         android:text="@string/in"
         android:textSize="@dimen/layout_18sp"/>
 
     <TextView
-        android:id="@+id/item_msg_trip_gallery_info"
+        android:id="@+id/item_msg_trip_image_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/item_msg_trip_gallery_in"
-        android:layout_toRightOf="@+id/item_msg_trip_gallery_in"
+        android:layout_toEndOf="@+id/item_msg_trip_image_in"
+        android:layout_toRightOf="@+id/item_msg_trip_image_in"
         android:clickable="false"
         android:focusable="false"
         android:text="@string/itemLocationInfo"
+        android:textColor="@color/mainColor"
         android:textSize="@dimen/layout_18sp"/>
 
     <TextView
-        android:id="@+id/item_msg_trip_gallery_action"
+        android:id="@+id/item_msg_trip_image_action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/item_msg_trip_gallery_info"
-        android:layout_toRightOf="@+id/item_msg_trip_gallery_info"
+        android:layout_toEndOf="@+id/item_msg_trip_image_info"
+        android:layout_toRightOf="@+id/item_msg_trip_image_info"
         android:text="@string/Action"
         android:textSize="@dimen/layout_18sp"/>
 

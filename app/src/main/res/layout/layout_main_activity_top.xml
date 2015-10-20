@@ -7,30 +7,9 @@
     android:layout_height="@dimen/layout_50dp"
     android:background="@color/mainColor">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/drawer_switch"
-        android:layout_width="@dimen/layout_45dp"
-        android:layout_height="@dimen/layout_45dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/layout_5dp"
-        android:layout_marginStart="@dimen/layout_5dp"
-        fresco:failureImage="@drawable/default_head_image_error"
-        fresco:failureImageScaleType="fitCenter"
-        fresco:placeholderImage="@drawable/default_head_image"
-        fresco:placeholderImageScaleType="fitCenter"
-        fresco:roundAsCircle="true"/>
 
-    <TextView
-        android:id="@+id/titleInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/MainTitle1"
-        android:textColor="@color/white"
-        android:textSize="@dimen/layout_22sp"/>
+
+
 
     <!--旅图页面相关按钮-->
     <RelativeLayout
@@ -107,24 +86,5 @@
             android:src="@drawable/icon_questions_selector"/>
 
     </RelativeLayout>
-
-    <!--收件箱搜索-->
-    <FrameLayout
-        android:id="@+id/inbox_button_layout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_50dp"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/titleInfo"
-        android:layout_toRightOf="@+id/titleInfo"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/main_4_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
-            android:src="@drawable/icon_search_selector"/>
-
-    </FrameLayout>
 
 </RelativeLayout>

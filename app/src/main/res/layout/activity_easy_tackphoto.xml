@@ -5,15 +5,16 @@
     android:id="@+id/tack_photo_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/easy_tack_photo_tool_bar"
-        style="@style/AppToolBar"
+        style="@style/AppToolBar2"
         app:navigationIcon="@drawable/back"
+        app:theme="@style/Theme.AppCompat.NoActionBar"
         app:title="@string/trip_image_publish"
-        app:titleTextColor="@color/white"
-        app:theme="@style/Theme.AppCompat.NoActionBar"/>
+        app:titleTextColor="@color/white" />
 
     <ScrollView
         android:id="@+id/easy_tack_photo_scroll_view"

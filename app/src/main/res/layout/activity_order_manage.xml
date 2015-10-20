@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="com.minglang.suiuu.activity.OrderManageActivity">
 
     <!--折叠区域-->
@@ -14,7 +15,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/order_manage_tool_bar"
-            style="@style/AppToolBar"
+            style="@style/AppToolBar2"
             app:layout_scrollFlags="scroll|enterAlways"
             app:navigationIcon="@drawable/back"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"

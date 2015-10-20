@@ -282,17 +282,17 @@
         <activity
             android:name=".activity.MySuiuuReleaseActivity"
             android:label="@string/title_activity_my_suiuu_details"
-            android:theme="@style/AppReleaseTheme" />
+            android:theme="@style/AppMainTheme" />
 
         <activity
             android:name=".activity.EditSuiuuInfoActivity"
             android:label="@string/title_activity_edit_suiuu_info"
-            android:theme="@style/AppMainTheme2" />
+            android:theme="@style/AppMainTheme" />
 
         <activity
             android:name=".activity.EditSuiuuPriceActivity"
             android:label="@string/title_activity_edit_suiuu_price"
-            android:theme="@style/AppMainTheme2" />
+            android:theme="@style/AppMainTheme" />
 
         <activity
             android:name=".activity.OrderManageActivity"
@@ -343,7 +343,7 @@
         <activity
             android:name=".activity.AccountManagerActivity"
             android:label="@string/title_activity_account_manage"
-            android:theme="@style/AppAccountTheme" />
+            android:theme="@style/AppMainTheme" />
 
         <activity
             android:name=".activity.ProblemDetailsActivity"
@@ -390,7 +390,7 @@
         <activity
             android:name=".activity.OrderContactInformationActivity"
             android:label="@string/title_activity_contact_information"
-            android:theme="@style/AppMainTheme2" />
+            android:theme="@style/AppMainTheme" />
 
         <activity
             android:name=".activity.AboutSuiuuActivity"

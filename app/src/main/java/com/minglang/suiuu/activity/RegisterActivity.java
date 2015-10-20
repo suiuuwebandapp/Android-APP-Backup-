@@ -110,7 +110,7 @@ public class RegisterActivity extends BaseActivity {
     @Bind(R.id.tv_get_confirm_number)
     TextView getConfirmNumber;
 
-    @Bind(R.id.second_login_register)
+    @Bind(R.id.register_button)
     TextView registerButton;
 
     @Bind(R.id.tv_zone)

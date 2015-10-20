@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppBaseTheme" parent="android:Theme.Material.Light.DarkActionBar">
-        <!-- API 21 theme customizations can go here. -->
-    </style>
-
     <style name="AppMainTheme" parent="AppNewBaseTheme">
-        <item name="android:colorPrimaryDark">@color/topColor</item>
+        <item name="android:colorPrimaryDark">@color/mainColorDark</item>
         <item name="android:colorPrimary">@color/mainColor</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:navigationBarColor">@color/mainColor</item>

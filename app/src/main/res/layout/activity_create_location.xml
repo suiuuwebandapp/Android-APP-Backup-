@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -12,19 +13,24 @@
         android:background="@color/mainColor">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/iv_create_location_callback"
+            android:layout_toLeftOf="@+id/iv_create_location_ok"
+            android:layout_toRightOf="@+id/iv_create_location_callback"
+            android:layout_toStartOf="@+id/iv_create_location_ok"
+            android:gravity="center_horizontal"
             android:text="@string/CreateLocation"
             android:textColor="@color/white"
-            android:textSize="@dimen/layout_18sp"/>
+            android:textSize="@dimen/layout_18sp" />
 
         <ImageView
             android:id="@+id/iv_create_location_callback"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/back"/>
+            android:src="@drawable/back"
+            tools:ignore="contentDescription" />
 
         <ImageView
             android:id="@+id/iv_create_location_ok"
@@ -34,13 +40,14 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/layout_8dp"
-            android:src="@drawable/icon_sure"/>
+            android:src="@drawable/icon_sure"
+            tools:ignore="contentDescription" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_top_info"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/layout_20dp"
@@ -55,7 +62,7 @@
             android:hint="@string/InputCreateLocationName"
             android:padding="@dimen/layout_5dp"
             android:singleLine="true"
-            android:textSize="@dimen/layout_15sp"/>
+            android:textSize="@dimen/layout_15sp" />
 
     </RelativeLayout>
 

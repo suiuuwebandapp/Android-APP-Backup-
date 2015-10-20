@@ -66,4 +66,5 @@ public class CreateLocationActivity extends BaseActivity {
             }
         });
     }
+
 }

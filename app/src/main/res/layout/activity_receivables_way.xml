@@ -1,18 +1,18 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/DefaultGray2">
+    android:background="@color/DefaultGray2"
+    android:fitsSystemWindows="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/receivables_way_tool_bar"
-        style="@style/AppToolBar"
+        style="@style/AppToolBar2"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         app:navigationIcon="@drawable/back"
-        app:popupTheme="@style/AppMainTheme2"
-        app:title="@string/ReceivablesMode"/>
+        app:title="@string/ReceivablesMode"
+        app:titleTextColor="@color/white" />
 
     <ListView
         android:id="@+id/receivables_way_list_view"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/receivables_way_tool_bar"
         android:layout_centerHorizontal="true"
-        android:choiceMode="singleChoice"/>
+        android:choiceMode="singleChoice" />
 
     <RelativeLayout
         android:id="@+id/receivables_way_hint_layout"
@@ -39,7 +39,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:padding="@dimen/layout_10dp"
-            android:src="@drawable/icon_no_receivables_hint"/>
+            android:src="@drawable/icon_no_receivables_hint" />
 
         <TextView
             android:id="@+id/textView4"
@@ -49,7 +49,7 @@
             android:layout_centerHorizontal="true"
             android:text="@string/YouNoHavingReceivableWay"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/textColor"/>
+            android:textColor="@color/textColor" />
 
     </RelativeLayout>
 

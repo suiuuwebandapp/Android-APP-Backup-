@@ -1,20 +1,9 @@
 <resources>
 
-    <!--
-        Base application theme for API 19+. This theme completely replaces
-        AppBaseTheme from BOTH res/values/styles.xml and
-        res/values-v11/styles.xml on API 19+ devices.
-    -->
-
-    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- API 14 theme customizations can go here. -->
-    </style>
-
-
     <style name="AppMainTheme" parent="AppNewBaseTheme">
-        <item name="colorPrimaryDark">@color/topColor</item>
         <item name="colorPrimary">@color/mainColor</item>
-        <item name="android:windowTranslucentStatus">false</item>
+        <item name="colorPrimaryDark">@color/mainColorDark</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
 </resources>

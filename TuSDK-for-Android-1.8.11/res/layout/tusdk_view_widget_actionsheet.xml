@@ -32,7 +32,7 @@
 
         <org.lasque.tusdk.core.view.widget.button.TuSdkButton
             android:id="@+id/lsq_cancelButton"
-            style="@style/lsq_actionsheetButton"
+            style="@style/lsq_actionSheetButton"
             android:layout_marginBottom="@dimen/lsq_actionsheet_space_bottom"
             android:background="@drawable/tusdk_view_widget_actionsheet_radius"
             android:text="@string/lsq_nav_cancel" />

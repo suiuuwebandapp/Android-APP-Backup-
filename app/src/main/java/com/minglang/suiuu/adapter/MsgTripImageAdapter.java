@@ -38,11 +38,11 @@ public class MsgTripImageAdapter extends BaseHolderAdapter<MsgTripImageItemData>
 
     @Override
     public void convert(ViewHolder helper, MsgTripImageItemData item, long position) {
-        SimpleDraweeView headImageView = helper.getView(R.id.item_msg_trip_gallery_head_image_view);
-        TextView userNameView = helper.getView(R.id.item_msg_trip_gallery_user_name);
-        TextView inView = helper.getView(R.id.item_msg_trip_gallery_in);
-        TextView infoView = helper.getView(R.id.item_msg_trip_gallery_info);
-        TextView actionView = helper.getView(R.id.item_msg_trip_gallery_action);
+        SimpleDraweeView headImageView = helper.getView(R.id.item_msg_trip_image_head_image_view);
+        TextView userNameView = helper.getView(R.id.item_msg_trip_image_user_name);
+        TextView inView = helper.getView(R.id.item_msg_trip_image_in);
+        TextView infoView = helper.getView(R.id.item_msg_trip_image_info);
+        TextView actionView = helper.getView(R.id.item_msg_trip_image_action);
 
         String headImagePath = item.getHeadImg();
         if (!TextUtils.isEmpty(headImagePath)) {

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -23,7 +24,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -64,9 +64,6 @@ public class AnswerActivity extends BaseAppCompatActivity {
     @Bind(R.id.answer_edit_text)
     EditText editText;
 
-    @BindColor(R.color.white)
-    int titleTextColor;
-
     private ProgressDialog progressDialog;
 
     private Context context;
@@ -76,16 +73,17 @@ public class AnswerActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer);
 
-        context = this;
-
         qID = getIntent().getStringExtra(Q_ID);
 
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
     }
 
     private void initView() {
-        toolbar.setTitleTextColor(titleTextColor);
+        context = this;
+
         setSupportActionBar(toolbar);
 
         progressDialog = new ProgressDialog(this);

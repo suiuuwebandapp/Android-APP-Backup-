@@ -58,8 +58,6 @@ public class MsgOrderAdapter extends BaseHolderAdapter<MsgOrderItemData> {
             } catch (Exception e) {
                 L.e(TAG, "Trip数据解析失败:" + e.getMessage());
             }
-        } else {
-            L.e(TAG, "第" + position + "Trip数据为空");
         }
 
 

@@ -28,11 +28,12 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.AccountInfo;
 import com.minglang.suiuu.entity.AccountInfo.AccountInfoData;
 import com.minglang.suiuu.utils.AppConstant;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.minglang.suiuu.utils.wechat.WeChatConstant;
 import com.squareup.okhttp.Request;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -53,7 +54,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -114,9 +114,6 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
     @BindString(R.string.ObtainWeChatAuthorization)
     String ObtainWeChatAuthorization;
 
-    @BindColor(R.color.white)
-    int titleColor;
-
     @Bind(R.id.receivables_way_tool_bar)
     Toolbar toolbar;
 
@@ -156,7 +153,10 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receivables_way);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         viewAction();
         sendRequest();
@@ -165,7 +165,6 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
     private void initView() {
         context = ReceivablesWayActivity.this;
 
-        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
         progressDialog = new ProgressDialog(this);

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mainColor"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <ImageView
@@ -11,7 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/layout_5dp"
-        android:src="@drawable/back" />
+        android:src="@drawable/back"
+        tools:ignore="contentDescription" />
 
     <ImageView
         android:id="@+id/iv_suiuu_info_head"
@@ -19,7 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/layout_50dp"
-        android:src="@drawable/login_portrait" />
+        android:src="@drawable/login_portrait"
+        tools:ignore="contentDescription" />
 
     <LinearLayout
         android:id="@+id/register_is_quick_login"
@@ -126,7 +130,7 @@
         <include
             android:id="@+id/register_confirm_number"
             layout="@layout/edittext_white_line"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3" />
 
@@ -140,10 +144,11 @@
             android:text="@string/obtain_captcha"
             android:textColor="@color/white"
             android:textSize="@dimen/layout_15sp" />
+
     </LinearLayout>
 
     <TextView
-        android:id="@+id/second_login_register"
+        android:id="@+id/register_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

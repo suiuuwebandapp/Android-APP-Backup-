@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -359,147 +360,14 @@ public class AppUtils {
         }
     }
 
-    public static String calculationTime(String timeString) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
-            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
-            SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm", Locale.CHINA);
-
-            //得到目标日期
-            Date appointDate = sdf.parse(timeString);
-
-            //得到当前日期
-            Date nowDate = sdf.parse(sdf.format(new Date(System.currentTimeMillis())));
-
-            L.i(TAG, "指定时间:" + appointDate.toGMTString());
-            L.i(TAG, "当前时间:" + nowDate.toGMTString());
-
-            Calendar appointCalendar = Calendar.getInstance();
-            Calendar nowCalendar = Calendar.getInstance();
-
-            appointCalendar.setTime(appointDate);
-            nowCalendar.setTime(nowDate);
-
-            //目标年份
-            int appointYear = appointCalendar.get(Calendar.YEAR);
-            //当年年份
-            int nowYear = nowCalendar.get(Calendar.YEAR);
-
-            //目标月份
-            int appointMonth = appointCalendar.get(Calendar.MONTH);
-            //当前月份
-            int nowMonth = nowCalendar.get(Calendar.MONTH);
-
-            //目标在当月第X天
-            int appointDayForMonth = appointCalendar.get(Calendar.DAY_OF_MONTH);
-            //本月第X天
-            int nowDayForMonth = nowCalendar.get(Calendar.DAY_OF_MONTH);
-
-            //目标当天第X小时
-            int appointHourForDay = appointCalendar.get(Calendar.HOUR_OF_DAY);
-            //当天第X小时
-            int nowHourForDay = nowCalendar.get(Calendar.HOUR_OF_DAY);
-
-            if (nowYear > appointYear) {
-                return sdf2.format(sdf2.parse(timeString));
-
-            } else if (nowYear == appointYear) {
-                if (nowMonth < appointMonth) {
-                    return sdf2.format(sdf2.parse(timeString));
-
-                } else if (nowMonth == appointMonth) {
-                    if (nowDayForMonth > appointDayForMonth) {
-                        return sdf2.format(sdf2.parse(timeString));
-
-                    } else if (nowDayForMonth == appointDayForMonth) {
-                        if (nowHourForDay > appointHourForDay) {
-                            return sdf2.format(sdf2.parse(timeString));
-
-                        } else if (nowHourForDay == appointHourForDay) {
-                            return sdf3.format(sdf3.parse(timeString));
-                        } else {
-                            return "";
-                        }
-                    } else {
-                        return "";
-                    }
-                } else {
-                    return "";
-                }
-            } else {
-                return "";
-            }
-
-
-        } catch (Exception e) {
-            L.e(TAG, "日期转换异常:" + e.getMessage());
-            return "";
+    public static int getStatusBarHeight(Activity activity) {
+        int result = 0;
+        Resources res = activity.getResources();
+        int resourceId = res.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = res.getDimensionPixelSize(resourceId);
         }
-    }
-
-    public static boolean ComparisonTime(String timeString1, String timeString2) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
-
-        try {
-            Date date1 = sdf.parse(timeString1);
-            Date date2 = sdf.parse(timeString2);
-
-            Calendar calendar1 = Calendar.getInstance();
-            Calendar calendar2 = Calendar.getInstance();
-
-            calendar1.setTime(date1);
-            calendar2.setTime(date2);
-
-            //目标年份
-            int year1 = calendar1.get(Calendar.YEAR);
-            //当年年份
-            int year2 = calendar2.get(Calendar.YEAR);
-
-            //目标月份
-            int month1 = calendar1.get(Calendar.MONTH);
-            //当前月份
-            int month2 = calendar2.get(Calendar.MONTH);
-
-            //目标在当月第X天
-            int day1 = calendar1.get(Calendar.DAY_OF_MONTH);
-            //本月第X天
-            int day2 = calendar2.get(Calendar.DAY_OF_MONTH);
-
-            //目标当天第X小时
-            int hour1 = calendar1.get(Calendar.HOUR_OF_DAY);
-            //当天第X小时
-            int hour2 = calendar2.get(Calendar.HOUR_OF_DAY);
-
-            if (year2 > year1) {
-                return true;
-            } else if (year2 == year1) {
-                if (month2 > month1) {
-                    return true;
-                } else if (month2 == month1) {
-                    if (day2 > day1) {
-                        return true;
-                    } else if (day2 == day1) {
-                        if (hour2 > hour1) {
-                            return true;
-                        } else if (hour2 == hour1) {
-                            return false;
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-
-        } catch (Exception e) {
-            L.e(TAG, "日期解析异常:" + e.getMessage());
-            return false;
-        }
+        return result;
     }
 
 }

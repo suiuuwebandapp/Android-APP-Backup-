@@ -1,21 +1,22 @@
 <RelativeLayout
-    android:id="@+id/contactUsRootLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/contactUsRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/contact_us_tool_bar"
-        style="@style/AppToolBar"
+        style="@style/AppToolBar2"
         app:navigationIcon="@drawable/back"
-        app:title="@string/ContactUs"/>
+        app:title="@string/ContactUs"
+        app:titleTextColor="@color/white" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/contact_us_tool_bar"
-        android:layout_above="@+id/contact_us_feed_back">
+        android:layout_above="@+id/contact_us_feed_back"
+        android:layout_below="@+id/contact_us_tool_bar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,43 +27,43 @@
 
                 <TextView
                     style="@style/contactUsLeftTextView"
-                    android:text="@string/WebSite"/>
+                    android:text="@string/WebSite" />
 
                 <TextView
                     style="@style/contactUsRightTextView"
-                    android:text="@string/WebsitePath"/>
+                    android:text="@string/WebsitePath" />
 
             </LinearLayout>
 
-            <TextView style="@style/settingDividingLine"/>
+            <TextView style="@style/settingDividingLine" />
 
             <LinearLayout style="@style/contactUsItemLayout">
 
                 <TextView
                     style="@style/contactUsLeftTextView"
-                    android:text="@string/Phone"/>
+                    android:text="@string/Phone" />
 
                 <TextView
                     style="@style/contactUsRightTextView"
-                    android:text="@string/PhoneNumber"/>
+                    android:text="@string/PhoneNumber" />
 
             </LinearLayout>
 
-            <TextView style="@style/settingDividingLine"/>
+            <TextView style="@style/settingDividingLine" />
 
             <LinearLayout style="@style/contactUsItemLayout">
 
                 <TextView
                     style="@style/contactUsLeftTextView"
-                    android:text="@string/Address"/>
+                    android:text="@string/Address" />
 
                 <TextView
                     style="@style/contactUsRightTextView"
-                    android:text="@string/AddressDetails"/>
+                    android:text="@string/AddressDetails" />
 
             </LinearLayout>
 
-            <TextView style="@style/settingDividingLine"/>
+            <TextView style="@style/settingDividingLine" />
 
         </LinearLayout>
 
@@ -77,6 +78,6 @@
         android:background="@drawable/setting_relevant_btn_selector"
         android:text="@string/FeedbackInfo"
         android:textColor="@drawable/setting_relevant_btn_text_color_selector"
-        android:textSize="@dimen/layout_18sp"/>
+        android:textSize="@dimen/layout_18sp" />
 
 </RelativeLayout>

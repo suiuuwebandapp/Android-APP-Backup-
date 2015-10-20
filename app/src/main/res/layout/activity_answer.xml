@@ -1,14 +1,15 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/answer_tool_bar"
-        style="@style/AppToolBar"
+        style="@style/AppToolBar2"
         app:navigationIcon="@drawable/back"
-        app:title="@string/answer_"/>
+        app:title="@string/answer_"
+        app:titleTextColor="@color/white" />
 
     <EditText
         android:id="@+id/answer_edit_text"
@@ -17,6 +18,6 @@
         android:layout_below="@+id/answer_tool_bar"
         android:layout_centerHorizontal="true"
         android:gravity="top"
-        android:hint="@string/answerQuestion"/>
+        android:hint="@string/answerQuestion" />
 
 </RelativeLayout>

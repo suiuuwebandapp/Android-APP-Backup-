@@ -20,6 +20,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SDCardUtils;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -40,7 +41,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import cn.edu.zafu.coreprogress.helper.ProgressHelper;
@@ -57,9 +57,6 @@ public class AboutSuiuuActivity extends BaseAppCompatActivity {
     private static final String CLIENT_TYPE = "clientType";
     private static final String VERSION_ID = "versionId";
     private static final String VERSION_MINI = "versionMini";
-
-    @BindColor(R.color.white)
-    int titleColor;
 
     @BindString(R.string.VersionName)
     String versionNameBefore;
@@ -97,13 +94,15 @@ public class AboutSuiuuActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_suiuu);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         viewAction();
     }
 
     private void initView() {
-        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
         progressDialog = new ProgressDialog(this);

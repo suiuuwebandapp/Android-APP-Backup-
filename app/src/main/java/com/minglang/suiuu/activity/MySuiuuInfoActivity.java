@@ -12,7 +12,7 @@ import com.minglang.suiuu.adapter.MySuiuuInfoAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.fragment.mysuiuu.ParticipateFragment;
 import com.minglang.suiuu.fragment.mysuiuu.PublishedFragment;
-import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
@@ -28,8 +28,6 @@ import butterknife.ButterKnife;
  * 查看我已参加和发布的随游
  */
 public class MySuiuuInfoActivity extends BaseAppCompatActivity {
-
-    private static final String TAG = MySuiuuInfoActivity.class.getSimpleName();
 
     @BindString(R.string.Published)
     String Published;
@@ -50,9 +48,11 @@ public class MySuiuuInfoActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_suiuu_info);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
-        L.i(TAG, "screenWidth:" + screenWidth + ",screenHeight:" + screenHeight);
     }
 
     /**

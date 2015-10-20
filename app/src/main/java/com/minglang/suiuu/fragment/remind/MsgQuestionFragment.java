@@ -81,10 +81,10 @@ public class MsgQuestionFragment extends BaseFragment {
     @BindString(R.string.SystemException)
     String SystemException;
 
-    @Bind(R.id.new_comment_fragment_head_frame)
+    @Bind(R.id.msg_question_fragment_head_frame)
     PtrClassicFrameLayout mPtrFrame;
 
-    @Bind(R.id.newCommentList)
+    @Bind(R.id.msg_question_list_view)
     ListView msgQuestionList;
 
     private List<MsgQuestionItemData> listAll = new ArrayList<>();
@@ -135,7 +135,6 @@ public class MsgQuestionFragment extends BaseFragment {
         initView();
         viewAction();
         getData4Service(page);
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 
@@ -298,6 +297,10 @@ public class MsgQuestionFragment extends BaseFragment {
             failureLessPage();
             Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public String getUserSign() {
+        return userSign;
     }
 
     private class MsgQuestionResultCallback extends OkHttpManager.ResultCallback<String> {

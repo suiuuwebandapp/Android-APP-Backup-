@@ -77,10 +77,10 @@ public class MsgTripImageFragment extends BaseFragment {
     @BindString(R.string.SystemException)
     String SystemException;
 
-    @Bind(R.id.new_at_fragment_head_frame)
+    @Bind(R.id.msg_trip_image_fragment_head_frame)
     PtrClassicFrameLayout mPtrFrame;
 
-    @Bind(R.id.new_at_list)
+    @Bind(R.id.msg_trip_image_list_view)
     ListView msgTripImageList;
 
     private List<MsgTripImageItemData> listAll = new ArrayList<>();

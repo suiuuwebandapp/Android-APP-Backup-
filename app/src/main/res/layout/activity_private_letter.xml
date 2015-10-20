@@ -1,19 +1,20 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/private_letter_tool_bar"
-        style="@style/AppToolBar"
+        style="@style/AppToolBar2"
         app:navigationIcon="@drawable/back"
-        app:title="@string/PrivateLetter"/>
+        app:title="@string/PrivateLetter"
+        app:titleTextColor="@color/white" />
 
     <com.minglang.pulltorefreshlibrary.PullToRefreshListView
         android:id="@+id/private_letter_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/private_letter_tool_bar"/>
+        android:layout_below="@+id/private_letter_tool_bar" />
 
 </RelativeLayout>

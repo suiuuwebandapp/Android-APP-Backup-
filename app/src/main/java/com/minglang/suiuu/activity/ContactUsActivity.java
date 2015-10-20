@@ -9,18 +9,15 @@ import android.widget.Button;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
+import com.minglang.suiuu.utils.StatusBarCompat;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 /**
  * 联系我们
  */
 public class ContactUsActivity extends BaseAppCompatActivity {
-
-    @BindColor(R.color.white)
-    int titleColor;
 
     @Bind(R.id.contact_us_tool_bar)
     Toolbar toolbar;
@@ -32,7 +29,10 @@ public class ContactUsActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_us);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         viewAction();
     }
@@ -41,7 +41,6 @@ public class ContactUsActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
-        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
     }

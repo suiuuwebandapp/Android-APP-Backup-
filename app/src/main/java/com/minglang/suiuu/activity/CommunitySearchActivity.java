@@ -34,12 +34,7 @@ public class CommunitySearchActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community_search);
         ButterKnife.bind(this);
-        initView();
         viewAction();
-    }
-
-    private void initView() {
-
     }
 
     private void viewAction() {

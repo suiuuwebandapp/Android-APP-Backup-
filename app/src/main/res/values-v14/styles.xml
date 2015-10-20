@@ -9,7 +9,7 @@
     </style>
 
     <style name="AppMainTheme" parent="AppNewBaseTheme">
-        <item name="colorPrimaryDark">@color/topColor</item>
+        <item name="colorPrimaryDark">@color/mainColorDark</item>
         <item name="colorPrimary">@color/mainColor</item>
     </style>
 

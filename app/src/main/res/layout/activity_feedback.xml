@@ -1,22 +1,20 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/DefaultGray2">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/feed_back_tool_bar"
-        style="@style/AppToolBar"
+        style="@style/AppToolBar2"
         app:navigationIcon="@drawable/back"
-        app:title="@string/FeedbackInfo"/>
+        app:title="@string/FeedbackInfo"
+        app:titleTextColor="@color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/feed_back_commit"
         android:layout_below="@+id/feed_back_tool_bar"
-        android:background="@color/DefaultGray2"
         android:orientation="vertical">
 
         <EditText
@@ -29,7 +27,7 @@
             android:hint="@string/feed_back_information"
             android:padding="@dimen/layout_8dp"
             android:textColor="@color/textColor"
-            android:textSize="@dimen/layout_16sp"/>
+            android:textSize="@dimen/layout_16sp" />
 
         <EditText
             android:id="@+id/feed_back_contact_way"
@@ -42,7 +40,7 @@
             android:hint="@string/feed_back_contact_way"
             android:padding="@dimen/layout_8dp"
             android:textColor="@color/textColor"
-            android:textSize="@dimen/layout_16sp"/>
+            android:textSize="@dimen/layout_16sp" />
 
     </LinearLayout>
 
@@ -55,6 +53,6 @@
         android:background="@drawable/setting_relevant_btn_selector"
         android:text="@string/Commit"
         android:textColor="@drawable/setting_relevant_btn_text_color_selector"
-        android:textSize="@dimen/layout_18sp"/>
+        android:textSize="@dimen/layout_18sp" />
 
 </RelativeLayout>

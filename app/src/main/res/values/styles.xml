@@ -1,59 +1,18 @@
 <resources>
 
-    <!-- Base application theme, dependent on API level. This theme is replaced
-       by AppBaseTheme from res/values-vXX/styles.xml on newer devices.-->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-    </style>
+    <style name="AppBaseTheme" parent="android:Theme.Light" />
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-    </style>
+    <style name="AppTheme" parent="AppBaseTheme" />
 
-    <!--Theme.AppCompat.Light.NoActionBar-->
-    <!--android:Theme.Light.NoTitleBar-->
-    <style name="FullBleedTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-    </style>
-
-    <style name="FullScreenTheme" parent="Theme.AppCompat.Light">
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
-    <style name="AppNewBaseTheme" parent="Theme.AppCompat.Light.NoActionBar" />
-
-    <style name="AppReleaseTheme" parent="AppNewBaseTheme">
-        <item name="colorPrimary">@color/DefaultGray2</item>
-    </style>
-
-    <style name="AppAccountTheme" parent="AppNewBaseTheme">
-        <item name="colorPrimary">@color/tr_black</item>
+    <style name="AppNewBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/mainColor</item>
+        <item name="colorPrimaryDark">@color/mainColorDark</item>
     </style>
 
     <style name="AppMainTheme" parent="AppNewBaseTheme">
-        <item name="colorPrimaryDark">@color/topColor</item>
         <item name="colorPrimary">@color/mainColor</item>
-    </style>
-
-    <style name="AppNewBaseTheme2" parent="Theme.AppCompat.NoActionBar" />
-
-    <style name="AppMainTheme2" parent="AppNewBaseTheme2">
-        <item name="colorPrimaryDark">@color/topColor</item>
-        <item name="colorPrimary">@color/mainColor</item>
-    </style>
-
-    <style name="BaseLayoutTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppBarLayoutTheme" parent="BaseLayoutTheme">
-        <item name="colorPrimary">@color/mainColor</item>
+        <item name="colorPrimaryDark">@color/mainColorDark</item>
     </style>
 
     <style name="anim_popup_dir">

@@ -19,11 +19,12 @@ import com.minglang.suiuu.adapter.AccountManageAdapter;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.TransferAccounts;
 import com.minglang.suiuu.entity.TransferAccounts.TransferAccountsData.TransferAccountsItemData;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONException;
@@ -36,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -65,9 +65,6 @@ public class AccountManagerActivity extends BaseAppCompatActivity {
     @BindString(R.string.DataException)
     String DataException;
 
-    @BindColor(R.color.white)
-    int titleColor;
-
     @Bind(R.id.account_balance_toolbar)
     Toolbar toolbar;
 
@@ -92,7 +89,10 @@ public class AccountManagerActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_manage);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         viewAction();
         sendAccountInfoRequest();
@@ -113,7 +113,6 @@ public class AccountManagerActivity extends BaseAppCompatActivity {
         progressDialog.setMessage(DialogMsg);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
         adapter = new AccountManageAdapter(this, listAll, R.layout.item_account_manage);

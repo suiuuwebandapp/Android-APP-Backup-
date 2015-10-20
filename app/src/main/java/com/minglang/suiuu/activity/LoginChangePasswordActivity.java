@@ -130,8 +130,11 @@ public class LoginChangePasswordActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_change_password);
+
         ButterKnife.bind(this);
+
         isQuicklyLogin = this.getIntent().getBooleanExtra("isQuicklyLogin", false);
+
         initView();
         viewAction();
     }
@@ -140,6 +143,7 @@ public class LoginChangePasswordActivity extends BaseActivity {
         //判断是否为快速登录
         if (isQuicklyLogin) {
             Map<String, String> map = SuiuuInfo.ReadQuicklyLoginInfo(this);
+
             //String openId = map.get("openId");
             //String type = map.get("type");
 

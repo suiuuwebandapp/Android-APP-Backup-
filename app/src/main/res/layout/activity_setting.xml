@@ -1,16 +1,18 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/settingRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/setting_tool_bar"
-        style="@style/AppToolBar"
+        style="@style/AppToolBar2"
         app:navigationIcon="@drawable/back"
-        app:title="@string/Setting" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="@string/Setting"
+        app:titleTextColor="@color/white" />
 
     <ScrollView
         android:layout_width="match_parent"

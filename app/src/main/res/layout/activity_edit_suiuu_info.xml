@@ -1,15 +1,16 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/edit_suiuu_info_tool_bar"
-        style="@style/AppToolBar"
+        style="@style/AppToolBar2"
         app:navigationIcon="@drawable/back"
-        app:title="@string/EditSuiuuInfo"/>
+        app:title="@string/EditSuiuuInfo"
+        app:titleTextColor="@color/white" />
 
     <EditText
         android:id="@+id/edit_suiuu_info_text"
@@ -21,8 +22,8 @@
         android:background="@color/DefaultGray2"
         android:gravity="top|start"
         android:hint="@string/HintEditSuiuuInfo"
-        android:padding="@dimen/layout_2dp"
+        android:padding="@dimen/layout_5dp"
         android:textColor="@color/tr_black"
-        android:textColorHint="@color/tr_black"/>
+        android:textColorHint="@color/tr_black" />
 
 </RelativeLayout>

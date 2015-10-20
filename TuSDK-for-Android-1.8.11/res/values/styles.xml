@@ -1,9 +1,9 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Application theme. -->
-    <style name="lsq_sdkBaseTheme" parent="android:Theme.Light.NoTitleBar"></style>
+    <style name="lsq_sdkBaseTheme" parent="android:Theme.Light.NoTitleBar" />
 
-    <style name="lsq_sdkTheme" parent="lsq_sdkBaseTheme"></style>
+    <style name="lsq_sdkTheme" parent="lsq_sdkBaseTheme" />
 
     <!-- split -->
     <style name="lsq_split">
@@ -72,8 +72,8 @@
         <item name="android:text">@string/lsq_text</item>
     </style>
 
-    <!-- actionsheet -->
-    <style name="lsq_actionsheetButton">
+    <!-- actionSheet -->
+    <style name="lsq_actionSheetButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">10dp</item>
@@ -81,6 +81,7 @@
         <item name="android:textSize">20sp</item>
         <item name="android:layout_marginBottom">@dimen/lsq_actionsheet_space_button</item>
     </style>
+
     <!-- edit entry Option -->
     <style name="lsq_edit_entryOptionButton">
         <item name="android:layout_width">0dp</item>

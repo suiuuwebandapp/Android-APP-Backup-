@@ -33,6 +33,7 @@
             android:clickable="false"
             android:focusable="false"
             android:text="@string/userName"
+            android:textColor="@color/mainColor"
             android:textSize="@dimen/layout_18sp" />
 
         <TextView
@@ -81,6 +82,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:text="@string/OrderTitle"
+            android:textColor="@color/mainColor"
             android:textSize="@dimen/layout_18sp" />
 
     </LinearLayout>

@@ -12,9 +12,9 @@ import android.widget.Toast;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.AppConstant;
+import com.minglang.suiuu.utils.StatusBarCompat;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 /**
@@ -25,9 +25,6 @@ public class EditSuiuuInfoActivity extends BaseAppCompatActivity {
     private static final String OLD_INFO = "oldInfo";
 
     private Intent suiuuIntent;
-
-    @BindColor(R.color.white)
-    int titleColor;
 
     @Bind(R.id.edit_suiuu_info_tool_bar)
     Toolbar toolbar;
@@ -40,7 +37,10 @@ public class EditSuiuuInfoActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_suiuu_info);
         suiuuIntent = getIntent();
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
     }
 
@@ -51,7 +51,6 @@ public class EditSuiuuInfoActivity extends BaseAppCompatActivity {
         String str = suiuuIntent.getStringExtra(OLD_INFO);
         editInfo.setText(str);
 
-        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
     }
 

@@ -6,7 +6,7 @@
     tools:context="com.minglang.suiuu.fragment.remind.MsgQuestionFragment">
 
     <in.srain.cube.views.ptr.PtrClassicFrameLayout
-        android:id="@+id/new_comment_fragment_head_frame"
+        android:id="@+id/msg_question_fragment_head_frame"
         xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,7 +20,7 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/newCommentList"/>
+            android:id="@+id/msg_question_list_view"/>
 
     </in.srain.cube.views.ptr.PtrClassicFrameLayout>
 

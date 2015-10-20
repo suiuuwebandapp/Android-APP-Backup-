@@ -12,10 +12,10 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 /**
@@ -24,9 +24,6 @@ import butterknife.ButterKnife;
 public class SettingActivity extends BaseAppCompatActivity {
 
     private static final String TAG = SettingActivity.class.getSimpleName();
-
-    @BindColor(R.color.white)
-    int titleColor;
 
     @Bind(R.id.setting_tool_bar)
     Toolbar toolbar;
@@ -54,13 +51,15 @@ public class SettingActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         viewAction();
     }
 
     private void initView() {
-        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
         context = SettingActivity.this;
 

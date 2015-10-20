@@ -1,11 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--控件/布局使用的Style-->
+<?xml version="1.0" encoding="utf-8"?><!--控件/布局使用的Style-->
 <resources>
 
     <style name="AppToolBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/layout_50dp</item>
         <item name="android:background">@color/mainColor</item>
+    </style>
+
+    <style name="AppToolBar2">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:fitsSystemWindows">true</item>
     </style>
 
     <!--主页底栏图片Style-->
@@ -135,7 +141,8 @@
         <item name="android:gravity">center_horizontal|center_vertical</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:textColor">@color/personal_center_text_view_color_selector</item>
-        <item name="android:background">@drawable/personal_center_text_view_background_selector</item>
+        <item name="android:background">@drawable/personal_center_text_view_background_selector
+        </item>
         <item name="android:padding">@dimen/layout_5dp</item>
         <item name="android:singleLine">true</item>
     </style>

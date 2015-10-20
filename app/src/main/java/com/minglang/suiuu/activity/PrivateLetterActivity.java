@@ -24,6 +24,7 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.entity.PrivateLetter;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -35,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -49,9 +49,6 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
     private static final String RELATE_ID = "relateId";
 
     private static final String HEAD_IMAGE_PATH = "headImagePath";
-
-    @BindColor(R.color.white)
-    int titleColor;
 
     @BindString(R.string.load_wait)
     String DialogMsg;
@@ -98,7 +95,10 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_letter);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         viewAction();
     }
@@ -110,7 +110,6 @@ public class PrivateLetterActivity extends BaseAppCompatActivity {
     }
 
     private void initView() {
-        toolBar.setTitleTextColor(titleColor);
         setSupportActionBar(toolBar);
 
         context = this;

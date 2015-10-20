@@ -12,9 +12,9 @@ import android.widget.Toast;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -24,10 +24,8 @@ import butterknife.ButterKnife;
  * 待添加网络方法
  */
 public class FeedbackActivity extends BaseAppCompatActivity {
-    private static final String TAG = FeedbackActivity.class.getSimpleName();
 
-    @BindColor(R.color.white)
-    int titleColor;
+    private static final String TAG = FeedbackActivity.class.getSimpleName();
 
     @Bind(R.id.feed_back_tool_bar)
     Toolbar toolbar;
@@ -51,13 +49,15 @@ public class FeedbackActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         viewAction();
     }
 
     private void initView() {
-        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
     }
 

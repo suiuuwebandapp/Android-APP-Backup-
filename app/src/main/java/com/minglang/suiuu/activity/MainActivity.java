@@ -14,7 +14,9 @@ import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -23,7 +25,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -46,6 +47,7 @@ import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.MD5Utils;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -72,11 +74,6 @@ public class MainActivity extends BaseAppCompatActivity {
     private static final int NUMBER2 = 2;
     private static final int NUMBER3 = 3;
     private static final int NUMBER4 = 4;
-
-    private static final String STATE = "state";
-
-    private static final String COUNTRY_ID = "countryId";
-    private static final String CITY_ID = "cityId";
 
     private static final String TIME_STAMP = "timestamp";
     private static final String APP_SIGN = "appSign";
@@ -114,6 +111,9 @@ public class MainActivity extends BaseAppCompatActivity {
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
+    @Bind(R.id.main_tool_bar)
+    Toolbar toolbar;
+
     @Bind(R.id.slider_layout)
     RelativeLayout sliderView;
 
@@ -122,6 +122,9 @@ public class MainActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.head_image)
     SimpleDraweeView headImageView;
+
+    @Bind(R.id.main_top_view)
+    View leftTopView;
 
     @Bind(R.id.side_list_view)
     ListView sideListView;
@@ -149,42 +152,6 @@ public class MainActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.tab4)
     LinearLayout tab4;
-
-    /**
-     * 旅图页面按钮布局
-     */
-    @Bind(R.id.travel_image_layout)
-    RelativeLayout travelImageLayout;
-
-    /**
-     * 随游页面按钮布局
-     */
-    @Bind(R.id.suiuu_button_layout)
-    FrameLayout suiuuButtonLayout;
-
-    @Bind(R.id.community_layout)
-    RelativeLayout communityLayout;
-
-    /**
-     * 旅图页面相册按钮
-     */
-    @Bind(R.id.main_1_album)
-    ImageView main_1_Album;
-
-    /**
-     * 随游页面搜索按钮
-     */
-    @Bind(R.id.main_2_search)
-    ImageView main_2_Search;
-
-    @Bind(R.id.main_3_search)
-    ImageView main_3_Search;
-
-    @Bind(R.id.main_3_questions)
-    ImageView main_3_Questions;
-
-    @Bind(R.id.main_4_search)
-    ImageView main_4_Search;
 
     @Bind(R.id.img1)
     ImageView imageTabOne;
@@ -259,9 +226,11 @@ public class MainActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        UmengUpdateAgent.update(this);
 
+        StatusBarCompat.compat(this);
+        UmengUpdateAgent.update(this);
         ButterKnife.bind(this);
+
         context = MainActivity.this;
         verification = SuiuuInfo.ReadVerification(context);
 
@@ -477,10 +446,25 @@ public class MainActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
+
         fm = getSupportFragmentManager();
 
+        int statusBarHeight = AppUtils.getStatusBarHeight(this);
+        int leftViewWidth = screenWidth / 4 * 3;
+
+        ViewGroup.LayoutParams viewParams = leftTopView.getLayoutParams();
+        viewParams.width = leftViewWidth;
+        viewParams.height = statusBarHeight;
+        leftTopView.setLayoutParams(viewParams);
+
         ViewGroup.LayoutParams sliderNavigationViewParams = sliderView.getLayoutParams();
-        sliderNavigationViewParams.width = screenWidth / 4 * 3;
+        sliderNavigationViewParams.width = leftViewWidth;
         sliderNavigationViewParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
         sliderView.setLayoutParams(sliderNavigationViewParams);
 
@@ -634,49 +618,6 @@ public class MainActivity extends BaseAppCompatActivity {
                     sideListView.setVisibility(View.VISIBLE);
                     sideListView2.setVisibility(View.GONE);
                 }
-            }
-        });
-
-        main_1_Album.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, SelectPictureActivity.class);
-                intent.putExtra(STATE, 1);
-                startActivityForResult(intent, AppConstant.PUBLISTH_TRIP_GALLERY_SUCCESS);
-            }
-        });
-
-        main_2_Search.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, SearchActivity.class);
-                intent.putExtra("searchClass", 2);
-                startActivity(intent);
-            }
-        });
-
-        main_3_Search.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, CommunitySearchActivity.class);
-                startActivityForResult(intent, AppConstant.COMMUNITY_SEARCH_SKIP);
-            }
-        });
-
-        main_3_Questions.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, PutQuestionsActivity.class);
-                intent.putExtra(COUNTRY_ID, problemFragment.getCountryId());
-                intent.putExtra(CITY_ID, problemFragment.getCityId());
-                startActivity(intent);
-            }
-        });
-
-        main_4_Search.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
 
@@ -922,11 +863,6 @@ public class MainActivity extends BaseAppCompatActivity {
                 imageTabTwo.setImageResource(R.drawable.icon_main_2_white);
                 imageTabThree.setImageResource(R.drawable.icon_main_3_white);
                 imageTabFour.setImageResource(R.drawable.icon_main_4_white);
-
-                travelImageLayout.setVisibility(View.VISIBLE);
-                suiuuButtonLayout.setVisibility(View.GONE);
-                communityLayout.setVisibility(View.GONE);
-                //inboxButtonLayout.setVisibility(View.GONE);
                 break;
 
             case NUMBER2:
@@ -934,11 +870,6 @@ public class MainActivity extends BaseAppCompatActivity {
                 imageTabTwo.setImageResource(R.drawable.icon_main_2_green);
                 imageTabThree.setImageResource(R.drawable.icon_main_3_white);
                 imageTabFour.setImageResource(R.drawable.icon_main_4_white);
-
-                travelImageLayout.setVisibility(View.GONE);
-                suiuuButtonLayout.setVisibility(View.VISIBLE);
-                communityLayout.setVisibility(View.GONE);
-                //inboxButtonLayout.setVisibility(View.GONE);
                 break;
 
             case NUMBER3:
@@ -946,22 +877,13 @@ public class MainActivity extends BaseAppCompatActivity {
                 imageTabTwo.setImageResource(R.drawable.icon_main_2_white);
                 imageTabThree.setImageResource(R.drawable.icon_main_3_green);
                 imageTabFour.setImageResource(R.drawable.icon_main_4_white);
-
-                travelImageLayout.setVisibility(View.GONE);
-                suiuuButtonLayout.setVisibility(View.GONE);
-                communityLayout.setVisibility(View.VISIBLE);
-                //inboxButtonLayout.setVisibility(View.GONE);
                 break;
+
             case NUMBER4:
                 imageTabOne.setImageResource(R.drawable.icon_main_1_white);
                 imageTabTwo.setImageResource(R.drawable.icon_main_2_white);
                 imageTabThree.setImageResource(R.drawable.icon_main_3_white);
                 imageTabFour.setImageResource(R.drawable.icon_main_4_green);
-
-                travelImageLayout.setVisibility(View.GONE);
-                suiuuButtonLayout.setVisibility(View.GONE);
-                communityLayout.setVisibility(View.GONE);
-                //inboxButtonLayout.setVisibility(View.VISIBLE);
                 break;
 
         }

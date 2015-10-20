@@ -129,7 +129,6 @@ public class MsgSystemFragment extends BaseFragment {
         initView();
         viewAction();
         getData4Service(page);
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + "token:" + token);
         return rootView;
     }
 
@@ -278,6 +277,10 @@ public class MsgSystemFragment extends BaseFragment {
             failureLessPage();
             Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public String getUserSign() {
+        return userSign;
     }
 
     private class MsgSystemResultCallback extends OkHttpManager.ResultCallback<String> {

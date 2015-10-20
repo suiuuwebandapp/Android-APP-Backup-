@@ -189,12 +189,66 @@ public class FirstLoginActivity extends BaseActivity {
     }
 
     private void viewAction() {
-        iv_exit.setOnClickListener(new MyOnClickListener());
-        bt_login.setOnClickListener(new MyOnClickListener());
-        bt_register.setOnClickListener(new MyOnClickListener());
-        iv_sina.setOnClickListener(new MyOnClickListener());
-        iv_wechat.setOnClickListener(new MyOnClickListener());
-        iv_qq.setOnClickListener(new MyOnClickListener());
+        iv_exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        bt_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, SecondLoginActivity.class);
+                intent.putExtra("isQuicklyLogin", false);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        bt_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(context, RegisterActivity.class));
+                finish();
+            }
+        });
+
+        iv_sina.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
+                type = "3";
+                mController.doOauthVerify(context, SHARE_MEDIA.SINA, new MicroBlog4UMAuthListener());
+            }
+        });
+
+        iv_wechat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
+                type = "2";
+                if (!weChatApi.isWXAppInstalled()) {
+                    dialog.dismiss();
+                    Toast.makeText(context, NoInstallWeChat, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                UMWXHandler wxHandler = new UMWXHandler(context, WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
+                wxHandler.addToSocialSDK();
+                mController.doOauthVerify(context, SHARE_MEDIA.WEIXIN, new WeChat4UMAuthListener());
+            }
+        });
+
+        iv_qq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
+                type = "1";
+                UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(FirstLoginActivity.this, TencentConstant.APP_ID, TencentConstant.APP_KEY);
+                qqSsoHandler.addToSocialSDK();
+                mController.doOauthVerify(context, SHARE_MEDIA.QQ, new QQLogin4UMAuthListener());
+            }
+        });
 
         mController.getConfig().setSsoHandler(new SinaSsoHandler());
     }
@@ -205,60 +259,6 @@ public class FirstLoginActivity extends BaseActivity {
     private void initThirdParty() {
         weChatApi = WXAPIFactory.createWXAPI(this, WeChatConstant.APP_ID, false);
         mController = UMServiceFactory.getUMSocialService("com.umeng.login");
-    }
-
-    private class MyOnClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-
-                case R.id.iv_exit:
-                    finish();
-                    break;
-
-                case R.id.bt_login:
-                    Intent intent = new Intent(context, SecondLoginActivity.class);
-                    intent.putExtra("isQuicklyLogin", false);
-                    startActivity(intent);
-                    finish();
-                    break;
-
-                case R.id.bt_register:
-                    startActivity(new Intent(context, RegisterActivity.class));
-                    finish();
-                    break;
-
-                case R.id.iv_sina:
-                    dialog.show();
-                    type = "3";
-                    mController.doOauthVerify(context, SHARE_MEDIA.SINA, new MicroBlog4UMAuthListener());
-                    break;
-
-                case R.id.iv_wechat:
-                    dialog.show();
-                    type = "2";
-                    if (!weChatApi.isWXAppInstalled()) {
-                        dialog.dismiss();
-                        Toast.makeText(context, NoInstallWeChat, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    UMWXHandler wxHandler = new UMWXHandler(context, WeChatConstant.APP_ID, WeChatConstant.APPSECRET);
-                    wxHandler.addToSocialSDK();
-                    mController.doOauthVerify(context, SHARE_MEDIA.WEIXIN, new WeChat4UMAuthListener());
-                    break;
-
-                case R.id.iv_qq:
-                    dialog.show();
-                    type = "1";
-                    UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(FirstLoginActivity.this, TencentConstant.APP_ID, TencentConstant.APP_KEY);
-                    qqSsoHandler.addToSocialSDK();
-                    mController.doOauthVerify(context, SHARE_MEDIA.QQ, new QQLogin4UMAuthListener());
-                    break;
-
-                default:
-                    break;
-            }
-        }
     }
 
     /**

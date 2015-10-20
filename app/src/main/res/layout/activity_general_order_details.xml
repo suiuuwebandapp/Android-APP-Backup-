@@ -1,6 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/tools"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/DefaultGray2">
@@ -44,7 +43,6 @@
                     android:layout_marginStart="@dimen/layout_8dp"
                     android:layout_toLeftOf="@+id/order_details_indicator"
                     android:layout_toStartOf="@+id/order_details_indicator"
-                    android:text="@string/app_name"
                     android:textColor="@color/remindColor"
                     android:textSize="@dimen/layout_16sp" />
 
@@ -59,7 +57,6 @@
                     android:layout_marginEnd="@dimen/layout_8dp"
                     android:layout_marginRight="@dimen/layout_8dp"
                     android:singleLine="true"
-                    android:text="@string/app_name"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/white" />
 
@@ -89,7 +86,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/layout_5dp"
-                    android:text="@string/app_name"
                     android:textColor="@color/slider_line_color"
                     android:textSize="@dimen/layout_16sp" />
 
@@ -124,7 +120,6 @@
                     android:layout_toRightOf="@+id/order_details_head_image_view"
                     android:layout_toStartOf="@+id/order_details_chat"
                     android:padding="@dimen/layout_3dp"
-                    android:text="@string/app_name"
                     android:textSize="@dimen/layout_18sp" />
 
                 <ImageView
@@ -224,7 +219,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text="@string/Zero"
                         android:textSize="@dimen/layout_16sp" />
 
                 </LinearLayout>
@@ -248,7 +242,6 @@
                         android:id="@+id/order_details_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/tempDate"
                         android:textSize="@dimen/layout_16sp" />
 
                 </LinearLayout>
@@ -272,7 +265,6 @@
                         android:id="@+id/order_details_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/tempTime"
                         android:textSize="@dimen/layout_16sp" />
 
                 </LinearLayout>
@@ -297,7 +289,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text="@string/tempNumber"
                         android:textSize="@dimen/layout_16sp" />
 
                 </LinearLayout>

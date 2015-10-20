@@ -33,6 +33,7 @@ import com.minglang.suiuu.entity.PrivateChat;
 import com.minglang.suiuu.entity.PrivateChat.PrivateChatData;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -51,7 +52,6 @@ import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -83,9 +83,6 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
 
     @BindString(R.string.SystemException)
     String SystemException;
-
-    @BindColor(R.color.white)
-    int titleColor;
 
     @Bind(R.id.private_letter_details_tool_bar)
     Toolbar toolBar;
@@ -137,7 +134,9 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         relateId = getIntent().getStringExtra(RELATE_ID);
         headImagePath = getIntent().getStringExtra(HEAD_IMG);
 
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         initLocalBroadcast();
         viewAction();
@@ -148,7 +147,6 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
      * 初始化方法
      */
     private void initView() {
-        toolBar.setTitleTextColor(titleColor);
         setSupportActionBar(toolBar);
 
         context = this;

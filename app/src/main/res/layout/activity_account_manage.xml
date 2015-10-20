@@ -1,5 +1,4 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,17 +6,18 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/account_balance_toolbar"
-        style="@style/AppToolBar"
+        style="@style/AppToolBar2"
         app:layout_collapseMode="pin"
         app:navigationIcon="@drawable/back"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="@string/AccountManager"/>
+        app:title="@string/AccountManager"
+        app:titleTextColor="@color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_below="@+id/account_balance_toolbar">
+        android:layout_below="@+id/account_balance_toolbar"
+        android:orientation="vertical">
 
         <include
             android:id="@+id/account_balance_layout"
@@ -26,16 +26,16 @@
             android:layout_height="@dimen/layout_150dp"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/layout_20dp"
-            android:layout_marginTop="@dimen/layout_20dp"/>
+            android:layout_marginTop="@dimen/layout_20dp" />
 
         <include
             android:id="@+id/account_balance_info_title_layout"
-            layout="@layout/include_account_info_list_title_layout"/>
+            layout="@layout/include_account_info_list_title_layout" />
 
         <ListView
             android:id="@+id/account_balance_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 

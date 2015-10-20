@@ -60,9 +60,6 @@ public class MsgOrderFragment extends BaseFragment {
     private static final String DATA = "data";
 
     private static final String ID = "id";
-    private static final String ORDER_STATUS = "orderStatus";
-
-    private static final String NEW = "new";
 
     @BindString(R.string.load_wait)
     String DialogMsg;
@@ -133,7 +130,6 @@ public class MsgOrderFragment extends BaseFragment {
         initView();
         viewAction();
         getData4Service(page);
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 

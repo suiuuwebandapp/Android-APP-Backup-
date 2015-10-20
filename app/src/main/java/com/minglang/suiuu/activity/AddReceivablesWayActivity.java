@@ -15,9 +15,10 @@ import android.widget.Toast;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
+import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
-import com.minglang.suiuu.utils.SuiuuInfo;
 import com.squareup.okhttp.Request;
 
 import org.json.JSONObject;
@@ -25,7 +26,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -38,9 +38,6 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
 
     private static final String ACCOUNT = "account";
     private static final String NAME = "name";
-
-    @BindColor(R.color.white)
-    int titleColor;
 
     @BindString(R.string.AccountNotNull)
     String AccountNotNull;
@@ -90,13 +87,15 @@ public class AddReceivablesWayActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_receivables_way);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         viewAction();
     }
 
     private void initView() {
-        toolbar.setTitleTextColor(titleColor);
         setSupportActionBar(toolbar);
 
         context = AddReceivablesWayActivity.this;

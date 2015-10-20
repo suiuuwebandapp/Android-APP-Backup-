@@ -1,15 +1,16 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/edit_suiuu_price_tool_bar"
-        style="@style/AppToolBar"
+        style="@style/AppToolBar2"
         app:navigationIcon="@drawable/back"
-        app:title="@string/EditSuiuuPrice"/>
+        app:title="@string/EditSuiuuPrice"
+        app:titleTextColor="@color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@color/DefaultGray2"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="@dimen/layout_2dp">
 
             <TextView
                 android:id="@+id/textView14"
@@ -36,14 +38,14 @@
                 android:layout_marginRight="@dimen/layout_8dp"
                 android:layout_marginStart="@dimen/layout_8dp"
                 android:text="@string/BasicPrice"
-                android:textSize="@dimen/layout_16sp"/>
+                android:textSize="@dimen/layout_16sp" />
 
             <EditText
                 android:id="@+id/edit_suiuu_basic_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:textSize="@dimen/layout_16sp"/>
+                android:textSize="@dimen/layout_16sp" />
 
         </LinearLayout>
 
@@ -54,7 +56,8 @@
             android:layout_marginBottom="@dimen/layout_10dp"
             android:layout_marginTop="@dimen/layout_10dp"
             android:background="@color/DefaultGray2"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="@dimen/layout_2dp">
 
             <TextView
                 android:id="@+id/textView15"
@@ -66,14 +69,14 @@
                 android:layout_marginRight="@dimen/layout_8dp"
                 android:layout_marginStart="@dimen/layout_8dp"
                 android:text="@string/AdditionalPrice"
-                android:textSize="@dimen/layout_16sp"/>
+                android:textSize="@dimen/layout_16sp" />
 
             <EditText
                 android:id="@+id/edit_suiuu_additional_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:textSize="@dimen/layout_16sp"/>
+                android:textSize="@dimen/layout_16sp" />
 
         </LinearLayout>
 
@@ -82,7 +85,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@color/DefaultGray2"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="@dimen/layout_2dp">
 
             <TextView
                 android:id="@+id/textView16"
@@ -94,14 +98,14 @@
                 android:layout_marginRight="@dimen/layout_8dp"
                 android:layout_marginStart="@dimen/layout_8dp"
                 android:text="@string/OtherPrice"
-                android:textSize="@dimen/layout_16sp"/>
+                android:textSize="@dimen/layout_16sp" />
 
             <EditText
                 android:id="@+id/edit_suiuu_other_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:textSize="@dimen/layout_16sp"/>
+                android:textSize="@dimen/layout_16sp" />
 
         </LinearLayout>
 
