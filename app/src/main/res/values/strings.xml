@@ -609,6 +609,11 @@
     <string name="NoCommentHint" translatable="false">还没有随友评论,快来抢沙发</string>
     <string name="PutComment" translatable="false">抢沙发</string>
 
+    <string name="CancelYourBook" translatable="false">取消了您的预定</string>
+    <string name="BookSuiuu" translatable="false">预定了随游</string>
+    <string name="ReceiveOrder" translatable="false">已接单</string>
+    <string name="ConfirmPlay" translatable="false">确认游玩</string>
+
     <string name="year" translatable="false">年</string>
     <string name="month" translatable="false">月</string>
     <string name="day" translatable="false">日</string>

@@ -94,6 +94,8 @@ public class MainActivity extends BaseAppCompatActivity {
     private static final String USER_KEY = "user_key";
     private static final String LOGIN = "login";
 
+    private static final int NETWORK_CODE = 1010;
+
     @BindString(R.string.SuiuuUser)
     String SuiuuUser;
 
@@ -241,7 +243,7 @@ public class MainActivity extends BaseAppCompatActivity {
             L.i(TAG, "isConnected:" + isConnected);
 
             String loginMessage = buildLoginMessage();
-            L.i(TAG, "loginMessage:" + loginMessage);
+            //L.i(TAG, "loginMessage:" + loginMessage);
             webSocketClient.send(loginMessage);
 
             progressDialog = new ProgressDialog(this);
@@ -254,21 +256,7 @@ public class MainActivity extends BaseAppCompatActivity {
             //暂停使用定位服务
             //bindService(new Intent(context, LocationService.class), serviceConnection, Context.BIND_AUTO_CREATE);
         } else {
-            new AlertDialog.Builder(context)
-                    .setMessage("无可用网络，请检查网络设置！")
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            startActivity(new Intent(Settings.ACTION_SETTINGS));
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })
-                    .create().show();
+            showNetworkSettingDialog();
         }
     }
 
@@ -277,23 +265,37 @@ public class MainActivity extends BaseAppCompatActivity {
         super.onResume();
 
         String networkHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
-
-        if (!TextUtils.isEmpty(networkHeadImagePath)) {
-            headImageView.setImageURI(Uri.parse(networkHeadImagePath));
-        } else {
-            headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
-        }
+        headImageView.setImageURI(Uri.parse(networkHeadImagePath));
 
         String user_name = SuiuuInfo.ReadUserData(this).getNickname();
         if (!TextUtils.isEmpty(user_name)) {
             nickNameView.setText(user_name);
         }
 
-        if (webSocketClient != null)
+        if (webSocketClient != null) {
             if (!isConnected) {
                 webSocketClient.send(buildLoginMessage());
             }
+        }
 
+    }
+
+    private void showNetworkSettingDialog() {
+        new AlertDialog.Builder(context)
+                .setMessage("无可用网络，请检查网络设置！")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent(Settings.ACTION_SETTINGS), NETWORK_CODE);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create().show();
     }
 
     /**
@@ -345,6 +347,8 @@ public class MainActivity extends BaseAppCompatActivity {
                 @Override
                 public void onFinish() {
                     L.i(TAG, "Service Time Request Finish!");
+                    initView();
+                    viewAction();
                 }
 
             });
@@ -355,6 +359,8 @@ public class MainActivity extends BaseAppCompatActivity {
             }
 
             showErrorDialog("时间获取失败，请尝试重新获取！");
+            initView();
+            viewAction();
         }
     }
 
@@ -519,13 +525,11 @@ public class MainActivity extends BaseAppCompatActivity {
             }
         }
 
-        MainSliderAdapter adapter =
-                new MainSliderAdapter(this, getResources().getStringArray(R.array.sideList));
+        MainSliderAdapter adapter = new MainSliderAdapter(this, getResources().getStringArray(R.array.sideList));
         adapter.setScreenHeight(screenHeight);
         sideListView.setAdapter(adapter);
 
-        MainSliderAdapter adapter2 =
-                new MainSliderAdapter(this, getResources().getStringArray(R.array.sideList2));
+        MainSliderAdapter adapter2 = new MainSliderAdapter(this, getResources().getStringArray(R.array.sideList2));
         adapter2.setScreenHeight(screenHeight);
         sideListView2.setAdapter(adapter2);
 
@@ -899,23 +903,30 @@ public class MainActivity extends BaseAppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != Activity.RESULT_OK) {
-            L.e(TAG, "return information is null");
-        } else if (data == null) {
-            L.e(TAG, "back data is null!");
-        } else {
-            switch (requestCode) {
-                case AppConstant.COMMUNITY_SEARCH_SKIP:
-                    String searchString = data.getStringExtra("Search");
-                    L.i(TAG, "Search Str:" + searchString);
-                    problemFragment.setSearchString(searchString);
-                    break;
-            }
+        switch (resultCode){
+            case Activity.RESULT_OK:
+                if (data == null){
+                    L.e(TAG, "back data is null!");
+                }else {
+                    switch (requestCode) {
+                        case AppConstant.COMMUNITY_SEARCH_SKIP:
+                            String searchString = data.getStringExtra("Search");
+                            L.i(TAG, "Search Str:" + searchString);
+                            problemFragment.setSearchString(searchString);
+                            break;
+                    }
+                }
+                break;
+
+            case AppConstant.PUBLISTH_TRIP_GALLERY_SUCCESS:
+                tripImageFragment.loadFirstPageData(null);
+                break;
+
+            case NETWORK_CODE:
+                getServiceTime();
+                break;
         }
 
-        if (requestCode == AppConstant.PUBLISTH_TRIP_GALLERY_SUCCESS) {
-            tripImageFragment.loadFirstPageData(null);
-        }
     }
 
     private class ExitReceiver extends BroadcastReceiver {

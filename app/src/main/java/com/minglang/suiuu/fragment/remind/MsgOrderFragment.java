@@ -173,7 +173,7 @@ public class MsgOrderFragment extends BaseFragment {
         // default is true
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
-        adapter = new MsgOrderAdapter(getActivity(), listAll, R.layout.item_msg_order);
+        adapter = new MsgOrderAdapter(getActivity(), listAll);
         msgOrderList.setAdapter(adapter);
 
         L.i(TAG, "Activity Name:" + getActivity().getClass().getSimpleName());

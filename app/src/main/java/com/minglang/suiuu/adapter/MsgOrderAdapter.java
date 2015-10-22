@@ -1,21 +1,16 @@
 package com.minglang.suiuu.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.activity.PersonalMainPagerActivity;
-import com.minglang.suiuu.adapter.basic.BaseHolderAdapter;
 import com.minglang.suiuu.entity.MsgOrder.MsgOrderData.MsgOrderItemData;
-import com.minglang.suiuu.entity.TripJsonInfo;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.List;
@@ -25,201 +20,157 @@ import java.util.List;
  * <p/>
  * 订单消息数据适配器
  */
-public class MsgOrderAdapter extends BaseHolderAdapter<MsgOrderItemData> {
+public class MsgOrderAdapter extends BaseAdapter {
 
-    private static final String TAG = MsgOrderAdapter.class.getSimpleName();
-
-    private static final String USER_SIGN = "userSign";
+    private static final int ORDER_CANCEL = 0;
+    private static final int ORDER_BOOK = 1;
+    private static final int ORDER_RECEIVE = 2;
+    private static final int ORDER_PLAY = 3;
 
     private Context context;
 
-    public MsgOrderAdapter(Context context, List<MsgOrderItemData> list, int itemLayoutId) {
-        super(context, list, itemLayoutId);
+    private List<MsgOrderItemData> list;
+
+    public MsgOrderAdapter(Context context, List<MsgOrderItemData> list) {
         this.context = context;
+        this.list = list;
+    }
+
+    public void setList(List<MsgOrderItemData> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
 
     @Override
-    public void convert(ViewHolder helper, MsgOrderItemData item, long position) {
-        SimpleDraweeView headImageView = helper.getView(R.id.item_msg_order_head_image_view);
-        TextView userNameView = helper.getView(R.id.item_msg_order_user_name);
-        TextView titleView = helper.getView(R.id.item_msg_order_title);
-
-        TextView inView = helper.getView(R.id.item_msg_order_in);
-        TextView purchase = helper.getView(R.id.item_msg_order_purchase);
-        TextView cancelView = helper.getView(R.id.item_msg_order_cancel);
-        TextView confirmView = helper.getView(R.id.item_msg_order_confirm);
-        TextView confirmRefundView = helper.getView(R.id.item_msg_order_confirm_refund);
-
-        TripJsonInfo tripJsonInfo = null;
-        String strTripInfo = item.getTripJsonInfo();
-        if (!TextUtils.isEmpty(strTripInfo)) {
-            try {
-                tripJsonInfo = JsonUtils.getInstance().fromJSON(TripJsonInfo.class, strTripInfo);
-            } catch (Exception e) {
-                L.e(TAG, "Trip数据解析失败:" + e.getMessage());
-            }
-        }
-
-
-        String headImagePath = item.getHeadImg();
-        if (!TextUtils.isEmpty(headImagePath)) {
-            headImageView.setImageURI(Uri.parse(headImagePath));
+    public int getCount() {
+        if (list != null && list.size() > 0) {
+            return list.size();
         } else {
-            headImageView.setImageURI(Uri.parse("res://com.minglang.suiuu/" + R.drawable.default_head_image_error));
+            return 0;
         }
-
-        String userName = item.getNickname();
-        if (!TextUtils.isEmpty(userName)) {
-            userNameView.setText(Html.fromHtml("<u>" + userName + "</u>"));
-        } else {
-            userNameView.setText("");
-        }
-
-        String type = item.getRelativeType();
-        if (!TextUtils.isEmpty(type)) {
-            switch (type) {
-                case "5":
-                    inView.setVisibility(View.VISIBLE);
-                    purchase.setVisibility(View.GONE);
-                    cancelView.setVisibility(View.GONE);
-                    confirmView.setVisibility(View.GONE);
-                    confirmRefundView.setVisibility(View.GONE);
-
-                    if (tripJsonInfo != null) {
-                        String title = tripJsonInfo.getInfo().getTitle();
-                        if (!TextUtils.isEmpty(title)) {
-                            titleView.setText(Html.fromHtml("<u>" + title + "</u>"));
-                        } else {
-                            titleView.setText("");
-                        }
-                    } else {
-                        titleView.setText("");
-                    }
-                    break;
-
-                case "9":
-                    inView.setVisibility(View.GONE);
-                    purchase.setVisibility(View.GONE);
-                    cancelView.setVisibility(View.VISIBLE);
-                    confirmView.setVisibility(View.GONE);
-                    confirmRefundView.setVisibility(View.GONE);
-
-                    if (tripJsonInfo != null) {
-                        String title = tripJsonInfo.getInfo().getTitle();
-                        if (!TextUtils.isEmpty(title)) {
-                            titleView.setText(title);
-                        } else {
-                            titleView.setText("");
-                        }
-                    } else {
-                        titleView.setText("");
-                    }
-                    break;
-
-                case "10":
-                    inView.setVisibility(View.GONE);
-                    purchase.setVisibility(View.VISIBLE);
-                    cancelView.setVisibility(View.GONE);
-                    confirmView.setVisibility(View.GONE);
-                    confirmRefundView.setVisibility(View.GONE);
-
-                    if (tripJsonInfo != null) {
-                        String title = tripJsonInfo.getInfo().getTitle();
-                        if (!TextUtils.isEmpty(title)) {
-                            titleView.setText(title);
-                        } else {
-                            titleView.setText("");
-                        }
-                    } else {
-                        titleView.setText("");
-                    }
-
-                    break;
-
-                case "11":
-                    inView.setVisibility(View.GONE);
-                    purchase.setVisibility(View.GONE);
-                    cancelView.setVisibility(View.GONE);
-                    confirmView.setVisibility(View.GONE);
-                    confirmRefundView.setVisibility(View.VISIBLE);
-                    titleView.setText("");
-                    break;
-
-                case "12":
-                    inView.setVisibility(View.GONE);
-                    purchase.setVisibility(View.GONE);
-                    cancelView.setVisibility(View.GONE);
-                    confirmView.setVisibility(View.VISIBLE);
-                    confirmRefundView.setVisibility(View.GONE);
-
-                    if (tripJsonInfo != null) {
-                        String title = tripJsonInfo.getInfo().getTitle();
-                        if (!TextUtils.isEmpty(title)) {
-                            titleView.setText(title);
-                        } else {
-                            titleView.setText("");
-                        }
-                    } else {
-                        titleView.setText("");
-                    }
-                    break;
-
-                default:
-                    inView.setVisibility(View.GONE);
-                    purchase.setVisibility(View.GONE);
-                    cancelView.setVisibility(View.GONE);
-                    confirmRefundView.setVisibility(View.GONE);
-                    confirmView.setVisibility(View.GONE);
-                    titleView.setText("");
-                    break;
-            }
-
-        } else {
-            inView.setVisibility(View.GONE);
-            purchase.setVisibility(View.GONE);
-            cancelView.setVisibility(View.GONE);
-            confirmRefundView.setVisibility(View.GONE);
-            confirmView.setVisibility(View.GONE);
-            titleView.setText("");
-        }
-
-        headImageView.setOnClickListener(new HeadImageViewClickListener(item));
-        userNameView.setOnClickListener(new UserNameViewClickListener(item));
-
     }
 
-    private class HeadImageViewClickListener implements View.OnClickListener {
-
-        private MsgOrderItemData item;
-
-        private HeadImageViewClickListener(MsgOrderItemData item) {
-            this.item = item;
+    @Override
+    public Object getItem(int position) {
+        if (list != null && list.size() > 0) {
+            return list.get(position);
+        } else {
+            return null;
         }
-
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(context, PersonalMainPagerActivity.class);
-            intent.putExtra(USER_SIGN, item.getCreateUserSign());
-            context.startActivity(intent);
-        }
-
     }
 
-    private class UserNameViewClickListener implements View.OnClickListener {
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-        private MsgOrderItemData item;
+    @Override
+    public int getViewTypeCount() {
+        return 4;
+    }
 
-        private UserNameViewClickListener(MsgOrderItemData item) {
-            this.item = item;
+    @Override
+    public int getItemViewType(int position) {
+        String type = list.get(position).getRelativeType();
+        switch (type) {
+            case "9":
+                return ORDER_CANCEL;
+
+            case "10":
+                return ORDER_BOOK;
+
+            case "11":
+                return ORDER_RECEIVE;
+
+            case "12":
+                return ORDER_PLAY;
         }
+        return -1;
+    }
 
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(context, PersonalMainPagerActivity.class);
-            intent.putExtra(USER_SIGN, item.getCreateUserSign());
-            context.startActivity(intent);
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        int itemType = getItemViewType(position);
+        switch (itemType) {
+            case ORDER_CANCEL:
+                ViewHolder cancelHolder = ViewHolder.get(context, convertView, parent, R.layout.item_msg_order_9, position);
+                convertView = cancelHolder.getConvertView();
+
+                SimpleDraweeView cancelHeadImageView = cancelHolder.getView(R.id.item_msg_order_9_head_image_view);
+                String cancelHeadImagePath = list.get(position).getHeadImg();
+                cancelHeadImageView.setImageURI(Uri.parse(cancelHeadImagePath));
+
+                TextView cancelUserNameView = cancelHolder.getView(R.id.item_msg_order_9_user_name);
+                String cancelUserName = list.get(position).getNickname();
+                if (!TextUtils.isEmpty(cancelUserName)) {
+                    cancelUserNameView.setText(cancelUserName);
+                }
+                break;
+
+            case ORDER_BOOK:
+                ViewHolder bookHolder = ViewHolder.get(context, convertView, parent, R.layout.item_msg_order_10, position);
+                convertView = bookHolder.getConvertView();
+
+                SimpleDraweeView bookHeadImageView = bookHolder.getView(R.id.item_msg_order_10_head_image_view);
+                String bookHeadImagePath = list.get(position).getHeadImg();
+                bookHeadImageView.setImageURI(Uri.parse(bookHeadImagePath));
+
+                TextView bookUserNameView = bookHolder.getView(R.id.item_msg_order_10_user_name);
+                String bookUserName = list.get(position).getNickname();
+                if (!TextUtils.isEmpty(bookUserName)) {
+                    bookUserNameView.setText(bookUserName);
+                }
+
+                TextView bookOrderNumberView = bookHolder.getView(R.id.item_msg_order_10_order_number);
+                String bookOrderNumber = list.get(position).getRelativeId();
+                if (!TextUtils.isEmpty(bookOrderNumber)) {
+                    bookOrderNumberView.setText(bookOrderNumber);
+                }
+                break;
+
+            case ORDER_RECEIVE:
+                ViewHolder receiveHolder = ViewHolder.get(context, convertView, parent, R.layout.item_msg_order_11, position);
+                convertView = receiveHolder.getConvertView();
+
+                SimpleDraweeView receiveHeadImageView = receiveHolder.getView(R.id.item_msg_order_11_head_image_view);
+                String receiveHeadImagePath = list.get(position).getHeadImg();
+                receiveHeadImageView.setImageURI(Uri.parse(receiveHeadImagePath));
+
+                TextView receiveUserNameView = receiveHolder.getView(R.id.item_msg_order_11_user_name);
+                String receiveUserName = list.get(position).getNickname();
+                if (!TextUtils.isEmpty(receiveUserName)) {
+                    receiveUserNameView.setText(receiveUserName);
+                }
+
+                TextView receiveOrderNumberView = receiveHolder.getView(R.id.item_msg_order_11_order_number);
+                String receiveOrderNumber = list.get(position).getRelativeId();
+                if (!TextUtils.isEmpty(receiveOrderNumber)) {
+                    receiveOrderNumberView.setText(receiveOrderNumber);
+                }
+                break;
+
+            case ORDER_PLAY:
+                ViewHolder playHolder = ViewHolder.get(context, convertView, parent, R.layout.item_msg_order_12, position);
+                convertView = playHolder.getConvertView();
+
+                SimpleDraweeView playHeadImageView = playHolder.getView(R.id.item_msg_order_12_head_image_view);
+                String playHeadImagePath = list.get(position).getHeadImg();
+                playHeadImageView.setImageURI(Uri.parse(playHeadImagePath));
+
+                TextView playUserNameView = playHolder.getView(R.id.item_msg_order_12_user_name);
+                String playUserName = list.get(position).getNickname();
+                if (!TextUtils.isEmpty(playUserName)) {
+                    playUserNameView.setText(playUserName);
+                }
+
+                TextView playOrderNumberView = playHolder.getView(R.id.item_msg_order_12_order_number);
+                String playOrderNumber = list.get(position).getRelativeId();
+                if (!TextUtils.isEmpty(playOrderNumber)) {
+                    playOrderNumberView.setText(playOrderNumber);
+                }
+                break;
         }
-
+        return convertView;
     }
 
 }
