@@ -194,8 +194,7 @@ public class ReceivablesWayActivity extends BaseAppCompatActivity {
         alipayButton = (Button) addRootView.findViewById(R.id.popup_add_receivables_alipay);
         weChatButton = (Button) addRootView.findViewById(R.id.popup_add_receivables_wechat);
 
-        addPopupWindow = new PopupWindow(addRootView, ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        addPopupWindow = new PopupWindow(addRootView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         addPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         addPopupWindow.setAnimationStyle(R.style.time_popup_window_anim_style);
         addPopupWindow.setOutsideTouchable(false);

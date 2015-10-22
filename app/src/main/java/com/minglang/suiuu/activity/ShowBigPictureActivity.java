@@ -18,6 +18,7 @@ import com.minglang.suiuu.customview.photodraweeview.MultiTouchViewPager;
 import com.minglang.suiuu.customview.photodraweeview.OnPhotoTapListener;
 import com.minglang.suiuu.customview.photodraweeview.OnViewTapListener;
 import com.minglang.suiuu.customview.photodraweeview.PhotoDraweeView;
+import com.minglang.suiuu.utils.StatusBarCompat;
 
 import java.util.List;
 
@@ -34,22 +35,29 @@ import butterknife.ButterKnife;
  * 修改备注：
  */
 public class ShowBigPictureActivity extends BaseActivity{
+
     @Bind(R.id.ci_indicator)
     CircleIndicator indicator;
+
     @Bind(R.id.mv_view_pager)
     MultiTouchViewPager viewPager;
+
     private List<String> picList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_big_picture);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         picList = this.getIntent().getStringArrayListExtra("picList");
+
         int position = this.getIntent().getIntExtra("position",0);
         viewPager.setAdapter(new DraweePagerAdapter());
         indicator.setViewPager(viewPager);
         viewPager.setCurrentItem(position);
-
     }
 
     public class DraweePagerAdapter extends PagerAdapter {

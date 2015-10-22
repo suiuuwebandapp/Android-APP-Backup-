@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.GeneralOrderDetailsActivity;
+import com.minglang.suiuu.activity.SettingActivity;
 import com.minglang.suiuu.adapter.CompletedAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.CompletedOrder;
@@ -28,12 +30,9 @@ import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +81,9 @@ public class CompletedFragment extends BaseFragment {
 
     @BindString(R.string.SystemException)
     String SystemException;
+
+    @BindString(R.string.LoginInvalid)
+    String LoginInvalid;
 
     private boolean isPullToRefresh = true;
 
@@ -171,12 +173,6 @@ public class CompletedFragment extends BaseFragment {
         listView.setAdapter(adapter);
 
         jsonUtils = JsonUtils.getInstance();
-
-        try {
-            token = URLEncoder.encode(token, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
     }
 
     private void viewAction() {
@@ -211,12 +207,12 @@ public class CompletedFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int location = position - 1;
+                CompletedOrderData orderData = listAll.get(location);
 
-                String orderNumber = listAll.get(location).getOrderNumber();
-                String titleImg = null;
+                String orderNumber = orderData.getOrderNumber();
+                String titleImg = "";
                 try {
-                    titleImg = jsonUtils.fromJSON(TripJsonInfo.class, listAll.get(location)
-                            .getTripJsonInfo()).getInfo().getTitleImg();
+                    titleImg = jsonUtils.fromJSON(TripJsonInfo.class, orderData.getTripJsonInfo()).getInfo().getTitleImg();
                 } catch (Exception e) {
                     L.e(TAG, "获取图片地址失败:" + e.getMessage());
                 }
@@ -240,6 +236,7 @@ public class CompletedFragment extends BaseFragment {
         String[] keyArray = new String[]{HttpNewServicePath.key, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{verification, String.valueOf(page), String.valueOf(15), token};
         String url = addUrlAndParams(HttpNewServicePath.getGeneralUserCompletedOrderPath, keyArray, valueArray);
+        L.i(TAG, "已完成的订单URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new CompletedResultCallback());
         } catch (IOException e) {
@@ -284,36 +281,47 @@ public class CompletedFragment extends BaseFragment {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                CompletedOrder completedOrder = jsonUtils.fromJSON(CompletedOrder.class, str);
-                if (completedOrder != null) {
+        } else try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "1":
+                    CompletedOrder completedOrder = jsonUtils.fromJSON(CompletedOrder.class, str);
                     List<CompletedOrderData> list = completedOrder.getData();
                     if (list != null && list.size() > 0) {
                         clearListData();
                         listAll.addAll(list);
-                        adapter.setList(listAll);
                     } else {
                         failureLessPage();
                         Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
-                }
-            } catch (Exception e) {
-                L.e(TAG, "解析失败:" + e.getMessage());
-                failureLessPage();
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                }
+                    adapter.setList(listAll);
+                    break;
+
+                case "-1":
+                    Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-2":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-3":
+                    Toast.makeText(getActivity(), LoginInvalid, Toast.LENGTH_SHORT).show();
+                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+                    localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
+                    ReturnLoginActivity(getActivity());
+                    break;
+
+                case "-4":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
             }
+        } catch (Exception e) {
+            L.e(TAG, "解析失败:" + e.getMessage());
+            failureLessPage();
+            Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
         }
     }
 

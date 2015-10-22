@@ -20,6 +20,7 @@ import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.GeneralOrderDetails;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -108,6 +109,8 @@ public class SuiuuPayActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suiuu_pay);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
 
         orderNumber = this.getIntent().getStringExtra(ORDER_NUMBER);

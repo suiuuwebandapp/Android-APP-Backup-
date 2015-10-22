@@ -15,6 +15,7 @@ import com.minglang.suiuu.fragment.remind.MsgOrderFragment;
 import com.minglang.suiuu.fragment.remind.MsgQuestionFragment;
 import com.minglang.suiuu.fragment.remind.MsgSystemFragment;
 import com.minglang.suiuu.fragment.remind.MsgTripImageFragment;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
@@ -82,7 +83,10 @@ public class NewRemindActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_remind);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
     }
 

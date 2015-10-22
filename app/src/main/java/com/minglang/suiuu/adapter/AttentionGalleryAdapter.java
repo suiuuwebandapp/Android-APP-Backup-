@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.entity.AttentionGallery.AttentionGalleryData.AttentionGalleryItemData;
+import com.minglang.suiuu.entity.AttentionTripImage.AttentionTripImageData.AttentionTripImageItemData;
 import com.minglang.suiuu.utils.ViewHolder;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class AttentionGalleryAdapter extends BaseAdapter {
 
     private Context context;
 
-    private List<AttentionGalleryItemData> list;
+    private List<AttentionTripImageItemData> list;
 
     private int screenWidth;
 
@@ -38,7 +38,7 @@ public class AttentionGalleryAdapter extends BaseAdapter {
         this.screenWidth = screenWidth;
     }
 
-    public void setList(List<AttentionGalleryItemData> list) {
+    public void setList(List<AttentionTripImageItemData> list) {
         this.list = list;
         notifyDataSetChanged();
     }

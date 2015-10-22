@@ -1,11 +1,11 @@
-<RelativeLayout
-    android:id="@+id/personalRootLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/personalRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:fitsSystemWindows="true"
     tools:context="com.minglang.suiuu.activity.PersonalSettingActivity">
 
     <RelativeLayout
@@ -24,12 +24,13 @@
             android:layout_centerVertical="true"
             android:text="@string/PersonalSetting"
             android:textColor="@color/white"
-            android:textSize="@dimen/layout_18sp"/>
+            android:textSize="@dimen/layout_18sp" />
 
         <ImageView
             android:id="@+id/personalSettingBack"
             style="@style/backKeyStyle"
-            android:src="@drawable/back"/>
+            android:src="@drawable/back"
+            tools:ignore="contentDescription" />
 
         <TextView
             android:id="@+id/personal_save"
@@ -43,7 +44,7 @@
             android:gravity="center_vertical"
             android:text="@string/save"
             android:textColor="@color/text_color1"
-            android:textSize="@dimen/layout_20sp"/>
+            android:textSize="@dimen/layout_20sp" />
 
     </RelativeLayout>
 
@@ -78,7 +79,7 @@
                     fresco:failureImage="@drawable/default_head_image_error"
                     fresco:failureImageScaleType="fitXY"
                     fresco:placeholderImage="@drawable/default_head_image"
-                    fresco:roundAsCircle="true"/>
+                    fresco:roundAsCircle="true" />
 
             </LinearLayout>
 
@@ -95,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/layout_15dp"
                     android:text="@string/sex"
-                    android:textSize="@dimen/layout_18sp"/>
+                    android:textSize="@dimen/layout_18sp" />
 
             </RelativeLayout>
 
@@ -112,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:hint="@string/NickNameHint"
-                    android:padding="@dimen/layout_15dp"/>
+                    android:padding="@dimen/layout_15dp" />
 
             </RelativeLayout>
 
@@ -132,7 +133,7 @@
                     android:layout_centerVertical="true"
                     android:padding="@dimen/layout_15dp"
                     android:text="@string/local"
-                    android:textSize="@dimen/layout_18sp"/>
+                    android:textSize="@dimen/layout_18sp" />
 
             </RelativeLayout>
 
@@ -149,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/TradeHint"
-                    android:padding="@dimen/layout_15dp"/>
+                    android:padding="@dimen/layout_15dp" />
 
             </RelativeLayout>
 
@@ -166,7 +167,7 @@
                     android:layout_height="wrap_content"
                     android:ems="40"
                     android:hint="@string/SignatureHint"
-                    android:padding="@dimen/layout_15dp"/>
+                    android:padding="@dimen/layout_15dp" />
 
             </RelativeLayout>
 

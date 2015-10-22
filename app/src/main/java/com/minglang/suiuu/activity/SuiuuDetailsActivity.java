@@ -33,6 +33,7 @@ import com.minglang.suiuu.fragment.mysuiuu.ParticipateFragment;
 import com.minglang.suiuu.fragment.mysuiuu.PublishedFragment;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -170,7 +171,10 @@ public class SuiuuDetailsActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suiuu_details_activity);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         getSuiuuDetailsData(tripId);
         showWebView();

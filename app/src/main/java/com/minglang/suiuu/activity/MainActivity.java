@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
@@ -458,10 +459,14 @@ public class MainActivity extends BaseAppCompatActivity {
         int statusBarHeight = AppUtils.getStatusBarHeight(this);
         int leftViewWidth = screenWidth / 4 * 3;
 
-        ViewGroup.LayoutParams viewParams = leftTopView.getLayoutParams();
-        viewParams.width = leftViewWidth;
-        viewParams.height = statusBarHeight;
-        leftTopView.setLayoutParams(viewParams);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            ViewGroup.LayoutParams viewParams = leftTopView.getLayoutParams();
+            viewParams.width = leftViewWidth;
+            viewParams.height = statusBarHeight;
+            leftTopView.setLayoutParams(viewParams);
+        } else {
+            leftTopView.setVisibility(View.GONE);
+        }
 
         ViewGroup.LayoutParams sliderNavigationViewParams = sliderView.getLayoutParams();
         sliderNavigationViewParams.width = leftViewWidth;

@@ -28,6 +28,7 @@ import com.minglang.suiuu.entity.SuiuuItemData;
 import com.minglang.suiuu.entity.SuiuuSearchTag;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -132,11 +133,13 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suiuu_search_detail);
+
+        StatusBarCompat.compat(this);
+
         ButterKnife.bind(this);
         searchCountry = this.getIntent().getStringExtra("country");
         initView();
         viewAction();
-//        getSuiuuSearchTag();
         loadDate(searchCountry, null, null, null, null, page);
     }
 

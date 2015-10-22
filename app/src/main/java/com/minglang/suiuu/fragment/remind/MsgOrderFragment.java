@@ -76,6 +76,9 @@ public class MsgOrderFragment extends BaseFragment {
     @BindString(R.string.SystemException)
     String SystemException;
 
+    @BindString(R.string.LoginInvalid)
+    String LoginInvalid;
+
     @Bind(R.id.msg_order_fragment_head_frame)
     PtrClassicFrameLayout mPtrFrame;
 
@@ -277,6 +280,7 @@ public class MsgOrderFragment extends BaseFragment {
                     break;
 
                 case "-3":
+                    Toast.makeText(getActivity(), LoginInvalid, Toast.LENGTH_SHORT).show();
                     ReturnLoginActivity(getActivity());
                     break;
 

@@ -1,18 +1,18 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/personal_trip_gallery_tool_bar"
         style="@style/AppToolBar"
         app:navigationIcon="@drawable/back"
-        app:title="@string/MainTitle1"/>
+        app:title="@string/MainTitle1" />
 
     <in.srain.cube.views.ptr.PtrClassicFrameLayout
-        android:id="@+id/personal_trip_gallery_head_frame"
         xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/personal_trip_gallery_head_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/personal_trip_gallery_tool_bar"
@@ -27,7 +27,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/personal_trip_gallery_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </in.srain.cube.views.ptr.PtrClassicFrameLayout>
 

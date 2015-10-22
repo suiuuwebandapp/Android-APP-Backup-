@@ -13,6 +13,7 @@ import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseActivity;
 import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +75,7 @@ public class SearchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suiuu_search);
 
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
 
         searchClass = this.getIntent().getIntExtra(SEARCH_CLASS, -1);

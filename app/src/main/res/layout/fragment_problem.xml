@@ -1,5 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -7,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_50dp"
+        android:layout_height="@dimen/layout_40dp"
         android:layout_gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -15,7 +14,9 @@
             android:id="@+id/spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3"/>
+            android:layout_weight="0.3"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical" />
 
         <FrameLayout
             android:id="@+id/select_layout"
@@ -34,7 +35,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/SelectDestination"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/mainColor"/>
+                android:textColor="@color/mainColor" />
 
         </FrameLayout>
 
@@ -43,12 +44,12 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_1dp"
-        android:background="@color/tr_black"/>
+        android:background="@color/tr_black" />
 
     <com.minglang.pulltorefreshlibrary.PullToRefreshListView
         android:id="@+id/problem_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
 </LinearLayout>

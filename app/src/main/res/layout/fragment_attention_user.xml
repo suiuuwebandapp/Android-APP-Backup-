@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <com.minglang.pulltorefreshlibrary.PullToRefreshGridView
-        android:id="@+id/attention_user_GridView"
+        android:id="@+id/attention_user_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"

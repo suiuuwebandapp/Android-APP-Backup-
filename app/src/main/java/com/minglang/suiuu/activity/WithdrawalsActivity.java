@@ -21,6 +21,7 @@ import com.minglang.suiuu.entity.AccountInfo;
 import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.interfaces.DetachableListener;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -135,7 +136,10 @@ public class WithdrawalsActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_withdrawals);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         viewAction();
         judgeAccount();

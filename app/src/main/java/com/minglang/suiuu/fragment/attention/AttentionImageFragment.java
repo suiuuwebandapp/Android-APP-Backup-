@@ -3,6 +3,7 @@ package com.minglang.suiuu.fragment.attention;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -15,20 +16,19 @@ import android.widget.Toast;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshGridView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.SettingActivity;
 import com.minglang.suiuu.activity.TripImageDetailsActivity;
 import com.minglang.suiuu.adapter.AttentionGalleryAdapter;
 import com.minglang.suiuu.base.BaseFragment;
-import com.minglang.suiuu.entity.AttentionGallery;
-import com.minglang.suiuu.entity.AttentionGallery.AttentionGalleryData;
-import com.minglang.suiuu.entity.AttentionGallery.AttentionGalleryData.AttentionGalleryItemData;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.entity.AttentionTripImage;
+import com.minglang.suiuu.entity.AttentionTripImage.AttentionTripImageData.AttentionTripImageItemData;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.ScreenUtils;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -76,14 +76,17 @@ public class AttentionImageFragment extends BaseFragment {
     @BindString(R.string.SystemException)
     String SystemException;
 
-    @Bind(R.id.attention_galler_gridView)
+    @BindString(R.string.LoginInvalid)
+    String LoginInvalid;
+
+    @Bind(R.id.attention_trip_image_grid_view)
     PullToRefreshGridView pullToRefreshGridView;
 
     private int page = 1;
 
     private boolean isPullToRefresh = true;
 
-    private List<AttentionGalleryItemData> listAll = new ArrayList<>();
+    private List<AttentionTripImageItemData> listAll = new ArrayList<>();
 
     private ProgressDialog progressDialog;
 
@@ -170,7 +173,7 @@ public class AttentionImageFragment extends BaseFragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                page = page + 1;
+                page++;
                 isPullToRefresh = false;
                 getData4Service(page);
             }
@@ -201,9 +204,9 @@ public class AttentionImageFragment extends BaseFragment {
         String[] keyArray = new String[]{USER_SIGN, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{userSign, String.valueOf(page), String.valueOf(20), token};
         String url = addUrlAndParams(HttpNewServicePath.getAttentionTripPath, keyArray, valueArray);
-
+        L.i(TAG, "关注的旅图URL:" + url);
         try {
-            OkHttpManager.onGetAsynRequest(url, new AttentionGalleryResultCallback());
+            OkHttpManager.onGetAsynRequest(url, new AttentionTripImageCallback());
         } catch (IOException e) {
             e.printStackTrace();
             hideDialog();
@@ -251,48 +254,47 @@ public class AttentionImageFragment extends BaseFragment {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                AttentionGallery attentionGallery = JsonUtils.getInstance().fromJSON(AttentionGallery.class, str);
-                if (attentionGallery != null) {
-                    AttentionGalleryData galleryData = attentionGallery.getData();
-                    if (galleryData != null) {
-                        List<AttentionGalleryItemData> list = galleryData.getData();
-                        if (list != null && list.size() > 0) {
-                            clearDataList();
-                            listAll.addAll(list);
-                            adapter.setList(listAll);
-                        } else {
-                            L.e(TAG, "列表为Null");
-                            failureLessPage();
-                            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                        }
+        } else try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "1":
+                    AttentionTripImage attentionTripImage = JsonUtils.getInstance().fromJSON(AttentionTripImage.class, str);
+                    AttentionTripImage.AttentionTripImageData tripImageData = attentionTripImage.getData();
+                    List<AttentionTripImageItemData> list = tripImageData.getData();
+                    if (list != null && list.size() > 0) {
+                        clearDataList();
+                        listAll.addAll(list);
                     } else {
-                        L.e(TAG, "第二层为Null");
                         failureLessPage();
                         Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    L.e(TAG, "第一层为Null");
-                    failureLessPage();
-                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                L.e(TAG, "数据解析失败:" + e.getMessage());
-                failureLessPage();
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                }
+                    adapter.setList(listAll);
+                    break;
+
+                case "-1":
+                    Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-2":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-3":
+                    Toast.makeText(getActivity(), LoginInvalid, Toast.LENGTH_SHORT).show();
+                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+                    localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
+                    ReturnLoginActivity(getActivity());
+                    break;
+
+                case "-4":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
             }
+        } catch (Exception e) {
+            L.e(TAG, "数据解析失败:" + e.getMessage());
+            failureLessPage();
+            Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -303,21 +305,24 @@ public class AttentionImageFragment extends BaseFragment {
     /**
      * 关注的圈子网络请求回调接口
      */
-    private class AttentionGalleryResultCallback extends OkHttpManager.ResultCallback<String> {
+    private class AttentionTripImageCallback extends OkHttpManager.ResultCallback<String> {
+
+        @Override
+        public void onResponse(String response) {
+            L.i(TAG, "关注的旅图数据:" + response);
+            bindData2View(response);
+        }
 
         @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "关注的圈子数据请求失败:" + e.getMessage());
-            hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        public void onResponse(String response) {
-            L.i(TAG, "关注的旅图数据:" + response);
+        public void onFinish() {
             hideDialog();
-            bindData2View(response);
         }
 
     }

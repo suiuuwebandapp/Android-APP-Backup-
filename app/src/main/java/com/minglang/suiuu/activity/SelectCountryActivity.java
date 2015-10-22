@@ -26,6 +26,7 @@ import com.minglang.suiuu.entity.HaveCountry;
 import com.minglang.suiuu.fragment.main.ProblemFragment;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.CharacterParser;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.comparator.CountryNameComparator;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.comparator.HaveCountryNameComparator;
@@ -121,6 +122,8 @@ public class SelectCountryActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_country);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
 
         String otherTag = getIntent().getStringExtra(OTHER_TAG);

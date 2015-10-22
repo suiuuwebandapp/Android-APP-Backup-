@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,7 +21,9 @@ import android.widget.Toast;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.CommunitySearchActivity;
 import com.minglang.suiuu.activity.ProblemDetailsActivity;
+import com.minglang.suiuu.activity.PutQuestionsActivity;
 import com.minglang.suiuu.activity.SelectCountryActivity;
 import com.minglang.suiuu.adapter.CommunitySortAdapter;
 import com.minglang.suiuu.adapter.ProblemAdapter;
@@ -159,6 +164,7 @@ public class ProblemFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             userSign = getArguments().getString(ARG_PARAM1);
             verification = getArguments().getString(ARG_PARAM2);
@@ -171,7 +177,6 @@ public class ProblemFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         initView();
         viewAction();
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification);
         return rootView;
     }
 
@@ -479,6 +484,32 @@ public class ProblemFragment extends BaseFragment {
                     break;
             }
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_problem_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.go_to_search_problem:
+                Intent intent = new Intent(getActivity(), CommunitySearchActivity.class);
+                startActivityForResult(intent, AppConstant.COMMUNITY_SEARCH_SKIP);
+                break;
+
+            case R.id.go_to_make_question:
+                Intent intent2 = new Intent(getActivity(), PutQuestionsActivity.class);
+                intent2.putExtra(COUNTRY_ID, getCountryId());
+                intent2.putExtra(CITY_ID, getCityId());
+                startActivity(intent2);
+        }
+        return true;
+    }
+
+    public String getUserSign() {
+        return userSign;
     }
 
     private class CommunityResultCallBack extends OkHttpManager.ResultCallback<String> {

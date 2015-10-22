@@ -24,6 +24,7 @@ import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -32,8 +33,6 @@ import com.squareup.okhttp.Request;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,9 +153,10 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
         countryId = getIntent().getStringExtra(COUNTRY_ID);
         cityId = getIntent().getStringExtra(CITY_ID);
-        L.i(TAG, "countryId:" + countryId + ",cityId:" + cityId);
 
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         viewAction();
         showDefaultTag2View();
@@ -169,11 +169,7 @@ public class PutQuestionsActivity extends BaseAppCompatActivity {
 
         context = this;
 
-        try {
-            token = URLEncoder.encode(SuiuuInfo.ReadAppTimeSign(this), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        token = SuiuuInfo.ReadAppTimeSign(this);
 
         loadDialog = new ProgressDialog(this);
         loadDialog.setMessage(LoadMsg);

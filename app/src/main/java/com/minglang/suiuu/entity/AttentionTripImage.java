@@ -8,7 +8,7 @@ import java.util.List;
  *
  * Created by Administrator on 2015/7/21.
  */
-public class AttentionGallery {
+public class AttentionTripImage {
 
     /**
      * data : {"msg":{"sortName":null,"showAll":false,"startRow":0,"sortType":"asc","pageSize":10,"currentPage":1,"totalCount":"1"},"data":[{"country":"test01","titleImg":"","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","city":"test01","lon":"0.152","attentionCount":"0","title":"test01","tags":"test01","commentCount":"2","contents":"sfasdf","userSign":"085963dc0af031709b032725e3ef18f5","createTime":"2015-07-15 17:25:24","picList":"sdsfdfsdf","nickname":"yao","id":"1","lat":"13.527"}]}
@@ -16,12 +16,12 @@ public class AttentionGallery {
      * status : 1
      * token : 3da9291b2c81741adc1e0e1193ad80ba
      */
-    private AttentionGalleryData data;
+    private AttentionTripImageData data;
     private String message;
     private int status;
     private String token;
 
-    public void setData(AttentionGalleryData data) {
+    public void setData(AttentionTripImageData data) {
         this.data = data;
     }
 
@@ -37,7 +37,7 @@ public class AttentionGallery {
         this.token = token;
     }
 
-    public AttentionGalleryData getData() {
+    public AttentionTripImageData getData() {
         return data;
     }
 
@@ -53,19 +53,19 @@ public class AttentionGallery {
         return token;
     }
 
-    public static class AttentionGalleryData {
+    public static class AttentionTripImageData {
         /**
          * msg : {"sortName":null,"showAll":false,"startRow":0,"sortType":"asc","pageSize":10,"currentPage":1,"totalCount":"1"}
          * data : [{"country":"test01","titleImg":"","headImg":"http://image.suiuu.com/suiuu_head/20150514090607_29484.jpg","city":"test01","lon":"0.152","attentionCount":"0","title":"test01","tags":"test01","commentCount":"2","contents":"sfasdf","userSign":"085963dc0af031709b032725e3ef18f5","createTime":"2015-07-15 17:25:24","picList":"sdsfdfsdf","nickname":"yao","id":"1","lat":"13.527"}]
          */
         private MsgEntity msg;
-        private List<AttentionGalleryItemData> data;
+        private List<AttentionTripImageItemData> data;
 
         public void setMsg(MsgEntity msg) {
             this.msg = msg;
         }
 
-        public void setData(List<AttentionGalleryItemData> data) {
+        public void setData(List<AttentionTripImageItemData> data) {
             this.data = data;
         }
 
@@ -73,7 +73,7 @@ public class AttentionGallery {
             return msg;
         }
 
-        public List<AttentionGalleryItemData> getData() {
+        public List<AttentionTripImageItemData> getData() {
             return data;
         }
 
@@ -152,7 +152,7 @@ public class AttentionGallery {
             }
         }
 
-        public static class AttentionGalleryItemData {
+        public static class AttentionTripImageItemData {
             /**
              * country : test01
              * titleImg :

@@ -2,14 +2,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/trip_image_details_tool_bar"
         style="@style/AppToolBar"
         app:navigationIcon="@drawable/back"
         app:title="@string/TripImageDetails"
-        app:titleTextColor="@color/white"/>
+        app:titleTextColor="@color/white" />
 
     <ScrollView
         android:id="@+id/trip_image_details"

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -17,18 +18,17 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.ProblemDetailsActivity;
+import com.minglang.suiuu.activity.SettingActivity;
 import com.minglang.suiuu.adapter.AttentionProblemAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.AttentionProblem;
-import com.minglang.suiuu.entity.AttentionProblem.AttentionProblemData;
 import com.minglang.suiuu.entity.AttentionProblem.AttentionProblemData.AttentionProblemItemData;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -82,6 +82,9 @@ public class AttentionProblemFragment extends BaseFragment {
 
     @BindString(R.string.SystemException)
     String SystemException;
+
+    @BindString(R.string.LoginInvalid)
+    String LoginInvalid;
 
     @Bind(R.id.attention_problem_list_view)
     PullToRefreshListView pullToRefreshListView;
@@ -174,7 +177,7 @@ public class AttentionProblemFragment extends BaseFragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                page = page + 1;
+                page++;
                 isPullToRefresh = false;
                 getProblemData4Service(page);
             }
@@ -212,7 +215,7 @@ public class AttentionProblemFragment extends BaseFragment {
         String[] keyArray = new String[]{USER_SIGN, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{userSign, String.valueOf(page), String.valueOf(20), token};
         String url = addUrlAndParams(HttpNewServicePath.getAttentionProblemInfoPath, keyArray, valueArray);
-
+        L.i(TAG, "关注的问答URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new AttentionProblemResultCallback());
         } catch (IOException e) {
@@ -249,68 +252,71 @@ public class AttentionProblemFragment extends BaseFragment {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                AttentionProblem attentionProblem = JsonUtils.getInstance().fromJSON(AttentionProblem.class, str);
-                if (attentionProblem != null) {
-                    AttentionProblemData problemData = attentionProblem.getData();
-                    if (problemData != null) {
-                        List<AttentionProblemItemData> list = problemData.getData();
-                        if (list != null && list.size() > 0) {
-                            clearDataList();
-                            listAll.addAll(list);
-                            adapter.setList(listAll);
-                        } else {
-                            L.e(TAG, "列表为Null");
-                            failureLessPage();
-                            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                        }
+        } else try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "1":
+                    AttentionProblem attentionProblem = JsonUtils.getInstance().fromJSON(AttentionProblem.class, str);
+                    AttentionProblem.AttentionProblemData problemData = attentionProblem.getData();
+                    List<AttentionProblemItemData> list = problemData.getData();
+                    if (list != null && list.size() > 0) {
+                        clearDataList();
+                        listAll.addAll(list);
                     } else {
-                        L.e(TAG, "第二层为Null");
                         failureLessPage();
                         Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    L.e(TAG, "第一层为Null");
-                    failureLessPage();
-                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                L.e(TAG, "解析错误:" + e.getMessage());
-                failureLessPage();
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    switch (status) {
-                        case "-1":
-                            Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                            break;
-                        case "-2":
-                            Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
-                            break;
-                    }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                }
+                    adapter.setList(listAll);
+                    break;
+
+                case "-1":
+                    Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-2":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-3":
+                    Toast.makeText(getActivity(), LoginInvalid, Toast.LENGTH_SHORT).show();
+                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+                    localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
+                    ReturnLoginActivity(getActivity());
+                    break;
+
+                case "-4":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
             }
+        } catch (Exception e) {
+            L.e(TAG, "解析错误:" + e.getMessage());
+            failureLessPage();
+            Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public String getVerification() {
+        return verification;
     }
 
     private class AttentionProblemResultCallback extends OkHttpManager.ResultCallback<String> {
 
         @Override
         public void onResponse(String response) {
-            hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "Exception:" + e.getMessage());
-            hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinish() {
+            hideDialog();
         }
 
     }

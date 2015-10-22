@@ -25,6 +25,7 @@ import com.minglang.suiuu.entity.HaveCity;
 import com.minglang.suiuu.utils.CharacterParser;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.comparator.CityNameComparator;
 import com.minglang.suiuu.utils.comparator.HaveCityNameComparator;
@@ -124,7 +125,9 @@ public class SelectCityActivity extends BaseAppCompatActivity {
         countryCNname = intent.getStringExtra(COUNTRY_C_NAME);
         isAllCountry = intent.getBooleanExtra(IS_ALL_COUNTRY, false);
 
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         getSelectCity4Service();
         viewAction();

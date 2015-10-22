@@ -93,7 +93,7 @@ public class MySuiuuInfoActivity extends BaseAppCompatActivity {
                 finish();
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
 }

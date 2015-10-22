@@ -8,13 +8,12 @@ import android.webkit.WebView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
+import com.minglang.suiuu.utils.StatusBarCompat;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class UsingSuiuuActivity extends BaseAppCompatActivity {
-
-    private static final String TAG = UsingSuiuuActivity.class.getSimpleName();
 
     @Bind(R.id.using_suiuu_tool_bar)
     Toolbar toolbar;
@@ -26,6 +25,8 @@ public class UsingSuiuuActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_using_suiuu);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);

@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,6 +25,7 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshScrollView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.activity.SearchActivity;
+import com.minglang.suiuu.activity.SelectPictureActivity;
 import com.minglang.suiuu.activity.TripImageDetailsActivity;
 import com.minglang.suiuu.adapter.TripImageAdapter;
 import com.minglang.suiuu.base.BaseFragment;
@@ -71,6 +75,8 @@ public class TripImageFragment extends BaseFragment {
 
     private static final String SEARCH_CLASS = "searchClass";
 
+    private static final String STATE = "state";
+
     @BindDrawable(R.drawable.image_view_border_style)
     Drawable Frame;
 
@@ -118,6 +124,12 @@ public class TripImageFragment extends BaseFragment {
     private List<String> clickTagList = new ArrayList<>();
 
     private String AddTag = "";
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -321,6 +333,23 @@ public class TripImageFragment extends BaseFragment {
         }
 
         pullToRefreshScrollView.onRefreshComplete();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_trip_image_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.go_to_selected_picture:
+                Intent intent = new Intent(getActivity(), SelectPictureActivity.class);
+                intent.putExtra(STATE, 1);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 
     /**

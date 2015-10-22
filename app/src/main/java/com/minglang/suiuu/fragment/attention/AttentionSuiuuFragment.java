@@ -3,6 +3,7 @@ package com.minglang.suiuu.fragment.attention;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -15,20 +16,19 @@ import android.widget.Toast;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshGridView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.SettingActivity;
 import com.minglang.suiuu.activity.SuiuuDetailsActivity;
 import com.minglang.suiuu.adapter.AttentionSuiuuAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.AttentionSuiuu;
-import com.minglang.suiuu.entity.AttentionSuiuu.AttentionSuiuuData;
 import com.minglang.suiuu.entity.AttentionSuiuu.AttentionSuiuuData.AttentionSuiuuItemData;
-import com.minglang.suiuu.utils.L;
-import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.JsonUtils;
-import com.minglang.suiuu.utils.http.OkHttpManager;
+import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.ScreenUtils;
+import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -77,7 +77,10 @@ public class AttentionSuiuuFragment extends BaseFragment {
     @BindString(R.string.SystemException)
     String SystemException;
 
-    @Bind(R.id.attention_user_GridView)
+    @BindString(R.string.LoginInvalid)
+    String LoginInvalid;
+
+    @Bind(R.id.attention_user_grid_view)
     PullToRefreshGridView pullToRefreshGridView;
 
     private int page = 1;
@@ -190,7 +193,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
 
                 Intent intent = new Intent(getActivity(), SuiuuDetailsActivity.class);
                 intent.putExtra(TRIP_ID, tripId);
-                intent.putExtra(CLASS_NAME,TAG);
+                intent.putExtra(CLASS_NAME, TAG);
                 getActivity().startActivity(intent);
             }
         });
@@ -210,7 +213,7 @@ public class AttentionSuiuuFragment extends BaseFragment {
         String[] keyArray = new String[]{USER_SIGN, PAGE, NUMBER, TOKEN};
         String[] valueArray = new String[]{userSign, String.valueOf(page), String.valueOf(20), token};
         String url = addUrlAndParams(HttpNewServicePath.getAttentionSuiuuPath, keyArray, valueArray);
-
+        L.i(TAG, "关注的随游URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new AttentionSuiuuResultCallback());
         } catch (IOException e) {
@@ -260,48 +263,47 @@ public class AttentionSuiuuFragment extends BaseFragment {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                AttentionSuiuu attentionSuiuu = JsonUtils.getInstance().fromJSON(AttentionSuiuu.class, str);
-                if (attentionSuiuu != null) {
-                    AttentionSuiuuData suiuuData = attentionSuiuu.getData();
-                    if (suiuuData != null) {
-                        List<AttentionSuiuuItemData> list = suiuuData.getData();
-                        if (list != null && list.size() > 0) {
-                            clearDataList();
-                            listAll.addAll(list);
-                            adapter.setList(listAll);
-                        } else {
-                            L.e(TAG, "列表数据为空！");
-                            failureLessPage();
-                            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                        }
+        } else try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "1":
+                    AttentionSuiuu attentionSuiuu = JsonUtils.getInstance().fromJSON(AttentionSuiuu.class, str);
+                    AttentionSuiuu.AttentionSuiuuData suiuuData = attentionSuiuu.getData();
+                    List<AttentionSuiuuItemData> list = suiuuData.getData();
+                    if (list != null && list.size() > 0) {
+                        clearDataList();
+                        listAll.addAll(list);
                     } else {
-                        L.e(TAG, "第二层为Null");
                         failureLessPage();
                         Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    L.e(TAG, "第一层为Null");
-                    failureLessPage();
-                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                failureLessPage();
-                L.e(TAG, "关注的用户的数据解析失败:" + e.getMessage());
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                    Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
-                }
+                    adapter.setList(listAll);
+                    break;
+
+                case "-1":
+                    Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-2":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-3":
+                    Toast.makeText(getActivity(), LoginInvalid, Toast.LENGTH_SHORT).show();
+                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+                    localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
+                    ReturnLoginActivity(getActivity());
+                    break;
+
+                case "-4":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
             }
+        } catch (Exception e) {
+            failureLessPage();
+            L.e(TAG, "关注的用户的数据解析失败:" + e.getMessage());
+            Toast.makeText(getActivity(), DataError, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -314,16 +316,19 @@ public class AttentionSuiuuFragment extends BaseFragment {
         @Override
         public void onResponse(String response) {
             L.i(TAG, "关注的随游数据:" + response);
-            hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "关注的随游数据请求失败:" + e.getMessage());
-            hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinish() {
+            hideDialog();
         }
 
     }

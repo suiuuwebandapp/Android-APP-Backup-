@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
 
 /**
  * 新订单页面
- * <p>
+ * <p/>
  * A simple {@link Fragment} subclass.
  * Use the {@link NewOrderFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -77,6 +77,9 @@ public class NewOrderFragment extends BaseFragment {
 
     @BindString(R.string.SystemException)
     String SystemException;
+
+    @BindString(R.string.LoginInvalid)
+    String LoginInvalid;
 
     @Bind(R.id.new_order_list_view)
     PullToRefreshListView pullToRefreshListView;
@@ -194,7 +197,7 @@ public class NewOrderFragment extends BaseFragment {
                         DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
                 refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
 
-                page = page + 1;
+                page++;
                 isPullToRefresh = false;
                 getNewOrderData(page);
             }
@@ -276,20 +279,15 @@ public class NewOrderFragment extends BaseFragment {
             switch (status) {
                 case "1":
                     OrderManage orderManage = JsonUtils.getInstance().fromJSON(OrderManage.class, str);
-                    if (orderManage != null) {
-                        List<OrderManage.OrderManageData> list = orderManage.getData();
-                        if (list != null && list.size() > 0) {
-                            clearDataList();
-                            listAll.addAll(list);
-                        } else {
-                            failureLessPage();
-                            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                        }
-                        orderListManageAdapter.setList(listAll);
+                    List<OrderManage.OrderManageData> list = orderManage.getData();
+                    if (list != null && list.size() > 0) {
+                        clearDataList();
+                        listAll.addAll(list);
                     } else {
                         failureLessPage();
                         Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
+                    orderListManageAdapter.setList(listAll);
                     break;
 
                 case "-1":
@@ -301,6 +299,7 @@ public class NewOrderFragment extends BaseFragment {
                     break;
 
                 case "-3":
+                    Toast.makeText(getActivity(), LoginInvalid, Toast.LENGTH_SHORT).show();
                     LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
                     localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
                     ReturnLoginActivity(getActivity());

@@ -28,6 +28,7 @@ import com.minglang.suiuu.entity.ProblemDetails.CommunityItemData.AttentionEntit
 import com.minglang.suiuu.entity.ProblemDetails.CommunityItemData.QuestionEntity;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -164,9 +165,10 @@ public class ProblemDetailsActivity extends BaseAppCompatActivity {
         strID = getIntent().getStringExtra(ID);
         title = getIntent().getStringExtra(TITLE);
         tags = getIntent().getStringExtra(TAGS);
-        L.i(TAG, "ID:" + strID + ",Title:" + title + ",Tags:" + tags);
 
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         viewAction();
     }

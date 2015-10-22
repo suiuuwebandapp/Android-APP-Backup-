@@ -82,6 +82,9 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
     @BindString(R.string.SystemException)
     String SystemException;
 
+    @BindString(R.string.LoginInvalid)
+    String LoginInvalid;
+
     @BindString(R.string.MainTitle1)
     String strTripImage;
 
@@ -357,6 +360,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
                     break;
 
                 case "-3":
+                    Toast.makeText(this, LoginInvalid, Toast.LENGTH_SHORT).show();
                     LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
                     localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
                     ReturnLoginActivity(this);

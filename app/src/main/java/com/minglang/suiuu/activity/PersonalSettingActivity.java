@@ -32,6 +32,7 @@ import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -206,7 +207,9 @@ public class PersonalSettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_setting);
 
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         initLoadDefaultData();
         ViewAction();

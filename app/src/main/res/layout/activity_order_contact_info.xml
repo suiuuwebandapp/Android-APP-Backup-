@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/DefaultGray2"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -20,8 +21,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/layout_8dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/layout_8dp">
 
             <TextView
                 android:layout_width="match_parent"

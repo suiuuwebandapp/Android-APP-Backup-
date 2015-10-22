@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -17,18 +18,18 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase.OnRefreshListener2;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.SettingActivity;
 import com.minglang.suiuu.activity.SuiuuDetailsActivity;
 import com.minglang.suiuu.adapter.ParticipateAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.Participate;
 import com.minglang.suiuu.entity.Participate.ParticipateData;
+import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
-import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.http.OkHttpManager;
 import com.squareup.okhttp.Request;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -83,6 +84,9 @@ public class ParticipateFragment extends BaseFragment {
     @BindString(R.string.SystemException)
     String SystemException;
 
+    @BindString(R.string.LoginInvalid)
+    String LoginInvalid;
+
     private int page = 1;
 
     private boolean isPullToRefresh = true;
@@ -136,7 +140,6 @@ public class ParticipateFragment extends BaseFragment {
         initView();
         ViewAction();
         getMyParticipateSuiuuData(page);
-        L.i(TAG, "userSign:" + userSign + ",verification:" + verification + ",token:" + token);
         return rootView;
     }
 
@@ -261,35 +264,47 @@ public class ParticipateFragment extends BaseFragment {
         if (TextUtils.isEmpty(str)) {
             failureLessPage();
             Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                Participate participate = JsonUtils.getInstance().fromJSON(Participate.class, str);
-                List<ParticipateData> list = participate.getData();
-                if (list != null && list.size() > 0) {
-                    clearListData();
-                    listAll.addAll(list);
-                    participateAdapter.setList(listAll);
-                } else {
-                    failureLessPage();
-                    Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                failureLessPage();
-                L.e(TAG, "解析错误:" + e.getMessage());
-                try {
-                    JSONObject object = new JSONObject(str);
-                    String status = object.getString(STATUS);
-                    if (status.equals("-1")) {
-                        Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
-                    } else if (status.equals("-2")) {
-                        Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+        } else try {
+            JSONObject object = new JSONObject(str);
+            String status = object.getString(STATUS);
+            switch (status) {
+                case "1":
+                    Participate participate = JsonUtils.getInstance().fromJSON(Participate.class, str);
+                    List<ParticipateData> list = participate.getData();
+                    if (list != null && list.size() > 0) {
+                        clearListData();
+                        listAll.addAll(list);
+                    } else {
+                        failureLessPage();
+                        Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                    Toast.makeText(getActivity(), DataException, Toast.LENGTH_SHORT).show();
-                }
-            }
+                    participateAdapter.setList(listAll);
+                    break;
 
+                case "-1":
+                    Toast.makeText(getActivity(), SystemException, Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-2":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "-3":
+                    Toast.makeText(getActivity(), LoginInvalid, Toast.LENGTH_SHORT).show();
+                    LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+                    localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
+                    ReturnLoginActivity(getActivity());
+                    break;
+
+                case "-4":
+                    Toast.makeText(getActivity(), object.getString(DATA), Toast.LENGTH_SHORT).show();
+                    break;
+
+            }
+        } catch (Exception e) {
+            failureLessPage();
+            L.e(TAG, "解析错误:" + e.getMessage());
+            Toast.makeText(getActivity(), DataException, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -299,17 +314,21 @@ public class ParticipateFragment extends BaseFragment {
         @Override
         public void onResponse(String response) {
             L.i(TAG, "已参加的随游数据:" + response);
-            hideDialog();
             bindData2View(response);
         }
 
         @Override
         public void onError(Request request, Exception e) {
             L.e(TAG, "Exception:" + e.getMessage());
-            hideDialog();
             failureLessPage();
             Toast.makeText(getActivity(), NetworkError, Toast.LENGTH_SHORT).show();
         }
+
+        @Override
+        public void onFinish() {
+            hideDialog();
+        }
+
     }
 
 }

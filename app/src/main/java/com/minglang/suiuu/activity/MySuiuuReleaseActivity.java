@@ -23,6 +23,7 @@ import com.minglang.suiuu.fragment.suiuu.JoinFragment;
 import com.minglang.suiuu.fragment.suiuu.NewApplyForFragment;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import java.util.ArrayList;
@@ -110,7 +111,10 @@ public class MySuiuuReleaseActivity extends BaseAppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_suiuu_release);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
+
         initView();
         ViewAction();
     }

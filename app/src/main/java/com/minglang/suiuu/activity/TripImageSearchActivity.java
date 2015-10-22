@@ -31,6 +31,7 @@ import com.minglang.suiuu.entity.TripImage;
 import com.minglang.suiuu.entity.TripImage.TripImageData.TripImageItemData;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
 import com.minglang.suiuu.utils.http.OkHttpManager;
@@ -121,6 +122,7 @@ public class TripImageSearchActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_image_search);
 
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
 
         searchCountry = this.getIntent().getStringExtra(COUNTRY);

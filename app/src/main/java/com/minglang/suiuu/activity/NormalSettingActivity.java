@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.base.BaseAppCompatActivity;
+import com.minglang.suiuu.utils.StatusBarCompat;
 
 import butterknife.Bind;
 import butterknife.BindString;
@@ -114,6 +115,7 @@ public class NormalSettingActivity extends BaseAppCompatActivity implements View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_normal_setting);
 
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
 
         if (savedInstanceState != null && savedInstanceState.getBoolean("isConflict", false)) {

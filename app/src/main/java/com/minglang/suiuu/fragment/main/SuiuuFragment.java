@@ -9,6 +9,9 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,6 +21,7 @@ import android.widget.Toast;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
+import com.minglang.suiuu.activity.SearchActivity;
 import com.minglang.suiuu.activity.SuiuuDetailsActivity;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
 import com.minglang.suiuu.base.BaseFragment;
@@ -61,6 +65,8 @@ public class SuiuuFragment extends BaseFragment {
 
     private static final String CLASS_NAME = "className";
 
+    private static final String SEARCH_CLASS = "searchClass";
+
     @BindDrawable(R.color.DefaultGray1)
     Drawable Divider;
 
@@ -93,6 +99,12 @@ public class SuiuuFragment extends BaseFragment {
     private ShowSuiuuAdapter adapter;
 
     private boolean isPullToRefresh = true;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -210,6 +222,23 @@ public class SuiuuFragment extends BaseFragment {
         }
 
         pullToRefreshListView.onRefreshComplete();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_suiuu_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.go_to_selected_area:
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.putExtra(SEARCH_CLASS, 2);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 
     /**

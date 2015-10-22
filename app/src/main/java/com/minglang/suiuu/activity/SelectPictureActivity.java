@@ -29,6 +29,7 @@ import com.minglang.suiuu.entity.ImageFolder;
 import com.minglang.suiuu.entity.ImageItem;
 import com.minglang.suiuu.popupwindow.BasePopupWindowForListView;
 import com.minglang.suiuu.utils.L;
+import com.minglang.suiuu.utils.StatusBarCompat;
 import com.minglang.suiuu.utils.ViewHolder;
 
 import java.io.File;
@@ -118,6 +119,8 @@ public class SelectPictureActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_picture);
+
+        StatusBarCompat.compat(this);
         ButterKnife.bind(this);
 
         state = this.getIntent().getIntExtra("state", 0);

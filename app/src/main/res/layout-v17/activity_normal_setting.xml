@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:ignore="RtlSymmetry">
 
-    <include
-        layout="@layout/common_top2_layout"/>
+    <include layout="@layout/common_top2_layout" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,12 +34,12 @@
                     android:gravity="start|center_vertical"
                     android:paddingStart="@dimen/layout_10dp"
                     android:text="@string/notify"
-                    android:textColor="@color/btn_gray_pressed"/>
+                    android:textColor="@color/btn_gray_pressed" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1dip"
-                    android:background="@color/btn_gray_normal"/>
+                    android:background="@color/btn_gray_normal" />
 
             </LinearLayout>
 
@@ -64,7 +63,7 @@
                         android:text="@string/newNotify"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/layout_14sp"
-                        android:typeface="serif"/>
+                        android:typeface="serif" />
 
                     <ImageView
                         android:id="@+id/iv_switch_open_notification"
@@ -73,7 +72,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/open_icon"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
                     <ImageView
                         android:id="@+id/iv_switch_close_notification"
@@ -82,7 +81,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/close_icon"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
 
                 </RelativeLayout>
 
@@ -92,7 +91,7 @@
                     android:layout_height="@dimen/layout_1dp"
                     android:layout_marginLeft="@dimen/layout_10dp"
                     android:layout_marginRight="@dimen/layout_10dp"
-                    android:background="#E6E6E6"/>
+                    android:background="#E6E6E6" />
 
                 <RelativeLayout
                     android:id="@+id/rl_switch_sound"
@@ -109,7 +108,7 @@
                         android:text="@string/voice"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/layout_14sp"
-                        android:typeface="serif"/>
+                        android:typeface="serif" />
 
                     <ImageView
                         android:id="@+id/iv_switch_open_sound"
@@ -118,7 +117,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/open_icon"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
                     <ImageView
                         android:id="@+id/iv_switch_close_sound"
@@ -127,7 +126,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/close_icon"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
 
                 </RelativeLayout>
 
@@ -137,7 +136,7 @@
                     android:layout_height="1dip"
                     android:layout_marginLeft="10dip"
                     android:layout_marginRight="10dip"
-                    android:background="#E6E6E6"/>
+                    android:background="#E6E6E6" />
 
                 <RelativeLayout
                     android:id="@+id/rl_switch_vibrate"
@@ -154,7 +153,7 @@
                         android:text="@string/shake"
                         android:textColor="@android:color/black"
                         android:textSize="14sp"
-                        android:typeface="serif"/>
+                        android:typeface="serif" />
 
                     <ImageView
                         android:id="@+id/iv_switch_open_vibrate"
@@ -163,7 +162,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/open_icon"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
                     <ImageView
                         android:id="@+id/iv_switch_close_vibrate"
@@ -172,7 +171,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/close_icon"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
 
                 </RelativeLayout>
 
@@ -190,12 +189,12 @@
                         android:gravity="center_vertical|start"
                         android:paddingStart="@dimen/layout_10dp"
                         android:text="@string/chatset"
-                        android:textColor="@color/btn_gray_pressed"/>
+                        android:textColor="@color/btn_gray_pressed" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="1dip"
-                        android:background="@color/btn_gray_normal"/>
+                        android:background="@color/btn_gray_normal" />
 
                 </LinearLayout>
 
@@ -214,7 +213,7 @@
                         android:text="@string/yangshengqi"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/layout_14sp"
-                        android:typeface="serif"/>
+                        android:typeface="serif" />
 
                     <ImageView
                         android:id="@+id/iv_switch_open_speaker"
@@ -223,7 +222,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/open_icon"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
                     <ImageView
                         android:id="@+id/iv_switch_close_speaker"
@@ -232,7 +231,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/close_icon"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
 
                 </RelativeLayout>
 
@@ -241,7 +240,7 @@
                     android:layout_height="1dip"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@color/btn_gray_normal"/>
+                    android:background="@color/btn_gray_normal" />
 
             </LinearLayout>
 

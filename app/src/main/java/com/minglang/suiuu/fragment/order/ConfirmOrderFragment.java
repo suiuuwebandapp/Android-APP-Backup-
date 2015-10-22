@@ -78,6 +78,9 @@ public class ConfirmOrderFragment extends BaseFragment {
     @BindString(R.string.SystemException)
     String SystemException;
 
+    @BindString(R.string.LoginInvalid)
+    String LoginInvalid;
+
     @Bind(R.id.confirm_order_list_view)
     PullToRefreshListView pullToRefreshListView;
 
@@ -276,20 +279,15 @@ public class ConfirmOrderFragment extends BaseFragment {
             switch (status) {
                 case "1":
                     OrderManage orderManage = JsonUtils.getInstance().fromJSON(OrderManage.class, str);
-                    if (orderManage != null) {
-                        List<OrderManageData> list = orderManage.getData();
-                        if (list != null && list.size() > 0) {
-                            clearListData();
-                            listAll.addAll(list);
-                            orderListManageAdapter.setList(listAll);
-                        } else {
-                            failureLessPage();
-                            Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
-                        }
+                    List<OrderManageData> list = orderManage.getData();
+                    if (list != null && list.size() > 0) {
+                        clearListData();
+                        listAll.addAll(list);
                     } else {
                         failureLessPage();
                         Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
+                    orderListManageAdapter.setList(listAll);
                     break;
 
                 case "-1":
@@ -301,6 +299,7 @@ public class ConfirmOrderFragment extends BaseFragment {
                     break;
 
                 case "-3":
+                    Toast.makeText(getActivity(), LoginInvalid, Toast.LENGTH_SHORT).show();
                     LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
                     localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
                     ReturnLoginActivity(getActivity());

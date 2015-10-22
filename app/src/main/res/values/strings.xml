@@ -219,7 +219,7 @@
     <string name="SystemException" translatable="false">系统异常，请稍候再试</string>
     <string name="UnknownError" translatable="false">未知错误</string>
 
-    <string name="LoginInvalid" translatable="false">登录信息过期,请重新登录!</string>
+    <string name="LoginInvalid" translatable="false">登录已过期,请重新登录!</string>
 
     <string name="ThisArticNoComment" translatable="false">该文章暂时没有评论</string>
 

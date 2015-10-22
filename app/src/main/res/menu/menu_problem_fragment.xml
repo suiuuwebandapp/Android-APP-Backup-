@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/go_to_search_problem"
+        android:icon="@drawable/icon_search_selector"
+        android:title=""
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/go_to_make_question"
+        android:icon="@drawable/icon_questions_selector"
+        android:title=""
+        app:showAsAction="ifRoom" />
+
+</menu>

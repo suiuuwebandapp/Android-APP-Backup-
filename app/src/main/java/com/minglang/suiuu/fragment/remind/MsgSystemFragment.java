@@ -75,6 +75,9 @@ public class MsgSystemFragment extends BaseFragment {
     @BindString(R.string.SystemException)
     String SystemException;
 
+    @BindString(R.string.LoginInvalid)
+    String LoginInvalid;
+
     @Bind(R.id.msg_system_fragment_head_frame)
     PtrClassicFrameLayout mPtrFrame;
 
@@ -244,11 +247,11 @@ public class MsgSystemFragment extends BaseFragment {
                     if (list != null && list.size() > 0) {
                         clearDataList();
                         listAll.addAll(list);
-                        adapter.setList(listAll);
                     } else {
                         failureLessPage();
                         Toast.makeText(getActivity(), NoData, Toast.LENGTH_SHORT).show();
                     }
+                    adapter.setList(listAll);
                     break;
 
                 case "-1":
@@ -260,6 +263,7 @@ public class MsgSystemFragment extends BaseFragment {
                     break;
 
                 case "-3":
+                    Toast.makeText(getActivity(), LoginInvalid, Toast.LENGTH_SHORT).show();
                     ReturnLoginActivity(getActivity());
                     break;
 
