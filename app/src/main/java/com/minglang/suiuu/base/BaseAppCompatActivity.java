@@ -11,6 +11,7 @@ import com.minglang.suiuu.activity.FirstLoginActivity;
 import com.minglang.suiuu.utils.L;
 
 import java.net.URLEncoder;
+import java.util.Locale;
 
 public class BaseAppCompatActivity extends AppCompatActivity {
 
@@ -62,10 +63,13 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     public String verification;
     public String token;
 
+    public boolean isZhCnLanguage;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initScreen();
+        isZhCnLanguage = isCNLanguage();
     }
 
     public void initScreen() {
@@ -102,6 +106,12 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         Intent intent = new Intent(activity, FirstLoginActivity.class);
         activity.startActivity(intent);
         activity.finish();
+    }
+
+    public boolean isCNLanguage() {
+        Locale locale = getResources().getConfiguration().locale;
+        String language = locale.getLanguage();
+        return language.endsWith("zh");
     }
 
     @Override

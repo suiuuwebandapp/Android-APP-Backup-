@@ -14,6 +14,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/my_suiuu_tool_bar"
             style="@style/AppToolBar2"
+            android:background="@color/mainColor"
             app:navigationIcon="@drawable/back"
             app:title="@string/MySuiuu"
             app:titleTextColor="@color/white" />
@@ -26,8 +27,8 @@
             app:tabIndicatorColor="@color/mainColor"
             app:tabIndicatorHeight="@dimen/layout_2dp"
             app:tabSelectedTextColor="@color/mainColor"
-            app:tabTextColor="@color/tr_black"
-            app:tabTextAppearance="?android:attr/textAppearanceMedium" />
+            app:tabTextAppearance="?android:attr/textAppearanceMedium"
+            app:tabTextColor="@color/tr_black" />
 
     </LinearLayout>
 

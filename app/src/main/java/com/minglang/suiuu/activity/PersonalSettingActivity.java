@@ -24,7 +24,7 @@ import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSFile;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.pickerview.OptionsPopupWindow;
 import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
@@ -47,7 +47,7 @@ import butterknife.BindString;
 import butterknife.ButterKnife;
 
 @SuppressWarnings("deprecation")
-public class PersonalSettingActivity extends BaseActivity {
+public class PersonalSettingActivity extends BaseAppCompatActivity {
 
     private static final String TAG = PersonalSettingActivity.class.getSimpleName();
 
@@ -203,7 +203,7 @@ public class PersonalSettingActivity extends BaseActivity {
     private ArrayList<String> optionsList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_setting);
 

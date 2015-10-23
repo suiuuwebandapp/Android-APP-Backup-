@@ -9,8 +9,8 @@ android {
         applicationId "com.minglang.suiuu"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
         multiDexEnabled true
     }
 
@@ -66,6 +66,7 @@ dependencies {
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
     compile 'com.ms-square:expandableTextView:0.1.4'
     compile 'cn.edu.zafu:coreprogress:0.0.2'
+    compile 'com.edmodo:rangebar:1.0.0'
     compile files('libs/picasso-2.4.0.jar')
     compile files('libs/umeng-analytics-v5.2.4.jar')
     compile files('libs/gson-2.3.1.jar')

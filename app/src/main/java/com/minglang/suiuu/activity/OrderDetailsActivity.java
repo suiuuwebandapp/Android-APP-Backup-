@@ -71,6 +71,8 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
     private static final String RELATE_ID = "relateId";
 
+    private static final String USER_SIGN = "userSign";
+
     /**
      * 订单ID
      */
@@ -286,6 +288,15 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        headImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrderDetailsActivity.this, PersonalMainPagerActivity.class);
+                intent.putExtra(USER_SIGN, userInfo.getUserSign());
+                startActivity(intent);
             }
         });
 

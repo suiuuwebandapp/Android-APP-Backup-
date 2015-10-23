@@ -83,10 +83,9 @@
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
+            android:theme="@style/AppFullScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -277,7 +276,7 @@
         <activity
             android:name=".activity.MySuiuuInfoActivity"
             android:label="@string/title_activity_my_suiuu"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppMainTheme" />
 
         <activity
             android:name=".activity.MySuiuuReleaseActivity"
@@ -297,17 +296,17 @@
         <activity
             android:name=".activity.OrderManageActivity"
             android:label="@string/title_activity_order_manage"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppMainTheme" />
 
         <activity
             android:name=".activity.SuiuuSearchDetailsActivity"
             android:label="@string/title_activity_suiuu_search_detail"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+            android:theme="@style/AppMainTheme" />
 
         <activity
             android:name=".activity.SearchActivity"
             android:label="@string/title_activity_suiuu_search"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+            android:theme="@style/AppMainTheme" />
 
         <activity
             android:name=".activity.SendCommentActivity"
@@ -332,13 +331,13 @@
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind"/>
+            android:screenOrientation="behind" />
 
         <activity
             android:name="com.alipay.sdk.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind"/>
+            android:screenOrientation="behind" />
 
         <activity
             android:name=".activity.AccountManagerActivity"
@@ -348,7 +347,7 @@
         <activity
             android:name=".activity.ProblemDetailsActivity"
             android:label="@string/title_activity_community_item"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppMainTheme" />
 
         <activity
             android:name=".activity.PutQuestionsActivity"
@@ -480,8 +479,7 @@
             android:launchMode="singleTask"
             android:noHistory="true"
             android:theme="@style/Theme.UMDialog"
-            android:windowSoftInputMode="stateVisible|adjustResize" >
-        </activity>
+            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
 
     </application>
 

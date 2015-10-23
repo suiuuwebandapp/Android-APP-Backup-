@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.AreaCodeAdapter;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.AreaCode;
 import com.minglang.suiuu.entity.AreaCodeData;
@@ -52,7 +52,7 @@ import butterknife.ButterKnife;
  * 修改时间：2015/9/10 17:23
  * 修改备注：
  */
-public class RegisterActivity extends BaseActivity {
+public class RegisterActivity extends BaseAppCompatActivity {
 
     private static final String TAG = RegisterActivity.class.getSimpleName();
 
@@ -169,7 +169,7 @@ public class RegisterActivity extends BaseActivity {
     private TextProgressDialog dialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);

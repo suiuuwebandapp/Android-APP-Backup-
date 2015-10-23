@@ -12,7 +12,7 @@ import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.photodraweeview.CircleIndicator;
 import com.minglang.suiuu.customview.photodraweeview.MultiTouchViewPager;
 import com.minglang.suiuu.customview.photodraweeview.OnPhotoTapListener;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * 修改时间：2015/8/25 17:25
  * 修改备注：
  */
-public class ShowBigPictureActivity extends BaseActivity{
+public class ShowBigPictureActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.ci_indicator)
     CircleIndicator indicator;
@@ -45,7 +45,7 @@ public class ShowBigPictureActivity extends BaseActivity{
     private List<String> picList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_big_picture);
 

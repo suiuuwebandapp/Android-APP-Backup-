@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.L;
 
 import butterknife.Bind;
@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
  * 修改时间：2015/9/11 12:42
  * 修改备注：
  */
-public class MainBindActivity extends BaseActivity {
+public class MainBindActivity extends BaseAppCompatActivity {
 
     private static final String TAG = MainBindActivity.class.getSimpleName();
 
@@ -62,7 +62,7 @@ public class MainBindActivity extends BaseActivity {
     private String sex;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_binding);
         ButterKnife.bind(this);

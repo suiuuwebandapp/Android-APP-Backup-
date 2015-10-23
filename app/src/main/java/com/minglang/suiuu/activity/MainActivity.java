@@ -347,8 +347,6 @@ public class MainActivity extends BaseAppCompatActivity {
                 @Override
                 public void onFinish() {
                     L.i(TAG, "Service Time Request Finish!");
-                    initView();
-                    viewAction();
                 }
 
             });
@@ -375,7 +373,8 @@ public class MainActivity extends BaseAppCompatActivity {
 
             String sign = MD5Utils.getMD5(time + verification + HttpNewServicePath.ConfusedCode);
 
-            String _url = addUrlAndParams(HttpNewServicePath.getToken, new String[]{TIME_STAMP, APP_SIGN, SIGN},
+            String _url = addUrlAndParams(HttpNewServicePath.getToken,
+                    new String[]{TIME_STAMP, APP_SIGN, SIGN},
                     new String[]{time, verification, sign});
 
             OkHttpManager.onGetAsynRequest(_url, new OkHttpManager.ResultCallback<String>() {
@@ -899,6 +898,28 @@ public class MainActivity extends BaseAppCompatActivity {
 
     }
 
+    private void unMainRegisterReceiver(){
+
+        try {
+            localBroadcastManager.unregisterReceiver(exitReceiver);
+        } catch (Exception e) {
+            L.e(TAG, "反注册ExitBroadcastReceiver失败:" + e.getMessage());
+        }
+
+        try {
+            unregisterReceiver(connectionNetChangeReceiver);
+        } catch (Exception e) {
+            L.e(TAG, "反注册ConnectionNetChangeReceiver失败:" + e.getMessage());
+        }
+
+        try {
+            unregisterReceiver(tokenBroadcastReceiver);
+        } catch (Exception e) {
+            L.e(TAG, "反注册TokenBroadcastReceiver失败:" + e.getMessage());
+        }
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1026,6 +1047,8 @@ public class MainActivity extends BaseAppCompatActivity {
                         webSocketClient.disconnect();
                     }
 
+                    unMainRegisterReceiver();
+
                     //定位服务相关
                     //unbindService(serviceConnection);
                     //locationBinder.endService();
@@ -1041,25 +1064,7 @@ public class MainActivity extends BaseAppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        try {
-            localBroadcastManager.unregisterReceiver(exitReceiver);
-        } catch (Exception e) {
-            L.e(TAG, "反注册ExitBroadcastReceiver失败:" + e.getMessage());
-        }
-
-        try {
-            unregisterReceiver(connectionNetChangeReceiver);
-        } catch (Exception e) {
-            L.e(TAG, "反注册ConnectionNetChangeReceiver失败:" + e.getMessage());
-        }
-
-        try {
-            unregisterReceiver(tokenBroadcastReceiver);
-        } catch (Exception e) {
-            L.e(TAG, "反注册TokenBroadcastReceiver失败:" + e.getMessage());
-        }
-
+        unMainRegisterReceiver();
     }
 
 }

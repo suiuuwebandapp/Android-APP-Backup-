@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.TextProgressDialog;
 import com.minglang.suiuu.entity.UserBack;
 import com.minglang.suiuu.entity.UserBack.UserBackData;
@@ -55,7 +55,7 @@ import butterknife.ButterKnife;
  * 修改时间：2015/9/10 14:08
  * 修改备注：
  */
-public class FirstLoginActivity extends BaseActivity {
+public class FirstLoginActivity extends BaseAppCompatActivity {
 
     private static final String TAG = FirstLoginActivity.class.getSimpleName();
 
@@ -173,7 +173,7 @@ public class FirstLoginActivity extends BaseActivity {
     private Context context;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_login);
         ButterKnife.bind(this);

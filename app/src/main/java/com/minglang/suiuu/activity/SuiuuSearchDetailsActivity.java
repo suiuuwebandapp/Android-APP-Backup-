@@ -1,10 +1,15 @@
 package com.minglang.suiuu.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -15,14 +20,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.edmodo.rangebar.RangeBar;
 import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.ShowSuiuuAdapter;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.customview.TextProgressDialog;
-import com.minglang.suiuu.customview.rangebar.RangeBar;
 import com.minglang.suiuu.entity.SuiuuData;
 import com.minglang.suiuu.entity.SuiuuItemData;
 import com.minglang.suiuu.entity.SuiuuSearchTag;
@@ -41,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -53,7 +59,7 @@ import butterknife.ButterKnife;
  * 修改时间：2015/6/25 15:02
  * 修改备注：
  */
-public class SuiuuSearchDetailsActivity extends BaseActivity {
+public class SuiuuSearchDetailsActivity extends BaseAppCompatActivity {
 
     private static final String TAG = SuiuuSearchDetailsActivity.class.getSimpleName();
 
@@ -78,6 +84,9 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
 
     private int endTick = 10000;
 
+    @BindDrawable(R.color.DefaultGray1)
+    Drawable Divider;
+
     @BindString(R.string.NoData)
     String NoData;
 
@@ -87,20 +96,20 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
     @BindString(R.string.NetworkAnomaly)
     String NetworkError;
 
-    @Bind(R.id.rangeBar)
+    @BindString(R.string.LoginInvalid)
+    String LoginInvalid;
+
+    @Bind(R.id.suiuu_search_details_tool_bar)
+    Toolbar toolbar;
+
+    @Bind(R.id.suiuu_search_details_range_bar)
     RangeBar rangebar;
-
-    @Bind(R.id.suiuu_search_back)
-    ImageButton backButton;
-
-    @Bind(R.id.suiuu_search_more)
-    ImageButton moreButton;
 
     @Bind(R.id.et_people_number)
     EditText peopleNumber;
 
     @Bind(R.id.tv_price_range)
-    TextView tv_price_range;
+    TextView showPriceSection;
 
     @Bind(R.id.id_flowLayout)
     FlowLayout tagLayout;
@@ -109,17 +118,17 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
     RelativeLayout searchMoreLayout;
 
     @Bind(R.id.lv_search_suiuu)
-    PullToRefreshListView suiuuSearchListView;
+    PullToRefreshListView pullToRefreshListView;
 
     private int page = 1;
 
     private ShowSuiuuAdapter adapter;
 
     @Bind(R.id.suiuu_search_add_people_number)
-    ImageButton ib_plus;
+    ImageButton addPersonal;
 
     @Bind(R.id.suiuu_search_less_people_number)
-    ImageButton ib_release;
+    ImageButton lessPersonal;
 
     private String searchCountry;
 
@@ -130,14 +139,15 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
     RelativeLayout noDataHintView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suiuu_search_detail);
 
         StatusBarCompat.compat(this);
-
         ButterKnife.bind(this);
+
         searchCountry = this.getIntent().getStringExtra("country");
+
         initView();
         viewAction();
         loadDate(searchCountry, null, null, null, null, page);
@@ -148,48 +158,35 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
 
         dialog = new TextProgressDialog(this);
 
-        rangebar.setTickStart(0);
-        rangebar.setTickEnd(10);
-        rangebar.setTickInterval(1);
+        setSupportActionBar(toolbar);
+
+        rangebar.setTickCount(10);
 
         peopleNumber.setKeyListener(null);
 
+        ListView listView = pullToRefreshListView.getRefreshableView();
+        listView.setDivider(Divider);
+        listView.setDividerHeight((int) getResources().getDimension(R.dimen.layout_5dp));
     }
 
     private void viewAction() {
 
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        moreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSearchMore();
-            }
-        });
-
-        ib_release.setOnClickListener(new MyOnclick());
+        lessPersonal.setOnClickListener(new MyOnclick());
 
         searchConfirmButton.setOnClickListener(new MyOnclick());
 
-        ib_plus.setOnClickListener(new MyOnclick());
+        addPersonal.setOnClickListener(new MyOnclick());
 
         rangebar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
-            public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue,
-                                              String rightPinValue) {
+            public void onIndexChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex) {
                 startTick = leftPinIndex * 1000;
                 endTick = rightPinIndex * 1000;
-                tv_price_range.setText(String.format("%s%s%s", leftPinIndex * 1000, "--", rightPinIndex * 1000));
+                showPriceSection.setText(String.format("%s%s%s", leftPinIndex * 1000, "--", rightPinIndex * 1000));
             }
         });
 
-
-        suiuuSearchListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -225,14 +222,14 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
 
         });
 
-        suiuuSearchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(SuiuuSearchDetailsActivity.this, SuiuuDetailsActivity.class);
                 intent.putExtra("tripId", listAll.get(position - 1).getTripId());
                 intent.putExtra(USER_SIGN, listAll.get(position - 1).getUserSign());
                 intent.putExtra(HEAD_IMG, listAll.get(position - 1).getHeadImg());
-                intent.putExtra(CLASS_NAME,TAG);
+                intent.putExtra(CLASS_NAME, TAG);
                 startActivity(intent);
             }
         });
@@ -242,11 +239,13 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
         dialog.show();
         String[] keyArray1 = new String[]{"cc", "peopleCount", "tag", "startPrice", "endPrice", "page", "number", "token"};
         String[] valueArray1 = new String[]{countryOrCity, peopleCount, tags, startPrice, endPrice, Integer.toString(page), "10", token};
+        String url = addUrlAndParams(HttpNewServicePath.getSuiuuList, keyArray1, valueArray1);
         try {
-            OkHttpManager.onGetAsynRequest(addUrlAndParams(HttpNewServicePath.getSuiuuList, keyArray1, valueArray1), new SuiuuSearchDetailsCallback());
+            OkHttpManager.onGetAsynRequest(url, new SuiuuSearchDetailsCallback());
         } catch (IOException e) {
             L.e(TAG, "数据请求错误:" + e.getMessage());
             dialog.dismiss();
+            Toast.makeText(SuiuuSearchDetailsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -258,13 +257,13 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
         }
     }
 
-    private void showList(List<SuiuuItemData> suiuuItemData) {
+    private void showList(List<SuiuuItemData> list) {
         if (adapter == null) {
-            suiuuSearchListView.setVisibility(View.VISIBLE);
-            adapter = new ShowSuiuuAdapter(this, suiuuItemData);
-            suiuuSearchListView.setAdapter(adapter);
+            pullToRefreshListView.setVisibility(View.VISIBLE);
+            adapter = new ShowSuiuuAdapter(this, list);
+            pullToRefreshListView.setAdapter(adapter);
         } else {
-            adapter.setList(suiuuItemData);
+            adapter.setList(list);
         }
     }
 
@@ -283,15 +282,35 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
 
     public void showSearchMore() {
         if (searchMoreLayout.isShown()) {
-            suiuuSearchListView.setEnabled(true);
+            pullToRefreshListView.setEnabled(true);
             searchMoreLayout.setVisibility(View.GONE);
         } else {
-            suiuuSearchListView.setEnabled(false);
+            pullToRefreshListView.setEnabled(false);
             searchMoreLayout.setVisibility(View.VISIBLE);
             if (tagList.size() < 1) {
                 getSuiuuSearchTag();
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_suiuu_search, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+
+            case R.id.suiuu_search_more:
+                showSearchMore();
+                break;
+        }
+        return true;
     }
 
     /**
@@ -349,13 +368,13 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
                         List<SuiuuItemData> list = baseCollection.getData();
                         if (list.size() < 1) {
                             if (page == 1) {
-                                suiuuSearchListView.setVisibility(View.GONE);
+                                pullToRefreshListView.setVisibility(View.GONE);
                                 noDataHintView.setVisibility(View.VISIBLE);
                             } else {
                                 Toast.makeText(SuiuuSearchDetailsActivity.this, NoData, Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            suiuuSearchListView.setVisibility(View.VISIBLE);
+                            pullToRefreshListView.setVisibility(View.VISIBLE);
                             noDataHintView.setVisibility(View.GONE);
                             listAll.addAll(list);
                             showList(listAll);
@@ -371,6 +390,17 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
                         Toast.makeText(SuiuuSearchDetailsActivity.this, msg, Toast.LENGTH_SHORT).show();
                         break;
 
+                    case "-3":
+                        Toast.makeText(SuiuuSearchDetailsActivity.this, LoginInvalid, Toast.LENGTH_SHORT).show();
+                        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(SuiuuSearchDetailsActivity.this);
+                        localBroadcastManager.sendBroadcast(new Intent(SettingActivity.class.getSimpleName()));
+                        ReturnLoginActivity(SuiuuSearchDetailsActivity.this);
+                        break;
+
+                    case "-4":
+                        Toast.makeText(SuiuuSearchDetailsActivity.this, jsonObject.getString(DATA), Toast.LENGTH_SHORT).show();
+                        break;
+
                     default:
                         Toast.makeText(SuiuuSearchDetailsActivity.this, NetworkError, Toast.LENGTH_SHORT).show();
                         break;
@@ -382,6 +412,7 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
 
         @Override
         public void onError(Request request, Exception e) {
+            L.i(TAG, "网络请求失败:" + e.getLocalizedMessage());
             Toast.makeText(SuiuuSearchDetailsActivity.this, "数据获取失败，请重试！", Toast.LENGTH_SHORT).show();
         }
 
@@ -422,14 +453,10 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
                     peopleNumber.setText(String.valueOf(enjoy_peopleNumber + 1));
                     break;
 
-                case R.id.iv_top_back:
-                    finish();
-                    break;
-
                 case R.id.search_confirm_button:
                     tags = "";
                     page = 1;
-                    suiuuSearchListView.setEnabled(true);
+                    pullToRefreshListView.setEnabled(true);
                     listAll.clear();
                     if (searchMoreLayout.isShown()) {
                         enjoyPeopleCount = peopleNumber.getText().toString().trim();
@@ -437,9 +464,12 @@ public class SuiuuSearchDetailsActivity extends BaseActivity {
                         for (TextView textV : listClick) {
                             tags += textV.getText() + ",";
                         }
-                        loadDate(searchCountry, "0".equals(enjoyPeopleCount) ? "" :
-                                        enjoyPeopleCount, "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
+
+                        loadDate(searchCountry,
+                                "0".equals(enjoyPeopleCount) ? "" : enjoyPeopleCount,
+                                "".equals(tags) ? tags : tags.substring(0, tags.length() - 1),
                                 Integer.toString(startTick), Integer.toString(endTick), page);
+
                         searchMoreLayout.setVisibility(View.GONE);
                     } else {
                         loadDate(searchCountry, null, null, null, null, page);

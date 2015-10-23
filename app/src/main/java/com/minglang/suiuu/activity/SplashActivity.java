@@ -11,13 +11,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.SuiuuInfo;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.splash_root_layout)
     RelativeLayout rootLayout;
@@ -36,7 +36,7 @@ public class SplashActivity extends BaseActivity {
     private Animation transAnim;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.customview.FlowLayout;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.StatusBarCompat;
@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
  * 修改时间：2015/7/2 17:26
  * 修改备注：
  */
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends BaseAppCompatActivity {
 
     private static final String TAG = SearchActivity.class.getSimpleName();
 
@@ -71,7 +71,7 @@ public class SearchActivity extends BaseActivity {
     private int searchClass = -1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suiuu_search);
 

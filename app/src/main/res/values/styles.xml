@@ -15,6 +15,10 @@
         <item name="colorPrimaryDark">@color/mainColorDark</item>
     </style>
 
+    <style name="AppFullScreenTheme" parent="AppNewBaseTheme">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <style name="anim_popup_dir">
         <item name="android:windowEnterAnimation">@anim/slide_in</item>
         <item name="android:windowExitAnimation">@anim/slide_out</item>

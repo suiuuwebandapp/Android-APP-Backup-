@@ -43,4 +43,46 @@
         <item>@color/yellow</item>
         <item>@color/green</item>
     </integer-array>
+
+    <string-array name="sideList">
+        <item>私信</item>
+        <item>我的随游</item>
+        <item>订单管理</item>
+        <item>账户管理</item>
+        <item>设置</item>
+    </string-array>
+
+    <string-array name="sideList2">
+        <item>我的预定</item>
+        <item>关注</item>
+        <item>私信</item>
+        <item>设置</item>
+        <item>退出</item>
+    </string-array>
+
+    <string-array name="communitySort">
+        <item>默认</item>
+        <item>热门</item>
+        <item>时间</item>
+    </string-array>
+
+    <string-array name="personalList">
+        <item>个人设置</item>
+        <item>通用设置</item>
+        <item>检查更新</item>
+        <item>去评分</item>
+        <item>联系我们</item>
+        <item>关于我们</item>
+    </string-array>
+
+    <string-array name="tripImageTagName">
+        <item>美食</item>
+        <item>建筑</item>
+        <item>电影</item>
+        <item>博物馆</item>
+        <item>景点</item>
+        <item>购物</item>
+        <item>酒吧</item>
+    </string-array>
+
 </resources>

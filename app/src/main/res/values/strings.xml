@@ -5,14 +5,14 @@
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
-    <string name="action_send">Send</string>
+    <string name="action_send" translatable="false">Send</string>
 
     <string name="app_name" translatable="false">随游</string>
 
     <string name="Login" translatable="false">登录</string>
     <string name="Register" translatable="false">注册</string>
 
-    <string name="LoginOverdue" ranslatable="false">登陆已过期，请重新登陆！</string>
+    <string name="LoginOverdue" translatable="false">登陆已过期，请重新登陆！</string>
 
     <string name="PleaseInputUserName" translatable="false">请输入用户名</string>
     <string name="PleaseInputPassword" translatable="false">请输入密码</string>
@@ -320,8 +320,8 @@
     <string name="Email" translatable="false">电子邮箱:</string>
 
     <string name="TripCount" translatable="false">伴游次数:</string>
-    <string name="HisSuiuu">他的随游</string>
-    <string name="HisParticipationSuiuu">他参与的随游</string>
+    <string name="HisSuiuu" translatable="false">他的随游</string>
+    <string name="HisParticipationSuiuu" translatable="false">他参与的随游</string>
 
     <string name="userName" translatable="false">用户名</string>
     <string name="userLocation" translatable="false">用户位置</string>
@@ -405,8 +405,8 @@
     <string name="Completed" translatable="false">已完成</string>
     <string name="NotFinished" translatable="false">未完成</string>
 
-    <string name="IndividualService">单项服务:</string>
-    <string name="pickup">接机</string>
+    <string name="IndividualService" translatable="false">单项服务:</string>
+    <string name="pickup" translatable="false">接机</string>
 
     <string name="orderPrice" translatable="false">订单总价:</string>
 
@@ -455,7 +455,7 @@
     <string name="voice" translatable="false">声音</string>
     <string name="shake" translatable="false">震动</string>
     <string name="chatset" translatable="false">聊天设置</string>
-    <string name="yangshengqi">使用扬声器播放语音</string>
+    <string name="yangshengqi" translatable="false">使用扬声器播放语音</string>
 
     <string name="unable_to_get_location" translatable="false">未知位置</string>
     <string name="User_name_cannot_be_empty" translatable="false">用户名不能为空！</string>
@@ -500,29 +500,29 @@
     <string name="CancelOrder" translatable="false">取消订单</string>
     <string name="AgainPay" translatable="false">重新支付</string>
 
-    <string name="MyProblem" trabslatable="false">我的问答</string>
+    <string name="MyProblem" translatable="false">我的问答</string>
 
-    <string name="AttentionFailure" trabslatable="false">关注失败</string>
+    <string name="AttentionFailure" translatable="false">关注失败</string>
 
-    <string name="SuiuuComment" trabslatable="false">随游评论</string>
+    <string name="SuiuuComment" translatable="false">随游评论</string>
 
-    <string name="DeleteFailure" trabslatable="false">删除失败</string>
+    <string name="DeleteFailure" translatable="false">删除失败</string>
 
-    <string name="NoInstallWeChat" trabslatable="false">您尚未安装微信，请安装后再用！</string>
+    <string name="NoInstallWeChat" translatable="false">您尚未安装微信，请安装后再用！</string>
 
-    <string name="ObtainWeChatAuthorization" trabslatable="false">正在获取微信授权，请稍候&#8230;</string>
+    <string name="ObtainWeChatAuthorization" translatable="false">正在获取微信授权，请稍候&#8230;</string>
 
-    <string name="IWithDraw" trabslatable="false">我要提现</string>
-    <string name="SelectDrawAccount" trabslatable="false">请选择提现账户</string>
+    <string name="IWithDraw" translatable="false">我要提现</string>
+    <string name="SelectDrawAccount" translatable="false">请选择提现账户</string>
 
-    <string name="MoneyHint" trabslatable="false">请输入要提现的金额</string>
+    <string name="MoneyHint" translatable="false">请输入要提现的金额</string>
 
-    <string name="MoneyNotNull" trabslatable="false">提现金额不能为空！</string>
+    <string name="MoneyNotNull" translatable="false">提现金额不能为空！</string>
 
-    <string name="NoBindReceivablesWay" trabslatable="false">您还没有绑定收款方式！</string>
+    <string name="NoBindReceivablesWay" translatable="false">您还没有绑定收款方式！</string>
 
-    <string name="UpLoadLogFile" trabslatable="false">上传日志</string>
-    <string name="SelectFile" trabslatable="false">SelectFile</string>
+    <string name="UpLoadLogFile" translatable="false">上传日志</string>
+    <string name="SelectFile" translatable="false">SelectFile</string>
 
     <string name="tempDate" translatable="false">15.08.15</string>
     <string name="tempTime" translatable="false">9:00 AM</string>
@@ -665,21 +665,21 @@
     <string name="title_activity_order_details" translatable="false">OrderDetailsActivity</string>
     <string name="title_activity_contact_information" translatable="false">OrderContactInformationActivity</string>
     <string name="title_activity_my_order_list" translatable="false">MyOrderListActivity</string>
-    <string name="title_activity_about_us">AboutUsActivity</string>
-    <string name="title_activity_receivables_way">ReceivablesWayActivity</string>
-    <string name="title_activity_add_receivables_way">AddReceivablesWayActivity</string>
-    <string name="show_big_picture_activity">ShowBigPictureActivity</string>
-    <string name="create_location_activity">CreateLocationActivity</string>
+    <string name="title_activity_about_us" translatable="false">AboutUsActivity</string>
+    <string name="title_activity_receivables_way" translatable="false">ReceivablesWayActivity</string>
+    <string name="title_activity_add_receivables_way" translatable="false">AddReceivablesWayActivity</string>
+    <string name="show_big_picture_activity" translatable="false">ShowBigPictureActivity</string>
+    <string name="create_location_activity" translatable="false">CreateLocationActivity</string>
 
-    <string name="title_activity_personal_suiuu">PersonalSuiuuActivity</string>
-    <string name="title_activity_personal_problem">PersonalProblemActivity</string>
-    <string name="title_activity_personal_trip_gallery">PersonalTripGalleryActivity</string>
-    <string name="title_activity_suiuu_comment">SuiuuCommentActivity</string>
-    <string name="title_activity_withdrawals">WithdrawalsActivity</string>
-    <string name="title_activity_up_load_log_file">UpLoadLogFileActivity</string>
-    <string name="title_activity_private_letter">PrivateLetterActivity</string>
-    <string name="title_activity_private_letter_chat">PrivateLetterChatActivity</string>
-    <string name="title_activity_using_suiuu">UsingSuiuuActivity</string>
-    <string name="title_activity_select_be_invited">SelectBeInvitedActivity</string>
+    <string name="title_activity_personal_suiuu" translatable="false">PersonalSuiuuActivity</string>
+    <string name="title_activity_personal_problem" translatable="false">PersonalProblemActivity</string>
+    <string name="title_activity_personal_trip_gallery" translatable="false">PersonalTripGalleryActivity</string>
+    <string name="title_activity_suiuu_comment" translatable="false">SuiuuCommentActivity</string>
+    <string name="title_activity_withdrawals" translatable="false">WithdrawalsActivity</string>
+    <string name="title_activity_up_load_log_file" translatable="false">UpLoadLogFileActivity</string>
+    <string name="title_activity_private_letter" translatable="false">PrivateLetterActivity</string>
+    <string name="title_activity_private_letter_chat" translatable="false">PrivateLetterChatActivity</string>
+    <string name="title_activity_using_suiuu" translatable="false">UsingSuiuuActivity</string>
+    <string name="title_activity_select_be_invited" translatable="false">SelectBeInvitedActivity</string>
 
 </resources>

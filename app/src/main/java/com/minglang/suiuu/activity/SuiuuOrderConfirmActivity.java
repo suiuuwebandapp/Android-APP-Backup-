@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.DateTimePickDialogUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.StatusBarCompat;
@@ -44,7 +44,7 @@ import butterknife.ButterKnife;
  * 修改时间：2015/6/11 15:08
  * 修改备注：
  */
-public class SuiuuOrderConfirmActivity extends BaseActivity {
+public class SuiuuOrderConfirmActivity extends BaseAppCompatActivity {
 
     private static final String TAG = SuiuuOrderConfirmActivity.class.getSimpleName();
 
@@ -106,7 +106,7 @@ public class SuiuuOrderConfirmActivity extends BaseActivity {
     private float AllServicePrice = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suiuu_order);
 

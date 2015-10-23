@@ -228,10 +228,10 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    inputString= v.getText().toString().trim();
+                    inputString = v.getText().toString().trim();
                     if (TextUtils.isEmpty(inputString)) {
                         Toast.makeText(context, "请输入信息", Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         String message = buildSendMessage();
                         L.i(TAG, "Send Message:" + message);
                         addSendMessage();
@@ -351,7 +351,7 @@ public class PrivateLetterChatActivity extends BaseAppCompatActivity {
         String[] valueArray = new String[]{relateId, token};
 
         String url = addUrlAndParams(HttpNewServicePath.getPrivateLetterInfoPath, keyArray, valueArray);
-
+        L.i(TAG, "聊天记录请求URL:" + url);
         try {
             OkHttpManager.onGetAsynRequest(url, new OkHttpManager.ResultCallback<String>() {
 

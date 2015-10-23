@@ -29,7 +29,7 @@ import com.minglang.pulltorefreshlibrary.PullToRefreshBase;
 import com.minglang.pulltorefreshlibrary.PullToRefreshListView;
 import com.minglang.suiuu.R;
 import com.minglang.suiuu.adapter.SearchNearMessageAdapter;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.L;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ import butterknife.BindString;
 import butterknife.ButterKnife;
 
 
-public class AMapActivity extends BaseActivity implements AMapLocationListener, PoiSearch.OnPoiSearchListener {
+public class AMapActivity extends BaseAppCompatActivity implements AMapLocationListener, PoiSearch.OnPoiSearchListener {
 
     private static final String TAG = AMapActivity.class.getSimpleName();
 

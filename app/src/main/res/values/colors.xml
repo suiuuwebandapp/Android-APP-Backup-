@@ -74,6 +74,7 @@
     <color name="DefaultGray1">#dddddd</color>
     <color name="DefaultGray2">#eeeeee</color>
     <color name="DefaultGray3">#c7c7c7</color>
+    <color name="DefaultGray4">#F4F4F4</color>
 
     <color name="AcceptBackgroundColor">#94C9FF</color>
 

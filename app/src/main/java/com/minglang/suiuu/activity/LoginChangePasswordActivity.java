@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.minglang.suiuu.R;
-import com.minglang.suiuu.base.BaseActivity;
+import com.minglang.suiuu.base.BaseAppCompatActivity;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.SuiuuInfo;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
  * 修改时间：2015/9/14 9:19
  * 修改备注：
  */
-public class LoginChangePasswordActivity extends BaseActivity {
+public class LoginChangePasswordActivity extends BaseAppCompatActivity {
 
     private static final String TAG = LoginChangePasswordActivity.class.getSimpleName();
 
@@ -127,7 +127,7 @@ public class LoginChangePasswordActivity extends BaseActivity {
     private static final String STATUS = "status";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_change_password);
 

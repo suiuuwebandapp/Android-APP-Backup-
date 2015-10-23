@@ -11,11 +11,12 @@
         android:id="@+id/orderManageBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/AppMainTheme">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/order_manage_tool_bar"
             style="@style/AppToolBar2"
+
             app:layout_scrollFlags="scroll|enterAlways"
             app:navigationIcon="@drawable/back"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"

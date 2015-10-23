@@ -1,52 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/suiuu_search_tool_bar"
-        style="@style/AppToolBar">
-
-        <ImageButton
-            android:id="@+id/suiuu_search_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/back"
-            android:contentDescription="@string/Back" />
-
-        <ImageButton
-            android:id="@+id/suiuu_search_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/high_search_normal"
-            android:contentDescription="@string/More" />
-
-        <TextView
-            android:id="@+id/suiuu_search_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/suiuu_search_back"
-            android:layout_toEndOf="@+id/suiuu_search_back"
-            android:text="@string/MainTitle2"
-            android:textColor="@color/white"
-            android:textSize="@dimen/layout_20sp"
-            android:layout_toLeftOf="@+id/suiuu_search_more"
-            android:layout_toStartOf="@+id/suiuu_search_more" />
-
-    </RelativeLayout>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/suiuu_search_details_tool_bar"
+        style="@style/AppToolBar2"
+        app:navigationIcon="@drawable/back"
+        app:title="@string/MainTitle2"
+        app:titleTextColor="@color/white" />
 
     <com.minglang.pulltorefreshlibrary.PullToRefreshListView
         android:id="@+id/lv_search_suiuu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/suiuu_search_tool_bar"
+        android:layout_below="@+id/suiuu_search_details_tool_bar"
         android:background="@color/white"
         android:scrollbars="none"
         android:visibility="visible" />
@@ -59,8 +28,9 @@
         android:id="@+id/search_more_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/suiuu_search_tool_bar"
+        android:layout_below="@+id/suiuu_search_details_tool_bar"
         android:background="@color/backgroundColor2"
+        android:clickable="true"
         android:padding="@dimen/layout_10dp"
         android:visibility="gone">
 
@@ -87,8 +57,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_marginStart="@dimen/layout_5dp"
                 android:background="@drawable/icon_less_personal"
                 android:contentDescription="@string/Less" />
 
@@ -97,8 +65,6 @@
                 android:layout_width="@dimen/layout_50dp"
                 android:layout_height="@dimen/layout_25dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/layout_5dp"
-                android:layout_marginStart="@dimen/layout_5dp"
                 android:layout_toEndOf="@+id/suiuu_search_less_people_number"
                 android:layout_toLeftOf="@+id/suiuu_search_add_people_number"
                 android:layout_toRightOf="@+id/suiuu_search_less_people_number"
@@ -140,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_type"
             android:background="@color/transparent"
-            android:padding="5dp" />
+            android:padding="@dimen/layout_5dp" />
 
         <TextView
             android:id="@+id/tv_price_show"
@@ -166,14 +132,12 @@
             android:textColor="@color/mainColor"
             android:textSize="@dimen/layout_15sp" />
 
-        <com.minglang.suiuu.customview.rangebar.RangeBar
-            android:id="@+id/rangeBar"
+        <com.edmodo.rangebar.RangeBar
+            android:id="@+id/suiuu_search_details_range_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_price_show"
-            android:layout_marginBottom="@dimen/layout_10dp"
-            android:layout_marginLeft="@dimen/layout_5dp"
-            android:layout_marginRight="@dimen/layout_5dp" />
+            app:theme="@android:style/Theme.Holo.Light.NoActionBar" />
 
         <Button
             android:id="@+id/search_confirm_button"
@@ -183,7 +147,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="33dp"
             android:background="@color/mainColor"
-            android:text="@string/confirm" />
+            android:text="@string/confirm"
+            android:textColor="@color/white" />
 
     </RelativeLayout>
 
