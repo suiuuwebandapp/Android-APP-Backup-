@@ -40,6 +40,7 @@ import com.squareup.okhttp.Request;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 import butterknife.Bind;
@@ -59,6 +60,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     private static final String TAG = OrderDetailsActivity.class.getSimpleName();
 
     private static final String ID = "id";
+    private static final String TITLE_IMAGE = "titleImage";
 
     private static final String ORDER_NUMBER = "orderNumber";
 
@@ -68,6 +70,7 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     private static final String DATA = "data";
 
     private static final String TRIP_ID = "tripId";
+    private static final String CLASS_NAME = "className";
 
     private static final String RELATE_ID = "relateId";
 
@@ -142,6 +145,9 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.suiuu_order_details_scroll_view)
     ScrollView scrollView;
+
+    @Bind(R.id.suiuu_order_details_background_image)
+    SimpleDraweeView titleImageView;
 
     @Bind(R.id.suiuu_order_details_base_price)
     TextView basePriceView;
@@ -233,6 +239,8 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
     private void initView() {
         Intent oldIntent = getIntent();
         strID = oldIntent.getStringExtra(ID);
+        String titleImage = oldIntent.getStringExtra(TITLE_IMAGE);
+        L.i(TAG, "orderId:" + strID + ",titleImagePath:" + titleImage);
 
         jsonUtils = JsonUtils.getInstance();
 
@@ -262,7 +270,12 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
         confirmOrderPath = HttpNewServicePath.setConfirmOrderDataPath;
         ignoreOrderPath = HttpNewServicePath.setIgnoreOrderDataPath;
 
+        if (!TextUtils.isEmpty(titleImage)) {
+            titleImageView.setImageURI(Uri.parse(titleImage));
+        }
+
         phoneNumberLayout.setVisibility(View.GONE);
+
     }
 
     private void viewAction() {
@@ -300,12 +313,24 @@ public class OrderDetailsActivity extends BaseAppCompatActivity {
             }
         });
 
+        titleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tripId = infoEntity.getTripId();
+                Intent intent = new Intent(OrderDetailsActivity.this, SuiuuDetailsActivity.class);
+                intent.putExtra(TRIP_ID, tripId);
+                intent.putExtra(CLASS_NAME, TAG);
+                startActivity(intent);
+            }
+        });
+
         titleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String tripId = infoEntity.getTripId();
                 Intent intent = new Intent(OrderDetailsActivity.this, SuiuuDetailsActivity.class);
                 intent.putExtra(TRIP_ID, tripId);
+                intent.putExtra(CLASS_NAME, TAG);
                 startActivity(intent);
             }
         });

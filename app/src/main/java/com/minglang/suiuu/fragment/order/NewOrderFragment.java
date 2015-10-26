@@ -23,6 +23,7 @@ import com.minglang.suiuu.adapter.OrderListManageAdapter;
 import com.minglang.suiuu.base.BaseFragment;
 import com.minglang.suiuu.entity.OrderManage;
 import com.minglang.suiuu.entity.OrderManage.OrderManageData;
+import com.minglang.suiuu.entity.TripJsonInfo;
 import com.minglang.suiuu.utils.JsonUtils;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
@@ -59,6 +60,7 @@ public class NewOrderFragment extends BaseFragment {
     private static final String NUMBER = "number";
 
     private static final String ID = "id";
+    private static final String TITLE_IMAGE = "titleImage";
 
     private static final String STATUS = "status";
     private static final String DATA = "data";
@@ -105,6 +107,8 @@ public class NewOrderFragment extends BaseFragment {
      * 数据源
      */
     private List<OrderManageData> listAll = new ArrayList<>();
+
+    private JsonUtils jsonUtils;
 
     /**
      * Use this factory method to create a new instance of
@@ -172,6 +176,8 @@ public class NewOrderFragment extends BaseFragment {
 
         orderListManageAdapter = new OrderListManageAdapter(getActivity());
         pullToRefreshListView.setAdapter(orderListManageAdapter);
+
+        jsonUtils = JsonUtils.getInstance();
     }
 
     /**
@@ -209,7 +215,11 @@ public class NewOrderFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int location = position - 1;
                 String strID = listAll.get(location).getOrderNumber();
+                String titleImage = jsonUtils.fromJSON(TripJsonInfo.class, listAll.get(location)
+                        .getTripJsonInfo()).getInfo().getTitleImg();
+
                 Intent intent = new Intent(getActivity(), OrderDetailsActivity.class);
+                intent.putExtra(TITLE_IMAGE, titleImage);
                 intent.putExtra(ID, strID);
                 startActivity(intent);
             }
@@ -278,7 +288,7 @@ public class NewOrderFragment extends BaseFragment {
             String status = object.getString(STATUS);
             switch (status) {
                 case "1":
-                    OrderManage orderManage = JsonUtils.getInstance().fromJSON(OrderManage.class, str);
+                    OrderManage orderManage = jsonUtils.fromJSON(OrderManage.class, str);
                     List<OrderManage.OrderManageData> list = orderManage.getData();
                     if (list != null && list.size() > 0) {
                         clearDataList();

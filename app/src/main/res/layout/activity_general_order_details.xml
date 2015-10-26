@@ -96,7 +96,7 @@
                 android:id="@+id/order_details_suiuu_user_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_5dp"
+                android:layout_marginTop="@dimen/layout_2dp"
                 android:background="@color/white">
 
                 <com.facebook.drawee.view.SimpleDraweeView
@@ -138,7 +138,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_5dp"
+                android:layout_marginTop="@dimen/layout_2dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -196,7 +196,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_5dp"
+                android:layout_marginTop="@dimen/layout_2dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -300,7 +300,7 @@
                 android:id="@+id/order_details_service_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_5dp"
+                android:layout_marginTop="@dimen/layout_2dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -327,7 +327,7 @@
                 android:id="@+id/order_details_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layout_5dp"
+                android:layout_marginTop="@dimen/layout_2dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 

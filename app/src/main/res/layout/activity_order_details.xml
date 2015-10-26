@@ -34,15 +34,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/layout_200dp">
 
-                    <ImageView
+                    <com.facebook.drawee.view.SimpleDraweeView
                         android:id="@+id/suiuu_order_details_background_image"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:contentDescription="@string/a"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/default_background_image" />
+                        fresco:failureImage="@drawable/loading_error"
+                        fresco:failureImageScaleType="fitCenter"
+                        fresco:placeholderImage="@drawable/loading"
+                        fresco:placeholderImageScaleType="fitCenter"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"

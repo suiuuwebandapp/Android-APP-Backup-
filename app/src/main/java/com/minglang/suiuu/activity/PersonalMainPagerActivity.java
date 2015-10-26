@@ -64,6 +64,8 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
     private static final String RELATE_ID = "relateId";
     private static final String HEAD_IMAGE_PATH = "headImagePath";
 
+    private static final String CLASS_NAME = "className";
+
     @BindColor(R.color.transparent)
     int titleColor;
 
@@ -234,6 +236,7 @@ public class PersonalMainPagerActivity extends BaseAppCompatActivity {
                 L.i(TAG, "click position:" + position);
                 Intent intent = new Intent(PersonalMainPagerActivity.this, SuiuuDetailsActivity.class);
                 intent.putExtra(TRIP_ID, listAll.get(position).getTripId());
+                intent.putExtra(CLASS_NAME, TAG);
                 startActivity(intent);
             }
         });
