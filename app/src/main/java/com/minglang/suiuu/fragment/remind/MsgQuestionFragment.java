@@ -178,7 +178,7 @@ public class MsgQuestionFragment extends BaseFragment {
         // default is true
         mPtrFrame.setKeepHeaderWhenRefresh(true);
 
-        adapter = new MsgQuestionAdapter(getActivity(), listAll, R.layout.item_msg_question);
+        adapter = new MsgQuestionAdapter(getActivity(), listAll);
         msgQuestionList.setAdapter(adapter);
     }
 

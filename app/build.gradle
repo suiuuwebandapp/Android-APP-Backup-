@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'bugly'
 
 android {
 
@@ -67,6 +68,7 @@ dependencies {
     compile 'com.ms-square:expandableTextView:0.1.4'
     compile 'cn.edu.zafu:coreprogress:0.0.2'
     compile 'com.edmodo:rangebar:1.0.0'
+    compile 'com.tencent.bugly:crashreport:1.2.6'
     compile files('libs/picasso-2.4.0.jar')
     compile files('libs/umeng-analytics-v5.2.4.jar')
     compile files('libs/gson-2.3.1.jar')
@@ -87,4 +89,9 @@ dependencies {
     compile project(':TuSDK-for-Android-1.8.11')
     compile project(':WebSockeLibrary')
     compile files('libs/alipaysdk.jar')
+}
+
+bugly {
+    appId = '900011358'    //注册时分配的App ID
+    appKey = 'Qk4IqlwQ9stBJjzF'  //注册时分配的App Key
 }

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,7 +44,6 @@ import com.minglang.suiuu.fragment.main.InformationFragment;
 import com.minglang.suiuu.fragment.main.ProblemFragment;
 import com.minglang.suiuu.fragment.main.SuiuuFragment;
 import com.minglang.suiuu.fragment.main.TripImageFragment;
-import com.minglang.suiuu.receiver.ConnectionNetChangeReceiver;
 import com.minglang.suiuu.utils.AppConstant;
 import com.minglang.suiuu.utils.AppUtils;
 import com.minglang.suiuu.utils.L;
@@ -138,7 +138,7 @@ public class MainActivity extends BaseAppCompatActivity {
     @Bind(R.id.switch_view)
     Button switchUser;
 
-    @Bind(R.id.titleInfo)
+    @Bind(R.id.title_info)
     TextView titleInfo;
 
     @Bind(R.id.drawer_switch)
@@ -168,9 +168,6 @@ public class MainActivity extends BaseAppCompatActivity {
     @Bind(R.id.img4)
     ImageView imageTabFour;
 
-    @Bind(R.id.network_error_view)
-    TextView networkErrorView;
-
     /**
      * 旅图页面
      */
@@ -193,8 +190,6 @@ public class MainActivity extends BaseAppCompatActivity {
 
     private ExitReceiver exitReceiver;
 
-    private ConnectionNetChangeReceiver connectionNetChangeReceiver;
-
     private TokenBroadcastReceiver tokenBroadcastReceiver;
 
     private Context context;
@@ -204,6 +199,8 @@ public class MainActivity extends BaseAppCompatActivity {
     private boolean isConnected;
 
     private LocalBroadcastManager localBroadcastManager;
+
+    private NetworkReceiver networkReceiver;
 
     //    private LocationService.LocationBinder locationBinder;
     //
@@ -225,6 +222,10 @@ public class MainActivity extends BaseAppCompatActivity {
 
     private ProgressDialog progressDialog;
 
+    private String time;
+
+    private String appTimeSign;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -237,27 +238,15 @@ public class MainActivity extends BaseAppCompatActivity {
         context = MainActivity.this;
         verification = SuiuuInfo.ReadVerification(context);
 
-        if (AppUtils.isNetworkConnect(context)) {
-            webSocketClient = SuiuuApplication.getWebSocketClient();
-            isConnected = webSocketClient.isConnected();
-            L.i(TAG, "isConnected:" + isConnected);
+        webSocketClient = SuiuuApplication.getWebSocketClient();
 
-            String loginMessage = buildLoginMessage();
-            //L.i(TAG, "loginMessage:" + loginMessage);
-            webSocketClient.send(loginMessage);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(LoadingVerificationInfo);
+        progressDialog.setCanceledOnTouchOutside(false);
 
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage(LoadingVerificationInfo);
-            progressDialog.setCanceledOnTouchOutside(false);
+        networkReceiver = new NetworkReceiver();
+        registerReceiver(networkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
-            getServiceTime();
-            versionCheck();
-
-            //暂停使用定位服务
-            //bindService(new Intent(context, LocationService.class), serviceConnection, Context.BIND_AUTO_CREATE);
-        } else {
-            showNetworkSettingDialog();
-        }
     }
 
     @Override
@@ -266,16 +255,20 @@ public class MainActivity extends BaseAppCompatActivity {
 
         String networkHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
         headImageView.setImageURI(Uri.parse(networkHeadImagePath));
+        drawerSwitch.setImageURI(Uri.parse(networkHeadImagePath));
 
         String user_name = SuiuuInfo.ReadUserData(this).getNickname();
         if (!TextUtils.isEmpty(user_name)) {
             nickNameView.setText(user_name);
         }
 
-        if (webSocketClient != null) {
-            if (!isConnected) {
-                webSocketClient.send(buildLoginMessage());
-            }
+        if (!AppUtils.isNetworkConnect(context)) {
+            showNetworkSettingDialog();
+        }
+
+        if (!isConnected) {
+            webSocketClient.connect();
+            webSocketClient.send(buildLoginMessage());
         }
 
     }
@@ -302,9 +295,7 @@ public class MainActivity extends BaseAppCompatActivity {
      * 得到服务器时间
      */
     private void getServiceTime() {
-        if (progressDialog != null && !progressDialog.isShowing()) {
-            progressDialog.show();
-        }
+        showMainDialog();
 
         try {
             OkHttpManager.onGetAsynRequest(HttpNewServicePath.getTime, new OkHttpManager.ResultCallback<String>() {
@@ -316,8 +307,8 @@ public class MainActivity extends BaseAppCompatActivity {
                         String status = object.getString(STATUS);
                         switch (status) {
                             case "1":
-                                String data = object.getString(DATA);
-                                getAppTimeSign(data);
+                                time = object.getString(DATA);
+                                getAppTimeSign(time);
                                 break;
                             case "-1":
                                 L.e(TAG, SystemException);
@@ -337,10 +328,7 @@ public class MainActivity extends BaseAppCompatActivity {
                 @Override
                 public void onError(Request request, Exception e) {
                     L.e(TAG, "时间获取错误:" + e.getMessage());
-                    if (progressDialog != null && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-
+                    hideMainDialog();
                     showErrorDialog("时间获取失败，请尝试重新获取！");
                 }
 
@@ -352,13 +340,8 @@ public class MainActivity extends BaseAppCompatActivity {
             });
         } catch (IOException e) {
             L.e(TAG, "获取服务器时间请求错误:" + e.getMessage());
-            if (progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-
+            hideMainDialog();
             showErrorDialog("时间获取失败，请尝试重新获取！");
-            initView();
-            viewAction();
         }
     }
 
@@ -386,16 +369,20 @@ public class MainActivity extends BaseAppCompatActivity {
                         String status = object.getString(STATUS);
                         switch (status) {
                             case "1":
-                                String appTimeSign = object.getString(DATA);
-                                L.i(TAG, "appTimeSign:" + appTimeSign);
+                                appTimeSign = object.getString(DATA);
                                 SuiuuInfo.WriteAppTimeSign(context, appTimeSign);
+
+                                initView();
+                                viewAction();
                                 break;
+
                             case "-3":
                                 SuiuuInfo.ClearSuiuuInfo(context);
                                 SuiuuInfo.ClearWeChatInfo(context);
                                 SuiuuInfo.ClearAliPayInfo(context);
                                 Toast.makeText(context, LoginOverdue, Toast.LENGTH_SHORT).show();
                                 break;
+
                             default:
                                 L.e(TAG, "获取失败");
                                 break;
@@ -413,20 +400,13 @@ public class MainActivity extends BaseAppCompatActivity {
 
                 @Override
                 public void onFinish() {
-                    if (progressDialog != null && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-
-                    initView();
-                    viewAction();
+                    hideMainDialog();
                 }
 
             });
         } catch (Exception e) {
             L.e(TAG, "获取Token请求错误:" + e.getMessage());
-            if (progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
+            hideMainDialog();
         }
     }
 
@@ -448,6 +428,18 @@ public class MainActivity extends BaseAppCompatActivity {
                 .create().show();
     }
 
+    private void initWebSocket() {
+
+        isConnected = webSocketClient.isConnected();
+        L.i(TAG, "isConnected:" + isConnected);
+        if (!isConnected) {
+            webSocketClient.connect();
+        }
+
+        String loginMessage = buildLoginMessage();
+        webSocketClient.send(loginMessage);
+    }
+
     /**
      * 初始化方法
      */
@@ -461,6 +453,12 @@ public class MainActivity extends BaseAppCompatActivity {
 
         fm = getSupportFragmentManager();
 
+        initFillView();
+        initReceiver();
+        initFragment();
+    }
+
+    private void initFillView() {
         int statusBarHeight = AppUtils.getStatusBarHeight(this);
         int leftViewWidth = screenWidth / 4 * 3;
 
@@ -477,23 +475,6 @@ public class MainActivity extends BaseAppCompatActivity {
         sliderNavigationViewParams.width = leftViewWidth;
         sliderNavigationViewParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
         sliderView.setLayoutParams(sliderNavigationViewParams);
-
-        String strNickName = SuiuuInfo.ReadUserData(this).getNickname();
-        if (!TextUtils.isEmpty(strNickName)) {
-            nickNameView.setText(strNickName);
-        } else {
-            nickNameView.setText("");
-        }
-
-        String strHeadImagePath = SuiuuInfo.ReadUserData(this).getHeadImg();
-        if (!TextUtils.isEmpty(strHeadImagePath)) {
-            headImageView.setImageURI(Uri.parse(strHeadImagePath));
-            drawerSwitch.setImageURI(Uri.parse(strHeadImagePath));
-        } else {
-            String failurePath = "res://com.minglang.suiuu/" + R.drawable.default_head_image_error;
-            headImageView.setImageURI(Uri.parse(failurePath));
-            drawerSwitch.setImageURI(Uri.parse(failurePath));
-        }
 
         String publisher = SuiuuInfo.ReadUserData(this).getIsPublisher();
         if (TextUtils.isEmpty(publisher)) {
@@ -532,8 +513,6 @@ public class MainActivity extends BaseAppCompatActivity {
         adapter2.setScreenHeight(screenHeight);
         sideListView2.setAdapter(adapter2);
 
-        initReceiver();
-        initFragment();
     }
 
     private void initFragment() {
@@ -558,14 +537,12 @@ public class MainActivity extends BaseAppCompatActivity {
         tokenBroadcastReceiver = new TokenBroadcastReceiver();
         registerReceiver(tokenBroadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
 
-        connectionNetChangeReceiver = new ConnectionNetChangeReceiver();
-        registerReceiver(connectionNetChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     private void versionCheck() {
         TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         String serialNumber = tm.getDeviceId();
-        L.i(TAG, "手机串号:" + serialNumber);
+        //L.i(TAG, "手机串号:" + serialNumber);
 
         OkHttpManager.Params[] paramArray = new OkHttpManager.Params[4];
         paramArray[0] = new OkHttpManager.Params(APP_ID, serialNumber);
@@ -583,11 +560,13 @@ public class MainActivity extends BaseAppCompatActivity {
                             } else try {
                                 JSONObject object = new JSONObject(response);
                                 String status = object.getString(STATUS);
-                                if (status.equals("1")) {
-                                    JSONObject data = object.getJSONObject(DATA);
-                                    String versionId = data.getString("vId");
-                                    L.i(TAG, "versionId:" + versionId);
-                                    SuiuuInfo.WriteVersionId(context, versionId);
+                                switch (status) {
+                                    case "1":
+                                        JSONObject data = object.getJSONObject(DATA);
+                                        String versionId = data.getString("vId");
+                                        L.i(TAG, "versionId:" + versionId);
+                                        SuiuuInfo.WriteVersionId(context, versionId);
+                                        break;
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -635,7 +614,8 @@ public class MainActivity extends BaseAppCompatActivity {
         nickNameView.setOnClickListener(onClickListener);
         headImageView.setOnClickListener(onClickListener);
 
-        final Class<?>[] classArray1 = new Class[]{PrivateLetterActivity.class, MySuiuuInfoActivity.class, OrderManageActivity.class,
+        final Class<?>[] classArray1 = new Class[]{PrivateLetterActivity.class,
+                MySuiuuInfoActivity.class, OrderManageActivity.class,
                 AccountManagerActivity.class, SettingActivity.class};
 
         sideListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -646,7 +626,8 @@ public class MainActivity extends BaseAppCompatActivity {
             }
         });
 
-        final Class<?>[] classArray2 = new Class[]{GeneralOrderListActivity.class, AttentionActivity.class, PrivateLetterActivity.class,
+        final Class<?>[] classArray2 = new Class[]{GeneralOrderListActivity.class,
+                AttentionActivity.class, PrivateLetterActivity.class,
                 SettingActivity.class};
 
         sideListView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -670,29 +651,6 @@ public class MainActivity extends BaseAppCompatActivity {
         tab3.setOnClickListener(onClickListener);
         tab4.setOnClickListener(onClickListener);
 
-        //广播监听
-        connectionNetChangeReceiver.setConnectionChangeListener(new ConnectionNetChangeReceiver.ConnectionChangeListener() {
-            @Override
-            public void connectionBreakOff(Context b) {
-                networkErrorView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void connectionResume(Context b) {
-                if (networkErrorView.isEnabled()) {
-                    networkErrorView.setVisibility(View.GONE);
-                }
-            }
-
-        });
-
-        //跳到设置界面
-        networkErrorView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Settings.ACTION_SETTINGS));
-            }
-        });
     }
 
     private String buildLoginMessage() {
@@ -898,7 +856,7 @@ public class MainActivity extends BaseAppCompatActivity {
 
     }
 
-    private void unMainRegisterReceiver(){
+    private void unMainRegisterReceiver() {
 
         try {
             localBroadcastManager.unregisterReceiver(exitReceiver);
@@ -907,9 +865,9 @@ public class MainActivity extends BaseAppCompatActivity {
         }
 
         try {
-            unregisterReceiver(connectionNetChangeReceiver);
+            unregisterReceiver(networkReceiver);
         } catch (Exception e) {
-            L.e(TAG, "反注册ConnectionNetChangeReceiver失败:" + e.getMessage());
+            L.e(TAG, "反注册NetworkReceiver失败:" + e.getMessage());
         }
 
         try {
@@ -920,15 +878,27 @@ public class MainActivity extends BaseAppCompatActivity {
 
     }
 
+    private void showMainDialog() {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
+    }
+
+    private void hideMainDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (resultCode){
+        switch (resultCode) {
             case Activity.RESULT_OK:
-                if (data == null){
+                if (data == null) {
                     L.e(TAG, "back data is null!");
-                }else {
+                } else {
                     switch (requestCode) {
                         case AppConstant.COMMUNITY_SEARCH_SKIP:
                             String searchString = data.getStringExtra("Search");
@@ -939,15 +909,51 @@ public class MainActivity extends BaseAppCompatActivity {
                 }
                 break;
 
-            case AppConstant.PUBLISTH_TRIP_GALLERY_SUCCESS:
-                tripImageFragment.loadFirstPageData(null);
-                break;
-
-            case NETWORK_CODE:
-                getServiceTime();
-                break;
         }
 
+    }
+
+    private class NetworkReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isAvailable()) {
+                int networkType = networkInfo.getType();
+                switch (networkType) {
+                    case ConnectivityManager.TYPE_WIFI:
+                        L.i(TAG, "WiFi on");
+
+                        if (TextUtils.isEmpty(time) && TextUtils.isEmpty(appTimeSign)) {
+                            getServiceTime();
+                            initWebSocket();
+                            versionCheck();
+
+                            //暂停使用定位服务
+                            //bindService(new Intent(context, LocationService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+                        }
+                        break;
+
+                    case ConnectivityManager.TYPE_MOBILE:
+                        L.i(TAG, "Mobile Network on");
+
+                        if (TextUtils.isEmpty(time) && TextUtils.isEmpty(appTimeSign)) {
+                            getServiceTime();
+                            initWebSocket();
+                            versionCheck();
+
+                            //暂停使用定位服务
+                            //bindService(new Intent(context, LocationService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+                        }
+                        break;
+
+                    default:
+                        L.i(TAG, "Network Off");
+                        showNetworkSettingDialog();
+                        break;
+                }
+            }
+        }
     }
 
     private class ExitReceiver extends BroadcastReceiver {
@@ -991,11 +997,6 @@ public class MainActivity extends BaseAppCompatActivity {
                     break;
 
                 case R.id.head_image:
-                    Intent headIntent = new Intent(context, PersonalMainPagerActivity.class);
-                    headIntent.putExtra(USER_SIGN, userSign);
-                    startActivity(headIntent);
-                    mDrawerLayout.closeDrawer(sliderView);
-                    break;
 
                 case R.id.nick_name:
                     Intent nickIntent = new Intent(context, PersonalMainPagerActivity.class);

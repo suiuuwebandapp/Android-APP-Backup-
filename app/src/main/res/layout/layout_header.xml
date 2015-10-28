@@ -19,7 +19,7 @@
             android:layout_above="@+id/dividing_line"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:background="@color/white"/>
+            android:background="@color/white" />
 
         <TextView
             android:id="@+id/dividing_line"
@@ -60,9 +60,9 @@
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/layout_8dp"
             android:gravity="center"
-            android:text="@string/NickName"
             android:textColor="@color/mainColor"
-            android:textSize="@dimen/layout_20sp" />
+            android:textSize="@dimen/layout_20sp"
+            tools:text="@string/NickName" />
 
     </RelativeLayout>
 

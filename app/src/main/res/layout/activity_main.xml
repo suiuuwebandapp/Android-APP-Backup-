@@ -40,7 +40,7 @@
                     fresco:roundAsCircle="true" />
 
                 <TextView
-                    android:id="@+id/titleInfo"
+                    android:id="@+id/title_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -50,18 +50,6 @@
                     android:textSize="@dimen/layout_22sp" />
 
             </android.support.v7.widget.Toolbar>
-
-            <TextView
-                android:id="@+id/network_error_view"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/layout_50dp"
-                android:drawableLeft="@drawable/icon_main_2_green"
-                android:drawableStart="@drawable/icon_main_2_green"
-                android:gravity="center"
-                android:text="@string/NetworkError"
-                android:textColor="@color/warning_color"
-                android:textSize="@dimen/layout_16sp"
-                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -87,6 +75,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/tr_write2"
+        android:clickable="true"
         android:fitsSystemWindows="true">
 
         <View

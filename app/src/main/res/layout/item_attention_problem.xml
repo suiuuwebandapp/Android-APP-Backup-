@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -23,7 +23,7 @@
             fresco:failureImage="@drawable/default_head_image_error"
             fresco:failureImageScaleType="fitXY"
             fresco:placeholderImage="@drawable/default_head_image"
-            fresco:roundAsCircle="true"/>
+            fresco:roundAsCircle="true" />
 
         <TextView
             android:id="@+id/item_attention_problem_comment_number"
@@ -37,7 +37,7 @@
             android:drawableStart="@drawable/icon_comment"
             android:gravity="center_vertical"
             android:text="@string/Zero"
-            android:textSize="@dimen/layout_20sp"/>
+            android:textSize="@dimen/layout_20sp" />
 
     </RelativeLayout>
 
@@ -55,7 +55,7 @@
         android:singleLine="true"
         android:text="@string/Title"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/textColor"/>
+        android:textColor="@color/textColor" />
 
     <TextView
         android:id="@+id/item_attention_problem_content"
@@ -69,7 +69,7 @@
         android:layout_marginTop="@dimen/layout_8dp"
         android:ellipsize="end"
         android:maxLines="3"
-        android:text="@string/tempText"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:text="@string/tempText" />
 
 </RelativeLayout>

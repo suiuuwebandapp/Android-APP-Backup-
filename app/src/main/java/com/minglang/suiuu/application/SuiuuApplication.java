@@ -27,9 +27,9 @@ import com.alibaba.sdk.android.oss.model.TokenGenerator;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.koushikdutta.WebSocketClient;
-import com.minglang.suiuu.crash.GlobalCrashHandler;
 import com.minglang.suiuu.utils.L;
 import com.minglang.suiuu.utils.http.HttpNewServicePath;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.apache.http.message.BasicNameValuePair;
 import org.lasque.tusdk.core.TuSdkApplication;
@@ -84,7 +84,9 @@ public class SuiuuApplication extends TuSdkApplication {
         initApplication();
         initAboutOSS();
 
-        GlobalCrashHandler.getInstance().init(this);
+        CrashReport.initCrashReport(this, "900011358", false);
+
+        //GlobalCrashHandler.getInstance().init(this);
 
         List<BasicNameValuePair> extraHeaders = Collections.singletonList(new BasicNameValuePair("", ""));
 
@@ -144,10 +146,6 @@ public class SuiuuApplication extends TuSdkApplication {
         conf.setSocketTimeout(15 * 1000); // 设置全局socket超时时间，默认30s
         conf.setMaxConnections(50); // 设置全局最大并发网络链接数, 默认50
         ossService.setClientConfiguration(conf);
-    }
-
-    public static void setWebSocketClient(WebSocketClient webSocketClient) {
-        SuiuuApplication.webSocketClient = webSocketClient;
     }
 
     public static WebSocketClient getWebSocketClient() {
